@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "279734428004",
+    "project_id": "qunzo-b2252",
+    "storage_bucket": "qunzo-b2252.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279734428004:android:ccd69b013d25e835949a71",
+        "android_client_info": {
+          "package_name": "com.qunzo.user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDecN3TGV6vDJPRbswbOKvrJ9dt7VkZUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
