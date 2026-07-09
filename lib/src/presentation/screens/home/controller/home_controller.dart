@@ -85,50 +85,53 @@ class HomeController extends GetxController {
     isBiometricEnable.value = savedBiometric ?? false;
   }
 
-  Future<void> _setInitialLanguage() async {
-    final savedLocale = await SettingsService.getLanguageLocaleCurrentState();
+Future<void> _setInitialLanguage() async {
+  final savedLocale = await SettingsService.getLanguageLocaleCurrentState();
 
-    if (savedLocale != null) {
-      if (savedLocale == "en") {
-        language.value = "English";
-        languageController.text = "English";
-      } else if (savedLocale == "ar") {
-        language.value = "Arabic";
-        languageController.text = "Arabic";
-      }
-    } else {
+  if (savedLocale != null) {
+    if (savedLocale == "en") {
       language.value = "English";
       languageController.text = "English";
-      await Get.find<SettingsService>().saveLanguageLocaleCurrentState("en");
+    } else if (savedLocale == "ar") {
+      language.value = "Arabic";
+      languageController.text = "Arabic";
+    } else if (savedLocale == "fa") {
+      language.value = "Persian";
+      languageController.text = "Persian";
     }
+  } else {
+    language.value = "English";
+    languageController.text = "English";
+    await Get.find<SettingsService>().saveLanguageLocaleCurrentState("en");
   }
+}
 
   // Language Switching Method
-  Future<void> changeLanguage(String languageName) async {
-    try {
-      language.value = languageName;
-      languageController.text = languageName;
+Future<void> changeLanguage(String languageName) async {
+  try {
+    language.value = languageName;
+    languageController.text = languageName;
 
-      String localeCode;
-      if (languageName == "English") {
-        localeCode = "en";
-      } else if (languageName == "Arabic") {
-        localeCode = "ar";
-      } else {
-        localeCode = "en";
-      }
-
-      await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
-        localeCode,
-      );
-
-      Get.updateLocale(Locale(localeCode));
-    } catch (e, stackTrace) {
-      debugPrint('❌ changeLanguage() error: $e');
-      debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.homeLanguageChangeFailed);
+    String localeCode;
+    if (languageName == "English") {
+      localeCode = "en";
+    } else if (languageName == "Arabic") {
+      localeCode = "ar";
+    } else if (languageName == "Persian") {
+      localeCode = "fa";
+    } else {
+      localeCode = "en";
     }
+
+    await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
+      localeCode,
+    );
+
+    Get.updateLocale(Locale(localeCode));
+  } catch (e, stackTrace) {
+    // ...
   }
+}
 
   // Toggle Biometric
   Future<void> toggleBiometric() async {
