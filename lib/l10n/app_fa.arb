@@ -497,7 +497,7 @@
   "invoiceDraft": "پیش‌نویس",
   "invoiceView": "مشاهده",
   "invoicePaid": "پرداخت شده",
-  "invoiceUnpaid": "پرداخت نشده"
+  "invoiceUnpaid": "پرداخت نشده",
   "comment_update_invoice": "==== به‌روزرسانی فاکتور ====",
   "updateInvoiceTitle": "به‌روزرسانی فاکتور",
   "updateInvoiceItems": "آیتم‌های فاکتور",
@@ -997,7 +997,7 @@
   "withdrawSuccessStepSectionBackHomeButton": "بازگشت به خانه",
   "comment_edit_withdraw_account_screen": "==== صفحه ویرایش حساب برداشت ====",
   "editWithdrawAccountTitle": "به‌روزرسانی حساب برداشت",
-  "editWithdrawAccountMethodName": "نام روش"
+  "editWithdrawAccountMethodName": "نام روش",
   "editWithdrawAccountMethodNameHint": "نام روش را وارد کنید",
   "editWithdrawAccountFieldHint": "اینجا بنویسید...",
   "editWithdrawAccountGenericFieldHint": "وارد کنید",
@@ -1748,7 +1748,7 @@
   "noFiatCurrencyFound": "ارز فیات یافت نشد",
   "noAssetCurrencyFound": "ارز دارایی یافت نشد",
   "filterPaymentAccount": "فیلتر حساب پرداخت",
-  "filterMyOrder": "فیلتر سفارش من"
+  "filterMyOrder": "فیلتر سفارش من",
     "@p2pEnterField": {
     "placeholders": {
       "field": {}
