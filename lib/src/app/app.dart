@@ -59,7 +59,7 @@ class _QunzoUserState extends State<QunzoUser> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [Locale('en'), Locale("ar"),  Locale('fa'),  Locale('zh')],
+          supportedLocales: const [Locale('en'), Locale("ar"),  Locale('fa'),  Locale('zh'),],
           builder: (context, widget) {
             return widget ?? const SizedBox.shrink();
           },
