@@ -101,6 +101,9 @@ Future<void> _setInitialLanguage() async {
 } else if (savedLocale == "zh") {
   language.value = "Chinese";  
   languageController.text = "Chinese";
+} else if (savedLocale == "ru") {
+  language.value = "Russian";
+  languageController.text = "Russian";
 }
   } else {
     language.value = "English";
@@ -124,7 +127,9 @@ Future<void> changeLanguage(String languageName) async {
       localeCode = "fa";
     } else if (languageName == "Chinese") {
       localeCode = "zh";
-    }  else {
+    }else if (languageName == "Russian") {
+      localeCode = "ru";
+    }   else {
       localeCode = "en";
     }
 

@@ -106,3 +106,6 @@ flutter:
     - family: LemiFont
       fonts:
         - asset: assets/fonts/LemiZhiXiaQianFeng-Regular.ttf
+    - family: NotoSansRU
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf

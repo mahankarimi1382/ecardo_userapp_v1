@@ -760,7 +760,7 @@
   "kycDetailsStatusRejected": "رد شده",
   "comment_notifications_screen": "==== صفحه اعلان‌ها ====",
   "notificationsScreenTitle": "همه اعلان‌ها",
-  "notificationsMarkAllReadButton": "علامت‌گذاری همه به عنوان خوانده‌شده",
+  "notificationsMarkAllReadButton": "خواندن همه",
   "comment_profile_settings_screen": "==== صفحه تنظیمات پروفایل ====",
   "profileSettingsScreenTitle": "تنظیمات پروفایل",
   "profileSettingsFirstName": "نام",

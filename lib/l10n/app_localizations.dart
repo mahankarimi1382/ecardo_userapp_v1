@@ -97,7 +97,9 @@ abstract class AppLocalizations {
     Locale('ar'),
     Locale('en'),
     Locale('fa'),
-    Locale('zh')
+    Locale('zh'),
+    Locale('ru'),
+
   ];
 
   /// No description provided for @comment_common_maintenance.
