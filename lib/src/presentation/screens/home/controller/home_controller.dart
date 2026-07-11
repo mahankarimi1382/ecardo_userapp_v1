@@ -122,7 +122,9 @@ Future<void> changeLanguage(String languageName) async {
       localeCode = "ar";
     } else if (languageName == "Persian") {
       localeCode = "fa";
-    } else {
+    } else if (languageName == "Chinese") {
+      localeCode = "zh";
+    }  else {
       localeCode = "en";
     }
 
@@ -131,9 +133,11 @@ Future<void> changeLanguage(String languageName) async {
     );
 
     Get.updateLocale(Locale(localeCode));
-  } catch (e, stackTrace) {
-    // ...
-  }
+    } catch (e, stackTrace) {
+      debugPrint('❌ changeLanguage() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+      ToastHelper().showErrorToast(localization.homeLanguageChangeFailed);
+    }
 }
 
   // Toggle Biometric
