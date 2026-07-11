@@ -6,6 +6,6 @@ class LightTheme {
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.lightBackground,
     fontFamily: "Plus Jakarta Sans",
-    fontFamilyFallback: const ['Vazirmatn'],
+    fontFamilyFallback: const ['Vazirmatn', 'LemiFont'],
   );
 }

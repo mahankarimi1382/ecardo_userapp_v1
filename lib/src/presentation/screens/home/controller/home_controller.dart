@@ -98,7 +98,10 @@ Future<void> _setInitialLanguage() async {
     } else if (savedLocale == "fa") {
       language.value = "Persian";
       languageController.text = "Persian";
-    }
+} else if (savedLocale == "zh") {
+  language.value = "Chinese";  
+  languageController.text = "Chinese";
+}
   } else {
     language.value = "English";
     languageController.text = "English";

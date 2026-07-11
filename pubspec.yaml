@@ -103,3 +103,6 @@ flutter:
     - family: Vazirmatn
       fonts:
         - asset: assets/fonts/Vazirmatn-Regular.ttf
+    - family: LemiFont
+      fonts:
+        - asset: assets/fonts/LemiZhiXiaQianFeng-Regular.ttf
