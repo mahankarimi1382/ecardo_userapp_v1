@@ -41,6 +41,8 @@ class CreateVirtualCardController extends GetxController {
   final RxString fundingSource = 'irr_wallet'.obs;
   final RxBool requestPhysical = false.obs;
   final amountController = TextEditingController();
+  final irrWalletController = TextEditingController();
+  final gatewayController = TextEditingController();
   final Map<String, TextEditingController> applicationFieldControllers = {};
   final Map<String, RxBool> applicationBooleanValues = {};
 
@@ -152,6 +154,8 @@ class CreateVirtualCardController extends GetxController {
     addressFocusNode.dispose();
     addressController.dispose();
     amountController.dispose();
+    irrWalletController.dispose();
+    gatewayController.dispose();
     for (final controller in applicationFieldControllers.values) {
       controller.dispose();
     }
@@ -164,8 +168,10 @@ class CreateVirtualCardController extends GetxController {
     cardProducts.clear();
     selectedCardProduct.value = null;
     selectedGateway.value = null;
+    gatewayController.clear();
     irrWallets.clear();
     selectedIrrWallet.value = null;
+    irrWalletController.clear();
 
     try {
       final response = await Get.find<NetworkService>().get(
@@ -230,6 +236,7 @@ class CreateVirtualCardController extends GetxController {
 
       creationMode.value = 'product';
       selectCardProduct(product);
+      cardProviderController.text = product.name ?? product.code ?? '';
       return;
     }
 
@@ -262,6 +269,7 @@ class CreateVirtualCardController extends GetxController {
       fundingSource.value = 'gateway';
     }
     selectedGateway.value = product.gateways.firstOrNull;
+    gatewayController.text = _gatewayDisplayText(selectedGateway.value);
   }
 
   void _syncApplicationFields() {
@@ -301,10 +309,45 @@ class CreateVirtualCardController extends GetxController {
         ),
       );
       selectedIrrWallet.value = irrWallets.firstOrNull;
+      irrWalletController.text = _walletDisplayText(selectedIrrWallet.value);
     } catch (e, stackTrace) {
       debugPrint('❌ fetchIrrWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
     }
+  }
+
+  void selectFundingSource(String source) {
+    fundingSource.value = source;
+  }
+
+  void selectIrrWallet(Wallets wallet) {
+    selectedIrrWallet.value = wallet;
+    irrWalletController.text = _walletDisplayText(wallet);
+  }
+
+  void clearIrrWallet() {
+    selectedIrrWallet.value = null;
+    irrWalletController.clear();
+  }
+
+  void selectGateway(CardGatewayData gateway) {
+    selectedGateway.value = gateway;
+    gatewayController.text = _gatewayDisplayText(gateway);
+  }
+
+  void clearGateway() {
+    selectedGateway.value = null;
+    gatewayController.clear();
+  }
+
+  String _walletDisplayText(Wallets? wallet) {
+    if (wallet == null) return '';
+    return '${wallet.name ?? 'IRR'} - '
+        '${wallet.formattedBalance ?? wallet.balance ?? '0'}';
+  }
+
+  String _gatewayDisplayText(CardGatewayData? gateway) {
+    return gateway?.name ?? gateway?.gatewayCode ?? '';
   }
 
   Future<void> createIrrCard() async {
@@ -706,6 +749,8 @@ class CreateVirtualCardController extends GetxController {
     addressController.clear();
 
     amountController.clear();
+    irrWalletController.text = _walletDisplayText(selectedIrrWallet.value);
+    gatewayController.text = _gatewayDisplayText(selectedGateway.value);
     requestPhysical.value = false;
     for (final controller in applicationFieldControllers.values) {
       controller.clear();

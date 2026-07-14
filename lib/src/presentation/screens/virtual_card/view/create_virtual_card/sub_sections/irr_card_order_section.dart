@@ -3,9 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
+import 'package:qunzo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:qunzo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_three.dart';
+import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_product_model.dart';
+import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
 class IrrCardOrderSection extends StatelessWidget {
   final Widget? applicantSection;
@@ -69,15 +74,27 @@ class IrrCardOrderSection extends StatelessWidget {
             ),
           ],
           SizedBox(height: 16.h),
-          TextField(
-            controller: controller.amountController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Initial load (IRR)',
-              helperText:
+          CommonRequiredLabelAndDynamicField(
+            labelText: 'Initial load (IRR)',
+            isLabelRequired: true,
+            dynamicField: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommonTextInputField(
+                  hintText: 'Enter initial load',
+                  controller: controller.amountController,
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 6.h),
+                Text(
                   '${_formatIrr(product.minimumInitialLoad)} - '
                   '${_formatIrr(product.maximumInitialLoad)} IRR',
-              border: const OutlineInputBorder(),
+                  style: TextStyle(
+                    color: AppColors.lightTextTertiary,
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 16.h),
@@ -159,33 +176,37 @@ class _ApplicationField extends StatelessWidget {
     }
 
     final textController = controller.applicationFieldControllers[field.name];
-    return TextField(
-      controller: textController,
-      readOnly: field.type == 'date',
-      onTap: field.type == 'date'
-          ? () async {
-              final selectedDate = await showDatePicker(
-                context: context,
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now().add(const Duration(days: 3650)),
-                initialDate: DateTime.now(),
-              );
-              if (selectedDate != null) {
-                textController?.text = DateFormat('yyyy-MM-dd').format(
-                  selectedDate,
+    return CommonRequiredLabelAndDynamicField(
+      labelText: field.label,
+      isLabelRequired: field.required,
+      dynamicField: CommonTextInputField(
+        hintText: '',
+        controller: textController,
+        readOnly: field.type == 'date',
+        onTap: field.type == 'date'
+            ? () async {
+                final selectedDate = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now().add(const Duration(days: 3650)),
+                  initialDate: DateTime.now(),
                 );
+                if (selectedDate != null) {
+                  textController?.text = DateFormat('yyyy-MM-dd').format(
+                    selectedDate,
+                  );
+                }
               }
-            }
-          : null,
-      keyboardType: field.type == 'number'
-          ? TextInputType.number
-          : TextInputType.text,
-      decoration: InputDecoration(
-        labelText: '${field.label}${field.required ? ' *' : ''}',
-        suffixIcon: field.type == 'date'
-            ? const Icon(Icons.calendar_month_outlined)
             : null,
-        border: const OutlineInputBorder(),
+        keyboardType: field.type == 'number'
+            ? TextInputType.number
+            : TextInputType.text,
+        suffixIcon: field.type == 'date'
+            ? Icon(
+                Icons.calendar_month_outlined,
+                color: AppColors.lightTextTertiary,
+              )
+            : null,
       ),
     );
   }
@@ -210,79 +231,149 @@ class _FundingSourceSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (supportsWallet && supportsGateway) ...[
-          SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(
-                value: 'irr_wallet',
-                label: Text('IRR Wallet'),
-              ),
-              ButtonSegment(
-                value: 'gateway',
-                label: Text('Payment Gateway'),
-              ),
-            ],
-            selected: {controller.fundingSource.value},
-            onSelectionChanged: (values) {
-              controller.fundingSource.value = values.first;
-            },
-          ),
+          _FundingSourceTabs(controller: controller),
           SizedBox(height: 16.h),
         ],
         if (controller.fundingSource.value == 'irr_wallet')
-          DropdownButtonFormField<int>(
-            initialValue: controller.selectedIrrWallet.value?.id,
-            decoration: const InputDecoration(
-              labelText: 'IRR wallet',
-              border: OutlineInputBorder(),
-            ),
-            items: controller.irrWallets
-                .map(
-                  (wallet) => DropdownMenuItem(
-                    value: wallet.id,
-                    child: Text(
-                      '${wallet.name ?? 'IRR'} - '
-                      '${wallet.formattedBalance ?? wallet.balance ?? '0'}',
-                    ),
+          CommonRequiredLabelAndDynamicField(
+            labelText: 'IRR wallet',
+            isLabelRequired: true,
+            dynamicField: CommonTextInputField(
+              hintText: 'Select IRR wallet',
+              controller: controller.irrWalletController,
+              readOnly: true,
+              suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
+              onTap: () {
+                Get.bottomSheet(
+                  CommonDropdownBottomSheetThree<Wallets>(
+                    items: controller.irrWallets,
+                    selectedItem: controller.selectedIrrWallet.value,
+                    bottomSheetHeight: 400.h,
+                    isShowTitle: true,
+                    title: 'Select IRR Wallet',
+                    notFoundText: 'No IRR wallet found',
+                    getDisplayText: _walletText,
+                    areItemsEqual: (first, second) => first.id == second.id,
+                    onItemSelected: controller.selectIrrWallet,
+                    onItemUnSelected: controller.clearIrrWallet,
+                    getItemSubtitle: (wallet) =>
+                        wallet.accountNo?.isNotEmpty == true
+                        ? wallet.accountNo
+                        : wallet.code,
                   ),
-                )
-                .toList(),
-            onChanged: (id) {
-              controller.selectedIrrWallet.value =
-                  controller.irrWallets.firstWhereOrNull(
-                (wallet) => wallet.id == id,
-              );
-            },
+                );
+              },
+            ),
           ),
         if (controller.fundingSource.value == 'gateway')
-          DropdownButtonFormField<int>(
-            initialValue: controller.selectedGateway.value?.id,
-            decoration: const InputDecoration(
-              labelText: 'Payment gateway',
-              border: OutlineInputBorder(),
-            ),
-            items: product.gateways
-                .map(
-                  (gateway) => DropdownMenuItem(
-                    value: gateway.id,
-                    child: Text(gateway.name ?? gateway.gatewayCode ?? ''),
+          CommonRequiredLabelAndDynamicField(
+            labelText: 'Payment gateway',
+            isLabelRequired: true,
+            dynamicField: CommonTextInputField(
+              hintText: 'Select payment gateway',
+              controller: controller.gatewayController,
+              readOnly: true,
+              suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
+              onTap: () {
+                Get.bottomSheet(
+                  CommonDropdownBottomSheetThree<CardGatewayData>(
+                    items: product.gateways,
+                    selectedItem: controller.selectedGateway.value,
+                    bottomSheetHeight: 400.h,
+                    isShowTitle: true,
+                    title: 'Select Payment Gateway',
+                    notFoundText: 'No payment gateway found',
+                    getDisplayText: _gatewayText,
+                    areItemsEqual: (first, second) => first.id == second.id,
+                    onItemSelected: controller.selectGateway,
+                    onItemUnSelected: controller.clearGateway,
+                    getItemSubtitle: (gateway) {
+                      final currency = gateway.currency ?? 'IRR';
+                      return '${gateway.minimumDeposit} - '
+                          '${gateway.maximumDeposit} $currency';
+                    },
                   ),
-                )
-                .toList(),
-            onChanged: (id) {
-              controller.selectedGateway.value =
-                  product.gateways.firstWhereOrNull(
-                (gateway) => gateway.id == id,
-              );
-            },
+                );
+              },
+            ),
           ),
         if (supportsWallet &&
             controller.fundingSource.value == 'irr_wallet' &&
-            controller.irrWallets.isEmpty)
+            controller.irrWallets.isEmpty) ...[
+          SizedBox(height: 8.h),
           const _MessageBox(
             message: 'No IRR wallet is available for this account.',
             color: AppColors.error,
           ),
+        ],
       ],
+    );
+  }
+
+  static String _walletText(Wallets wallet) {
+    return '${wallet.name ?? 'IRR'} - '
+        '${wallet.formattedBalance ?? wallet.balance ?? '0'}';
+  }
+
+  static String _gatewayText(CardGatewayData gateway) {
+    return gateway.name ?? gateway.gatewayCode ?? '';
+  }
+}
+
+class _FundingSourceTabs extends StatelessWidget {
+  final CreateVirtualCardController controller;
+
+  const _FundingSourceTabs({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8.r),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEEEEEE),
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: CommonButton(
+              borderRadius: 12,
+              height: 42,
+              width: double.infinity,
+              fontSize: 12,
+              text: 'IRR Wallet',
+              backgroundColor: controller.fundingSource.value == 'irr_wallet'
+                  ? AppColors.lightPrimary
+                  : AppColors.white,
+              textColor: controller.fundingSource.value == 'irr_wallet'
+                  ? AppColors.white
+                  : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+              onPressed: () {
+                controller.selectFundingSource('irr_wallet');
+              },
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: CommonButton(
+              borderRadius: 12,
+              height: 42,
+              width: double.infinity,
+              fontSize: 12,
+              text: 'Payment Gateway',
+              backgroundColor: controller.fundingSource.value == 'gateway'
+                  ? AppColors.lightPrimary
+                  : AppColors.white,
+              textColor: controller.fundingSource.value == 'gateway'
+                  ? AppColors.white
+                  : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+              onPressed: () {
+                controller.selectFundingSource('gateway');
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

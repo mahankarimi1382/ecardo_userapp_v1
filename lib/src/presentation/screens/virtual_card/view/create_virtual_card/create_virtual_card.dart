@@ -3,10 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:qunzo_user/src/common/services/settings_service.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_loading.dart';
+import 'package:qunzo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:qunzo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_three.dart';
+import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/card_holder_tab_section.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/choose_card_holder_section.dart';
@@ -178,10 +183,12 @@ class _IrrProductArea extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
-            TextButton.icon(
+            CommonButton(
+              width: 180,
+              height: 42,
+              fontSize: 13,
+              text: 'Retry IRR products',
               onPressed: controller.retryCardProducts,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry IRR products'),
             ),
           ],
         ),
@@ -230,46 +237,51 @@ class _UnifiedProviderSelector extends StatelessWidget {
 
       return Padding(
         padding: EdgeInsets.only(bottom: 24.h),
-        child: DropdownButtonFormField<String>(
-          key: ValueKey(controller.selectedCreationOption.value),
-          initialValue: controller.selectedCreationOption.value,
-          isExpanded: true,
-          itemHeight: 64,
-          decoration: const InputDecoration(
-            labelText: 'Choose card provider',
-            border: OutlineInputBorder(),
-          ),
-          items: options
-              .map(
-                (option) => DropdownMenuItem(
-                  value: option.value,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        option.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (option.subtitle.isNotEmpty)
-                        Text(
-                          option.subtitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppColors.lightTextTertiary,
-                            fontSize: 11.sp,
-                          ),
-                        ),
-                    ],
-                  ),
+        child: CommonRequiredLabelAndDynamicField(
+          labelText: 'Card Provider',
+          isLabelRequired: true,
+          dynamicField: CommonTextInputField(
+            suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
+            focusNode: controller.cardProviderFocusNode,
+            isFocused: controller.isCardProviderFocused.value,
+            hintText: 'Select Card Provider',
+            controller: controller.cardProviderController,
+            suffixIconColor: AppColors.lightTextTertiary,
+            readOnly: true,
+            onTap: () {
+              final selectedOption = options.firstWhereOrNull(
+                (option) =>
+                    option.value == controller.selectedCreationOption.value,
+              );
+              Get.bottomSheet(
+                CommonDropdownBottomSheetThree<_ProviderOption>(
+                  items: options,
+                  selectedItem: selectedOption,
+                  bottomSheetHeight: 440.h,
+                  isShowTitle: true,
+                  title: 'Select Card Provider',
+                  notFoundText: 'Card provider not found',
+                  showSearch: options.length > 6,
+                  getDisplayText: (option) => option.title,
+                  getSearchKeywords: (option) => [
+                    option.title,
+                    option.subtitle,
+                  ],
+                  areItemsEqual: (first, second) =>
+                      first.value == second.value,
+                  onItemSelected: (option) {
+                    controller.selectCreationOption(option.value);
+                  },
+                  customItemBuilder: (option, isSelected) {
+                    return _ProviderOptionTile(
+                      option: option,
+                      isSelected: isSelected,
+                    );
+                  },
                 ),
-              )
-              .toList(),
-          onChanged: (value) {
-            if (value != null) controller.selectCreationOption(value);
-          },
+              );
+            },
+          ),
         ),
       );
     });
@@ -351,6 +363,72 @@ class _ProviderOption {
     required this.title,
     required this.subtitle,
   });
+}
+
+class _ProviderOptionTile extends StatelessWidget {
+  final _ProviderOption option;
+  final bool isSelected;
+
+  const _ProviderOptionTile({
+    required this.option,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.lightPrimary.withValues(alpha: 0.06)
+            : AppColors.lightBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: isSelected
+            ? Border.all(
+                color: AppColors.lightPrimary.withValues(alpha: 0.20),
+                width: 1.5.w,
+              )
+            : null,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  option.title,
+                  style: TextStyle(
+                    color: isSelected
+                        ? AppColors.lightPrimary
+                        : AppColors.lightTextPrimary,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (option.subtitle.isNotEmpty) ...[
+                  SizedBox(height: 4.h),
+                  Text(
+                    option.subtitle,
+                    style: TextStyle(
+                      color: AppColors.lightTextTertiary,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (isSelected)
+            Image.asset(
+              PngAssets.commonDropdownTickIcon,
+              width: 18.w,
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _SectionHeader extends StatelessWidget {
