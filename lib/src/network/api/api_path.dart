@@ -149,6 +149,9 @@ class ApiPath {
 
   // Virtual Cards
   static const String getVirtualCardsEndpoint = '/user/cards';
+  static const String getCardProductsEndpoint = '/user/card-products';
+  static const String postCardOrdersEndpoint = '/user/card-orders';
+  static const String getCardOrdersEndpoint = '/user/card-orders';
   static const String getVirtualCardBsiProviderDetailsEndpoint =
       '/user/bsicards/cards/details';
   static const String postUpdateStatusEndpoint = '/user/cards/update-status';
@@ -157,6 +160,23 @@ class ApiPath {
   static const String getCardProvidersEndpoint = '/get-card-providers';
   static const String getCardHoldersEndpoint = '/user/cardholders';
   static const String getCardTransactionEndpoint = '/user/cards/transactions';
+  static String postIrrCardTopUpEndpoint({required String cardId}) =>
+      '/user/cards/$cardId/irr-topup';
+
+  static String normalizeActionEndpoint(String? endpoint, String fallback) {
+    final value = endpoint?.trim();
+    if (value == null || value.isEmpty) return fallback;
+
+    final uri = Uri.tryParse(value);
+    var path = uri?.hasScheme == true ? uri!.path : value;
+    if (path == '/api') return '/';
+    if (path.startsWith('/api/')) {
+      path = path.substring(4);
+    } else if (path.startsWith('api/')) {
+      path = path.substring(3);
+    }
+    return path.startsWith('/') ? path : '/$path';
+  }
 
   // Payment Links Endpoints
   static const String paymentLinksEndpoint = '/user/payment-links/history';

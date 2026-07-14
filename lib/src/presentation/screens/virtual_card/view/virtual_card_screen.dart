@@ -152,7 +152,9 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                               MainAxisAlignment.end,
                                           children: [
                                             Text(
-                                              card.cardHolder!.name!,
+                                              card.cardHolder?.name ??
+                                                  card.display?.title ??
+                                                  'Virtual Card',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 18.sp,
@@ -164,9 +166,10 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                             Row(
                                               children: [
                                                 Obx(() {
-                                                  final accountNo = card
-                                                      .cardNumber
-                                                      .toString();
+                                                  final accountNo =
+                                                      card.displayNumber ??
+                                                      card.cardNumber ??
+                                                      '';
                                                   final isVisible =
                                                       hasShowToggle
                                                       ? controller
@@ -174,12 +177,23 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                             .value
                                                       : false;
 
+                                                  final canReveal =
+                                                      card.capabilities
+                                                          ?.canRevealPan ==
+                                                      true;
+                                                  final shownNumber =
+                                                      accountNo.isEmpty
+                                                      ? '${card.amount ?? '0'} ${card.currency ?? ''}'
+                                                      : isVisible && canReveal
+                                                      ? formatAccountNumber(
+                                                          accountNo,
+                                                        ).trim()
+                                                      : accountNo.length > 4
+                                                      ? '**** **** **** ${accountNo.substring(accountNo.length - 4)}'
+                                                      : accountNo;
+
                                                   return Text(
-                                                    isVisible
-                                                        ? formatAccountNumber(
-                                                            accountNo,
-                                                          ).trim()
-                                                        : "**** **** **** ${accountNo.substring(accountNo.length - 4)}",
+                                                    shownNumber,
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w500,
@@ -192,7 +206,11 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                 SizedBox(width: 8.w),
                                                 Obx(
                                                   () => GestureDetector(
-                                                    onTap: hasShowToggle
+                                                    onTap:
+                                                        hasShowToggle &&
+                                                            card.capabilities
+                                                                    ?.canRevealPan !=
+                                                                false
                                                         ? () {
                                                             controller
                                                                     .showAccountNumberList[index]
@@ -246,7 +264,16 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                     ),
                                                     SizedBox(height: 4.h),
                                                     Text(
-                                                      "${card.expirationMonth}/${card.expirationYear.toString().substring(2)}",
+                                                      card.display?.showExpiry ==
+                                                                  false ||
+                                                              card.expirationMonth ==
+                                                                  null ||
+                                                              card.expirationYear ==
+                                                                  null
+                                                          ? card.display
+                                                                    ?.balanceLabel ??
+                                                                'Balance'
+                                                          : "${card.expirationMonth}/${card.expirationYear.toString().substring(2)}",
                                                       style: TextStyle(
                                                         letterSpacing: 0,
                                                         fontSize: 14.sp,
@@ -278,7 +305,12 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                         ),
                                                         SizedBox(height: 4.h),
                                                         Text(
-                                                          card.cvc!,
+                                                          card.display?.showCvc ==
+                                                                      false ||
+                                                                  card.cvc ==
+                                                                      null
+                                                              ? '${card.amount ?? '0'} ${card.currency ?? ''}'
+                                                              : card.cvc!,
                                                           style: TextStyle(
                                                             letterSpacing: 0,
                                                             fontSize: 14.sp,
@@ -309,12 +341,17 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                       ),
                                                       child: Center(
                                                         child: Text(
-                                                          card
-                                                                  .status!
+                                                          (card.lifecycleStatus ??
+                                                                      card.status ??
+                                                                      '')
                                                                   .isNotEmpty
-                                                              ? card.status![0]
+                                                              ? (card.lifecycleStatus ??
+                                                                        card.status ??
+                                                                        '')[0]
                                                                         .toUpperCase() +
-                                                                    card.status!
+                                                                    (card.lifecycleStatus ??
+                                                                            card.status ??
+                                                                            '')
                                                                         .substring(
                                                                           1,
                                                                         )
