@@ -8,7 +8,9 @@ import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/crea
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_product_model.dart';
 
 class IrrCardOrderSection extends StatelessWidget {
-  const IrrCardOrderSection({super.key});
+  final Widget? applicantSection;
+
+  const IrrCardOrderSection({super.key, this.applicantSection});
 
   @override
   Widget build(BuildContext context) {
@@ -21,34 +23,36 @@ class IrrCardOrderSection extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (controller.cardProducts.length > 1) ...[
-            DropdownButtonFormField<int>(
-              initialValue: product.id,
-              decoration: const InputDecoration(
-                labelText: 'Card product',
-                border: OutlineInputBorder(),
-              ),
-              items: controller.cardProducts
-                  .map(
-                    (item) => DropdownMenuItem(
-                      value: item.id,
-                      child: Text(item.name ?? item.code ?? 'IRR Card'),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (id) {
-                final selected = controller.cardProducts.firstWhereOrNull(
-                  (item) => item.id == id,
-                );
-                if (selected != null) controller.selectCardProduct(selected);
-              },
-            ),
-            SizedBox(height: 16.h),
-          ],
           Text(
             product.name ?? 'IRR Card',
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800),
           ),
+          if (product.issuer != null) ...[
+            SizedBox(height: 8.h),
+            Text(
+              [
+                product.issuer?.name,
+                product.issuer?.countryCode,
+                product.issuer?.network,
+              ].whereType<String>().where((value) => value.isNotEmpty).join(' · '),
+              style: TextStyle(
+                color: AppColors.lightTextTertiary,
+                fontSize: 13.sp,
+              ),
+            ),
+            if ((product.issuer?.disclosure ?? '').isNotEmpty) ...[
+              SizedBox(height: 6.h),
+              Text(
+                product.issuer!.disclosure!,
+                style: TextStyle(
+                  color: product.issuer!.isExternallyUsable
+                      ? AppColors.success
+                      : AppColors.error,
+                  fontSize: 12.sp,
+                ),
+              ),
+            ],
+          ],
           SizedBox(height: 6.h),
           Text(
             'Issue fee: ${_formatIrr(product.creationFee)} IRR',
@@ -86,6 +90,7 @@ class IrrCardOrderSection extends StatelessWidget {
               ),
             ),
           ),
+          if (applicantSection != null) applicantSection!,
           _FundingSourceSection(product: product, controller: controller),
           if (product.capabilities?.canRequestPhysical == true) ...[
             SizedBox(height: 8.h),

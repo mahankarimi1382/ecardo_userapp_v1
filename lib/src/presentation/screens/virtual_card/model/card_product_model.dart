@@ -22,6 +22,7 @@ class CardProductData {
   String? code;
   String? currency;
   String? fundingMode;
+  CardIssuerData? issuer;
   int minimumInitialLoad = 0;
   int maximumInitialLoad = 0;
   int minimumTopup = 0;
@@ -45,6 +46,10 @@ class CardProductData {
     code = json['code']?.toString();
     currency = json['currency']?.toString();
     fundingMode = json['funding_mode']?.toString();
+    final issuerData = json['issuer'];
+    if (issuerData is Map) {
+      issuer = CardIssuerData.fromJson(issuerData.cast<String, dynamic>());
+    }
     minimumInitialLoad = _asInt(json['minimum_initial_load']) ?? 0;
     maximumInitialLoad = _asInt(json['maximum_initial_load']) ?? 0;
     minimumTopup = _asInt(json['minimum_topup']) ?? 0;
@@ -88,6 +93,35 @@ class CardProductData {
       );
     }
   }
+}
+
+class CardIssuerData {
+  int? id;
+  String? name;
+  String? code;
+  String? countryCode;
+  String? currency;
+  String? providerType;
+  String? network;
+  String? disclosure;
+  Map<String, dynamic> capabilities = {};
+
+  CardIssuerData.fromJson(Map<String, dynamic> json) {
+    id = _asInt(json['id']);
+    name = json['name']?.toString();
+    code = json['code']?.toString();
+    countryCode = json['country_code']?.toString();
+    currency = json['currency']?.toString();
+    providerType = json['provider_type']?.toString();
+    network = json['network']?.toString();
+    disclosure = json['disclosure']?.toString();
+    final capabilityData = json['capabilities'];
+    if (capabilityData is Map) {
+      capabilities = capabilityData.cast<String, dynamic>();
+    }
+  }
+
+  bool get isExternallyUsable => capabilities['external_payments'] == true;
 }
 
 class CardApplicationField {

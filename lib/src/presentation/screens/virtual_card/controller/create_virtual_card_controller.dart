@@ -19,6 +19,8 @@ class CreateVirtualCardController extends GetxController {
   final RxBool isCardHolderLoading = false.obs;
   final RxBool isCreateVirtualCardLoading = false.obs;
   final RxBool selectedTab = true.obs;
+  final RxString creationMode = 'product'.obs;
+  final RxnString selectedCreationOption = RxnString();
   final localization = AppLocalizations.of(Get.context!);
 
   // Card Provider Controller
@@ -30,6 +32,9 @@ class CreateVirtualCardController extends GetxController {
 
   final RxList<CardProductData> cardProducts = <CardProductData>[].obs;
   final Rxn<CardProductData> selectedCardProduct = Rxn<CardProductData>();
+  final RxBool isCardProductsLoading = false.obs;
+  final RxBool hasLoadedCardProducts = false.obs;
+  final RxString cardProductsError = ''.obs;
   final RxList<Wallets> irrWallets = <Wallets>[].obs;
   final Rxn<Wallets> selectedIrrWallet = Rxn<Wallets>();
   final Rxn<CardGatewayData> selectedGateway = Rxn<CardGatewayData>();
@@ -153,11 +158,24 @@ class CreateVirtualCardController extends GetxController {
   }
 
   Future<void> fetchCardProducts() async {
+    isCardProductsLoading.value = true;
+    hasLoadedCardProducts.value = false;
+    cardProductsError.value = '';
+    cardProducts.clear();
+    selectedCardProduct.value = null;
+    selectedGateway.value = null;
+    irrWallets.clear();
+    selectedIrrWallet.value = null;
+
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.getCardProductsEndpoint,
       );
-      if (response.status != Status.completed) return;
+      if (response.status != Status.completed || response.data == null) {
+        cardProductsError.value =
+            response.message ?? 'Unable to load IRR card products.';
+        return;
+      }
 
       final model = CardProductModel.fromJson(response.data!);
       cardProducts.assignAll(
@@ -173,7 +191,63 @@ class CreateVirtualCardController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCardProducts() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      cardProductsError.value = 'Unable to load IRR card products.';
+    } finally {
+      hasLoadedCardProducts.value = true;
+      isCardProductsLoading.value = false;
     }
+  }
+
+  Future<void> retryCardProducts() async {
+    await fetchCardProducts();
+    if (cardProducts.isNotEmpty) {
+      await fetchIrrWallets();
+      await selectCreationOption('product:${cardProducts.first.id}');
+    }
+  }
+
+  Future<void> initializeCreationSelection() async {
+    if (cardProducts.isNotEmpty) {
+      await selectCreationOption('product:${cardProducts.first.id}');
+      return;
+    }
+
+    final provider = cardProvidersList.firstOrNull;
+    if (provider?.code != null) {
+      await selectCreationOption('legacy:${provider!.code}');
+    }
+  }
+
+  Future<void> selectCreationOption(String value) async {
+    selectedCreationOption.value = value;
+
+    if (value.startsWith('product:')) {
+      final productId = int.tryParse(value.substring('product:'.length));
+      final product = cardProducts.firstWhereOrNull(
+        (item) => item.id == productId,
+      );
+      if (product == null) return;
+
+      creationMode.value = 'product';
+      selectCardProduct(product);
+      return;
+    }
+
+    if (!value.startsWith('legacy:')) return;
+    final providerCode = value.substring('legacy:'.length);
+    final provider = cardProvidersList.firstWhereOrNull(
+      (item) => item.code == providerCode,
+    );
+    if (provider == null) return;
+
+    creationMode.value = 'legacy';
+    selectedTab.value = true;
+    selectedCardProvider.value = provider;
+    cardProviderController.text = provider.name ?? provider.code ?? '';
+    cardHolderList.clear();
+    cardHolderController.clear();
+    selectedCardHolder.value = null;
+    await fetchCardHolders();
   }
 
   void selectCardProduct(CardProductData product) {
