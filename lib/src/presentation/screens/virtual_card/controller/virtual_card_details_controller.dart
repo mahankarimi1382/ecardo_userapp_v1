@@ -9,6 +9,8 @@ import 'package:qunzo_user/src/network/service/network_service.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/virtual_card_details_bsi_card_provider_model.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart';
+import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:qunzo_user/src/presentation/widgets/web_view_screen.dart';
 
 class VirtualCardDetailsController extends GetxController {
   // Global Variable
@@ -30,6 +32,7 @@ class VirtualCardDetailsController extends GetxController {
   final FocusNode amountFocusNode = FocusNode();
   final RxString amount = ''.obs;
   final amountController = TextEditingController();
+  final RxList<Wallets> irrWallets = <Wallets>[].obs;
 
   // Review Amounts
   final RxDouble baseAmount = 0.0.obs;
@@ -110,10 +113,22 @@ class VirtualCardDetailsController extends GetxController {
               ?.toLowerCase() ??
           '';
       final response = await Get.find<NetworkService>().post(
-        endpoint: "${ApiPath.postUpdateStatusEndpoint}/$cardId",
+        endpoint: ApiPath.normalizeActionEndpoint(
+          virtualCardDetailsModel.value.data?.actions?.statusEndpoint,
+          "${ApiPath.postUpdateStatusEndpoint}/$cardId",
+        ),
         data: null,
       );
       if (response.status == Status.completed) {
+        final responseData = response.data!['data'];
+        final redirectUrl = responseData is Map
+            ? responseData['redirect_url']?.toString()
+            : null;
+        if (redirectUrl != null && redirectUrl.isNotEmpty) {
+          await Get.to<Map<String, dynamic>>(
+            () => WebViewScreen(paymentUrl: redirectUrl),
+          );
+        }
         ToastHelper().showSuccessToast(response.data!["message"]);
         if (provider == "bsicards" || provider == "digital") {
           await fetchVirtualCardDetailsBsiCardProvider(cardId: cardId);
@@ -156,6 +171,92 @@ class VirtualCardDetailsController extends GetxController {
       }
     } catch (e, stackTrace) {
       debugPrint('❌ cardBalanceTopUp() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+    } finally {
+      isCardBalanceTopUpLoading.value = false;
+    }
+  }
+
+  Future<void> fetchIrrWallets() async {
+    try {
+      final response = await Get.find<NetworkService>().get(
+        endpoint: ApiPath.walletsEndpoint,
+      );
+      if (response.status != Status.completed) return;
+
+      final model = WalletsModel.fromJson(response.data!);
+      irrWallets.assignAll(
+        (model.data?.wallets ?? []).where(
+          (wallet) => wallet.code?.toUpperCase() == 'IRR',
+        ),
+      );
+    } catch (e, stackTrace) {
+      debugPrint('❌ fetchIrrWallets() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+    }
+  }
+
+  Future<void> irrCardBalanceTopUp({
+    required String cardId,
+    required String fundingSource,
+    int? walletId,
+    int? gatewayMethodId,
+  }) async {
+    final amount = int.tryParse(amountController.text.replaceAll(',', ''));
+    final card = virtualCardDetailsModel.value.data;
+    if (amount == null || amount <= 0) {
+      ToastHelper().showErrorToast(
+        localization!.cardDetailsAmountGreaterThanZero,
+      );
+      return;
+    }
+    if (fundingSource == 'irr_wallet' && walletId == null) {
+      ToastHelper().showErrorToast('Select an IRR wallet.');
+      return;
+    }
+    if (fundingSource == 'gateway' && gatewayMethodId == null) {
+      ToastHelper().showErrorToast('Select a payment gateway.');
+      return;
+    }
+
+    isCardBalanceTopUpLoading.value = true;
+    try {
+      final response = await Get.find<NetworkService>().post(
+        endpoint: ApiPath.normalizeActionEndpoint(
+          card?.actions?.topupEndpoint,
+          ApiPath.postIrrCardTopUpEndpoint(cardId: cardId),
+        ),
+        data: {
+          'funding_source': fundingSource,
+          'wallet_id': fundingSource == 'irr_wallet' ? walletId : null,
+          'gateway_method_id': fundingSource == 'gateway'
+              ? gatewayMethodId
+              : null,
+          'amount': amount,
+        },
+      );
+      if (response.status != Status.completed) return;
+
+      final responseData = response.data!['data'];
+      final redirectUrl = responseData is Map
+          ? responseData['redirect_url']?.toString()
+          : null;
+      if (redirectUrl != null && redirectUrl.isNotEmpty) {
+        await Get.to<Map<String, dynamic>>(
+          () => WebViewScreen(paymentUrl: redirectUrl),
+        );
+      }
+
+      ToastHelper().showSuccessToast(
+        response.data!['message']?.toString() ?? 'Card top-up submitted.',
+      );
+      amountController.clear();
+      Get.back();
+      await fetchVirtualCardDetails(cardId: cardId);
+      await Get.find<VirtualCardController>().fetchVirtualCards();
+    } catch (e, stackTrace) {
+      debugPrint('❌ irrCardBalanceTopUp() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {

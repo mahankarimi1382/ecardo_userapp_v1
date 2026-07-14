@@ -1,0 +1,1287 @@
+diff --git a/lib/src/network/api/api_path.dart b/lib/src/network/api/api_path.dart
+index a815e2e..dae6ec0 100644
+--- a/lib/src/network/api/api_path.dart
++++ b/lib/src/network/api/api_path.dart
+@@ -149,6 +149,9 @@ class ApiPath {
+ 
+   // Virtual Cards
+   static const String getVirtualCardsEndpoint = '/user/cards';
++  static const String getCardProductsEndpoint = '/user/card-products';
++  static const String postCardOrdersEndpoint = '/user/card-orders';
++  static const String getCardOrdersEndpoint = '/user/card-orders';
+   static const String getVirtualCardBsiProviderDetailsEndpoint =
+       '/user/bsicards/cards/details';
+   static const String postUpdateStatusEndpoint = '/user/cards/update-status';
+@@ -157,6 +160,8 @@ class ApiPath {
+   static const String getCardProvidersEndpoint = '/get-card-providers';
+   static const String getCardHoldersEndpoint = '/user/cardholders';
+   static const String getCardTransactionEndpoint = '/user/cards/transactions';
++  static String postIrrCardTopUpEndpoint({required String cardId}) =>
++      '/user/cards/$cardId/irr-topup';
+ 
+   // Payment Links Endpoints
+   static const String paymentLinksEndpoint = '/user/payment-links/history';
+diff --git a/lib/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart b/lib/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart
+index f0579be..d1e4204 100644
+--- a/lib/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart
++++ b/lib/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart
+@@ -9,6 +9,9 @@ import 'package:qunzo_user/src/network/service/network_service.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_holder_model.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_provider_model.dart';
++import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_product_model.dart';
++import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
++import 'package:qunzo_user/src/presentation/widgets/web_view_screen.dart';
+ 
+ class CreateVirtualCardController extends GetxController {
+   // Global Variables
+@@ -25,6 +28,16 @@ class CreateVirtualCardController extends GetxController {
+   final Rxn<CardProviderData> selectedCardProvider = Rxn<CardProviderData>();
+   final RxList<CardProviderData> cardProvidersList = <CardProviderData>[].obs;
+ 
++  final RxList<CardProductData> cardProducts = <CardProductData>[].obs;
++  final Rxn<CardProductData> selectedCardProduct = Rxn<CardProductData>();
++  final RxList<Wallets> irrWallets = <Wallets>[].obs;
++  final Rxn<Wallets> selectedIrrWallet = Rxn<Wallets>();
++  final Rxn<CardGatewayData> selectedGateway = Rxn<CardGatewayData>();
++  final RxString fundingSource = 'irr_wallet'.obs;
++  final RxBool requestPhysical = false.obs;
++  final amountController = TextEditingController();
++  final Map<String, TextEditingController> applicationFieldControllers = {};
++
+   // Card Holder Controller
+   final RxBool isCardHolderFocused = false.obs;
+   final FocusNode cardHolderFocusNode = FocusNode();
+@@ -132,6 +145,162 @@ class CreateVirtualCardController extends GetxController {
+     postalCodeController.dispose();
+     addressFocusNode.dispose();
+     addressController.dispose();
++    amountController.dispose();
++    for (final controller in applicationFieldControllers.values) {
++      controller.dispose();
++    }
++  }
++
++  Future<void> fetchCardProducts() async {
++    final response = await Get.find<NetworkService>().get(
++      endpoint: ApiPath.getCardProductsEndpoint,
++    );
++    if (response.status == Status.completed) {
++      final model = CardProductModel.fromJson(response.data!);
++      cardProducts.assignAll(model.data ?? []);
++      if (cardProducts.isNotEmpty) {
++        selectedCardProduct.value = cardProducts.first;
++        _syncApplicationFieldControllers();
++        final capabilities = selectedCardProduct.value?.capabilities;
++        fundingSource.value = capabilities?.canFundFromIrrWallet == true
++            ? 'irr_wallet'
++            : 'gateway';
++        selectedGateway.value =
++            selectedCardProduct.value?.gateways?.firstOrNull;
++      }
++    }
++  }
++
++  void _syncApplicationFieldControllers() {
++    final names = (selectedCardProduct.value?.applicationFields ?? [])
++        .map((field) => field.name)
++        .whereType<String>()
++        .toSet();
++    applicationFieldControllers.removeWhere((name, controller) {
++      if (names.contains(name)) return false;
++      controller.dispose();
++      return true;
++    });
++    for (final name in names) {
++      applicationFieldControllers.putIfAbsent(
++        name,
++        TextEditingController.new,
++      );
++    }
++  }
++
++  Future<void> fetchIrrWallets() async {
++    final response = await Get.find<NetworkService>().get(
++      endpoint: ApiPath.walletsEndpoint,
++    );
++    if (response.status == Status.completed) {
++      final model = WalletsModel.fromJson(response.data!);
++      irrWallets.assignAll(
++        (model.data?.wallets ?? []).where((wallet) => wallet.code == 'IRR'),
++      );
++      selectedIrrWallet.value = irrWallets.firstOrNull;
++    }
++  }
++
++  Future<void> createIrrCard() async {
++    if (!validateIrrCardFields()) return;
++
++    isCreateVirtualCardLoading.value = true;
++    try {
++      final product = selectedCardProduct.value!;
++      final body = <String, dynamic>{
++        'card_product_id': product.id,
++        'funding_source': fundingSource.value,
++        'amount': int.parse(amountController.text.replaceAll(',', '')),
++        'request_physical': requestPhysical.value,
++        'name': nameController.text,
++        'email': emailController.text,
++        'phone_number': phoneNumberController.text,
++        'country': selectedCountry.value?.code,
++        'city': cityController.text,
++        'state': stateController.text,
++        'postal_code': postalCodeController.text,
++        'address': addressController.text,
++        'application_data': {
++          for (final entry in applicationFieldControllers.entries)
++            entry.key: entry.value.text,
++        },
++        if (fundingSource.value == 'irr_wallet')
++          'wallet_id': selectedIrrWallet.value?.id,
++        if (fundingSource.value == 'gateway')
++          'gateway_method_id': selectedGateway.value?.id,
++      };
++
++      final response = await Get.find<NetworkService>().post(
++        endpoint: ApiPath.postCardOrdersEndpoint,
++        data: body,
++      );
++      if (response.status != Status.completed) return;
++
++      final data = response.data!['data'];
++      final redirectUrl = data['redirect_url']?.toString();
++      if (redirectUrl != null && redirectUrl.isNotEmpty) {
++        final result = await Get.to<Map<String, dynamic>>(
++          () => WebViewScreen(paymentUrl: redirectUrl),
++        );
++        if (result?['success'] != true) return;
++      }
++
++      ToastHelper().showSuccessToast(
++        response.data!['message']?.toString() ?? 'Card order created',
++      );
++      await Get.find<VirtualCardController>().fetchVirtualCards();
++      Get.back();
++    } catch (e, stackTrace) {
++      debugPrint('createIrrCard error: $e');
++      debugPrint('$stackTrace');
++      ToastHelper().showErrorToast(e.toString());
++    } finally {
++      isCreateVirtualCardLoading.value = false;
++    }
++  }
++
++  bool validateIrrCardFields() {
++    final product = selectedCardProduct.value;
++    if (product == null) {
++      ToastHelper().showErrorToast('Card product is unavailable');
++      return false;
++    }
++    final amount = int.tryParse(amountController.text.replaceAll(',', ''));
++    if (amount == null ||
++        amount < (product.minimumInitialLoad ?? 0) ||
++        amount > (product.maximumInitialLoad ?? 0)) {
++      ToastHelper().showErrorToast(
++        'Amount must be between ${product.minimumInitialLoad} and ${product.maximumInitialLoad} IRR',
++      );
++      return false;
++    }
++    if (fundingSource.value == 'irr_wallet' &&
++        selectedIrrWallet.value == null) {
++      ToastHelper().showErrorToast('Select an IRR wallet');
++      return false;
++    }
++    if (fundingSource.value == 'gateway' && selectedGateway.value == null) {
++      ToastHelper().showErrorToast('Select a Shetab gateway');
++      return false;
++    }
++    if (nameController.text.isEmpty ||
++        phoneNumberController.text.isEmpty ||
++        cityController.text.isEmpty ||
++        postalCodeController.text.isEmpty ||
++        addressController.text.isEmpty) {
++      ToastHelper().showErrorToast('Complete the cardholder information');
++      return false;
++    }
++    for (final field in product.applicationFields ?? []) {
++      if (field.required &&
++          (applicationFieldControllers[field.name]?.text.trim().isEmpty ??
++              true)) {
++        ToastHelper().showErrorToast('${field.label ?? field.name} is required');
++        return false;
++      }
++    }
++    return true;
+   }
+ 
+   // Fetch Card Providers
+diff --git a/lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart b/lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart
+index 5826c92..7828579 100644
+--- a/lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart
++++ b/lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart
+@@ -9,6 +9,7 @@ import 'package:qunzo_user/src/network/service/network_service.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/model/virtual_card_details_bsi_card_provider_model.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart';
++import 'package:qunzo_user/src/presentation/widgets/web_view_screen.dart';
+ 
+ class VirtualCardDetailsController extends GetxController {
+   // Global Variable
+@@ -114,6 +115,14 @@ class VirtualCardDetailsController extends GetxController {
+         data: null,
+       );
+       if (response.status == Status.completed) {
++        final redirectUrl =
++            response.data!['data']?['redirect_url']?.toString();
++        if (redirectUrl != null && redirectUrl.isNotEmpty) {
++          final result = await Get.to<Map<String, dynamic>>(
++            () => WebViewScreen(paymentUrl: redirectUrl),
++          );
++          if (result?['success'] != true) return;
++        }
+         ToastHelper().showSuccessToast(response.data!["message"]);
+         if (provider == "bsicards" || provider == "digital") {
+           await fetchVirtualCardDetailsBsiCardProvider(cardId: cardId);
+@@ -132,8 +141,18 @@ class VirtualCardDetailsController extends GetxController {
+   }
+ 
+   // Card Balance Top Up
+-  Future<void> cardBalanceTopUp({required String cardId}) async {
+-    if (!validateAmountStep()) {
++  Future<void> cardBalanceTopUp({
++    required String cardId,
++    String? endpoint,
++    Map<String, dynamic>? additionalData,
++  }) async {
++    if (endpoint == null && !validateAmountStep()) {
++      return;
++    }
++    if (endpoint != null &&
++        (double.tryParse(amountController.text.replaceAll(',', '')) ?? 0) <=
++            0) {
++      ToastHelper().showErrorToast(localization!.cardDetailsAmountGreaterThanZero);
+       return;
+     }
+ 
+@@ -141,10 +160,12 @@ class VirtualCardDetailsController extends GetxController {
+     try {
+       final Map<String, dynamic> requestBody = {
+         "amount": amountController.text,
++        ...?additionalData,
+       };
+ 
+       final response = await Get.find<NetworkService>().post(
+-        endpoint: "${ApiPath.postCardBalanceTopUpEndpoint}/$cardId",
++        endpoint:
++            endpoint ?? "${ApiPath.postCardBalanceTopUpEndpoint}/$cardId",
+         data: requestBody,
+       );
+       if (response.status == Status.completed) {
+diff --git a/lib/src/presentation/screens/virtual_card/model/card_product_model.dart b/lib/src/presentation/screens/virtual_card/model/card_product_model.dart
+new file mode 100644
+index 0000000..32d59eb
+--- /dev/null
++++ b/lib/src/presentation/screens/virtual_card/model/card_product_model.dart
+@@ -0,0 +1,107 @@
++class CardProductModel {
++  String? status;
++  List<CardProductData>? data;
++
++  CardProductModel({this.status, this.data});
++
++  CardProductModel.fromJson(Map<String, dynamic> json) {
++    status = json['status']?.toString();
++    if (json['data'] != null) {
++      data = <CardProductData>[];
++      for (final item in json['data']) {
++        data!.add(CardProductData.fromJson(item));
++      }
++    }
++  }
++}
++
++class CardProductData {
++  int? id;
++  String? name;
++  String? code;
++  String? currency;
++  String? fundingMode;
++  int? minimumInitialLoad;
++  int? maximumInitialLoad;
++  int? creationFee;
++  int? physicalCardFee;
++  String? terms;
++  List<CardGatewayData>? gateways;
++  CardCapabilities? capabilities;
++  List<CardApplicationField>? applicationFields;
++
++  CardProductData.fromJson(Map<String, dynamic> json) {
++    id = json['id'];
++    name = json['name'];
++    code = json['code'];
++    currency = json['currency'];
++    fundingMode = json['funding_mode'];
++    minimumInitialLoad = _asInt(json['minimum_initial_load']);
++    maximumInitialLoad = _asInt(json['maximum_initial_load']);
++    creationFee = _asInt(json['creation_fee']);
++    physicalCardFee = _asInt(json['physical_card_fee']);
++    terms = json['terms'];
++    if (json['gateways'] != null) {
++      gateways = <CardGatewayData>[];
++      for (final item in json['gateways']) {
++        gateways!.add(CardGatewayData.fromJson(item));
++      }
++    }
++    capabilities = json['capabilities'] != null
++        ? CardCapabilities.fromJson(json['capabilities'])
++        : null;
++    if (json['application_fields'] != null) {
++      applicationFields = <CardApplicationField>[];
++      for (final item in json['application_fields']) {
++        applicationFields!.add(CardApplicationField.fromJson(item));
++      }
++    }
++  }
++
++  static int _asInt(dynamic value) =>
++      int.tryParse(value?.toString() ?? '') ?? 0;
++}
++
++class CardApplicationField {
++  String? name;
++  String? label;
++  String? type;
++  bool required = false;
++
++  CardApplicationField.fromJson(Map<String, dynamic> json) {
++    name = json['name'];
++    label = json['label'];
++    type = json['type'];
++    required = json['required'] == true;
++  }
++}
++
++class CardGatewayData {
++  int? id;
++  String? name;
++  String? gatewayCode;
++  String? charge;
++  String? chargeType;
++
++  CardGatewayData.fromJson(Map<String, dynamic> json) {
++    id = json['id'];
++    name = json['name'];
++    gatewayCode = json['gateway_code'];
++    charge = json['charge']?.toString();
++    chargeType = json['charge_type'];
++  }
++}
++
++class CardCapabilities {
++  bool canCreateVirtual = false;
++  bool canRequestPhysical = false;
++  bool canFundFromIrrWallet = false;
++  bool canFundFromGateway = false;
++
++  CardCapabilities.fromJson(Map<String, dynamic> json) {
++    canCreateVirtual = json['can_create_virtual'] == true;
++    canRequestPhysical = json['can_request_physical'] == true;
++    canFundFromIrrWallet = json['can_fund_from_irr_wallet'] == true;
++    canFundFromGateway = json['can_fund_from_gateway'] == true;
++  }
++}
+diff --git a/lib/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart b/lib/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart
+index f27351b..eff6b97 100644
+--- a/lib/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart
++++ b/lib/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart
+@@ -1,5 +1,8 @@
+ class VirtualCardDetailsModel {
+   String? status;
++  String? lifecycleStatus;
++  String? virtualStatus;
++  String? physicalStatus;
+   String? message;
+   VirtualCardDetailsData? data;
+ 
+@@ -25,6 +28,7 @@ class VirtualCardDetailsData {
+   String? amount;
+   String? provider;
+   String? cardNumber;
++  String? displayNumber;
+   String? cvc;
+   int? expirationMonth;
+   int? expirationYear;
+@@ -32,6 +36,10 @@ class VirtualCardDetailsData {
+   String? createdAt;
+   String? updatedAt;
+   CardHolder? cardHolder;
++  CardDisplay? display;
++  CardCapabilities? capabilities;
++  CardActions? actions;
++  CardFunding? funding;
+ 
+   VirtualCardDetailsData({
+     this.id,
+@@ -41,9 +49,13 @@ class VirtualCardDetailsData {
+     this.currency,
+     this.type,
+     this.status,
++    this.lifecycleStatus,
++    this.virtualStatus,
++    this.physicalStatus,
+     this.amount,
+     this.provider,
+     this.cardNumber,
++    this.displayNumber,
+     this.cvc,
+     this.expirationMonth,
+     this.expirationYear,
+@@ -51,6 +63,10 @@ class VirtualCardDetailsData {
+     this.createdAt,
+     this.updatedAt,
+     this.cardHolder,
++    this.display,
++    this.capabilities,
++    this.actions,
++    this.funding,
+   });
+ 
+   VirtualCardDetailsData.fromJson(Map<String, dynamic> json) {
+@@ -61,9 +77,13 @@ class VirtualCardDetailsData {
+     currency = json['currency'];
+     type = json['type'];
+     status = json['status'];
++    lifecycleStatus = json['lifecycle_status'];
++    virtualStatus = json['virtual_status'];
++    physicalStatus = json['physical_status'];
+     amount = json['amount'];
+     provider = json['provider'];
+     cardNumber = json['card_number'];
++    displayNumber = json['display_number'];
+     cvc = json['cvc'];
+     expirationMonth = json['expiration_month'];
+     expirationYear = json['expiration_year'];
+@@ -73,6 +93,96 @@ class VirtualCardDetailsData {
+     cardHolder = json['card_holder'] != null
+         ? CardHolder.fromJson(json['card_holder'])
+         : null;
++    display = json['display'] != null
++        ? CardDisplay.fromJson(json['display'])
++        : null;
++    capabilities = json['capabilities'] != null
++        ? CardCapabilities.fromJson(json['capabilities'])
++        : null;
++    actions = json['actions'] != null
++        ? CardActions.fromJson(json['actions'])
++        : null;
++    funding = json['funding'] != null
++        ? CardFunding.fromJson(json['funding'])
++        : null;
++  }
++}
++
++class CardDisplay {
++  String? title;
++  String? subtitle;
++  String? balanceLabel;
++  int currencyDecimals = 2;
++  bool showPan = false;
++  bool showExpiry = false;
++  bool showCvc = false;
++
++  CardDisplay.fromJson(Map<String, dynamic> json) {
++    title = json['title'];
++    subtitle = json['subtitle'];
++    balanceLabel = json['balance_label'];
++    currencyDecimals =
++        int.tryParse(json['currency_decimals']?.toString() ?? '') ?? 2;
++    showPan = json['show_pan'] == true;
++    showExpiry = json['show_expiry'] == true;
++    showCvc = json['show_cvc'] == true;
++  }
++}
++
++class CardCapabilities {
++  bool canTopup = false;
++  bool canFreeze = false;
++  bool canViewTransactions = false;
++  bool canRequestPhysical = false;
++  bool canRevealPan = false;
++
++  CardCapabilities.fromJson(Map<String, dynamic> json) {
++    canTopup = json['can_topup'] == true;
++    canFreeze = json['can_freeze'] == true;
++    canViewTransactions = json['can_view_transactions'] == true;
++    canRequestPhysical = json['can_request_physical'] == true;
++    canRevealPan = json['can_reveal_pan'] == true;
++  }
++}
++
++class CardActions {
++  String? topupEndpoint;
++  String? statusEndpoint;
++  String? transactionsEndpoint;
++
++  CardActions.fromJson(Map<String, dynamic> json) {
++    topupEndpoint = json['topup_endpoint'];
++    statusEndpoint = json['status_endpoint'];
++    transactionsEndpoint = json['transactions_endpoint'];
++  }
++}
++
++class CardFunding {
++  String? mode;
++  String? defaultSource;
++  int? defaultGatewayMethodId;
++  List<CardGateway>? gateways;
++
++  CardFunding.fromJson(Map<String, dynamic> json) {
++    mode = json['mode'];
++    defaultSource = json['default_source'];
++    defaultGatewayMethodId = json['default_gateway_method_id'];
++    if (json['gateways'] != null) {
++      gateways = <CardGateway>[];
++      for (final item in json['gateways']) {
++        gateways!.add(CardGateway.fromJson(item));
++      }
++    }
++  }
++}
++
++class CardGateway {
++  int? id;
++  String? name;
++
++  CardGateway.fromJson(Map<String, dynamic> json) {
++    id = json['id'];
++    name = json['name'];
+   }
+ }
+ 
+diff --git a/lib/src/presentation/screens/virtual_card/model/virtual_cards_model.dart b/lib/src/presentation/screens/virtual_card/model/virtual_cards_model.dart
+index 449aaba..2295dc9 100644
+--- a/lib/src/presentation/screens/virtual_card/model/virtual_cards_model.dart
++++ b/lib/src/presentation/screens/virtual_card/model/virtual_cards_model.dart
+@@ -1,5 +1,8 @@
+ class VirtualCardsModel {
+   String? status;
++  String? lifecycleStatus;
++  String? virtualStatus;
++  String? physicalStatus;
+   String? message;
+   List<VirtualCardsData>? data;
+ 
+@@ -28,6 +31,7 @@ class VirtualCardsData {
+   String? amount;
+   String? provider;
+   String? cardNumber;
++  String? displayNumber;
+   String? cvc;
+   int? expirationMonth;
+   int? expirationYear;
+@@ -35,6 +39,9 @@ class VirtualCardsData {
+   String? createdAt;
+   String? updatedAt;
+   CardHolder? cardHolder;
++  CardDisplay? display;
++  CardCapabilities? capabilities;
++  CardActions? actions;
+ 
+   VirtualCardsData({
+     this.id,
+@@ -44,9 +51,13 @@ class VirtualCardsData {
+     this.currency,
+     this.type,
+     this.status,
++    this.lifecycleStatus,
++    this.virtualStatus,
++    this.physicalStatus,
+     this.amount,
+     this.provider,
+     this.cardNumber,
++    this.displayNumber,
+     this.cvc,
+     this.expirationMonth,
+     this.expirationYear,
+@@ -54,6 +65,9 @@ class VirtualCardsData {
+     this.createdAt,
+     this.updatedAt,
+     this.cardHolder,
++    this.display,
++    this.capabilities,
++    this.actions,
+   });
+ 
+   VirtualCardsData.fromJson(Map<String, dynamic> json) {
+@@ -64,9 +78,13 @@ class VirtualCardsData {
+     currency = json['currency'];
+     type = json['type'];
+     status = json['status'];
++    lifecycleStatus = json['lifecycle_status'];
++    virtualStatus = json['virtual_status'];
++    physicalStatus = json['physical_status'];
+     amount = json['amount'];
+     provider = json['provider'];
+     cardNumber = json['card_number'];
++    displayNumber = json['display_number'];
+     cvc = json['cvc'];
+     expirationMonth = json['expiration_month'];
+     expirationYear = json['expiration_year'];
+@@ -76,6 +94,64 @@ class VirtualCardsData {
+     cardHolder = json['card_holder'] != null
+         ? CardHolder.fromJson(json['card_holder'])
+         : null;
++    display = json['display'] != null
++        ? CardDisplay.fromJson(json['display'])
++        : null;
++    capabilities = json['capabilities'] != null
++        ? CardCapabilities.fromJson(json['capabilities'])
++        : null;
++    actions = json['actions'] != null
++        ? CardActions.fromJson(json['actions'])
++        : null;
++  }
++}
++
++class CardDisplay {
++  String? title;
++  String? subtitle;
++  String? balanceLabel;
++  int currencyDecimals = 2;
++  bool showPan = false;
++  bool showExpiry = false;
++  bool showCvc = false;
++
++  CardDisplay.fromJson(Map<String, dynamic> json) {
++    title = json['title'];
++    subtitle = json['subtitle'];
++    balanceLabel = json['balance_label'];
++    currencyDecimals =
++        int.tryParse(json['currency_decimals']?.toString() ?? '') ?? 2;
++    showPan = json['show_pan'] == true;
++    showExpiry = json['show_expiry'] == true;
++    showCvc = json['show_cvc'] == true;
++  }
++}
++
++class CardCapabilities {
++  bool canTopup = false;
++  bool canFreeze = false;
++  bool canViewTransactions = false;
++  bool canRequestPhysical = false;
++  bool canRevealPan = false;
++
++  CardCapabilities.fromJson(Map<String, dynamic> json) {
++    canTopup = json['can_topup'] == true;
++    canFreeze = json['can_freeze'] == true;
++    canViewTransactions = json['can_view_transactions'] == true;
++    canRequestPhysical = json['can_request_physical'] == true;
++    canRevealPan = json['can_reveal_pan'] == true;
++  }
++}
++
++class CardActions {
++  String? topupEndpoint;
++  String? statusEndpoint;
++  String? transactionsEndpoint;
++
++  CardActions.fromJson(Map<String, dynamic> json) {
++    topupEndpoint = json['topup_endpoint'];
++    statusEndpoint = json['status_endpoint'];
++    transactionsEndpoint = json['transactions_endpoint'];
+   }
+ }
+ 
+diff --git a/lib/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart b/lib/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart
+index 473cdba..c01b448 100644
+--- a/lib/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart
++++ b/lib/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart
+@@ -11,6 +11,7 @@ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_vir
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/choose_card_holder_section.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/choose_card_provider_section.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/create_new_card_holder_section.dart';
++import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/irr_card_order_section.dart';
+ 
+ class CreateVirtualCard extends StatefulWidget {
+   const CreateVirtualCard({super.key});
+@@ -31,7 +32,11 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
+   Future<void> loadData() async {
+     controller.selectedTab.value = true;
+     controller.isLoading.value = true;
+-    await controller.fetchCardProviders();
++    await controller.fetchCardProducts();
++    await controller.fetchIrrWallets();
++    if (controller.cardProducts.isEmpty) {
++      await controller.fetchCardProviders();
++    }
+     await controller.fetchCountries();
+     controller.isLoading.value = false;
+   }
+@@ -75,13 +80,21 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
+                               child: Column(
+                                 children: [
+                                   SizedBox(height: 16.h),
+-                                  ChooseCardProviderSection(),
+-                                  SizedBox(height: 16.h),
+-                                  CardHolderTabSection(),
+-                                  SizedBox(height: 16.h),
+-                                  controller.selectedTab.value == true
+-                                      ? ChooseCardHolderSection()
+-                                      : CreateNewCardHolderSection(),
++                                  if (controller.cardProducts.isNotEmpty) ...[
++                                    CreateNewCardHolderSection(
++                                      showSubmitButton: false,
++                                    ),
++                                    SizedBox(height: 20.h),
++                                    IrrCardOrderSection(),
++                                  ] else ...[
++                                    ChooseCardProviderSection(),
++                                    SizedBox(height: 16.h),
++                                    CardHolderTabSection(),
++                                    SizedBox(height: 16.h),
++                                    controller.selectedTab.value == true
++                                        ? ChooseCardHolderSection()
++                                        : CreateNewCardHolderSection(),
++                                  ],
+                                 ],
+                               ),
+                             ),
+diff --git a/lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/create_new_card_holder_section.dart b/lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/create_new_card_holder_section.dart
+index 31d2d99..50ee482 100644
+--- a/lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/create_new_card_holder_section.dart
++++ b/lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/create_new_card_holder_section.dart
+@@ -10,7 +10,12 @@ import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_file
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart';
+ 
+ class CreateNewCardHolderSection extends StatelessWidget {
+-  const CreateNewCardHolderSection({super.key});
++  final bool showSubmitButton;
++
++  const CreateNewCardHolderSection({
++    super.key,
++    this.showSubmitButton = true,
++  });
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -157,13 +162,14 @@ class CreateNewCardHolderSection extends StatelessWidget {
+           ),
+         ),
+         SizedBox(height: 16.h),
+-        Obx(
+-          () => CommonButton(
+-            text: localization.createCardHolderButtonCreate,
+-            isLoading: controller.isCreateVirtualCardLoading.value,
+-            onPressed: () => controller.createVirtualCard(),
++        if (showSubmitButton)
++          Obx(
++            () => CommonButton(
++              text: localization.createCardHolderButtonCreate,
++              isLoading: controller.isCreateVirtualCardLoading.value,
++              onPressed: () => controller.createVirtualCard(),
++            ),
+           ),
+-        ),
+         SizedBox(height: 30.h),
+       ],
+     );
+diff --git a/lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/irr_card_order_section.dart b/lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/irr_card_order_section.dart
+new file mode 100644
+index 0000000..47c24b8
+--- /dev/null
++++ b/lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/irr_card_order_section.dart
+@@ -0,0 +1,148 @@
++import 'package:flutter/material.dart';
++import 'package:get/get.dart';
++import 'package:qunzo_user/src/app/constants/app_colors.dart';
++import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
++import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart';
++
++class IrrCardOrderSection extends StatelessWidget {
++  const IrrCardOrderSection({super.key});
++
++  @override
++  Widget build(BuildContext context) {
++    final CreateVirtualCardController controller = Get.find();
++
++    return Obx(() {
++      final product = controller.selectedCardProduct.value;
++      if (product == null) return const SizedBox.shrink();
++      final capabilities = product.capabilities;
++
++      return Column(
++        crossAxisAlignment: CrossAxisAlignment.start,
++        children: [
++          Text(
++            product.name ?? 'IRR Card',
++            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
++          ),
++          const SizedBox(height: 8),
++          Text(
++            'Issue fee: ${product.creationFee ?? 0} IRR',
++            style: const TextStyle(color: AppColors.error),
++          ),
++          const SizedBox(height: 16),
++          TextField(
++            controller: controller.amountController,
++            keyboardType: TextInputType.number,
++            decoration: InputDecoration(
++              labelText: 'Initial load (IRR)',
++              helperText:
++                  '${product.minimumInitialLoad} - ${product.maximumInitialLoad} IRR',
++              border: const OutlineInputBorder(),
++            ),
++          ),
++          const SizedBox(height: 16),
++          ...(product.applicationFields ?? []).map((field) {
++            final controller =
++                Get.find<CreateVirtualCardController>()
++                    .applicationFieldControllers[field.name];
++            return Padding(
++              padding: const EdgeInsets.only(bottom: 16),
++              child: TextField(
++                controller: controller,
++                keyboardType: field.type == 'number'
++                    ? TextInputType.number
++                    : field.type == 'date'
++                    ? TextInputType.datetime
++                    : TextInputType.text,
++                decoration: InputDecoration(
++                  labelText:
++                      '${field.label ?? field.name ?? ''}${field.required ? ' *' : ''}',
++                  border: const OutlineInputBorder(),
++                ),
++              ),
++            );
++          }),
++          if (capabilities?.canFundFromIrrWallet == true &&
++              capabilities?.canFundFromGateway == true)
++            SegmentedButton<String>(
++              segments: const [
++                ButtonSegment(value: 'irr_wallet', label: Text('IRR Wallet')),
++                ButtonSegment(value: 'gateway', label: Text('Shetab')),
++              ],
++              selected: {controller.fundingSource.value},
++              onSelectionChanged: (values) {
++                controller.fundingSource.value = values.first;
++              },
++            ),
++          const SizedBox(height: 16),
++          if (controller.fundingSource.value == 'irr_wallet')
++            DropdownButtonFormField<int>(
++              value: controller.selectedIrrWallet.value?.id,
++              decoration: const InputDecoration(
++                labelText: 'IRR wallet',
++                border: OutlineInputBorder(),
++              ),
++              items: controller.irrWallets
++                  .map(
++                    (wallet) => DropdownMenuItem(
++                      value: wallet.id,
++                      child: Text(
++                        '${wallet.name ?? 'IRR'} - ${wallet.formattedBalance ?? wallet.balance}',
++                      ),
++                    ),
++                  )
++                  .toList(),
++              onChanged: (id) {
++                controller.selectedIrrWallet.value = controller.irrWallets
++                    .firstWhereOrNull((wallet) => wallet.id == id);
++              },
++            ),
++          if (controller.fundingSource.value == 'gateway')
++            DropdownButtonFormField<int>(
++              value: controller.selectedGateway.value?.id,
++              decoration: const InputDecoration(
++                labelText: 'Shetab gateway',
++                border: OutlineInputBorder(),
++              ),
++              items: (product.gateways ?? [])
++                  .map(
++                    (gateway) => DropdownMenuItem(
++                      value: gateway.id,
++                      child: Text(gateway.name ?? gateway.gatewayCode ?? ''),
++                    ),
++                  )
++                  .toList(),
++              onChanged: (id) {
++                controller.selectedGateway.value = product.gateways
++                    ?.firstWhereOrNull((gateway) => gateway.id == id);
++              },
++            ),
++          if (capabilities?.canRequestPhysical == true) ...[
++            const SizedBox(height: 8),
++            CheckboxListTile(
++              contentPadding: EdgeInsets.zero,
++              value: controller.requestPhysical.value,
++              title: Text(
++                'Request physical card (${product.physicalCardFee ?? 0} IRR)',
++              ),
++              onChanged: (value) {
++                controller.requestPhysical.value = value == true;
++              },
++            ),
++          ],
++          if ((product.terms ?? '').isNotEmpty) ...[
++            const SizedBox(height: 8),
++            Text(product.terms!, style: const TextStyle(fontSize: 12)),
++          ],
++          const SizedBox(height: 20),
++          CommonButton(
++            width: double.infinity,
++            text: 'Create IRR Card',
++            isLoading: controller.isCreateVirtualCardLoading.value,
++            onPressed: controller.createIrrCard,
++          ),
++          const SizedBox(height: 30),
++        ],
++      );
++    });
++  }
++}
+diff --git a/lib/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/generic/generic_card_provider.dart b/lib/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/generic/generic_card_provider.dart
+new file mode 100644
+index 0000000..3583fc6
+--- /dev/null
++++ b/lib/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/generic/generic_card_provider.dart
+@@ -0,0 +1,72 @@
++import 'package:flutter/material.dart';
++import 'package:get/get.dart';
++import 'package:qunzo_user/src/app/constants/app_colors.dart';
++import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart';
++
++class GenericCardProvider extends StatelessWidget {
++  const GenericCardProvider({super.key});
++
++  @override
++  Widget build(BuildContext context) {
++    final VirtualCardDetailsController controller = Get.find();
++    final card = controller.virtualCardDetailsModel.value.data;
++
++    if (card == null) return const SizedBox.shrink();
++
++    return Column(
++      crossAxisAlignment: CrossAxisAlignment.start,
++      children: [
++        Container(
++          width: double.infinity,
++          padding: const EdgeInsets.all(20),
++          decoration: BoxDecoration(
++            gradient: const LinearGradient(
++              colors: [Color(0xFF7445FF), Color(0xFF4C2BB3)],
++            ),
++            borderRadius: BorderRadius.circular(20),
++          ),
++          child: Column(
++            crossAxisAlignment: CrossAxisAlignment.start,
++            children: [
++              Text(
++                card.display?.title ?? 'Card',
++                style: const TextStyle(
++                  color: Colors.white,
++                  fontSize: 20,
++                  fontWeight: FontWeight.w800,
++                ),
++              ),
++              const SizedBox(height: 8),
++              Text(
++                card.displayNumber ?? card.currency ?? '',
++                style: const TextStyle(color: Colors.white, fontSize: 18),
++              ),
++              const SizedBox(height: 24),
++              Text(
++                '${card.amount ?? '0'} ${card.currency ?? ''}',
++                style: const TextStyle(
++                  color: Colors.white,
++                  fontSize: 24,
++                  fontWeight: FontWeight.w900,
++                ),
++              ),
++              const SizedBox(height: 8),
++              Text(
++                card.status ?? '',
++                style: const TextStyle(color: Colors.white70),
++              ),
++            ],
++          ),
++        ),
++        const SizedBox(height: 20),
++        if ((card.display?.subtitle ?? '').isNotEmpty)
++          Text(
++            card.display!.subtitle!,
++            style: const TextStyle(color: AppColors.lightTextTertiary),
++          ),
++        const SizedBox(height: 12),
++        Text('Physical status: ${card.physicalStatus ?? 'not_requested'}'),
++      ],
++    );
++  }
++}
+diff --git a/lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart b/lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart
+index e540b3e..845e19a 100644
+--- a/lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart
++++ b/lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart
+@@ -9,6 +9,7 @@ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_ca
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/bsicards/bsicards_provider.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/stripe/stripe_card_top_up_bottom_sheet.dart';
+ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/stripe/stripe_provider.dart';
++import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/generic/generic_card_provider.dart';
+ 
+ import '../../../../../app/constants/app_colors.dart';
+ import '../../../../../app/constants/assets_path/png/png_assets.dart';
+@@ -64,7 +65,11 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
+             SizedBox(height: 16.h),
+             CommonAppBar(
+               title: localization!.virtualCardDetailsAppBarTitle,
+-              rightSideWidget: GestureDetector(
++              rightSideWidget: controller.virtualCardDetailsModel.value.data
++                          ?.capabilities?.canViewTransactions ==
++                      false
++                  ? const SizedBox.shrink()
++                  : GestureDetector(
+                 onTap: () {
+                   Get.toNamed(
+                     BaseRoute.virtualCardTransaction,
+@@ -90,13 +95,17 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
+                             ? const StripeProvider()
+                             : provider == "bsicards"
+                             ? const BsicardsProvider()
+-                            : const SizedBox.shrink(),
++                            : const GenericCardProvider(),
+                       ),
+                     ),
+             ),
+           ],
+         ),
+-        floatingActionButton: controller.isLoading.value
++        floatingActionButton:
++            controller.isLoading.value ||
++                controller.virtualCardDetailsModel.value.data?.capabilities
++                        ?.canTopup ==
++                    false
+             ? null
+             : Padding(
+                 padding: EdgeInsets.only(bottom: 20.h),
+@@ -111,6 +120,18 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
+                         Get.bottomSheet(StripeCardTopUpBottomSheet(cardId: id));
+                       } else if (provider == "bsicards") {
+                         Get.bottomSheet(BsicardsCardTopUpBottomSheet());
++                      } else {
++                        Get.bottomSheet(
++                          _GenericTopUpSheet(
++                            cardId: id,
++                            endpoint: controller
++                                .virtualCardDetailsModel
++                                .value
++                                .data
++                                ?.actions
++                                ?.topupEndpoint,
++                          ),
++                        );
+                       }
+                     },
+                     backgroundColor: const Color(0xFF7445FF),
+@@ -140,3 +161,105 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
+     });
+   }
+ }
++
++class _GenericTopUpSheet extends StatefulWidget {
++  final String cardId;
++  final String? endpoint;
++
++  const _GenericTopUpSheet({required this.cardId, required this.endpoint});
++
++  @override
++  State<_GenericTopUpSheet> createState() => _GenericTopUpSheetState();
++}
++
++class _GenericTopUpSheetState extends State<_GenericTopUpSheet> {
++  final amountController = TextEditingController();
++  String fundingSource = 'irr_wallet';
++  int? gatewayMethodId;
++
++  @override
++  void dispose() {
++    amountController.dispose();
++    super.dispose();
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    final controller = Get.find<VirtualCardDetailsController>();
++    final funding = controller.virtualCardDetailsModel.value.data?.funding;
++    fundingSource = funding?.defaultSource ?? fundingSource;
++    gatewayMethodId ??= funding?.defaultGatewayMethodId;
++
++    return Container(
++      padding: const EdgeInsets.all(20),
++      decoration: const BoxDecoration(
++        color: Colors.white,
++        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
++      ),
++      child: SafeArea(
++        child: Column(
++          mainAxisSize: MainAxisSize.min,
++          children: [
++            TextField(
++              controller: amountController,
++              keyboardType: TextInputType.number,
++              decoration: const InputDecoration(
++                labelText: 'Top up amount (IRR)',
++                border: OutlineInputBorder(),
++              ),
++            ),
++            const SizedBox(height: 16),
++            if (funding?.mode == 'both')
++              SegmentedButton<String>(
++                segments: const [
++                  ButtonSegment(value: 'irr_wallet', label: Text('IRR Wallet')),
++                  ButtonSegment(value: 'gateway', label: Text('Shetab')),
++                ],
++                selected: {fundingSource},
++                onSelectionChanged: (values) {
++                  setState(() => fundingSource = values.first);
++                },
++              ),
++            if (fundingSource == 'gateway') ...[
++              const SizedBox(height: 16),
++              DropdownButtonFormField<int>(
++                value: gatewayMethodId,
++                decoration: const InputDecoration(
++                  labelText: 'Shetab gateway',
++                  border: OutlineInputBorder(),
++                ),
++                items: (funding?.gateways ?? [])
++                    .map(
++                      (gateway) => DropdownMenuItem(
++                        value: gateway.id,
++                        child: Text(gateway.name ?? ''),
++                      ),
++                    )
++                    .toList(),
++                onChanged: (value) {
++                  setState(() => gatewayMethodId = value);
++                },
++              ),
++            ],
++            const SizedBox(height: 16),
++            ElevatedButton(
++              onPressed: () {
++                controller.amountController.text = amountController.text;
++                controller.cardBalanceTopUp(
++                  cardId: widget.cardId,
++                  endpoint: widget.endpoint,
++                  additionalData: {
++                    'funding_source': fundingSource,
++                    if (fundingSource == 'gateway')
++                      'gateway_method_id': gatewayMethodId,
++                  },
++                );
++              },
++              child: const Text('Continue'),
++            ),
++          ],
++        ),
++      ),
++    );
++  }
++}
+diff --git a/lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart b/lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart
+index 2c68c4f..96c4e94 100644
+--- a/lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart
++++ b/lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart
+@@ -152,7 +152,9 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
+                                               MainAxisAlignment.end,
+                                           children: [
+                                             Text(
+-                                              card.cardHolder!.name!,
++                                              card.cardHolder?.name ??
++                                                  card.display?.title ??
++                                                  "IRR Card",
+                                               style: TextStyle(
+                                                 fontWeight: FontWeight.w600,
+                                                 fontSize: 18.sp,
+@@ -164,9 +166,10 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
+                                             Row(
+                                               children: [
+                                                 Obx(() {
+-                                                  final accountNo = card
+-                                                      .cardNumber
+-                                                      .toString();
++                                                  final accountNo =
++                                                      card.displayNumber ??
++                                                      card.cardNumber ??
++                                                      "";
+                                                   final isVisible =
+                                                       hasShowToggle
+                                                       ? controller
+@@ -174,12 +177,19 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
+                                                             .value
+                                                       : false;
+ 
++                                                  final shownNumber =
++                                                      accountNo.isEmpty
++                                                      ? "${card.currency ?? ''} ${card.amount ?? '0'}"
++                                                      : isVisible &&
++                                                            card.capabilities
++                                                                    ?.canRevealPan ==
++                                                                true
++                                                      ? formatAccountNumber(
++                                                          accountNo,
++                                                        ).trim()
++                                                      : accountNo;
+                                                   return Text(
+-                                                    isVisible
+-                                                        ? formatAccountNumber(
+-                                                            accountNo,
+-                                                          ).trim()
+-                                                        : "**** **** **** ${accountNo.substring(accountNo.length - 4)}",
++                                                    shownNumber,
+                                                     style: TextStyle(
+                                                       fontWeight:
+                                                           FontWeight.w500,
+@@ -192,7 +202,11 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
+                                                 SizedBox(width: 8.w),
+                                                 Obx(
+                                                   () => GestureDetector(
+-                                                    onTap: hasShowToggle
++                                                    onTap:
++                                                        hasShowToggle &&
++                                                            card.capabilities
++                                                                    ?.canRevealPan ==
++                                                                true
+                                                         ? () {
+                                                             controller
+                                                                     .showAccountNumberList[index]
+@@ -246,7 +260,14 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
+                                                     ),
+                                                     SizedBox(height: 4.h),
+                                                     Text(
+-                                                      "${card.expirationMonth}/${card.expirationYear.toString().substring(2)}",
++                                                      card.display?.showExpiry ==
++                                                                  true &&
++                                                              card.expirationMonth !=
++                                                                  null &&
++                                                              card.expirationYear !=
++                                                                  null
++                                                          ? "${card.expirationMonth}/${card.expirationYear.toString().substring(2)}"
++                                                          : "${card.currency ?? ''} ${card.amount ?? '0'}",
+                                                       style: TextStyle(
+                                                         letterSpacing: 0,
+                                                         fontSize: 14.sp,
+@@ -278,7 +299,13 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
+                                                         ),
+                                                         SizedBox(height: 4.h),
+                                                         Text(
+-                                                          card.cvc!,
++                                                          card.display?.showCvc ==
++                                                                      true &&
++                                                                  card.cvc != null
++                                                              ? card.cvc!
++                                                              : card.physicalStatus ??
++                                                                    card.type ??
++                                                                    "",
+                                                           style: TextStyle(
+                                                             letterSpacing: 0,
+                                                             fontSize: 14.sp,

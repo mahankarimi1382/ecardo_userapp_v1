@@ -33,6 +33,17 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Unused Flutter platform projects
+
+/ios/
+/linux/
+/macos/
+/web/
+/windows/
+
+# Local implementation handoff
+/ecardo-irr-flutter-handoff/
+
 # Symbolication related
 app.*.symbols
 

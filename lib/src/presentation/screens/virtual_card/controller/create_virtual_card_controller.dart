@@ -9,6 +9,9 @@ import 'package:qunzo_user/src/network/service/network_service.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_holder_model.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_provider_model.dart';
+import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_product_model.dart';
+import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:qunzo_user/src/presentation/widgets/web_view_screen.dart';
 
 class CreateVirtualCardController extends GetxController {
   // Global Variables
@@ -24,6 +27,17 @@ class CreateVirtualCardController extends GetxController {
   final cardProviderController = TextEditingController();
   final Rxn<CardProviderData> selectedCardProvider = Rxn<CardProviderData>();
   final RxList<CardProviderData> cardProvidersList = <CardProviderData>[].obs;
+
+  final RxList<CardProductData> cardProducts = <CardProductData>[].obs;
+  final Rxn<CardProductData> selectedCardProduct = Rxn<CardProductData>();
+  final RxList<Wallets> irrWallets = <Wallets>[].obs;
+  final Rxn<Wallets> selectedIrrWallet = Rxn<Wallets>();
+  final Rxn<CardGatewayData> selectedGateway = Rxn<CardGatewayData>();
+  final RxString fundingSource = 'irr_wallet'.obs;
+  final RxBool requestPhysical = false.obs;
+  final amountController = TextEditingController();
+  final Map<String, TextEditingController> applicationFieldControllers = {};
+  final Map<String, RxBool> applicationBooleanValues = {};
 
   // Card Holder Controller
   final RxBool isCardHolderFocused = false.obs;
@@ -132,6 +146,276 @@ class CreateVirtualCardController extends GetxController {
     postalCodeController.dispose();
     addressFocusNode.dispose();
     addressController.dispose();
+    amountController.dispose();
+    for (final controller in applicationFieldControllers.values) {
+      controller.dispose();
+    }
+  }
+
+  Future<void> fetchCardProducts() async {
+    try {
+      final response = await Get.find<NetworkService>().get(
+        endpoint: ApiPath.getCardProductsEndpoint,
+      );
+      if (response.status != Status.completed) return;
+
+      final model = CardProductModel.fromJson(response.data!);
+      cardProducts.assignAll(
+        model.data.where(
+          (product) =>
+              product.currency?.toUpperCase() == 'IRR' &&
+              product.capabilities?.canCreateVirtual == true,
+        ),
+      );
+      if (cardProducts.isNotEmpty) {
+        selectCardProduct(cardProducts.first);
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ fetchCardProducts() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+    }
+  }
+
+  void selectCardProduct(CardProductData product) {
+    selectedCardProduct.value = product;
+    requestPhysical.value = false;
+    _syncApplicationFields();
+
+    final capabilities = product.capabilities;
+    if (capabilities?.canFundFromIrrWallet == true) {
+      fundingSource.value = 'irr_wallet';
+    } else {
+      fundingSource.value = 'gateway';
+    }
+    selectedGateway.value = product.gateways.firstOrNull;
+  }
+
+  void _syncApplicationFields() {
+    final fields = selectedCardProduct.value?.applicationFields ?? [];
+    final names = fields.map((field) => field.name).toSet();
+
+    applicationFieldControllers.removeWhere((name, controller) {
+      if (names.contains(name)) return false;
+      controller.dispose();
+      return true;
+    });
+    applicationBooleanValues.removeWhere((name, _) => !names.contains(name));
+
+    for (final field in fields) {
+      if (field.type == 'boolean') {
+        applicationBooleanValues.putIfAbsent(field.name, () => false.obs);
+      } else {
+        applicationFieldControllers.putIfAbsent(
+          field.name,
+          TextEditingController.new,
+        );
+      }
+    }
+  }
+
+  Future<void> fetchIrrWallets() async {
+    try {
+      final response = await Get.find<NetworkService>().get(
+        endpoint: ApiPath.walletsEndpoint,
+      );
+      if (response.status != Status.completed) return;
+
+      final model = WalletsModel.fromJson(response.data!);
+      irrWallets.assignAll(
+        (model.data?.wallets ?? []).where(
+          (wallet) => wallet.code?.toUpperCase() == 'IRR',
+        ),
+      );
+      selectedIrrWallet.value = irrWallets.firstOrNull;
+    } catch (e, stackTrace) {
+      debugPrint('❌ fetchIrrWallets() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+    }
+  }
+
+  Future<void> createIrrCard() async {
+    if (!validateIrrCardFields()) return;
+
+    isCreateVirtualCardLoading.value = true;
+    try {
+      final product = selectedCardProduct.value!;
+      final amount = int.parse(amountController.text.replaceAll(',', ''));
+      final response = await Get.find<NetworkService>().post(
+        endpoint: ApiPath.postCardOrdersEndpoint,
+        data: {
+          'card_product_id': product.id,
+          'funding_source': fundingSource.value,
+          'wallet_id': fundingSource.value == 'irr_wallet'
+              ? selectedIrrWallet.value?.id
+              : null,
+          'gateway_method_id': fundingSource.value == 'gateway'
+              ? selectedGateway.value?.id
+              : null,
+          'amount': amount,
+          'request_physical': requestPhysical.value,
+          'name': nameController.text.trim(),
+          'email': emailController.text.trim(),
+          'phone_number': phoneNumberController.text.trim(),
+          'address': addressController.text.trim(),
+          'country': selectedCountry.value?.code,
+          'city': cityController.text.trim(),
+          'state': stateController.text.trim(),
+          'postal_code': postalCodeController.text.trim(),
+          'application_data': _applicationData(product.applicationFields),
+        },
+      );
+      if (response.status != Status.completed) return;
+
+      final responseData = response.data!['data'];
+      final data = responseData is Map
+          ? responseData.cast<String, dynamic>()
+          : <String, dynamic>{};
+      final redirectUrl = data['redirect_url']?.toString();
+      if (redirectUrl != null && redirectUrl.isNotEmpty) {
+        await Get.to<Map<String, dynamic>>(
+          () => WebViewScreen(paymentUrl: redirectUrl),
+        );
+      }
+
+      await Get.find<VirtualCardController>().fetchVirtualCards();
+      final initialOrderData = data['order'];
+      final initialOrder = initialOrderData is Map
+          ? initialOrderData.cast<String, dynamic>()
+          : <String, dynamic>{};
+      final orderId = initialOrder['id']?.toString();
+      final order = orderId == null
+          ? initialOrder
+          : await _fetchCardOrder(orderId) ?? initialOrder;
+      final status = order['status']?.toString().toLowerCase() ?? '';
+      final failureMessage = order['failure_message']?.toString();
+      if (status == 'provisioning_failed' ||
+          status == 'failed' ||
+          status == 'cancelled') {
+        ToastHelper().showErrorToast(
+          failureMessage ?? 'The card order could not be completed.',
+        );
+        return;
+      }
+
+      ToastHelper().showSuccessToast(
+        response.data!['message']?.toString() ??
+            _cardOrderStatusMessage(status),
+      );
+      clearFields();
+      Get.back();
+    } catch (e, stackTrace) {
+      debugPrint('❌ createIrrCard() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+    } finally {
+      isCreateVirtualCardLoading.value = false;
+    }
+  }
+
+  Future<Map<String, dynamic>?> _fetchCardOrder(String orderId) async {
+    final response = await Get.find<NetworkService>().get(
+      endpoint: '${ApiPath.getCardOrdersEndpoint}/$orderId',
+    );
+    if (response.status != Status.completed) return null;
+
+    final responseData = response.data!['data'];
+    if (responseData is! Map) return null;
+    final data = responseData.cast<String, dynamic>();
+    final orderData = data['order'];
+    return orderData is Map
+        ? orderData.cast<String, dynamic>()
+        : data;
+  }
+
+  Map<String, dynamic> _applicationData(
+    List<CardApplicationField> fields,
+  ) {
+    return {
+      for (final field in fields)
+        field.name: switch (field.type) {
+          'boolean' => applicationBooleanValues[field.name]?.value ?? false,
+          'number' =>
+            num.tryParse(
+              applicationFieldControllers[field.name]?.text.trim() ?? '',
+            ),
+          _ => applicationFieldControllers[field.name]?.text.trim() ?? '',
+        },
+    };
+  }
+
+  bool validateIrrCardFields() {
+    final product = selectedCardProduct.value;
+    if (product == null) {
+      ToastHelper().showErrorToast('Card product is unavailable.');
+      return false;
+    }
+
+    final amount = int.tryParse(amountController.text.replaceAll(',', ''));
+    if (amount == null || amount <= 0) {
+      ToastHelper().showErrorToast('Enter a valid amount in Iranian rials.');
+      return false;
+    }
+    if (product.minimumInitialLoad > 0 &&
+        amount < product.minimumInitialLoad) {
+      ToastHelper().showErrorToast(
+        'The minimum initial load is ${product.minimumInitialLoad} IRR.',
+      );
+      return false;
+    }
+    if (product.maximumInitialLoad > 0 &&
+        amount > product.maximumInitialLoad) {
+      ToastHelper().showErrorToast(
+        'The maximum initial load is ${product.maximumInitialLoad} IRR.',
+      );
+      return false;
+    }
+    if (fundingSource.value == 'irr_wallet' &&
+        selectedIrrWallet.value == null) {
+      ToastHelper().showErrorToast('Select an IRR wallet.');
+      return false;
+    }
+    if (fundingSource.value == 'gateway' && selectedGateway.value == null) {
+      ToastHelper().showErrorToast('Select a payment gateway.');
+      return false;
+    }
+    if (nameController.text.trim().isEmpty ||
+        emailController.text.trim().isEmpty ||
+        phoneNumberController.text.trim().isEmpty ||
+        selectedCountry.value?.code == null ||
+        cityController.text.trim().isEmpty ||
+        stateController.text.trim().isEmpty ||
+        postalCodeController.text.trim().isEmpty ||
+        addressController.text.trim().isEmpty) {
+      ToastHelper().showErrorToast('Complete the cardholder information.');
+      return false;
+    }
+    if (!GetUtils.isEmail(emailController.text.trim())) {
+      ToastHelper().showErrorToast(localization!.createEmailInvalid);
+      return false;
+    }
+
+    for (final field in product.applicationFields) {
+      if (!field.required || field.type == 'boolean') continue;
+      final value = applicationFieldControllers[field.name]?.text.trim() ?? '';
+      if (value.isEmpty) {
+        ToastHelper().showErrorToast('${field.label} is required.');
+        return false;
+      }
+      if (field.type == 'number' && num.tryParse(value) == null) {
+        ToastHelper().showErrorToast('${field.label} must be a number.');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  String _cardOrderStatusMessage(String status) {
+    return switch (status) {
+      'payment_pending' => 'Card order created and awaiting payment.',
+      'pending' || 'provisioning' => 'Card provisioning is in progress.',
+      'active' || 'completed' => 'Your card is ready.',
+      _ => 'Card order created.',
+    };
   }
 
   // Fetch Card Providers
@@ -346,5 +630,14 @@ class CreateVirtualCardController extends GetxController {
     // Address Controller
     isAddressFocused.value = false;
     addressController.clear();
+
+    amountController.clear();
+    requestPhysical.value = false;
+    for (final controller in applicationFieldControllers.values) {
+      controller.clear();
+    }
+    for (final value in applicationBooleanValues.values) {
+      value.value = false;
+    }
   }
 }

@@ -11,6 +11,7 @@ import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_vir
 import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/choose_card_holder_section.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/choose_card_provider_section.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/create_new_card_holder_section.dart';
+import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/irr_card_order_section.dart';
 
 class CreateVirtualCard extends StatefulWidget {
   const CreateVirtualCard({super.key});
@@ -31,8 +32,12 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
   Future<void> loadData() async {
     controller.selectedTab.value = true;
     controller.isLoading.value = true;
-    await controller.fetchCardProviders();
-    await controller.fetchCountries();
+    await Future.wait([
+      controller.fetchCardProducts(),
+      controller.fetchCardProviders(),
+      controller.fetchCountries(),
+    ]);
+    if (controller.cardProducts.isNotEmpty) await controller.fetchIrrWallets();
     controller.isLoading.value = false;
   }
 
@@ -75,6 +80,15 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
                               child: Column(
                                 children: [
                                   SizedBox(height: 16.h),
+                                  if (controller.cardProducts.isNotEmpty) ...[
+                                    const CreateNewCardHolderSection(
+                                      showSubmitButton: false,
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    const IrrCardOrderSection(),
+                                    const Divider(),
+                                    SizedBox(height: 20.h),
+                                  ],
                                   ChooseCardProviderSection(),
                                   SizedBox(height: 16.h),
                                   CardHolderTabSection(),
