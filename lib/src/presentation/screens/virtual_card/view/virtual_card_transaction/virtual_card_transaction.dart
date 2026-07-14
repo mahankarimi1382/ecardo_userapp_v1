@@ -19,12 +19,13 @@ class VirtualCardTransaction extends StatefulWidget {
 
 class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
   final String cardId = Get.arguments?["card_id"] ?? "";
+  final String? endpoint = Get.arguments?["endpoint"]?.toString();
   final VirtualCardTransactionController controller = Get.find();
 
   @override
   void initState() {
     super.initState();
-    controller.fetchCardTransactions(cardId: cardId);
+    controller.fetchCardTransactions(cardId: cardId, endpoint: endpoint);
   }
 
   @override
@@ -50,6 +51,7 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                   controller.fetchCardTransactionsBySync(
                     cardId: cardId,
                     isSync: "true",
+                    endpoint: endpoint,
                   );
                 },
               ),
@@ -58,7 +60,10 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
           SizedBox(height: 16.h),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () => controller.fetchCardTransactions(cardId: cardId),
+              onRefresh: () => controller.fetchCardTransactions(
+                cardId: cardId,
+                endpoint: endpoint,
+              ),
               color: AppColors.lightPrimary,
               child: Obx(() {
                 if (controller.isLoading.value) {

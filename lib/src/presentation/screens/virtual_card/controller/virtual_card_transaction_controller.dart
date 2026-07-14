@@ -14,11 +14,17 @@ class VirtualCardTransactionController extends GetxController {
       <CardTransactionData>[].obs;
 
   // Fetch Card Transactions
-  Future<void> fetchCardTransactions({required String cardId}) async {
+  Future<void> fetchCardTransactions({
+    required String cardId,
+    String? endpoint,
+  }) async {
     isLoading.value = true;
     try {
       final response = await Get.find<NetworkService>().get(
-        endpoint: "${ApiPath.getCardTransactionEndpoint}/$cardId",
+        endpoint: ApiPath.normalizeActionEndpoint(
+          endpoint,
+          "${ApiPath.getCardTransactionEndpoint}/$cardId",
+        ),
       );
       if (response.status == Status.completed) {
         final cardTransactionModel = CardTransactionModel.fromJson(
@@ -42,11 +48,17 @@ class VirtualCardTransactionController extends GetxController {
   Future<void> fetchCardTransactionsBySync({
     required String cardId,
     required String isSync,
+    String? endpoint,
   }) async {
     isLoading.value = true;
     try {
+      final normalizedEndpoint = ApiPath.normalizeActionEndpoint(
+        endpoint,
+        "${ApiPath.getCardTransactionEndpoint}/$cardId",
+      );
       final response = await Get.find<NetworkService>().get(
-        endpoint: "${ApiPath.getCardTransactionEndpoint}/$cardId?sync=$isSync",
+        endpoint:
+            '$normalizedEndpoint${normalizedEndpoint.contains('?') ? '&' : '?'}sync=$isSync',
       );
       if (response.status == Status.completed) {
         final cardTransactionModel = CardTransactionModel.fromJson(

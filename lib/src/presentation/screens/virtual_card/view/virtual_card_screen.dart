@@ -59,6 +59,12 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                             final card = controller.virtualCardList[index];
                             final hasShowToggle =
                                 index < controller.showAccountNumberList.length;
+                            final rawAccountNo =
+                                card.displayNumber ?? card.cardNumber ?? '';
+                            final canShowPan =
+                                card.display?.showPan != false &&
+                                card.capabilities?.canRevealPan != false;
+                            final accountNo = canShowPan ? rawAccountNo : '';
 
                             return Padding(
                               padding: EdgeInsetsDirectional.only(
@@ -166,10 +172,6 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                             Row(
                                               children: [
                                                 Obx(() {
-                                                  final accountNo =
-                                                      card.displayNumber ??
-                                                      card.cardNumber ??
-                                                      '';
                                                   final isVisible =
                                                       hasShowToggle
                                                       ? controller
@@ -204,8 +206,10 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                   );
                                                 }),
                                                 SizedBox(width: 8.w),
-                                                Obx(
-                                                  () => GestureDetector(
+                                                if (accountNo.isNotEmpty &&
+                                                    canShowPan)
+                                                  Obx(
+                                                    () => GestureDetector(
                                                     onTap:
                                                         hasShowToggle &&
                                                             card.capabilities
@@ -235,10 +239,10 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                           ColorFilter.mode(
                                                             AppColors.white,
                                                             BlendMode.srcIn,
-                                                          ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                  ),
                                               ],
                                             ),
                                             SizedBox(height: 10.h),
@@ -252,8 +256,17 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      localization
-                                                          .virtualCardCardExpiryDateLabel,
+                                                      card.display?.showExpiry ==
+                                                                  false ||
+                                                              card.expirationMonth ==
+                                                                  null ||
+                                                              card.expirationYear ==
+                                                                  null
+                                                          ? card.display
+                                                                    ?.balanceLabel ??
+                                                                'Balance'
+                                                          : localization
+                                                                .virtualCardCardExpiryDateLabel,
                                                       style: TextStyle(
                                                         letterSpacing: 0,
                                                         fontSize: 11.sp,
@@ -292,8 +305,13 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          localization
-                                                              .virtualCardCardCvcLabel,
+                                                          card.display?.showCvc ==
+                                                                      false ||
+                                                                  card.cvc ==
+                                                                      null
+                                                              ? 'Currency'
+                                                              : localization
+                                                                    .virtualCardCardCvcLabel,
                                                           style: TextStyle(
                                                             letterSpacing: 0,
                                                             fontSize: 11.sp,

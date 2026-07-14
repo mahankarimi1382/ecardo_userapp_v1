@@ -81,13 +81,15 @@ class VirtualCardsData {
     lifecycleStatus = json['lifecycle_status']?.toString();
     virtualStatus = json['virtual_status']?.toString();
     physicalStatus = json['physical_status']?.toString();
-    amount = json['amount'];
-    provider = json['provider'];
-    cardNumber = json['card_number'];
+    amount = json['amount']?.toString();
+    provider = json['provider']?.toString();
+    cardNumber = json['card_number']?.toString();
     displayNumber = json['display_number']?.toString();
-    cvc = json['cvc'];
-    expirationMonth = json['expiration_month'];
-    expirationYear = json['expiration_year'];
+    cvc = json['cvc']?.toString();
+    expirationMonth =
+        num.tryParse(json['expiration_month']?.toString() ?? '')?.toInt();
+    expirationYear =
+        num.tryParse(json['expiration_year']?.toString() ?? '')?.toInt();
     lastFourDigits = json['last_four_digits'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];

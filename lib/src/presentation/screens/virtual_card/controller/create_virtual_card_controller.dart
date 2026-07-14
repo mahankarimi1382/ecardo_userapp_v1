@@ -278,10 +278,14 @@ class CreateVirtualCardController extends GetxController {
       }
 
       await Get.find<VirtualCardController>().fetchVirtualCards();
-      final orderData = data['order'];
-      final order = orderData is Map
-          ? orderData.cast<String, dynamic>()
+      final initialOrderData = data['order'];
+      final initialOrder = initialOrderData is Map
+          ? initialOrderData.cast<String, dynamic>()
           : <String, dynamic>{};
+      final orderId = initialOrder['id']?.toString();
+      final order = orderId == null
+          ? initialOrder
+          : await _fetchCardOrder(orderId) ?? initialOrder;
       final status = order['status']?.toString().toLowerCase() ?? '';
       final failureMessage = order['failure_message']?.toString();
       if (status == 'provisioning_failed' ||
@@ -306,6 +310,21 @@ class CreateVirtualCardController extends GetxController {
     } finally {
       isCreateVirtualCardLoading.value = false;
     }
+  }
+
+  Future<Map<String, dynamic>?> _fetchCardOrder(String orderId) async {
+    final response = await Get.find<NetworkService>().get(
+      endpoint: '${ApiPath.getCardOrdersEndpoint}/$orderId',
+    );
+    if (response.status != Status.completed) return null;
+
+    final responseData = response.data!['data'];
+    if (responseData is! Map) return null;
+    final data = responseData.cast<String, dynamic>();
+    final orderData = data['order'];
+    return orderData is Map
+        ? orderData.cast<String, dynamic>()
+        : data;
   }
 
   Map<String, dynamic> _applicationData(

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart';
+import 'package:qunzo_user/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart';
 
 class GenericCardProvider extends StatelessWidget {
   const GenericCardProvider({super.key});
@@ -120,7 +121,7 @@ class GenericCardProvider extends StatelessWidget {
     return '•••• •••• •••• ${value.substring(value.length - 4)}';
   }
 
-  static String _statusLabel(dynamic card) {
+  static String _statusLabel(VirtualCardDetailsData card) {
     final status =
         card.lifecycleStatus ?? card.virtualStatus ?? card.status ?? 'pending';
     return _humanize(status.toString());

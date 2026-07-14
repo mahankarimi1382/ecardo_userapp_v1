@@ -32,13 +32,12 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
   Future<void> loadData() async {
     controller.selectedTab.value = true;
     controller.isLoading.value = true;
-    await controller.fetchCardProducts();
-    if (controller.cardProducts.isNotEmpty) {
-      await controller.fetchIrrWallets();
-    } else {
-      await controller.fetchCardProviders();
-    }
-    await controller.fetchCountries();
+    await Future.wait([
+      controller.fetchCardProducts(),
+      controller.fetchCardProviders(),
+      controller.fetchCountries(),
+    ]);
+    if (controller.cardProducts.isNotEmpty) await controller.fetchIrrWallets();
     controller.isLoading.value = false;
   }
 
@@ -87,15 +86,16 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
                                     ),
                                     SizedBox(height: 20.h),
                                     const IrrCardOrderSection(),
-                                  ] else ...[
-                                    ChooseCardProviderSection(),
-                                    SizedBox(height: 16.h),
-                                    CardHolderTabSection(),
-                                    SizedBox(height: 16.h),
-                                    controller.selectedTab.value == true
-                                        ? ChooseCardHolderSection()
-                                        : CreateNewCardHolderSection(),
+                                    const Divider(),
+                                    SizedBox(height: 20.h),
                                   ],
+                                  ChooseCardProviderSection(),
+                                  SizedBox(height: 16.h),
+                                  CardHolderTabSection(),
+                                  SizedBox(height: 16.h),
+                                  controller.selectedTab.value == true
+                                      ? ChooseCardHolderSection()
+                                      : CreateNewCardHolderSection(),
                                 ],
                               ),
                             ),

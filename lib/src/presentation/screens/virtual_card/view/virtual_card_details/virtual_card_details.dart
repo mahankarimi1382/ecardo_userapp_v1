@@ -80,7 +80,10 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
                       onTap: () {
                         Get.toNamed(
                           BaseRoute.virtualCardTransaction,
-                          arguments: {"card_id": cardId},
+                          arguments: {
+                            "card_id": cardId,
+                            "endpoint": card?.actions?.transactionsEndpoint,
+                          },
                         );
                       },
                       child: Padding(
@@ -181,6 +184,7 @@ class _GenericTopUpBottomSheetState extends State<_GenericTopUpBottomSheet> {
   @override
   void initState() {
     super.initState();
+    controller.amountController.clear();
     final funding = controller.virtualCardDetailsModel.value.data?.funding;
     fundingSource = funding?.defaultSource ?? 'irr_wallet';
     gatewayMethodId = funding?.defaultGatewayMethodId;
