@@ -183,12 +183,18 @@ class Addons {
   bool? virtualCards;
   bool? giftCards;
   bool? p2pTrading;
+  bool? travel;
+  bool? travelSim;
+  bool? travelFlight;
 
-  Addons({this.virtualCards, this.giftCards, this.p2pTrading});
+  Addons({this.virtualCards, this.giftCards, this.p2pTrading, this.travel, this.travelSim, this.travelFlight});
 
   Addons.fromJson(Map<String, dynamic> json) {
     virtualCards = json['virtual_cards'];
     giftCards = json['gift_cards'];
     p2pTrading = json['p2p_trading'];
+    travel = json['travel'];
+    travelSim = json['travel_sim'];
+    travelFlight = json['travel_flight'];
   }
 }
