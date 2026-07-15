@@ -144,7 +144,7 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
 class _IrrProductArea extends StatelessWidget {
   final CreateVirtualCardController controller;
 
-  const _IrrProductArea({super.key, required this.controller});
+  const _IrrProductArea({required this.controller});
 
   @override
   Widget build(BuildContext context) {

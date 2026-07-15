@@ -209,17 +209,13 @@ class VirtualCardDetailsController extends GetxController {
       );
       return;
     }
-    if (funding != null &&
-        funding.minimumTopup > 0 &&
-        amount < funding.minimumTopup) {
+    if (funding.minimumTopup > 0 && amount < funding.minimumTopup) {
       ToastHelper().showErrorToast(
         'The minimum top-up is ${funding.minimumTopup} ${card?.currency ?? ''}.',
       );
       return;
     }
-    if (funding != null &&
-        funding.maximumTopup > 0 &&
-        amount > funding.maximumTopup) {
+    if (funding.maximumTopup > 0 && amount > funding.maximumTopup) {
       ToastHelper().showErrorToast(
         'The maximum top-up is ${funding.maximumTopup} ${card?.currency ?? ''}.',
       );

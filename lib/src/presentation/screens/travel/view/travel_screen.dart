@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../controller/travel_controller.dart';
 
 class TravelScreen extends StatelessWidget {
-  const TravelScreen({Key? key}) : super(key: key);
+  const TravelScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
