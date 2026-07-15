@@ -258,6 +258,23 @@ class VirtualCardDetailsController extends GetxController {
         );
       }
 
+      final orderData = responseData is Map ? responseData['order'] : null;
+      final order = orderData is Map
+          ? orderData.cast<String, dynamic>()
+          : <String, dynamic>{};
+      final status = order['status']?.toString().toLowerCase() ?? '';
+      final failureMessage = order['failure_message']?.toString().trim() ?? '';
+      if (status == 'provisioning_failed' ||
+          status == 'failed' ||
+          status == 'cancelled') {
+        ToastHelper().showErrorToast(
+          failureMessage.isNotEmpty
+              ? failureMessage
+              : 'The card top-up could not be completed.',
+        );
+        return;
+      }
+
       ToastHelper().showSuccessToast(
         response.data!['message']?.toString() ?? 'Card top-up submitted.',
       );

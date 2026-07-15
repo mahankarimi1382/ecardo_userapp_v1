@@ -395,13 +395,13 @@ class NetworkService extends getx.GetxService {
       case 400:
         final jsonResponse = response.data as Map<String, dynamic>? ?? {};
         _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = jsonResponse['message'] as String? ?? "";
+        final errorMessages = _errorMessage(jsonResponse);
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
       case 401:
         final jsonResponse = response.data as Map<String, dynamic>? ?? {};
         _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = jsonResponse['message'] as String? ?? "";
+        final errorMessages = _errorMessage(jsonResponse);
         getx.Get.dialog(
           PopScope(
             canPop: false,
@@ -481,21 +481,21 @@ class NetworkService extends getx.GetxService {
       case 422:
         final jsonResponse = response.data as Map<String, dynamic>? ?? {};
         _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = jsonResponse['message'] as String? ?? "";
+        final errorMessages = _errorMessage(jsonResponse);
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
 
       case 500:
         final jsonResponse = response.data as Map<String, dynamic>? ?? {};
         _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = jsonResponse['message'] as String? ?? "";
+        final errorMessages = _errorMessage(jsonResponse);
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
 
       case 503:
         final jsonResponse = response.data as Map<String, dynamic>? ?? {};
         _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = jsonResponse['message'] as String? ?? "";
+        final errorMessages = _errorMessage(jsonResponse);
         ToastHelper().showErrorToast(errorMessages);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (getx.Get.currentRoute != BaseRoute.maintenanceMode) {
@@ -512,6 +512,30 @@ class NetworkService extends getx.GetxService {
   }
 
   // ---------------------- UTILS ----------------------
+
+  String _errorMessage(Map<String, dynamic> response) {
+    for (final key in ['message', 'error', 'detail']) {
+      final value = response[key]?.toString().trim() ?? '';
+      if (value.isNotEmpty) return value;
+    }
+
+    final errors = response['errors'];
+    if (errors is Map) {
+      for (final value in errors.values) {
+        if (value is List && value.isNotEmpty) {
+          final message = value.first?.toString().trim() ?? '';
+          if (message.isNotEmpty) return message;
+        }
+        final message = value?.toString().trim() ?? '';
+        if (message.isNotEmpty) return message;
+      }
+    } else if (errors is List && errors.isNotEmpty) {
+      final message = errors.first?.toString().trim() ?? '';
+      if (message.isNotEmpty) return message;
+    }
+
+    return localization?.networkErrorOccurred ?? 'An error occurred.';
+  }
 
   Map<String, String> get _baseHeaders {
     return {'Content-Type': 'application/json', 'Accept': 'application/json'};

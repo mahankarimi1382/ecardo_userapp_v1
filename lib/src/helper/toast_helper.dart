@@ -9,7 +9,9 @@ class ToastHelper {
 
   // Error Toast Message
   void showErrorToast(String message) {
-    Fluttertoast.showToast(msg: message, backgroundColor: AppColors.error);
+    final text = message.trim();
+    if (text.isEmpty) return;
+    Fluttertoast.showToast(msg: text, backgroundColor: AppColors.error);
   }
 
   // Success Toast Message

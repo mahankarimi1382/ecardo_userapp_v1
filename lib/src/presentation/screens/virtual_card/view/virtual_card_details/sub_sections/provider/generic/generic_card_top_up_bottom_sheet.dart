@@ -83,16 +83,17 @@ class _GenericCardTopUpBottomSheetState
     final limitText = _limitText(card, funding);
     final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
     final screenHeight = MediaQuery.sizeOf(context).height;
-    final availableHeight = (screenHeight - keyboardHeight)
-        .clamp(0.0, screenHeight)
-        .toDouble();
+    final availableHeight = screenHeight - keyboardHeight;
+    final sheetHeight = keyboardHeight > 0
+        ? availableHeight
+        : screenHeight * 0.88;
     final gateways = funding?.gateways ?? <CardGateway>[];
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.only(bottom: keyboardHeight),
       child: SizedBox(
-        height: availableHeight * 0.88,
+        height: sheetHeight,
         child: AnimatedContainer(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           duration: const Duration(milliseconds: 300),
