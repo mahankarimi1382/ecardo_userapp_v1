@@ -176,10 +176,17 @@ class _ApplicationField extends StatelessWidget {
         isLabelRequired: field.required,
         dynamicField: CommonSingleDatePicker(
           hintText: '',
-          suffixIcon: Icon(
-            Icons.calendar_month_outlined,
-            color: AppColors.lightTextTertiary,
+          suffixIcon: ColorFiltered(
+            colorFilter: const ColorFilter.mode(
+              AppColors.lightTextTertiary,
+              BlendMode.srcIn,
+            ),
+            child: Image.asset(
+              PngAssets.calenderCommonIcon,
+            ),
           ),
+          suffixIconWidth: 25,
+          suffixIconHeight: 25,
           onDateSelected: (date) {
             textController?.text = DateFormat('yyyy-MM-dd').format(date);
           },
@@ -329,7 +336,7 @@ class _FundingSourceTabs extends StatelessWidget {
               borderRadius: 12,
               height: 42,
               width: double.infinity,
-              fontSize: 12,
+              fontSize: 11,
               text: 'IRR Wallet',
               backgroundColor: controller.fundingSource.value == 'irr_wallet'
                   ? AppColors.lightPrimary
@@ -348,7 +355,7 @@ class _FundingSourceTabs extends StatelessWidget {
               borderRadius: 12,
               height: 42,
               width: double.infinity,
-              fontSize: 12,
+              fontSize: 11,
               text: 'Payment Gateway',
               backgroundColor: controller.fundingSource.value == 'gateway'
                   ? AppColors.lightPrimary

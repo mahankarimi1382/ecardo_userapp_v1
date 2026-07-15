@@ -101,16 +101,22 @@ class CommonVirtualCardView extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _ValueBlock(label: firstLabel, value: firstValue),
-                    Row(
-                      children: [
-                        _ValueBlock(label: secondLabel, value: secondValue),
-                        SizedBox(width: 24.w),
-                        _StatusBadge(status: status),
-                      ],
+                    Expanded(
+                      child: _ValueBlock(
+                        label: firstLabel,
+                        value: firstValue,
+                      ),
                     ),
+                    SizedBox(width: 12.w),
+                    Flexible(
+                      child: _ValueBlock(
+                        label: secondLabel,
+                        value: secondValue,
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    _StatusBadge(status: status),
                   ],
                 ),
               ],
@@ -180,12 +186,18 @@ class CommonVirtualCardView extends StatelessWidget {
   Widget _networkText() {
     final value = network?.trim() ?? '';
     if (value.isEmpty) return const SizedBox.shrink();
-    return Text(
-      value,
-      style: TextStyle(
-        color: AppColors.white,
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w900,
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 100.w),
+      child: Text(
+        value,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.end,
+        style: TextStyle(
+          color: AppColors.white,
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w900,
+        ),
       ),
     );
   }
@@ -211,6 +223,8 @@ class _ValueBlock extends StatelessWidget {
       children: [
         Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 11.sp,
             color: AppColors.white,
@@ -220,6 +234,8 @@ class _ValueBlock extends StatelessWidget {
         SizedBox(height: 4.h),
         Text(
           value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppColors.white,
@@ -241,7 +257,7 @@ class _StatusBadge extends StatelessWidget {
     final normalized = status.toLowerCase();
     final active = normalized == 'active' || normalized == 'completed';
     return Container(
-      constraints: BoxConstraints(minWidth: 70.w),
+      constraints: BoxConstraints(minWidth: 70.w, maxWidth: 88.w),
       height: 24.h,
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       alignment: Alignment.center,
@@ -251,6 +267,8 @@ class _StatusBadge extends StatelessWidget {
       ),
       child: Text(
         _humanize(status),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 12.sp,

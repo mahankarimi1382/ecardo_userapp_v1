@@ -209,11 +209,23 @@ class CardGateway {
   int? id;
   String? name;
   String? gatewayCode;
+  num charge = 0;
+  String? chargeType;
+  int minimumDeposit = 0;
+  int maximumDeposit = 0;
+  String? currency;
 
   CardGateway.fromJson(Map<String, dynamic> json) {
     id = num.tryParse(json['id']?.toString() ?? '')?.toInt();
     name = json['name']?.toString();
     gatewayCode = json['gateway_code']?.toString();
+    charge = num.tryParse(json['charge']?.toString() ?? '') ?? 0;
+    chargeType = json['charge_type']?.toString();
+    minimumDeposit =
+        num.tryParse(json['minimum_deposit']?.toString() ?? '')?.toInt() ?? 0;
+    maximumDeposit =
+        num.tryParse(json['maximum_deposit']?.toString() ?? '')?.toInt() ?? 0;
+    currency = json['currency']?.toString();
   }
 }
 

@@ -78,7 +78,7 @@ class ChooseCardHolderSection extends StatelessWidget {
               onPressed: controller.submitSelectedCard,
             ),
           ),
-        SizedBox(height: 30.h),
+        SizedBox(height: showSubmitButton ? 30.h : 8.h),
       ],
     );
   }

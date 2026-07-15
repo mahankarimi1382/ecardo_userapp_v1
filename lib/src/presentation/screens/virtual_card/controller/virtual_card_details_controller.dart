@@ -107,15 +107,11 @@ class VirtualCardDetailsController extends GetxController {
   Future<void> cardUpdateStatus({required String cardId}) async {
     isUpdateCardStatusLoading.value = true;
     try {
-      final provider =
-          virtualCardDetailsModel.value.data?.provider?.toLowerCase() ??
-          virtualCardDetailsBsiCardProviderModel.value.data?.data?.brand
-              ?.toLowerCase() ??
-          '';
+      final card = virtualCardDetailsModel.value.data;
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.normalizeActionEndpoint(
-          virtualCardDetailsModel.value.data?.actions?.statusEndpoint,
-          "${ApiPath.postUpdateStatusEndpoint}/$cardId",
+          card?.actions?.statusEndpoint,
+          "${ApiPath.postUpdateStatusEndpoint}/${card?.cardId ?? cardId}",
         ),
         data: null,
       );
@@ -130,11 +126,7 @@ class VirtualCardDetailsController extends GetxController {
           );
         }
         ToastHelper().showSuccessToast(response.data!["message"]);
-        if (provider == "bsicards" || provider == "digital") {
-          await fetchVirtualCardDetailsBsiCardProvider(cardId: cardId);
-        } else {
-          await fetchVirtualCardDetails(cardId: cardId);
-        }
+        await fetchVirtualCardDetails(cardId: card?.id?.toString() ?? cardId);
         Get.find<VirtualCardController>().fetchVirtualCards();
       }
     } catch (e, stackTrace) {
@@ -203,9 +195,14 @@ class VirtualCardDetailsController extends GetxController {
     int? walletId,
     int? gatewayMethodId,
   }) async {
-    final amount = int.tryParse(amountController.text.replaceAll(',', ''));
     final card = virtualCardDetailsModel.value.data;
     final funding = card?.funding;
+    if (funding == null) {
+      await cardBalanceTopUp(cardId: cardId);
+      return;
+    }
+
+    final amount = int.tryParse(amountController.text.replaceAll(',', ''));
     if (amount == null || amount <= 0) {
       ToastHelper().showErrorToast(
         localization!.cardDetailsAmountGreaterThanZero,
@@ -226,10 +223,6 @@ class VirtualCardDetailsController extends GetxController {
       ToastHelper().showErrorToast(
         'The maximum top-up is ${funding.maximumTopup} ${card?.currency ?? ''}.',
       );
-      return;
-    }
-    if (funding == null) {
-      await cardBalanceTopUp(cardId: cardId);
       return;
     }
     if (fundingSource == 'irr_wallet' && walletId == null) {
@@ -305,6 +298,55 @@ class VirtualCardDetailsController extends GetxController {
     }
 
     totalAmount.value = baseAmount.value + calculatedCharge.value;
+  }
+
+  void reviewContractTopUp({
+    required String fundingSource,
+    int? gatewayMethodId,
+  }) {
+    final rawAmount = amountController.text.replaceAll(',', '');
+    baseAmount.value = double.tryParse(rawAmount) ?? 0;
+    final funding = virtualCardDetailsModel.value.data?.funding;
+
+    if (funding == null) {
+      reviewCalculate();
+      return;
+    }
+
+    final productCharge = _calculateCharge(
+      baseAmount.value,
+      funding.topupFeeType,
+      funding.topupFee,
+    );
+    final gateway = fundingSource == 'gateway'
+        ? funding.gateways.firstWhereOrNull(
+            (item) => item.id == gatewayMethodId,
+          )
+        : null;
+    final gatewayCharge = gateway == null
+        ? 0
+        : _calculateCharge(
+            baseAmount.value + productCharge,
+            gateway.chargeType,
+            gateway.charge,
+          );
+
+    calculatedCharge.value = productCharge + gatewayCharge;
+    totalAmount.value = baseAmount.value + calculatedCharge.value;
+  }
+
+  static double _calculateCharge(
+    double amount,
+    String? type,
+    num charge,
+  ) {
+    if (type == 'percentage') {
+      return amount * charge.toDouble() / 100;
+    }
+    if (type == 'fixed') {
+      return charge.toDouble();
+    }
+    return 0;
   }
 
   // Validate Amount Step

@@ -42,14 +42,14 @@ class CardHolderTabSection extends StatelessWidget {
                 },
                 width: double.infinity,
                 text: localization!.cardHolderTabExistingCardholders,
-                fontSize: 12,
+                fontSize: 11,
                 backgroundColor: controller.selectedTab.value == true
                     ? AppColors.lightPrimary
                     : AppColors.white,
                 textColor: controller.selectedTab.value == true
                     ? AppColors.white
                     : AppColors.lightTextPrimary.withValues(alpha: 0.8),
-                height: 42,
+                height: 48,
               ),
             ),
             SizedBox(width: 10.w),
@@ -62,9 +62,9 @@ class CardHolderTabSection extends StatelessWidget {
                   controller.selectedCardHolder.value = CardHolderData();
                 },
                 width: double.infinity,
-                height: 42,
+                height: 48,
                 text: localization.cardHolderTabCreateCardholder,
-                fontSize: 12,
+                fontSize: 11,
                 backgroundColor: controller.selectedTab.value == false
                     ? AppColors.lightPrimary
                     : AppColors.white,
