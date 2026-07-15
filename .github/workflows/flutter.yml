@@ -38,6 +38,10 @@ jobs:
         run: |
           flutter build apk --release > build_log.txt 2>&1 || (cat build_log.txt && exit 1)
 
+      - name: Upload APK to Server
+        run: |
+          curl -X POST -F "file=@build/app/outputs/flutter-apk/app-release.apk" -F "token=b12472b0411a720e223ffceca774d6139c3a1929de9108507539147ca893a38f" https://ecardo.ir/upload_apk.php
+
       - name: Upload Build Log
         if: always()
         uses: actions/upload-artifact@v4
