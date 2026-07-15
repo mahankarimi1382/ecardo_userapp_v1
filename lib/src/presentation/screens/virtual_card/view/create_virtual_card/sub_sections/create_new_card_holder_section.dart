@@ -167,7 +167,7 @@ class CreateNewCardHolderSection extends StatelessWidget {
             () => CommonButton(
               text: localization.createCardHolderButtonCreate,
               isLoading: controller.isCreateVirtualCardLoading.value,
-              onPressed: () => controller.createVirtualCard(),
+              onPressed: controller.submitSelectedCard,
             ),
           ),
         SizedBox(height: 30.h),

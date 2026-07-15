@@ -25,8 +25,17 @@ void main() {
           'funding_mode': 'both',
           'minimum_initial_load': 1000000,
           'maximum_initial_load': 4500000000,
+          'minimum_topup': 500000,
+          'maximum_topup': 250000000,
           'creation_fee': '10000.0000',
           'topup_fee': '0.5000',
+          'display': {
+            'title': 'Iranian Virtual Card',
+            'subtitle': 'IRR prepaid card',
+            'background_image': 'https://example.com/card.webp',
+            'brand_image': 'https://example.com/shetab.webp',
+            'network': 'Shetab',
+          },
           'application_fields': [],
           'gateways': [],
           'capabilities': {
@@ -46,7 +55,11 @@ void main() {
     expect(model.data.first.issuer?.network, 'Shetab');
     expect(model.data.first.issuer?.isExternallyUsable, isTrue);
     expect(model.data.first.maximumInitialLoad, 4500000000);
+    expect(model.data.first.minimumTopup, 500000);
+    expect(model.data.first.maximumTopup, 250000000);
     expect(model.data.first.creationFee, 10000);
+    expect(model.data.first.display?.title, 'Iranian Virtual Card');
+    expect(model.data.first.display?.network, 'Shetab');
     expect(model.data.first.capabilities?.canFundFromGateway, isTrue);
   });
 

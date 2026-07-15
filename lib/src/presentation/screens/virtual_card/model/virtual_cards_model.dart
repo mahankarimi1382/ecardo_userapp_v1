@@ -118,6 +118,15 @@ class CardDisplay {
   String? title;
   String? subtitle;
   String? balanceLabel;
+  String? numberLabel;
+  String? expiryLabel;
+  String? cvcLabel;
+  String? currencyLabel;
+  String? primaryColor;
+  String? secondaryColor;
+  String? backgroundImage;
+  String? brandImage;
+  String? network;
   int currencyDecimals = 2;
   bool showPan = false;
   bool showExpiry = false;
@@ -127,6 +136,15 @@ class CardDisplay {
     title = json['title']?.toString();
     subtitle = json['subtitle']?.toString();
     balanceLabel = json['balance_label']?.toString();
+    numberLabel = json['number_label']?.toString();
+    expiryLabel = json['expiry_label']?.toString();
+    cvcLabel = json['cvc_label']?.toString();
+    currencyLabel = json['currency_label']?.toString();
+    primaryColor = json['primary_color']?.toString();
+    secondaryColor = json['secondary_color']?.toString();
+    backgroundImage = json['background_image']?.toString();
+    brandImage = json['brand_image']?.toString();
+    network = json['network']?.toString();
     currencyDecimals =
         num.tryParse(json['currency_decimals']?.toString() ?? '')?.toInt() ?? 2;
     showPan = json['show_pan'] == true;

@@ -122,6 +122,15 @@ class CardDisplay {
   String? title;
   String? subtitle;
   String? balanceLabel;
+  String? numberLabel;
+  String? expiryLabel;
+  String? cvcLabel;
+  String? currencyLabel;
+  String? primaryColor;
+  String? secondaryColor;
+  String? backgroundImage;
+  String? brandImage;
+  String? network;
   int currencyDecimals = 2;
   bool showPan = false;
   bool showExpiry = false;
@@ -131,6 +140,15 @@ class CardDisplay {
     title = json['title']?.toString();
     subtitle = json['subtitle']?.toString();
     balanceLabel = json['balance_label']?.toString();
+    numberLabel = json['number_label']?.toString();
+    expiryLabel = json['expiry_label']?.toString();
+    cvcLabel = json['cvc_label']?.toString();
+    currencyLabel = json['currency_label']?.toString();
+    primaryColor = json['primary_color']?.toString();
+    secondaryColor = json['secondary_color']?.toString();
+    backgroundImage = json['background_image']?.toString();
+    brandImage = json['brand_image']?.toString();
+    network = json['network']?.toString();
     currencyDecimals =
         num.tryParse(json['currency_decimals']?.toString() ?? '')?.toInt() ?? 2;
     showPan = json['show_pan'] == true;
@@ -159,6 +177,10 @@ class CardFunding {
   String? mode;
   String? defaultSource;
   int? defaultGatewayMethodId;
+  int minimumTopup = 0;
+  int maximumTopup = 0;
+  String? topupFeeType;
+  num topupFee = 0;
   List<CardGateway> gateways = [];
 
   CardFunding.fromJson(Map<String, dynamic> json) {
@@ -167,6 +189,12 @@ class CardFunding {
     defaultGatewayMethodId =
         num.tryParse(json['default_gateway_method_id']?.toString() ?? '')
             ?.toInt();
+    minimumTopup =
+        num.tryParse(json['minimum_topup']?.toString() ?? '')?.toInt() ?? 0;
+    maximumTopup =
+        num.tryParse(json['maximum_topup']?.toString() ?? '')?.toInt() ?? 0;
+    topupFeeType = json['topup_fee_type']?.toString();
+    topupFee = num.tryParse(json['topup_fee']?.toString() ?? '') ?? 0;
     final items = json['gateways'];
     if (items is List) {
       gateways = items

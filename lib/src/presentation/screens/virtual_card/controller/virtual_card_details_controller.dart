@@ -197,7 +197,7 @@ class VirtualCardDetailsController extends GetxController {
     }
   }
 
-  Future<void> irrCardBalanceTopUp({
+  Future<void> cardBalanceTopUpFromContract({
     required String cardId,
     required String fundingSource,
     int? walletId,
@@ -205,10 +205,31 @@ class VirtualCardDetailsController extends GetxController {
   }) async {
     final amount = int.tryParse(amountController.text.replaceAll(',', ''));
     final card = virtualCardDetailsModel.value.data;
+    final funding = card?.funding;
     if (amount == null || amount <= 0) {
       ToastHelper().showErrorToast(
         localization!.cardDetailsAmountGreaterThanZero,
       );
+      return;
+    }
+    if (funding != null &&
+        funding.minimumTopup > 0 &&
+        amount < funding.minimumTopup) {
+      ToastHelper().showErrorToast(
+        'The minimum top-up is ${funding.minimumTopup} ${card?.currency ?? ''}.',
+      );
+      return;
+    }
+    if (funding != null &&
+        funding.maximumTopup > 0 &&
+        amount > funding.maximumTopup) {
+      ToastHelper().showErrorToast(
+        'The maximum top-up is ${funding.maximumTopup} ${card?.currency ?? ''}.',
+      );
+      return;
+    }
+    if (funding == null) {
+      await cardBalanceTopUp(cardId: cardId);
       return;
     }
     if (fundingSource == 'irr_wallet' && walletId == null) {
@@ -256,7 +277,7 @@ class VirtualCardDetailsController extends GetxController {
       await fetchVirtualCardDetails(cardId: cardId);
       await Get.find<VirtualCardController>().fetchVirtualCards();
     } catch (e, stackTrace) {
-      debugPrint('❌ irrCardBalanceTopUp() error: $e');
+      debugPrint('❌ cardBalanceTopUpFromContract() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {

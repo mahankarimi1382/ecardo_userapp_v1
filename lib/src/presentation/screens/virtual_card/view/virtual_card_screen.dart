@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
+import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-
-import '../../../../app/constants/app_colors.dart';
-import '../../../../app/constants/assets_path/png/png_assets.dart';
-import '../../../../app/constants/assets_path/svg/svg_assets.dart';
-import '../../../../app/routes/routes.dart';
-import '../../../../common/widgets/app_bar/common_app_bar.dart';
-import '../../../../common/widgets/app_bar/common_default_app_bar.dart';
-import '../controller/virtual_card_controller.dart';
+import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
+import 'package:qunzo_user/src/presentation/screens/virtual_card/model/virtual_cards_model.dart';
+import 'package:qunzo_user/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart';
 
 class VirtualCardScreen extends StatefulWidget {
   const VirtualCardScreen({super.key});
@@ -33,392 +32,32 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
+    final localization = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: CommonDefaultAppBar(),
-      body: Obx(() {
-        return Column(
+      body: Obx(
+        () => Column(
           children: [
             SizedBox(height: 16.h),
-            CommonAppBar(title: localization!.virtualCardScreenAppBarTitle),
+            CommonAppBar(title: localization.virtualCardScreenAppBarTitle),
             Expanded(
               child: controller.isLoading.value
-                  ? CommonLoading()
+                  ? const CommonLoading()
                   : RefreshIndicator(
-                      onRefresh: () => controller.fetchVirtualCards(),
+                      onRefresh: controller.fetchVirtualCards,
                       color: AppColors.lightPrimary,
                       child: ListView(
                         padding: EdgeInsets.only(bottom: 30.h),
                         children: [
-                          _buildCreateCardSection(),
+                          _buildCreateCardSection(localization),
                           SizedBox(height: 16.h),
                           ...List.generate(controller.virtualCardList.length, (
                             index,
                           ) {
-                            final card = controller.virtualCardList[index];
-                            final hasShowToggle =
-                                index < controller.showAccountNumberList.length;
-                            final rawAccountNo =
-                                card.displayNumber ?? card.cardNumber ?? '';
-                            final canShowPan =
-                                card.display?.showPan != false &&
-                                card.capabilities?.canRevealPan != false;
-                            final accountNo = canShowPan ? rawAccountNo : '';
-
-                            return Padding(
-                              padding: EdgeInsetsDirectional.only(
-                                start: 18.w,
-                                end: 18.w,
-                                bottom: 16.h,
-                              ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(16.r),
-                                onTap: () {
-                                  Get.toNamed(
-                                    BaseRoute.virtualCardDetails,
-                                    arguments: {
-                                      "id": card.id.toString(),
-                                      "card_id": card.cardId.toString(),
-                                      "provider": card.provider,
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 200.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.r),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      Center(
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          height: 200.h,
-                                          child: Obx(() {
-                                            final bgImageUrl = controller
-                                                .cardBackgroundImage
-                                                .value
-                                                .trim();
-
-                                            if (bgImageUrl.isNotEmpty) {
-                                              final isSvg = bgImageUrl
-                                                  .toLowerCase()
-                                                  .endsWith('.svg');
-
-                                              if (isSvg) {
-                                                return SvgPicture.network(
-                                                  bgImageUrl,
-                                                  fit: BoxFit.fill,
-                                                  errorBuilder:
-                                                      (
-                                                        context,
-                                                        error,
-                                                        stackTrace,
-                                                      ) => Image.asset(
-                                                        PngAssets.cardMap,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                );
-                                              } else {
-                                                return Image.network(
-                                                  bgImageUrl,
-                                                  fit: BoxFit.fill,
-                                                  errorBuilder:
-                                                      (
-                                                        context,
-                                                        error,
-                                                        stackTrace,
-                                                      ) => Image.asset(
-                                                        PngAssets.cardMap,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                );
-                                              }
-                                            }
-
-                                            return Image.asset(
-                                              PngAssets.cardMap,
-                                              fit: BoxFit.contain,
-                                            );
-                                          }),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.only(
-                                          start: 16.w,
-                                          end: 16.w,
-                                          bottom: 16.h,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              card.cardHolder?.name ??
-                                                  card.display?.title ??
-                                                  'Virtual Card',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 18.sp,
-                                                letterSpacing: 0,
-                                                color: AppColors.white,
-                                              ),
-                                            ),
-                                            SizedBox(height: 16.h),
-                                            Row(
-                                              children: [
-                                                Obx(() {
-                                                  final isVisible =
-                                                      hasShowToggle
-                                                      ? controller
-                                                            .showAccountNumberList[index]
-                                                            .value
-                                                      : false;
-
-                                                  final canReveal =
-                                                      card.capabilities
-                                                          ?.canRevealPan ==
-                                                      true;
-                                                  final shownNumber =
-                                                      accountNo.isEmpty
-                                                      ? '${card.amount ?? '0'} ${card.currency ?? ''}'
-                                                      : isVisible && canReveal
-                                                      ? formatAccountNumber(
-                                                          accountNo,
-                                                        ).trim()
-                                                      : accountNo.length > 4
-                                                      ? '**** **** **** ${accountNo.substring(accountNo.length - 4)}'
-                                                      : accountNo;
-
-                                                  return Text(
-                                                    shownNumber,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 20.sp,
-                                                      letterSpacing: 0,
-                                                      color: AppColors.white,
-                                                    ),
-                                                  );
-                                                }),
-                                                SizedBox(width: 8.w),
-                                                if (accountNo.isNotEmpty &&
-                                                    canShowPan)
-                                                  Obx(
-                                                    () => GestureDetector(
-                                                    onTap:
-                                                        hasShowToggle &&
-                                                            card.capabilities
-                                                                    ?.canRevealPan !=
-                                                                false
-                                                        ? () {
-                                                            controller
-                                                                    .showAccountNumberList[index]
-                                                                    .value =
-                                                                !controller
-                                                                    .showAccountNumberList[index]
-                                                                    .value;
-                                                          }
-                                                        : null,
-                                                    child: SvgPicture.asset(
-                                                      hasShowToggle &&
-                                                              controller
-                                                                  .showAccountNumberList[index]
-                                                                  .value
-                                                          ? SvgAssets
-                                                                .hideEyeIcon
-                                                          : SvgAssets
-                                                                .showEyeIcon,
-                                                      width: 18.w,
-                                                      height: 18.h,
-                                                      colorFilter:
-                                                          ColorFilter.mode(
-                                                            AppColors.white,
-                                                            BlendMode.srcIn,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 10.h),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      card.display?.showExpiry ==
-                                                                  false ||
-                                                              card.expirationMonth ==
-                                                                  null ||
-                                                              card.expirationYear ==
-                                                                  null
-                                                          ? card.display
-                                                                    ?.balanceLabel ??
-                                                                'Balance'
-                                                          : localization
-                                                                .virtualCardCardExpiryDateLabel,
-                                                      style: TextStyle(
-                                                        letterSpacing: 0,
-                                                        fontSize: 11.sp,
-                                                        color: AppColors.white,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 4.h),
-                                                    Text(
-                                                      card.display?.showExpiry ==
-                                                                  false ||
-                                                              card.expirationMonth ==
-                                                                  null ||
-                                                              card.expirationYear ==
-                                                                  null
-                                                          ? card.display
-                                                                    ?.balanceLabel ??
-                                                                'Balance'
-                                                          : "${card.expirationMonth}/${card.expirationYear.toString().substring(2)}",
-                                                      style: TextStyle(
-                                                        letterSpacing: 0,
-                                                        fontSize: 14.sp,
-                                                        color: AppColors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          card.display?.showCvc ==
-                                                                      false ||
-                                                                  card.cvc ==
-                                                                      null
-                                                              ? 'Currency'
-                                                              : localization
-                                                                    .virtualCardCardCvcLabel,
-                                                          style: TextStyle(
-                                                            letterSpacing: 0,
-                                                            fontSize: 11.sp,
-                                                            color:
-                                                                AppColors.white,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 4.h),
-                                                        Text(
-                                                          card.display?.showCvc ==
-                                                                      false ||
-                                                                  card.cvc ==
-                                                                      null
-                                                              ? '${card.amount ?? '0'} ${card.currency ?? ''}'
-                                                              : card.cvc!,
-                                                          style: TextStyle(
-                                                            letterSpacing: 0,
-                                                            fontSize: 14.sp,
-                                                            color:
-                                                                AppColors.white,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(width: 40.w),
-                                                    Container(
-                                                      width: 70.w,
-                                                      height: 24.h,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            card.status ==
-                                                                "active"
-                                                            ? Color(0xFFDBFFDA)
-                                                            : const Color(
-                                                                0xFFF8D8D8,
-                                                              ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              8.r,
-                                                            ),
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          (card.lifecycleStatus ??
-                                                                      card.status ??
-                                                                      '')
-                                                                  .isNotEmpty
-                                                              ? (card.lifecycleStatus ??
-                                                                        card.status ??
-                                                                        '')[0]
-                                                                        .toUpperCase() +
-                                                                    (card.lifecycleStatus ??
-                                                                            card.status ??
-                                                                            '')
-                                                                        .substring(
-                                                                          1,
-                                                                        )
-                                                              : "",
-                                                          style: TextStyle(
-                                                            letterSpacing: 0,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: 12.sp,
-                                                            color:
-                                                                card.status ==
-                                                                    "active"
-                                                                ? AppColors
-                                                                      .success
-                                                                : AppColors
-                                                                      .error,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      PositionedDirectional(
-                                        top: 16.h,
-                                        start: 16.w,
-                                        child: Image.asset(
-                                          PngAssets.cardChip,
-                                          width: 38.w,
-                                          height: 28.h,
-                                        ),
-                                      ),
-                                      PositionedDirectional(
-                                        top: 16.h,
-                                        end: 16.w,
-                                        child: Image.asset(
-                                          PngAssets.cardVisa,
-                                          width: 48.w,
-                                          height: 15.h,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                            return _cardItem(
+                              controller.virtualCardList[index],
+                              index,
                             );
                           }),
                         ],
@@ -426,21 +65,87 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                     ),
             ),
           ],
-        );
-      }),
+        ),
+      ),
     );
   }
 
-  String formatAccountNumber(String number) {
-    return number.replaceAllMapped(
-      RegExp(r".{4}"),
-      (match) => "${match.group(0)} ",
+  Widget _cardItem(VirtualCardsData card, int index) {
+    final rawNumber = card.cardNumber ?? '';
+    final maskedNumber = card.displayNumber ??
+        (rawNumber.isNotEmpty ? _maskNumber(rawNumber) : '');
+    final canReveal =
+        rawNumber.isNotEmpty &&
+        card.display?.showPan != false &&
+        card.capabilities?.canRevealPan == true;
+    final revealed =
+        index < controller.showAccountNumberList.length &&
+        controller.showAccountNumberList[index].value;
+    final value = maskedNumber.isEmpty
+        ? '${card.amount ?? '0'} ${card.currency ?? ''}'
+        : revealed
+        ? _formatNumber(rawNumber)
+        : maskedNumber;
+    final showExpiry =
+        card.display?.showExpiry == true &&
+        card.expirationMonth != null &&
+        card.expirationYear != null;
+    final showCvc = card.display?.showCvc == true && card.cvc != null;
+
+    return Padding(
+      padding: EdgeInsetsDirectional.only(
+        start: 18.w,
+        end: 18.w,
+        bottom: 16.h,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          Get.toNamed(
+            BaseRoute.virtualCardDetails,
+            arguments: {
+              'id': card.id.toString(),
+              'card_id': card.cardId.toString(),
+              'provider': card.provider,
+            },
+          );
+        },
+        child: CommonVirtualCardView(
+          title:
+              card.display?.title ??
+              'Virtual Card',
+          value: value,
+          firstLabel: showExpiry
+              ? card.display?.expiryLabel ?? 'Expiry'
+              : card.display?.balanceLabel ?? 'Balance',
+          firstValue: showExpiry
+              ? '${card.expirationMonth}/${card.expirationYear.toString().substring(2)}'
+              : '${card.amount ?? '0'} ${card.currency ?? ''}',
+          secondLabel: showCvc
+              ? card.display?.cvcLabel ?? 'CVC'
+              : card.display?.currencyLabel ?? 'Currency',
+          secondValue: showCvc ? card.cvc! : card.currency ?? '',
+          status:
+              card.lifecycleStatus ?? card.virtualStatus ?? card.status ?? '',
+          canReveal: canReveal,
+          isRevealed: revealed,
+          onReveal: canReveal
+              ? () {
+                  controller.showAccountNumberList[index].value = !revealed;
+                }
+              : null,
+          backgroundImage:
+              card.display?.backgroundImage ??
+              controller.cardBackgroundImage.value,
+          brandImage: card.display?.brandImage,
+          network: card.display?.network,
+          primaryColor: card.display?.primaryColor,
+          secondaryColor: card.display?.secondaryColor,
+        ),
+      ),
     );
   }
 
-  Widget _buildCreateCardSection() {
-    final localization = AppLocalizations.of(context);
-
+  Widget _buildCreateCardSection(AppLocalizations localization) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w),
       child: Column(
@@ -451,17 +156,16 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
             children: [
               Image.asset(PngAssets.createVirtualCardImage, fit: BoxFit.fill),
               Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 60.w),
+                padding: EdgeInsets.symmetric(horizontal: 60.w),
                 child: Column(
                   children: [
                     Text(
-                      localization!.virtualCardCreateCardTitle,
+                      localization.virtualCardCreateCardTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 16.sp,
                         color: AppColors.lightTextPrimary,
-                        letterSpacing: 0,
                       ),
                     ),
                     SizedBox(height: 20.h),
@@ -487,5 +191,16 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
         ],
       ),
     );
+  }
+
+  static String _formatNumber(String value) {
+    return value
+        .replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)} ')
+        .trim();
+  }
+
+  static String _maskNumber(String value) {
+    if (value.length <= 4) return value;
+    return '**** **** **** ${value.substring(value.length - 4)}';
   }
 }

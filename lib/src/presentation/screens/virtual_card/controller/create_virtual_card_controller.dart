@@ -237,6 +237,16 @@ class CreateVirtualCardController extends GetxController {
       creationMode.value = 'product';
       selectCardProduct(product);
       cardProviderController.text = product.name ?? product.code ?? '';
+      selectedCardProvider.value = CardProviderData(
+        name: product.issuer?.name,
+        code: product.issuer?.code,
+      );
+      cardHolderList.clear();
+      cardHolderController.clear();
+      selectedCardHolder.value = null;
+      if ((product.issuer?.code ?? '').isNotEmpty) {
+        await fetchCardHolders();
+      }
       return;
     }
 
@@ -357,6 +367,7 @@ class CreateVirtualCardController extends GetxController {
     try {
       final product = selectedCardProduct.value!;
       final amount = int.parse(amountController.text.replaceAll(',', ''));
+      final holder = selectedTab.value ? selectedCardHolder.value : null;
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.postCardOrdersEndpoint,
         data: {
@@ -370,14 +381,14 @@ class CreateVirtualCardController extends GetxController {
               : null,
           'amount': amount,
           'request_physical': requestPhysical.value,
-          'name': nameController.text.trim(),
-          'email': emailController.text.trim(),
-          'phone_number': phoneNumberController.text.trim(),
-          'address': addressController.text.trim(),
-          'country': selectedCountry.value?.code,
-          'city': cityController.text.trim(),
-          'state': stateController.text.trim(),
-          'postal_code': postalCodeController.text.trim(),
+          'name': holder?.name ?? nameController.text.trim(),
+          'email': holder?.email ?? emailController.text.trim(),
+          'phone_number': holder?.phoneNumber ?? phoneNumberController.text.trim(),
+          'address': holder?.address ?? addressController.text.trim(),
+          'country': holder?.country ?? selectedCountry.value?.code,
+          'city': holder?.city ?? cityController.text.trim(),
+          'state': holder?.state ?? stateController.text.trim(),
+          'postal_code': holder?.postalCode ?? postalCodeController.text.trim(),
           'application_data': _applicationData(product.applicationFields),
         },
       );
@@ -495,18 +506,24 @@ class CreateVirtualCardController extends GetxController {
       ToastHelper().showErrorToast('Select a payment gateway.');
       return false;
     }
-    if (nameController.text.trim().isEmpty ||
-        emailController.text.trim().isEmpty ||
-        phoneNumberController.text.trim().isEmpty ||
-        selectedCountry.value?.code == null ||
-        cityController.text.trim().isEmpty ||
-        stateController.text.trim().isEmpty ||
-        postalCodeController.text.trim().isEmpty ||
-        addressController.text.trim().isEmpty) {
+    if (selectedTab.value && selectedCardHolder.value == null) {
+      ToastHelper().showErrorToast(localization!.createCardHolderRequired);
+      return false;
+    }
+    final holder = selectedTab.value ? selectedCardHolder.value : null;
+    final email = holder?.email ?? emailController.text.trim();
+    if ((holder?.name ?? nameController.text.trim()).isEmpty ||
+        email.isEmpty ||
+        (holder?.phoneNumber ?? phoneNumberController.text.trim()).isEmpty ||
+        (holder?.country ?? selectedCountry.value?.code) == null ||
+        (holder?.city ?? cityController.text.trim()).isEmpty ||
+        (holder?.state ?? stateController.text.trim()).isEmpty ||
+        (holder?.postalCode ?? postalCodeController.text.trim()).isEmpty ||
+        (holder?.address ?? addressController.text.trim()).isEmpty) {
       ToastHelper().showErrorToast('Complete the cardholder information.');
       return false;
     }
-    if (!GetUtils.isEmail(emailController.text.trim())) {
+    if (!GetUtils.isEmail(email)) {
       ToastHelper().showErrorToast(localization!.createEmailInvalid);
       return false;
     }
@@ -594,6 +611,12 @@ class CreateVirtualCardController extends GetxController {
   }
 
   // Create Virtual Card
+  Future<void> submitSelectedCard() {
+    return creationMode.value == 'product'
+        ? createIrrCard()
+        : createVirtualCard();
+  }
+
   Future<void> createVirtualCard() async {
     if (!validateFields()) return;
 

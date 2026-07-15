@@ -6,6 +6,7 @@ import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:qunzo_user/src/common/widgets/common_single_date_picker.dart';
 import 'package:qunzo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_three.dart';
 import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart';
@@ -13,9 +14,7 @@ import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_prod
 import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
 class IrrCardOrderSection extends StatelessWidget {
-  final Widget? applicantSection;
-
-  const IrrCardOrderSection({super.key, this.applicantSection});
+  const IrrCardOrderSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -107,20 +106,19 @@ class IrrCardOrderSection extends StatelessWidget {
               ),
             ),
           ),
-          if (applicantSection != null) applicantSection!,
           _FundingSourceSection(product: product, controller: controller),
           if (product.capabilities?.canRequestPhysical == true) ...[
-            SizedBox(height: 8.h),
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              value: controller.requestPhysical.value,
-              title: Text(
-                'Request physical card '
-                '(${_formatIrr(product.physicalCardFee)} IRR)',
+            SizedBox(height: 16.h),
+            CommonRequiredLabelAndDynamicField(
+              labelText:
+                  'Request physical card '
+                  '(${_formatIrr(product.physicalCardFee)} IRR)',
+              dynamicField: _BooleanChoice(
+                value: controller.requestPhysical.value,
+                onChanged: (value) {
+                  controller.requestPhysical.value = value;
+                },
               ),
-              onChanged: (value) {
-                controller.requestPhysical.value = value == true;
-              },
             ),
           ],
           if ((product.terms ?? '').isNotEmpty) ...[
@@ -134,13 +132,6 @@ class IrrCardOrderSection extends StatelessWidget {
             ),
           ],
           SizedBox(height: 20.h),
-          CommonButton(
-            width: double.infinity,
-            text: 'Create IRR Card',
-            isLoading: controller.isCreateVirtualCardLoading.value,
-            onPressed: controller.createIrrCard,
-          ),
-          SizedBox(height: 30.h),
         ],
       );
     });
@@ -164,49 +155,47 @@ class _ApplicationField extends StatelessWidget {
   Widget build(BuildContext context) {
     if (field.type == 'boolean') {
       return Obx(
-        () => SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text('${field.label}${field.required ? ' *' : ''}'),
-          value: controller.applicationBooleanValues[field.name]?.value ?? false,
-          onChanged: (value) {
-            controller.applicationBooleanValues[field.name]?.value = value;
-          },
+        () => CommonRequiredLabelAndDynamicField(
+          labelText: field.label,
+          isLabelRequired: field.required,
+          dynamicField: _BooleanChoice(
+            value:
+                controller.applicationBooleanValues[field.name]?.value ?? false,
+            onChanged: (value) {
+              controller.applicationBooleanValues[field.name]?.value = value;
+            },
+          ),
         ),
       );
     }
 
     final textController = controller.applicationFieldControllers[field.name];
+    if (field.type == 'date') {
+      return CommonRequiredLabelAndDynamicField(
+        labelText: field.label,
+        isLabelRequired: field.required,
+        dynamicField: CommonSingleDatePicker(
+          hintText: '',
+          suffixIcon: Icon(
+            Icons.calendar_month_outlined,
+            color: AppColors.lightTextTertiary,
+          ),
+          onDateSelected: (date) {
+            textController?.text = DateFormat('yyyy-MM-dd').format(date);
+          },
+        ),
+      );
+    }
+
     return CommonRequiredLabelAndDynamicField(
       labelText: field.label,
       isLabelRequired: field.required,
       dynamicField: CommonTextInputField(
         hintText: '',
         controller: textController,
-        readOnly: field.type == 'date',
-        onTap: field.type == 'date'
-            ? () async {
-                final selectedDate = await showDatePicker(
-                  context: context,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now().add(const Duration(days: 3650)),
-                  initialDate: DateTime.now(),
-                );
-                if (selectedDate != null) {
-                  textController?.text = DateFormat('yyyy-MM-dd').format(
-                    selectedDate,
-                  );
-                }
-              }
-            : null,
         keyboardType: field.type == 'number'
             ? TextInputType.number
             : TextInputType.text,
-        suffixIcon: field.type == 'date'
-            ? Icon(
-                Icons.calendar_month_outlined,
-                color: AppColors.lightTextTertiary,
-              )
-            : null,
       ),
     );
   }
@@ -374,6 +363,51 @@ class _FundingSourceTabs extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _BooleanChoice extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _BooleanChoice({
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: CommonButton(
+            height: 42,
+            borderRadius: 12,
+            text: 'No',
+            backgroundColor: value ? AppColors.white : AppColors.lightPrimary,
+            textColor: value ? AppColors.lightTextPrimary : AppColors.white,
+            borderColor: value
+                ? AppColors.lightTextPrimary.withValues(alpha: 0.15)
+                : null,
+            onPressed: () => onChanged(false),
+          ),
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: CommonButton(
+            height: 42,
+            borderRadius: 12,
+            text: 'Yes',
+            backgroundColor: value ? AppColors.lightPrimary : AppColors.white,
+            textColor: value ? AppColors.white : AppColors.lightTextPrimary,
+            borderColor: value
+                ? null
+                : AppColors.lightTextPrimary.withValues(alpha: 0.15),
+            onPressed: () => onChanged(true),
+          ),
+        ),
+      ],
     );
   }
 }

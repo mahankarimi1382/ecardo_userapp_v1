@@ -91,18 +91,34 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _UnifiedProviderSelector(controller: controller),
+                          Obx(() => controller.creationMode.value == 'product'
+                              ? _IrrProductArea(controller: controller)
+                              : const _LegacyIssueFee()),
+                          SizedBox(height: 20.h),
+                          const _SectionHeader(
+                            title: 'Cardholder information',
+                            subtitle:
+                                'Choose an existing cardholder or enter new cardholder details.',
+                          ),
+                          SizedBox(height: 16.h),
+                          const CardHolderTabSection(),
+                          SizedBox(height: 16.h),
                           Obx(
-                            () => AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 200),
-                              child: controller.creationMode.value == 'product'
-                                  ? _IrrProductArea(
-                                      key: const ValueKey('product'),
-                                      controller: controller,
-                                    )
-                                  : _LegacyCardArea(
-                                      key: const ValueKey('legacy'),
-                                      controller: controller,
-                                    ),
+                            () => controller.selectedTab.value
+                                ? const ChooseCardHolderSection(
+                                    showSubmitButton: false,
+                                  )
+                                : const CreateNewCardHolderSection(
+                                    showSubmitButton: false,
+                                  ),
+                          ),
+                          Obx(
+                            () => CommonButton(
+                              width: double.infinity,
+                              text: 'Create Virtual Card',
+                              isLoading:
+                                  controller.isCreateVirtualCardLoading.value,
+                              onPressed: controller.submitSelectedCard,
                             ),
                           ),
                         ],
@@ -138,21 +154,7 @@ class _IrrProductArea extends StatelessWidget {
       }
 
       if (controller.cardProducts.isNotEmpty) {
-        return IrrCardOrderSection(
-          applicantSection: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 24.h),
-              const _SectionHeader(
-                title: 'Cardholder information',
-                subtitle:
-                    'Enter the identity and delivery details required by this product.',
-              ),
-              SizedBox(height: 16.h),
-              const CreateNewCardHolderSection(showSubmitButton: false),
-            ],
-          ),
-        );
+        return const IrrCardOrderSection();
       }
 
       if (!controller.hasLoadedCardProducts.value) {
@@ -285,42 +287,6 @@ class _UnifiedProviderSelector extends StatelessWidget {
         ),
       );
     });
-  }
-}
-
-class _LegacyCardArea extends StatelessWidget {
-  final CreateVirtualCardController controller;
-
-  const _LegacyCardArea({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    if (controller.cardProvidersList.isEmpty) {
-      return const _AvailabilityMessage(
-        message: 'No legacy virtual-card provider is currently available.',
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const _SectionHeader(
-          title: 'Provider cardholder',
-          subtitle:
-              'Create the card for an existing cardholder or add a new one.',
-        ),
-        SizedBox(height: 16.h),
-        const _LegacyIssueFee(),
-        SizedBox(height: 20.h),
-        const CardHolderTabSection(),
-        SizedBox(height: 16.h),
-        Obx(
-          () => controller.selectedTab.value
-              ? const ChooseCardHolderSection()
-              : const CreateNewCardHolderSection(),
-        ),
-      ],
-    );
   }
 }
 

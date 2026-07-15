@@ -36,6 +36,7 @@ class CardProductData {
   String? image;
   String? terms;
   String? maintenanceMessage;
+  CardProductDisplay? display;
   List<CardApplicationField> applicationFields = [];
   List<CardGatewayData> gateways = [];
   CardProductCapabilities? capabilities;
@@ -63,6 +64,11 @@ class CardProductData {
     image = json['image']?.toString();
     terms = json['terms']?.toString();
     maintenanceMessage = json['maintenance_message']?.toString();
+    if (json['display'] is Map) {
+      display = CardProductDisplay.fromJson(
+        (json['display'] as Map).cast<String, dynamic>(),
+      );
+    }
 
     final fields = json['application_fields'];
     if (fields is List) {
@@ -92,6 +98,22 @@ class CardProductData {
         capabilityData.cast<String, dynamic>(),
       );
     }
+  }
+}
+
+class CardProductDisplay {
+  String? title;
+  String? subtitle;
+  String? backgroundImage;
+  String? brandImage;
+  String? network;
+
+  CardProductDisplay.fromJson(Map<String, dynamic> json) {
+    title = json['title']?.toString();
+    subtitle = json['subtitle']?.toString();
+    backgroundImage = json['background_image']?.toString();
+    brandImage = json['brand_image']?.toString();
+    network = json['network']?.toString();
   }
 }
 

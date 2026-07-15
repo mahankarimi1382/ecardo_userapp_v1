@@ -12,7 +12,12 @@ import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/crea
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_holder_model.dart';
 
 class ChooseCardHolderSection extends StatelessWidget {
-  const ChooseCardHolderSection({super.key});
+  final bool showSubmitButton;
+
+  const ChooseCardHolderSection({
+    super.key,
+    this.showSubmitButton = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +70,14 @@ class ChooseCardHolderSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 16.h),
-        Obx(
-          () => CommonButton(
-            text: localization.chooseCardHolderButtonCreate,
-            isLoading: controller.isCreateVirtualCardLoading.value,
-            onPressed: () => controller.createVirtualCard(),
+        if (showSubmitButton)
+          Obx(
+            () => CommonButton(
+              text: localization.chooseCardHolderButtonCreate,
+              isLoading: controller.isCreateVirtualCardLoading.value,
+              onPressed: controller.submitSelectedCard,
+            ),
           ),
-        ),
         SizedBox(height: 30.h),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart';
 import 'package:qunzo_user/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart';
+import 'package:qunzo_user/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart';
 
 class GenericCardProvider extends StatelessWidget {
   const GenericCardProvider({super.key});
@@ -22,67 +23,59 @@ class GenericCardProvider extends StatelessWidget {
       symbol: '',
       decimalDigits: decimals,
     ).format(num.tryParse(card.amount ?? '') ?? 0).trim();
-    final displayNumber = card.displayNumber ?? card.cardNumber;
+    final rawNumber = card.cardNumber ?? '';
+    final maskedNumber = card.displayNumber ??
+        (rawNumber.isNotEmpty ? _maskNumber(rawNumber) : '');
     final showNumber =
         card.display?.showPan == true &&
         card.capabilities?.canRevealPan == true &&
-        (displayNumber ?? '').isNotEmpty;
+        rawNumber.isNotEmpty;
+
+    final status = _statusLabel(card);
+    final expiry =
+        card.display?.showExpiry == true &&
+            card.expirationMonth != null &&
+            card.expirationYear != null
+        ? '${card.expirationMonth}/${card.expirationYear.toString().substring(2)}'
+        : '$balance ${card.currency ?? ''}';
+    final cvc =
+        card.display?.showCvc == true && card.cvc != null
+        ? card.cvc!
+        : card.currency ?? '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20.w),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF7445FF), Color(0xFF4C2BB3)],
-            ),
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                card.display?.title ?? 'Virtual Card',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              if (showNumber) ...[
-                SizedBox(height: 20.h),
-                Obx(
-                  () => Text(
-                    controller.showAccountNumber.value
-                        ? displayNumber!
-                        : _maskNumber(displayNumber!),
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 18.sp,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ),
-              ],
-              SizedBox(height: 24.h),
-              Text(
-                card.display?.balanceLabel ?? 'Balance',
-                style: TextStyle(color: Colors.white70, fontSize: 12.sp),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                '$balance ${card.currency ?? ''}',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              SizedBox(height: 12.h),
-              _StatusChip(status: _statusLabel(card)),
-            ],
+        Obx(
+          () => CommonVirtualCardView(
+            title: card.display?.title ?? 'Virtual Card',
+            value: showNumber
+                ? controller.showAccountNumber.value
+                      ? rawNumber
+                      : maskedNumber
+                : maskedNumber.isNotEmpty
+                ? maskedNumber
+                : '$balance ${card.currency ?? ''}',
+            firstLabel: card.display?.showExpiry == true
+                ? card.display?.expiryLabel ?? 'Expiry'
+                : card.display?.balanceLabel ?? 'Balance',
+            firstValue: expiry,
+            secondLabel: card.display?.showCvc == true
+                ? card.display?.cvcLabel ?? 'CVC'
+                : card.display?.currencyLabel ?? 'Currency',
+            secondValue: cvc,
+            status: status,
+            canReveal: showNumber,
+            isRevealed: controller.showAccountNumber.value,
+            onReveal: () {
+              controller.showAccountNumber.value =
+                  !controller.showAccountNumber.value;
+            },
+            backgroundImage: card.display?.backgroundImage,
+            brandImage: card.display?.brandImage,
+            network: card.display?.network,
+            primaryColor: card.display?.primaryColor,
+            secondaryColor: card.display?.secondaryColor,
           ),
         ),
         if ((card.display?.subtitle ?? '').isNotEmpty) ...[
@@ -95,18 +88,16 @@ class GenericCardProvider extends StatelessWidget {
             ),
           ),
         ],
-        if (card.display?.showExpiry == true &&
-            card.expirationMonth != null &&
-            card.expirationYear != null) ...[
-          SizedBox(height: 16.h),
-          Text(
-            'Expiry: ${card.expirationMonth}/'
-            '${card.expirationYear.toString().substring(2)}',
-          ),
-        ],
-        if (card.display?.showCvc == true && card.cvc != null) ...[
+        if ((card.cardHolder?.name ?? '').isNotEmpty) ...[
           SizedBox(height: 8.h),
-          Text('CVC: ${card.cvc}'),
+          Text(
+            card.cardHolder!.name!,
+            style: TextStyle(
+              color: AppColors.lightTextPrimary,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
         if ((card.physicalStatus ?? '').isNotEmpty) ...[
           SizedBox(height: 8.h),
@@ -134,40 +125,5 @@ class GenericCardProvider extends StatelessWidget {
         .where((part) => part.isNotEmpty)
         .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
         .join(' ');
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final normalized = status.toLowerCase();
-    final isSuccess = normalized == 'active' || normalized == 'completed';
-    final isFailure =
-        normalized.contains('failed') || normalized == 'cancelled';
-    final color = isSuccess
-        ? AppColors.success
-        : isFailure
-        ? AppColors.error
-        : const Color(0xFFFFA000);
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Text(
-        status,
-        style: TextStyle(
-          color: AppColors.white,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
   }
 }
