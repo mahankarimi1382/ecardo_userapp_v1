@@ -67,7 +67,7 @@ class _TravelScreenState extends State<TravelScreen> with SingleTickerProviderSt
                         SizedBox(height: 4),
                         Text(
                           'eCardo Global Travel Operating System',
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                          style: TextStyle(color: Colors.white60, fontSize: 12),
                         ),
                       ],
                     ),
@@ -163,8 +163,7 @@ class _TravelScreenState extends State<TravelScreen> with SingleTickerProviderSt
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        mainAxisAlignment: Main----
           Row(
             children: [
               Expanded(child: _buildFormRow(Icons.flight_takeoff, 'From', originController.text)),
@@ -188,8 +187,7 @@ class _TravelScreenState extends State<TravelScreen> with SingleTickerProviderSt
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        mainAxisAlignment: Main----
           _buildFormRow(Icons.public, 'Select Destination', 'China, Iran, Global Coverage'),
           const SizedBox(height: 35),
           _buildSearchButton('Configure eSIM / 🔍 立即搜索', () {
