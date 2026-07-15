@@ -177,7 +177,7 @@ class _ApplicationField extends StatelessWidget {
         dynamicField: CommonSingleDatePicker(
           hintText: '',
           suffixIcon: ColorFiltered(
-            colorFilter: const ColorFilter.mode(
+            colorFilter: ColorFilter.mode(
               AppColors.lightTextTertiary,
               BlendMode.srcIn,
             ),
