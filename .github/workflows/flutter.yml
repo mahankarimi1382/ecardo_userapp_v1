@@ -29,6 +29,18 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Run Analyze
+        run: |
+          flutter analyze > analysis_report.txt 2>&1 || true
+          cat analysis_report.txt
+
+      - name: Upload Analysis Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: analysis-report
+          path: analysis_report.txt
+
       - name: Build Release APK
         run: flutter build apk --release
 
