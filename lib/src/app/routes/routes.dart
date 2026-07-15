@@ -148,4 +148,5 @@ class BaseRoute {
   static const String maintenanceMode = "/maintenance_mode_route";
 
   static const String p2pTrading = "/p2p_trading_route";
+  static const String travel = "/travel_route";
 }

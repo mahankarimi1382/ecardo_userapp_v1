@@ -133,6 +133,12 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
           "icon": PngAssets.p2pTradingService,
           "navigate": BaseRoute.p2pTrading,
         },
+      if (homeController.userModel.value.data?.addons?.travel == true)
+        {
+          "title": "eCardo Travel",
+          "icon": PngAssets.walletsService,
+          "navigate": BaseRoute.travel,
+        },
     ];
 
     final int itemsPerPage = 8;

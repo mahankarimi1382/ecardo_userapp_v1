@@ -418,4 +418,8 @@ List<GetPage> routesHandler = [
     page: () => RoutesConfig.p2pTrading,
     binding: P2pBinding(),
   ),
+  GetPage(
+    name: BaseRoute.travel,
+    page: () => RoutesConfig.travel,
+  ),
 ];
