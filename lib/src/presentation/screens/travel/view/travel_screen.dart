@@ -63,7 +63,7 @@ class TravelScreen extends StatelessWidget {
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 children: [
-                  _buildServiceCard(context, 'Hotels', Icons.hotel, Colors.emerald, () {
+                  _buildServiceCard(context, 'Hotels', Icons.hotel, Colors.green, () {
                     Get.snackbar('Hotels', 'Hotel booking is active under Hotel Engine.');
                   }),
                   _buildServiceCard(context, 'eSIM & SIM', Icons.wifi, Colors.blue, () {
