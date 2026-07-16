@@ -82,67 +82,59 @@ class _GenericCardTopUpBottomSheetState
     );
     final limitText = _limitText(card, funding);
     final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
-    final screenHeight = MediaQuery.sizeOf(context).height;
-    final availableHeight = screenHeight - keyboardHeight;
-    final sheetHeight = keyboardHeight > 0
-        ? availableHeight
-        : screenHeight * 0.88;
+    final keyboardVisible = keyboardHeight > 0;
     final gateways = funding?.gateways ?? <CardGateway>[];
 
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
-      padding: EdgeInsets.only(bottom: keyboardHeight),
-      child: SizedBox(
-        height: sheetHeight,
-        child: AnimatedContainer(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutQuart,
-          margin: EdgeInsets.symmetric(horizontal: 16.w),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadiusDirectional.only(
-              topStart: Radius.circular(24.r),
-              topEnd: Radius.circular(24.r),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.black.withValues(alpha: 0.06),
-                blurRadius: 40,
-              ),
-            ],
+    return FractionallySizedBox(
+      heightFactor: 0.9,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        margin: EdgeInsets.symmetric(horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadiusDirectional.only(
+            topStart: Radius.circular(24.r),
+            topEnd: Radius.circular(24.r),
           ),
-          child: Column(
-            children: [
-              SizedBox(height: 12.h),
-              Container(
-                width: 35.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(30.r),
-                ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.06),
+              blurRadius: 40,
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 12.h),
+            Container(
+              width: 35.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(30.r),
               ),
-              SizedBox(height: 10.h),
-              Text(
-                localization.cardTopUpTitle,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16.sp,
-                  color: AppColors.lightTextPrimary,
-                ),
+            ),
+            SizedBox(height: 10.h),
+            Text(
+              localization.cardTopUpTitle,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 16.sp,
+                color: AppColors.lightTextPrimary,
               ),
-              SizedBox(height: 10.h),
-              _Divider(),
-              Expanded(
-                child: SingleChildScrollView(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: EdgeInsets.only(bottom: 30.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 16.h),
+            ),
+            SizedBox(height: 10.h),
+            _Divider(),
+            Expanded(
+              child: SingleChildScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.only(bottom: keyboardHeight + 30.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16.h),
+                    if (!keyboardVisible)
                       _BalanceBanner(
                         title: _balanceTitle(localization, funding),
                         value: _balanceValue(
@@ -297,12 +289,11 @@ class _GenericCardTopUpBottomSheetState
                               ),
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

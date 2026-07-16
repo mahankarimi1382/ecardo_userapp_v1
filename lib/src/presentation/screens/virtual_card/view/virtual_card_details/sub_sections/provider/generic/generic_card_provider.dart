@@ -174,7 +174,7 @@ class _UniversalCardDetails extends StatelessWidget {
                 child: _HeadlineValue(
                   value: '${card.amount ?? '0'} '
                       '${card.currency?.toUpperCase() ?? ''}',
-                  label: _humanize(card.type ?? 'virtual'),
+                  label: card.display?.balanceLabel ?? 'Balance',
                   alignEnd: true,
                   valueColor: AppColors.success,
                 ),
