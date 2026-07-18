@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDgFfu2VI5eHHsXsy_FlI0bXHy3-hzp6uo</string>
+	<string>AIzaSyCugrhE0iAiv4H2FFYyhEZT_AUrXGjcafM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>279734428004</string>
+	<string>292987494106</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.qunzo.user</string>
 	<key>PROJECT_ID</key>
-	<string>qunzo-b2252</string>
+	<string>ecardo-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>qunzo-b2252.firebasestorage.app</string>
+	<string>ecardo-app.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:279734428004:ios:f06064424e537a53949a71</string>
+	<string>1:292987494106:ios:9009185e45066d59138fe3</string>
 </dict>
 </plist>
