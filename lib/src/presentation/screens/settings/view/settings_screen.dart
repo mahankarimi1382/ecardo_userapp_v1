@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:qunzo_user/src/common/services/app_update_helper.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:qunzo_user/src/app/routes/routes.dart';
 import 'package:qunzo_user/src/common/services/settings_service.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -76,6 +78,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
     }
     if (Get.find<SettingsService>().getSetting("user_ticket") == "1") {
+    settingsList.add({
+
+      "icon": PngAssets.arrowRightCommonIcon,
+
+      "title": "Check for Updates",
+
+      "is_status": false,
+
+      "navigate": "update",
+
+    });
+
       settingsList.insert(4, {
         "icon": PngAssets.supportEndDrawerIcon,
         "title": localization.settingsSupport,
@@ -142,7 +156,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           localization.settingsSignOut) {
                                         await homeController.submitLogout();
                                       } else {
-                                        Get.toNamed(item["navigate"]);
+                                        if (item["navigate"] == "update") {
+
+                                          AppUpdateHelper.checkForUpdate(context, showMessageIfNoUpdate: true);
+
+                                        } else {
+
+                                          Get.toNamed(item["navigate"]);
+
+                                        }
                                       }
                                     },
                                     child: Container(
