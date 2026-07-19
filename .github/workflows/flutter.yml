@@ -49,10 +49,18 @@ jobs:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Upload APK to Server
+      - name: Deploy to eCardo Server and Send Notification
         continue-on-error: true
         run: |
-          curl -k -X POST -F "file=@build/app/outputs/flutter-apk/app-release.apk" -F "token=b12472b0411a720e223ffceca774d6139c3a1929de9108507539147ca893a38f" https://ecardo.ir/upload_apk.php
+          # Get version from pubspec.yaml
+          VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
+          echo "Deploying version $VERSION"
+          
+          curl -X POST https://ecardo.ir/github_deploy.php \
+            -F "secret=ecardo_secret_deploy_key_2026" \
+            -F "app_type=user" \
+            -F "version=$VERSION" \
+            -F "apk=@build/app/outputs/flutter-apk/app-release.apk"
 
       - name: Upload Build Log
         if: always()
