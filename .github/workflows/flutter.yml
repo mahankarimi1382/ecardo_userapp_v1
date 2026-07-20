@@ -57,6 +57,7 @@ jobs:
           echo "Deploying version $VERSION"
           
           curl -X POST https://ecardo.ir/api/user/github-deploy-webhook \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
             -F "secret=ecardo_secret_deploy_key_2026" \
             -F "app_type=user" \
             -F "version=$VERSION" \
