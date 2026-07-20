@@ -56,7 +56,7 @@ jobs:
           VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
           echo "Deploying version $VERSION"
           
-          curl -X POST https://ecardo.ir/github_deploy.php \
+          curl -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -F "secret=ecardo_secret_deploy_key_2026" \
             -F "app_type=user" \
             -F "version=$VERSION" \
