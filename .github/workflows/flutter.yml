@@ -49,10 +49,10 @@ jobs:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Deploy to eCardo Server and Send Notification
+      - name: Deploy APK to eCardo Server
         continue-on-error: true
         run: |
-          # Get version from pubspec.yaml
+          # Extract version from pubspec.yaml (e.g. 1.0.1+2 -> 1.0.1)
           VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
           echo "Deploying version $VERSION"
           
