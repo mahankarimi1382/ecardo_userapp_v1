@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,7 +60,7 @@ class _TravelServiceScreenState extends State<TravelServiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         backgroundColor: TravelTheme.background,
         appBar: const CommonDefaultAppBar(
@@ -1119,7 +1121,7 @@ class _RoutePoint extends StatelessWidget {
       children: [
         Text(
           time,
-          textDirection: TextDirection.ltr,
+          textDirection: ui.TextDirection.ltr,
           style: const TextStyle(
             color: TravelTheme.navy,
             fontSize: 19,
@@ -1128,7 +1130,7 @@ class _RoutePoint extends StatelessWidget {
         ),
         Text(
           code,
-          textDirection: TextDirection.ltr,
+          textDirection: ui.TextDirection.ltr,
           style: const TextStyle(color: TravelTheme.muted, fontSize: 11),
         ),
       ],
@@ -1145,7 +1147,7 @@ class _Price extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '${NumberFormat('#,###').format(offer.totalAmount)} ${offer.currency}',
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
       style: const TextStyle(
         color: Color(0xFF806600),
         fontSize: 16,

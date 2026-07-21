@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -35,7 +37,7 @@ class TravelCheckoutScreen extends StatelessWidget {
     final symbol = wallet?.symbol ?? '';
 
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         backgroundColor: TravelTheme.background,
         appBar: const CommonDefaultAppBar(
@@ -247,7 +249,7 @@ class _OrderSummary extends StatelessWidget {
                   Expanded(child: Text(line.label)),
                   Text(
                     '${NumberFormat('#,###').format(line.amount)} ${line.currency.isEmpty ? offer.currency : line.currency}',
-                    textDirection: TextDirection.ltr,
+                    textDirection: ui.TextDirection.ltr,
                   ),
                 ],
               ),
@@ -267,7 +269,7 @@ class _OrderSummary extends StatelessWidget {
               ),
               Text(
                 '${NumberFormat('#,###').format(offer.totalAmount)} ${offer.currency}',
-                textDirection: TextDirection.ltr,
+                textDirection: ui.TextDirection.ltr,
                 style: const TextStyle(
                   color: Color(0xFF806600),
                   fontSize: 21,
@@ -323,7 +325,7 @@ class _WalletSummary extends StatelessWidget {
                 ),
                 Text(
                   '$balance $symbol',
-                  textDirection: TextDirection.ltr,
+                  textDirection: ui.TextDirection.ltr,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,

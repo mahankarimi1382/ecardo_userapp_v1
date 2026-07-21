@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +41,7 @@ class _TravelOfferScreenState extends State<TravelOfferScreen> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         backgroundColor: TravelTheme.background,
         appBar: const CommonDefaultAppBar(
@@ -207,7 +209,7 @@ class _LargeValue extends StatelessWidget {
       children: [
         Text(
           value,
-          textDirection: TextDirection.ltr,
+          textDirection: ui.TextDirection.ltr,
           style: const TextStyle(
             color: TravelTheme.navy,
             fontSize: 22,
@@ -216,7 +218,7 @@ class _LargeValue extends StatelessWidget {
         ),
         Text(
           label,
-          textDirection: TextDirection.ltr,
+          textDirection: ui.TextDirection.ltr,
           style: const TextStyle(color: TravelTheme.muted),
         ),
       ],
@@ -299,7 +301,7 @@ class _Attributes extends StatelessWidget {
                     ),
                     Text(
                       entry.value.toString(),
-                      textDirection: TextDirection.ltr,
+                      textDirection: ui.TextDirection.ltr,
                       style: const TextStyle(
                         color: TravelTheme.navy,
                         fontWeight: FontWeight.w700,
@@ -354,7 +356,7 @@ class _Pricing extends StatelessWidget {
                   ),
                   Text(
                     '${NumberFormat('#,###').format(line.amount)} ${line.currency.isEmpty ? offer.currency : line.currency}',
-                    textDirection: TextDirection.ltr,
+                    textDirection: ui.TextDirection.ltr,
                     style: const TextStyle(color: Colors.white),
                   ),
                 ],
@@ -378,7 +380,7 @@ class _Pricing extends StatelessWidget {
               ),
               Text(
                 '${NumberFormat('#,###').format(offer.totalAmount)} ${offer.currency}',
-                textDirection: TextDirection.ltr,
+                textDirection: ui.TextDirection.ltr,
                 style: const TextStyle(
                   color: TravelTheme.goldSoft,
                   fontSize: 20,
