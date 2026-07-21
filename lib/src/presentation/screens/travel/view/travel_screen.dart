@@ -1,415 +1,761 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/presentation/screens/home/controller/home_controller.dart';
+
 import '../controller/travel_controller.dart';
+import '../model/travel_model.dart';
+import 'travel_service_screen.dart';
+import 'widgets/travel_theme.dart';
 
-class TravelScreen extends StatefulWidget {
-  const TravelScreen({Key? key}) : super(key: key);
-
-  @override
-  _TravelScreenState createState() => _TravelScreenState();
-}
-
-class _TravelScreenState extends State<TravelScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final TravelController controller = Get.put(TravelController());
-
-  // Form Controllers
-  final originController = TextEditingController(text: 'THR');
-  final destController = TextEditingController(text: 'SYZ');
-  final dateController = TextEditingController(text: '2026-07-20');
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
+class TravelScreen extends StatelessWidget {
+  const TravelScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF4F5F7),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            // 1. Alitrip/Fliggy Vibrant Orange Gradient Top Header
-            Container(
-              width: double.infinity,
-              height: 240,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFFFF8C00), Color(0xFFFFB900)], // Fliggy Signature Yellow/Orange
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 60.0, left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          '飞猪旅行 Fliggy',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
+    final controller = Get.isRegistered<TravelController>()
+        ? Get.find<TravelController>()
+        : Get.put(TravelController());
+    final home = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>()
+        : null;
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: TravelTheme.background,
+        body: SafeArea(
+          child: RefreshIndicator(
+            color: TravelTheme.gold,
+            onRefresh: controller.loadBootstrap,
+            child: Obx(
+              () => CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 44),
+                    sliver: SliverList.list(
+                      children: [
+                        _Header(home: home),
+                        const SizedBox(height: 24),
+                        _TravelHero(controller: controller),
+                        const SizedBox(height: 20),
+                        _CreditCard(home: home),
+                        const SizedBox(height: 18),
+                        const _WalletActions(),
+                        const SizedBox(height: 28),
+                        _PrimaryServices(controller: controller),
+                        const SizedBox(height: 24),
+                        _Promotion(controller: controller),
+                        const SizedBox(height: 30),
+                        _RecentSearches(controller: controller),
+                        const SizedBox(height: 30),
+                        _FeaturedDestinations(controller: controller),
+                        if (controller.errorMessage.value.isNotEmpty &&
+                            controller.services.isEmpty) ...[
+                          const SizedBox(height: 24),
+                          _EmptyState(
+                            message: controller.errorMessage.value,
+                            onRetry: controller.loadBootstrap,
                           ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'eCardo Global Travel Operating System',
-                          style: TextStyle(color: Colors.white60, fontSize: 12),
-                        ),
+                        ],
                       ],
                     ),
-                    const CircleAvatar(
-                      backgroundColor: Colors.white30,
-                      child: Icon(Icons.person, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  final HomeController? home;
+
+  const _Header({required this.home});
+
+  @override
+  Widget build(BuildContext context) {
+    final name = home?.userModel.value.data?.fullName;
+    return Row(
+      children: [
+        Container(
+          width: 46,
+          height: 46,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: TravelTheme.gold, width: 1.5),
+          ),
+          child: const Icon(Icons.person_rounded, color: TravelTheme.navy),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'eCardo Travel',
+                style: TextStyle(
+                  color: TravelTheme.navy,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              if (name?.isNotEmpty == true)
+                Text(
+                  name!,
+                  style: const TextStyle(
+                    color: TravelTheme.muted,
+                    fontSize: 11,
+                  ),
+                ),
+            ],
+          ),
+        ),
+        IconButton(
+          onPressed: () => Get.toNamed(BaseRoute.notifications),
+          icon: const Icon(
+            Icons.notifications_none_rounded,
+            color: TravelTheme.navy,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TravelHero extends StatelessWidget {
+  final TravelController controller;
+
+  const _TravelHero({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    final hero = _firstContent(controller, 'home_hero');
+    return Container(
+      height: 210,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: TravelTheme.cardRadius,
+        gradient: const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [TravelTheme.navy, Color(0xFF334155)],
+        ),
+        boxShadow: TravelTheme.cardShadow,
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (hero?.imageUrl.isNotEmpty == true)
+            CachedNetworkImage(
+              imageUrl: hero!.imageUrl,
+              fit: BoxFit.cover,
+              errorWidget: (_, __, ___) => const SizedBox.shrink(),
+            ),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0x220F172A), Color(0xE60F172A)],
+              ),
+            ),
+          ),
+          Positioned(
+            right: 22,
+            left: 22,
+            bottom: 22,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  hero?.title.isNotEmpty == true
+                      ? hero!.title
+                      : 'تجربه مجلل سفر',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 7),
+                Text(
+                  hero?.subtitle.isNotEmpty == true
+                      ? hero!.subtitle
+                      : 'پرواز، اقامت و اتصال جهانی در یک تجربه یکپارچه.',
+                  style: const TextStyle(
+                    color: Color(0xFFE2E8F0),
+                    fontSize: 13,
+                    height: 1.6,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CreditCard extends StatelessWidget {
+  final HomeController? home;
+
+  const _CreditCard({required this.home});
+
+  @override
+  Widget build(BuildContext context) {
+    final wallet =
+        home?.walletsList.firstWhereOrNull((item) => item.isDefault == true) ??
+        home?.walletsList.firstOrNull;
+    final balance =
+        wallet?.formattedBalance ?? home?.userModel.value.data?.balance ?? '—';
+    final symbol = wallet?.symbol ?? '';
+
+    return Container(
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        borderRadius: TravelTheme.cardRadius,
+        gradient: const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [TravelTheme.navy, Color(0xFF303B54)],
+        ),
+        boxShadow: TravelTheme.cardShadow,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(
+                Icons.contactless_rounded,
+                color: TravelTheme.gold,
+                size: 30,
+              ),
+              Spacer(),
+              Text(
+                'TRAVEL CREDIT BALANCE',
+                textDirection: TextDirection.ltr,
+                style: TextStyle(
+                  color: TravelTheme.goldSoft,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Text(
+            '$balance $symbol',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textDirection: TextDirection.ltr,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Row(
+            children: [
+              Text(
+                'ECARDO TRAVEL',
+                textDirection: TextDirection.ltr,
+                style: TextStyle(
+                  color: Color(0xFFCBD5E1),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Spacer(),
+              _CardServiceIcon(icon: Icons.flight_rounded),
+              SizedBox(width: 6),
+              _CardServiceIcon(icon: Icons.sim_card_rounded),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CardServiceIcon extends StatelessWidget {
+  final IconData icon;
+
+  const _CardServiceIcon({required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(
+        color: TravelTheme.gold.withValues(alpha: 0.15),
+        shape: BoxShape.circle,
+        border: Border.all(color: TravelTheme.gold.withValues(alpha: 0.55)),
+      ),
+      child: Icon(icon, size: 19, color: TravelTheme.goldSoft),
+    );
+  }
+}
+
+class _WalletActions extends StatelessWidget {
+  const _WalletActions();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: TravelTheme.cardRadius,
+        boxShadow: TravelTheme.cardShadow,
+      ),
+      child: Row(
+        children: [
+          _WalletAction(
+            label: 'افزایش اعتبار',
+            icon: Icons.add_rounded,
+            selected: true,
+            onTap: () => Get.toNamed(BaseRoute.addMoney),
+          ),
+          _WalletAction(
+            label: 'انتقال',
+            icon: Icons.swap_horiz_rounded,
+            onTap: () => Get.toNamed(BaseRoute.transfer),
+          ),
+          _WalletAction(
+            label: 'تاریخچه',
+            icon: Icons.history_rounded,
+            onTap: () => Get.toNamed(BaseRoute.transactions),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WalletAction extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _WalletAction({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+    this.selected = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: TravelTheme.pillRadius,
+        child: Column(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: selected ? TravelTheme.goldSoft : TravelTheme.field,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: TravelTheme.navy),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                color: TravelTheme.text,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PrimaryServices extends StatelessWidget {
+  final TravelController controller;
+
+  const _PrimaryServices({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    if (controller.isBootstrapLoading.value && controller.services.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(30),
+          child: CircularProgressIndicator(color: TravelTheme.gold),
+        ),
+      );
+    }
+
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: controller.services.map((service) {
+        final width = (MediaQuery.sizeOf(context).width - 52) / 2;
+        return SizedBox(
+          width: width,
+          child: Material(
+            color: service.key == 'flight'
+                ? TravelTheme.navy
+                : TravelTheme.field,
+            borderRadius: TravelTheme.pillRadius,
+            child: InkWell(
+              borderRadius: TravelTheme.pillRadius,
+              onTap: () => Get.to(() => TravelServiceScreen(service: service)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 15,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      service.icon,
+                      color: service.key == 'flight'
+                          ? Colors.white
+                          : TravelTheme.navy,
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        service.displayName,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: service.key == 'flight'
+                              ? Colors.white
+                              : TravelTheme.navy,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
 
-            // 2. Central Alitrip Styled Booking Card
-            Padding(
-              padding: const EdgeInsets.only(top: 130.0, left: 16, right: 16),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 15,
-                          offset: Offset(0, 8),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // Tab Selector (Hotels, Flights, eSIM)
-                        TabBar(
-                          controller: _tabController,
-                          indicatorColor: const Color(0xFFFF8C00),
-                          labelColor: const Color(0xFFFF8C00),
-                          unselectedLabelColor: Colors.grey,
-                          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                          tabs: const [
-                            Tab(icon: Icon(Icons.hotel), text: 'Hotels / 酒店'),
-                            Tab(icon: Icon(Icons.flight), text: 'Flights / 机票'),
-                            Tab(icon: Icon(Icons.wifi), text: 'eSIM / 流量'),
-                          ],
-                        ),
-                        
-                        // Tab Content Area
-                        SizedBox(
-                          height: 230,
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              _buildHotelTab(),
-                              _buildFlightTab(context),
-                              _buildEsimTab(context),
-                            ],
-                          ),
-                        ),
-                      ],
+class _Promotion extends StatelessWidget {
+  final TravelController controller;
+
+  const _Promotion({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    final promotion = _firstContent(controller, 'promotions');
+    if (promotion == null) return const SizedBox.shrink();
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: TravelTheme.goldSoft,
+        borderRadius: TravelTheme.cardRadius,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              color: TravelTheme.gold.withValues(alpha: 0.22),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.flight_takeoff_rounded, size: 30),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (promotion.badge.isNotEmpty)
+                  Text(
+                    promotion.badge,
+                    style: const TextStyle(
+                      color: Color(0xFF745C00),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-
-                  // 3. Recommended / Flash Sale Packages Section (Alitrip style)
-                  const SizedBox(height: 24),
-                  _buildFlashSalesSection(),
-                ],
-              ),
+                Text(
+                  promotion.title,
+                  style: const TextStyle(
+                    color: TravelTheme.navy,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                if (promotion.subtitle.isNotEmpty)
+                  Text(
+                    promotion.subtitle,
+                    style: const TextStyle(
+                      color: Color(0xFF745C00),
+                      fontSize: 12,
+                    ),
+                  ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHotelTab() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildFormRow(Icons.location_on, 'Destination', 'Tehran, Iran / 德黑兰'),
-          const Divider(height: 24),
-          _buildFormRow(Icons.calendar_today, 'Check-in / Out', '2026-07-20 ➔ 2026-07-25'),
-          const SizedBox(height: 20),
-          _buildSearchButton('Search Hotels / 🔍 立即搜索', () {
-            Get.snackbar('Hotels', 'GDS Hotel availability check triggered.');
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFlightTab(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: _buildFormRow(Icons.flight_takeoff, 'From', originController.text)),
-              const Icon(Icons.swap_horiz, color: Color(0xFFFF8C00)),
-              Expanded(child: _buildFormRow(Icons.flight_land, 'To', destController.text)),
-            ],
           ),
-          const Divider(height: 24),
-          _buildFormRow(Icons.calendar_today, 'Departure Date', dateController.text),
-          const SizedBox(height: 20),
-          _buildSearchButton('Search Flights / 🔍 立即搜索', () {
-            controller.searchFlights(originController.text, destController.text, dateController.text);
-            _showFlightsDialog(context);
-          }),
         ],
       ),
     );
   }
+}
 
-  Widget _buildEsimTab(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          _buildFormRow(Icons.public, 'Select Destination', 'China, Iran, Global Coverage'),
-          const SizedBox(height: 35),
-          _buildSearchButton('Configure eSIM / 🔍 立即搜索', () {
-            controller.loadCountries();
-            _showEsimBottomSheet(context);
-          }),
-        ],
-      ),
-    );
-  }
+class _RecentSearches extends StatelessWidget {
+  final TravelController controller;
 
-  Widget _buildFormRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, color: Colors.grey, size: 20),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),
-            const SizedBox(height: 2),
-            Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF0F172A))),
-          ],
-        )
-      ],
-    );
-  }
+  const _RecentSearches({required this.controller});
 
-  Widget _buildSearchButton(String label, VoidCallback onTap) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFF8C00), // Fliggy Orange
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        minimumSize: const Size(double.infinity, 50),
-        elevation: 4,
-      ),
-      onPressed: onTap,
-      child: Text(
-        label,
-        style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget _buildFlashSalesSection() {
+  @override
+  Widget build(BuildContext context) {
+    final items = _allContent(controller, 'recent_searches');
+    if (items.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text(
-              'Fliggy Flash Sales / 飞猪爆款特惠',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
-            ),
-            Text(
-              'View All',
-              style: TextStyle(color: Color(0xFFFF8C00), fontSize: 12, fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-        const SizedBox(height: 12),
+        const _SectionTitle(title: 'جستجوهای اخیر'),
+        const SizedBox(height: 14),
         SizedBox(
-          height: 150,
-          child: ListView(
+          height: 132,
+          child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            children: [
-              _buildFlashCard('China Local eSIM', '5G High Speed', '¥ 45', 'https://flagcdn.com/w320/cn.png'),
-              _buildFlashCard('Tehran Luxury Hotel', '5 Star Espinas', '¥ 1280', 'https://flagcdn.com/w320/ir.png'),
-              _buildFlashCard('IKA Airport SIM', 'Physical Handover', '¥ 68', 'https://flagcdn.com/w320/ir.png'),
-            ],
+            itemCount: items.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, index) {
+              final item = items[index];
+              return Container(
+                width: 170,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: TravelTheme.cardRadius,
+                  border: Border.all(color: TravelTheme.line),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.travel_explore_rounded,
+                          color: TravelTheme.gold,
+                          size: 20,
+                        ),
+                        const Spacer(),
+                        if (item.badge.isNotEmpty)
+                          Text(
+                            item.badge,
+                            style: const TextStyle(
+                              color: Color(0xFF745C00),
+                              fontSize: 10,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      item.title,
+                      textDirection: TextDirection.ltr,
+                      style: const TextStyle(
+                        color: TravelTheme.navy,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      item.subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: TravelTheme.muted,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-        )
+        ),
       ],
     );
   }
+}
 
-  Widget _buildFlashCard(String title, String subtitle, String price, String flagUrl) {
+class _FeaturedDestinations extends StatelessWidget {
+  final TravelController controller;
+
+  const _FeaturedDestinations({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    final items = _allContent(controller, 'featured_destinations');
+    if (items.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionTitle(title: 'پیشنهادهای ویژه'),
+        const SizedBox(height: 14),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: items.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 1.25,
+          ),
+          itemBuilder: (_, index) => _DestinationCard(item: items[index]),
+        ),
+      ],
+    );
+  }
+}
+
+class _DestinationCard extends StatelessWidget {
+  final TravelContentItem item;
+
+  const _DestinationCard({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      width: 140,
-      margin: const EdgeInsets.only(right: 12),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: TravelTheme.cardRadius,
+        gradient: const LinearGradient(
+          colors: [TravelTheme.navySoft, TravelTheme.navy],
+        ),
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (item.imageUrl.isNotEmpty)
+            CachedNetworkImage(
+              imageUrl: item.imageUrl,
+              fit: BoxFit.cover,
+              errorWidget: (_, __, ___) => const SizedBox.shrink(),
+            ),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Color(0xD90F172A)],
+              ),
+            ),
+          ),
+          Positioned(
+            right: 14,
+            left: 14,
+            bottom: 13,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                if (item.subtitle.isNotEmpty)
+                  Text(
+                    item.subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xFFE2E8F0),
+                      fontSize: 10,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+
+  const _SectionTitle({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: const TextStyle(
+        color: TravelTheme.navy,
+        fontSize: 20,
+        fontWeight: FontWeight.w900,
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+
+  const _EmptyState({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.black12),
+        borderRadius: TravelTheme.cardRadius,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(flagUrl, width: 32, height: 20),
-            const SizedBox(height: 12),
-            Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-            Text(subtitle, style: const TextStyle(fontSize: 9, color: Colors.grey)),
-            const Spacer(),
-            Text(price, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFFF8C00))),
-          ],
-        ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.travel_explore_rounded,
+            color: TravelTheme.gold,
+            size: 38,
+          ),
+          const SizedBox(height: 10),
+          Text(message, textAlign: TextAlign.center),
+          TextButton(onPressed: onRetry, child: const Text('تلاش دوباره')),
+        ],
       ),
     );
   }
+}
 
-  void _showEsimBottomSheet(BuildContext context) {
-    Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Fliggy Global eSIM / 飞猪境外上网', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            Obx(() {
-              if (controller.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return SizedBox(
-                height: 120,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.countries.length,
-                  itemBuilder: (context, index) {
-                    var c = controller.countries[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 12.0),
-                      child: ActionChip(
-                        backgroundColor: const Color(0xFFFFF2E6),
-                        avatar: Image.network(c['flag'], width: 24, height: 24),
-                        label: Text(c['name'], style: const TextStyle(color: Color(0xFFFF8C00), fontWeight: FontWeight.bold)),
-                        onPressed: () {
-                          controller.loadPackages(c['code']);
-                          Get.back();
-                          _showPackagesDialog(context);
-                        },
-                      ),
-                    );
-                  },
-                ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
-  }
+TravelContentItem? _firstContent(TravelController controller, String key) {
+  final items = _allContent(controller, key);
+  return items.firstOrNull;
+}
 
-  void _showPackagesDialog(BuildContext context) {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Fliggy eSIM Packages / 飞猪境外流量'),
-        content: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return SizedBox(
-            width: double.maxFinite,
-            height: 250,
-            child: ListView.builder(
-              itemCount: controller.products.length,
-              itemBuilder: (context, index) {
-                var p = controller.products[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  child: ListTile(
-                    title: Text(p.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text(p.description),
-                    trailing: Text('\$${p.sellingPrice}', style: const TextStyle(color: Color(0xFFFF8C00), fontWeight: FontWeight.bold)),
-                    onTap: () {
-                      Get.back();
-                      Get.snackbar('Purchase Success', 'SIM order placed successfully. Balance deducted from your Credit Line.');
-                    },
-                  ),
-                );
-              },
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  void _showFlightsDialog(BuildContext context) {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Primary GDS Flight Finder / 飞猪机票'),
-        content: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (controller.flights.isEmpty) {
-            return const Text('No active flight options returned in sandbox mode.');
-          }
-          return SizedBox(
-            width: double.maxFinite,
-            height: 250,
-            child: ListView.builder(
-              itemCount: controller.flights.length,
-              itemBuilder: (context, index) {
-                var f = controller.flights[index];
-                return Card(
-                  child: ListTile(
-                    title: Text('Flight ${f.flightNumber} (${f.airlineName})'),
-                    subtitle: Text('${f.departureAirport} ➔ ${f.arrivalAirport}'),
-                    trailing: Text('\$${f.finalPrice}', style: const TextStyle(color: Color(0xFFFF8C00), fontWeight: FontWeight.bold)),
-                    onTap: () {
-                      Get.back();
-                      Get.snackbar('Booking Placed', 'PNR generated. Operations team will ticket in +48h.');
-                    },
-                  ),
-                );
-              },
-            ),
-          );
-        }),
-      ),
-    );
-  }
+List<TravelContentItem> _allContent(TravelController controller, String key) {
+  return controller.services.expand((service) => service.content(key)).toList();
 }

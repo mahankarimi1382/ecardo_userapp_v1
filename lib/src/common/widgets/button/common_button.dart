@@ -17,6 +17,8 @@ class CommonButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? loadingColor;
   final bool? isLoading;
+  final Gradient? gradient;
+  final List<BoxShadow>? boxShadow;
 
   const CommonButton({
     super.key,
@@ -33,6 +35,8 @@ class CommonButton extends StatelessWidget {
     this.backgroundColor = AppColors.lightPrimary,
     this.isLoading,
     this.loadingColor,
+    this.gradient,
+    this.boxShadow,
   });
 
   @override
@@ -47,7 +51,9 @@ class CommonButton extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius.r),
-          color: backgroundColor,
+          color: gradient == null ? backgroundColor : null,
+          gradient: gradient,
+          boxShadow: boxShadow,
           border: borderColor != null
               ? Border.all(color: borderColor!, width: borderWidth.w)
               : null,

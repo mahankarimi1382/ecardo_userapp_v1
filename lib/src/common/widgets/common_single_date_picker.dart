@@ -26,6 +26,9 @@ class CommonSingleDatePicker extends StatefulWidget {
   final Function()? suffixIconOnTap;
   final double? suffixIconWidth;
   final double? suffixIconHeight;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
+  final String datePattern;
 
   const CommonSingleDatePicker({
     super.key,
@@ -49,6 +52,9 @@ class CommonSingleDatePicker extends StatefulWidget {
     this.suffixIconOnTap,
     this.suffixIconWidth,
     this.suffixIconHeight,
+    this.firstDate,
+    this.lastDate,
+    this.datePattern = "dd/MM/yyyy",
   });
 
   @override
@@ -60,11 +66,12 @@ class _CommonSingleDatePickerState extends State<CommonSingleDatePicker> {
   late DateTime _selectedDay;
   late TextEditingController _dateController;
 
-  final DateFormat dateFormat = DateFormat("dd/MM/yyyy");
+  late final DateFormat dateFormat;
 
   @override
   void initState() {
     super.initState();
+    dateFormat = DateFormat(widget.datePattern);
     _selectedDay = widget.initialDate ?? DateTime.now();
     _dateController = TextEditingController(
       text: widget.initialDate != null
@@ -202,8 +209,8 @@ class _CommonSingleDatePickerState extends State<CommonSingleDatePicker> {
     final DateTime? picked = await showRoundedDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime.utc(1990, 1, 1),
-      lastDate: DateTime.utc(2030, 12, 31),
+      firstDate: widget.firstDate ?? DateTime.utc(1990, 1, 1),
+      lastDate: widget.lastDate ?? DateTime.utc(2030, 12, 31),
       borderRadius: 16,
       height: MediaQuery.of(context).size.height * 0.35,
       theme: ThemeData(
