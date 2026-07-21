@@ -11,7 +11,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="Qunzo User">
+        android:label="eCardo">
         
 
         <activity
