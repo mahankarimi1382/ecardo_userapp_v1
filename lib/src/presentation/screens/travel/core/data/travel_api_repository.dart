@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:qunzo_user/src/network/service/token_service.dart';
 
 import '../models/travel_models.dart';

@@ -10,6 +10,8 @@ The intentional first-party gateway `https://trip.ecardo.ir/api/v1` is preserved
 
 Static review confirmed valid JSON in all existing ARB files, complete coverage for all used Travel localization keys in the English template, no missing local import/export targets, no old provider/path remnants, and no `git diff --check` errors.
 
+The first release build reached Dart compilation and exposed an ambiguous `Response` import between Dio and GetX in `TravelApiRepository`. The GetX import now hides `Response`, leaving the repository's typed response explicitly resolved to Dio. The release build must be rerun in CI to confirm the next build stage.
+
 Travel personal information opens the authenticated profile editor at `BaseRoute.profileSettings`; the signup-only `BaseRoute.personalInfo` route is intentionally not used.
 
 ## Files Changed
@@ -40,6 +42,7 @@ Travel personal information opens the authenticated profile editor at `BaseRoute
 - English is the complete initial Travel locale; Persian, Arabic, Russian, and Chinese translations remain pending.
 - Generated localization Dart files were intentionally not modified.
 - The first CI/build step must regenerate localizations from `lib/l10n/app_en.arb` before compilation because generated localization Dart files are tracked but were intentionally not edited manually.
+- The latest CI release build stopped at the now-fixed Dio/GetX `Response` import conflict; a post-fix release build has not yet run.
 
 ## Exact Next Steps
 
