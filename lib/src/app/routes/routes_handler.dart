@@ -421,5 +421,6 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.travel,
     page: () => RoutesConfig.travel,
+    binding: TravelBinding(),
   ),
 ];

@@ -62,6 +62,7 @@ import '../../presentation/screens/settings/controller/reply_ticket_controller.d
 import '../../presentation/screens/settings/controller/support_ticket_controller.dart';
 import '../../presentation/screens/settings/controller/two_factor_authentication_controller.dart';
 import '../../presentation/screens/transactions/controller/transactions_controller.dart';
+import '../../presentation/screens/travel/core/controller/travel_controller.dart';
 import '../../presentation/screens/transfer/controller/transfer_controller.dart';
 import '../../presentation/screens/transfer/controller/transfer_history_controller.dart';
 import '../../presentation/screens/transfer/controller/transfer_received_history_controller.dart';
@@ -614,5 +615,12 @@ class P2pBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<P2pController>(() => P2pController());
     Get.lazyPut<PaymentAccountController>(() => PaymentAccountController());
+  }
+}
+
+class TravelBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<TravelController>(() => TravelController());
   }
 }
