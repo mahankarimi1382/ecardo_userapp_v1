@@ -16,6 +16,17 @@ Mock-mode offers can be browsed but cannot be purchased. This deliberately remov
 
 Static review confirmed no `git diff --check` errors. The live bootstrap and normalized search endpoints were checked read-only on July 26, 2026.
 
+The Travel landing page now keeps bootstrap loading separate from authenticated
+order/activity loading. A slow or failed order request can no longer leave the
+service area as an unexplained gray loading block. Bootstrap failures display
+the shared translated error and retry controls. The enabled services render in
+the approved three-column mini-app order: Flight, Hotel, and eSIM.
+
+The production bootstrap now reports Hotel and Flight as `catalog`, backed by
+the normalized `master_json` snapshot provider. Both remain browse-only with
+`search` and `offer_details`; wallet checkout is intentionally disabled until a
+live provider revalidates availability and price. eSIM remains in mock mode.
+
 The first release build reached Dart compilation and exposed an ambiguous `Response` import between Dio and GetX in `TravelApiRepository`. The GetX import now hides `Response`, leaving the repository's typed response explicitly resolved to Dio. The release build must be rerun in CI to confirm the next build stage.
 
 Travel personal information opens the authenticated profile editor at `BaseRoute.profileSettings`; the signup-only `BaseRoute.personalInfo` route is intentionally not used.
@@ -39,8 +50,8 @@ Travel personal information opens the authenticated profile editor at `BaseRoute
 
 ## Known Limitations
 
-- Hotel, flight, and eSIM discovery use normalized gateway responses. The currently deployed bootstrap marks all three services as `mock`, so purchasing is intentionally unavailable.
-- Live order history, token exchange, hotel booking, and hotel wallet payment remain connected, but checkout is gated while the hotel service is in mock mode.
+- Hotel, flight, and eSIM discovery use normalized gateway responses. Hotel and Flight currently use browse-only `catalog` mode; eSIM remains `mock`.
+- Live order history, token exchange, hotel booking, and hotel wallet payment remain connected, but checkout is gated while the selected service is not live with an explicit purchase capability.
 - Destination, date, room, guest, origin, passenger-count, and eSIM country controls are editable. Autocomplete datasets and filters remain product follow-ups.
 - Saved travelers are hidden from the account hub until backend persistence endpoints are available. No fake personal traveler records are shown.
 - My hotels, My flights, and My eSIMs use filtered views of one normalized order collection; server-side pagination and filters remain a backend follow-up.

@@ -12,6 +12,8 @@ class TravelController extends GetxController {
     : repository = repository ?? TravelApiRepository();
 
   final RxBool isLoading = false.obs;
+  final RxBool isBootstrapLoading = false.obs;
+  final RxBool isActivityLoading = false.obs;
   final RxBool isCheckoutLoading = false.obs;
   final RxBool checkoutFailed = false.obs;
   final RxnString bootstrapError = RxnString();
@@ -53,12 +55,15 @@ class TravelController extends GetxController {
   }
 
   Future<void> _loadBootstrap() async {
+    isBootstrapLoading.value = true;
     bootstrapError.value = null;
     try {
       bootstrap.value = await repository.getBootstrap();
     } catch (error) {
       bootstrap.value = null;
       bootstrapError.value = error.toString();
+    } finally {
+      isBootstrapLoading.value = false;
     }
   }
 
@@ -94,6 +99,7 @@ class TravelController extends GetxController {
   }
 
   Future<void> _loadOrders() async {
+    isActivityLoading.value = true;
     try {
       final loadedOrders = await repository.getOrders();
       orders.assignAll(loadedOrders);
@@ -113,6 +119,8 @@ class TravelController extends GetxController {
     } catch (_) {
       orders.clear();
       activity.clear();
+    } finally {
+      isActivityLoading.value = false;
     }
   }
 

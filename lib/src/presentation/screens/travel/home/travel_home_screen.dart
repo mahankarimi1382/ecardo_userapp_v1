@@ -40,24 +40,33 @@ class TravelHomeScreen extends StatelessWidget {
           padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 36.h),
           children: [
             Obx(() {
-              final services = controller.bootstrap.value?.services ?? const [];
+              final bootstrap = controller.bootstrap.value;
+              final services = bootstrap?.services ?? const [];
               final homeHero = _homeHero(services);
-              return _Hero(
-                eyebrow:
-                    homeHero['subtitle']?.toString() ??
-                    localization.travelHeroEyebrow,
-                title:
-                    homeHero['title']?.toString() ??
-                    localization.travelHeroTitle,
+
+              return Column(
+                children: [
+                  _Hero(
+                    eyebrow:
+                        homeHero['subtitle']?.toString() ??
+                        localization.travelHeroEyebrow,
+                    title:
+                        homeHero['title']?.toString() ??
+                        localization.travelHeroTitle,
+                  ),
+                  SizedBox(height: 22.h),
+                  _Services(
+                    services: services,
+                    isLoading: controller.isBootstrapLoading.value,
+                    hasError:
+                        bootstrap == null &&
+                        controller.bootstrapError.value != null,
+                    localization: localization,
+                    onRetry: controller.reloadBootstrap,
+                  ),
+                ],
               );
             }),
-            SizedBox(height: 22.h),
-            Obx(
-              () => _Services(
-                controller: controller,
-                localization: localization,
-              ),
-            ),
             SizedBox(height: 28.h),
             TravelSectionHeader(
               title: localization.travelRecentActivity,
@@ -66,8 +75,12 @@ class TravelHomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Obx(
-              () => controller.isLoading.value && controller.activity.isEmpty
+              () =>
+                  controller.isActivityLoading.value &&
+                  controller.activity.isEmpty
                   ? const SizedBox(height: 120, child: CommonLoading())
+                  : controller.activity.isEmpty
+                  ? const SizedBox.shrink()
                   : Column(
                       children: controller.activity
                           .take(3)
@@ -207,55 +220,70 @@ class _Hero extends StatelessWidget {
 }
 
 class _Services extends StatelessWidget {
-  final TravelController controller;
+  final List<TravelServiceConfig> services;
+  final bool isLoading;
+  final bool hasError;
   final AppLocalizations localization;
+  final Future<void> Function() onRetry;
 
   const _Services({
-    required this.controller,
+    required this.services,
+    required this.isLoading,
+    required this.hasError,
     required this.localization,
+    required this.onRetry,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bootstrap = controller.bootstrap.value;
-    if (bootstrap == null) {
-      if (controller.isLoading.value) {
-        return const SizedBox(height: 120, child: CommonLoading());
+    if (services.isEmpty) {
+      if (isLoading) {
+        return const SizedBox(height: 112, child: CommonLoading());
       }
-      return Column(
-        children: [
-          TravelEmptyState(message: localization.allControllerLoadError),
-          CommonButton(
-            width: double.infinity,
-            text: localization.noInternetConnectionRetryButton,
-            onPressed: controller.reloadBootstrap,
-          ),
-        ],
-      );
-    }
-    if (bootstrap.services.isEmpty) {
+      if (hasError) {
+        return Column(
+          children: [
+            TravelEmptyState(message: localization.allControllerLoadError),
+            CommonButton(
+              width: double.infinity,
+              text: localization.noInternetConnectionRetryButton,
+              onPressed: onRetry,
+            ),
+          ],
+        );
+      }
       return TravelEmptyState(message: localization.travelOfferUnavailable);
     }
-    return Wrap(
-      spacing: 12.w,
-      runSpacing: 12.h,
-      children: bootstrap.services
-          .map(
-            (service) => SizedBox(
-              width: (MediaQuery.sizeOf(context).width - 52.w) / 2,
-              child: _ServiceTile(
-                color: travelProductColor(service.type),
-                icon: travelProductIcon(service.type),
-                label: service.displayName,
-                description: service.description,
-                foreground: service.type == TravelProductType.esim
-                    ? TravelTheme.ink
-                    : Colors.white,
-                onTap: () => _openService(service.type),
-              ),
+
+    final serviceByType = {for (final service in services) service.type: service};
+    final visibleServices = [
+      TravelProductType.flight,
+      TravelProductType.hotel,
+      TravelProductType.esim,
+    ]
+        .map((type) => serviceByType[type])
+        .whereType<TravelServiceConfig>()
+        .toList();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var index = 0; index < visibleServices.length; index++) ...[
+          Expanded(
+            child: _ServiceTile(
+              color: travelProductColor(visibleServices[index].type),
+              icon: travelProductIcon(visibleServices[index].type),
+              label: visibleServices[index].displayName,
+              foreground:
+                  visibleServices[index].type == TravelProductType.esim
+                  ? TravelTheme.ink
+                  : Colors.white,
+              onTap: () => _openService(visibleServices[index].type),
             ),
-          )
-          .toList(),
+          ),
+          if (index < visibleServices.length - 1) SizedBox(width: 12.w),
+        ],
+      ],
     );
   }
 
@@ -279,64 +307,55 @@ class _ServiceTile extends StatelessWidget {
   final Color foreground;
   final IconData icon;
   final String label;
-  final String description;
   final VoidCallback onTap;
 
   const _ServiceTile({
     required this.color,
     required this.icon,
     required this.label,
-    required this.description,
     required this.onTap,
     this.foreground = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      borderRadius: BorderRadius.circular(24.r),
-      child: InkWell(
-        onTap: onTap,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Material(
+        color: color,
         borderRadius: BorderRadius.circular(24.r),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 6.w),
-          child: Column(
-            children: [
-              Container(
-                width: 50.r,
-                height: 50.r,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.94),
-                  shape: BoxShape.circle,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 6.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 50.r,
+                  height: 50.r,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.94),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: color),
                 ),
-                child: Icon(icon, color: color),
-              ),
-              SizedBox(height: 12.h),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: foreground,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              if (description.isNotEmpty) ...[
-                SizedBox(height: 5.h),
+                SizedBox(height: 12.h),
                 Text(
-                  description,
+                  label,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: foreground.withValues(alpha: .78),
-                    fontSize: 9.sp,
-                    height: 1.3,
+                    color: foreground,
+                    fontSize: 11.sp,
+                    height: 1.25,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ],
-            ],
+            ),
           ),
         ),
       ),
