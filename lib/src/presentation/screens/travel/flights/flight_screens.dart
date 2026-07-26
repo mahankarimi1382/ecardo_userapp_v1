@@ -27,6 +27,12 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   int childCount = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Get.find<TravelController>().loadUpcomingFlights();
+  }
+
+  @override
   void dispose() {
     originController.dispose();
     destinationController.dispose();
@@ -216,6 +222,40 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
               ],
             ),
           ),
+          SizedBox(height: 24.h),
+          TravelSectionHeader(
+            title:
+                service?.presentation['upcoming_title']?.toString() ??
+                localization.travelFlights,
+          ),
+          SizedBox(height: 10.h),
+          Obx(() {
+            if (controller.isUpcomingFlightsLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (controller.upcomingFlightOffers.isEmpty) {
+              return TravelEmptyState(
+                message: localization.travelNoFlightResults,
+              );
+            }
+            return Column(
+              children: controller.upcomingFlightOffers
+                  .take(5)
+                  .map(
+                    (offer) => Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: _FlightOfferCard(
+                        offer: offer,
+                        onTap: () async {
+                          await controller.loadOfferDetails(offer);
+                          Get.to(() => const FlightDetailsScreen());
+                        },
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          }),
         ],
       ),
     );
@@ -310,7 +350,33 @@ class FlightResultsScreen extends StatelessWidget {
       title: localization.travelFlightResults,
       child: Obx(
         () => controller.flightOffers.isEmpty
-            ? TravelEmptyState(message: localization.travelNoFlightResults)
+            ? ListView(
+                padding: EdgeInsets.all(20.r),
+                children: [
+                  TravelEmptyState(
+                    message: localization.travelNoFlightResults,
+                  ),
+                  if (controller.upcomingFlightOffers.isNotEmpty) ...[
+                    SizedBox(height: 24.h),
+                    TravelSectionHeader(
+                      title: localization.travelFlights,
+                    ),
+                    SizedBox(height: 10.h),
+                    ...controller.upcomingFlightOffers.take(8).map(
+                      (offer) => Padding(
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: _FlightOfferCard(
+                          offer: offer,
+                          onTap: () async {
+                            await controller.loadOfferDetails(offer);
+                            Get.to(() => const FlightDetailsScreen());
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              )
             : ListView.separated(
                 padding: EdgeInsets.all(20.r),
                 itemCount: controller.flightOffers.length,
@@ -319,8 +385,8 @@ class FlightResultsScreen extends StatelessWidget {
                   final offer = controller.flightOffers[index];
                   return _FlightOfferCard(
                     offer: offer,
-                    onTap: () {
-                      controller.selectedOffer.value = offer;
+                    onTap: () async {
+                      await controller.loadOfferDetails(offer);
                       Get.to(() => const FlightDetailsScreen());
                     },
                   );

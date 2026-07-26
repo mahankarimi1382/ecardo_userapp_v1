@@ -43,13 +43,19 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
           padding: EdgeInsets.all(16.r),
           child: Obx(
             () {
+              final wallet = controller.walletForCurrency(
+                widget.total.currency,
+              );
               final hasBalance =
-                  controller.mainWalletBalance >= widget.total.amount;
+                  controller.walletBalanceFor(widget.total.currency) >=
+                  widget.total.amount;
               final canPurchase = controller.canPurchase(widget.type);
               return CommonButton(
                 width: double.infinity,
                 text: !canPurchase
                     ? localization.travelOfferUnavailable
+                    : wallet == null
+                    ? localization.travelMainWallet
                     : hasBalance
                     ? localization.travelPayFromWallet
                     : localization.travelAddMoney,
@@ -67,6 +73,11 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 isLoading: controller.isCheckoutLoading.value,
                 onPressed: !canPurchase
                     ? null
+                    : wallet == null
+                    ? () => Get.toNamed(
+                        BaseRoute.createNewWallet,
+                        arguments: {'returnRoute': BaseRoute.travel},
+                      )
                     : hasBalance
                     ? () async {
                         final order = await controller.checkout(
@@ -88,7 +99,13 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                         }
                       }
                     : () async {
-                        await Get.toNamed(BaseRoute.addMoney);
+                        await Get.toNamed(
+                          BaseRoute.addMoney,
+                          arguments: {
+                            'returnRoute': BaseRoute.travel,
+                            'wallet_id': wallet.id.toString(),
+                          },
+                        );
                         await controller.refreshMainWallet();
                         if (mounted) setState(() {});
                       },
@@ -98,8 +115,10 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
         ),
       ),
       child: Obx(() {
+        final wallet = controller.walletForCurrency(widget.total.currency);
         final hasBalance =
-            controller.mainWalletBalance >= widget.total.amount;
+            controller.walletBalanceFor(widget.total.currency) >=
+            widget.total.amount;
         final canPurchase = controller.canPurchase(widget.type);
         return ListView(
           padding: EdgeInsets.all(20.r),
@@ -212,8 +231,10 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                       travelMoney(
                         context,
                         TravelMoney(
-                          amount: controller.mainWalletBalance,
-                          currency: controller.mainWalletCurrency,
+                          amount: controller.walletBalanceFor(
+                            widget.total.currency,
+                          ),
+                          currency: widget.total.currency,
                         ),
                       ),
                       style: TextStyle(
@@ -248,6 +269,55 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                     ),
                   ],
                 ),
+              ),
+              SizedBox(height: 10.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: CommonButton(
+                      width: double.infinity,
+                      text: localization.travelAddMoney,
+                      backgroundColor: TravelTheme.green,
+                      onPressed: wallet == null
+                          ? () => Get.toNamed(
+                              BaseRoute.createNewWallet,
+                              arguments: {'returnRoute': BaseRoute.travel},
+                            )
+                          : () async {
+                              await Get.toNamed(
+                                BaseRoute.addMoney,
+                                arguments: {
+                                  'returnRoute': BaseRoute.travel,
+                                  'wallet_id': wallet.id.toString(),
+                                },
+                              );
+                              await controller.refreshMainWallet();
+                              if (mounted) setState(() {});
+                            },
+                    ),
+                  ),
+                  if (wallet != null) ...[
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: CommonButton(
+                        width: double.infinity,
+                        text: localization.exchangeTitle,
+                        backgroundColor: TravelTheme.blue,
+                        onPressed: () async {
+                          await Get.toNamed(
+                            BaseRoute.exchange,
+                            arguments: {
+                              'returnRoute': BaseRoute.travel,
+                              'to_currency': widget.total.currency,
+                            },
+                          );
+                          await controller.refreshMainWallet();
+                          if (mounted) setState(() {});
+                        },
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ],
             SizedBox(height: 24.h),

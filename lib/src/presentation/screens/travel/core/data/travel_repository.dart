@@ -7,6 +7,13 @@ abstract interface class TravelRepository {
 
   Future<List<TravelOffer>> searchFlights(TravelFlightSearch search);
 
+  Future<List<TravelOffer>> getUpcomingFlights();
+
+  Future<TravelOffer> getOfferDetails(
+    TravelProductType type,
+    String offerId,
+  );
+
   Future<List<TravelEsimPackage>> getEsimPackages(String destinationCode);
 
   Future<List<TravelTraveler>> getTravelers();

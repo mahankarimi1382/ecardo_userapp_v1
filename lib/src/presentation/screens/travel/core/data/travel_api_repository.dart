@@ -29,7 +29,8 @@ class TravelApiRepository implements TravelRepository {
   Future<TravelBootstrap> getBootstrap() async {
     final response = await _client.get<Map<String, dynamic>>(
       '/travel/bootstrap',
-      queryParameters: {'locale': Get.locale?.toLanguageTag() ?? 'en'},
+      queryParameters: {'locale': _locale},
+      options: _localeOptions(),
     );
     final data = _map(response.data?['data']);
     final services = _listOfMaps(data['services'])
@@ -76,27 +77,34 @@ class TravelApiRepository implements TravelRepository {
     required String idempotencyKey,
     required TravelBookingDetails bookingDetails,
   }) async {
-    if (type != TravelProductType.hotel) {
-      throw UnsupportedError(
-        'The eCardo Travel gateway does not expose this product yet.',
-      );
-    }
     final checkInDate = bookingDetails.checkInDate;
     final checkOutDate = bookingDetails.checkOutDate;
-    if (checkInDate == null || checkOutDate == null) {
+    if (type == TravelProductType.hotel &&
+        (checkInDate == null || checkOutDate == null)) {
       throw ArgumentError('Hotel booking dates are required.');
     }
     final token = await _ensureTravelAccessToken();
+    final isCatalogOffer = productId.startsWith('master_json:');
     final createResponse = await _client.post<Map<String, dynamic>>(
-      '/offer-orders',
-      data: {
-        'offer_id': productId,
-        'check_in_date': _date(checkInDate),
-        'check_out_date': _date(checkOutDate),
-        'room_count': bookingDetails.roomCount,
-        'adult_count': bookingDetails.adultCount,
-        'child_count': bookingDetails.childCount,
-      },
+      isCatalogOffer ? '/catalog-orders' : '/offer-orders',
+      data: isCatalogOffer
+          ? {
+              'service': type.name,
+              'offer_id': productId,
+              if (checkInDate != null) 'check_in_date': _date(checkInDate),
+              if (checkOutDate != null) 'check_out_date': _date(checkOutDate),
+              'room_count': bookingDetails.roomCount,
+              'adult_count': bookingDetails.adultCount,
+              'child_count': bookingDetails.childCount,
+            }
+          : {
+              'offer_id': productId,
+              'check_in_date': _date(checkInDate!),
+              'check_out_date': _date(checkOutDate!),
+              'room_count': bookingDetails.roomCount,
+              'adult_count': bookingDetails.adultCount,
+              'child_count': bookingDetails.childCount,
+            },
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',
@@ -123,7 +131,8 @@ class TravelApiRepository implements TravelRepository {
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',
-          'Idempotency-Key': 'pay-$idempotencyKey',
+          'Idempotency-Key':
+              'pay-$idempotencyKey-${DateTime.now().millisecondsSinceEpoch}',
         },
       ),
     );
@@ -141,8 +150,11 @@ class TravelApiRepository implements TravelRepository {
     }
     return TravelOrder(
       id: orderId,
-      type: TravelProductType.hotel,
-      titleKey: created['hotel_name']?.toString() ?? 'travelHotelBooking',
+      type: type,
+      titleKey:
+          created['title']?.toString() ??
+          created['hotel_name']?.toString() ??
+          'travelHotelBooking',
       reference:
           created['order_number']?.toString() ??
           paid['order_number']?.toString() ??
@@ -241,13 +253,20 @@ class TravelApiRepository implements TravelRepository {
     final booking = _map(json['booking']);
     final productSnapshot = _map(json['product_snapshot']);
     final snapshotHotel = _map(productSnapshot['hotel']);
+    final type = switch (productSnapshot['service']?.toString()) {
+      'flight' => TravelProductType.flight,
+      'esim' => TravelProductType.esim,
+      _ => TravelProductType.hotel,
+    };
+    final snapshotOffer = _map(productSnapshot['offer']);
     return TravelOrder(
       id: (json['public_id'] ?? json['id'])?.toString() ?? '',
-      type: TravelProductType.hotel,
+      type: type,
       titleKey:
           hotel['name']?.toString() ??
           snapshotHotel['name']?.toString() ??
           productSnapshot['hotel_name']?.toString() ??
+          snapshotOffer['title']?.toString() ??
           json['hotel_name']?.toString() ??
           'travelHotelBooking',
       reference:
@@ -282,9 +301,11 @@ class TravelApiRepository implements TravelRepository {
   @override
   Future<List<TravelOffer>> searchFlights(TravelFlightSearch search) async {
     final offers = await _searchService('flight', {
-      'origin': search.origin,
-      'destination': search.destination,
-      'departure_date': _date(search.departureDate),
+      if (search.origin?.isNotEmpty == true) 'origin': search.origin,
+      if (search.destination?.isNotEmpty == true)
+        'destination': search.destination,
+      if (search.departureDate != null)
+        'departure_date': _date(search.departureDate!),
       'adults': search.adultCount,
       'children': search.childCount,
     });
@@ -292,6 +313,24 @@ class TravelApiRepository implements TravelRepository {
         .map((offer) => _mapNormalizedOffer(offer, TravelProductType.flight))
         .where((offer) => offer.id.isNotEmpty)
         .toList();
+  }
+
+  @override
+  Future<List<TravelOffer>> getUpcomingFlights() =>
+      searchFlights(const TravelFlightSearch());
+
+  @override
+  Future<TravelOffer> getOfferDetails(
+    TravelProductType type,
+    String offerId,
+  ) async {
+    final response = await _client.get<Map<String, dynamic>>(
+      '/travel/services/${type.name}/offers/${Uri.encodeComponent(offerId)}',
+      queryParameters: {'locale': _locale},
+      options: _localeOptions(),
+    );
+    final data = _map(response.data?['data']);
+    return _mapNormalizedOffer(_map(data['offer']), type);
   }
 
   @override
@@ -322,7 +361,9 @@ class TravelApiRepository implements TravelRepository {
   ) async {
     final response = await _client.post<Map<String, dynamic>>(
       '/travel/services/$service/search',
+      queryParameters: {'locale': _locale},
       data: {'criteria': criteria},
+      options: _localeOptions(),
     );
     final data = _map(response.data?['data']);
     return _listOfMaps(data['offers']);
@@ -387,6 +428,8 @@ class TravelApiRepository implements TravelRepository {
   ) {
     final pricing = _map(json['pricing']);
     final attributes = _map(json['attributes']);
+    final product = _map(json['product']);
+    final policies = _map(json['policies']);
     return TravelOffer(
       id: json['id']?.toString() ?? '',
       type: type,
@@ -400,6 +443,11 @@ class TravelApiRepository implements TravelRepository {
       ),
       rating: _amount(attributes['stars']),
       featureKeys: _strings(json['highlights']).take(4).toList(),
+      product: product,
+      attributes: attributes,
+      policies: policies,
+      actions: _listOfMaps(json['actions']),
+      pricingComponents: _listOfMaps(pricing['components']),
       metadata: {
         ...attributes.map(
           (key, value) => MapEntry(key, value?.toString() ?? ''),
@@ -463,6 +511,12 @@ class TravelApiRepository implements TravelRepository {
           value?.toString().replaceAll(',', '') ?? '0',
         ) ??
         0;
+  }
+
+  String get _locale => Get.locale?.languageCode.toLowerCase() ?? 'en';
+
+  Options _localeOptions({Map<String, dynamic>? headers}) {
+    return Options(headers: {'X-Locale': _locale, ...?headers});
   }
 
   static TravelOrderStatus _orderStatus(dynamic value) {

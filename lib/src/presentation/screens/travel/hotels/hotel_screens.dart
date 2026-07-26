@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
@@ -332,8 +333,8 @@ class HotelResultsScreen extends StatelessWidget {
                   final offer = controller.hotelOffers[index];
                   return _HotelOfferCard(
                     offer: offer,
-                    onTap: () {
-                      controller.selectedOffer.value = offer;
+                    onTap: () async {
+                      await controller.loadOfferDetails(offer);
                       Get.to(() => const HotelDetailsScreen());
                     },
                   );
@@ -504,6 +505,19 @@ class HotelDetailsScreen extends StatelessWidget {
         child: TravelEmptyState(message: localization.travelOfferUnavailable),
       );
     }
+    final product = offer.product;
+    final attributes = offer.attributes;
+    final description = product['description']?.toString().trim() ?? '';
+    final amenities = _providerStrings(product['amenities']);
+    final images = _providerImages(product['images']);
+    final rooms = _providerMaps(product['rooms']);
+    final reviews = _providerMap(product['reviews']);
+    final address = attributes['address']?.toString().trim() ?? '';
+    final latitude = attributes['latitude'];
+    final longitude = attributes['longitude'];
+    final hasCoordinates = latitude != null && longitude != null;
+    final sourceUpdatedAt =
+        product['source_updated_at']?.toString().trim() ?? '';
     return TravelPage(
       title: localization.travelHotelDetails,
       bottomNavigationBar: SafeArea(
@@ -535,20 +549,9 @@ class HotelDetailsScreen extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(20.r),
         children: [
-          ClipRRect(
-            borderRadius: TravelTheme.radius,
-            child: SizedBox(
-              height: 230.h,
-              width: double.infinity,
-              child: offer.imageUrl.isNotEmpty
-                  ? Image.network(
-                      offer.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          const _HotelImageFallback(),
-                    )
-                  : const _HotelImageFallback(),
-            ),
+          _HotelGallery(
+            images: images,
+            fallbackImageUrl: offer.imageUrl,
           ),
           SizedBox(height: 18.h),
           Text(
@@ -560,52 +563,197 @@ class HotelDetailsScreen extends StatelessWidget {
             travelLocalizedKey(localization, offer.subtitleKey),
             style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp),
           ),
+          if (address.isNotEmpty) ...[
+            SizedBox(height: 10.h),
+            TravelCard(
+              onTap: hasCoordinates
+                  ? () async {
+                      await Clipboard.setData(
+                        ClipboardData(text: '$latitude,$longitude'),
+                      );
+                      Get.snackbar(
+                        localization.travelHotelDetails,
+                        '$latitude, $longitude',
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    }
+                  : null,
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.location_on_outlined,
+                    color: TravelTheme.purple,
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(child: Text(address)),
+                  if (hasCoordinates)
+                    const Icon(Icons.map_outlined, color: TravelTheme.purple),
+                ],
+              ),
+            ),
+          ],
           SizedBox(height: 20.h),
-          Row(
-            children: [
-              Expanded(
-                child: _DetailHighlight(
-                  icon: Icons.restaurant_rounded,
-                  label: localization.travelFeatureBreakfast,
-                  value: localization.travelIncluded,
+          _ProviderMoneySummary(offer: offer),
+          if (description.isNotEmpty) ...[
+            SizedBox(height: 26.h),
+            TravelSectionHeader(title: localization.travelAboutHotel),
+            SizedBox(height: 8.h),
+            Text(description, style: TextStyle(fontSize: 13.sp, height: 1.8)),
+          ],
+          if (amenities.isNotEmpty) ...[
+            SizedBox(height: 24.h),
+            TravelSectionHeader(title: localization.travelIncluded),
+            SizedBox(height: 10.h),
+            Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              children: amenities.map((item) => Chip(label: Text(item))).toList(),
+            ),
+          ],
+          if (rooms.isNotEmpty) ...[
+            SizedBox(height: 24.h),
+            TravelSectionHeader(title: localization.travelHotels),
+            SizedBox(height: 10.h),
+            ...rooms.map(
+              (room) => Padding(
+                padding: EdgeInsets.only(bottom: 12.h),
+                child: _ProviderRoomCard(room: room),
+              ),
+            ),
+          ],
+          if (reviews.isNotEmpty) ...[
+            SizedBox(height: 24.h),
+            TravelSectionHeader(title: localization.travelStatus),
+            SizedBox(height: 10.h),
+            _ProviderMapCard(values: reviews),
+          ],
+          if (attributes.isNotEmpty) ...[
+            SizedBox(height: 24.h),
+            TravelSectionHeader(title: localization.travelHotelDetails),
+            SizedBox(height: 10.h),
+            _ProviderMapCard(
+              values: Map<String, dynamic>.from(attributes)
+                ..remove('address')
+                ..remove('latitude')
+                ..remove('longitude'),
+            ),
+          ],
+          if (offer.policies.isNotEmpty) ...[
+            SizedBox(height: 24.h),
+            TravelSectionHeader(title: localization.travelPolicies),
+            SizedBox(height: 10.h),
+            _ProviderMapCard(values: offer.policies),
+          ],
+          if (sourceUpdatedAt.isNotEmpty) ...[
+            SizedBox(height: 14.h),
+            Text(
+              sourceUpdatedAt,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: TravelTheme.muted, fontSize: 10.sp),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _HotelGallery extends StatelessWidget {
+  final List<String> images;
+  final String fallbackImageUrl;
+
+  const _HotelGallery({
+    required this.images,
+    required this.fallbackImageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final gallery = [
+      if (fallbackImageUrl.isNotEmpty) fallbackImageUrl,
+      ...images.where((image) => image != fallbackImageUrl),
+    ];
+    if (gallery.isEmpty) {
+      return ClipRRect(
+        borderRadius: TravelTheme.radius,
+        child: SizedBox(height: 230.h, child: const _HotelImageFallback()),
+      );
+    }
+    return SizedBox(
+      height: 230.h,
+      child: PageView.builder(
+        itemCount: gallery.length,
+        itemBuilder: (context, index) => Padding(
+          padding: EdgeInsetsDirectional.only(
+            end: index == gallery.length - 1 ? 0.0 : 8.w,
+          ),
+          child: ClipRRect(
+            borderRadius: TravelTheme.radius,
+            child: Image.network(
+              gallery[index],
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const _HotelImageFallback(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProviderMoneySummary extends StatelessWidget {
+  final TravelOffer offer;
+
+  const _ProviderMoneySummary({required this.offer});
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+    final maximum = double.tryParse(
+          offer.attributes['price_max']?.toString() ?? '',
+        ) ??
+        0;
+    return TravelCard(
+      child: Column(
+        children: [
+          _PolicyRow(
+            title: localization.travelStartingPrice,
+            value: travelMoney(context, offer.total),
+          ),
+          if (maximum > 0) ...[
+            const Divider(),
+            _PolicyRow(
+              title: localization.travelTotal,
+              value: travelMoney(
+                context,
+                TravelMoney(
+                  amount: maximum,
+                  currency: offer.total.currency,
                 ),
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: _DetailHighlight(
-                  icon: Icons.wifi_rounded,
-                  label: localization.travelFeatureWifi,
-                  value: localization.travelFree,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 26.h),
-          TravelSectionHeader(title: localization.travelAboutHotel),
-          SizedBox(height: 8.h),
-          Text(
-            localization.travelHotelDescription,
-            style: TextStyle(fontSize: 13.sp, height: 1.8),
-          ),
-          SizedBox(height: 24.h),
-          TravelSectionHeader(title: localization.travelPolicies),
-          SizedBox(height: 10.h),
-          TravelCard(
-            child: Column(
+            ),
+          ],
+          ...offer.pricingComponents.map(
+            (component) => Column(
               children: [
-                _PolicyRow(
-                  title: localization.travelCheckIn,
-                  value: '14:00',
-                ),
                 const Divider(),
                 _PolicyRow(
-                  title: localization.travelCheckOut,
-                  value: '12:00',
-                ),
-                const Divider(),
-                _PolicyRow(
-                  title: localization.travelCancellation,
-                  value: localization.travelCancellationSummary,
+                  title:
+                      component['label']?.toString() ??
+                      localization.travelPriceSummary,
+                  value: travelMoney(
+                    context,
+                    TravelMoney(
+                      amount:
+                          double.tryParse(
+                            component['amount']?.toString() ?? '',
+                          ) ??
+                          0,
+                      currency:
+                          component['currency']?.toString() ??
+                          offer.total.currency,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -614,6 +762,169 @@ class HotelDetailsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ProviderRoomCard extends StatelessWidget {
+  final Map<String, dynamic> room;
+
+  const _ProviderRoomCard({required this.room});
+
+  @override
+  Widget build(BuildContext context) {
+    final imageUrls = _providerImages(room['images']);
+    final values = Map<String, dynamic>.from(room)
+      ..remove('images')
+      ..remove('room_name')
+      ..remove('price')
+      ..remove('currency')
+      ..remove('description');
+    final description = room['description']?.toString().trim() ?? '';
+    final price = double.tryParse(room['price']?.toString() ?? '') ?? 0;
+    final currency = room['currency']?.toString() ?? 'IRR';
+    return TravelCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (imageUrls.isNotEmpty)
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              child: Image.network(
+                imageUrls.first,
+                height: 150.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+            ),
+          Padding(
+            padding: EdgeInsets.all(16.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  room['room_name']?.toString() ??
+                      room['name']?.toString() ??
+                      '',
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
+                if (description.isNotEmpty) ...[
+                  SizedBox(height: 8.h),
+                  Text(description),
+                ],
+                if (price > 0) ...[
+                  SizedBox(height: 10.h),
+                  Text(
+                    travelMoney(
+                      context,
+                      TravelMoney(amount: price, currency: currency),
+                    ),
+                    style: const TextStyle(
+                      color: TravelTheme.purple,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+                if (values.isNotEmpty) ...[
+                  SizedBox(height: 10.h),
+                  _ProviderMapRows(values: values),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProviderMapCard extends StatelessWidget {
+  final Map<String, dynamic> values;
+
+  const _ProviderMapCard({required this.values});
+
+  @override
+  Widget build(BuildContext context) {
+    return TravelCard(child: _ProviderMapRows(values: values));
+  }
+}
+
+class _ProviderMapRows extends StatelessWidget {
+  final Map<String, dynamic> values;
+
+  const _ProviderMapRows({required this.values});
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = values.entries
+        .where((entry) => _providerValue(entry.value).isNotEmpty)
+        .toList();
+    return Column(
+      children: [
+        for (var index = 0; index < entries.length; index++) ...[
+          _PolicyRow(
+            title: _providerLabel(entries[index].key),
+            value: _providerValue(entries[index].value),
+          ),
+          if (index != entries.length - 1) const Divider(),
+        ],
+      ],
+    );
+  }
+}
+
+Map<String, dynamic> _providerMap(dynamic value) {
+  if (value is Map<String, dynamic>) return value;
+  if (value is Map) return Map<String, dynamic>.from(value);
+  return const {};
+}
+
+List<Map<String, dynamic>> _providerMaps(dynamic value) {
+  if (value is! List) return const [];
+  return value.whereType<Map>().map(Map<String, dynamic>.from).toList();
+}
+
+List<String> _providerStrings(dynamic value) {
+  if (value is! List) return const [];
+  return value
+      .map((item) => item?.toString() ?? '')
+      .where((item) => item.isNotEmpty)
+      .toList();
+}
+
+List<String> _providerImages(dynamic value) {
+  if (value is! List) return const [];
+  return value
+      .map((item) {
+        if (item is Map) return item['url']?.toString() ?? '';
+        return item?.toString() ?? '';
+      })
+      .where((item) => item.isNotEmpty)
+      .toList();
+}
+
+String _providerLabel(String key) {
+  final words = key.replaceAll('_', ' ').trim();
+  if (words.isEmpty) return '';
+  return '${words[0].toUpperCase()}${words.substring(1)}';
+}
+
+String _providerValue(dynamic value) {
+  if (value == null) return '';
+  if (value is bool) return value ? '✓' : '—';
+  if (value is List) {
+    return value.map(_providerValue).where((item) => item.isNotEmpty).join(', ');
+  }
+  if (value is Map) {
+    return value.entries
+        .map(
+          (entry) =>
+              '${_providerLabel(entry.key.toString())}: ${_providerValue(entry.value)}',
+        )
+        .where((item) => !item.endsWith(': '))
+        .join(' • ');
+  }
+  return value.toString();
 }
 
 class _TravelDateField extends StatelessWidget {
@@ -655,34 +966,6 @@ class _TravelDateField extends StatelessWidget {
           onDateSelected: onDateSelected,
         ),
       ],
-    );
-  }
-}
-
-class _DetailHighlight extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _DetailHighlight({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TravelCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: TravelTheme.purple),
-          SizedBox(height: 12.h),
-          Text(label, style: TextStyle(color: TravelTheme.muted, fontSize: 10.sp)),
-          SizedBox(height: 3.h),
-          Text(value, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp)),
-        ],
-      ),
     );
   }
 }

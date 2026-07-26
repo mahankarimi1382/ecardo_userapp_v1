@@ -3,6 +3,8 @@ import 'package:qunzo_user/src/presentation/screens/bill_payment/view/data_bundl
 import 'package:qunzo_user/src/presentation/screens/bill_payment/view/internet/internet.dart';
 import 'package:qunzo_user/src/presentation/screens/bill_payment/view/toll/toll.dart';
 import 'package:qunzo_user/src/presentation/screens/gift_card/view/gift_card_screen.dart';
+import 'package:qunzo_user/src/presentation/screens/travel/account/travel_account_screen.dart';
+import 'package:qunzo_user/src/presentation/screens/travel/account/travel_history_screen.dart';
 import 'package:qunzo_user/src/presentation/screens/travel/home/travel_home_screen.dart';
 import 'package:qunzo_user/src/presentation/screens/p2p/view/p2p_view.dart';
 import 'package:qunzo_user/src/presentation/screens/payment_links/view/payment_links_screen.dart';
@@ -206,4 +208,6 @@ class RoutesConfig {
 
   static const p2pTrading = P2pViewScreen();
   static const travel = TravelHomeScreen();
+  static const travelHistory = TravelHistoryScreen();
+  static const travelAccount = TravelAccountScreen();
 }

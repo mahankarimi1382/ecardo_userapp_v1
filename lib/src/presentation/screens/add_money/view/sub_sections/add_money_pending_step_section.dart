@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/app/routes/route_return.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_loading.dart';
 import 'package:qunzo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
@@ -194,7 +194,7 @@ class _AddMoneyPendingStepSectionState
               CommonButton(
                 onPressed: () async {
                   Get.delete<AddMoneyController>();
-                  Get.toNamed(BaseRoute.navigation);
+                  RouteReturn.complete();
                   await Get.find<HomeController>().loadData();
                 },
                 width: double.infinity,

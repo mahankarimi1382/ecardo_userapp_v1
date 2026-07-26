@@ -22,6 +22,7 @@ class TravelAccountScreen extends StatelessWidget {
         : null;
     return TravelPage(
       title: localization.travelAccount,
+      activeSection: TravelNavigationSection.account,
       child: ListView(
         padding: EdgeInsets.all(20.r),
         children: [
@@ -126,7 +127,10 @@ class TravelAccountScreen extends StatelessWidget {
             icon: Icons.account_balance_wallet_outlined,
             title: localization.travelMainWallet,
             subtitle: localization.travelWalletSharedDescription,
-            onTap: () => Get.toNamed(BaseRoute.addMoney),
+            onTap: () => Get.toNamed(
+              BaseRoute.addMoney,
+              arguments: {'returnRoute': BaseRoute.travel},
+            ),
           ),
         ],
       ),

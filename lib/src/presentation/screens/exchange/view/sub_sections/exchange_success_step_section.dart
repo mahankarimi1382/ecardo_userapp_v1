@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/app/routes/route_return.dart';
 import 'package:qunzo_user/src/common/services/settings_service.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_loading.dart';
@@ -184,7 +184,7 @@ class _ExchangeSuccessStepSectionState
                     CommonButton(
                       onPressed: () async {
                         Get.delete<ExchangeController>();
-                        Get.toNamed(BaseRoute.navigation);
+                        RouteReturn.complete();
                       },
                       width: double.infinity,
                       text: localization.exchangeSuccessBackHome,

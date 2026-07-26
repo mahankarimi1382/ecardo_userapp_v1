@@ -291,12 +291,31 @@ class ExchangeController extends GetxController {
 
         if (fromExchangeWalletsList.isNotEmpty &&
             toExchangeWalletsList.isNotEmpty) {
-          fromWallet.value = fromExchangeWalletsList.first;
-          if (toExchangeWalletsList.length > 1) {
-            toWallet.value = toExchangeWalletsList[1];
-          } else {
-            toWallet.value = toExchangeWalletsList.first;
-          }
+          final arguments = Get.arguments is Map ? Get.arguments as Map : {};
+          final requestedFrom = arguments['from_currency']
+              ?.toString()
+              .toUpperCase();
+          final requestedTo = arguments['to_currency']
+              ?.toString()
+              .toUpperCase();
+          fromWallet.value =
+              fromExchangeWalletsList.firstWhereOrNull(
+                (wallet) => wallet.code?.toUpperCase() == requestedFrom,
+              ) ??
+              fromExchangeWalletsList.firstWhereOrNull(
+                (wallet) =>
+                    wallet.code?.toUpperCase() != requestedTo &&
+                    (double.tryParse(wallet.balance ?? '0') ?? 0) > 0,
+              ) ??
+              fromExchangeWalletsList.first;
+          toWallet.value =
+              toExchangeWalletsList.firstWhereOrNull(
+                (wallet) => wallet.code?.toUpperCase() == requestedTo,
+              ) ??
+              toExchangeWalletsList.firstWhereOrNull(
+                (wallet) => wallet.code != fromWallet.value?.code,
+              ) ??
+              toExchangeWalletsList.first;
 
           calculateExchange();
         }

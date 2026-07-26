@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:qunzo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
 import '../data/travel_repository.dart';
 import '../data/travel_api_repository.dart';
@@ -15,12 +16,15 @@ class TravelController extends GetxController {
   final RxBool isBootstrapLoading = false.obs;
   final RxBool isActivityLoading = false.obs;
   final RxBool isCheckoutLoading = false.obs;
+  final RxBool isOfferLoading = false.obs;
+  final RxBool isUpcomingFlightsLoading = false.obs;
   final RxBool checkoutFailed = false.obs;
   final RxnString bootstrapError = RxnString();
   final RxnString searchError = RxnString();
   final Rxn<TravelBootstrap> bootstrap = Rxn<TravelBootstrap>();
   final RxList<TravelOffer> hotelOffers = <TravelOffer>[].obs;
   final RxList<TravelOffer> flightOffers = <TravelOffer>[].obs;
+  final RxList<TravelOffer> upcomingFlightOffers = <TravelOffer>[].obs;
   final RxList<TravelEsimPackage> esimPackages = <TravelEsimPackage>[].obs;
   final RxList<TravelTraveler> travelers = <TravelTraveler>[].obs;
   final RxList<TravelOrder> orders = <TravelOrder>[].obs;
@@ -86,16 +90,24 @@ class TravelController extends GetxController {
     final service = serviceFor(type);
     final purchaseEnabled = service?.capabilities.any(
       (capability) => {
+        'catalog_checkout',
+        'sandbox_purchase',
         'purchase',
         'book',
         'booking',
         'checkout',
       }.contains(capability.toLowerCase()),
     );
-    return type == TravelProductType.hotel &&
-        service != null &&
-        service.dataMode.toLowerCase() == 'live' &&
-        purchaseEnabled == true;
+    if (service == null || purchaseEnabled != true) return false;
+    if (service.dataMode.toLowerCase() == 'catalog') {
+      return service.capabilities.any(
+        (capability) => {
+          'catalog_checkout',
+          'sandbox_purchase',
+        }.contains(capability.toLowerCase()),
+      );
+    }
+    return service.dataMode.toLowerCase() == 'live';
   }
 
   Future<void> _loadOrders() async {
@@ -154,6 +166,34 @@ class TravelController extends GetxController {
     }
   }
 
+  Future<void> loadUpcomingFlights() async {
+    if (isUpcomingFlightsLoading.value) return;
+    isUpcomingFlightsLoading.value = true;
+    try {
+      upcomingFlightOffers.assignAll(await repository.getUpcomingFlights());
+    } catch (_) {
+      upcomingFlightOffers.clear();
+    } finally {
+      isUpcomingFlightsLoading.value = false;
+    }
+  }
+
+  Future<void> loadOfferDetails(TravelOffer offer) async {
+    selectedOffer.value = offer;
+    if (isOfferLoading.value) return;
+    isOfferLoading.value = true;
+    try {
+      selectedOffer.value = await repository.getOfferDetails(
+        offer.type,
+        offer.id,
+      );
+    } catch (_) {
+      selectedOffer.value = offer;
+    } finally {
+      isOfferLoading.value = false;
+    }
+  }
+
   Future<bool> loadEsimPackages(String destinationCode) async {
     isLoading.value = true;
     searchError.value = null;
@@ -188,32 +228,22 @@ class TravelController extends GetxController {
     }
   }
 
-  double get mainWalletBalance {
-    if (!Get.isRegistered<HomeController>()) return 0;
+  Wallets? walletForCurrency(String currency) {
+    if (!Get.isRegistered<HomeController>()) return null;
     final wallets = Get.find<HomeController>().walletsList;
-    if (wallets.isEmpty) return 0;
-    final wallet = wallets.firstWhereOrNull((item) => item.isDefault == true) ??
-        wallets.firstWhereOrNull(
-          (item) => item.code?.toUpperCase() == 'IRR',
-        ) ??
-        wallets.first;
+    return wallets.firstWhereOrNull(
+      (item) => item.code?.toUpperCase() == currency.toUpperCase(),
+    );
+  }
+
+  double walletBalanceFor(String currency) {
+    final wallet = walletForCurrency(currency);
+    if (wallet == null) return 0;
     final raw = wallet.balance ?? '0';
     return double.tryParse(
           raw.replaceAll(',', '').replaceAll(RegExp(r'[^0-9.-]'), ''),
         ) ??
         0;
-  }
-
-  String get mainWalletCurrency {
-    if (!Get.isRegistered<HomeController>()) return 'IRR';
-    final wallets = Get.find<HomeController>().walletsList;
-    if (wallets.isEmpty) return 'IRR';
-    final wallet = wallets.firstWhereOrNull((item) => item.isDefault == true) ??
-        wallets.firstWhereOrNull(
-          (item) => item.code?.toUpperCase() == 'IRR',
-        ) ??
-        wallets.first;
-    return wallet.code ?? 'IRR';
   }
 
   Future<void> refreshMainWallet() async {

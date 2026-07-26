@@ -423,4 +423,12 @@ List<GetPage> routesHandler = [
     page: () => RoutesConfig.travel,
     binding: TravelBinding(),
   ),
+  GetPage(
+    name: BaseRoute.travelHistory,
+    page: () => RoutesConfig.travelHistory,
+  ),
+  GetPage(
+    name: BaseRoute.travelAccount,
+    page: () => RoutesConfig.travelAccount,
+  ),
 ];

@@ -96,7 +96,10 @@ class TravelHomeScreen extends StatelessWidget {
             SizedBox(height: 14.h),
             TravelCard(
               color: const Color(0xFFEAF3FF),
-              onTap: () => Get.toNamed(BaseRoute.addMoney),
+              onTap: () => Get.toNamed(
+                BaseRoute.addMoney,
+                arguments: {'returnRoute': BaseRoute.travel},
+              ),
               child: Row(
                 children: [
                   Container(

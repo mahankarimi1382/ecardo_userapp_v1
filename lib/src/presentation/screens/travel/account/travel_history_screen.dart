@@ -17,6 +17,7 @@ class TravelHistoryScreen extends StatelessWidget {
     final controller = Get.find<TravelController>();
     return TravelPage(
       title: localization.travelHistory,
+      activeSection: TravelNavigationSection.history,
       child: Obx(
         () => controller.activity.isEmpty
             ? TravelEmptyState(message: localization.travelNoActivity)

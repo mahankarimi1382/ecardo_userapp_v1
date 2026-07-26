@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
+import 'package:qunzo_user/src/app/routes/routes.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 
 import '../core/models/travel_models.dart';
 import 'travel_theme.dart';
+
+enum TravelNavigationSection { dashboard, history, account }
 
 class TravelPage extends StatelessWidget {
   final String title;
@@ -14,6 +18,8 @@ class TravelPage extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? trailing;
   final bool showBack;
+  final bool showTravelNavigation;
+  final TravelNavigationSection activeSection;
 
   const TravelPage({
     super.key,
@@ -22,6 +28,8 @@ class TravelPage extends StatelessWidget {
     this.bottomNavigationBar,
     this.trailing,
     this.showBack = true,
+    this.showTravelNavigation = true,
+    this.activeSection = TravelNavigationSection.dashboard,
   });
 
   @override
@@ -41,7 +49,135 @@ class TravelPage extends StatelessWidget {
           Expanded(child: child),
         ],
       ),
-      bottomNavigationBar: bottomNavigationBar,
+      bottomNavigationBar: _TravelPageFooter(
+        actionBar: bottomNavigationBar,
+        showNavigation: showTravelNavigation,
+        activeSection: activeSection,
+      ),
+    );
+  }
+}
+
+class _TravelPageFooter extends StatelessWidget {
+  final Widget? actionBar;
+  final bool showNavigation;
+  final TravelNavigationSection activeSection;
+
+  const _TravelPageFooter({
+    required this.actionBar,
+    required this.showNavigation,
+    required this.activeSection,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!showNavigation) return actionBar ?? const SizedBox.shrink();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (actionBar != null) actionBar!,
+        TravelBottomNavigation(activeSection: activeSection),
+      ],
+    );
+  }
+}
+
+class TravelBottomNavigation extends StatelessWidget {
+  final TravelNavigationSection activeSection;
+
+  const TravelBottomNavigation({super.key, required this.activeSection});
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(18.w, 8.h, 18.w, 10.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: const Border(top: BorderSide(color: TravelTheme.border)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: .06),
+              blurRadius: 22,
+              offset: const Offset(0, -6),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            _TravelNavigationItem(
+              label: localization.travelTitle,
+              icon: Icons.dashboard_rounded,
+              selected: activeSection == TravelNavigationSection.dashboard,
+              onTap: () => _open(BaseRoute.travel),
+            ),
+            _TravelNavigationItem(
+              label: localization.travelHistory,
+              icon: Icons.history_rounded,
+              selected: activeSection == TravelNavigationSection.history,
+              onTap: () => _open(BaseRoute.travelHistory),
+            ),
+            _TravelNavigationItem(
+              label: localization.travelAccount,
+              icon: Icons.person_rounded,
+              selected: activeSection == TravelNavigationSection.account,
+              onTap: () => _open(BaseRoute.travelAccount),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _open(String route) {
+    if (Get.currentRoute == route) return;
+    Get.offNamed(route);
+  }
+}
+
+class _TravelNavigationItem extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _TravelNavigationItem({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? TravelTheme.blue : TravelTheme.muted;
+    return Expanded(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16.r),
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 6.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 23.r),
+              SizedBox(height: 3.h),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 9.sp,
+                  fontWeight: selected ? FontWeight.w900 : FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

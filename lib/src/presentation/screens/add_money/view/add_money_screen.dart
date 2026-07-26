@@ -4,6 +4,7 @@ import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/app/routes/route_return.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:qunzo_user/src/common/widgets/common_loading.dart';
@@ -49,7 +50,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          Get.offNamed(BaseRoute.navigation);
+          RouteReturn.complete();
         }
       },
       child: Scaffold(
@@ -70,7 +71,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                           () => CommonAppBar(
                             title: localizations.addMoneyTitle,
                             backLogicFunction: () async {
-                              Get.offNamed(BaseRoute.navigation);
+                              RouteReturn.complete();
                             },
                             isBackLogicApply: true,
                             rightSideWidget: controller.currentStep.value == 0

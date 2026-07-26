@@ -84,18 +84,18 @@ class TravelHotelSearch {
 }
 
 class TravelFlightSearch {
-  final String origin;
-  final String destination;
-  final DateTime departureDate;
+  final String? origin;
+  final String? destination;
+  final DateTime? departureDate;
   final int adultCount;
   final int childCount;
 
   const TravelFlightSearch({
-    required this.origin,
-    required this.destination,
-    required this.departureDate,
-    required this.adultCount,
-    required this.childCount,
+    this.origin,
+    this.destination,
+    this.departureDate,
+    this.adultCount = 1,
+    this.childCount = 0,
   });
 }
 
@@ -142,6 +142,11 @@ class TravelOffer {
   final double rating;
   final List<String> featureKeys;
   final Map<String, String> metadata;
+  final Map<String, dynamic> product;
+  final Map<String, dynamic> attributes;
+  final Map<String, dynamic> policies;
+  final List<Map<String, dynamic>> actions;
+  final List<Map<String, dynamic>> pricingComponents;
 
   const TravelOffer({
     required this.id,
@@ -154,6 +159,11 @@ class TravelOffer {
     required this.rating,
     required this.featureKeys,
     required this.metadata,
+    this.product = const {},
+    this.attributes = const {},
+    this.policies = const {},
+    this.actions = const [],
+    this.pricingComponents = const [],
   });
 }
 
