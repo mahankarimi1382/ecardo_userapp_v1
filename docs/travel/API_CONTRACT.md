@@ -37,7 +37,7 @@ Errors use:
 
 Flutter maps these normalized eCardo responses into Travel domain models. Supplier response formats remain behind the gateway.
 
-The current hotel design is aligned to the deployed Tehran catalog and sends the normalized city code `THR`. A future destination selector should pass the user's selected normalized city code.
+Flutter submits the user's editable destination, dates, room count, adult count, and child count through the normalized service-search contract.
 
 ## Deployed Contract
 
@@ -192,22 +192,26 @@ The following routes are backend/admin-only and must not be called by the custom
 - `POST /operator/orders/{order}/reject`
 - `POST /operator/bookings/{booking}/voucher`
 
-## Gateway Expansion Required
+## Current Normalized Discovery
 
-The following normalized customer capabilities are not present in the inspected deployed contract and remain mock-backed in Flutter:
-
-- Flight search, offers, booking, ticketing, and order artifacts
-- eSIM destinations, packages, purchase, installation, and activation
-- Multiple saved travelers
-- Combined Travel and main-wallet activity history
-- Redesigned bootstrap/configuration and backend-controlled content
-- General offer revalidation endpoint
-
-Recommended future routes:
+The inspected production contract exposes:
 
 - `GET /travel/bootstrap`
 - `POST /travel/services/{service}/search`
 - `GET /travel/services/{service}/offers/{offer}`
+
+Flutter consumes bootstrap and normalized hotel, flight, and eSIM search responses. On July 26, 2026, bootstrap reported `data_mode: mock` for all three services. Mock offers are display-only and cannot reach wallet checkout.
+
+The following capabilities still require stable live contracts or Flutter integration:
+
+- Flight purchase, ticketing, and order artifacts
+- eSIM purchase, installation, and activation
+- Multiple saved travelers
+- Combined Travel and main-wallet activity history
+- General offer revalidation endpoint
+
+Recommended future routes:
+
 - `POST /travel/services/{service}/offers/{offer}/revalidate`
 - `GET|POST|PATCH /travelers`
 - `GET /activity`
@@ -216,8 +220,8 @@ These routes must continue returning normalized eCardo schemas regardless of the
 
 ## Repository Mapping
 
-- `TravelApiRepository`: deployed `trip.ecardo.ir` hotel catalog, token exchange, order history, hotel booking, and wallet payment.
-- `MockTravelRepository`: flight, eSIM, saved travelers, and combined activity until normalized gateway endpoints are exposed.
-- `HybridTravelRepository`: selects the live or mock implementation by capability.
+- `TravelApiRepository`: deployed bootstrap, normalized hotel/flight/eSIM discovery, token exchange, order history, hotel booking, and wallet payment.
+- `TravelRepository`: stable application-facing contract.
+- `TravelApiRepository`: the sole runtime implementation; no local provider/order mock repository remains.
 
-Live hotel catalog and order history never display fake fallback records. Booking creation verifies the returned authoritative amount and currency before wallet capture. Booking creation and wallet payment never fall back to a mock success.
+Order history never displays fake fallback records. Booking creation verifies the returned authoritative amount and currency before wallet capture. No booking or payment operation falls back to a mock success.

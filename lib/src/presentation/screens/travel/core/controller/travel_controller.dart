@@ -9,16 +9,14 @@ class TravelController extends GetxController {
   final TravelRepository repository;
 
   TravelController({TravelRepository? repository})
-    : repository =
-          repository ??
-          HybridTravelRepository(
-            gateway: TravelApiRepository(),
-            fallback: MockTravelRepository(),
-          );
+    : repository = repository ?? TravelApiRepository();
 
   final RxBool isLoading = false.obs;
   final RxBool isCheckoutLoading = false.obs;
   final RxBool checkoutFailed = false.obs;
+  final RxnString bootstrapError = RxnString();
+  final RxnString searchError = RxnString();
+  final Rxn<TravelBootstrap> bootstrap = Rxn<TravelBootstrap>();
   final RxList<TravelOffer> hotelOffers = <TravelOffer>[].obs;
   final RxList<TravelOffer> flightOffers = <TravelOffer>[].obs;
   final RxList<TravelEsimPackage> esimPackages = <TravelEsimPackage>[].obs;
@@ -46,63 +44,120 @@ class TravelController extends GetxController {
     isLoading.value = true;
     try {
       await Future.wait<void>([
+        _loadBootstrap(),
         _loadOrders(),
-        _loadActivity(),
-        _loadTravelers(),
       ]);
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> _loadOrders() async {
+  Future<void> _loadBootstrap() async {
+    bootstrapError.value = null;
     try {
-      orders.assignAll(await repository.getOrders());
-    } catch (_) {
-      orders.clear();
+      bootstrap.value = await repository.getBootstrap();
+    } catch (error) {
+      bootstrap.value = null;
+      bootstrapError.value = error.toString();
     }
   }
 
-  Future<void> _loadActivity() async {
+  Future<void> reloadBootstrap() async {
+    isLoading.value = true;
     try {
-      activity.assignAll(await repository.getActivity());
+      await _loadBootstrap();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  bool isServiceEnabled(TravelProductType type) =>
+      bootstrap.value?.serviceFor(type) != null;
+
+  TravelServiceConfig? serviceFor(TravelProductType type) =>
+      bootstrap.value?.serviceFor(type);
+
+  bool canPurchase(TravelProductType type) {
+    final service = serviceFor(type);
+    final purchaseEnabled = service?.capabilities.any(
+      (capability) => {
+        'purchase',
+        'book',
+        'booking',
+        'checkout',
+      }.contains(capability.toLowerCase()),
+    );
+    return type == TravelProductType.hotel &&
+        service != null &&
+        service.dataMode.toLowerCase() == 'live' &&
+        purchaseEnabled == true;
+  }
+
+  Future<void> _loadOrders() async {
+    try {
+      final loadedOrders = await repository.getOrders();
+      orders.assignAll(loadedOrders);
+      activity.assignAll(
+        loadedOrders.map(
+          (order) => TravelActivity(
+            id: 'order-${order.id}',
+            titleKey: order.titleKey,
+            subtitleKey: order.reference,
+            amount: order.total,
+            isCredit: false,
+            createdAt: order.createdAt,
+            type: order.type,
+          ),
+        ),
+      );
     } catch (_) {
+      orders.clear();
       activity.clear();
     }
   }
 
-  Future<void> _loadTravelers() async {
-    try {
-      travelers.assignAll(await repository.getTravelers());
-    } catch (_) {
-      travelers.clear();
-    }
-  }
-
-  Future<void> searchHotels() async {
+  Future<bool> searchHotels(TravelHotelSearch search) async {
     isLoading.value = true;
+    searchError.value = null;
     try {
-      hotelOffers.assignAll(await repository.searchHotels());
-    } catch (_) {
+      hotelOffers.assignAll(await repository.searchHotels(search));
+      return true;
+    } catch (error) {
       hotelOffers.clear();
+      searchError.value = error.toString();
+      return false;
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> searchFlights() async {
+  Future<bool> searchFlights(TravelFlightSearch search) async {
     isLoading.value = true;
+    searchError.value = null;
     try {
-      flightOffers.assignAll(await repository.searchFlights());
+      flightOffers.assignAll(await repository.searchFlights(search));
+      return true;
+    } catch (error) {
+      flightOffers.clear();
+      searchError.value = error.toString();
+      return false;
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> loadEsimPackages() async {
+  Future<bool> loadEsimPackages(String destinationCode) async {
     isLoading.value = true;
+    searchError.value = null;
     try {
-      esimPackages.assignAll(await repository.getEsimPackages());
+      esimPackages.assignAll(
+        await repository.getEsimPackages(destinationCode),
+      );
+      return true;
+    } catch (error) {
+      esimPackages.clear();
+      searchError.value = error.toString();
+      return false;
     } finally {
       isLoading.value = false;
     }
@@ -127,11 +182,39 @@ class TravelController extends GetxController {
 
   double get mainWalletBalance {
     if (!Get.isRegistered<HomeController>()) return 0;
-    final raw = Get.find<HomeController>().userModel.value.data?.balance ?? '0';
+    final wallets = Get.find<HomeController>().walletsList;
+    if (wallets.isEmpty) return 0;
+    final wallet = wallets.firstWhereOrNull((item) => item.isDefault == true) ??
+        wallets.firstWhereOrNull(
+          (item) => item.code?.toUpperCase() == 'IRR',
+        ) ??
+        wallets.first;
+    final raw = wallet.balance ?? '0';
     return double.tryParse(
           raw.replaceAll(',', '').replaceAll(RegExp(r'[^0-9.-]'), ''),
         ) ??
         0;
+  }
+
+  String get mainWalletCurrency {
+    if (!Get.isRegistered<HomeController>()) return 'IRR';
+    final wallets = Get.find<HomeController>().walletsList;
+    if (wallets.isEmpty) return 'IRR';
+    final wallet = wallets.firstWhereOrNull((item) => item.isDefault == true) ??
+        wallets.firstWhereOrNull(
+          (item) => item.code?.toUpperCase() == 'IRR',
+        ) ??
+        wallets.first;
+    return wallet.code ?? 'IRR';
+  }
+
+  Future<void> refreshMainWallet() async {
+    if (!Get.isRegistered<HomeController>()) return;
+    final homeController = Get.find<HomeController>();
+    await Future.wait<void>([
+      homeController.fetchWallets(),
+      homeController.fetchUser(),
+    ]);
   }
 
   Future<TravelOrder?> checkout({
@@ -141,6 +224,10 @@ class TravelController extends GetxController {
     required TravelBookingDetails bookingDetails,
   }) async {
     if (isCheckoutLoading.value) return null;
+    if (!canPurchase(type)) {
+      checkoutFailed.value = true;
+      return null;
+    }
     isCheckoutLoading.value = true;
     checkoutFailed.value = false;
     _activeIdempotencyKey ??=
@@ -155,6 +242,7 @@ class TravelController extends GetxController {
       );
       latestOrder.value = order;
       orders.insert(0, order);
+      await refreshMainWallet();
       _activeIdempotencyKey = null;
       return order;
     } catch (_) {

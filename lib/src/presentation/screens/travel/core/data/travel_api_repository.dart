@@ -26,16 +26,35 @@ class TravelApiRepository implements TravelRepository {
           );
 
   @override
-  Future<List<TravelOffer>> searchHotels() async {
+  Future<TravelBootstrap> getBootstrap() async {
     final response = await _client.get<Map<String, dynamic>>(
-      '/hotel-offers',
-      queryParameters: {
-        'locale': Get.locale?.toLanguageTag() ?? 'en',
-        'city': 'THR',
-      },
+      '/travel/bootstrap',
+      queryParameters: {'locale': Get.locale?.toLanguageTag() ?? 'en'},
     );
-    return _dataList(response.data)
-        .map(_mapHotelOffer)
+    final data = _map(response.data?['data']);
+    final services = _listOfMaps(data['services'])
+        .map(_mapService)
+        .whereType<TravelServiceConfig>()
+        .toList();
+    return TravelBootstrap(
+      currency: data['currency']?.toString() ?? 'IRR',
+      locale: data['locale']?.toString() ?? 'en',
+      services: services,
+    );
+  }
+
+  @override
+  Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async {
+    final offers = await _searchService('hotel', {
+        'city': search.city,
+        'check_in': _date(search.checkInDate),
+        'check_out': _date(search.checkOutDate),
+        'rooms': search.roomCount,
+        'adults': search.adultCount,
+        'children': search.childCount,
+      });
+    return offers
+        .map((offer) => _mapNormalizedOffer(offer, TravelProductType.hotel))
         .where((offer) => offer.id.isNotEmpty)
         .toList();
   }
@@ -261,12 +280,29 @@ class TravelApiRepository implements TravelRepository {
   }
 
   @override
-  Future<List<TravelOffer>> searchFlights() =>
-      throw UnsupportedError('Flights are not exposed by the gateway yet.');
+  Future<List<TravelOffer>> searchFlights(TravelFlightSearch search) async {
+    final offers = await _searchService('flight', {
+      'origin': search.origin,
+      'destination': search.destination,
+      'departure_date': _date(search.departureDate),
+      'adults': search.adultCount,
+      'children': search.childCount,
+    });
+    return offers
+        .map((offer) => _mapNormalizedOffer(offer, TravelProductType.flight))
+        .where((offer) => offer.id.isNotEmpty)
+        .toList();
+  }
 
   @override
-  Future<List<TravelEsimPackage>> getEsimPackages() =>
-      throw UnsupportedError('eSIM is not exposed by the gateway yet.');
+  Future<List<TravelEsimPackage>> getEsimPackages(
+    String destinationCode,
+  ) async {
+    final offers = await _searchService('esim', {
+      'country_code': destinationCode,
+    });
+    return offers.map(_mapEsimPackage).where((item) => item.id.isNotEmpty).toList();
+  }
 
   @override
   Future<List<TravelTraveler>> getTravelers() =>
@@ -280,10 +316,126 @@ class TravelApiRepository implements TravelRepository {
   Future<List<TravelActivity>> getActivity() =>
       throw UnsupportedError('Combined activity is not exposed yet.');
 
+  Future<List<Map<String, dynamic>>> _searchService(
+    String service,
+    Map<String, dynamic> criteria,
+  ) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      '/travel/services/$service/search',
+      data: {'criteria': criteria},
+    );
+    final data = _map(response.data?['data']);
+    return _listOfMaps(data['offers']);
+  }
+
   static List<Map<String, dynamic>> _dataList(Map<String, dynamic>? root) {
     final data = root?['data'];
     if (data is! List) return const [];
     return data.whereType<Map>().map(Map<String, dynamic>.from).toList();
+  }
+
+  static List<Map<String, dynamic>> _listOfMaps(dynamic value) {
+    if (value is! List) return const [];
+    return value.whereType<Map>().map(Map<String, dynamic>.from).toList();
+  }
+
+  TravelServiceConfig? _mapService(Map<String, dynamic> json) {
+    final type = switch (json['key']?.toString()) {
+      'hotel' => TravelProductType.hotel,
+      'flight' => TravelProductType.flight,
+      'esim' => TravelProductType.esim,
+      _ => null,
+    };
+    if (type == null) return null;
+    final resultSchema = _map(json['result_schema']);
+    return TravelServiceConfig(
+      type: type,
+      displayName: json['display_name']?.toString() ?? type.name,
+      description: json['description']?.toString() ?? '',
+      iconKey: json['icon_key']?.toString() ?? type.name,
+      accentColor: json['accent_color']?.toString() ?? '',
+      capabilities: _strings(json['capabilities']),
+      searchFields: _listOfMaps(json['search_schema'])
+          .map(
+            (field) => TravelSearchField(
+              key: field['key']?.toString() ?? '',
+              type: field['type']?.toString() ?? 'text',
+              label: field['label']?.toString() ?? '',
+              hint: field['hint']?.toString(),
+              required: field['required'] == true,
+              defaultValue: field['default'] is num
+                  ? field['default'] as num
+                  : num.tryParse(field['default']?.toString() ?? ''),
+              minimum: field['min'] is num
+                  ? field['min'] as num
+                  : num.tryParse(field['min']?.toString() ?? ''),
+              maximum: field['max'] is num
+                  ? field['max'] as num
+                  : num.tryParse(field['max']?.toString() ?? ''),
+            ),
+          )
+          .where((field) => field.key.isNotEmpty)
+          .toList(),
+      presentation: _map(resultSchema['presentation']),
+      dataMode: json['data_mode']?.toString() ?? 'live',
+    );
+  }
+
+  TravelOffer _mapNormalizedOffer(
+    Map<String, dynamic> json,
+    TravelProductType type,
+  ) {
+    final pricing = _map(json['pricing']);
+    final attributes = _map(json['attributes']);
+    return TravelOffer(
+      id: json['id']?.toString() ?? '',
+      type: type,
+      titleKey: json['title']?.toString() ?? '',
+      subtitleKey: json['subtitle']?.toString() ?? '',
+      badgeKey: json['badge']?.toString() ?? '',
+      imageUrl: json['image_url']?.toString() ?? '',
+      total: TravelMoney(
+        amount: _amount(pricing['total_amount']),
+        currency: pricing['currency']?.toString() ?? 'IRR',
+      ),
+      rating: _amount(attributes['stars']),
+      featureKeys: _strings(json['highlights']).take(4).toList(),
+      metadata: {
+        ...attributes.map(
+          (key, value) => MapEntry(key, value?.toString() ?? ''),
+        ),
+        'provider_key': json['provider_key']?.toString() ?? '',
+        'booking_mode': json['booking_mode']?.toString() ?? '',
+        'departure':
+            attributes['departure_time']?.toString() ??
+            attributes['departure']?.toString() ??
+            '',
+        'arrival':
+            attributes['arrival_time']?.toString() ??
+            attributes['arrival']?.toString() ??
+            '',
+        'duration': attributes['duration']?.toString() ?? '',
+      },
+    );
+  }
+
+  TravelEsimPackage _mapEsimPackage(Map<String, dynamic> json) {
+    final pricing = _map(json['pricing']);
+    final attributes = _map(json['attributes']);
+    final dataGb = attributes['data_gb'];
+    return TravelEsimPackage(
+      id: json['id']?.toString() ?? '',
+      destinationCode: attributes['country_code']?.toString() ?? '',
+      dataLabel: dataGb == null ? '∞' : '${_amount(dataGb).toStringAsFixed(0)} GB',
+      validityDays: _amount(attributes['validity_days']).round(),
+      total: TravelMoney(
+        amount: _amount(pricing['total_amount']),
+        currency: pricing['currency']?.toString() ?? 'IRR',
+      ),
+      isPopular: _strings(json['highlights']).any(
+        (item) => item.toLowerCase().contains('best'),
+      ),
+    );
   }
 
   static Map<String, dynamic> _map(dynamic value) {

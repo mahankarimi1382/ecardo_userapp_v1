@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
+import 'package:qunzo_user/src/common/widgets/common_single_date_picker.dart';
+import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/controller/travel_controller.dart';
@@ -10,13 +12,41 @@ import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 
-class FlightSearchScreen extends StatelessWidget {
+class FlightSearchScreen extends StatefulWidget {
   const FlightSearchScreen({super.key});
+
+  @override
+  State<FlightSearchScreen> createState() => _FlightSearchScreenState();
+}
+
+class _FlightSearchScreenState extends State<FlightSearchScreen> {
+  final originController = TextEditingController();
+  final destinationController = TextEditingController();
+  DateTime departureDate = DateTime.now().add(const Duration(days: 7));
+  int adultCount = 1;
+  int childCount = 0;
+
+  @override
+  void dispose() {
+    originController.dispose();
+    destinationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final controller = Get.find<TravelController>();
+    final service = controller.serviceFor(TravelProductType.flight);
+    final originField = service?.searchFields.firstWhereOrNull(
+      (field) => field.key == 'origin',
+    );
+    final destinationField = service?.searchFields.firstWhereOrNull(
+      (field) => field.key == 'destination',
+    );
+    final heroTitle =
+        service?.presentation['hero_title']?.toString() ??
+        localization.travelFlightHero;
     return TravelPage(
       title: localization.travelFlightSearch,
       child: ListView(
@@ -44,7 +74,7 @@ class FlightSearchScreen extends StatelessWidget {
                 Align(
                   alignment: AlignmentDirectional.bottomStart,
                   child: Text(
-                    localization.travelFlightHero,
+                    heroTitle,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22.sp,
@@ -59,28 +89,50 @@ class FlightSearchScreen extends StatelessWidget {
           TravelCard(
             child: Column(
               children: [
-                TravelFieldTile(
-                  label: localization.travelOrigin,
-                  value: localization.travelMockTehranAirport,
-                  icon: Icons.flight_takeoff_rounded,
+                CommonTextInputField(
+                  controller: originController,
+                  hintText:
+                      originField?.hint ??
+                      originField?.label ??
+                      localization.travelOrigin,
+                  prefixIcon: const Icon(
+                    Icons.flight_takeoff_rounded,
+                    color: TravelTheme.blue,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: const CircleAvatar(
-                    backgroundColor: TravelTheme.blue,
-                    child: Icon(Icons.swap_vert_rounded, color: Colors.white),
+                  child: IconButton(
+                    onPressed: () {
+                      final origin = originController.text;
+                      originController.text = destinationController.text;
+                      destinationController.text = origin;
+                    },
+                    icon: const CircleAvatar(
+                      backgroundColor: TravelTheme.blue,
+                      child: Icon(Icons.swap_vert_rounded, color: Colors.white),
+                    ),
                   ),
                 ),
-                TravelFieldTile(
-                  label: localization.travelDestination,
-                  value: localization.travelMockIstanbulAirport,
-                  icon: Icons.flight_land_rounded,
+                CommonTextInputField(
+                  controller: destinationController,
+                  hintText:
+                      destinationField?.hint ??
+                      destinationField?.label ??
+                      localization.travelDestination,
+                  prefixIcon: const Icon(
+                    Icons.flight_land_rounded,
+                    color: TravelTheme.blue,
+                  ),
                 ),
                 SizedBox(height: 12.h),
-                TravelFieldTile(
-                  label: localization.travelDepartureDate,
-                  value: '2026/08/20',
-                  icon: Icons.calendar_month_outlined,
+                CommonSingleDatePicker(
+                  initialDate: departureDate,
+                  firstDate: DateTime.now(),
+                  hintText: localization.travelDepartureDate,
+                  suffixIcon: const Icon(Icons.calendar_month_outlined),
+                  onDateSelected: (value) =>
+                      setState(() => departureDate = value),
                 ),
                 SizedBox(height: 12.h),
                 Row(
@@ -88,16 +140,32 @@ class FlightSearchScreen extends StatelessWidget {
                     Expanded(
                       child: TravelFieldTile(
                         label: localization.travelAdults,
-                        value: '1',
+                        value: '$adultCount',
                         icon: Icons.person_outline_rounded,
+                        onTap: () => _selectCount(
+                          label: localization.travelAdults,
+                          current: adultCount,
+                          minimum: 1,
+                          maximum: 9,
+                          onSelected: (value) =>
+                              setState(() => adultCount = value),
+                        ),
                       ),
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: TravelFieldTile(
                         label: localization.travelChildren,
-                        value: '0',
+                        value: '$childCount',
                         icon: Icons.child_care_rounded,
+                        onTap: () => _selectCount(
+                          label: localization.travelChildren,
+                          current: childCount,
+                          minimum: 0,
+                          maximum: 8,
+                          onSelected: (value) =>
+                              setState(() => childCount = value),
+                        ),
                       ),
                     ),
                   ],
@@ -110,33 +178,122 @@ class FlightSearchScreen extends StatelessWidget {
                     backgroundColor: TravelTheme.blue,
                     isLoading: controller.isLoading.value,
                     onPressed: () async {
-                      await controller.searchFlights();
-                      Get.to(() => const FlightResultsScreen());
+                      final origin = originController.text.trim().toUpperCase();
+                      final destination = destinationController.text
+                          .trim()
+                          .toUpperCase();
+                      if (origin.isEmpty ||
+                          destination.isEmpty ||
+                          origin == destination) {
+                        Get.snackbar(
+                          localization.travelFlightSearch,
+                          localization.travelOfferUnavailable,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                        return;
+                      }
+                      final succeeded = await controller.searchFlights(
+                        TravelFlightSearch(
+                          origin: origin,
+                          destination: destination,
+                          departureDate: departureDate,
+                          adultCount: adultCount,
+                          childCount: childCount,
+                        ),
+                      );
+                      if (succeeded) {
+                        Get.to(() => const FlightResultsScreen());
+                      } else {
+                        Get.snackbar(
+                          localization.travelFlightSearch,
+                          localization.allControllerLoadError,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
                     },
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 26.h),
-          TravelSectionHeader(title: localization.travelRecentSearches),
-          SizedBox(height: 10.h),
-          TravelCard(
-            child: Row(
+        ],
+      ),
+    );
+  }
+
+  Future<void> _selectCount({
+    required String label,
+    required int current,
+    required int minimum,
+    required int maximum,
+    required ValueChanged<int> onSelected,
+  }) async {
+    var selected = current;
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setSheetState) => Container(
+          padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 28.h),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.flight_rounded, color: TravelTheme.blue),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(localization.travelMockRouteTehranIstanbul),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded),
+                SizedBox(height: 18.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: selected > minimum
+                          ? () => setSheetState(() => selected--)
+                          : null,
+                      icon: const Icon(Icons.remove_circle_outline_rounded),
+                    ),
+                    SizedBox(
+                      width: 54.w,
+                      child: Text(
+                        '$selected',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: selected < maximum
+                          ? () => setSheetState(() => selected++)
+                          : null,
+                      icon: const Icon(Icons.add_circle_outline_rounded),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 18.h),
+                CommonButton(
+                  width: double.infinity,
+                  text: AppLocalizations.of(context)!.travelSelect,
+                  backgroundColor: TravelTheme.blue,
+                  onPressed: () {
+                    onSelected(selected);
+                    Get.back();
+                  },
+                ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -274,10 +431,15 @@ class _FlightOfferCard extends StatelessWidget {
           SizedBox(height: 16.h),
           Align(
             alignment: AlignmentDirectional.centerEnd,
-            child: FilledButton(
-              style: FilledButton.styleFrom(backgroundColor: TravelTheme.blue),
-              onPressed: onTap,
-              child: Text(localization.travelSelectFlight),
+            child: SizedBox(
+              width: 130.w,
+              child: CommonButton(
+                height: 42,
+                fontSize: 11,
+                backgroundColor: TravelTheme.blue,
+                text: localization.travelSelectFlight,
+                onPressed: onTap,
+              ),
             ),
           ),
         ],
@@ -317,6 +479,7 @@ class FlightDetailsScreen extends StatelessWidget {
         child: TravelEmptyState(message: localization.travelOfferUnavailable),
       );
     }
+    final canPurchase = controller.canPurchase(TravelProductType.flight);
     return TravelPage(
       title: localization.travelFlightDetails,
       bottomNavigationBar: SafeArea(
@@ -324,16 +487,22 @@ class FlightDetailsScreen extends StatelessWidget {
           padding: EdgeInsets.all(16.r),
           child: CommonButton(
             width: double.infinity,
-            text: localization.travelContinueToPayment,
-            backgroundColor: TravelTheme.blue,
-            onPressed: () => Get.to(
-              () => TravelCheckoutScreen(
-                type: TravelProductType.flight,
-                productId: offer.id,
-                title: travelLocalizedKey(localization, offer.titleKey),
-                total: offer.total,
-              ),
-            ),
+            text: canPurchase
+                ? localization.travelContinueToPayment
+                : localization.travelOfferUnavailable,
+            backgroundColor: canPurchase
+                ? TravelTheme.blue
+                : TravelTheme.muted,
+            onPressed: canPurchase
+                ? () => Get.to(
+                    () => TravelCheckoutScreen(
+                      type: TravelProductType.flight,
+                      productId: offer.id,
+                      title: travelLocalizedKey(localization, offer.titleKey),
+                      total: offer.total,
+                    ),
+                  )
+                : null,
           ),
         ),
       ),

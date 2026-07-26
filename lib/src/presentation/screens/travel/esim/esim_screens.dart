@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
+import 'package:qunzo_user/src/common/widgets/common_loading.dart';
+import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/controller/travel_controller.dart';
@@ -16,6 +18,14 @@ class EsimIntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final controller = Get.find<TravelController>();
+    final service = controller.serviceFor(TravelProductType.esim);
+    final heroTitle =
+        service?.presentation['hero_title']?.toString() ??
+        localization.travelEsimIntroTitle;
+    final heroSubtitle =
+        service?.presentation['hero_subtitle']?.toString() ??
+        localization.travelEsimIntroDescription;
     return TravelPage(
       title: localization.travelEsim,
       bottomNavigationBar: SafeArea(
@@ -53,12 +63,12 @@ class EsimIntroScreen extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           Text(
-            localization.travelEsimIntroTitle,
+            heroTitle,
             style: TextStyle(fontSize: 25.sp, fontWeight: FontWeight.w900),
           ),
           SizedBox(height: 10.h),
           Text(
-            localization.travelEsimIntroDescription,
+            heroSubtitle,
             style: TextStyle(
               color: TravelTheme.muted,
               fontSize: 13.sp,
@@ -138,31 +148,71 @@ class EsimPackagesScreen extends StatefulWidget {
 }
 
 class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
+  final destinationController = TextEditingController();
+
   @override
-  void initState() {
-    super.initState();
-    final controller = Get.find<TravelController>();
-    if (controller.esimPackages.isEmpty) {
-      controller.loadEsimPackages();
-    }
+  void dispose() {
+    destinationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final controller = Get.find<TravelController>();
+    final service = controller.serviceFor(TravelProductType.esim);
+    final destinationField = service?.searchFields.firstWhereOrNull(
+      (field) => field.key == 'country_code',
+    );
     return TravelPage(
       title: localization.travelEsimPackages,
       child: Obx(
         () => controller.isLoading.value && controller.esimPackages.isEmpty
-            ? const Center(child: CircularProgressIndicator())
+            ? const CommonLoading()
             : ListView(
                 padding: EdgeInsets.all(20.r),
                 children: [
-                  TravelFieldTile(
-                    label: localization.travelDestination,
-                    value: localization.travelEsimTurkey,
-                    icon: Icons.public_rounded,
+                  CommonTextInputField(
+                    controller: destinationController,
+                    hintText:
+                        destinationField?.hint ??
+                        destinationField?.label ??
+                        localization.travelDestination,
+                    prefixIcon: const Icon(
+                      Icons.public_rounded,
+                      color: TravelTheme.yellow,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  CommonButton(
+                    width: double.infinity,
+                    text: localization.travelBrowseEsimPackages,
+                    textColor: TravelTheme.ink,
+                    backgroundColor: TravelTheme.yellow,
+                    isLoading: controller.isLoading.value,
+                    onPressed: () async {
+                      final destination = destinationController.text
+                          .trim()
+                          .toUpperCase();
+                      if (destination.isEmpty) {
+                        Get.snackbar(
+                          localization.travelEsimPackages,
+                          localization.travelDestination,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                        return;
+                      }
+                      final succeeded = await controller.loadEsimPackages(
+                        destination,
+                      );
+                      if (!succeeded) {
+                        Get.snackbar(
+                          localization.travelEsimPackages,
+                          localization.allControllerLoadError,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
+                    },
                   ),
                   SizedBox(height: 20.h),
                   TravelSectionHeader(
@@ -191,18 +241,21 @@ class _PackageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final controller = Get.find<TravelController>();
+    final canPurchase = controller.canPurchase(TravelProductType.esim);
     return TravelCard(
-      onTap: () {
-        controller.selectedEsim.value = package;
-        Get.to(
-          () => TravelCheckoutScreen(
-            type: TravelProductType.esim,
-            productId: package.id,
-            title: localization.travelEsimTurkey,
-            total: package.total,
-          ),
-        );
-      },
+      onTap: canPurchase
+          ? () {
+              controller.selectedEsim.value = package;
+              Get.to(
+                () => TravelCheckoutScreen(
+                  type: TravelProductType.esim,
+                  productId: package.id,
+                  title: package.destinationCode,
+                  total: package.total,
+                ),
+              );
+            }
+          : null,
       child: Column(
         children: [
           Row(
@@ -266,23 +319,34 @@ class _PackageCard extends StatelessWidget {
                   ),
                 ),
               ),
-              FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: TravelTheme.yellow,
-                  foregroundColor: TravelTheme.ink,
+              SizedBox(
+                width: 120.w,
+                child: CommonButton(
+                  height: 42,
+                  text: canPurchase
+                      ? localization.travelSelect
+                      : localization.travelOfferUnavailable,
+                  fontSize: 10,
+                  textColor: canPurchase
+                      ? TravelTheme.ink
+                      : Colors.white,
+                  backgroundColor: canPurchase
+                      ? TravelTheme.yellow
+                      : TravelTheme.muted,
+                  onPressed: canPurchase
+                      ? () {
+                          controller.selectedEsim.value = package;
+                          Get.to(
+                            () => TravelCheckoutScreen(
+                              type: TravelProductType.esim,
+                              productId: package.id,
+                              title: package.destinationCode,
+                              total: package.total,
+                            ),
+                          );
+                        }
+                      : null,
                 ),
-                onPressed: () {
-                  controller.selectedEsim.value = package;
-                  Get.to(
-                    () => TravelCheckoutScreen(
-                      type: TravelProductType.esim,
-                      productId: package.id,
-                      title: localization.travelEsimTurkey,
-                      total: package.total,
-                    ),
-                  );
-                },
-                child: Text(localization.travelSelect),
               ),
             ],
           ),

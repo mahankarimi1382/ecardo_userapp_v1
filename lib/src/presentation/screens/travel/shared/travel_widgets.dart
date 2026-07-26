@@ -157,7 +157,20 @@ class TravelSectionHeader extends StatelessWidget {
           ),
         ),
         if (action != null)
-          TextButton(onPressed: onAction, child: Text(action!)),
+          InkWell(
+            borderRadius: BorderRadius.circular(10.r),
+            onTap: onAction,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+              child: Text(
+                action!,
+                style: const TextStyle(
+                  color: TravelTheme.blue,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

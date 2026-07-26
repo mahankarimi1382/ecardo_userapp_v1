@@ -9,7 +9,6 @@ import '../bookings/travel_orders_screen.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
-import '../travelers/travelers_screen.dart';
 import 'travel_history_screen.dart';
 
 class TravelAccountScreen extends StatelessWidget {
@@ -110,12 +109,6 @@ class TravelAccountScreen extends StatelessWidget {
             title: localization.travelAllBookings,
             subtitle: localization.travelMyBookingsDescription,
             onTap: () => Get.to(() => const TravelOrdersScreen()),
-          ),
-          _AccountTile(
-            icon: Icons.people_alt_outlined,
-            title: localization.travelSavedTravelers,
-            subtitle: localization.travelSavedTravelersDescription,
-            onTap: () => Get.to(() => const TravelersScreen()),
           ),
           _AccountTile(
             icon: Icons.badge_outlined,

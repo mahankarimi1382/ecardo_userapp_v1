@@ -2,17 +2,17 @@
 
 ## Purpose
 
-eCardo Travel is a mini-app inside the main eCardo Flutter application. It reuses the authenticated user, main wallet balance, personal information, saved travelers, localization, and GetX navigation conventions. It does not connect directly to travel providers.
+eCardo Travel is a mini-app inside the main eCardo Flutter application. It reuses the authenticated user, main wallet, personal information, localization, and GetX navigation conventions. It does not connect directly to travel providers.
 
 ## Module Boundaries
 
-- `travel/core`: domain models, repository interfaces, mock repository, and shared controller state.
+- `travel/core`: domain models, repository interface, first-party API repository, and shared controller state.
 - `travel/home`: Travel dashboard and service entry points.
 - `travel/hotels`: hotel search, results, and details.
 - `travel/flights`: flight search, results, and passenger/fare review.
 - `travel/esim`: eSIM introduction and package selection.
 - `travel/bookings`: wallet checkout, booking lists, vouchers, tickets, and activation details.
-- `travel/travelers`: saved traveler presentation.
+- `travel/travelers`: dormant saved-traveler presentation for a future persistence contract.
 - `travel/account`: account hub and combined travel/wallet history.
 - `travel/shared`: design tokens, responsive cards, fields, formatting, and product helpers.
 
@@ -20,7 +20,7 @@ The existing `BaseRoute.travel` route remains the single super-app entry. `Trave
 
 ## Data and Repository Layers
 
-Widgets depend on `TravelController`, which depends on the `TravelRepository` interface. `TravelApiRepository` targets the first-party public gateway at `https://trip.ecardo.ir/api/v1`. `HybridTravelRepository` uses that gateway for the currently exposed hotel catalog, orders, token exchange, booking creation, and wallet payment flows; realistic mock data remains behind the same interface for flight, eSIM, saved-traveler, and combined-history capabilities that the gateway does not expose yet.
+Widgets depend on `TravelController`, which depends on the `TravelRepository` interface. `TravelApiRepository` targets the first-party public gateway at `https://trip.ecardo.ir/api/v1`. Bootstrap and normalized hotel, flight, and eSIM searches always come from this gateway. Flutter does not contain provider selection or provider response conversion logic. Saved travelers remain hidden until a persistence endpoint exists.
 
 Provider payloads must be translated by the eCardo backend into the domain shapes represented by:
 
@@ -43,7 +43,7 @@ Generated localization Dart files are not edited manually.
 
 ## Wallet Checkout
 
-Travel checkout always selects the main eCardo wallet and reads its balance from the shared `HomeController`.
+Travel checkout selects the wallet marked `isDefault` in the shared `HomeController.walletsList`, with the IRR wallet as a fallback.
 
 The intended live sequence is:
 
@@ -54,9 +54,9 @@ The intended live sequence is:
 5. Poll or retrieve the resulting order.
 6. Render a voucher, ticket, or eSIM activation artifact.
 
-The checkout controller blocks duplicate taps and reuses an active idempotency key until the request succeeds. If the wallet balance is insufficient, checkout routes to `BaseRoute.addMoney` and refreshes its local balance display when the user returns.
+The checkout controller blocks duplicate taps and reuses an active idempotency key until the request succeeds. If the wallet balance is insufficient, checkout routes to `BaseRoute.addMoney` and refreshes both shared wallet and user state when the user returns.
 
-Live hotel catalog, order history, booking creation, and wallet payment never fall back to mock records. Booking creation also verifies that the authoritative payable amount and currency still match the displayed gateway offer before wallet capture. Failures remain failures and are shown to the user.
+Services marked `mock` by bootstrap can be browsed but cannot reach checkout. Live hotel checkout also requires an explicit backend capability such as `purchase`, `book`, `booking`, or `checkout`. This guarantees that demo or incompletely configured services never produce a fake confirmation or wallet transaction. Booking creation also verifies that the authoritative payable amount and currency still match the displayed gateway offer before wallet capture.
 
 Travel access tokens are cached only until shortly before the gateway-provided expiration time. Payment responses must reach an explicit paid/booked/completed state before Flutter presents success.
 

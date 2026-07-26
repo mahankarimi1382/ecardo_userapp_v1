@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_single_date_picker.dart';
+import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/controller/travel_controller.dart';
@@ -19,8 +20,12 @@ class HotelSearchScreen extends StatefulWidget {
 }
 
 class _HotelSearchScreenState extends State<HotelSearchScreen> {
+  final cityController = TextEditingController();
   late DateTime checkInDate;
   late DateTime checkOutDate;
+  int roomCount = 1;
+  int adultCount = 2;
+  int childCount = 0;
 
   @override
   void initState() {
@@ -35,9 +40,22 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
   }
 
   @override
+  void dispose() {
+    cityController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final controller = Get.find<TravelController>();
+    final service = controller.serviceFor(TravelProductType.hotel);
+    final cityField = service?.searchFields.firstWhereOrNull(
+      (field) => field.key == 'city',
+    );
+    final heroTitle =
+        service?.presentation['hero_title']?.toString() ??
+        localization.travelHotelHero;
     return TravelPage(
       title: localization.travelHotelSearch,
       child: ListView(
@@ -55,7 +73,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
             child: Align(
               alignment: AlignmentDirectional.bottomStart,
               child: Text(
-                localization.travelHotelHero,
+                heroTitle,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22.sp,
@@ -68,16 +86,16 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
           TravelCard(
             child: Column(
               children: [
-                TravelFieldTile(
-                  label: localization.travelDestinationCountry,
-                  value: localization.travelMockIran,
-                  icon: Icons.public_rounded,
-                ),
-                SizedBox(height: 12.h),
-                TravelFieldTile(
-                  label: localization.travelDestinationCity,
-                  value: localization.travelMockTehran,
-                  icon: Icons.location_on_outlined,
+                CommonTextInputField(
+                  controller: cityController,
+                  hintText:
+                      cityField?.hint ??
+                      cityField?.label ??
+                      localization.travelDestinationCity,
+                  prefixIcon: const Icon(
+                    Icons.location_on_outlined,
+                    color: TravelTheme.purple,
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 Row(
@@ -116,8 +134,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                 SizedBox(height: 12.h),
                 TravelFieldTile(
                   label: localization.travelGuests,
-                  value: localization.travelMockGuests,
+                  value: '$roomCount / $adultCount / $childCount',
                   icon: Icons.group_outlined,
+                  onTap: _showGuestPicker,
                 ),
                 SizedBox(height: 20.h),
                 Obx(
@@ -127,34 +146,165 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                     backgroundColor: TravelTheme.purple,
                     isLoading: controller.isLoading.value,
                     onPressed: () async {
+                      final city = cityController.text.trim().toUpperCase();
+                      if (city.isEmpty) {
+                        Get.snackbar(
+                          localization.travelHotelSearch,
+                          localization.travelDestinationCity,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                        return;
+                      }
                       controller.hotelBookingDetails.value =
                           TravelBookingDetails(
                             checkInDate: checkInDate,
                             checkOutDate: checkOutDate,
-                            roomCount: 1,
-                            adultCount: 2,
-                            childCount: 1,
+                            roomCount: roomCount,
+                            adultCount: adultCount,
+                            childCount: childCount,
                           );
-                      await controller.searchHotels();
-                      Get.to(() => const HotelResultsScreen());
+                      final succeeded = await controller.searchHotels(
+                        TravelHotelSearch(
+                          city: city,
+                          checkInDate: checkInDate,
+                          checkOutDate: checkOutDate,
+                          roomCount: roomCount,
+                          adultCount: adultCount,
+                          childCount: childCount,
+                        ),
+                      );
+                      if (succeeded) {
+                        Get.to(() => const HotelResultsScreen());
+                      } else {
+                        Get.snackbar(
+                          localization.travelHotelSearch,
+                          localization.allControllerLoadError,
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
                     },
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 26.h),
-          TravelSectionHeader(title: localization.travelRecentSearches),
-          SizedBox(height: 10.h),
-          TravelCard(
-            child: Row(
-              children: [
-                const Icon(Icons.apartment_rounded, color: TravelTheme.purple),
-                SizedBox(width: 12.w),
-                Expanded(child: Text(localization.travelMockTehranHotels)),
-                const Icon(Icons.chevron_right_rounded),
-              ],
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showGuestPicker() async {
+    var selectedRooms = roomCount;
+    var selectedAdults = adultCount;
+    var selectedChildren = childCount;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final localization = AppLocalizations.of(context)!;
+        return StatefulBuilder(
+          builder: (context, setSheetState) => Container(
+            padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 28.h),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _CountRow(
+                    label: localization.travelGuests,
+                    value: selectedRooms,
+                    minimum: 1,
+                    maximum: 8,
+                    onChanged: (value) =>
+                        setSheetState(() => selectedRooms = value),
+                  ),
+                  _CountRow(
+                    label: localization.travelAdults,
+                    value: selectedAdults,
+                    minimum: 1,
+                    maximum: 8,
+                    onChanged: (value) =>
+                        setSheetState(() => selectedAdults = value),
+                  ),
+                  _CountRow(
+                    label: localization.travelChildren,
+                    value: selectedChildren,
+                    minimum: 0,
+                    maximum: 6,
+                    onChanged: (value) =>
+                        setSheetState(() => selectedChildren = value),
+                  ),
+                  SizedBox(height: 16.h),
+                  CommonButton(
+                    width: double.infinity,
+                    text: localization.travelSelect,
+                    backgroundColor: TravelTheme.purple,
+                    onPressed: () {
+                      setState(() {
+                        roomCount = selectedRooms;
+                        adultCount = selectedAdults;
+                        childCount = selectedChildren;
+                      });
+                      Get.back();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _CountRow extends StatelessWidget {
+  final String label;
+  final int value;
+  final int minimum;
+  final int maximum;
+  final ValueChanged<int> onChanged;
+
+  const _CountRow({
+    required this.label,
+    required this.value,
+    required this.minimum,
+    required this.maximum,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+          ),
+          IconButton(
+            onPressed: value > minimum ? () => onChanged(value - 1) : null,
+            icon: const Icon(Icons.remove_circle_outline_rounded),
+          ),
+          SizedBox(
+            width: 34.w,
+            child: Text(
+              '$value',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.w900),
+            ),
+          ),
+          IconButton(
+            onPressed: value < maximum ? () => onChanged(value + 1) : null,
+            icon: const Icon(Icons.add_circle_outline_rounded),
           ),
         ],
       ),
@@ -209,20 +359,21 @@ class _HotelOfferCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 145.h,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              gradient: LinearGradient(
-                colors: [Color(0xFF4A148C), TravelTheme.purple],
-              ),
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(24),
             ),
-            child: Center(
-              child: Icon(
-                Icons.hotel_rounded,
-                size: 72.r,
-                color: Colors.white.withValues(alpha: 0.88),
-              ),
+            child: SizedBox(
+              height: 145.h,
+              width: double.infinity,
+              child: offer.imageUrl.isNotEmpty
+                  ? Image.network(
+                      offer.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          const _HotelImageFallback(),
+                    )
+                  : const _HotelImageFallback(),
             ),
           ),
           Padding(
@@ -241,10 +392,11 @@ class _HotelOfferCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Text('★ ${offer.rating}'),
-                    ),
+                    if (offer.rating > 0)
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Text('★ ${offer.rating}'),
+                      ),
                   ],
                 ),
                 SizedBox(height: 5.h),
@@ -295,12 +447,15 @@ class _HotelOfferCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    FilledButton(
-                      style: FilledButton.styleFrom(
+                    SizedBox(
+                      width: 120.w,
+                      child: CommonButton(
+                        height: 42,
+                        fontSize: 11,
                         backgroundColor: TravelTheme.purple,
+                        text: localization.travelViewDetails,
+                        onPressed: onTap,
                       ),
-                      onPressed: onTap,
-                      child: Text(localization.travelViewDetails),
                     ),
                   ],
                 ),
@@ -313,13 +468,36 @@ class _HotelOfferCard extends StatelessWidget {
   }
 }
 
+class _HotelImageFallback extends StatelessWidget {
+  const _HotelImageFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF4A148C), TravelTheme.purple],
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          Icons.hotel_rounded,
+          size: 72.r,
+          color: Colors.white.withValues(alpha: 0.88),
+        ),
+      ),
+    );
+  }
+}
+
 class HotelDetailsScreen extends StatelessWidget {
   const HotelDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final offer = Get.find<TravelController>().selectedOffer.value;
+    final controller = Get.find<TravelController>();
+    final offer = controller.selectedOffer.value;
     if (offer == null) {
       return TravelPage(
         title: localization.travelHotelDetails,
@@ -333,36 +511,43 @@ class HotelDetailsScreen extends StatelessWidget {
           padding: EdgeInsets.all(16.r),
           child: CommonButton(
             width: double.infinity,
-            text: localization.travelReserveHotel,
-            backgroundColor: TravelTheme.purple,
-            onPressed: () => Get.to(
-              () => TravelCheckoutScreen(
-                type: TravelProductType.hotel,
-                productId: offer.id,
-                title: travelLocalizedKey(localization, offer.titleKey),
-                total: offer.total,
-                bookingDetails:
-                    Get.find<TravelController>().hotelBookingDetails.value,
-              ),
-            ),
+            text: controller.canPurchase(TravelProductType.hotel)
+                ? localization.travelReserveHotel
+                : localization.travelOfferUnavailable,
+            backgroundColor:
+                controller.canPurchase(TravelProductType.hotel)
+                ? TravelTheme.purple
+                : TravelTheme.muted,
+            onPressed: controller.canPurchase(TravelProductType.hotel)
+                ? () => Get.to(
+                    () => TravelCheckoutScreen(
+                      type: TravelProductType.hotel,
+                      productId: offer.id,
+                      title: travelLocalizedKey(localization, offer.titleKey),
+                      total: offer.total,
+                      bookingDetails: controller.hotelBookingDetails.value,
+                    ),
+                  )
+                : null,
           ),
         ),
       ),
       child: ListView(
         padding: EdgeInsets.all(20.r),
         children: [
-          Container(
-            height: 230.h,
-            decoration: BoxDecoration(
-              borderRadius: TravelTheme.radius,
-              gradient: const LinearGradient(
-                begin: AlignmentDirectional.topStart,
-                end: AlignmentDirectional.bottomEnd,
-                colors: [Color(0xFF311B92), TravelTheme.purple],
-              ),
-            ),
-            child: const Center(
-              child: Icon(Icons.king_bed_rounded, size: 100, color: Colors.white),
+          ClipRRect(
+            borderRadius: TravelTheme.radius,
+            child: SizedBox(
+              height: 230.h,
+              width: double.infinity,
+              child: offer.imageUrl.isNotEmpty
+                  ? Image.network(
+                      offer.imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          const _HotelImageFallback(),
+                    )
+                  : const _HotelImageFallback(),
             ),
           ),
           SizedBox(height: 18.h),

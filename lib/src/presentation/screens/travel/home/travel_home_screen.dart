@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
+import 'package:qunzo_user/src/common/widgets/common_loading.dart';
 
 import '../account/travel_account_screen.dart';
 import '../bookings/travel_orders_screen.dart';
@@ -37,38 +39,24 @@ class TravelHomeScreen extends StatelessWidget {
         child: ListView(
           padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 36.h),
           children: [
-            _Hero(localization: localization),
+            Obx(() {
+              final services = controller.bootstrap.value?.services ?? const [];
+              final homeHero = _homeHero(services);
+              return _Hero(
+                eyebrow:
+                    homeHero['subtitle']?.toString() ??
+                    localization.travelHeroEyebrow,
+                title:
+                    homeHero['title']?.toString() ??
+                    localization.travelHeroTitle,
+              );
+            }),
             SizedBox(height: 22.h),
-            Row(
-              children: [
-                Expanded(
-                  child: _ServiceTile(
-                    color: TravelTheme.blue,
-                    icon: Icons.flight_rounded,
-                    label: localization.travelFlights,
-                    onTap: () => Get.to(() => const FlightSearchScreen()),
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: _ServiceTile(
-                    color: TravelTheme.purple,
-                    icon: Icons.hotel_rounded,
-                    label: localization.travelHotels,
-                    onTap: () => Get.to(() => const HotelSearchScreen()),
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: _ServiceTile(
-                    color: TravelTheme.yellow,
-                    icon: Icons.sim_card_rounded,
-                    label: localization.travelEsim,
-                    foreground: TravelTheme.ink,
-                    onTap: () => Get.to(() => const EsimIntroScreen()),
-                  ),
-                ),
-              ],
+            Obx(
+              () => _Services(
+                controller: controller,
+                localization: localization,
+              ),
             ),
             SizedBox(height: 28.h),
             TravelSectionHeader(
@@ -79,7 +67,7 @@ class TravelHomeScreen extends StatelessWidget {
             SizedBox(height: 8.h),
             Obx(
               () => controller.isLoading.value && controller.activity.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const SizedBox(height: 120, child: CommonLoading())
                   : Column(
                       children: controller.activity
                           .take(3)
@@ -141,12 +129,24 @@ class TravelHomeScreen extends StatelessWidget {
       ),
     );
   }
+
+  Map<String, dynamic> _homeHero(List<TravelServiceConfig> services) {
+    for (final service in services) {
+      final items = service.presentation['home_hero'];
+      if (items is! List || items.isEmpty) continue;
+      final first = items.first;
+      if (first is Map<String, dynamic>) return first;
+      if (first is Map) return Map<String, dynamic>.from(first);
+    }
+    return const {};
+  }
 }
 
 class _Hero extends StatelessWidget {
-  final AppLocalizations localization;
+  final String eyebrow;
+  final String title;
 
-  const _Hero({required this.localization});
+  const _Hero({required this.eyebrow, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +180,7 @@ class _Hero extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  localization.travelHeroEyebrow,
+                  eyebrow,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.84),
                     fontSize: 13.sp,
@@ -189,7 +189,7 @@ class _Hero extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  localization.travelHeroTitle,
+                  title,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 25.sp,
@@ -206,17 +206,87 @@ class _Hero extends StatelessWidget {
   }
 }
 
+class _Services extends StatelessWidget {
+  final TravelController controller;
+  final AppLocalizations localization;
+
+  const _Services({
+    required this.controller,
+    required this.localization,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bootstrap = controller.bootstrap.value;
+    if (bootstrap == null) {
+      if (controller.isLoading.value) {
+        return const SizedBox(height: 120, child: CommonLoading());
+      }
+      return Column(
+        children: [
+          TravelEmptyState(message: localization.allControllerLoadError),
+          CommonButton(
+            width: double.infinity,
+            text: localization.noInternetConnectionRetryButton,
+            onPressed: controller.reloadBootstrap,
+          ),
+        ],
+      );
+    }
+    if (bootstrap.services.isEmpty) {
+      return TravelEmptyState(message: localization.travelOfferUnavailable);
+    }
+    return Wrap(
+      spacing: 12.w,
+      runSpacing: 12.h,
+      children: bootstrap.services
+          .map(
+            (service) => SizedBox(
+              width: (MediaQuery.sizeOf(context).width - 52.w) / 2,
+              child: _ServiceTile(
+                color: travelProductColor(service.type),
+                icon: travelProductIcon(service.type),
+                label: service.displayName,
+                description: service.description,
+                foreground: service.type == TravelProductType.esim
+                    ? TravelTheme.ink
+                    : Colors.white,
+                onTap: () => _openService(service.type),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  void _openService(TravelProductType type) {
+    switch (type) {
+      case TravelProductType.hotel:
+        Get.to(() => const HotelSearchScreen());
+        return;
+      case TravelProductType.flight:
+        Get.to(() => const FlightSearchScreen());
+        return;
+      case TravelProductType.esim:
+        Get.to(() => const EsimIntroScreen());
+        return;
+    }
+  }
+}
+
 class _ServiceTile extends StatelessWidget {
   final Color color;
   final Color foreground;
   final IconData icon;
   final String label;
+  final String description;
   final VoidCallback onTap;
 
   const _ServiceTile({
     required this.color,
     required this.icon,
     required this.label,
+    required this.description,
     required this.onTap,
     this.foreground = Colors.white,
   });
@@ -252,6 +322,20 @@ class _ServiceTile extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                 ),
               ),
+              if (description.isNotEmpty) ...[
+                SizedBox(height: 5.h),
+                Text(
+                  description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: foreground.withValues(alpha: .78),
+                    fontSize: 9.sp,
+                    height: 1.3,
+                  ),
+                ),
+              ],
             ],
           ),
         ),

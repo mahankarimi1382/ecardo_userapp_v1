@@ -42,7 +42,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
 
-    final List<Map<String, String>> serviceList = [
+    final List<Map<String, dynamic>> serviceList = [
       {
         "title": localization.otherServicesQrCode,
         "icon": PngAssets.qrCodeService,
@@ -135,8 +135,8 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         },
       if (homeController.userModel.value.data?.addons?.travel == true)
         {
-          "title": "eCardo Travel",
-          "icon": PngAssets.walletsService,
+          "title": localization.travelTitle,
+          "iconData": Icons.flight_takeoff_rounded,
           "navigate": BaseRoute.travel,
         },
     ];
@@ -236,7 +236,27 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Image.asset(item["icon"]!, width: 35),
+                              if (item["iconData"] is IconData)
+                                Container(
+                                  width: 38,
+                                  height: 38,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.lightPrimary.withValues(
+                                      alpha: .10,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(
+                                    item["iconData"] as IconData,
+                                    color: AppColors.lightPrimary,
+                                    size: 22,
+                                  ),
+                                )
+                              else
+                                Image.asset(
+                                  item["icon"] as String,
+                                  width: 35,
+                                ),
                               const SizedBox(height: 8),
                               Text(
                                 title,

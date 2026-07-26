@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
+import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
+import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 
 import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
@@ -139,13 +141,9 @@ class TravelersScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 18.h),
-                TextFormField(
+                CommonTextInputField(
                   controller: nameController,
-                  textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(
-                    labelText: localization.travelTravelerFullName,
-                    border: const OutlineInputBorder(),
-                  ),
+                  hintText: localization.travelTravelerFullName,
                   validator: (value) => value?.trim().isEmpty == false
                       ? null
                       : localization.travelFieldRequired,
@@ -153,13 +151,9 @@ class TravelersScreen extends StatelessWidget {
                 SizedBox(height: 12.h),
                 Directionality(
                   textDirection: TextDirection.ltr,
-                  child: TextFormField(
+                  child: CommonTextInputField(
                     controller: passportController,
-                    textCapitalization: TextCapitalization.characters,
-                    decoration: InputDecoration(
-                      labelText: localization.travelPassportNumber,
-                      border: const OutlineInputBorder(),
-                    ),
+                    hintText: localization.travelPassportNumber,
                     validator: (value) => value?.trim().isEmpty == false
                         ? null
                         : localization.travelFieldRequired,
@@ -168,15 +162,9 @@ class TravelersScreen extends StatelessWidget {
                 SizedBox(height: 12.h),
                 Directionality(
                   textDirection: TextDirection.ltr,
-                  child: TextFormField(
+                  child: CommonTextInputField(
                     controller: nationalityController,
-                    textCapitalization: TextCapitalization.characters,
-                    maxLength: 2,
-                    decoration: InputDecoration(
-                      labelText: localization.travelNationalityCode,
-                      counterText: '',
-                      border: const OutlineInputBorder(),
-                    ),
+                    hintText: localization.travelNationalityCode,
                     validator: (value) => value?.trim().length == 2
                         ? null
                         : localization.travelNationalityCodeInvalid,
@@ -184,42 +172,30 @@ class TravelersScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 18.h),
                 Obx(
-                  () => SizedBox(
+                  () => CommonButton(
                     width: double.infinity,
-                    child: FilledButton(
-                      onPressed: controller.isLoading.value
-                          ? null
-                          : () async {
-                              if (formKey.currentState?.validate() != true) {
-                                return;
-                              }
-                              await controller.saveTraveler(
-                                TravelTraveler(
-                                  id: traveler?.id ?? '',
-                                  fullName: nameController.text.trim(),
-                                  passportNumber: passportController.text
-                                      .trim()
-                                      .toUpperCase(),
-                                  nationalityCode: nationalityController.text
-                                      .trim()
-                                      .toUpperCase(),
-                                ),
-                              );
-                              if (sheetContext.mounted) {
-                                Navigator.of(sheetContext).pop();
-                              }
-                            },
-                      child: controller.isLoading.value
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(localization.travelSaveTraveler),
-                    ),
+                    text: localization.travelSaveTraveler,
+                    isLoading: controller.isLoading.value,
+                    onPressed: () async {
+                      if (formKey.currentState?.validate() != true) {
+                        return;
+                      }
+                      await controller.saveTraveler(
+                        TravelTraveler(
+                          id: traveler?.id ?? '',
+                          fullName: nameController.text.trim(),
+                          passportNumber: passportController.text
+                              .trim()
+                              .toUpperCase(),
+                          nationalityCode: nationalityController.text
+                              .trim()
+                              .toUpperCase(),
+                        ),
+                      );
+                      if (sheetContext.mounted) {
+                        Navigator.of(sheetContext).pop();
+                      }
+                    },
                   ),
                 ),
               ],
