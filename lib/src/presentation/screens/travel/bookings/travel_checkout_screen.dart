@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -32,6 +34,47 @@ class TravelCheckoutScreen extends StatefulWidget {
 }
 
 class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
+  TravelReservation? reservation;
+  Timer? reservationTimer;
+  Duration reservationRemaining = Duration.zero;
+  bool purchaseForOther = false;
+  final beneficiaryNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    reservationTimer?.cancel();
+    beneficiaryNameController.dispose();
+    super.dispose();
+  }
+
+  void _startReservationTimer(TravelReservation value) {
+    reservationTimer?.cancel();
+    setState(() {
+      reservation = value;
+      reservationRemaining = value.expiresAt.difference(DateTime.now());
+    });
+    reservationTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      final remaining = value.expiresAt.difference(DateTime.now());
+      if (remaining.isNegative) {
+        reservationTimer?.cancel();
+        setState(() {
+          reservation = null;
+          reservationRemaining = Duration.zero;
+        });
+        return;
+      }
+      setState(() => reservationRemaining = remaining);
+    });
+  }
+
+  TravelBookingDetails get _bookingDetails => widget.bookingDetails.copyWith(
+    beneficiaryType: purchaseForOther ? 'other' : 'self',
+    beneficiaryName: purchaseForOther
+        ? beneficiaryNameController.text.trim()
+        : '',
+  );
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -54,6 +97,10 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 width: double.infinity,
                 text: !canPurchase
                     ? localization.travelOfferUnavailable
+                    : reservation == null
+                    ? widget.type == TravelProductType.hotel
+                          ? localization.travelReserveHotel
+                          : localization.travelSelectFlight
                     : wallet == null
                     ? localization.travelMainWallet
                     : hasBalance
@@ -73,6 +120,33 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 isLoading: controller.isCheckoutLoading.value,
                 onPressed: !canPurchase
                     ? null
+                    : reservation == null
+                    ? () async {
+                        if (purchaseForOther &&
+                            beneficiaryNameController.text.trim().isEmpty) {
+                          Get.snackbar(
+                            localization.travelPassengerReview,
+                            localization.travelOfferUnavailable,
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                          return;
+                        }
+                        final value = await controller.reserve(
+                          type: widget.type,
+                          productId: widget.productId,
+                          total: widget.total,
+                          bookingDetails: _bookingDetails,
+                        );
+                        if (value != null) {
+                          _startReservationTimer(value);
+                        } else if (controller.checkoutFailed.value) {
+                          Get.snackbar(
+                            localization.travelPaymentFailed,
+                            localization.travelPaymentFailedDescription,
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        }
+                      }
                     : wallet == null
                     ? () => Get.toNamed(
                         BaseRoute.createNewWallet,
@@ -80,11 +154,8 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                       )
                     : hasBalance
                     ? () async {
-                        final order = await controller.checkout(
-                          type: widget.type,
-                          productId: widget.productId,
-                          total: widget.total,
-                          bookingDetails: widget.bookingDetails,
+                        final order = await controller.payReservation(
+                          reservation!,
                         );
                         if (order != null) {
                           Get.off(
@@ -148,6 +219,48 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               ),
               SizedBox(height: 12.h),
             ],
+            if (reservation != null) ...[
+              TravelCard(
+                color: const Color(0xFFFFF8E1),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.timer_outlined,
+                      color: TravelTheme.warning,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Text(
+                              reservation!.orderNumber,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Text(
+                              '${reservationRemaining.inMinutes.remainder(60).toString().padLeft(2, '0')}:${reservationRemaining.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                              style: const TextStyle(
+                                color: TravelTheme.warning,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 12.h),
+            ],
             TravelCard(
               color: travelProductColor(widget.type).withValues(alpha: .10),
               child: Row(
@@ -189,6 +302,48 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                       ],
                     ),
                   ),
+                ],
+              ),
+            ),
+            SizedBox(height: 24.h),
+            TravelSectionHeader(title: localization.travelPassengerReview),
+            SizedBox(height: 10.h),
+            TravelCard(
+              child: Column(
+                children: [
+                  RadioListTile<bool>(
+                    contentPadding: EdgeInsets.zero,
+                    value: false,
+                    groupValue: purchaseForOther,
+                    title: Text(localization.travelPrimaryPassenger),
+                    subtitle: Text(localization.travelPassengerFromProfile),
+                    onChanged: reservation == null
+                        ? (value) => setState(
+                            () => purchaseForOther = value ?? false,
+                          )
+                        : null,
+                  ),
+                  RadioListTile<bool>(
+                    contentPadding: EdgeInsets.zero,
+                    value: true,
+                    groupValue: purchaseForOther,
+                    title: Text(localization.commonDropdownOther),
+                    onChanged: reservation == null
+                        ? (value) => setState(
+                            () => purchaseForOther = value ?? true,
+                          )
+                        : null,
+                  ),
+                  if (purchaseForOther)
+                    TextField(
+                      controller: beneficiaryNameController,
+                      enabled: reservation == null,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        labelText: localization.travelPrimaryPassenger,
+                        prefixIcon: const Icon(Icons.person_outline_rounded),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -289,7 +444,7 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                                 arguments: {
                                   'returnRoute': BaseRoute.travel,
                                   'wallet_id': wallet.id.toString(),
-                                },
+                          },
                               );
                               await controller.refreshMainWallet();
                               if (mounted) setState(() {});
@@ -304,11 +459,19 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                         text: localization.exchangeTitle,
                         backgroundColor: TravelTheme.blue,
                         onPressed: () async {
+                          final candidates = controller.fundedExchangeWallets(
+                            widget.total.currency,
+                          );
+                          final suggested = candidates.isEmpty
+                              ? null
+                              : candidates.first;
                           await Get.toNamed(
                             BaseRoute.exchange,
                             arguments: {
                               'returnRoute': BaseRoute.travel,
                               'to_currency': widget.total.currency,
+                              if (suggested?.code != null)
+                                'from_currency': suggested!.code,
                             },
                           );
                           await controller.refreshMainWallet();

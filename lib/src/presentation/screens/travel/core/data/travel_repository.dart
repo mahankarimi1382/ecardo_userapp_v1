@@ -24,11 +24,16 @@ abstract interface class TravelRepository {
 
   Future<List<TravelActivity>> getActivity();
 
-  Future<TravelOrder> createOrder({
+  Future<TravelReservation> createReservation({
     required TravelProductType type,
     required String productId,
     required TravelMoney expectedTotal,
     required String idempotencyKey,
     required TravelBookingDetails bookingDetails,
+  });
+
+  Future<TravelOrder> payReservation({
+    required TravelReservation reservation,
+    required String idempotencyKey,
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_single_date_picker.dart';
@@ -207,6 +208,11 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                           childCount: childCount,
                         ),
                       );
+                      controller.flightBookingDetails.value =
+                          TravelBookingDetails(
+                            adultCount: adultCount,
+                            childCount: childCount,
+                          );
                       if (succeeded) {
                         Get.to(() => const FlightResultsScreen());
                       } else {
@@ -406,6 +412,17 @@ class _FlightOfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final origin = _flightValue(offer, 'origin');
+    final destination = _flightValue(offer, 'destination');
+    final departure = _flightDateTime(offer, 'departure');
+    final arrival = _flightDateTime(offer, 'arrival');
+    final airline = _flightValue(
+      offer,
+      'airline_name',
+      fallback: offer.titleKey,
+    );
+    final flightNumber = _flightValue(offer, 'flight_number');
+    final duration = _flightValue(offer, 'duration');
     return TravelCard(
       onTap: onTap,
       child: Column(
@@ -419,23 +436,42 @@ class _FlightOfferCard extends StatelessWidget {
                   color: const Color(0xFFEAF3FF),
                   borderRadius: BorderRadius.circular(15.r),
                 ),
-                child: const Icon(Icons.flight_rounded, color: TravelTheme.blue),
+                child: offer.imageUrl.isEmpty
+                    ? const Icon(
+                        Icons.flight_rounded,
+                        color: TravelTheme.blue,
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(15.r),
+                        child: Image.network(
+                          offer.imageUrl,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.flight_rounded,
+                            color: TravelTheme.blue,
+                          ),
+                        ),
+                      ),
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      travelLocalizedKey(localization, offer.subtitleKey),
+                    TravelBidiText(
+                      airline,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     SizedBox(height: 3.h),
-                    Text(
-                      travelLocalizedKey(localization, offer.badgeKey),
+                    TravelBidiText(
+                      [
+                        if (flightNumber.isNotEmpty) flightNumber,
+                        if (offer.badgeKey.isNotEmpty)
+                          travelLocalizedKey(localization, offer.badgeKey),
+                      ].join(' • '),
                       style: TextStyle(
                         color: TravelTheme.blue,
                         fontSize: 10.sp,
@@ -463,14 +499,15 @@ class _FlightOfferCard extends StatelessWidget {
             child: Row(
               children: [
                 _FlightTime(
-                  code: offer.metadata['origin']!,
-                  time: offer.metadata['departure']!,
+                  code: origin,
+                  city: _flightValue(offer, 'origin_name'),
+                  time: _flightTime(departure),
                 ),
                 Expanded(
                   child: Column(
                     children: [
                       Text(
-                        offer.metadata['duration']!,
+                        duration,
                         style: TextStyle(
                           color: TravelTheme.muted,
                           fontSize: 10.sp,
@@ -488,13 +525,29 @@ class _FlightOfferCard extends StatelessWidget {
                   ),
                 ),
                 _FlightTime(
-                  code: offer.metadata['destination']!,
-                  time: offer.metadata['arrival']!,
+                  code: destination,
+                  city: _flightValue(offer, 'destination_name'),
+                  time: _flightTime(arrival),
                 ),
               ],
             ),
           ),
           SizedBox(height: 16.h),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: Text(
+                departure.split(' ').first,
+                style: TextStyle(
+                  color: TravelTheme.muted,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 10.h),
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: SizedBox(
@@ -516,9 +569,14 @@ class _FlightOfferCard extends StatelessWidget {
 
 class _FlightTime extends StatelessWidget {
   final String code;
+  final String city;
   final String time;
 
-  const _FlightTime({required this.code, required this.time});
+  const _FlightTime({
+    required this.code,
+    required this.time,
+    this.city = '',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -526,6 +584,17 @@ class _FlightTime extends StatelessWidget {
       children: [
         Text(time, style: const TextStyle(fontWeight: FontWeight.w900)),
         Text(code, style: const TextStyle(color: TravelTheme.muted)),
+        if (city.isNotEmpty)
+          SizedBox(
+            width: 92.w,
+            child: TravelBidiText(
+              city,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: TravelTheme.muted, fontSize: 9.sp),
+            ),
+          ),
       ],
     );
   }
@@ -546,6 +615,14 @@ class FlightDetailsScreen extends StatelessWidget {
       );
     }
     final canPurchase = controller.canPurchase(TravelProductType.flight);
+    final bookingDetails = controller.flightBookingDetails.value;
+    final total = _flightTotal(offer, bookingDetails);
+    final departure = _flightDateTime(offer, 'departure');
+    final arrival = _flightDateTime(offer, 'arrival');
+    final segments = _flightMaps(offer.product['segments']);
+    final cancellationRules = _flightMaps(
+      offer.product['cancellation_rules'],
+    );
     return TravelPage(
       title: localization.travelFlightDetails,
       bottomNavigationBar: SafeArea(
@@ -565,7 +642,8 @@ class FlightDetailsScreen extends StatelessWidget {
                       type: TravelProductType.flight,
                       productId: offer.id,
                       title: travelLocalizedKey(localization, offer.titleKey),
-                      total: offer.total,
+                      total: total,
+                      bookingDetails: bookingDetails,
                     ),
                   )
                 : null,
@@ -582,8 +660,9 @@ class FlightDetailsScreen extends StatelessWidget {
               child: Row(
                 children: [
                   _FlightTime(
-                    code: offer.metadata['origin']!,
-                    time: offer.metadata['departure']!,
+                    code: _flightValue(offer, 'origin'),
+                    city: _flightValue(offer, 'origin_name'),
+                    time: _flightTime(departure),
                   ),
                   const Expanded(
                     child: Padding(
@@ -597,13 +676,59 @@ class FlightDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   _FlightTime(
-                    code: offer.metadata['destination']!,
-                    time: offer.metadata['arrival']!,
+                    code: _flightValue(offer, 'destination'),
+                    city: _flightValue(offer, 'destination_name'),
+                    time: _flightTime(arrival),
                   ),
                 ],
               ),
             ),
           ),
+          SizedBox(height: 22.h),
+          TravelSectionHeader(title: localization.travelFlightDetails),
+          SizedBox(height: 10.h),
+          TravelCard(
+            child: _FlightDetailRows(
+              values: {
+                'Airline': _flightValue(offer, 'airline_name'),
+                'Flight': _flightValue(offer, 'flight_number'),
+                'Departure': departure,
+                'Arrival': arrival,
+                'Duration': _flightValue(offer, 'duration'),
+                'Cabin': _flightValue(offer, 'cabin_class'),
+                'Baggage': _flightValue(offer, 'baggage').isEmpty
+                    ? ''
+                    : '${_flightValue(offer, 'baggage')} kg',
+                'Aircraft': _flightValue(offer, 'aircraft_code'),
+              },
+            ),
+          ),
+          if (segments.isNotEmpty) ...[
+            SizedBox(height: 22.h),
+            TravelSectionHeader(title: localization.travelFlightDetails),
+            SizedBox(height: 10.h),
+            ...segments.map(
+              (segment) => Padding(
+                padding: EdgeInsets.only(bottom: 10.h),
+                child: TravelCard(
+                  child: _FlightDetailRows(values: segment),
+                ),
+              ),
+            ),
+          ],
+          if (cancellationRules.isNotEmpty) ...[
+            SizedBox(height: 22.h),
+            TravelSectionHeader(title: localization.travelPolicies),
+            SizedBox(height: 10.h),
+            ...cancellationRules.map(
+              (rule) => Padding(
+                padding: EdgeInsets.only(bottom: 10.h),
+                child: TravelCard(
+                  child: _FlightDetailRows(values: rule),
+                ),
+              ),
+            ),
+          ],
           SizedBox(height: 22.h),
           TravelSectionHeader(title: localization.travelPassengerReview),
           SizedBox(height: 10.h),
@@ -640,31 +765,17 @@ class FlightDetailsScreen extends StatelessWidget {
           TravelCard(
             child: Column(
               children: [
-                _FareRow(
-                  label: localization.travelBaseFare,
-                  value: travelMoney(
-                    context,
-                    TravelMoney(
-                      amount: offer.total.amount * .84,
-                      currency: offer.total.currency,
-                    ),
+                for (final component
+                    in _pricedFlightComponents(offer, bookingDetails)) ...[
+                  _FareRow(
+                    label: component.$1,
+                    value: travelMoney(context, component.$2),
                   ),
-                ),
-                const Divider(),
-                _FareRow(
-                  label: localization.travelTaxesAndFees,
-                  value: travelMoney(
-                    context,
-                    TravelMoney(
-                      amount: offer.total.amount * .16,
-                      currency: offer.total.currency,
-                    ),
-                  ),
-                ),
-                const Divider(),
+                  const Divider(),
+                ],
                 _FareRow(
                   label: localization.travelTotal,
-                  value: travelMoney(context, offer.total),
+                  value: travelMoney(context, total),
                   strong: true,
                 ),
               ],
@@ -674,6 +785,44 @@ class FlightDetailsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+List<(String, TravelMoney)> _pricedFlightComponents(
+  TravelOffer offer,
+  TravelBookingDetails bookingDetails,
+) {
+  final result = <(String, TravelMoney)>[];
+  for (final component in offer.pricingComponents) {
+    final type = component['type']?.toString().toLowerCase() ?? '';
+    final unit = double.tryParse(
+          (component['unit_amount'] ?? component['amount'])?.toString() ?? '',
+        ) ??
+        0;
+    final quantity = switch (type) {
+      'adult' => bookingDetails.adultCount,
+      'child' => bookingDetails.childCount,
+      _ => 0,
+    };
+    if (quantity <= 0 || unit <= 0) continue;
+    result.add((
+      '${component['label'] ?? _flightLabel(type)} × $quantity',
+      TravelMoney(
+        amount: unit * quantity,
+        currency:
+            component['currency']?.toString() ?? offer.total.currency,
+      ),
+    ));
+  }
+  if (result.isEmpty) {
+    result.add((
+      'Fare × ${bookingDetails.adultCount}',
+      TravelMoney(
+        amount: offer.total.amount * bookingDetails.adultCount,
+        currency: offer.total.currency,
+      ),
+    ));
+  }
+  return result;
 }
 
 class _FareRow extends StatelessWidget {
@@ -702,4 +851,125 @@ class _FareRow extends StatelessWidget {
       ],
     );
   }
+}
+
+class _FlightDetailRows extends StatelessWidget {
+  final Map<String, dynamic> values;
+
+  const _FlightDetailRows({required this.values});
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = values.entries
+        .where((entry) => entry.value?.toString().trim().isNotEmpty == true)
+        .toList();
+    return Column(
+      children: [
+        for (var index = 0; index < entries.length; index++) ...[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 92.w,
+                child: Text(
+                  _flightLabel(entries[index].key),
+                  style: TextStyle(
+                    color: TravelTheme.muted,
+                    fontSize: 10.sp,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TravelBidiText(
+                  _flightDisplayValue(entries[index].value),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+          if (index != entries.length - 1) const Divider(height: 22),
+        ],
+      ],
+    );
+  }
+}
+
+String _flightValue(
+  TravelOffer offer,
+  String key, {
+  String fallback = '',
+}) {
+  final value = offer.attributes[key] ?? offer.metadata[key];
+  final text = value?.toString().trim() ?? '';
+  return text.isEmpty || text == 'null' ? fallback : text;
+}
+
+String _flightDateTime(TravelOffer offer, String key) {
+  final raw = _flightValue(offer, key);
+  final parsed = DateTime.tryParse(raw.replaceFirst(' ', 'T'));
+  if (parsed == null) return raw;
+  return DateFormat('yyyy-MM-dd HH:mm').format(parsed);
+}
+
+String _flightTime(String dateTime) {
+  final parsed = DateTime.tryParse(dateTime.replaceFirst(' ', 'T'));
+  if (parsed == null) {
+    final match = RegExp(r'\b\d{1,2}:\d{2}\b').firstMatch(dateTime);
+    return match?.group(0) ?? dateTime;
+  }
+  return DateFormat('HH:mm').format(parsed);
+}
+
+TravelMoney _flightTotal(
+  TravelOffer offer,
+  TravelBookingDetails bookingDetails,
+) {
+  double component(String type, double fallback) {
+    for (final item in offer.pricingComponents) {
+      final itemType = item['type']?.toString().toLowerCase() ?? '';
+      final label = item['label']?.toString().toLowerCase() ?? '';
+      if (itemType == type || label.startsWith(type)) {
+        return double.tryParse(
+              (item['unit_amount'] ?? item['amount'])?.toString() ?? '',
+            ) ??
+            fallback;
+      }
+    }
+    return fallback;
+  }
+
+  final adultFare = component('adult', offer.total.amount);
+  final childFare = component('child', 0);
+  return TravelMoney(
+    amount:
+        adultFare * bookingDetails.adultCount +
+        childFare * bookingDetails.childCount,
+    currency: offer.total.currency,
+  );
+}
+
+List<Map<String, dynamic>> _flightMaps(dynamic value) {
+  if (value is! List) return const [];
+  return value.whereType<Map>().map(Map<String, dynamic>.from).toList();
+}
+
+String _flightLabel(String key) {
+  final words = key.replaceAll('_', ' ').trim();
+  if (words.isEmpty) return '';
+  return '${words[0].toUpperCase()}${words.substring(1)}';
+}
+
+String _flightDisplayValue(dynamic value) {
+  if (value is Map) {
+    return value.entries
+        .map(
+          (entry) =>
+              '${_flightLabel(entry.key.toString())}: ${_flightDisplayValue(entry.value)}',
+        )
+        .join(' • ');
+  }
+  if (value is List) {
+    return value.map(_flightDisplayValue).join(', ');
+  }
+  return value?.toString() ?? '';
 }

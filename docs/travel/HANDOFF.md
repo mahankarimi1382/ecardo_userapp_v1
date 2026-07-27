@@ -2,6 +2,51 @@
 
 Updated on July 26, 2026.
 
+## July 27, 2026 Expanded Booking Workflow
+
+The Flutter source now uses explicit hotel room selection instead of treating a
+hotel catalog result as the purchased product. Room price is calculated as:
+
+```text
+room nightly price × room count × night count
+```
+
+Flight checkout now uses adult and child fare components and preserves airline,
+flight number, airports, departure/arrival time, cabin, baggage, segments, and
+cancellation rules in cards, details, orders, and generated vouchers.
+
+Catalog checkout is split into reservation and payment steps. The backend
+returns `payment_due_at`; Flutter shows a countdown and pays the existing order
+instead of creating another one. The service configuration exposes a
+`reservation_hold_minutes` value from 5 through 60 minutes. Travel Origin runs
+`travel:reservations:expire` every minute and marks unpaid expired reservations
+failed/expired. Catalog mode still does not claim to lock supplier inventory;
+live providers must implement and release their own supplier reservation.
+
+Checkout supports purchasing for the signed-in customer or another named
+beneficiary. The beneficiary and selected room are stored in the order product
+snapshot. Wallet checkout automatically targets the offer currency and suggests
+the best funded different-currency wallet as the exchange source when the
+matching wallet is short.
+
+All Travel screens share the same footer, including a direct main-app Home
+action. Provider-originated Persian/Arabic, Latin/Cyrillic, and Chinese strings
+use first-strong-character direction detection so mixed supplier content does
+not inherit the wrong paragraph direction.
+
+Confirmed hotel and flight records can generate a downloadable PDF voucher from
+the confirmation page or booking history. The file includes order details and a
+QR payload containing the eCardo Travel order identity and amount.
+
+Production backend/admin backup:
+
+```text
+/root/ecardo-travel-deploy-backup-20260727-173018
+```
+
+Flutter CI must still run localization generation, formatting, analysis, tests,
+and builds. The server does not have Flutter or Dart installed.
+
 ## Scope Completed
 
 This change completes the requested Flutter-side Travel navigation, locale

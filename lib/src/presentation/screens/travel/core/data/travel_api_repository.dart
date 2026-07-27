@@ -70,7 +70,7 @@ class TravelApiRepository implements TravelRepository {
   }
 
   @override
-  Future<TravelOrder> createOrder({
+  Future<TravelReservation> createReservation({
     required TravelProductType type,
     required String productId,
     required TravelMoney expectedTotal,
@@ -93,14 +93,23 @@ class TravelApiRepository implements TravelRepository {
               'offer_id': productId,
               if (checkInDate != null) 'check_in_date': _date(checkInDate),
               if (checkOutDate != null) 'check_out_date': _date(checkOutDate),
+              if (bookingDetails.roomId.isNotEmpty)
+                'room_id': bookingDetails.roomId,
               'room_count': bookingDetails.roomCount,
               'adult_count': bookingDetails.adultCount,
               'child_count': bookingDetails.childCount,
+              'search_metadata': {
+                'beneficiary_type': bookingDetails.beneficiaryType,
+                if (bookingDetails.beneficiaryName.isNotEmpty)
+                  'beneficiary_name': bookingDetails.beneficiaryName,
+                if (bookingDetails.roomName.isNotEmpty)
+                  'room_name': bookingDetails.roomName,
+              },
             }
           : {
               'offer_id': productId,
-              'check_in_date': _date(checkInDate!),
-              'check_out_date': _date(checkOutDate!),
+              if (checkInDate != null) 'check_in_date': _date(checkInDate),
+              if (checkOutDate != null) 'check_out_date': _date(checkOutDate),
               'room_count': bookingDetails.roomCount,
               'adult_count': bookingDetails.adultCount,
               'child_count': bookingDetails.childCount,
@@ -126,13 +135,36 @@ class TravelApiRepository implements TravelRepository {
         'The authoritative Travel total changed before wallet payment.',
       );
     }
+    return TravelReservation(
+      id: orderId,
+      orderNumber: created['order_number']?.toString() ?? orderId,
+      title:
+          created['title']?.toString() ??
+          created['hotel_name']?.toString() ??
+          'travelHotelBooking',
+      type: type,
+      total: TravelMoney(
+        amount: payableAmount,
+        currency: payableCurrency,
+      ),
+      expiresAt:
+          DateTime.tryParse(created['payment_due_at']?.toString() ?? '') ??
+          DateTime.now().add(const Duration(minutes: 15)),
+    );
+  }
+
+  @override
+  Future<TravelOrder> payReservation({
+    required TravelReservation reservation,
+    required String idempotencyKey,
+  }) async {
+    final token = await _ensureTravelAccessToken();
     final payResponse = await _client.post<Map<String, dynamic>>(
-      '/orders/${Uri.encodeComponent(orderId)}/pay',
+      '/orders/${Uri.encodeComponent(reservation.id)}/pay',
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',
-          'Idempotency-Key':
-              'pay-$idempotencyKey-${DateTime.now().millisecondsSinceEpoch}',
+          'Idempotency-Key': idempotencyKey,
         },
       ),
     );
@@ -149,32 +181,26 @@ class TravelApiRepository implements TravelRepository {
       );
     }
     return TravelOrder(
-      id: orderId,
-      type: type,
-      titleKey:
-          created['title']?.toString() ??
-          created['hotel_name']?.toString() ??
-          'travelHotelBooking',
+      id: reservation.id,
+      type: reservation.type,
+      titleKey: reservation.title,
       reference:
-          created['order_number']?.toString() ??
-          paid['order_number']?.toString() ??
-          orderId,
+          reservation.orderNumber.isNotEmpty
+              ? reservation.orderNumber
+              : paid['order_number']?.toString() ?? reservation.id,
       total: TravelMoney(
         amount: _amount(
           paid['paid_amount'] ??
-              created['payable_amount'] ??
-              expectedTotal.amount,
+              reservation.total.amount,
         ),
         currency:
             paid['currency']?.toString() ??
-            created['currency']?.toString() ??
-            expectedTotal.currency,
+            reservation.total.currency,
       ),
-      status: _orderStatus(paid['status'] ?? created['status']),
+      status: _orderStatus(paid['status']),
       createdAt: DateTime.now(),
       details: {
-        'gateway_status':
-            paid['status']?.toString() ?? created['status']?.toString() ?? '',
+        'gateway_status': paid['status']?.toString() ?? '',
       },
     );
   }
@@ -259,6 +285,10 @@ class TravelApiRepository implements TravelRepository {
       _ => TravelProductType.hotel,
     };
     final snapshotOffer = _map(productSnapshot['offer']);
+    final snapshotAttributes = _map(snapshotOffer['attributes']);
+    final snapshotProduct = _map(snapshotOffer['product']);
+    final selectedRoom = _map(snapshotProduct['selected_room']);
+    final searchMetadata = _map(productSnapshot['search_metadata']);
     return TravelOrder(
       id: (json['public_id'] ?? json['id'])?.toString() ?? '',
       type: type,
@@ -294,6 +324,21 @@ class TravelApiRepository implements TravelRepository {
         'check_out':
             (json['check_out_date'] ?? request['check_out_date'])?.toString() ??
             '',
+        'room': selectedRoom['room_name']?.toString() ?? '',
+        'beneficiary':
+            searchMetadata['beneficiary_name']?.toString() ??
+            searchMetadata['beneficiary_type']?.toString() ??
+            '',
+        'origin': snapshotAttributes['origin']?.toString() ?? '',
+        'destination': snapshotAttributes['destination']?.toString() ?? '',
+        'departure':
+            snapshotAttributes['departure_time']?.toString() ?? '',
+        'arrival': snapshotAttributes['arrival_time']?.toString() ?? '',
+        'flight_number':
+            snapshotAttributes['flight_number']?.toString() ?? '',
+        'airline': snapshotAttributes['airline_name']?.toString() ?? '',
+        'cabin': snapshotAttributes['cabin_class']?.toString() ?? '',
+        'baggage': snapshotAttributes['baggage']?.toString() ?? '',
       },
     );
   }

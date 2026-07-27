@@ -114,6 +114,10 @@ class TravelBookingDetails {
   final int roomCount;
   final int adultCount;
   final int childCount;
+  final String roomId;
+  final String roomName;
+  final String beneficiaryType;
+  final String beneficiaryName;
 
   const TravelBookingDetails({
     this.checkInDate,
@@ -121,7 +125,35 @@ class TravelBookingDetails {
     this.roomCount = 1,
     this.adultCount = 1,
     this.childCount = 0,
+    this.roomId = '',
+    this.roomName = '',
+    this.beneficiaryType = 'self',
+    this.beneficiaryName = '',
   });
+
+  TravelBookingDetails copyWith({
+    DateTime? checkInDate,
+    DateTime? checkOutDate,
+    int? roomCount,
+    int? adultCount,
+    int? childCount,
+    String? roomId,
+    String? roomName,
+    String? beneficiaryType,
+    String? beneficiaryName,
+  }) {
+    return TravelBookingDetails(
+      checkInDate: checkInDate ?? this.checkInDate,
+      checkOutDate: checkOutDate ?? this.checkOutDate,
+      roomCount: roomCount ?? this.roomCount,
+      adultCount: adultCount ?? this.adultCount,
+      childCount: childCount ?? this.childCount,
+      roomId: roomId ?? this.roomId,
+      roomName: roomName ?? this.roomName,
+      beneficiaryType: beneficiaryType ?? this.beneficiaryType,
+      beneficiaryName: beneficiaryName ?? this.beneficiaryName,
+    );
+  }
 }
 
 class TravelMoney {
@@ -218,6 +250,24 @@ class TravelOrder {
     required this.status,
     required this.createdAt,
     required this.details,
+  });
+}
+
+class TravelReservation {
+  final String id;
+  final String orderNumber;
+  final String title;
+  final TravelProductType type;
+  final TravelMoney total;
+  final DateTime expiresAt;
+
+  const TravelReservation({
+    required this.id,
+    required this.orderNumber,
+    required this.title,
+    required this.type,
+    required this.total,
+    required this.expiresAt,
   });
 }
 

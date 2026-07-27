@@ -518,34 +518,9 @@ class HotelDetailsScreen extends StatelessWidget {
     final hasCoordinates = latitude != null && longitude != null;
     final sourceUpdatedAt =
         product['source_updated_at']?.toString().trim() ?? '';
+    final bookingDetails = controller.hotelBookingDetails.value;
     return TravelPage(
       title: localization.travelHotelDetails,
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16.r),
-          child: CommonButton(
-            width: double.infinity,
-            text: controller.canPurchase(TravelProductType.hotel)
-                ? localization.travelReserveHotel
-                : localization.travelOfferUnavailable,
-            backgroundColor:
-                controller.canPurchase(TravelProductType.hotel)
-                ? TravelTheme.purple
-                : TravelTheme.muted,
-            onPressed: controller.canPurchase(TravelProductType.hotel)
-                ? () => Get.to(
-                    () => TravelCheckoutScreen(
-                      type: TravelProductType.hotel,
-                      productId: offer.id,
-                      title: travelLocalizedKey(localization, offer.titleKey),
-                      total: offer.total,
-                      bookingDetails: controller.hotelBookingDetails.value,
-                    ),
-                  )
-                : null,
-          ),
-        ),
-      ),
       child: ListView(
         padding: EdgeInsets.all(20.r),
         children: [
@@ -554,12 +529,12 @@ class HotelDetailsScreen extends StatelessWidget {
             fallbackImageUrl: offer.imageUrl,
           ),
           SizedBox(height: 18.h),
-          Text(
+          TravelBidiText(
             travelLocalizedKey(localization, offer.titleKey),
             style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w900),
           ),
           SizedBox(height: 6.h),
-          Text(
+          TravelBidiText(
             travelLocalizedKey(localization, offer.subtitleKey),
             style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp),
           ),
@@ -585,7 +560,7 @@ class HotelDetailsScreen extends StatelessWidget {
                     color: TravelTheme.purple,
                   ),
                   SizedBox(width: 10.w),
-                  Expanded(child: Text(address)),
+                  Expanded(child: TravelBidiText(address)),
                   if (hasCoordinates)
                     const Icon(Icons.map_outlined, color: TravelTheme.purple),
                 ],
@@ -598,7 +573,10 @@ class HotelDetailsScreen extends StatelessWidget {
             SizedBox(height: 26.h),
             TravelSectionHeader(title: localization.travelAboutHotel),
             SizedBox(height: 8.h),
-            Text(description, style: TextStyle(fontSize: 13.sp, height: 1.8)),
+            TravelBidiText(
+              description,
+              style: TextStyle(fontSize: 13.sp, height: 1.8),
+            ),
           ],
           if (amenities.isNotEmpty) ...[
             SizedBox(height: 24.h),
@@ -617,7 +595,47 @@ class HotelDetailsScreen extends StatelessWidget {
             ...rooms.map(
               (room) => Padding(
                 padding: EdgeInsets.only(bottom: 12.h),
-                child: _ProviderRoomCard(room: room),
+                child: _ProviderRoomCard(
+                  room: room,
+                  enabled: controller.canPurchase(TravelProductType.hotel),
+                  onSelect: () {
+                    final roomId = room['room_id']?.toString() ?? '';
+                    final roomName =
+                        room['room_name']?.toString() ??
+                        room['name']?.toString() ??
+                        '';
+                    final unitPrice =
+                        double.tryParse(room['price']?.toString() ?? '') ?? 0;
+                    final nights = bookingDetails.checkInDate != null &&
+                            bookingDetails.checkOutDate != null
+                        ? bookingDetails.checkOutDate!
+                            .difference(bookingDetails.checkInDate!)
+                            .inDays
+                            .clamp(1, 365)
+                            .toInt()
+                        : 1;
+                    final total = TravelMoney(
+                      amount:
+                          unitPrice * bookingDetails.roomCount * nights,
+                      currency:
+                          room['currency']?.toString() ??
+                          offer.total.currency,
+                    );
+                    Get.to(
+                      () => TravelCheckoutScreen(
+                        type: TravelProductType.hotel,
+                        productId: offer.id,
+                        title:
+                            '${travelLocalizedKey(localization, offer.titleKey)} • $roomName',
+                        total: total,
+                        bookingDetails: bookingDetails.copyWith(
+                          roomId: roomId,
+                          roomName: roomName,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -766,8 +784,14 @@ class _ProviderMoneySummary extends StatelessWidget {
 
 class _ProviderRoomCard extends StatelessWidget {
   final Map<String, dynamic> room;
+  final bool enabled;
+  final VoidCallback onSelect;
 
-  const _ProviderRoomCard({required this.room});
+  const _ProviderRoomCard({
+    required this.room,
+    required this.enabled,
+    required this.onSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -802,7 +826,7 @@ class _ProviderRoomCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                TravelBidiText(
                   room['room_name']?.toString() ??
                       room['name']?.toString() ??
                       '',
@@ -810,7 +834,7 @@ class _ProviderRoomCard extends StatelessWidget {
                 ),
                 if (description.isNotEmpty) ...[
                   SizedBox(height: 8.h),
-                  Text(description),
+                  TravelBidiText(description),
                 ],
                 if (price > 0) ...[
                   SizedBox(height: 10.h),
@@ -829,6 +853,16 @@ class _ProviderRoomCard extends StatelessWidget {
                   SizedBox(height: 10.h),
                   _ProviderMapRows(values: values),
                 ],
+                SizedBox(height: 14.h),
+                CommonButton(
+                  width: double.infinity,
+                  text: enabled
+                      ? AppLocalizations.of(context)!.travelSelect
+                      : AppLocalizations.of(context)!.travelOfferUnavailable,
+                  backgroundColor:
+                      enabled ? TravelTheme.purple : TravelTheme.muted,
+                  onPressed: enabled && price > 0 ? onSelect : null,
+                ),
               ],
             ),
           ),

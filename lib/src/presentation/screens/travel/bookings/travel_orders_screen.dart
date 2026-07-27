@@ -131,7 +131,26 @@ class TravelOrdersScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 5.h),
-                            const Icon(Icons.chevron_right_rounded),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (order.type != TravelProductType.esim &&
+                                    order.status != TravelOrderStatus.failed &&
+                                    order.status !=
+                                        TravelOrderStatus.refunded)
+                                  IconButton(
+                                    tooltip: localization
+                                        .qrCodeScreenDownloadButton,
+                                    onPressed: () =>
+                                        downloadTravelVoucher(context, order),
+                                    icon: const Icon(
+                                      Icons.download_rounded,
+                                      color: TravelTheme.blue,
+                                    ),
+                                  ),
+                                const Icon(Icons.chevron_right_rounded),
+                              ],
+                            ),
                           ],
                         ),
                       ],

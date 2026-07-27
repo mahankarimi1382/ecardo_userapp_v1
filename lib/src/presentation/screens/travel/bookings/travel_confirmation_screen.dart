@@ -1,6 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 
@@ -143,6 +149,17 @@ class TravelConfirmationScreen extends StatelessWidget {
               ],
             ),
           ),
+          if (order.type != TravelProductType.esim &&
+              order.status != TravelOrderStatus.failed &&
+              order.status != TravelOrderStatus.refunded) ...[
+            SizedBox(height: 16.h),
+            CommonButton(
+              width: double.infinity,
+              text: localization.qrCodeScreenDownloadButton,
+              backgroundColor: travelProductColor(order.type),
+              onPressed: () => downloadTravelVoucher(context, order),
+            ),
+          ],
           if (order.type == TravelProductType.esim) ...[
             SizedBox(height: 16.h),
             TravelCard(
@@ -171,6 +188,128 @@ class TravelConfirmationScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> downloadTravelVoucher(
+  BuildContext context,
+  TravelOrder order,
+) async {
+  final locale = Localizations.localeOf(context);
+  final isRtl = const {'fa', 'ar'}.contains(locale.languageCode);
+  final fontAsset = switch (locale.languageCode) {
+    'fa' || 'ar' => 'assets/fonts/Vazirmatn-Regular.ttf',
+    'zh' => 'assets/fonts/LemiZhiXiaQianFeng-Regular.ttf',
+    'ru' => 'assets/fonts/NotoSans-Regular.ttf',
+    _ => 'assets/fonts/PlusJakartaSans-Medium.ttf',
+  };
+  final fontData = await rootBundle.load(fontAsset);
+  final font = pw.Font.ttf(fontData);
+  final document = pw.Document();
+  final voucherData = [
+    'ecardo-travel',
+    order.id,
+    order.reference,
+    order.type.name,
+    order.total.amount.toString(),
+    order.total.currency,
+  ].join('|');
+  document.addPage(
+    pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.all(32),
+      theme: pw.ThemeData.withFont(base: font, bold: font),
+      build: (_) => pw.Directionality(
+        textDirection: isRtl ? pw.TextDirection.rtl : pw.TextDirection.ltr,
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+          children: [
+            pw.Text(
+              'eCardo Travel',
+              style: pw.TextStyle(
+                fontSize: 24,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue800,
+              ),
+            ),
+            pw.SizedBox(height: 8),
+            pw.Text(
+              order.type == TravelProductType.hotel
+                  ? 'Hotel reservation voucher'
+                  : 'Flight ticket voucher',
+              style: pw.TextStyle(
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+            pw.SizedBox(height: 24),
+            _voucherRow('Product', order.titleKey),
+            _voucherRow('Reference', order.reference),
+            _voucherRow('Status', order.status.name),
+            _voucherRow(
+              'Paid amount',
+              '${order.total.amount.toStringAsFixed(0)} ${order.total.currency}',
+            ),
+            ...order.details.entries.map(
+              (entry) => _voucherRow(
+                entry.key.replaceAll('_', ' '),
+                entry.value,
+              ),
+            ),
+            pw.Spacer(),
+            pw.Center(
+              child: pw.BarcodeWidget(
+                barcode: pw.Barcode.qrCode(),
+                data: voucherData,
+                width: 150,
+                height: 150,
+              ),
+            ),
+            pw.SizedBox(height: 12),
+            pw.Text(
+              order.reference,
+              textAlign: pw.TextAlign.center,
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            ),
+            pw.SizedBox(height: 18),
+            pw.Text(
+              'Present this voucher with the traveler identity document. Supplier confirmation and cancellation rules remain authoritative.',
+              textAlign: pw.TextAlign.center,
+              style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey700),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+  final bytes = await document.save();
+  await Printing.sharePdf(
+    bytes: Uint8List.fromList(bytes),
+    filename: 'ecardo-${order.type.name}-${order.reference}.pdf',
+  );
+}
+
+pw.Widget _voucherRow(String label, String value) {
+  return pw.Container(
+    padding: const pw.EdgeInsets.symmetric(vertical: 9),
+    decoration: const pw.BoxDecoration(
+      border: pw.Border(
+        bottom: pw.BorderSide(color: PdfColors.grey300),
+      ),
+    ),
+    child: pw.Row(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.SizedBox(
+          width: 120,
+          child: pw.Text(
+            label,
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+          ),
+        ),
+        pw.Expanded(child: pw.Text(value)),
+      ],
+    ),
+  );
 }
 
 class _ConfirmationRow extends StatelessWidget {

@@ -125,6 +125,12 @@ class TravelBottomNavigation extends StatelessWidget {
               selected: activeSection == TravelNavigationSection.account,
               onTap: () => _open(BaseRoute.travelAccount),
             ),
+            _TravelNavigationItem(
+              label: localization.bottomNavHome,
+              icon: Icons.home_rounded,
+              selected: false,
+              onTap: () => Get.offAllNamed(BaseRoute.navigation),
+            ),
           ],
         ),
       ),
@@ -134,6 +140,53 @@ class TravelBottomNavigation extends StatelessWidget {
   void _open(String route) {
     if (Get.currentRoute == route) return;
     Get.offNamed(route);
+  }
+}
+
+TextDirection travelTextDirection(
+  BuildContext context,
+  String value, {
+  TextDirection? fallback,
+}) {
+  final firstStrong = RegExp(
+    r'[\u0590-\u08FF]|[A-Za-z\u0400-\u04FF\u4E00-\u9FFF]',
+  ).firstMatch(value)?.group(0);
+  if (firstStrong == null) {
+    return fallback ?? Directionality.of(context);
+  }
+  return RegExp(r'[\u0590-\u08FF]').hasMatch(firstStrong)
+      ? TextDirection.rtl
+      : TextDirection.ltr;
+}
+
+class TravelBidiText extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+
+  const TravelBidiText(
+    this.text, {
+    super.key,
+    this.style,
+    this.textAlign,
+    this.maxLines,
+    this.overflow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: travelTextDirection(context, text),
+      child: Text(
+        text,
+        style: style,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+      ),
+    );
   }
 }
 

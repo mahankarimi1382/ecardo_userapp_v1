@@ -32,12 +32,15 @@ class TravelController extends GetxController {
   final Rxn<TravelOffer> selectedOffer = Rxn<TravelOffer>();
   final Rxn<TravelEsimPackage> selectedEsim = Rxn<TravelEsimPackage>();
   final Rxn<TravelOrder> latestOrder = Rxn<TravelOrder>();
+  final Rxn<TravelReservation> activeReservation = Rxn<TravelReservation>();
   final Rx<TravelBookingDetails> hotelBookingDetails = TravelBookingDetails(
     checkInDate: DateTime.now().add(const Duration(days: 30)),
     checkOutDate: DateTime.now().add(const Duration(days: 32)),
     roomCount: 1,
     adultCount: 2,
   ).obs;
+  final Rx<TravelBookingDetails> flightBookingDetails =
+      const TravelBookingDetails().obs;
   String? _activeIdempotencyKey;
 
   @override
@@ -236,6 +239,42 @@ class TravelController extends GetxController {
     );
   }
 
+  List<Wallets> walletsForCurrency(String currency) {
+    if (!Get.isRegistered<HomeController>()) return const [];
+    return Get.find<HomeController>().walletsList
+        .where(
+          (item) => item.code?.toUpperCase() == currency.toUpperCase(),
+        )
+        .toList();
+  }
+
+  List<Wallets> fundedExchangeWallets(String targetCurrency) {
+    if (!Get.isRegistered<HomeController>()) return const [];
+    return Get.find<HomeController>().walletsList
+        .where(
+          (item) =>
+              item.code?.toUpperCase() != targetCurrency.toUpperCase() &&
+              (double.tryParse(
+                    (item.balance ?? '0')
+                        .replaceAll(',', '')
+                        .replaceAll(RegExp(r'[^0-9.-]'), ''),
+                  ) ??
+                  0) >
+                  0,
+        )
+        .toList()
+      ..sort((left, right) {
+        double balance(Wallets wallet) =>
+            double.tryParse(
+              (wallet.balance ?? '0')
+                  .replaceAll(',', '')
+                  .replaceAll(RegExp(r'[^0-9.-]'), ''),
+            ) ??
+            0;
+        return balance(right).compareTo(balance(left));
+      });
+  }
+
   double walletBalanceFor(String currency) {
     final wallet = walletForCurrency(currency);
     if (wallet == null) return 0;
@@ -255,7 +294,7 @@ class TravelController extends GetxController {
     ]);
   }
 
-  Future<TravelOrder?> checkout({
+  Future<TravelReservation?> reserve({
     required TravelProductType type,
     required String productId,
     required TravelMoney total,
@@ -271,17 +310,43 @@ class TravelController extends GetxController {
     _activeIdempotencyKey ??=
         '${type.name}-$productId-${DateTime.now().millisecondsSinceEpoch}';
     try {
-      final order = await repository.createOrder(
+      final reservation = await repository.createReservation(
         type: type,
         productId: productId,
         expectedTotal: total,
         idempotencyKey: _activeIdempotencyKey!,
         bookingDetails: bookingDetails,
       );
+      activeReservation.value = reservation;
+      return reservation;
+    } catch (_) {
+      checkoutFailed.value = true;
+      return null;
+    } finally {
+      isCheckoutLoading.value = false;
+    }
+  }
+
+  Future<TravelOrder?> payReservation(TravelReservation reservation) async {
+    if (isCheckoutLoading.value) return null;
+    if (DateTime.now().isAfter(reservation.expiresAt)) {
+      checkoutFailed.value = true;
+      activeReservation.value = null;
+      return null;
+    }
+    isCheckoutLoading.value = true;
+    checkoutFailed.value = false;
+    try {
+      final order = await repository.payReservation(
+        reservation: reservation,
+        idempotencyKey:
+            'pay-${reservation.id}-${DateTime.now().millisecondsSinceEpoch}',
+      );
       latestOrder.value = order;
       orders.insert(0, order);
-      await refreshMainWallet();
+      activeReservation.value = null;
       _activeIdempotencyKey = null;
+      await refreshMainWallet();
       return order;
     } catch (_) {
       checkoutFailed.value = true;
