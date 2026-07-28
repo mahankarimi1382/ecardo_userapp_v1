@@ -52,10 +52,7 @@ class TravelController extends GetxController {
   Future<void> loadDashboard() async {
     isLoading.value = true;
     try {
-      await Future.wait<void>([
-        _loadBootstrap(),
-        _loadOrders(),
-      ]);
+      await Future.wait<void>([_loadBootstrap(), _loadOrders()]);
     } finally {
       isLoading.value = false;
     }
@@ -201,9 +198,7 @@ class TravelController extends GetxController {
     isLoading.value = true;
     searchError.value = null;
     try {
-      esimPackages.assignAll(
-        await repository.getEsimPackages(destinationCode),
-      );
+      esimPackages.assignAll(await repository.getEsimPackages(destinationCode));
       return true;
     } catch (error) {
       esimPackages.clear();
@@ -218,9 +213,7 @@ class TravelController extends GetxController {
     isLoading.value = true;
     try {
       final savedTraveler = await repository.saveTraveler(traveler);
-      final index = travelers.indexWhere(
-        (item) => item.id == savedTraveler.id,
-      );
+      final index = travelers.indexWhere((item) => item.id == savedTraveler.id);
       if (index == -1) {
         travelers.add(savedTraveler);
       } else {
@@ -242,9 +235,7 @@ class TravelController extends GetxController {
   List<Wallets> walletsForCurrency(String currency) {
     if (!Get.isRegistered<HomeController>()) return const [];
     return Get.find<HomeController>().walletsList
-        .where(
-          (item) => item.code?.toUpperCase() == currency.toUpperCase(),
-        )
+        .where((item) => item.code?.toUpperCase() == currency.toUpperCase())
         .toList();
   }
 
@@ -255,11 +246,11 @@ class TravelController extends GetxController {
           (item) =>
               item.code?.toUpperCase() != targetCurrency.toUpperCase() &&
               (double.tryParse(
-                    (item.balance ?? '0')
-                        .replaceAll(',', '')
-                        .replaceAll(RegExp(r'[^0-9.-]'), ''),
-                  ) ??
-                  0) >
+                        (item.balance ?? '0')
+                            .replaceAll(',', '')
+                            .replaceAll(RegExp(r'[^0-9.-]'), ''),
+                      ) ??
+                      0) >
                   0,
         )
         .toList()
@@ -348,6 +339,36 @@ class TravelController extends GetxController {
       _activeIdempotencyKey = null;
       await refreshMainWallet();
       return order;
+    } catch (_) {
+      checkoutFailed.value = true;
+      return null;
+    } finally {
+      isCheckoutLoading.value = false;
+    }
+  }
+
+  Future<TravelOrder?> requestRefund({
+    required TravelOrder order,
+    required String reasonCode,
+    String? customerNote,
+  }) async {
+    if (isCheckoutLoading.value) return null;
+    isCheckoutLoading.value = true;
+    checkoutFailed.value = false;
+    try {
+      final updatedOrder = await repository.requestRefund(
+        order: order,
+        reasonCode: reasonCode,
+        customerNote: customerNote,
+        idempotencyKey:
+            'refund-${order.id}-${DateTime.now().millisecondsSinceEpoch}',
+      );
+      final index = orders.indexWhere((item) => item.id == order.id);
+      if (index >= 0) {
+        orders[index] = updatedOrder;
+      }
+      latestOrder.value = updatedOrder;
+      return updatedOrder;
     } catch (_) {
       checkoutFailed.value = true;
       return null;

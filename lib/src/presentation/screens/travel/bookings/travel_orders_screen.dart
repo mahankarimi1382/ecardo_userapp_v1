@@ -26,14 +26,13 @@ class TravelOrdersScreen extends StatelessWidget {
     };
     return TravelPage(
       title: title,
-      child: Obx(
-        () {
-          final visibleOrders = initialType == null
-              ? controller.orders.toList()
-              : controller.orders
-                    .where((order) => order.type == initialType)
-                    .toList();
-          return visibleOrders.isEmpty
+      child: Obx(() {
+        final visibleOrders = initialType == null
+            ? controller.orders.toList()
+            : controller.orders
+                  .where((order) => order.type == initialType)
+                  .toList();
+        return visibleOrders.isEmpty
             ? TravelEmptyState(
                 message: switch (initialType) {
                   TravelProductType.hotel => localization.travelNoHotels,
@@ -45,121 +44,139 @@ class TravelOrdersScreen extends StatelessWidget {
             : ListView.separated(
                 padding: EdgeInsets.all(20.r),
                 itemCount: visibleOrders.length,
-                separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                separatorBuilder: (_, _) => SizedBox(height: 12.h),
                 itemBuilder: (context, index) {
                   final order = visibleOrders[index];
+                  final canDownloadVoucher =
+                      order.type != TravelProductType.esim &&
+                      order.status != TravelOrderStatus.failed &&
+                      order.status != TravelOrderStatus.refunded;
                   return TravelCard(
-                    onTap: () =>
-                        Get.to(() => TravelConfirmationScreen(order: order)),
-                    child: Row(
+                    child: Column(
                       children: [
-                        Container(
-                          width: 54.r,
-                          height: 54.r,
-                          decoration: BoxDecoration(
-                            color: travelProductColor(
-                              order.type,
-                            ).withValues(alpha: .14),
-                            borderRadius: BorderRadius.circular(18.r),
+                        InkWell(
+                          onTap: () => Get.to(
+                            () => TravelConfirmationScreen(order: order),
                           ),
-                          child: Icon(
-                            travelProductIcon(order.type),
-                            color: travelProductColor(order.type),
-                          ),
-                        ),
-                        SizedBox(width: 14.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                travelLocalizedKey(
-                                  localization,
-                                  order.titleKey,
+                              Container(
+                                width: 54.r,
+                                height: 54.r,
+                                decoration: BoxDecoration(
+                                  color: travelProductColor(
+                                    order.type,
+                                  ).withValues(alpha: .14),
+                                  borderRadius: BorderRadius.circular(18.r),
                                 ),
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w900,
+                                child: Icon(
+                                  travelProductIcon(order.type),
+                                  color: travelProductColor(order.type),
                                 ),
                               ),
-                              SizedBox(height: 5.h),
-                              Directionality(
-                                textDirection: TextDirection.ltr,
-                                child: Text(
-                                  order.reference,
-                                  style: TextStyle(
-                                    color: TravelTheme.muted,
-                                    fontSize: 10.sp,
-                                  ),
+                              SizedBox(width: 14.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      travelLocalizedKey(
+                                        localization,
+                                        order.titleKey,
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: Text(
+                                        order.reference,
+                                        style: TextStyle(
+                                          color: TravelTheme.muted,
+                                          fontSize: 10.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    switch (order.status) {
+                                      TravelOrderStatus.pending =>
+                                        localization.travelPendingConfirmation,
+                                      TravelOrderStatus.active =>
+                                        localization.travelActive,
+                                      TravelOrderStatus.confirmed =>
+                                        localization.travelConfirmed,
+                                      TravelOrderStatus.completed =>
+                                        localization.travelCompleted,
+                                      TravelOrderStatus.refunded =>
+                                        localization.travelRefunded,
+                                      TravelOrderStatus.failed =>
+                                        localization.travelFailed,
+                                    },
+                                    style: TextStyle(
+                                      color: switch (order.status) {
+                                        TravelOrderStatus.pending =>
+                                          TravelTheme.warning,
+                                        TravelOrderStatus.failed =>
+                                          TravelTheme.red,
+                                        TravelOrderStatus.refunded =>
+                                          TravelTheme.muted,
+                                        TravelOrderStatus.confirmed ||
+                                        TravelOrderStatus.active ||
+                                        TravelOrderStatus.completed =>
+                                          TravelTheme.green,
+                                      },
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  const Icon(Icons.chevron_right_rounded),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              switch (order.status) {
-                                TravelOrderStatus.pending =>
-                                  localization.travelPendingConfirmation,
-                                TravelOrderStatus.active =>
-                                  localization.travelActive,
-                                TravelOrderStatus.confirmed =>
-                                  localization.travelConfirmed,
-                                TravelOrderStatus.completed =>
-                                  localization.travelCompleted,
-                                TravelOrderStatus.refunded =>
-                                  localization.travelRefunded,
-                                TravelOrderStatus.failed =>
-                                  localization.travelFailed,
-                              },
+                        if (canDownloadVoucher) ...[
+                          SizedBox(height: 14.h),
+                          const Divider(),
+                          SizedBox(height: 10.h),
+                          TravelVoucherQr(order: order, size: 116.r),
+                          SizedBox(height: 8.h),
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Text(
+                              order.reference,
                               style: TextStyle(
-                                color: switch (order.status) {
-                                  TravelOrderStatus.pending =>
-                                    TravelTheme.warning,
-                                  TravelOrderStatus.failed => TravelTheme.red,
-                                  TravelOrderStatus.refunded =>
-                                    TravelTheme.muted,
-                                  TravelOrderStatus.confirmed ||
-                                  TravelOrderStatus.active ||
-                                  TravelOrderStatus.completed =>
-                                    TravelTheme.green,
-                                },
+                                color: TravelTheme.muted,
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
-                            SizedBox(height: 5.h),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (order.type != TravelProductType.esim &&
-                                    order.status != TravelOrderStatus.failed &&
-                                    order.status !=
-                                        TravelOrderStatus.refunded)
-                                  IconButton(
-                                    tooltip: localization
-                                        .qrCodeScreenDownloadButton,
-                                    onPressed: () =>
-                                        downloadTravelVoucher(context, order),
-                                    icon: const Icon(
-                                      Icons.download_rounded,
-                                      color: TravelTheme.blue,
-                                    ),
-                                  ),
-                                const Icon(Icons.chevron_right_rounded),
-                              ],
+                          ),
+                          TextButton.icon(
+                            onPressed: () =>
+                                downloadTravelVoucher(context, order),
+                            icon: const Icon(Icons.download_rounded),
+                            label: Text(
+                              localization.qrCodeScreenDownloadButton,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ],
                     ),
                   );
                 },
               );
-        },
-      ),
+      }),
     );
   }
 }

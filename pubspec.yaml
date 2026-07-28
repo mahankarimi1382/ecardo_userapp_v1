@@ -48,6 +48,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   lottie: ^3.3.2
   path_provider: ^2.1.5
+  barcode: ^2.2.9
   printing: ^5.14.2
   pdf: ^3.11.3
   cached_network_image: ^3.4.1

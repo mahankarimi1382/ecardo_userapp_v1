@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/routes/routes.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -9,6 +9,23 @@ import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dar
 
 import '../core/models/travel_models.dart';
 import 'travel_theme.dart';
+
+void showTravelMessage(
+  BuildContext context, {
+  required String title,
+  required String message,
+}) {
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  if (messenger == null) return;
+  messenger
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        content: Text('$title\n$message'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+}
 
 enum TravelNavigationSection { dashboard, history, account }
 
@@ -305,13 +322,25 @@ class TravelFieldTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: TextStyle(color: TravelTheme.muted, fontSize: 11.sp)),
+                  Text(
+                    label,
+                    style: TextStyle(color: TravelTheme.muted, fontSize: 11.sp),
+                  ),
                   SizedBox(height: 4.h),
-                  Text(value, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.sp)),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14.sp,
+                    ),
+                  ),
                 ],
               ),
             ),
-            const Icon(Icons.keyboard_arrow_down_rounded, color: TravelTheme.muted),
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: TravelTheme.muted,
+            ),
           ],
         ),
       ),
@@ -389,19 +418,16 @@ String travelLocalizedKey(AppLocalizations localization, String key) {
     'travelFeaturePool' => localization.travelFeaturePool,
     'travelFeatureWifi' => localization.travelFeatureWifi,
     'travelFeatureParking' => localization.travelFeatureParking,
-    'travelFeatureAirportTransfer' =>
-      localization.travelFeatureAirportTransfer,
+    'travelFeatureAirportTransfer' => localization.travelFeatureAirportTransfer,
     'travelFeatureCabinBag' => localization.travelFeatureCabinBag,
     'travelFeatureRefundable' => localization.travelFeatureRefundable,
     'travelEsimTurkey' => localization.travelEsimTurkey,
-    'travelActivityFlightPurchase' =>
-      localization.travelActivityFlightPurchase,
+    'travelActivityFlightPurchase' => localization.travelActivityFlightPurchase,
     'travelActivityEsimPurchase' => localization.travelActivityEsimPurchase,
     'travelActivityWalletTopUp' => localization.travelActivityWalletTopUp,
     'travelMainWallet' => localization.travelMainWallet,
     'travelDemoOffer' => localization.travelDemoOffer,
-    'travelRequiresConfirmation' =>
-      localization.travelRequiresConfirmation,
+    'travelRequiresConfirmation' => localization.travelRequiresConfirmation,
     'travelHotelBooking' => localization.travelHotelBooking,
     _ => key,
   };

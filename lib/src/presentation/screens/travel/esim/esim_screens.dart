@@ -124,7 +124,10 @@ class _Benefit extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+                  Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
                   SizedBox(height: 3.h),
                   Text(
                     subtitle,
@@ -195,10 +198,10 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                           .trim()
                           .toUpperCase();
                       if (destination.isEmpty) {
-                        Get.snackbar(
-                          localization.travelEsimPackages,
-                          localization.travelDestination,
-                          snackPosition: SnackPosition.BOTTOM,
+                        showTravelMessage(
+                          context,
+                          title: localization.travelEsimPackages,
+                          message: localization.travelDestination,
                         );
                         return;
                       }
@@ -206,18 +209,16 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                         destination,
                       );
                       if (!succeeded) {
-                        Get.snackbar(
-                          localization.travelEsimPackages,
-                          localization.allControllerLoadError,
-                          snackPosition: SnackPosition.BOTTOM,
+                        showTravelMessage(
+                          context,
+                          title: localization.travelEsimPackages,
+                          message: localization.allControllerLoadError,
                         );
                       }
                     },
                   ),
                   SizedBox(height: 20.h),
-                  TravelSectionHeader(
-                    title: localization.travelChoosePackage,
-                  ),
+                  TravelSectionHeader(title: localization.travelChoosePackage),
                   SizedBox(height: 10.h),
                   ...controller.esimPackages.map(
                     (package) => Padding(
@@ -327,9 +328,7 @@ class _PackageCard extends StatelessWidget {
                       ? localization.travelSelect
                       : localization.travelOfferUnavailable,
                   fontSize: 10,
-                  textColor: canPurchase
-                      ? TravelTheme.ink
-                      : Colors.white,
+                  textColor: canPurchase ? TravelTheme.ink : Colors.white,
                   backgroundColor: canPurchase
                       ? TravelTheme.yellow
                       : TravelTheme.muted,

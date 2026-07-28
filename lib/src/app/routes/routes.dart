@@ -1,4 +1,6 @@
 class BaseRoute {
+  static const String root = "/";
+
   static const String splash = "/splash_route";
 
   static const noInternetConnection = '/no_internet_connection';

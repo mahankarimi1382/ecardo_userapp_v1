@@ -84,105 +84,99 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.r),
-          child: Obx(
-            () {
-              final wallet = controller.walletForCurrency(
-                widget.total.currency,
-              );
-              final hasBalance =
-                  controller.walletBalanceFor(widget.total.currency) >=
-                  widget.total.amount;
-              final canPurchase = controller.canPurchase(widget.type);
-              return CommonButton(
-                width: double.infinity,
-                text: !canPurchase
-                    ? localization.travelOfferUnavailable
-                    : reservation == null
-                    ? widget.type == TravelProductType.hotel
-                          ? localization.travelReserveHotel
-                          : localization.travelSelectFlight
-                    : wallet == null
-                    ? localization.travelMainWallet
-                    : hasBalance
-                    ? localization.travelPayFromWallet
-                    : localization.travelAddMoney,
-                backgroundColor: !canPurchase
-                    ? TravelTheme.muted
-                    : hasBalance
-                    ? travelProductColor(widget.type)
-                    : TravelTheme.green,
-                textColor:
-                    widget.type == TravelProductType.esim &&
-                        hasBalance &&
-                        canPurchase
-                    ? TravelTheme.ink
-                    : Colors.white,
-                isLoading: controller.isCheckoutLoading.value,
-                onPressed: !canPurchase
-                    ? null
-                    : reservation == null
-                    ? () async {
-                        if (purchaseForOther &&
-                            beneficiaryNameController.text.trim().isEmpty) {
-                          Get.snackbar(
-                            localization.travelPassengerReview,
-                            localization.travelOfferUnavailable,
-                            snackPosition: SnackPosition.BOTTOM,
-                          );
-                          return;
-                        }
-                        final value = await controller.reserve(
-                          type: widget.type,
-                          productId: widget.productId,
-                          total: widget.total,
-                          bookingDetails: _bookingDetails,
+          child: Obx(() {
+            final wallet = controller.walletForCurrency(widget.total.currency);
+            final hasBalance =
+                controller.walletBalanceFor(widget.total.currency) >=
+                widget.total.amount;
+            final canPurchase = controller.canPurchase(widget.type);
+            return CommonButton(
+              width: double.infinity,
+              text: !canPurchase
+                  ? localization.travelOfferUnavailable
+                  : reservation == null
+                  ? widget.type == TravelProductType.hotel
+                        ? localization.travelReserveHotel
+                        : localization.travelSelectFlight
+                  : wallet == null
+                  ? localization.travelMainWallet
+                  : hasBalance
+                  ? localization.travelPayFromWallet
+                  : localization.travelAddMoney,
+              backgroundColor: !canPurchase
+                  ? TravelTheme.muted
+                  : hasBalance
+                  ? travelProductColor(widget.type)
+                  : TravelTheme.green,
+              textColor:
+                  widget.type == TravelProductType.esim &&
+                      hasBalance &&
+                      canPurchase
+                  ? TravelTheme.ink
+                  : Colors.white,
+              isLoading: controller.isCheckoutLoading.value,
+              onPressed: !canPurchase
+                  ? null
+                  : reservation == null
+                  ? () async {
+                      if (purchaseForOther &&
+                          beneficiaryNameController.text.trim().isEmpty) {
+                        showTravelMessage(
+                          context,
+                          title: localization.travelPassengerReview,
+                          message: localization.travelOfferUnavailable,
                         );
-                        if (value != null) {
-                          _startReservationTimer(value);
-                        } else if (controller.checkoutFailed.value) {
-                          Get.snackbar(
-                            localization.travelPaymentFailed,
-                            localization.travelPaymentFailedDescription,
-                            snackPosition: SnackPosition.BOTTOM,
-                          );
-                        }
+                        return;
                       }
-                    : wallet == null
-                    ? () => Get.toNamed(
-                        BaseRoute.createNewWallet,
-                        arguments: {'returnRoute': BaseRoute.travel},
-                      )
-                    : hasBalance
-                    ? () async {
-                        final order = await controller.payReservation(
-                          reservation!,
+                      final value = await controller.reserve(
+                        type: widget.type,
+                        productId: widget.productId,
+                        total: widget.total,
+                        bookingDetails: _bookingDetails,
+                      );
+                      if (value != null) {
+                        _startReservationTimer(value);
+                      } else if (controller.checkoutFailed.value) {
+                        showTravelMessage(
+                          context,
+                          title: localization.travelPaymentFailed,
+                          message: localization.travelPaymentFailedDescription,
                         );
-                        if (order != null) {
-                          Get.off(
-                            () => TravelConfirmationScreen(order: order),
-                          );
-                        } else if (controller.checkoutFailed.value) {
-                          Get.snackbar(
-                            localization.travelPaymentFailed,
-                            localization.travelPaymentFailedDescription,
-                            snackPosition: SnackPosition.BOTTOM,
-                          );
-                        }
                       }
-                    : () async {
-                        await Get.toNamed(
-                          BaseRoute.addMoney,
-                          arguments: {
-                            'returnRoute': BaseRoute.travel,
-                            'wallet_id': wallet.id.toString(),
-                          },
+                    }
+                  : wallet == null
+                  ? () => Get.toNamed(
+                      BaseRoute.createNewWallet,
+                      arguments: {'returnRoute': BaseRoute.travel},
+                    )
+                  : hasBalance
+                  ? () async {
+                      final order = await controller.payReservation(
+                        reservation!,
+                      );
+                      if (order != null) {
+                        Get.off(() => TravelConfirmationScreen(order: order));
+                      } else if (controller.checkoutFailed.value) {
+                        showTravelMessage(
+                          context,
+                          title: localization.travelPaymentFailed,
+                          message: localization.travelPaymentFailedDescription,
                         );
-                        await controller.refreshMainWallet();
-                        if (mounted) setState(() {});
-                      },
-              );
-            },
-          ),
+                      }
+                    }
+                  : () async {
+                      await Get.toNamed(
+                        BaseRoute.addMoney,
+                        arguments: {
+                          'returnRoute': BaseRoute.travel,
+                          'wallet_id': wallet.id.toString(),
+                        },
+                      );
+                      await controller.refreshMainWallet();
+                      if (mounted) setState(() {});
+                    },
+            );
+          }),
         ),
       ),
       child: Obx(() {
@@ -318,9 +312,8 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                     title: Text(localization.travelPrimaryPassenger),
                     subtitle: Text(localization.travelPassengerFromProfile),
                     onChanged: reservation == null
-                        ? (value) => setState(
-                            () => purchaseForOther = value ?? false,
-                          )
+                        ? (value) =>
+                              setState(() => purchaseForOther = value ?? false)
                         : null,
                   ),
                   RadioListTile<bool>(
@@ -329,9 +322,8 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                     groupValue: purchaseForOther,
                     title: Text(localization.commonDropdownOther),
                     onChanged: reservation == null
-                        ? (value) => setState(
-                            () => purchaseForOther = value ?? true,
-                          )
+                        ? (value) =>
+                              setState(() => purchaseForOther = value ?? true)
                         : null,
                   ),
                   if (purchaseForOther)
@@ -444,7 +436,7 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                                 arguments: {
                                   'returnRoute': BaseRoute.travel,
                                   'wallet_id': wallet.id.toString(),
-                          },
+                                },
                               );
                               await controller.refreshMainWallet();
                               if (mounted) setState(() {});

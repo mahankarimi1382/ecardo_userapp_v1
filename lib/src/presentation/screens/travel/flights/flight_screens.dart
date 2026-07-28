@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 import 'package:qunzo_user/src/common/widgets/common_single_date_picker.dart';
@@ -192,10 +192,10 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                       if (origin.isEmpty ||
                           destination.isEmpty ||
                           origin == destination) {
-                        Get.snackbar(
-                          localization.travelFlightSearch,
-                          localization.travelOfferUnavailable,
-                          snackPosition: SnackPosition.BOTTOM,
+                        showTravelMessage(
+                          context,
+                          title: localization.travelFlightSearch,
+                          message: localization.travelOfferUnavailable,
                         );
                         return;
                       }
@@ -216,10 +216,10 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                       if (succeeded) {
                         Get.to(() => const FlightResultsScreen());
                       } else {
-                        Get.snackbar(
-                          localization.travelFlightSearch,
-                          localization.allControllerLoadError,
-                          snackPosition: SnackPosition.BOTTOM,
+                        showTravelMessage(
+                          context,
+                          title: localization.travelFlightSearch,
+                          message: localization.allControllerLoadError,
                         );
                       }
                     },
@@ -359,27 +359,25 @@ class FlightResultsScreen extends StatelessWidget {
             ? ListView(
                 padding: EdgeInsets.all(20.r),
                 children: [
-                  TravelEmptyState(
-                    message: localization.travelNoFlightResults,
-                  ),
+                  TravelEmptyState(message: localization.travelNoFlightResults),
                   if (controller.upcomingFlightOffers.isNotEmpty) ...[
                     SizedBox(height: 24.h),
-                    TravelSectionHeader(
-                      title: localization.travelFlights,
-                    ),
+                    TravelSectionHeader(title: localization.travelFlights),
                     SizedBox(height: 10.h),
-                    ...controller.upcomingFlightOffers.take(8).map(
-                      (offer) => Padding(
-                        padding: EdgeInsets.only(bottom: 12.h),
-                        child: _FlightOfferCard(
-                          offer: offer,
-                          onTap: () async {
-                            await controller.loadOfferDetails(offer);
-                            Get.to(() => const FlightDetailsScreen());
-                          },
+                    ...controller.upcomingFlightOffers
+                        .take(8)
+                        .map(
+                          (offer) => Padding(
+                            padding: EdgeInsets.only(bottom: 12.h),
+                            child: _FlightOfferCard(
+                              offer: offer,
+                              onTap: () async {
+                                await controller.loadOfferDetails(offer);
+                                Get.to(() => const FlightDetailsScreen());
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
                   ],
                 ],
               )
@@ -437,10 +435,7 @@ class _FlightOfferCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15.r),
                 ),
                 child: offer.imageUrl.isEmpty
-                    ? const Icon(
-                        Icons.flight_rounded,
-                        color: TravelTheme.blue,
-                      )
+                    ? const Icon(Icons.flight_rounded, color: TravelTheme.blue)
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(15.r),
                         child: Image.network(
@@ -572,11 +567,7 @@ class _FlightTime extends StatelessWidget {
   final String city;
   final String time;
 
-  const _FlightTime({
-    required this.code,
-    required this.time,
-    this.city = '',
-  });
+  const _FlightTime({required this.code, required this.time, this.city = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -620,9 +611,7 @@ class FlightDetailsScreen extends StatelessWidget {
     final departure = _flightDateTime(offer, 'departure');
     final arrival = _flightDateTime(offer, 'arrival');
     final segments = _flightMaps(offer.product['segments']);
-    final cancellationRules = _flightMaps(
-      offer.product['cancellation_rules'],
-    );
+    final cancellationRules = _flightMaps(offer.product['cancellation_rules']);
     return TravelPage(
       title: localization.travelFlightDetails,
       bottomNavigationBar: SafeArea(
@@ -633,9 +622,7 @@ class FlightDetailsScreen extends StatelessWidget {
             text: canPurchase
                 ? localization.travelContinueToPayment
                 : localization.travelOfferUnavailable,
-            backgroundColor: canPurchase
-                ? TravelTheme.blue
-                : TravelTheme.muted,
+            backgroundColor: canPurchase ? TravelTheme.blue : TravelTheme.muted,
             onPressed: canPurchase
                 ? () => Get.to(
                     () => TravelCheckoutScreen(
@@ -710,9 +697,7 @@ class FlightDetailsScreen extends StatelessWidget {
             ...segments.map(
               (segment) => Padding(
                 padding: EdgeInsets.only(bottom: 10.h),
-                child: TravelCard(
-                  child: _FlightDetailRows(values: segment),
-                ),
+                child: TravelCard(child: _FlightDetailRows(values: segment)),
               ),
             ),
           ],
@@ -723,9 +708,7 @@ class FlightDetailsScreen extends StatelessWidget {
             ...cancellationRules.map(
               (rule) => Padding(
                 padding: EdgeInsets.only(bottom: 10.h),
-                child: TravelCard(
-                  child: _FlightDetailRows(values: rule),
-                ),
+                child: TravelCard(child: _FlightDetailRows(values: rule)),
               ),
             ),
           ],
@@ -755,7 +738,10 @@ class FlightDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.check_circle_rounded, color: TravelTheme.green),
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: TravelTheme.green,
+                ),
               ],
             ),
           ),
@@ -765,8 +751,10 @@ class FlightDetailsScreen extends StatelessWidget {
           TravelCard(
             child: Column(
               children: [
-                for (final component
-                    in _pricedFlightComponents(offer, bookingDetails)) ...[
+                for (final component in _pricedFlightComponents(
+                  offer,
+                  bookingDetails,
+                )) ...[
                   _FareRow(
                     label: component.$1,
                     value: travelMoney(context, component.$2),
@@ -794,7 +782,8 @@ List<(String, TravelMoney)> _pricedFlightComponents(
   final result = <(String, TravelMoney)>[];
   for (final component in offer.pricingComponents) {
     final type = component['type']?.toString().toLowerCase() ?? '';
-    final unit = double.tryParse(
+    final unit =
+        double.tryParse(
           (component['unit_amount'] ?? component['amount'])?.toString() ?? '',
         ) ??
         0;
@@ -808,8 +797,7 @@ List<(String, TravelMoney)> _pricedFlightComponents(
       '${component['label'] ?? _flightLabel(type)} × $quantity',
       TravelMoney(
         amount: unit * quantity,
-        currency:
-            component['currency']?.toString() ?? offer.total.currency,
+        currency: component['currency']?.toString() ?? offer.total.currency,
       ),
     ));
   }
@@ -873,10 +861,7 @@ class _FlightDetailRows extends StatelessWidget {
                 width: 92.w,
                 child: Text(
                   _flightLabel(entries[index].key),
-                  style: TextStyle(
-                    color: TravelTheme.muted,
-                    fontSize: 10.sp,
-                  ),
+                  style: TextStyle(color: TravelTheme.muted, fontSize: 10.sp),
                 ),
               ),
               Expanded(
@@ -894,11 +879,7 @@ class _FlightDetailRows extends StatelessWidget {
   }
 }
 
-String _flightValue(
-  TravelOffer offer,
-  String key, {
-  String fallback = '',
-}) {
+String _flightValue(TravelOffer offer, String key, {String fallback = ''}) {
   final value = offer.attributes[key] ?? offer.metadata[key];
   final text = value?.toString().trim() ?? '';
   return text.isEmpty || text == 'null' ? fallback : text;

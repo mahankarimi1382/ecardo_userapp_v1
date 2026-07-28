@@ -6,6 +6,12 @@ import 'routes_config.dart';
 
 List<GetPage> routesHandler = [
   GetPage(
+    name: BaseRoute.root,
+    page: () => RoutesConfig.splash,
+    binding: SplashBinding(),
+  ),
+
+  GetPage(
     name: BaseRoute.splash,
     page: () => RoutesConfig.splash,
     binding: SplashBinding(),

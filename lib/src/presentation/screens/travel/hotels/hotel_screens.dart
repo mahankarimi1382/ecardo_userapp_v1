@@ -33,11 +33,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
     super.initState();
     final details = Get.find<TravelController>().hotelBookingDetails.value;
     checkInDate =
-        details.checkInDate ??
-        DateTime.now().add(const Duration(days: 30));
+        details.checkInDate ?? DateTime.now().add(const Duration(days: 30));
     checkOutDate =
-        details.checkOutDate ??
-        checkInDate.add(const Duration(days: 2));
+        details.checkOutDate ?? checkInDate.add(const Duration(days: 2));
   }
 
   @override
@@ -149,10 +147,10 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                     onPressed: () async {
                       final city = cityController.text.trim().toUpperCase();
                       if (city.isEmpty) {
-                        Get.snackbar(
-                          localization.travelHotelSearch,
-                          localization.travelDestinationCity,
-                          snackPosition: SnackPosition.BOTTOM,
+                        showTravelMessage(
+                          context,
+                          title: localization.travelHotelSearch,
+                          message: localization.travelDestinationCity,
                         );
                         return;
                       }
@@ -177,10 +175,10 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                       if (succeeded) {
                         Get.to(() => const HotelResultsScreen());
                       } else {
-                        Get.snackbar(
-                          localization.travelHotelSearch,
-                          localization.allControllerLoadError,
-                          snackPosition: SnackPosition.BOTTOM,
+                        showTravelMessage(
+                          context,
+                          title: localization.travelHotelSearch,
+                          message: localization.allControllerLoadError,
                         );
                       }
                     },
@@ -361,9 +359,7 @@ class _HotelOfferCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(24),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: SizedBox(
               height: 145.h,
               width: double.infinity,
@@ -371,8 +367,7 @@ class _HotelOfferCard extends StatelessWidget {
                   ? Image.network(
                       offer.imageUrl,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          const _HotelImageFallback(),
+                      errorBuilder: (_, __, ___) => const _HotelImageFallback(),
                     )
                   : const _HotelImageFallback(),
             ),
@@ -524,10 +519,7 @@ class HotelDetailsScreen extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(20.r),
         children: [
-          _HotelGallery(
-            images: images,
-            fallbackImageUrl: offer.imageUrl,
-          ),
+          _HotelGallery(images: images, fallbackImageUrl: offer.imageUrl),
           SizedBox(height: 18.h),
           TravelBidiText(
             travelLocalizedKey(localization, offer.titleKey),
@@ -546,10 +538,10 @@ class HotelDetailsScreen extends StatelessWidget {
                       await Clipboard.setData(
                         ClipboardData(text: '$latitude,$longitude'),
                       );
-                      Get.snackbar(
-                        localization.travelHotelDetails,
-                        '$latitude, $longitude',
-                        snackPosition: SnackPosition.BOTTOM,
+                      showTravelMessage(
+                        context,
+                        title: localization.travelHotelDetails,
+                        message: '$latitude, $longitude',
                       );
                     }
                   : null,
@@ -585,7 +577,9 @@ class HotelDetailsScreen extends StatelessWidget {
             Wrap(
               spacing: 8.w,
               runSpacing: 8.h,
-              children: amenities.map((item) => Chip(label: Text(item))).toList(),
+              children: amenities
+                  .map((item) => Chip(label: Text(item)))
+                  .toList(),
             ),
           ],
           if (rooms.isNotEmpty) ...[
@@ -606,20 +600,19 @@ class HotelDetailsScreen extends StatelessWidget {
                         '';
                     final unitPrice =
                         double.tryParse(room['price']?.toString() ?? '') ?? 0;
-                    final nights = bookingDetails.checkInDate != null &&
+                    final nights =
+                        bookingDetails.checkInDate != null &&
                             bookingDetails.checkOutDate != null
                         ? bookingDetails.checkOutDate!
-                            .difference(bookingDetails.checkInDate!)
-                            .inDays
-                            .clamp(1, 365)
-                            .toInt()
+                              .difference(bookingDetails.checkInDate!)
+                              .inDays
+                              .clamp(1, 365)
+                              .toInt()
                         : 1;
                     final total = TravelMoney(
-                      amount:
-                          unitPrice * bookingDetails.roomCount * nights,
+                      amount: unitPrice * bookingDetails.roomCount * nights,
                       currency:
-                          room['currency']?.toString() ??
-                          offer.total.currency,
+                          room['currency']?.toString() ?? offer.total.currency,
                     );
                     Get.to(
                       () => TravelCheckoutScreen(
@@ -680,10 +673,7 @@ class _HotelGallery extends StatelessWidget {
   final List<String> images;
   final String fallbackImageUrl;
 
-  const _HotelGallery({
-    required this.images,
-    required this.fallbackImageUrl,
-  });
+  const _HotelGallery({required this.images, required this.fallbackImageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -727,10 +717,8 @@ class _ProviderMoneySummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final maximum = double.tryParse(
-          offer.attributes['price_max']?.toString() ?? '',
-        ) ??
-        0;
+    final maximum =
+        double.tryParse(offer.attributes['price_max']?.toString() ?? '') ?? 0;
     return TravelCard(
       child: Column(
         children: [
@@ -744,10 +732,7 @@ class _ProviderMoneySummary extends StatelessWidget {
               title: localization.travelTotal,
               value: travelMoney(
                 context,
-                TravelMoney(
-                  amount: maximum,
-                  currency: offer.total.currency,
-                ),
+                TravelMoney(amount: maximum, currency: offer.total.currency),
               ),
             ),
           ],
@@ -812,7 +797,9 @@ class _ProviderRoomCard extends StatelessWidget {
         children: [
           if (imageUrls.isNotEmpty)
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
               child: Image.network(
                 imageUrls.first,
                 height: 150.h,
@@ -859,8 +846,9 @@ class _ProviderRoomCard extends StatelessWidget {
                   text: enabled
                       ? AppLocalizations.of(context)!.travelSelect
                       : AppLocalizations.of(context)!.travelOfferUnavailable,
-                  backgroundColor:
-                      enabled ? TravelTheme.purple : TravelTheme.muted,
+                  backgroundColor: enabled
+                      ? TravelTheme.purple
+                      : TravelTheme.muted,
                   onPressed: enabled && price > 0 ? onSelect : null,
                 ),
               ],
@@ -947,7 +935,10 @@ String _providerValue(dynamic value) {
   if (value == null) return '';
   if (value is bool) return value ? '✓' : '—';
   if (value is List) {
-    return value.map(_providerValue).where((item) => item.isNotEmpty).join(', ');
+    return value
+        .map(_providerValue)
+        .where((item) => item.isNotEmpty)
+        .join(', ');
   }
   if (value is Map) {
     return value.entries

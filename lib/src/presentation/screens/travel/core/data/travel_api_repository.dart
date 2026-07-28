@@ -33,10 +33,9 @@ class TravelApiRepository implements TravelRepository {
       options: _localeOptions(),
     );
     final data = _map(response.data?['data']);
-    final services = _listOfMaps(data['services'])
-        .map(_mapService)
-        .whereType<TravelServiceConfig>()
-        .toList();
+    final services = _listOfMaps(
+      data['services'],
+    ).map(_mapService).whereType<TravelServiceConfig>().toList();
     return TravelBootstrap(
       currency: data['currency']?.toString() ?? 'IRR',
       locale: data['locale']?.toString() ?? 'en',
@@ -47,13 +46,13 @@ class TravelApiRepository implements TravelRepository {
   @override
   Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async {
     final offers = await _searchService('hotel', {
-        'city': search.city,
-        'check_in': _date(search.checkInDate),
-        'check_out': _date(search.checkOutDate),
-        'rooms': search.roomCount,
-        'adults': search.adultCount,
-        'children': search.childCount,
-      });
+      'city': search.city,
+      'check_in': _date(search.checkInDate),
+      'check_out': _date(search.checkOutDate),
+      'rooms': search.roomCount,
+      'adults': search.adultCount,
+      'children': search.childCount,
+    });
     return offers
         .map((offer) => _mapNormalizedOffer(offer, TravelProductType.hotel))
         .where((offer) => offer.id.isNotEmpty)
@@ -63,10 +62,9 @@ class TravelApiRepository implements TravelRepository {
   @override
   Future<List<TravelOrder>> getOrders() async {
     final response = await _authorizedGet('/orders');
-    return _dataList(response.data)
-        .map(_mapOrder)
-        .where((order) => order.id.isNotEmpty)
-        .toList();
+    return _dataList(
+      response.data,
+    ).map(_mapOrder).where((order) => order.id.isNotEmpty).toList();
   }
 
   @override
@@ -143,10 +141,7 @@ class TravelApiRepository implements TravelRepository {
           created['hotel_name']?.toString() ??
           'travelHotelBooking',
       type: type,
-      total: TravelMoney(
-        amount: payableAmount,
-        currency: payableCurrency,
-      ),
+      total: TravelMoney(amount: payableAmount, currency: payableCurrency),
       expiresAt:
           DateTime.tryParse(created['payment_due_at']?.toString() ?? '') ??
           DateTime.now().add(const Duration(minutes: 15)),
@@ -180,29 +175,61 @@ class TravelApiRepository implements TravelRepository {
         'Travel wallet payment did not reach a successful state.',
       );
     }
-    return TravelOrder(
+    final fallbackOrder = TravelOrder(
       id: reservation.id,
       type: reservation.type,
       titleKey: reservation.title,
-      reference:
-          reservation.orderNumber.isNotEmpty
-              ? reservation.orderNumber
-              : paid['order_number']?.toString() ?? reservation.id,
+      reference: reservation.orderNumber.isNotEmpty
+          ? reservation.orderNumber
+          : paid['order_number']?.toString() ?? reservation.id,
       total: TravelMoney(
-        amount: _amount(
-          paid['paid_amount'] ??
-              reservation.total.amount,
-        ),
-        currency:
-            paid['currency']?.toString() ??
-            reservation.total.currency,
+        amount: _amount(paid['paid_amount'] ?? reservation.total.amount),
+        currency: paid['currency']?.toString() ?? reservation.total.currency,
       ),
       status: _orderStatus(paid['status']),
       createdAt: DateTime.now(),
       details: {
+        'raw_status': paid['status']?.toString() ?? '',
         'gateway_status': paid['status']?.toString() ?? '',
       },
     );
+    try {
+      final orderResponse = await _authorizedGet(
+        '/orders/${Uri.encodeComponent(reservation.id)}',
+      );
+      final order = _map(orderResponse.data?['data']);
+      return order.isEmpty ? fallbackOrder : _mapOrder(order);
+    } catch (_) {
+      return fallbackOrder;
+    }
+  }
+
+  @override
+  Future<TravelOrder> requestRefund({
+    required TravelOrder order,
+    required String reasonCode,
+    String? customerNote,
+    required String idempotencyKey,
+  }) async {
+    final token = await _ensureTravelAccessToken();
+    await _client.post<Map<String, dynamic>>(
+      '/orders/${Uri.encodeComponent(order.id)}/refunds',
+      data: {
+        'reason_code': reasonCode,
+        if (customerNote?.trim().isNotEmpty == true)
+          'customer_note': customerNote!.trim(),
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Idempotency-Key': idempotencyKey,
+        },
+      ),
+    );
+    final response = await _authorizedGet(
+      '/orders/${Uri.encodeComponent(order.id)}',
+    );
+    return _mapOrder(_map(response.data?['data']));
   }
 
   Future<Response<Map<String, dynamic>>> _authorizedGet(String path) async {
@@ -289,6 +316,10 @@ class TravelApiRepository implements TravelRepository {
     final snapshotProduct = _map(snapshotOffer['product']);
     final selectedRoom = _map(snapshotProduct['selected_room']);
     final searchMetadata = _map(productSnapshot['search_metadata']);
+    final vouchers = _listOfMaps(booking['vouchers']);
+    final voucher = vouchers.isEmpty
+        ? const <String, dynamic>{}
+        : vouchers.first;
     return TravelOrder(
       id: (json['public_id'] ?? json['id'])?.toString() ?? '',
       type: type,
@@ -306,9 +337,7 @@ class TravelApiRepository implements TravelRepository {
           '',
       total: TravelMoney(
         amount: _amount(
-          json['paid_amount'] ??
-              json['payable_amount'] ??
-              json['total_amount'],
+          json['paid_amount'] ?? json['payable_amount'] ?? json['total_amount'],
         ),
         currency: json['currency']?.toString() ?? 'IRR',
       ),
@@ -317,7 +346,12 @@ class TravelApiRepository implements TravelRepository {
           DateTime.tryParse(json['created_at']?.toString() ?? '') ??
           DateTime.now(),
       details: {
+        'raw_status': json['status']?.toString() ?? '',
         'approval_status': json['approval_status']?.toString() ?? '',
+        'supplier_reference': booking['supplier_reference']?.toString() ?? '',
+        'booking_number': booking['booking_number']?.toString() ?? '',
+        'voucher_number': voucher['voucher_number']?.toString() ?? '',
+        'voucher_issued_at': voucher['issued_at']?.toString() ?? '',
         'check_in':
             (json['check_in_date'] ?? request['check_in_date'])?.toString() ??
             '',
@@ -325,17 +359,30 @@ class TravelApiRepository implements TravelRepository {
             (json['check_out_date'] ?? request['check_out_date'])?.toString() ??
             '',
         'room': selectedRoom['room_name']?.toString() ?? '',
+        'room_count': json['room_count']?.toString() ?? '',
+        'adult_count': json['adult_count']?.toString() ?? '',
+        'child_count': json['child_count']?.toString() ?? '',
+        'board_type':
+            (snapshotProduct['board_type'] ??
+                    snapshotOffer['board_type'] ??
+                    snapshotAttributes['board_type'])
+                ?.toString() ??
+            '',
+        'cancellation_policy':
+            (snapshotProduct['cancellation_policy'] ??
+                    snapshotOffer['cancellation_policy'] ??
+                    snapshotAttributes['cancellation_policy'])
+                ?.toString() ??
+            '',
         'beneficiary':
             searchMetadata['beneficiary_name']?.toString() ??
             searchMetadata['beneficiary_type']?.toString() ??
             '',
         'origin': snapshotAttributes['origin']?.toString() ?? '',
         'destination': snapshotAttributes['destination']?.toString() ?? '',
-        'departure':
-            snapshotAttributes['departure_time']?.toString() ?? '',
+        'departure': snapshotAttributes['departure_time']?.toString() ?? '',
         'arrival': snapshotAttributes['arrival_time']?.toString() ?? '',
-        'flight_number':
-            snapshotAttributes['flight_number']?.toString() ?? '',
+        'flight_number': snapshotAttributes['flight_number']?.toString() ?? '',
         'airline': snapshotAttributes['airline_name']?.toString() ?? '',
         'cabin': snapshotAttributes['cabin_class']?.toString() ?? '',
         'baggage': snapshotAttributes['baggage']?.toString() ?? '',
@@ -385,7 +432,10 @@ class TravelApiRepository implements TravelRepository {
     final offers = await _searchService('esim', {
       'country_code': destinationCode,
     });
-    return offers.map(_mapEsimPackage).where((item) => item.id.isNotEmpty).toList();
+    return offers
+        .map(_mapEsimPackage)
+        .where((item) => item.id.isNotEmpty)
+        .toList();
   }
 
   @override
@@ -519,15 +569,17 @@ class TravelApiRepository implements TravelRepository {
     return TravelEsimPackage(
       id: json['id']?.toString() ?? '',
       destinationCode: attributes['country_code']?.toString() ?? '',
-      dataLabel: dataGb == null ? '∞' : '${_amount(dataGb).toStringAsFixed(0)} GB',
+      dataLabel: dataGb == null
+          ? '∞'
+          : '${_amount(dataGb).toStringAsFixed(0)} GB',
       validityDays: _amount(attributes['validity_days']).round(),
       total: TravelMoney(
         amount: _amount(pricing['total_amount']),
         currency: pricing['currency']?.toString() ?? 'IRR',
       ),
-      isPopular: _strings(json['highlights']).any(
-        (item) => item.toLowerCase().contains('best'),
-      ),
+      isPopular: _strings(
+        json['highlights'],
+      ).any((item) => item.toLowerCase().contains('best')),
     );
   }
 
@@ -552,10 +604,7 @@ class TravelApiRepository implements TravelRepository {
   }
 
   static double _amount(dynamic value) {
-    return double.tryParse(
-          value?.toString().replaceAll(',', '') ?? '0',
-        ) ??
-        0;
+    return double.tryParse(value?.toString().replaceAll(',', '') ?? '0') ?? 0;
   }
 
   String get _locale => Get.locale?.languageCode.toLowerCase() ?? 'en';

@@ -7,6 +7,9 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_fa.dart';
+import 'app_localizations_ru.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -97,9 +100,8 @@ abstract class AppLocalizations {
     Locale('ar'),
     Locale('en'),
     Locale('fa'),
-    Locale('zh'),
     Locale('ru'),
-
+    Locale('zh'),
   ];
 
   /// No description provided for @comment_common_maintenance.
@@ -10565,6 +10567,1044 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filter My Order'**
   String get filterMyOrder;
+
+  /// No description provided for @comment_travel.
+  ///
+  /// In en, this message translates to:
+  /// **'==== eCardo Travel ===='**
+  String get comment_travel;
+
+  /// No description provided for @travelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'eCardo Travel'**
+  String get travelTitle;
+
+  /// No description provided for @travelHeroEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'A better travel experience'**
+  String get travelHeroEyebrow;
+
+  /// No description provided for @travelHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Book your next journey today'**
+  String get travelHeroTitle;
+
+  /// No description provided for @travelFlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Flights'**
+  String get travelFlights;
+
+  /// No description provided for @travelHotels.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotels'**
+  String get travelHotels;
+
+  /// No description provided for @travelEsim.
+  ///
+  /// In en, this message translates to:
+  /// **'eSIM'**
+  String get travelEsim;
+
+  /// No description provided for @travelRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get travelRecentActivity;
+
+  /// No description provided for @travelViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get travelViewAll;
+
+  /// No description provided for @travelMainWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Main eCardo wallet'**
+  String get travelMainWallet;
+
+  /// No description provided for @travelWalletSharedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The same secure wallet you use across eCardo'**
+  String get travelWalletSharedDescription;
+
+  /// No description provided for @travelHotelSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel search'**
+  String get travelHotelSearch;
+
+  /// No description provided for @travelHotelHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay somewhere unforgettable'**
+  String get travelHotelHero;
+
+  /// No description provided for @travelDestinationCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination country'**
+  String get travelDestinationCountry;
+
+  /// No description provided for @travelDestinationCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get travelDestinationCity;
+
+  /// No description provided for @travelCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get travelCheckIn;
+
+  /// No description provided for @travelCheckOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get travelCheckOut;
+
+  /// No description provided for @travelGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Guests'**
+  String get travelGuests;
+
+  /// No description provided for @travelSearchHotels.
+  ///
+  /// In en, this message translates to:
+  /// **'Search hotels'**
+  String get travelSearchHotels;
+
+  /// No description provided for @travelRecentSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get travelRecentSearches;
+
+  /// No description provided for @travelHotelResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel results'**
+  String get travelHotelResults;
+
+  /// No description provided for @travelNoHotelResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching hotels were found.'**
+  String get travelNoHotelResults;
+
+  /// No description provided for @travelStartingPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting price per stay'**
+  String get travelStartingPrice;
+
+  /// No description provided for @travelViewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View details'**
+  String get travelViewDetails;
+
+  /// No description provided for @travelHotelDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel details'**
+  String get travelHotelDetails;
+
+  /// No description provided for @travelOfferUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This offer is no longer available.'**
+  String get travelOfferUnavailable;
+
+  /// No description provided for @travelReserveHotel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reserve hotel'**
+  String get travelReserveHotel;
+
+  /// No description provided for @travelIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Included'**
+  String get travelIncluded;
+
+  /// No description provided for @travelFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get travelFree;
+
+  /// No description provided for @travelAboutHotel.
+  ///
+  /// In en, this message translates to:
+  /// **'About the hotel'**
+  String get travelAboutHotel;
+
+  /// No description provided for @travelHotelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the eCardo Travel API.'**
+  String get travelHotelDescription;
+
+  /// No description provided for @travelPolicies.
+  ///
+  /// In en, this message translates to:
+  /// **'Policies'**
+  String get travelPolicies;
+
+  /// No description provided for @travelCancellation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation'**
+  String get travelCancellation;
+
+  /// No description provided for @travelCancellationSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation before the stated deadline'**
+  String get travelCancellationSummary;
+
+  /// No description provided for @travelFlightSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight search'**
+  String get travelFlightSearch;
+
+  /// No description provided for @travelFlightHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Your dream journey starts here'**
+  String get travelFlightHero;
+
+  /// No description provided for @travelOrigin.
+  ///
+  /// In en, this message translates to:
+  /// **'Origin'**
+  String get travelOrigin;
+
+  /// No description provided for @travelDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get travelDestination;
+
+  /// No description provided for @travelDepartureDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure date'**
+  String get travelDepartureDate;
+
+  /// No description provided for @travelAdults.
+  ///
+  /// In en, this message translates to:
+  /// **'Adults'**
+  String get travelAdults;
+
+  /// No description provided for @travelChildren.
+  ///
+  /// In en, this message translates to:
+  /// **'Children'**
+  String get travelChildren;
+
+  /// No description provided for @travelSearchFlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Search flights'**
+  String get travelSearchFlights;
+
+  /// No description provided for @travelFlightResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight results'**
+  String get travelFlightResults;
+
+  /// No description provided for @travelNoFlightResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching flights were found.'**
+  String get travelNoFlightResults;
+
+  /// No description provided for @travelSelectFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Select flight'**
+  String get travelSelectFlight;
+
+  /// No description provided for @travelFlightDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight and passenger details'**
+  String get travelFlightDetails;
+
+  /// No description provided for @travelContinueToPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to payment'**
+  String get travelContinueToPayment;
+
+  /// No description provided for @travelPassengerReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger review'**
+  String get travelPassengerReview;
+
+  /// No description provided for @travelPrimaryPassenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary passenger'**
+  String get travelPrimaryPassenger;
+
+  /// No description provided for @travelPassengerFromProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Details are shared from your eCardo profile'**
+  String get travelPassengerFromProfile;
+
+  /// No description provided for @travelFareDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Fare details'**
+  String get travelFareDetails;
+
+  /// No description provided for @travelBaseFare.
+  ///
+  /// In en, this message translates to:
+  /// **'Base fare'**
+  String get travelBaseFare;
+
+  /// No description provided for @travelTaxesAndFees.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxes and fees'**
+  String get travelTaxesAndFees;
+
+  /// No description provided for @travelTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get travelTotal;
+
+  /// No description provided for @travelBrowseEsimPackages.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse eSIM packages'**
+  String get travelBrowseEsimPackages;
+
+  /// No description provided for @travelEsimIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay connected wherever you travel'**
+  String get travelEsimIntroTitle;
+
+  /// No description provided for @travelEsimIntroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a digital data package, pay from your main eCardo wallet and activate it without replacing your physical SIM.'**
+  String get travelEsimIntroDescription;
+
+  /// No description provided for @travelEsimInstantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant delivery'**
+  String get travelEsimInstantTitle;
+
+  /// No description provided for @travelEsimInstantDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Activation details are available immediately after payment.'**
+  String get travelEsimInstantDescription;
+
+  /// No description provided for @travelEsimCoverageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel-ready coverage'**
+  String get travelEsimCoverageTitle;
+
+  /// No description provided for @travelEsimCoverageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose local or global packages for your destination.'**
+  String get travelEsimCoverageDescription;
+
+  /// No description provided for @travelEsimTransparentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transparent pricing'**
+  String get travelEsimTransparentTitle;
+
+  /// No description provided for @travelEsimTransparentDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'See the backend-confirmed total before you pay.'**
+  String get travelEsimTransparentDescription;
+
+  /// No description provided for @travelEsimPackages.
+  ///
+  /// In en, this message translates to:
+  /// **'eSIM packages'**
+  String get travelEsimPackages;
+
+  /// No description provided for @travelChoosePackage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a package'**
+  String get travelChoosePackage;
+
+  /// No description provided for @travelMostPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Most popular'**
+  String get travelMostPopular;
+
+  /// No description provided for @travelSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get travelSelect;
+
+  /// No description provided for @travelValidityDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days validity'**
+  String travelValidityDays(int days);
+
+  /// No description provided for @travelWalletCheckout.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet checkout'**
+  String get travelWalletCheckout;
+
+  /// No description provided for @travelBackendConfirmedPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price confirmed by eCardo Travel'**
+  String get travelBackendConfirmedPrice;
+
+  /// No description provided for @travelPaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
+  String get travelPaymentMethod;
+
+  /// No description provided for @travelAvailableBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Available balance'**
+  String get travelAvailableBalance;
+
+  /// No description provided for @travelInsufficientBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Your main wallet balance is insufficient. Add money, then return to refresh checkout.'**
+  String get travelInsufficientBalance;
+
+  /// No description provided for @travelPriceSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Price summary'**
+  String get travelPriceSummary;
+
+  /// No description provided for @travelSubtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get travelSubtotal;
+
+  /// No description provided for @travelWalletPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet payment'**
+  String get travelWalletPayment;
+
+  /// No description provided for @travelCheckoutSafetyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment is submitted once using an idempotent booking request.'**
+  String get travelCheckoutSafetyNote;
+
+  /// No description provided for @travelPayFromWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay from wallet'**
+  String get travelPayFromWallet;
+
+  /// No description provided for @travelAddMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Add money'**
+  String get travelAddMoney;
+
+  /// No description provided for @travelPaymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was not completed'**
+  String get travelPaymentFailed;
+
+  /// No description provided for @travelPaymentFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wallet was not treated as paid. Please review the booking and try again.'**
+  String get travelPaymentFailedDescription;
+
+  /// No description provided for @travelHotelVoucher.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel voucher'**
+  String get travelHotelVoucher;
+
+  /// No description provided for @travelFlightTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight ticket'**
+  String get travelFlightTicket;
+
+  /// No description provided for @travelEsimActivation.
+  ///
+  /// In en, this message translates to:
+  /// **'eSIM activation'**
+  String get travelEsimActivation;
+
+  /// No description provided for @travelVoucherReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your confirmed hotel voucher is ready.'**
+  String get travelVoucherReady;
+
+  /// No description provided for @travelTicketReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your issued flight ticket is ready.'**
+  String get travelTicketReady;
+
+  /// No description provided for @travelEsimReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your eSIM is active and ready to install.'**
+  String get travelEsimReady;
+
+  /// No description provided for @travelPurchaseSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase successful'**
+  String get travelPurchaseSuccessful;
+
+  /// No description provided for @travelReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get travelReference;
+
+  /// No description provided for @travelStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get travelStatus;
+
+  /// No description provided for @travelActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get travelActive;
+
+  /// No description provided for @travelConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get travelConfirmed;
+
+  /// No description provided for @travelCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get travelCompleted;
+
+  /// No description provided for @travelRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get travelRefunded;
+
+  /// No description provided for @travelFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get travelFailed;
+
+  /// No description provided for @travelBookingFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking failed'**
+  String get travelBookingFailed;
+
+  /// No description provided for @travelBookingFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This booking did not complete. Review the order status before trying another payment.'**
+  String get travelBookingFailedDescription;
+
+  /// No description provided for @travelBookingRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking refunded'**
+  String get travelBookingRefunded;
+
+  /// No description provided for @travelBookingRefundedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The payment for this booking has been returned to the wallet.'**
+  String get travelBookingRefundedDescription;
+
+  /// No description provided for @travelPendingConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending confirmation'**
+  String get travelPendingConfirmation;
+
+  /// No description provided for @travelHotelBookingSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel booking submitted'**
+  String get travelHotelBookingSubmitted;
+
+  /// No description provided for @travelHotelPendingConfirmationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was received. eCardo Travel is confirming the hotel with the authorized supplier before issuing your voucher.'**
+  String get travelHotelPendingConfirmationDescription;
+
+  /// No description provided for @travelPaidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid amount'**
+  String get travelPaidAmount;
+
+  /// No description provided for @travelActivationDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Activation details'**
+  String get travelActivationDetails;
+
+  /// No description provided for @travelActivationInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your device cellular settings, add an eSIM and use the secure installation details returned by the eCardo backend.'**
+  String get travelActivationInstructions;
+
+  /// No description provided for @travelViewMyBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'View my bookings'**
+  String get travelViewMyBookings;
+
+  /// No description provided for @travelMyBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'My bookings'**
+  String get travelMyBookings;
+
+  /// No description provided for @travelAllBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'All bookings'**
+  String get travelAllBookings;
+
+  /// No description provided for @travelMyHotels.
+  ///
+  /// In en, this message translates to:
+  /// **'My hotels'**
+  String get travelMyHotels;
+
+  /// No description provided for @travelMyFlights.
+  ///
+  /// In en, this message translates to:
+  /// **'My flights'**
+  String get travelMyFlights;
+
+  /// No description provided for @travelMyEsims.
+  ///
+  /// In en, this message translates to:
+  /// **'My eSIMs'**
+  String get travelMyEsims;
+
+  /// No description provided for @travelMyHotelsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed stays and hotel vouchers'**
+  String get travelMyHotelsDescription;
+
+  /// No description provided for @travelMyFlightsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Booked flights and issued tickets'**
+  String get travelMyFlightsDescription;
+
+  /// No description provided for @travelMyEsimsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Active and previous data packages'**
+  String get travelMyEsimsDescription;
+
+  /// No description provided for @travelNoBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have any travel bookings yet.'**
+  String get travelNoBookings;
+
+  /// No description provided for @travelNoHotels.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have any hotel bookings yet.'**
+  String get travelNoHotels;
+
+  /// No description provided for @travelNoFlights.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have any flight bookings yet.'**
+  String get travelNoFlights;
+
+  /// No description provided for @travelNoEsims.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have any eSIM purchases yet.'**
+  String get travelNoEsims;
+
+  /// No description provided for @travelSavedTravelers.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved travelers'**
+  String get travelSavedTravelers;
+
+  /// No description provided for @travelNoTravelers.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved travelers are available yet.'**
+  String get travelNoTravelers;
+
+  /// No description provided for @travelAddTraveler.
+  ///
+  /// In en, this message translates to:
+  /// **'Add traveler'**
+  String get travelAddTraveler;
+
+  /// No description provided for @travelEditTraveler.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit traveler'**
+  String get travelEditTraveler;
+
+  /// No description provided for @travelTravelerFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get travelTravelerFullName;
+
+  /// No description provided for @travelPassportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport number'**
+  String get travelPassportNumber;
+
+  /// No description provided for @travelNationalityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Nationality code'**
+  String get travelNationalityCode;
+
+  /// No description provided for @travelNationalityCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a two-letter country code'**
+  String get travelNationalityCodeInvalid;
+
+  /// No description provided for @travelFieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get travelFieldRequired;
+
+  /// No description provided for @travelSaveTraveler.
+  ///
+  /// In en, this message translates to:
+  /// **'Save traveler'**
+  String get travelSaveTraveler;
+
+  /// No description provided for @travelAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel account'**
+  String get travelAccount;
+
+  /// No description provided for @travelAccountHolder.
+  ///
+  /// In en, this message translates to:
+  /// **'eCardo member'**
+  String get travelAccountHolder;
+
+  /// No description provided for @travelMemberDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared profile, wallet and traveler information'**
+  String get travelMemberDescription;
+
+  /// No description provided for @travelMyBookingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotels, flights and active eSIMs'**
+  String get travelMyBookingsDescription;
+
+  /// No description provided for @travelSavedTravelersDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Reuse passenger details securely'**
+  String get travelSavedTravelersDescription;
+
+  /// No description provided for @travelPersonalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal information'**
+  String get travelPersonalInformation;
+
+  /// No description provided for @travelPersonalInformationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage details shared with Travel'**
+  String get travelPersonalInformationDescription;
+
+  /// No description provided for @travelHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel and wallet history'**
+  String get travelHistory;
+
+  /// No description provided for @travelHistoryDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'View purchases and wallet activity together'**
+  String get travelHistoryDescription;
+
+  /// No description provided for @travelNoActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No travel or wallet activity is available.'**
+  String get travelNoActivity;
+
+  /// No description provided for @travelMockIran.
+  ///
+  /// In en, this message translates to:
+  /// **'Iran'**
+  String get travelMockIran;
+
+  /// No description provided for @travelMockTehran.
+  ///
+  /// In en, this message translates to:
+  /// **'Tehran'**
+  String get travelMockTehran;
+
+  /// No description provided for @travelMockGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'2 adults, 1 child'**
+  String get travelMockGuests;
+
+  /// No description provided for @travelMockTehranHotels.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotels in Tehran'**
+  String get travelMockTehranHotels;
+
+  /// No description provided for @travelMockHotelEspinas.
+  ///
+  /// In en, this message translates to:
+  /// **'Espinas Palace Hotel'**
+  String get travelMockHotelEspinas;
+
+  /// No description provided for @travelMockHotelEspinasLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Saadat Abad, Tehran'**
+  String get travelMockHotelEspinasLocation;
+
+  /// No description provided for @travelMockHotelParsian.
+  ///
+  /// In en, this message translates to:
+  /// **'Parsian International Hotel'**
+  String get travelMockHotelParsian;
+
+  /// No description provided for @travelMockHotelParsianLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Valiasr Street, Tehran'**
+  String get travelMockHotelParsianLocation;
+
+  /// No description provided for @travelMockHotelVisteria.
+  ///
+  /// In en, this message translates to:
+  /// **'Visteria Hotel'**
+  String get travelMockHotelVisteria;
+
+  /// No description provided for @travelMockHotelVisteriaLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tajrish, Tehran'**
+  String get travelMockHotelVisteriaLocation;
+
+  /// No description provided for @travelMockTehranAirport.
+  ///
+  /// In en, this message translates to:
+  /// **'Tehran (THR)'**
+  String get travelMockTehranAirport;
+
+  /// No description provided for @travelMockIstanbulAirport.
+  ///
+  /// In en, this message translates to:
+  /// **'Istanbul (IST)'**
+  String get travelMockIstanbulAirport;
+
+  /// No description provided for @travelMockRouteTehranIstanbul.
+  ///
+  /// In en, this message translates to:
+  /// **'Tehran → Istanbul'**
+  String get travelMockRouteTehranIstanbul;
+
+  /// No description provided for @travelMockFlightTehranIstanbul.
+  ///
+  /// In en, this message translates to:
+  /// **'Tehran to Istanbul'**
+  String get travelMockFlightTehranIstanbul;
+
+  /// No description provided for @travelMockAirlineOne.
+  ///
+  /// In en, this message translates to:
+  /// **'eCardo Air'**
+  String get travelMockAirlineOne;
+
+  /// No description provided for @travelMockAirlineTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Atlas Airways'**
+  String get travelMockAirlineTwo;
+
+  /// No description provided for @travelEsimTurkey.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkey eSIM'**
+  String get travelEsimTurkey;
+
+  /// No description provided for @travelRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get travelRecommended;
+
+  /// No description provided for @travelBestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Best value'**
+  String get travelBestValue;
+
+  /// No description provided for @travelLuxury.
+  ///
+  /// In en, this message translates to:
+  /// **'Luxury'**
+  String get travelLuxury;
+
+  /// No description provided for @travelDirect.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct'**
+  String get travelDirect;
+
+  /// No description provided for @travelLowestPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowest price'**
+  String get travelLowestPrice;
+
+  /// No description provided for @travelFeatureBreakfast.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get travelFeatureBreakfast;
+
+  /// No description provided for @travelFeaturePool.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool'**
+  String get travelFeaturePool;
+
+  /// No description provided for @travelFeatureWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi'**
+  String get travelFeatureWifi;
+
+  /// No description provided for @travelFeatureParking.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking'**
+  String get travelFeatureParking;
+
+  /// No description provided for @travelFeatureAirportTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Airport transfer'**
+  String get travelFeatureAirportTransfer;
+
+  /// No description provided for @travelFeatureCabinBag.
+  ///
+  /// In en, this message translates to:
+  /// **'Cabin bag'**
+  String get travelFeatureCabinBag;
+
+  /// No description provided for @travelFeatureRefundable.
+  ///
+  /// In en, this message translates to:
+  /// **'Refundable'**
+  String get travelFeatureRefundable;
+
+  /// No description provided for @travelActivityFlightPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight purchase'**
+  String get travelActivityFlightPurchase;
+
+  /// No description provided for @travelActivityEsimPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'eSIM purchase'**
+  String get travelActivityEsimPurchase;
+
+  /// No description provided for @travelActivityWalletTopUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet top-up'**
+  String get travelActivityWalletTopUp;
+
+  /// No description provided for @travelDemoOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo offer'**
+  String get travelDemoOffer;
+
+  /// No description provided for @travelRequiresConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmation required'**
+  String get travelRequiresConfirmation;
+
+  /// No description provided for @travelHotelBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel booking'**
+  String get travelHotelBooking;
 }
 
 class _AppLocalizationsDelegate
@@ -10592,9 +11632,11 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     case 'en':
       return AppLocalizationsEn();
     case 'fa':
+      return AppLocalizationsFa();
     case 'ru':
+      return AppLocalizationsRu();
     case 'zh':
-      return AppLocalizationsEn(locale.languageCode);
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

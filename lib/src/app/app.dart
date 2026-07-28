@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/app/config/theme/light_theme.dart';
 import 'package:qunzo_user/src/app/constants/app_strings.dart';
+import 'package:qunzo_user/src/app/bindings/app_bindings.dart';
 import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/app/routes/routes_config.dart';
 import 'package:qunzo_user/src/app/routes/routes_handler.dart';
 import 'package:qunzo_user/src/common/services/settings_service.dart';
 
@@ -50,7 +52,12 @@ class _QunzoUserState extends State<QunzoUser> {
           themeMode: ThemeMode.light,
           theme: LightTheme().lightTheme(context),
           getPages: routesHandler,
-          initialRoute: BaseRoute.splash,
+          initialRoute: BaseRoute.root,
+          unknownRoute: GetPage(
+            name: '/not-found',
+            page: () => RoutesConfig.splash,
+            binding: SplashBinding(),
+          ),
           locale: _locale,
           fallbackLocale: const Locale('en'),
           localizationsDelegates: const [
@@ -59,7 +66,13 @@ class _QunzoUserState extends State<QunzoUser> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [Locale('en'), Locale("ar"),  Locale('fa'),  Locale('zh'), Locale('ru')],
+          supportedLocales: const [
+            Locale('en'),
+            Locale("ar"),
+            Locale('fa'),
+            Locale('zh'),
+            Locale('ru'),
+          ],
           builder: (context, widget) {
             return widget ?? const SizedBox.shrink();
           },

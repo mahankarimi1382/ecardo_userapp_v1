@@ -9,10 +9,7 @@ abstract interface class TravelRepository {
 
   Future<List<TravelOffer>> getUpcomingFlights();
 
-  Future<TravelOffer> getOfferDetails(
-    TravelProductType type,
-    String offerId,
-  );
+  Future<TravelOffer> getOfferDetails(TravelProductType type, String offerId);
 
   Future<List<TravelEsimPackage>> getEsimPackages(String destinationCode);
 
@@ -34,6 +31,13 @@ abstract interface class TravelRepository {
 
   Future<TravelOrder> payReservation({
     required TravelReservation reservation,
+    required String idempotencyKey,
+  });
+
+  Future<TravelOrder> requestRefund({
+    required TravelOrder order,
+    required String reasonCode,
+    String? customerNote,
     required String idempotencyKey,
   });
 }
