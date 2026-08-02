@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/services/api_service.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
 import 'package:qunzo_user/src/helper/toast_helper.dart';
+import 'package:qunzo_user/src/network/service/network_service.dart';
+import 'package:qunzo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 class DynamicPasswordScreen extends StatefulWidget {
   const DynamicPasswordScreen({super.key});
@@ -15,6 +15,9 @@ class DynamicPasswordScreen extends StatefulWidget {
 }
 
 class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
+  final HomeController _homeController = Get.find<HomeController>();
+  final NetworkService _networkService = Get.find<NetworkService>();
+
   String? _otpCode;
   int _secondsRemaining = 0;
   Timer? _timer;
@@ -31,8 +34,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
     _timer?.cancel();
 
     try {
-      final user = Get.find<SettingsService>().userModel.value.data;
-      final accountNumber = user?.accountNumber ?? '';
+      final accountNumber = _homeController.userModel.value.accountNumber ?? '';
 
       if (accountNumber.isEmpty) {
         ToastHelper().showErrorToast('خطا: اطلاعات کاربر یافت نشد');
@@ -40,13 +42,13 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         return;
       }
 
-      final response = await ApiService.post(
-        '/api/pay/generate-otp',
-        body: {'account_number': accountNumber},
+      final response = await _networkService.post(
+        endpoint: '/pay/generate-otp',
+        data: {'account_number': accountNumber},
       );
 
-      if (response != null && response['status'] == 'success') {
-        final data = response['data'];
+      if (response.data != null && response.data!['status'] == 'success') {
+        final data = response.data!['data'];
         setState(() {
           _otpCode = data['code']?.toString() ?? '';
           _secondsRemaining = data['expires_in'] ?? 60;
@@ -54,7 +56,9 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         });
         _startCountdown();
       } else {
-        ToastHelper().showErrorToast(response?['message'] ?? 'خطا در تولید رمز');
+        ToastHelper().showErrorToast(
+          response.data?['message'] ?? 'خطا در تولید رمز',
+        );
         setState(() => _isLoading = false);
       }
     } catch (e) {
@@ -88,7 +92,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         title: const Text('رمز پویا'),
         backgroundColor: AppColors.white,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: AppColors.lightTextPrimary,
         centerTitle: true,
       ),
       body: Padding(
@@ -174,7 +178,10 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              TextButton(onPressed: _generateOtp, child: const Text('تولید رمز جدید', style: TextStyle(color: AppColors.lightPrimary))),
+              TextButton(
+                onPressed: _generateOtp,
+                child: const Text('تولید رمز جدید', style: TextStyle(color: AppColors.lightPrimary)),
+              ),
             ] else ...[
               SizedBox(
                 width: double.infinity,
