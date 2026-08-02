@@ -153,4 +153,5 @@ class BaseRoute {
   static const String travel = "/travel_route";
   static const String travelHistory = "/travel_history_route";
   static const String travelAccount = "/travel_account_route";
+  static const String dynamicPassword = "/dynamic_password_route";
 }

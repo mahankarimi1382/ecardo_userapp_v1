@@ -44,6 +44,11 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
 
     final List<Map<String, dynamic>> serviceList = [
       {
+        "title": "🔐 رمز پویا",
+        "iconData": Icons.pin_rounded,
+        "navigate": BaseRoute.dynamicPassword,
+      },
+      {
         "title": localization.otherServicesQrCode,
         "icon": PngAssets.qrCodeService,
         "navigate": BaseRoute.qrCode,

@@ -432,9 +432,15 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.travelHistory,
     page: () => RoutesConfig.travelHistory,
+    binding: TravelBinding(),
   ),
   GetPage(
     name: BaseRoute.travelAccount,
     page: () => RoutesConfig.travelAccount,
+    binding: TravelBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.dynamicPassword,
+    page: () => RoutesConfig.dynamicPassword,
   ),
 ];

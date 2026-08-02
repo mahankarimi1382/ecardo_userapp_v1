@@ -1,3 +1,4 @@
+import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
 import 'package:qunzo_user/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart';
 import 'package:qunzo_user/src/presentation/screens/bill_payment/view/data_bundle/data_bundle.dart';
 import 'package:qunzo_user/src/presentation/screens/bill_payment/view/internet/internet.dart';
@@ -210,4 +211,5 @@ class RoutesConfig {
   static const travel = TravelHomeScreen();
   static const travelHistory = TravelHistoryScreen();
   static const travelAccount = TravelAccountScreen();
+  static final dynamicPassword = const DynamicPasswordScreen();
 }
