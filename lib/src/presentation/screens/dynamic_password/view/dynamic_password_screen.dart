@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/helper/toast_helper.dart';
+import 'package:qunzo_user/src/network/response/status.dart';
 import 'package:qunzo_user/src/network/service/network_service.dart';
 import 'package:qunzo_user/src/presentation/screens/home/controller/home_controller.dart';
 
@@ -16,7 +17,6 @@ class DynamicPasswordScreen extends StatefulWidget {
 
 class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
   final HomeController _homeController = Get.find<HomeController>();
-  final NetworkService _networkService = Get.find<NetworkService>();
 
   String? _otpCode;
   int _secondsRemaining = 0;
@@ -34,7 +34,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
     _timer?.cancel();
 
     try {
-      final accountNumber = _homeController.userModel.value.accountNumber ?? '';
+      final accountNumber = _homeController.userModel.value.data?.accountNumber ?? '';
 
       if (accountNumber.isEmpty) {
         ToastHelper().showErrorToast('خطا: اطلاعات کاربر یافت نشد');
@@ -42,23 +42,29 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         return;
       }
 
-      final response = await _networkService.post(
+      final response = await Get.find<NetworkService>().post(
         endpoint: '/pay/generate-otp',
         data: {'account_number': accountNumber},
       );
 
-      if (response.data != null && response.data!['status'] == 'success') {
-        final data = response.data!['data'];
-        setState(() {
-          _otpCode = data['code']?.toString() ?? '';
-          _secondsRemaining = data['expires_in'] ?? 60;
-          _isLoading = false;
-        });
-        _startCountdown();
+      if (response.status == Status.completed && response.data != null) {
+        final responseData = response.data!;
+        if (responseData['status'] == 'success') {
+          final data = responseData['data'];
+          setState(() {
+            _otpCode = data['code']?.toString() ?? '';
+            _secondsRemaining = data['expires_in'] ?? 60;
+            _isLoading = false;
+          });
+          _startCountdown();
+        } else {
+          ToastHelper().showErrorToast(
+            responseData['message'] ?? 'خطا در تولید رمز',
+          );
+          setState(() => _isLoading = false);
+        }
       } else {
-        ToastHelper().showErrorToast(
-          response.data?['message'] ?? 'خطا در تولید رمز',
-        );
+        ToastHelper().showErrorToast(response.message ?? 'خطا در ارتباط با سرور');
         setState(() => _isLoading = false);
       }
     } catch (e) {
