@@ -7,6 +7,7 @@ import 'package:qunzo_user/src/app/routes/routes.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 
+import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
 import 'travel_theme.dart';
 
@@ -17,17 +18,46 @@ void showTravelMessage(
 }) {
   final messenger = ScaffoldMessenger.maybeOf(context);
   if (messenger == null) return;
+  final safeMessage = travelSafePresentationMessage(message);
   messenger
     ..hideCurrentSnackBar()
     ..showSnackBar(
       SnackBar(
-        content: Text('$title\n$message'),
+        content: Text('$title\n$safeMessage'),
         behavior: SnackBarBehavior.floating,
       ),
     );
 }
 
 enum TravelNavigationSection { dashboard, history, account }
+
+String travelSafePresentationMessage(String message) {
+  final trimmed = message.trim();
+  if (trimmed.isEmpty) return travelGenericErrorMessage;
+  final reference = _travelReferenceFromText(trimmed);
+  final looksUnsafe = RegExp(
+    r'(DioException|Exception|Error|StackTrace|package:|dart:|<html|{|"message")',
+    caseSensitive: false,
+  ).hasMatch(trimmed);
+  if (!looksUnsafe) return trimmed;
+  if (reference == null) return travelGenericErrorMessage;
+  return '$travelGenericErrorMessage Reference: $reference';
+}
+
+String? _travelReferenceFromText(String value) {
+  final match = RegExp(
+    r'(?:support[_ -]?reference|request[_ -]?reference|request[_ -]?id|correlation[_ -]?id|trace[_ -]?id|reference)["\s:=]+([A-Za-z0-9][A-Za-z0-9._:-]{0,79})',
+    caseSensitive: false,
+  ).firstMatch(value);
+  return match?.group(1);
+}
+
+TravelController ensureTravelController() {
+  if (Get.isRegistered<TravelController>()) {
+    return Get.find<TravelController>();
+  }
+  return Get.put(TravelController());
+}
 
 class TravelPage extends StatelessWidget {
   final String title;
@@ -92,7 +122,7 @@ class _TravelPageFooter extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (actionBar != null) actionBar!,
+        ?actionBar,
         TravelBottomNavigation(activeSection: activeSection),
       ],
     );
@@ -431,6 +461,177 @@ String travelLocalizedKey(AppLocalizations localization, String key) {
     'travelHotelBooking' => localization.travelHotelBooking,
     _ => key,
   };
+}
+
+String travelBackendText(BuildContext context, dynamic value) {
+  if (value == null) return '';
+  if (value is! Map) return value.toString().trim();
+  final map = Map<String, dynamic>.from(value);
+  final language = Localizations.localeOf(context).languageCode.toLowerCase();
+  final selected =
+      map[language] ??
+      (language == 'zh' ? map['zh-cn'] ?? map['zh_cn'] : null) ??
+      map['en'] ??
+      map.values.firstOrNull;
+  return selected?.toString().trim() ?? '';
+}
+
+String travelBackendFieldLabel(AppLocalizations localization, String key) {
+  return switch (key.toLowerCase()) {
+    'address' => localization.travelAddress,
+    'amenities' => localization.travelIncluded,
+    'airline' || 'airline_name' => localization.travelAirline,
+    'arrival' || 'arrival_time' => localization.travelArrival,
+    'aircraft' || 'aircraft_code' => localization.travelAircraft,
+    'baggage' || 'baggage_allowance' => localization.travelBaggage,
+    'board' || 'board_type' => localization.travelBoard,
+    'booking_number' => localization.travelBookingNumber,
+    'cabin' || 'cabin_class' => localization.travelCabin,
+    'cancellation' ||
+    'cancellation_policy' ||
+    'cancellation_rules' => localization.travelCancellationPolicy,
+    'check_in' || 'check_in_time' => localization.travelCheckIn,
+    'check_out' || 'check_out_time' => localization.travelCheckOut,
+    'child_count' || 'children' => localization.travelChildren,
+    'departure' || 'departure_time' => localization.travelDeparture,
+    'description' => localization.travelDescription,
+    'destination' || 'destination_name' => localization.travelDestination,
+    'duration' => localization.travelDuration,
+    'flight' || 'flight_number' => localization.travelFlightNumber,
+    'origin' || 'origin_name' => localization.travelOrigin,
+    'price' || 'total' || 'total_amount' => localization.travelTotal,
+    'rating' || 'stars' => localization.travelRating,
+    'refund_policy' || 'refundability' => localization.travelRefundPolicy,
+    'room' || 'room_name' => localization.travelRoom,
+    'room_count' || 'rooms' => localization.travelRooms,
+    'supplier_reference' => localization.travelSupplierReference,
+    'voucher_number' => localization.travelVoucherNumber,
+    _ =>
+      key
+          .replaceAll('_', ' ')
+          .split(' ')
+          .where((part) => part.isNotEmpty)
+          .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
+          .join(' '),
+  };
+}
+
+String travelBackendValue(BuildContext context, dynamic value) {
+  if (value == null) return '';
+  if (value is bool) return value ? '✓' : '—';
+  if (value is List) {
+    return value
+        .map((item) => travelBackendValue(context, item))
+        .where((item) => item.isNotEmpty)
+        .join(', ');
+  }
+  if (value is Map) {
+    final localized = travelBackendText(context, value);
+    if (localized.isNotEmpty && !localized.startsWith('{')) return localized;
+    final localization = AppLocalizations.of(context)!;
+    return value.entries
+        .map(
+          (entry) =>
+              '${travelBackendFieldLabel(localization, entry.key.toString())}: '
+              '${travelBackendValue(context, entry.value)}',
+        )
+        .where((item) => !item.endsWith(': '))
+        .join(' • ');
+  }
+  return value.toString().trim();
+}
+
+class TravelJourneyGuide extends StatelessWidget {
+  final int currentStep;
+  final List<String> steps;
+  final String? message;
+
+  const TravelJourneyGuide({
+    super.key,
+    required this.currentStep,
+    required this.steps,
+    this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TravelCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (message?.isNotEmpty == true) ...[
+            Text(
+              message!,
+              style: TextStyle(
+                color: TravelTheme.muted,
+                fontSize: 11.sp,
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: 14.h),
+          ],
+          Row(
+            children: [
+              for (var index = 0; index < steps.length; index++) ...[
+                Expanded(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 14.r,
+                        backgroundColor: index <= currentStep
+                            ? TravelTheme.blue
+                            : TravelTheme.border,
+                        child: index < currentStep
+                            ? const Icon(
+                                Icons.check_rounded,
+                                color: Colors.white,
+                                size: 16,
+                              )
+                            : Text(
+                                '${index + 1}',
+                                style: TextStyle(
+                                  color: index == currentStep
+                                      ? Colors.white
+                                      : TravelTheme.muted,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 10.sp,
+                                ),
+                              ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        steps[index],
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: index == currentStep
+                              ? TravelTheme.ink
+                              : TravelTheme.muted,
+                          fontSize: 9.sp,
+                          fontWeight: index == currentStep
+                              ? FontWeight.w900
+                              : FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (index != steps.length - 1)
+                  Container(
+                    width: 18.w,
+                    height: 2,
+                    color: index < currentStep
+                        ? TravelTheme.blue
+                        : TravelTheme.border,
+                  ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 String travelMoney(BuildContext context, TravelMoney money) {

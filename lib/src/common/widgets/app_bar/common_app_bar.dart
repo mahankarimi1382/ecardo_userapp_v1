@@ -67,7 +67,7 @@ class CommonAppBar extends StatelessWidget {
             ),
           ],
         ),
-        if (rightSideWidget != null) rightSideWidget!,
+        ?rightSideWidget,
         if (rightSideWidget == null &&
             rightSideIcon != null &&
             onPressed != null)

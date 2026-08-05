@@ -8,7 +8,6 @@ import 'package:qunzo_user/src/common/widgets/common_loading.dart';
 
 import '../account/travel_account_screen.dart';
 import '../bookings/travel_orders_screen.dart';
-import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
 import '../esim/esim_intro_screen.dart';
 import '../flights/flight_search_screen.dart';
@@ -22,7 +21,7 @@ class TravelHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final controller = Get.find<TravelController>();
+    final controller = ensureTravelController();
 
     return TravelPage(
       title: localization.travelTitle,

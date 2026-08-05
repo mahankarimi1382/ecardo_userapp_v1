@@ -6,8 +6,8 @@ version: 1.0.3+4
 
 environment:
   sdk: ^3.9.2
-#  Flutter version 3.35.7
-#  Dart version 3.9.2
+#  Flutter version 3.44.6
+#  Dart version 3.12.2
 
 dependencies:
   open_filex: ^4.5.2
@@ -22,6 +22,8 @@ dependencies:
   pin_code_fields: ^8.0.1
   fluttertoast: ^9.0.0
   flutter_rounded_date_picker: ^3.0.4
+  calendar_date_picker2: ^3.0.0
+  shamsi_date: ^1.1.0
   intl: ^0.20.2
   shared_preferences: ^2.5.3
   image_picker: ^1.2.0
@@ -54,8 +56,6 @@ dependencies:
   cached_network_image: ^3.4.1
 
 dev_dependencies:
-  open_filex: ^4.5.2
-  package_info_plus: ^8.0.0
   flutter_test:
     sdk: flutter
 

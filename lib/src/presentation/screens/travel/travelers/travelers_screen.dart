@@ -16,7 +16,7 @@ class TravelersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final controller = Get.find<TravelController>();
+    final controller = ensureTravelController();
     return TravelPage(
       title: localization.travelSavedTravelers,
       trailing: Padding(
@@ -32,7 +32,7 @@ class TravelersScreen extends StatelessWidget {
             : ListView.separated(
                 padding: EdgeInsets.all(20.r),
                 itemCount: controller.travelers.length,
-                separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                separatorBuilder: (_, _) => SizedBox(height: 12.h),
                 itemBuilder: (context, index) {
                   final traveler = controller.travelers[index];
                   return TravelCard(

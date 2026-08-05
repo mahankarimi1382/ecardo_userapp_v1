@@ -10,22 +10,22 @@
 | `7` | `TravelConfirmationScreen` for hotel | Checkout → Hotel Voucher |
 | `14` | `FlightSearchScreen` | Travel Home → Flight Search |
 | `13` | `FlightResultsScreen` | Flight Search → Flight Results |
-| `8` | `FlightDetailsScreen` and `TravelCheckoutScreen` | Results → Passenger Review → Checkout |
+| `8` | `FlightDetailsScreen` and `TravelCheckoutScreen` | Results → Fare Details → Beneficiary → Checkout |
 | `9` | `TravelOrdersScreen` filtered to flights | Account → My Flights |
 | `10` | `TravelConfirmationScreen` for flight | Checkout → Flight Ticket |
 | `esim_2` | `EsimIntroScreen` | Travel Home → eSIM Introduction |
 | `esim_1` | `EsimPackagesScreen` | Introduction → Package Selection |
 | `esim_3` | `TravelConfirmationScreen` for eSIM | Checkout → Activation Details |
 | `4` | `TravelOrdersScreen` filtered to eSIMs | Account → My eSIMs |
-| `11` | `TravelersScreen` | Account → Saved Travelers |
+| `11` | `TravelersScreen` | Dormant until saved-traveler persistence exists |
 | `12` | Existing authenticated `BaseRoute.profileSettings` | Account → Personal Information |
 | `15` | `TravelAccountScreen` | Travel Home → Account Hub |
-| `5` | `TravelHistoryScreen` | Account → Combined Travel and Wallet History |
+| `5` | `TravelHistoryScreen` | Account → Order-derived Travel activity |
 
 ## Primary Navigation
 
 - Hotel: Home → Search → Results → Details → Wallet Checkout → Voucher
-- Flight: Home → Search → Results → Passenger/Fare Review → Wallet Checkout → Ticket
+- Flight: Home → Search → Results → Fare Details → Beneficiary → Wallet Checkout → Ticket
 - eSIM: Home → Introduction → Packages → Wallet Checkout → Activation Details
 
 ## Shared Components

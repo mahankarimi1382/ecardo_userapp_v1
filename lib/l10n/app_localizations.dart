@@ -2810,6 +2810,18 @@ abstract class AppLocalizations {
   /// **'Other Services'**
   String get otherServicesTitle;
 
+  /// No description provided for @dynamicPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic Password'**
+  String get dynamicPasswordTitle;
+
+  /// No description provided for @dynamicPasswordDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'6-digit code for wallet payment'**
+  String get dynamicPasswordDesc;
+
   /// No description provided for @otherServicesQrCode.
   ///
   /// In en, this message translates to:
@@ -10802,6 +10814,24 @@ abstract class AppLocalizations {
   /// **'Departure date'**
   String get travelDepartureDate;
 
+  /// No description provided for @travelReturnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Return date'**
+  String get travelReturnDate;
+
+  /// No description provided for @travelOneWay.
+  ///
+  /// In en, this message translates to:
+  /// **'One-way'**
+  String get travelOneWay;
+
+  /// No description provided for @travelRoundTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Round trip'**
+  String get travelRoundTrip;
+
   /// No description provided for @travelAdults.
   ///
   /// In en, this message translates to:
@@ -10813,6 +10843,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Children'**
   String get travelChildren;
+
+  /// No description provided for @travelInfants.
+  ///
+  /// In en, this message translates to:
+  /// **'Infants'**
+  String get travelInfants;
+
+  /// No description provided for @travelCabinClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Cabin class'**
+  String get travelCabinClass;
+
+  /// No description provided for @travelEconomy.
+  ///
+  /// In en, this message translates to:
+  /// **'Economy'**
+  String get travelEconomy;
+
+  /// No description provided for @travelBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get travelBusiness;
 
   /// No description provided for @travelSearchFlights.
   ///
@@ -10832,11 +10886,41 @@ abstract class AppLocalizations {
   /// **'No matching flights were found.'**
   String get travelNoFlightResults;
 
+  /// No description provided for @travelAlternativeFlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative flights.'**
+  String get travelAlternativeFlights;
+
+  /// No description provided for @travelAlternativeFlightsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your exact search has no matches. These upcoming options are shown as alternatives; edit the search to change route or date.'**
+  String get travelAlternativeFlightsDescription;
+
   /// No description provided for @travelSelectFlight.
   ///
   /// In en, this message translates to:
   /// **'Select flight'**
   String get travelSelectFlight;
+
+  /// No description provided for @travelSelectReturnFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Select return flight'**
+  String get travelSelectReturnFlight;
+
+  /// No description provided for @travelOutboundFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Outbound flight'**
+  String get travelOutboundFlight;
+
+  /// No description provided for @travelReturnFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Return flight'**
+  String get travelReturnFlight;
 
   /// No description provided for @travelFlightDetails.
   ///
@@ -10951,6 +11035,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'eSIM packages'**
   String get travelEsimPackages;
+
+  /// No description provided for @travelNoEsimPackages.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching eSIM packages were found.'**
+  String get travelNoEsimPackages;
 
   /// No description provided for @travelChoosePackage.
   ///
@@ -11306,6 +11396,96 @@ abstract class AppLocalizations {
   /// **'Full name'**
   String get travelTravelerFullName;
 
+  /// No description provided for @travelFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First name'**
+  String get travelFirstName;
+
+  /// No description provided for @travelLastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last name'**
+  String get travelLastName;
+
+  /// No description provided for @travelBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get travelBirthDate;
+
+  /// No description provided for @travelPassportExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport expiry'**
+  String get travelPassportExpiry;
+
+  /// No description provided for @travelGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get travelGender;
+
+  /// No description provided for @travelMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get travelMale;
+
+  /// No description provided for @travelFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get travelFemale;
+
+  /// No description provided for @travelNotificationContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking notifications'**
+  String get travelNotificationContact;
+
+  /// No description provided for @travelPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile number'**
+  String get travelPhone;
+
+  /// No description provided for @travelEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get travelEmail;
+
+  /// No description provided for @travelPassengerDetailsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete every passenger and add a mobile number or email for booking updates.'**
+  String get travelPassengerDetailsRequired;
+
+  /// No description provided for @travelAdultPassenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Adult passenger'**
+  String get travelAdultPassenger;
+
+  /// No description provided for @travelChildPassenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Child passenger'**
+  String get travelChildPassenger;
+
+  /// No description provided for @travelInfantPassenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Infant passenger'**
+  String get travelInfantPassenger;
+
+  /// No description provided for @travelCompleteTravelerDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete traveler details'**
+  String get travelCompleteTravelerDetails;
+
   /// No description provided for @travelPassportNumber.
   ///
   /// In en, this message translates to:
@@ -11605,6 +11785,624 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hotel booking'**
   String get travelHotelBooking;
+
+  /// No description provided for @travelReviewStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get travelReviewStep;
+
+  /// No description provided for @travelConfirmationStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmation'**
+  String get travelConfirmationStep;
+
+  /// No description provided for @travelReviewConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I reviewed and confirm these details'**
+  String get travelReviewConfirmation;
+
+  /// No description provided for @travelReviewConfirmationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the traveler, product, total, and wallet before creating the reservation.'**
+  String get travelReviewConfirmationDescription;
+
+  /// No description provided for @travelReservationHoldActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete payment before this reservation expires'**
+  String get travelReservationHoldActive;
+
+  /// No description provided for @travelReservationExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Reservation expired. Start again to create a new hold.'**
+  String get travelReservationExpired;
+
+  /// No description provided for @travelNeedsAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention'**
+  String get travelNeedsAttention;
+
+  /// No description provided for @travelUpcomingAndActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming and active'**
+  String get travelUpcomingAndActive;
+
+  /// No description provided for @travelCancellationsAndRefunds.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellations and refunds'**
+  String get travelCancellationsAndRefunds;
+
+  /// No description provided for @travelPaymentPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment pending'**
+  String get travelPaymentPending;
+
+  /// No description provided for @travelPaymentProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment processing'**
+  String get travelPaymentProcessing;
+
+  /// No description provided for @travelVoucherIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Voucher issued'**
+  String get travelVoucherIssued;
+
+  /// No description provided for @travelCancellationRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation requested'**
+  String get travelCancellationRequested;
+
+  /// No description provided for @travelRefundInReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund in review'**
+  String get travelRefundInReview;
+
+  /// No description provided for @travelCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get travelCancelled;
+
+  /// No description provided for @travelExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get travelExpired;
+
+  /// No description provided for @travelStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Status unavailable'**
+  String get travelStatusUnavailable;
+
+  /// No description provided for @travelBookingCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking cancelled'**
+  String get travelBookingCancelled;
+
+  /// No description provided for @travelBookingExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking expired'**
+  String get travelBookingExpired;
+
+  /// No description provided for @travelCompletePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete payment'**
+  String get travelCompletePayment;
+
+  /// No description provided for @travelPaymentIsProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment is processing'**
+  String get travelPaymentIsProcessing;
+
+  /// No description provided for @travelFlightRequestSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight request submitted'**
+  String get travelFlightRequestSubmitted;
+
+  /// No description provided for @travelEsimRequestSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'eSIM request submitted'**
+  String get travelEsimRequestSubmitted;
+
+  /// No description provided for @travelBookingStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking status unavailable'**
+  String get travelBookingStatusUnavailable;
+
+  /// No description provided for @travelBookingCancelledDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This booking is cancelled. No active voucher is available.'**
+  String get travelBookingCancelledDescription;
+
+  /// No description provided for @travelBookingExpiredDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The booking hold expired before it reached a confirmed state.'**
+  String get travelBookingExpiredDescription;
+
+  /// No description provided for @travelCancellationRequestedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cancellation request is awaiting an authoritative supplier review.'**
+  String get travelCancellationRequestedDescription;
+
+  /// No description provided for @travelRefundInReviewDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your refund request is under review. The final amount and timing are not confirmed yet.'**
+  String get travelRefundInReviewDescription;
+
+  /// No description provided for @travelPaymentPendingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment has not been confirmed for this booking.'**
+  String get travelPaymentPendingDescription;
+
+  /// No description provided for @travelPaymentProcessingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The wallet result is still being verified. Do not submit another payment.'**
+  String get travelPaymentProcessingDescription;
+
+  /// No description provided for @travelSupplierPendingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was received, but supplier confirmation or the travel document is not ready yet.'**
+  String get travelSupplierPendingDescription;
+
+  /// No description provided for @travelUnknownStatusDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The latest booking state could not be recognized. Refresh My Bookings before taking further action.'**
+  String get travelUnknownStatusDescription;
+
+  /// No description provided for @travelConfirmedArtifactPendingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The booking is confirmed, but its voucher or ticket is not available yet.'**
+  String get travelConfirmedArtifactPendingDescription;
+
+  /// No description provided for @travelStatusReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Status reference'**
+  String get travelStatusReference;
+
+  /// No description provided for @travelRequestRefund.
+  ///
+  /// In en, this message translates to:
+  /// **'Request refund'**
+  String get travelRequestRefund;
+
+  /// No description provided for @travelCancelBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel booking'**
+  String get travelCancelBooking;
+
+  /// No description provided for @travelPurchaseDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase date'**
+  String get travelPurchaseDate;
+
+  /// No description provided for @travelSupplierReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplier reference'**
+  String get travelSupplierReference;
+
+  /// No description provided for @travelBookingNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking number'**
+  String get travelBookingNumber;
+
+  /// No description provided for @travelVoucherNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Voucher number'**
+  String get travelVoucherNumber;
+
+  /// No description provided for @travelRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get travelRoom;
+
+  /// No description provided for @travelRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get travelRooms;
+
+  /// No description provided for @travelBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get travelBoard;
+
+  /// No description provided for @travelCancellationPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation policy'**
+  String get travelCancellationPolicy;
+
+  /// No description provided for @travelBeneficiary.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger or beneficiary'**
+  String get travelBeneficiary;
+
+  /// No description provided for @travelDeparture.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
+  String get travelDeparture;
+
+  /// No description provided for @travelArrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival'**
+  String get travelArrival;
+
+  /// No description provided for @travelFlightNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight number'**
+  String get travelFlightNumber;
+
+  /// No description provided for @travelAirline.
+  ///
+  /// In en, this message translates to:
+  /// **'Airline'**
+  String get travelAirline;
+
+  /// No description provided for @travelCabin.
+  ///
+  /// In en, this message translates to:
+  /// **'Cabin'**
+  String get travelCabin;
+
+  /// No description provided for @travelBaggage.
+  ///
+  /// In en, this message translates to:
+  /// **'Baggage'**
+  String get travelBaggage;
+
+  /// No description provided for @travelRefundReviewNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This sends a request for review. Cancellation and refund are not immediate, and supplier penalties may apply.'**
+  String get travelRefundReviewNotice;
+
+  /// No description provided for @travelReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get travelReason;
+
+  /// No description provided for @travelReasonPlansChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel plans changed'**
+  String get travelReasonPlansChanged;
+
+  /// No description provided for @travelReasonBookingMistake.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking mistake'**
+  String get travelReasonBookingMistake;
+
+  /// No description provided for @travelReasonPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal reason'**
+  String get travelReasonPersonal;
+
+  /// No description provided for @travelAdditionalNoteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional note (optional)'**
+  String get travelAdditionalNoteOptional;
+
+  /// No description provided for @travelKeepBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep booking'**
+  String get travelKeepBooking;
+
+  /// No description provided for @travelSubmitRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit request'**
+  String get travelSubmitRequest;
+
+  /// No description provided for @travelCancellationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The booking cannot be cancelled from its current state.'**
+  String get travelCancellationUnavailable;
+
+  /// No description provided for @travelRefundRequestAwaitingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cancellation and refund request is awaiting review.'**
+  String get travelRefundRequestAwaitingReview;
+
+  /// No description provided for @travelPriceLowToHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: low to high'**
+  String get travelPriceLowToHigh;
+
+  /// No description provided for @travelPriceHighToLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: high to low'**
+  String get travelPriceHighToLow;
+
+  /// No description provided for @travelRatingHighToLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating: high to low'**
+  String get travelRatingHighToLow;
+
+  /// No description provided for @travelAllRatings.
+  ///
+  /// In en, this message translates to:
+  /// **'All ratings'**
+  String get travelAllRatings;
+
+  /// No description provided for @travelRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get travelRating;
+
+  /// No description provided for @travelSortAndFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort and filter'**
+  String get travelSortAndFilter;
+
+  /// No description provided for @travelShortestDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortest duration'**
+  String get travelShortestDuration;
+
+  /// No description provided for @travelNonRefundable.
+  ///
+  /// In en, this message translates to:
+  /// **'Non-refundable'**
+  String get travelNonRefundable;
+
+  /// No description provided for @travelEsimDeviceReadinessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check device compatibility'**
+  String get travelEsimDeviceReadinessTitle;
+
+  /// No description provided for @travelEsimDeviceReadinessDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Before purchase, confirm that your device supports eSIM and is unlocked for another mobile plan.'**
+  String get travelEsimDeviceReadinessDescription;
+
+  /// No description provided for @travelEsimCompatibilityNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Package purchase does not guarantee device compatibility. Installation details appear only after the backend marks the eSIM ready.'**
+  String get travelEsimCompatibilityNotice;
+
+  /// No description provided for @travelEsimValidity.
+  ///
+  /// In en, this message translates to:
+  /// **'Validity'**
+  String get travelEsimValidity;
+
+  /// No description provided for @travelEsimActivationReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your eSIM installation details are ready.'**
+  String get travelEsimActivationReady;
+
+  /// No description provided for @travelPaymentReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment received'**
+  String get travelPaymentReceived;
+
+  /// No description provided for @travelPaymentReceivedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was received. eCardo Travel is completing supplier confirmation before issuing the final document.'**
+  String get travelPaymentReceivedDescription;
+
+  /// No description provided for @travelSearchFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Search did not complete. Previous results are still shown when available; edit the search or try again.'**
+  String get travelSearchFailedDescription;
+
+  /// No description provided for @travelReservationFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Reservation could not be created. Your wallet was not charged by this app session.'**
+  String get travelReservationFailedDescription;
+
+  /// No description provided for @travelRefundFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The cancellation or refund request was not submitted. Please review the booking and try again.'**
+  String get travelRefundFailedDescription;
+
+  /// No description provided for @travelNoPaymentAttemptedAfterExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment was attempted or charged in this app session for this expired hold.'**
+  String get travelNoPaymentAttemptedAfterExpiry;
+
+  /// No description provided for @travelLastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated'**
+  String get travelLastUpdated;
+
+  /// No description provided for @travelJourneySearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get travelJourneySearch;
+
+  /// No description provided for @travelJourneyCompare.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get travelJourneyCompare;
+
+  /// No description provided for @travelJourneyReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get travelJourneyReview;
+
+  /// No description provided for @travelJourneyPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay'**
+  String get travelJourneyPay;
+
+  /// No description provided for @travelHotelSearchGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the destination, dates, and occupancy. Results and availability always come from the Travel backend.'**
+  String get travelHotelSearchGuidance;
+
+  /// No description provided for @travelHotelResultsGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare backend-provided price, rating, facilities, location, rooms, and policies before opening an option.'**
+  String get travelHotelResultsGuidance;
+
+  /// No description provided for @travelHotelDetailsGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the property, room facts, occupancy, price, and cancellation rules before continuing.'**
+  String get travelHotelDetailsGuidance;
+
+  /// No description provided for @travelFlightSearchGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the route, date, and passenger count. Flight availability and fares always come from the Travel backend.'**
+  String get travelFlightSearchGuidance;
+
+  /// No description provided for @travelFlightResultsGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare backend-provided times, airline, cabin, baggage, fare, and refundability before selecting.'**
+  String get travelFlightResultsGuidance;
+
+  /// No description provided for @travelFlightDetailsGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the flight, fare components, baggage, passenger count, and cancellation rules before continuing.'**
+  String get travelFlightDetailsGuidance;
+
+  /// No description provided for @travelSelectedForComparison.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String travelSelectedForComparison(int count);
+
+  /// No description provided for @travelCompare.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get travelCompare;
+
+  /// No description provided for @travelCompareLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You can compare up to three options at a time.'**
+  String get travelCompareLimit;
+
+  /// No description provided for @travelCompareHotels.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare hotels'**
+  String get travelCompareHotels;
+
+  /// No description provided for @travelCompareFlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare flights'**
+  String get travelCompareFlights;
+
+  /// No description provided for @travelComparisonUsesBackendFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Only facts returned by the backend are shown. Missing facts are not inferred.'**
+  String get travelComparisonUsesBackendFacts;
+
+  /// No description provided for @travelAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get travelAddress;
+
+  /// No description provided for @travelAircraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Aircraft'**
+  String get travelAircraft;
+
+  /// No description provided for @travelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get travelDescription;
+
+  /// No description provided for @travelDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get travelDuration;
+
+  /// No description provided for @travelRefundPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund policy'**
+  String get travelRefundPolicy;
+
+  /// No description provided for @travelPostPurchaseGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel.'**
+  String get travelPostPurchaseGuidance;
 }
 
 class _AppLocalizationsDelegate

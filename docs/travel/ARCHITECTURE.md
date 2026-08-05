@@ -35,30 +35,44 @@ Provider payloads must be translated by the eCardo backend into the domain shape
 
 ## Localization and Direction
 
-Visible interface copy is represented by keys in `lib/l10n/app_en.arb`. English is the complete initial Travel locale. Other locale ARBs can be translated incrementally through the repository's normal localization workflow.
+Visible interface copy belongs in the locale ARBs. Generated localization
+classes exist for English, Persian, Arabic, Russian, and Chinese, but many
+Travel values in non-English locales remain untranslated English. Generated
+localization Dart files are not edited manually.
 
-Screens inherit locale direction from the application. Direction-aware padding and alignment use `EdgeInsetsDirectional`, `AlignmentDirectional`, and `PositionedDirectional`. Prices, booking references, airport codes, passport values, routes, and times use explicit LTR direction where required.
-
-Generated localization Dart files are not edited manually.
+Screens inherit locale direction from the application. Direction-aware padding
+and alignment use directional Flutter APIs. Provider-originated mixed-script
+text uses first-strong-character direction detection. Prices, booking
+references, airport codes, passport values, routes, and times use explicit LTR
+direction where required.
 
 ## Wallet Checkout
 
-Travel checkout selects the wallet marked `isDefault` in the shared `HomeController.walletsList`, with the IRR wallet as a fallback.
+Travel checkout selects a wallet whose currency matches the offer. It does not
+fall back to a default or IRR wallet for a different-currency purchase.
 
 The intended live sequence is:
 
-1. Request or revalidate a normalized offer through `trip.ecardo.ir`.
-2. Create a booking/payment intent with an idempotency key.
-3. Display the backend-confirmed total and selected main wallet.
-4. Submit wallet payment once.
-5. Poll or retrieve the resulting order.
-6. Render a voucher, ticket, or eSIM activation artifact.
+1. Load normalized offer details through `trip.ecardo.ir`.
+2. Create a timed reservation with an idempotency key.
+3. Verify the backend-confirmed total and currency.
+4. Display the reservation deadline and matching-currency wallet.
+5. Submit wallet payment once.
+6. Retrieve the resulting order.
+7. Render a confirmed artifact only when the backend status supports it.
 
 The checkout controller blocks duplicate taps and reuses an active idempotency key until the request succeeds. If the wallet balance is insufficient, checkout routes to `BaseRoute.addMoney` and refreshes both shared wallet and user state when the user returns.
 
-Services marked `mock` by bootstrap can be browsed but cannot reach checkout. Live hotel checkout also requires an explicit backend capability such as `purchase`, `book`, `booking`, or `checkout`. This guarantees that demo or incompletely configured services never produce a fake confirmation or wallet transaction. Booking creation also verifies that the authoritative payable amount and currency still match the displayed gateway offer before wallet capture.
+Services marked `mock` by bootstrap can be browsed but cannot reach checkout.
+Catalog services require `catalog_checkout` or `sandbox_purchase`; live
+services require an explicit purchase capability. Booking creation verifies
+that authoritative amount and currency still match the displayed offer before
+wallet capture.
 
-Travel access tokens are cached only until shortly before the gateway-provided expiration time. Payment responses must reach an explicit paid/booked/completed state before Flutter presents success.
+Travel access tokens are cached only until shortly before gateway-provided
+expiration. Payment receipt and artifact issuance are separate states. Flutter
+must communicate pending supplier confirmation instead of treating every
+wallet capture as a confirmed booking.
 
 Flutter totals are presentation values only. The live backend must remain authoritative for availability, pricing, taxes, currency, payment, and order status.
 

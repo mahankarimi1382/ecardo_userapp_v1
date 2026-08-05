@@ -11,7 +11,6 @@ import 'package:printing/printing.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
 
-import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
@@ -25,17 +24,48 @@ class TravelConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final isSuccessful =
-        order.status != TravelOrderStatus.failed &&
-        order.status != TravelOrderStatus.refunded;
+    final isSuccessful = {
+      TravelOrderStatus.issued,
+      TravelOrderStatus.active,
+      TravelOrderStatus.completed,
+    }.contains(order.status);
+    final isEsimReady =
+        order.type == TravelProductType.esim && order.hasReadyEsimActivation;
+    final isEsimWaitingForActivation =
+        order.type == TravelProductType.esim &&
+        {
+          TravelOrderStatus.confirmed,
+          TravelOrderStatus.supplierPending,
+          TravelOrderStatus.paymentProcessing,
+        }.contains(order.status);
+    final isTerminalProblem = {
+      TravelOrderStatus.failed,
+      TravelOrderStatus.expired,
+      TravelOrderStatus.cancelled,
+    }.contains(order.status);
     final title = switch (order.status) {
       TravelOrderStatus.failed => localization.travelBookingFailed,
       TravelOrderStatus.refunded => localization.travelBookingRefunded,
-      _ => switch (order.type) {
-        TravelProductType.hotel =>
-          order.status == TravelOrderStatus.pending
-              ? localization.travelHotelBookingSubmitted
-              : localization.travelHotelVoucher,
+      TravelOrderStatus.cancelled => localization.travelBookingCancelled,
+      TravelOrderStatus.expired => localization.travelBookingExpired,
+      TravelOrderStatus.cancellationPending =>
+        localization.travelCancellationRequested,
+      TravelOrderStatus.refundPending => localization.travelRefundInReview,
+      TravelOrderStatus.paymentPending => localization.travelCompletePayment,
+      TravelOrderStatus.paymentProcessing =>
+        localization.travelPaymentIsProcessing,
+      TravelOrderStatus.paymentReceived => localization.travelPaymentReceived,
+      TravelOrderStatus.supplierPending => switch (order.type) {
+        TravelProductType.hotel => localization.travelHotelBookingSubmitted,
+        TravelProductType.flight => localization.travelFlightRequestSubmitted,
+        TravelProductType.esim => localization.travelEsimRequestSubmitted,
+      },
+      TravelOrderStatus.unknown => localization.travelBookingStatusUnavailable,
+      TravelOrderStatus.confirmed => localization.travelConfirmed,
+      TravelOrderStatus.issued ||
+      TravelOrderStatus.active ||
+      TravelOrderStatus.completed => switch (order.type) {
+        TravelProductType.hotel => localization.travelHotelVoucher,
         TravelProductType.flight => localization.travelFlightTicket,
         TravelProductType.esim => localization.travelEsimActivation,
       },
@@ -44,23 +74,34 @@ class TravelConfirmationScreen extends StatelessWidget {
       TravelOrderStatus.failed => localization.travelBookingFailedDescription,
       TravelOrderStatus.refunded =>
         localization.travelBookingRefundedDescription,
-      _ => switch (order.type) {
-        TravelProductType.hotel =>
-          order.status == TravelOrderStatus.pending
-              ? localization.travelHotelPendingConfirmationDescription
-              : localization.travelVoucherReady,
+      TravelOrderStatus.cancelled =>
+        localization.travelBookingCancelledDescription,
+      TravelOrderStatus.expired => localization.travelBookingExpiredDescription,
+      TravelOrderStatus.cancellationPending =>
+        localization.travelCancellationRequestedDescription,
+      TravelOrderStatus.refundPending =>
+        localization.travelRefundInReviewDescription,
+      TravelOrderStatus.paymentPending =>
+        localization.travelPaymentPendingDescription,
+      TravelOrderStatus.paymentProcessing =>
+        localization.travelPaymentProcessingDescription,
+      TravelOrderStatus.paymentReceived =>
+        localization.travelPaymentReceivedDescription,
+      TravelOrderStatus.supplierPending =>
+        localization.travelSupplierPendingDescription,
+      TravelOrderStatus.unknown => localization.travelUnknownStatusDescription,
+      TravelOrderStatus.confirmed =>
+        localization.travelConfirmedArtifactPendingDescription,
+      TravelOrderStatus.issued ||
+      TravelOrderStatus.active ||
+      TravelOrderStatus.completed => switch (order.type) {
+        TravelProductType.hotel => localization.travelVoucherReady,
         TravelProductType.flight => localization.travelTicketReady,
-        TravelProductType.esim => localization.travelEsimReady,
+        TravelProductType.esim => localization.travelEsimActivationReady,
       },
     };
-    final statusText = switch (order.status) {
-      TravelOrderStatus.pending => localization.travelPendingConfirmation,
-      TravelOrderStatus.confirmed => localization.travelConfirmed,
-      TravelOrderStatus.active => localization.travelActive,
-      TravelOrderStatus.completed => localization.travelCompleted,
-      TravelOrderStatus.refunded => localization.travelRefunded,
-      TravelOrderStatus.failed => localization.travelFailed,
-    };
+    final statusText = travelOrderStatusText(localization, order.status);
+    final statusColor = travelOrderStatusColor(order.status);
     return TravelPage(
       title: title,
       bottomNavigationBar: SafeArea(
@@ -88,19 +129,35 @@ class TravelConfirmationScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSuccessful
                     ? const Color(0xFFEAF7EF)
-                    : const Color(0xFFFFEBEE),
+                    : isTerminalProblem
+                    ? const Color(0xFFFFEBEE)
+                    : TravelTheme.yellow.withValues(alpha: .18),
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                isSuccessful ? Icons.check_rounded : Icons.close_rounded,
+                isEsimWaitingForActivation
+                    ? Icons.hourglass_top_rounded
+                    : isSuccessful
+                    ? Icons.check_rounded
+                    : travelOrderStatusIcon(order.status),
                 size: 52,
-                color: isSuccessful ? TravelTheme.green : TravelTheme.red,
+                color: isEsimWaitingForActivation
+                    ? statusColor
+                    : isSuccessful
+                    ? TravelTheme.green
+                    : isTerminalProblem
+                    ? TravelTheme.red
+                    : statusColor,
               ),
             ),
           ),
           SizedBox(height: 18.h),
           Text(
-            isSuccessful ? localization.travelPurchaseSuccessful : statusText,
+            isEsimWaitingForActivation
+                ? statusText
+                : isEsimReady || isSuccessful
+                ? localization.travelPurchaseSuccessful
+                : statusText,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w900),
           ),
@@ -109,6 +166,17 @@ class TravelConfirmationScreen extends StatelessWidget {
             description,
             textAlign: TextAlign.center,
             style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp),
+          ),
+          SizedBox(height: 18.h),
+          TravelJourneyGuide(
+            currentStep: 3,
+            steps: [
+              localization.travelJourneySearch,
+              localization.travelJourneyCompare,
+              localization.travelJourneyReview,
+              localization.travelJourneyPay,
+            ],
+            message: localization.travelPostPurchaseGuidance,
           ),
           SizedBox(height: 26.h),
           TravelCard(
@@ -140,6 +208,15 @@ class TravelConfirmationScreen extends StatelessWidget {
                   label: localization.travelStatus,
                   value: statusText,
                 ),
+                if (order.status == TravelOrderStatus.unknown &&
+                    order.effectiveRawStatus.isNotEmpty) ...[
+                  const Divider(),
+                  _ConfirmationRow(
+                    label: localization.travelStatusReference,
+                    value: order.effectiveRawStatus,
+                    forceLtr: true,
+                  ),
+                ],
                 const Divider(),
                 _ConfirmationRow(
                   label: localization.travelPaidAmount,
@@ -149,9 +226,7 @@ class TravelConfirmationScreen extends StatelessWidget {
               ],
             ),
           ),
-          if (order.type != TravelProductType.esim &&
-              order.status != TravelOrderStatus.failed &&
-              order.status != TravelOrderStatus.refunded) ...[
+          if (order.hasIssuedVoucher) ...[
             SizedBox(height: 16.h),
             TravelVoucherCard(order: order),
             SizedBox(height: 16.h),
@@ -162,15 +237,15 @@ class TravelConfirmationScreen extends StatelessWidget {
               onPressed: () => downloadTravelVoucher(context, order),
             ),
           ],
-          if (_canRequestTravelRefund(order)) ...[
+          if (order.canRequestCancellation) ...[
             SizedBox(height: 12.h),
             Obx(() {
-              final controller = Get.find<TravelController>();
+              final controller = ensureTravelController();
               return CommonButton(
                 width: double.infinity,
-                text: order.details['raw_status'] == 'voucher_generated'
-                    ? 'Request refund'
-                    : 'Cancel booking',
+                text: order.effectiveRawStatus == 'voucher_generated'
+                    ? localization.travelRequestRefund
+                    : localization.travelCancelBooking,
                 backgroundColor: Colors.white,
                 textColor: TravelTheme.red,
                 borderColor: TravelTheme.red,
@@ -181,7 +256,7 @@ class TravelConfirmationScreen extends StatelessWidget {
               );
             }),
           ],
-          if (order.type == TravelProductType.esim) ...[
+          if (order.hasReadyEsimActivation) ...[
             SizedBox(height: 16.h),
             TravelCard(
               color: TravelTheme.yellow.withValues(alpha: .13),
@@ -327,10 +402,10 @@ List<TravelVoucherEntry> travelVoucherEntries(
     ),
     TravelVoucherEntry(
       label: localization.travelStatus,
-      value: _travelOrderStatusText(localization, order.status),
+      value: travelOrderStatusText(localization, order.status),
     ),
     TravelVoucherEntry(
-      label: 'Purchase date',
+      label: localization.travelPurchaseDate,
       value: DateFormat.yMMMd(
         locale,
       ).add_Hm().format(order.createdAt.toLocal()),
@@ -348,7 +423,7 @@ List<TravelVoucherEntry> travelVoucherEntries(
     if (value.isEmpty || hiddenDetails.contains(detail.key)) continue;
     entries.add(
       TravelVoucherEntry(
-        label: _voucherLabel(detail.key),
+        label: _voucherLabel(localization, detail.key),
         value: value,
         forceLtr: _voucherValueIsLtr(detail.key),
       ),
@@ -368,41 +443,29 @@ String travelVoucherData(TravelOrder order) => [
   order.details['supplier_reference'] ?? '',
 ].join('|');
 
-String _travelOrderStatusText(
-  AppLocalizations localization,
-  TravelOrderStatus status,
-) => switch (status) {
-  TravelOrderStatus.pending => localization.travelPendingConfirmation,
-  TravelOrderStatus.active => localization.travelActive,
-  TravelOrderStatus.confirmed => localization.travelConfirmed,
-  TravelOrderStatus.completed => localization.travelCompleted,
-  TravelOrderStatus.refunded => localization.travelRefunded,
-  TravelOrderStatus.failed => localization.travelFailed,
-};
-
-String _voucherLabel(String key) {
-  const labels = {
-    'supplier_reference': 'Supplier reference',
-    'booking_number': 'Booking number',
-    'voucher_number': 'Voucher number',
-    'voucher_issued_at': 'Voucher issued',
-    'check_in': 'Check-in',
-    'check_out': 'Check-out',
-    'room': 'Room',
-    'room_count': 'Rooms',
-    'adult_count': 'Adults',
-    'child_count': 'Children',
-    'board_type': 'Board',
-    'cancellation_policy': 'Cancellation policy',
-    'beneficiary': 'Passenger / beneficiary',
-    'origin': 'Origin',
-    'destination': 'Destination',
-    'departure': 'Departure',
-    'arrival': 'Arrival',
-    'flight_number': 'Flight number',
-    'airline': 'Airline',
-    'cabin': 'Cabin',
-    'baggage': 'Baggage',
+String _voucherLabel(AppLocalizations localization, String key) {
+  final labels = {
+    'supplier_reference': localization.travelSupplierReference,
+    'booking_number': localization.travelBookingNumber,
+    'voucher_number': localization.travelVoucherNumber,
+    'voucher_issued_at': localization.travelVoucherIssued,
+    'check_in': localization.travelCheckIn,
+    'check_out': localization.travelCheckOut,
+    'room': localization.travelRoom,
+    'room_count': localization.travelRooms,
+    'adult_count': localization.travelAdults,
+    'child_count': localization.travelChildren,
+    'board_type': localization.travelBoard,
+    'cancellation_policy': localization.travelCancellationPolicy,
+    'beneficiary': localization.travelBeneficiary,
+    'origin': localization.travelOrigin,
+    'destination': localization.travelDestination,
+    'departure': localization.travelDeparture,
+    'arrival': localization.travelArrival,
+    'flight_number': localization.travelFlightNumber,
+    'airline': localization.travelAirline,
+    'cabin': localization.travelCabin,
+    'baggage': localization.travelBaggage,
   };
   return labels[key] ??
       key
@@ -424,15 +487,12 @@ bool _voucherValueIsLtr(String key) => {
   'flight_number',
 }.contains(key);
 
-bool _canRequestTravelRefund(TravelOrder order) =>
-    order.type != TravelProductType.esim &&
-    {'booked', 'voucher_generated'}.contains(order.details['raw_status']);
-
 Future<void> _showRefundRequestDialog(
   BuildContext context,
   TravelOrder order,
 ) async {
-  final controller = Get.find<TravelController>();
+  final controller = ensureTravelController();
+  final localization = AppLocalizations.of(context)!;
   final noteController = TextEditingController();
   var reasonCode = 'TRIP_CHANGED';
   final confirmed = await showDialog<bool>(
@@ -440,36 +500,39 @@ Future<void> _showRefundRequestDialog(
     builder: (dialogContext) => StatefulBuilder(
       builder: (context, setState) => AlertDialog(
         title: Text(
-          order.details['raw_status'] == 'voucher_generated'
-              ? 'Request refund'
-              : 'Cancel booking',
+          order.effectiveRawStatus == 'voucher_generated'
+              ? localization.travelRequestRefund
+              : localization.travelCancelBooking,
         ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'This sends a request for review. Cancellation and refund are not immediate, and supplier penalties may apply.',
-              ),
+              Text(localization.travelRefundReviewNotice),
               SizedBox(height: 16.h),
               DropdownButtonFormField<String>(
                 initialValue: reasonCode,
-                decoration: const InputDecoration(labelText: 'Reason'),
-                items: const [
+                decoration: InputDecoration(
+                  labelText: localization.travelReason,
+                ),
+                items: [
                   DropdownMenuItem(
                     value: 'TRIP_CHANGED',
-                    child: Text('Travel plans changed'),
+                    child: Text(localization.travelReasonPlansChanged),
                   ),
                   DropdownMenuItem(
                     value: 'BOOKING_MISTAKE',
-                    child: Text('Booking mistake'),
+                    child: Text(localization.travelReasonBookingMistake),
                   ),
                   DropdownMenuItem(
                     value: 'PERSONAL_REASON',
-                    child: Text('Personal reason'),
+                    child: Text(localization.travelReasonPersonal),
                   ),
-                  DropdownMenuItem(value: 'OTHER', child: Text('Other')),
+                  DropdownMenuItem(
+                    value: 'OTHER',
+                    child: Text(localization.commonDropdownOther),
+                  ),
                 ],
                 onChanged: (value) =>
                     setState(() => reasonCode = value ?? reasonCode),
@@ -479,8 +542,8 @@ Future<void> _showRefundRequestDialog(
                 controller: noteController,
                 maxLength: 1000,
                 maxLines: 4,
-                decoration: const InputDecoration(
-                  labelText: 'Additional note (optional)',
+                decoration: InputDecoration(
+                  labelText: localization.travelAdditionalNoteOptional,
                   alignLabelWithHint: true,
                 ),
               ),
@@ -490,11 +553,11 @@ Future<void> _showRefundRequestDialog(
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Keep booking'),
+            child: Text(localization.travelKeepBooking),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Submit request'),
+            child: Text(localization.travelSubmitRequest),
           ),
         ],
       ),
@@ -513,18 +576,12 @@ Future<void> _showRefundRequestDialog(
   if (!context.mounted) return;
   if (updatedOrder == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'The booking cannot be cancelled from its current state.',
-        ),
-      ),
+      SnackBar(content: Text(localization.travelCancellationUnavailable)),
     );
     return;
   }
   ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Your cancellation and refund request is awaiting review.'),
-    ),
+    SnackBar(content: Text(localization.travelRefundRequestAwaitingReview)),
   );
   await Navigator.of(context).pushReplacement(
     MaterialPageRoute<void>(

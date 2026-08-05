@@ -3,6 +3,12 @@ import '../models/travel_models.dart';
 abstract interface class TravelRepository {
   Future<TravelBootstrap> getBootstrap();
 
+  Future<List<TravelSuggestion>> getSuggestions(
+    TravelProductType type, {
+    String query,
+    int limit,
+  });
+
   Future<List<TravelOffer>> searchHotels(TravelHotelSearch search);
 
   Future<List<TravelOffer>> searchFlights(TravelFlightSearch search);
@@ -16,6 +22,13 @@ abstract interface class TravelRepository {
   Future<List<TravelTraveler>> getTravelers();
 
   Future<TravelTraveler> saveTraveler(TravelTraveler traveler);
+
+  Future<TravelTravelerProfile> getTravelerProfile();
+
+  Future<TravelTravelerProfile> updateTravelerProfile(
+    TravelPassenger passenger, {
+    String phone,
+  });
 
   Future<List<TravelOrder>> getOrders();
 

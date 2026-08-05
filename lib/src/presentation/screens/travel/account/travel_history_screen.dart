@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qunzo_user/l10n/app_localizations.dart';
 
-import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
@@ -14,7 +13,7 @@ class TravelHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final controller = Get.find<TravelController>();
+    final controller = ensureTravelController();
     return TravelPage(
       title: localization.travelHistory,
       activeSection: TravelNavigationSection.history,
@@ -24,7 +23,7 @@ class TravelHistoryScreen extends StatelessWidget {
             : ListView.separated(
                 padding: EdgeInsets.all(20.r),
                 itemCount: controller.activity.length,
-                separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                separatorBuilder: (_, _) => SizedBox(height: 12.h),
                 itemBuilder: (context, index) {
                   final item = controller.activity[index];
                   final color = item.isCredit
@@ -52,10 +51,7 @@ class TravelHistoryScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                travelLocalizedKey(
-                                  localization,
-                                  item.titleKey,
-                                ),
+                                travelLocalizedKey(localization, item.titleKey),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                 ),

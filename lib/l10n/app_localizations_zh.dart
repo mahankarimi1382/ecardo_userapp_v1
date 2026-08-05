@@ -1363,6 +1363,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get otherServicesTitle => '其他服务';
 
   @override
+  String get dynamicPasswordTitle => '动态密码';
+
+  @override
+  String get dynamicPasswordDesc => '用于钱包支付的 6 位验证码';
+
+  @override
   String get otherServicesQrCode => '二维码';
 
   @override
@@ -5351,481 +5357,551 @@ class AppLocalizationsZh extends AppLocalizations {
   String get filterMyOrder => '筛选我的订单';
 
   @override
-  String get comment_travel => '==== eCardo Travel ====';
+  String get comment_travel => '==== eCardo 旅行 ====';
 
   @override
-  String get travelTitle => 'eCardo Travel';
+  String get travelTitle => 'eCardo 旅行';
 
   @override
-  String get travelHeroEyebrow => 'A better travel experience';
+  String get travelHeroEyebrow => '更好的旅行体验';
 
   @override
-  String get travelHeroTitle => 'Book your next journey today';
+  String get travelHeroTitle => '立即预订下一段旅程';
 
   @override
-  String get travelFlights => 'Flights';
+  String get travelFlights => '航班';
 
   @override
-  String get travelHotels => 'Hotels';
+  String get travelHotels => '酒店';
 
   @override
   String get travelEsim => 'eSIM';
 
   @override
-  String get travelRecentActivity => 'Recent activity';
+  String get travelRecentActivity => '最近活动';
 
   @override
-  String get travelViewAll => 'View all';
+  String get travelViewAll => '查看全部';
 
   @override
-  String get travelMainWallet => 'Main eCardo wallet';
+  String get travelMainWallet => 'eCardo 主钱包';
 
   @override
-  String get travelWalletSharedDescription =>
-      'The same secure wallet you use across eCardo';
+  String get travelWalletSharedDescription => '与你在 eCardo 中使用的同一个安全钱包';
 
   @override
-  String get travelHotelSearch => 'Hotel search';
+  String get travelHotelSearch => '酒店搜索';
 
   @override
-  String get travelHotelHero => 'Stay somewhere unforgettable';
+  String get travelHotelHero => '入住难忘之地';
 
   @override
-  String get travelDestinationCountry => 'Destination country';
+  String get travelDestinationCountry => '目的地国家';
 
   @override
-  String get travelDestinationCity => 'City';
+  String get travelDestinationCity => '城市';
 
   @override
-  String get travelCheckIn => 'Check-in';
+  String get travelCheckIn => '入住';
 
   @override
-  String get travelCheckOut => 'Check-out';
+  String get travelCheckOut => '退房';
 
   @override
-  String get travelGuests => 'Guests';
+  String get travelGuests => '住客';
 
   @override
-  String get travelSearchHotels => 'Search hotels';
+  String get travelSearchHotels => '搜索酒店';
 
   @override
-  String get travelRecentSearches => 'Recent searches';
+  String get travelRecentSearches => '最近搜索';
 
   @override
-  String get travelHotelResults => 'Hotel results';
+  String get travelHotelResults => '酒店结果';
 
   @override
-  String get travelNoHotelResults => 'No matching hotels were found.';
+  String get travelNoHotelResults => '未找到匹配的酒店。';
 
   @override
-  String get travelStartingPrice => 'Starting price per stay';
+  String get travelStartingPrice => '每次住宿起价';
 
   @override
-  String get travelViewDetails => 'View details';
+  String get travelViewDetails => '查看详情';
 
   @override
-  String get travelHotelDetails => 'Hotel details';
+  String get travelHotelDetails => '酒店详情';
 
   @override
-  String get travelOfferUnavailable => 'This offer is no longer available.';
+  String get travelOfferUnavailable => '此优惠已不可用。';
 
   @override
-  String get travelReserveHotel => 'Reserve hotel';
+  String get travelReserveHotel => '预订酒店';
 
   @override
-  String get travelIncluded => 'Included';
+  String get travelIncluded => '已包含';
 
   @override
-  String get travelFree => 'Free';
+  String get travelFree => '免费';
 
   @override
-  String get travelAboutHotel => 'About the hotel';
+  String get travelAboutHotel => '关于酒店';
 
   @override
   String get travelHotelDescription =>
-      'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the eCardo Travel API.';
+      '精致的城市住宿，提供舒适客房、贴心服务，并可便捷前往主要景点。最终房间内容和政策将由 eCardo Travel API 提供。';
 
   @override
-  String get travelPolicies => 'Policies';
+  String get travelPolicies => '政策';
 
   @override
-  String get travelCancellation => 'Cancellation';
+  String get travelCancellation => '取消';
 
   @override
-  String get travelCancellationSummary =>
-      'Free cancellation before the stated deadline';
+  String get travelCancellationSummary => '在规定截止时间前可免费取消';
 
   @override
-  String get travelFlightSearch => 'Flight search';
+  String get travelFlightSearch => '航班搜索';
 
   @override
-  String get travelFlightHero => 'Your dream journey starts here';
+  String get travelFlightHero => '梦想旅程从这里开始';
 
   @override
-  String get travelOrigin => 'Origin';
+  String get travelOrigin => '出发地';
 
   @override
-  String get travelDestination => 'Destination';
+  String get travelDestination => '目的地';
 
   @override
-  String get travelDepartureDate => 'Departure date';
+  String get travelDepartureDate => '出发日期';
 
   @override
-  String get travelAdults => 'Adults';
+  String get travelReturnDate => '返程日期';
 
   @override
-  String get travelChildren => 'Children';
+  String get travelOneWay => '单程';
 
   @override
-  String get travelSearchFlights => 'Search flights';
+  String get travelRoundTrip => '往返';
 
   @override
-  String get travelFlightResults => 'Flight results';
+  String get travelAdults => '成人';
 
   @override
-  String get travelNoFlightResults => 'No matching flights were found.';
+  String get travelChildren => '儿童';
 
   @override
-  String get travelSelectFlight => 'Select flight';
+  String get travelInfants => '婴儿';
 
   @override
-  String get travelFlightDetails => 'Flight and passenger details';
+  String get travelCabinClass => '舱位等级';
 
   @override
-  String get travelContinueToPayment => 'Continue to payment';
+  String get travelEconomy => '经济舱';
 
   @override
-  String get travelPassengerReview => 'Passenger review';
+  String get travelBusiness => '商务舱';
 
   @override
-  String get travelPrimaryPassenger => 'Primary passenger';
+  String get travelSearchFlights => '搜索航班';
 
   @override
-  String get travelPassengerFromProfile =>
-      'Details are shared from your eCardo profile';
+  String get travelFlightResults => '航班结果';
 
   @override
-  String get travelFareDetails => 'Fare details';
+  String get travelNoFlightResults => '未找到匹配的航班。';
 
   @override
-  String get travelBaseFare => 'Base fare';
+  String get travelAlternativeFlights => '备选航班';
 
   @override
-  String get travelTaxesAndFees => 'Taxes and fees';
+  String get travelAlternativeFlightsDescription =>
+      '你的精确搜索没有匹配结果。以下临近选项仅作为备选；可编辑搜索以更改路线或日期。';
 
   @override
-  String get travelTotal => 'Total';
+  String get travelSelectFlight => '选择航班';
 
   @override
-  String get travelBrowseEsimPackages => 'Browse eSIM packages';
+  String get travelSelectReturnFlight => '选择返程航班';
 
   @override
-  String get travelEsimIntroTitle => 'Stay connected wherever you travel';
+  String get travelOutboundFlight => '去程航班';
+
+  @override
+  String get travelReturnFlight => '返程航班';
+
+  @override
+  String get travelFlightDetails => '航班和乘客详情';
+
+  @override
+  String get travelContinueToPayment => '继续支付';
+
+  @override
+  String get travelPassengerReview => '乘客确认';
+
+  @override
+  String get travelPrimaryPassenger => '主要乘客';
+
+  @override
+  String get travelPassengerFromProfile => '详情来自你的 eCardo 个人资料';
+
+  @override
+  String get travelFareDetails => '票价详情';
+
+  @override
+  String get travelBaseFare => '基础票价';
+
+  @override
+  String get travelTaxesAndFees => '税费';
+
+  @override
+  String get travelTotal => '总计';
+
+  @override
+  String get travelBrowseEsimPackages => '浏览 eSIM 套餐';
+
+  @override
+  String get travelEsimIntroTitle => '无论去哪里都保持连接';
 
   @override
   String get travelEsimIntroDescription =>
-      'Choose a digital data package, pay from your main eCardo wallet and activate it without replacing your physical SIM.';
+      '选择数字流量套餐，用 eCardo 主钱包支付，无需更换实体 SIM 卡即可激活。';
 
   @override
-  String get travelEsimInstantTitle => 'Instant delivery';
+  String get travelEsimInstantTitle => '即时交付';
 
   @override
-  String get travelEsimInstantDescription =>
-      'Activation details are available immediately after payment.';
+  String get travelEsimInstantDescription => '付款后可立即获取激活详情。';
 
   @override
-  String get travelEsimCoverageTitle => 'Travel-ready coverage';
+  String get travelEsimCoverageTitle => '旅行覆盖';
 
   @override
-  String get travelEsimCoverageDescription =>
-      'Choose local or global packages for your destination.';
+  String get travelEsimCoverageDescription => '为目的地选择本地或全球套餐。';
 
   @override
-  String get travelEsimTransparentTitle => 'Transparent pricing';
+  String get travelEsimTransparentTitle => '透明定价';
 
   @override
-  String get travelEsimTransparentDescription =>
-      'See the backend-confirmed total before you pay.';
+  String get travelEsimTransparentDescription => '付款前查看后端确认的总价。';
 
   @override
-  String get travelEsimPackages => 'eSIM packages';
+  String get travelEsimPackages => 'eSIM 套餐';
 
   @override
-  String get travelChoosePackage => 'Choose a package';
+  String get travelNoEsimPackages => '未找到匹配的 eSIM 套餐。';
 
   @override
-  String get travelMostPopular => 'Most popular';
+  String get travelChoosePackage => '选择套餐';
 
   @override
-  String get travelSelect => 'Select';
+  String get travelMostPopular => '最受欢迎';
+
+  @override
+  String get travelSelect => '选择';
 
   @override
   String travelValidityDays(int days) {
-    return '$days days validity';
+    return '有效期 $days 天';
   }
 
   @override
-  String get travelWalletCheckout => 'Wallet checkout';
+  String get travelWalletCheckout => '钱包结账';
 
   @override
-  String get travelBackendConfirmedPrice => 'Price confirmed by eCardo Travel';
+  String get travelBackendConfirmedPrice => '价格由 eCardo Travel 确认';
 
   @override
-  String get travelPaymentMethod => 'Payment method';
+  String get travelPaymentMethod => '支付方式';
 
   @override
-  String get travelAvailableBalance => 'Available balance';
+  String get travelAvailableBalance => '可用余额';
 
   @override
-  String get travelInsufficientBalance =>
-      'Your main wallet balance is insufficient. Add money, then return to refresh checkout.';
+  String get travelInsufficientBalance => '你的主钱包余额不足。请充值后返回刷新结账。';
 
   @override
-  String get travelPriceSummary => 'Price summary';
+  String get travelPriceSummary => '价格摘要';
 
   @override
-  String get travelSubtotal => 'Subtotal';
+  String get travelSubtotal => '小计';
 
   @override
-  String get travelWalletPayment => 'Wallet payment';
+  String get travelWalletPayment => '钱包支付';
 
   @override
-  String get travelCheckoutSafetyNote =>
-      'Payment is submitted once using an idempotent booking request.';
+  String get travelCheckoutSafetyNote => '支付将通过幂等预订请求仅提交一次。';
 
   @override
-  String get travelPayFromWallet => 'Pay from wallet';
+  String get travelPayFromWallet => '从钱包支付';
 
   @override
-  String get travelAddMoney => 'Add money';
+  String get travelAddMoney => '充值';
 
   @override
-  String get travelPaymentFailed => 'Payment was not completed';
+  String get travelPaymentFailed => '支付未完成';
 
   @override
-  String get travelPaymentFailedDescription =>
-      'Your wallet was not treated as paid. Please review the booking and try again.';
+  String get travelPaymentFailedDescription => '你的钱包未被视为已支付。请检查预订并重试。';
 
   @override
-  String get travelHotelVoucher => 'Hotel voucher';
+  String get travelHotelVoucher => '酒店凭证';
 
   @override
-  String get travelFlightTicket => 'Flight ticket';
+  String get travelFlightTicket => '机票';
 
   @override
-  String get travelEsimActivation => 'eSIM activation';
+  String get travelEsimActivation => 'eSIM 激活';
 
   @override
-  String get travelVoucherReady => 'Your confirmed hotel voucher is ready.';
+  String get travelVoucherReady => '你的酒店确认凭证已准备好。';
 
   @override
-  String get travelTicketReady => 'Your issued flight ticket is ready.';
+  String get travelTicketReady => '你的机票已出票并准备好。';
 
   @override
-  String get travelEsimReady => 'Your eSIM is active and ready to install.';
+  String get travelEsimReady => '你的 eSIM 已激活，可安装。';
 
   @override
-  String get travelPurchaseSuccessful => 'Purchase successful';
+  String get travelPurchaseSuccessful => '购买成功';
 
   @override
-  String get travelReference => 'Reference';
+  String get travelReference => '参考号';
 
   @override
-  String get travelStatus => 'Status';
+  String get travelStatus => '状态';
 
   @override
-  String get travelActive => 'Active';
+  String get travelActive => '有效';
 
   @override
-  String get travelConfirmed => 'Confirmed';
+  String get travelConfirmed => '已确认';
 
   @override
-  String get travelCompleted => 'Completed';
+  String get travelCompleted => '已完成';
 
   @override
-  String get travelRefunded => 'Refunded';
+  String get travelRefunded => '已退款';
 
   @override
-  String get travelFailed => 'Failed';
+  String get travelFailed => '失败';
 
   @override
-  String get travelBookingFailed => 'Booking failed';
+  String get travelBookingFailed => '预订失败';
 
   @override
-  String get travelBookingFailedDescription =>
-      'This booking did not complete. Review the order status before trying another payment.';
+  String get travelBookingFailedDescription => '此预订未完成。再次付款前请查看订单状态。';
 
   @override
-  String get travelBookingRefunded => 'Booking refunded';
+  String get travelBookingRefunded => '预订已退款';
 
   @override
-  String get travelBookingRefundedDescription =>
-      'The payment for this booking has been returned to the wallet.';
+  String get travelBookingRefundedDescription => '此预订的付款已退回钱包。';
 
   @override
-  String get travelPendingConfirmation => 'Pending confirmation';
+  String get travelPendingConfirmation => '等待确认';
 
   @override
-  String get travelHotelBookingSubmitted => 'Hotel booking submitted';
+  String get travelHotelBookingSubmitted => '酒店预订已提交';
 
   @override
   String get travelHotelPendingConfirmationDescription =>
-      'Payment was received. eCardo Travel is confirming the hotel with the authorized supplier before issuing your voucher.';
+      '已收到付款。eCardo Travel 正在向授权供应商确认酒店，然后签发凭证。';
 
   @override
-  String get travelPaidAmount => 'Paid amount';
+  String get travelPaidAmount => '已付金额';
 
   @override
-  String get travelActivationDetails => 'Activation details';
+  String get travelActivationDetails => '激活详情';
 
   @override
   String get travelActivationInstructions =>
-      'Open your device cellular settings, add an eSIM and use the secure installation details returned by the eCardo backend.';
+      '打开设备蜂窝网络设置，添加 eSIM，并使用 eCardo 后端返回的安全安装详情。';
 
   @override
-  String get travelViewMyBookings => 'View my bookings';
+  String get travelViewMyBookings => '查看我的预订';
 
   @override
-  String get travelMyBookings => 'My bookings';
+  String get travelMyBookings => '我的预订';
 
   @override
-  String get travelAllBookings => 'All bookings';
+  String get travelAllBookings => '所有预订';
 
   @override
-  String get travelMyHotels => 'My hotels';
+  String get travelMyHotels => '我的酒店';
 
   @override
-  String get travelMyFlights => 'My flights';
+  String get travelMyFlights => '我的航班';
 
   @override
-  String get travelMyEsims => 'My eSIMs';
+  String get travelMyEsims => '我的 eSIM';
 
   @override
-  String get travelMyHotelsDescription => 'Confirmed stays and hotel vouchers';
+  String get travelMyHotelsDescription => '已确认住宿和酒店凭证';
 
   @override
-  String get travelMyFlightsDescription => 'Booked flights and issued tickets';
+  String get travelMyFlightsDescription => '已预订航班和已出票机票';
 
   @override
-  String get travelMyEsimsDescription => 'Active and previous data packages';
+  String get travelMyEsimsDescription => '当前和历史流量套餐';
 
   @override
-  String get travelNoBookings => 'You do not have any travel bookings yet.';
+  String get travelNoBookings => '你还没有任何旅行预订。';
 
   @override
-  String get travelNoHotels => 'You do not have any hotel bookings yet.';
+  String get travelNoHotels => '你还没有任何酒店预订。';
 
   @override
-  String get travelNoFlights => 'You do not have any flight bookings yet.';
+  String get travelNoFlights => '你还没有任何航班预订。';
 
   @override
-  String get travelNoEsims => 'You do not have any eSIM purchases yet.';
+  String get travelNoEsims => '你还没有任何 eSIM 购买。';
 
   @override
-  String get travelSavedTravelers => 'Saved travelers';
+  String get travelSavedTravelers => '已保存旅客';
 
   @override
-  String get travelNoTravelers => 'No saved travelers are available yet.';
+  String get travelNoTravelers => '还没有已保存的旅客。';
 
   @override
-  String get travelAddTraveler => 'Add traveler';
+  String get travelAddTraveler => '添加旅客';
 
   @override
-  String get travelEditTraveler => 'Edit traveler';
+  String get travelEditTraveler => '编辑旅客';
 
   @override
-  String get travelTravelerFullName => 'Full name';
+  String get travelTravelerFullName => '全名';
 
   @override
-  String get travelPassportNumber => 'Passport number';
+  String get travelFirstName => '名';
 
   @override
-  String get travelNationalityCode => 'Nationality code';
+  String get travelLastName => '姓';
 
   @override
-  String get travelNationalityCodeInvalid => 'Enter a two-letter country code';
+  String get travelBirthDate => '出生日期';
 
   @override
-  String get travelFieldRequired => 'This field is required';
+  String get travelPassportExpiry => '护照有效期';
 
   @override
-  String get travelSaveTraveler => 'Save traveler';
+  String get travelGender => '性别';
 
   @override
-  String get travelAccount => 'Travel account';
+  String get travelMale => '男';
 
   @override
-  String get travelAccountHolder => 'eCardo member';
+  String get travelFemale => '女';
 
   @override
-  String get travelMemberDescription =>
-      'Shared profile, wallet and traveler information';
+  String get travelNotificationContact => '预订通知';
 
   @override
-  String get travelMyBookingsDescription => 'Hotels, flights and active eSIMs';
+  String get travelPhone => '手机号码';
 
   @override
-  String get travelSavedTravelersDescription =>
-      'Reuse passenger details securely';
+  String get travelEmail => '电子邮箱';
 
   @override
-  String get travelPersonalInformation => 'Personal information';
+  String get travelPassengerDetailsRequired => '请填写所有乘客信息，并添加手机号码或电子邮箱以接收预订更新。';
 
   @override
-  String get travelPersonalInformationDescription =>
-      'Manage details shared with Travel';
+  String get travelAdultPassenger => '成人乘客';
 
   @override
-  String get travelHistory => 'Travel and wallet history';
+  String get travelChildPassenger => '儿童乘客';
 
   @override
-  String get travelHistoryDescription =>
-      'View purchases and wallet activity together';
+  String get travelInfantPassenger => '婴儿乘客';
 
   @override
-  String get travelNoActivity => 'No travel or wallet activity is available.';
+  String get travelCompleteTravelerDetails => '完善乘客信息';
 
   @override
-  String get travelMockIran => 'Iran';
+  String get travelPassportNumber => '护照号码';
 
   @override
-  String get travelMockTehran => 'Tehran';
+  String get travelNationalityCode => '国籍代码';
 
   @override
-  String get travelMockGuests => '2 adults, 1 child';
+  String get travelNationalityCodeInvalid => '请输入两位国家代码';
 
   @override
-  String get travelMockTehranHotels => 'Hotels in Tehran';
+  String get travelFieldRequired => '此字段为必填项';
 
   @override
-  String get travelMockHotelEspinas => 'Espinas Palace Hotel';
+  String get travelSaveTraveler => '保存旅客';
 
   @override
-  String get travelMockHotelEspinasLocation => 'Saadat Abad, Tehran';
+  String get travelAccount => '旅行账户';
 
   @override
-  String get travelMockHotelParsian => 'Parsian International Hotel';
+  String get travelAccountHolder => 'eCardo 会员';
 
   @override
-  String get travelMockHotelParsianLocation => 'Valiasr Street, Tehran';
+  String get travelMemberDescription => '共享个人资料、钱包和旅客信息';
 
   @override
-  String get travelMockHotelVisteria => 'Visteria Hotel';
+  String get travelMyBookingsDescription => '酒店、航班和有效 eSIM';
 
   @override
-  String get travelMockHotelVisteriaLocation => 'Tajrish, Tehran';
+  String get travelSavedTravelersDescription => '安全复用乘客详情';
 
   @override
-  String get travelMockTehranAirport => 'Tehran (THR)';
+  String get travelPersonalInformation => '个人信息';
 
   @override
-  String get travelMockIstanbulAirport => 'Istanbul (IST)';
+  String get travelPersonalInformationDescription => '管理与旅行共享的详情';
 
   @override
-  String get travelMockRouteTehranIstanbul => 'Tehran → Istanbul';
+  String get travelHistory => '旅行和钱包历史';
 
   @override
-  String get travelMockFlightTehranIstanbul => 'Tehran to Istanbul';
+  String get travelHistoryDescription => '一起查看购买和钱包活动';
+
+  @override
+  String get travelNoActivity => '暂无旅行或钱包活动。';
+
+  @override
+  String get travelMockIran => '伊朗';
+
+  @override
+  String get travelMockTehran => '德黑兰';
+
+  @override
+  String get travelMockGuests => '2 位成人，1 位儿童';
+
+  @override
+  String get travelMockTehranHotels => '德黑兰酒店';
+
+  @override
+  String get travelMockHotelEspinas => 'Espinas Palace 酒店';
+
+  @override
+  String get travelMockHotelEspinasLocation => '萨达特阿巴德，德黑兰';
+
+  @override
+  String get travelMockHotelParsian => 'Parsian International 酒店';
+
+  @override
+  String get travelMockHotelParsianLocation => '瓦利阿斯尔街，德黑兰';
+
+  @override
+  String get travelMockHotelVisteria => 'Visteria 酒店';
+
+  @override
+  String get travelMockHotelVisteriaLocation => '塔杰里什，德黑兰';
+
+  @override
+  String get travelMockTehranAirport => '德黑兰 (THR)';
+
+  @override
+  String get travelMockIstanbulAirport => '伊斯坦布尔 (IST)';
+
+  @override
+  String get travelMockRouteTehranIstanbul => '德黑兰 → 伊斯坦布尔';
+
+  @override
+  String get travelMockFlightTehranIstanbul => '德黑兰至伊斯坦布尔';
 
   @override
   String get travelMockAirlineOne => 'eCardo Air';
@@ -5834,59 +5910,375 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMockAirlineTwo => 'Atlas Airways';
 
   @override
-  String get travelEsimTurkey => 'Turkey eSIM';
+  String get travelEsimTurkey => '土耳其 eSIM';
 
   @override
-  String get travelRecommended => 'Recommended';
+  String get travelRecommended => '推荐';
 
   @override
-  String get travelBestValue => 'Best value';
+  String get travelBestValue => '最划算';
 
   @override
-  String get travelLuxury => 'Luxury';
+  String get travelLuxury => '豪华';
 
   @override
-  String get travelDirect => 'Direct';
+  String get travelDirect => '直达';
 
   @override
-  String get travelLowestPrice => 'Lowest price';
+  String get travelLowestPrice => '最低价';
 
   @override
-  String get travelFeatureBreakfast => 'Breakfast';
+  String get travelFeatureBreakfast => '早餐';
 
   @override
-  String get travelFeaturePool => 'Pool';
+  String get travelFeaturePool => '泳池';
 
   @override
-  String get travelFeatureWifi => 'Wi-Fi';
+  String get travelFeatureWifi => 'Wi‑Fi';
 
   @override
-  String get travelFeatureParking => 'Parking';
+  String get travelFeatureParking => '停车';
 
   @override
-  String get travelFeatureAirportTransfer => 'Airport transfer';
+  String get travelFeatureAirportTransfer => '机场接送';
 
   @override
-  String get travelFeatureCabinBag => 'Cabin bag';
+  String get travelFeatureCabinBag => '随身行李';
 
   @override
-  String get travelFeatureRefundable => 'Refundable';
+  String get travelFeatureRefundable => '可退款';
 
   @override
-  String get travelActivityFlightPurchase => 'Flight purchase';
+  String get travelActivityFlightPurchase => '购买航班';
 
   @override
-  String get travelActivityEsimPurchase => 'eSIM purchase';
+  String get travelActivityEsimPurchase => '购买 eSIM';
 
   @override
-  String get travelActivityWalletTopUp => 'Wallet top-up';
+  String get travelActivityWalletTopUp => '钱包充值';
 
   @override
-  String get travelDemoOffer => 'Demo offer';
+  String get travelDemoOffer => '演示优惠';
 
   @override
-  String get travelRequiresConfirmation => 'Confirmation required';
+  String get travelRequiresConfirmation => '需要确认';
 
   @override
-  String get travelHotelBooking => 'Hotel booking';
+  String get travelHotelBooking => '酒店预订';
+
+  @override
+  String get travelReviewStep => '审核';
+
+  @override
+  String get travelConfirmationStep => '确认';
+
+  @override
+  String get travelReviewConfirmation => '我已查看并确认这些详情';
+
+  @override
+  String get travelReviewConfirmationDescription => '创建预订前，请确认旅客、产品、总额和钱包。';
+
+  @override
+  String get travelReservationHoldActive => '请在预订过期前完成付款';
+
+  @override
+  String get travelReservationExpired => '预订已过期。请重新开始创建新的保留。';
+
+  @override
+  String get travelNeedsAttention => '需要处理';
+
+  @override
+  String get travelUpcomingAndActive => '即将开始和有效';
+
+  @override
+  String get travelCancellationsAndRefunds => '取消和退款';
+
+  @override
+  String get travelPaymentPending => '付款待处理';
+
+  @override
+  String get travelPaymentProcessing => '付款处理中';
+
+  @override
+  String get travelVoucherIssued => '凭证已签发';
+
+  @override
+  String get travelCancellationRequested => '已请求取消';
+
+  @override
+  String get travelRefundInReview => '退款审核中';
+
+  @override
+  String get travelCancelled => '已取消';
+
+  @override
+  String get travelExpired => '已过期';
+
+  @override
+  String get travelStatusUnavailable => '状态不可用';
+
+  @override
+  String get travelBookingCancelled => '预订已取消';
+
+  @override
+  String get travelBookingExpired => '预订已过期';
+
+  @override
+  String get travelCompletePayment => '完成付款';
+
+  @override
+  String get travelPaymentIsProcessing => '付款正在处理';
+
+  @override
+  String get travelFlightRequestSubmitted => '航班请求已提交';
+
+  @override
+  String get travelEsimRequestSubmitted => 'eSIM 请求已提交';
+
+  @override
+  String get travelBookingStatusUnavailable => '预订状态不可用';
+
+  @override
+  String get travelBookingCancelledDescription => '此预订已取消。没有可用的有效凭证。';
+
+  @override
+  String get travelBookingExpiredDescription => '预订保留在确认前已过期。';
+
+  @override
+  String get travelCancellationRequestedDescription => '您的取消请求正在等待供应商权威审核。';
+
+  @override
+  String get travelRefundInReviewDescription => '您的退款请求正在审核中。最终金额和时间尚未确认。';
+
+  @override
+  String get travelPaymentPendingDescription => '此预订的付款尚未确认。';
+
+  @override
+  String get travelPaymentProcessingDescription => '钱包结果仍在验证中。请勿再次提交付款。';
+
+  @override
+  String get travelSupplierPendingDescription => '已收到付款，但供应商确认或旅行文件尚未准备好。';
+
+  @override
+  String get travelUnknownStatusDescription => '无法识别最新预订状态。请先刷新“我的预订”。';
+
+  @override
+  String get travelConfirmedArtifactPendingDescription => '预订已确认，但凭证或机票尚不可用。';
+
+  @override
+  String get travelStatusReference => '状态参考';
+
+  @override
+  String get travelRequestRefund => '申请退款';
+
+  @override
+  String get travelCancelBooking => '取消预订';
+
+  @override
+  String get travelPurchaseDate => '购买日期';
+
+  @override
+  String get travelSupplierReference => '供应商参考';
+
+  @override
+  String get travelBookingNumber => '预订编号';
+
+  @override
+  String get travelVoucherNumber => '凭证编号';
+
+  @override
+  String get travelRoom => '房间';
+
+  @override
+  String get travelRooms => '房间数';
+
+  @override
+  String get travelBoard => '膳食';
+
+  @override
+  String get travelCancellationPolicy => '取消政策';
+
+  @override
+  String get travelBeneficiary => '旅客或受益人';
+
+  @override
+  String get travelDeparture => '出发';
+
+  @override
+  String get travelArrival => '到达';
+
+  @override
+  String get travelFlightNumber => '航班号';
+
+  @override
+  String get travelAirline => '航空公司';
+
+  @override
+  String get travelCabin => '舱位';
+
+  @override
+  String get travelBaggage => '行李';
+
+  @override
+  String get travelRefundReviewNotice => '这会发送审核请求。取消和退款不会立即完成，且可能产生供应商罚金。';
+
+  @override
+  String get travelReason => '原因';
+
+  @override
+  String get travelReasonPlansChanged => '旅行计划变更';
+
+  @override
+  String get travelReasonBookingMistake => '预订错误';
+
+  @override
+  String get travelReasonPersonal => '个人原因';
+
+  @override
+  String get travelAdditionalNoteOptional => '附加备注（可选）';
+
+  @override
+  String get travelKeepBooking => '保留预订';
+
+  @override
+  String get travelSubmitRequest => '提交请求';
+
+  @override
+  String get travelCancellationUnavailable => '当前状态下无法取消此预订。';
+
+  @override
+  String get travelRefundRequestAwaitingReview => '您的取消和退款请求正在等待审核。';
+
+  @override
+  String get travelPriceLowToHigh => '价格：从低到高';
+
+  @override
+  String get travelPriceHighToLow => '价格：从高到低';
+
+  @override
+  String get travelRatingHighToLow => '评分：从高到低';
+
+  @override
+  String get travelAllRatings => '所有评分';
+
+  @override
+  String get travelRating => '评分';
+
+  @override
+  String get travelSortAndFilter => '排序和筛选';
+
+  @override
+  String get travelShortestDuration => '最短时长';
+
+  @override
+  String get travelNonRefundable => '不可退款';
+
+  @override
+  String get travelEsimDeviceReadinessTitle => '检查设备兼容性';
+
+  @override
+  String get travelEsimDeviceReadinessDescription =>
+      '购买前，请确认您的设备支持 eSIM，并且未锁定其他移动套餐。';
+
+  @override
+  String get travelEsimCompatibilityNotice =>
+      '购买套餐不保证设备兼容。只有后端标记 eSIM 就绪后才会显示安装详情。';
+
+  @override
+  String get travelEsimValidity => '有效期';
+
+  @override
+  String get travelEsimActivationReady => '您的 eSIM 安装详情已准备好。';
+
+  @override
+  String get travelPaymentReceived => '已收到付款';
+
+  @override
+  String get travelPaymentReceivedDescription =>
+      '已收到付款。eCardo Travel 正在完成供应商确认，然后签发最终文件。';
+
+  @override
+  String get travelSearchFailedDescription => '搜索未完成。如有之前结果，将继续显示；请编辑搜索或重试。';
+
+  @override
+  String get travelReservationFailedDescription => '无法创建预订。此应用会话未从您的钱包扣款。';
+
+  @override
+  String get travelRefundFailedDescription => '取消或退款请求未提交。请查看预订并重试。';
+
+  @override
+  String get travelNoPaymentAttemptedAfterExpiry => '此过期保留在本应用会话中未尝试付款，也未扣款。';
+
+  @override
+  String get travelLastUpdated => '最后更新';
+
+  @override
+  String get travelJourneySearch => '搜索';
+
+  @override
+  String get travelJourneyCompare => '比较';
+
+  @override
+  String get travelJourneyReview => '核对';
+
+  @override
+  String get travelJourneyPay => '支付';
+
+  @override
+  String get travelHotelSearchGuidance => '选择目的地、日期和入住人数。结果与可订状态始终来自旅行后端。';
+
+  @override
+  String get travelHotelResultsGuidance => '打开选项前，请比较后端返回的价格、评分、设施、位置、房型和政策。';
+
+  @override
+  String get travelHotelDetailsGuidance => '继续前，请核对住宿、房型、入住人数、价格和取消政策。';
+
+  @override
+  String get travelFlightSearchGuidance => '选择航线、日期和乘客人数。航班余位和票价始终来自旅行后端。';
+
+  @override
+  String get travelFlightResultsGuidance =>
+      '选择前，请比较后端返回的时间、航空公司、舱位、行李、票价和退改信息。';
+
+  @override
+  String get travelFlightDetailsGuidance => '继续前，请核对航班、票价组成、行李、乘客人数和取消政策。';
+
+  @override
+  String travelSelectedForComparison(int count) {
+    return '已选择 $count 项';
+  }
+
+  @override
+  String get travelCompare => '比较';
+
+  @override
+  String get travelCompareLimit => '每次最多可比较三个选项。';
+
+  @override
+  String get travelCompareHotels => '比较酒店';
+
+  @override
+  String get travelCompareFlights => '比较航班';
+
+  @override
+  String get travelComparisonUsesBackendFacts => '仅显示后端返回的事实，不推测缺失信息。';
+
+  @override
+  String get travelAddress => '地址';
+
+  @override
+  String get travelAircraft => '机型';
+
+  @override
+  String get travelDescription => '说明';
+
+  @override
+  String get travelDuration => '时长';
+
+  @override
+  String get travelRefundPolicy => '退款政策';
+
+  @override
+  String get travelPostPurchaseGuidance =>
+      '请保留订单编号，刷新“我的预订”查看状态变化，并仅使用后端已签发的旅行凭证。';
 }

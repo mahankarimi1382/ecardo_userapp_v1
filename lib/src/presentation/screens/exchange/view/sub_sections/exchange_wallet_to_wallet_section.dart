@@ -96,30 +96,59 @@ class ExchangeWalletToWalletSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                localizations.exchangeRate,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.lightPrimary,
-                  letterSpacing: 0,
-                  fontSize: 14,
-                ),
-              ),
-              Obx(() {
-                final fromCode = controller.fromWallet.value?.code ?? "";
-                final toCode = controller.toWallet.value?.code ?? "";
-                final rate = controller.exchangeRate.value;
-
-                return Text(
-                  "1 $fromCode = ${rate.toStringAsFixed(DynamicDecimalsHelper().getDynamicDecimals(currencyCode: controller.toWallet.value!.name!, siteCurrencyCode: Get.find<SettingsService>().getSetting("site_currency")!, siteCurrencyDecimals: Get.find<SettingsService>().getSetting("site_currency_decimals")!, isCrypto: controller.toWallet.value!.isCrypto!))} $toCode",
+              Flexible(
+                flex: 0,
+                child: Text(
+                  localizations.exchangeRate,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextPrimary,
+                    color: AppColors.lightPrimary,
                     letterSpacing: 0,
                     fontSize: 14,
                   ),
-                );
-              }),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Obx(() {
+                  final toWallet = controller.toWallet.value;
+                  final fromCode = controller.fromWallet.value?.code ?? "";
+                  final toCode = toWallet?.code ?? "";
+                  final rate = controller.exchangeRate.value;
+                  if (fromCode.isEmpty || toCode.isEmpty || toWallet == null) {
+                    return Text(
+                      "—",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.lightTextPrimary,
+                        fontSize: 14,
+                      ),
+                    );
+                  }
+                  final settings = Get.find<SettingsService>();
+                  final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+                    currencyCode: toWallet.code ?? toWallet.name ?? "",
+                    siteCurrencyCode:
+                        settings.getSetting("site_currency") ?? "",
+                    siteCurrencyDecimals:
+                        settings.getSetting("site_currency_decimals") ?? "2",
+                    isCrypto: toWallet.isCrypto ?? false,
+                  );
+                  return Text(
+                    "1 $fromCode = ${rate.toStringAsFixed(decimals)} $toCode",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.lightTextPrimary,
+                      letterSpacing: 0,
+                      fontSize: 14,
+                    ),
+                  );
+                }),
+              ),
             ],
           ),
           const SizedBox(height: 25),

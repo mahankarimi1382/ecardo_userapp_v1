@@ -10,7 +10,10 @@ import 'package:qunzo_user/src/common/services/settings_service.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 
 class AppUpdateHelper {
-  static Future<void> checkForUpdate(BuildContext context, {bool showMessageIfNoUpdate = false}) async {
+  static Future<void> checkForUpdate(
+    BuildContext context, {
+    bool showMessageIfNoUpdate = false,
+  }) async {
     try {
       final settings = Get.find<SettingsService>();
       String serverVersion = settings.getSetting('app_version') ?? '';
@@ -18,12 +21,17 @@ class AppUpdateHelper {
       bool forceUpdate = settings.getSetting('app_force_update') == '1';
 
       if (serverVersion.isEmpty || updateLink.isEmpty) {
-        if (showMessageIfNoUpdate) Get.snackbar('System', 'You are on the latest version.');
+        if (showMessageIfNoUpdate) {
+          Get.snackbar('System', 'You are on the latest version.');
+        }
         return;
       }
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       String currentVersion = packageInfo.version;
+      if (!context.mounted) {
+        return;
+      }
 
       if (serverVersion != currentVersion && serverVersion.isNotEmpty) {
         _showUpdateDialog(context, serverVersion, updateLink, forceUpdate);
@@ -37,7 +45,12 @@ class AppUpdateHelper {
     }
   }
 
-  static void _showUpdateDialog(BuildContext context, String version, String url, bool forceUpdate) {
+  static void _showUpdateDialog(
+    BuildContext context,
+    String version,
+    String url,
+    bool forceUpdate,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: !forceUpdate,
@@ -46,7 +59,9 @@ class AppUpdateHelper {
           canPop: !forceUpdate,
           child: AlertDialog(
             title: Text('New Update Available ($version)'),
-            content: const Text('A new version of the application is available. Please update to continue.'),
+            content: const Text(
+              'A new version of the application is available. Please update to continue.',
+            ),
             actions: [
               if (!forceUpdate)
                 TextButton(
@@ -54,12 +69,17 @@ class AppUpdateHelper {
                   child: const Text('Later'),
                 ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.lightPrimary,
+                ),
                 onPressed: () {
-                  if(!forceUpdate) Navigator.pop(ctx);
+                  if (!forceUpdate) Navigator.pop(ctx);
                   _downloadAndInstall(url);
                 },
-                child: const Text('Download & Update', style: TextStyle(color: Colors.white)),
+                child: const Text(
+                  'Download & Update',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -72,7 +92,10 @@ class AppUpdateHelper {
     try {
       var status = await Permission.storage.request();
       if (!status.isGranted) {
-        Get.snackbar('Permission Denied', 'Storage permission is required to download the update.');
+        Get.snackbar(
+          'Permission Denied',
+          'Storage permission is required to download the update.',
+        );
         return;
       }
 
@@ -98,12 +121,12 @@ class AppUpdateHelper {
         url,
         filePath,
         onReceiveProgress: (rec, total) {
-           // could update UI here if using a stateful widget
+          // could update UI here if using a stateful widget
         },
       );
 
       Get.back(); // close progress dialog
-      
+
       final result = await OpenFilex.open(filePath);
       if (result.type != ResultType.done) {
         Get.snackbar('Error', 'Failed to open APK: ${result.message}');

@@ -1,227 +1,220 @@
-# Normalized Travel API Contract
+# Travel API Contract
 
-## Public Boundary
+Updated: July 28, 2026.
 
-Flutter uses the first-party eCardo Travel gateway:
+## Boundary and Authority
+
+Flutter calls only:
 
 ```text
 https://trip.ecardo.ir/api/v1
 ```
 
-`trip.ecardo.ir` is the public Cloudflare edge boundary. The private origin, provider URLs, provider credentials, retries, and provider-specific response formats must never be embedded in Flutter.
+Supplier URLs, credentials, payloads, and internal cost fields stay behind the
+gateway. The backend is authoritative for availability, price, currency,
+reservation deadline, rules, cancellation, refunds, and lifecycle status.
 
-## Standard Envelope
+## Common Behavior
 
-Successful responses use:
+Expected success envelope:
 
 ```json
-{
-  "status": "success",
-  "data": {},
-  "meta": {}
-}
+{"status":"success","data":{},"meta":{}}
 ```
 
-Errors use:
+Expected error envelope:
 
 ```json
 {
   "status": "error",
-  "error": {
-    "code": "BUSINESS_RULE_FAILED",
-    "message": "The offer is no longer purchasable."
-  },
-  "request_id": null
+  "error": {"code": "BUSINESS_RULE_FAILED", "message": "Safe user message"},
+  "request_id": "support-reference"
 }
 ```
 
-Flutter maps these normalized eCardo responses into Travel domain models. Supplier response formats remain behind the gateway.
+Locale-aware calls send:
 
-Flutter submits the user's editable destination, dates, room count, adult count, and child count through the normalized service-search contract.
-
-## Deployed Contract
-
-### Authentication
-
-`POST /auth/exchange`
-
-Exchanges the authenticated main eCardo token for a short-lived Travel token.
-
-```json
-{
-  "source_token": "<main-ecardo-token>"
-}
+```text
+locale=en
+X-Locale: en
 ```
 
-Authenticated Travel requests use:
+Authenticated calls send:
 
 ```text
 Authorization: Bearer <travel-token>
 ```
 
-### Hotel Catalog
-
-- `GET /hotels?locale=en&city=THR`
-- `GET /hotels/{hotel}?locale=en`
-- `GET /hotel-offers?locale=en&city=THR`
-- `GET /hotel-offers/{offer}?locale=en`
-
-Normalized hotel offer:
-
-```json
-{
-  "id": "offer_public_id",
-  "code": "HOTEL-OFFER-001",
-  "version": 1,
-  "hotel": {
-    "id": "hotel_public_id",
-    "name": "Hotel name",
-    "city": "Tehran",
-    "country_code": "IR",
-    "star_rating": 5,
-    "amenities": ["wifi", "breakfast"]
-  },
-  "room_name": "Deluxe room",
-  "board_type": "breakfast",
-  "price": {
-    "amount": "4800000",
-    "currency": "IRR"
-  },
-  "inclusions": ["Breakfast"],
-  "restrictions": [],
-  "cancellation_policy": {},
-  "requires_admin_confirmation": true,
-  "valid_until": "2026-08-31T23:59:59Z",
-  "catalog_revision": "catalog-revision",
-  "is_demo": false
-}
-```
-
-Supplier cost fields and provider credentials are intentionally absent.
-
-### Traveler Profile
-
-- `GET /me/traveler-profile`
-- `PUT /me/traveler-profile`
-
-The deployed endpoint represents the authenticated user's primary traveler profile. The redesigned saved-traveler list requires a future multi-traveler contract.
-
-### Hotel Booking
-
-`POST /offer-orders`
-
-Required header:
+State-changing purchase/refund calls send a stable:
 
 ```text
-Idempotency-Key: <stable-client-key>
+Idempotency-Key: <client-generated-key>
 ```
+
+## Deployed Endpoints
+
+### Bootstrap
+
+`GET /travel/bootstrap`
+
+Returns locale, currency, service presentation, `data_mode`, and capabilities.
+On July 28, 2026, hotel and flight were catalog services with search,
+offer-details, and catalog-checkout capability.
+
+### Discovery
+
+- `POST /travel/services/{service}/search`
+- `GET /travel/services/{service}/offers/{offerId}`
+
+Hotel search currently sends city, check-in, check-out, rooms, adults, and
+children. Flight sends origin, destination, departure date, adults, and
+children. Empty flight criteria are used for upcoming discovery.
+
+Offer responses are normalized into product, attributes, policies, actions,
+pricing components, total, rating, features, and metadata.
+
+### Authentication
+
+`POST /auth/exchange`
 
 Request:
 
 ```json
-{
-  "offer_id": "offer_public_id",
-  "check_in_date": "2026-08-12",
-  "check_out_date": "2026-08-14",
-  "room_count": 1,
-  "adult_count": 2,
-  "child_count": 1
-}
+{"source_token":"<main-ecardo-token>"}
 ```
 
-Response includes the authoritative payable amount:
+The returned token is cached until shortly before expiry.
 
-```json
-{
-  "id": "order_public_id",
-  "order_number": "ECT-2026-0001",
-  "status": "pending_payment",
-  "payable_amount": "4800000",
-  "currency": "IRR",
-  "approval_status": "pending"
-}
-```
+### Reservation
 
-Flutter sends search criteria but does not calculate or override the authoritative total.
+- `POST /catalog-orders`
+- `POST /offer-orders`
 
-### Wallet Payment
+Catalog requests include service, offer, dates when applicable, room and guest
+counts, selected room, and beneficiary metadata. Live offer orders use the
+normalized offer ID and booking criteria.
+
+Flutter rejects the reservation if returned `payable_amount` or `currency`
+differs from the displayed expected total. It uses backend `payment_due_at`;
+if omitted, current code applies a 15-minute fallback.
+
+### Payment
 
 `POST /orders/{order}/pay`
 
-Required header:
+The current client accepts:
 
-```text
-Idempotency-Key: <stable-payment-key>
-```
+- `paid_pending_admin_approval`
+- `booked`
+- `voucher_generated`
+- `completed`
 
-The backend captures funds from the main eCardo wallet transactionally. Repeated idempotency keys must return the existing result and must never debit the wallet twice.
-
-Current successful payment state:
-
-```json
-{
-  "id": "order_public_id",
-  "status": "paid_pending_admin_approval",
-  "paid_amount": "4800000",
-  "currency": "IRR"
-}
-```
-
-This is not yet a confirmed voucher. Flutter displays a pending-confirmation state until the authorized supplier purchase is confirmed and a voucher is issued.
+This must evolve into a richer lifecycle. Wallet capture does not always mean
+the supplier artifact has been issued. Required distinctions include payment
+received, supplier confirmation, issued, inventory lost with funds safe or
+restored, failed, cancelled, and refunded.
 
 ### Orders
 
 - `GET /orders`
 - `GET /orders/{order}`
 
-Orders may include quote, request, state transition, booking, and voucher relationships. Flutter maps them into normalized order presentation and does not inspect provider data.
+The app maps normalized order data into `TravelOrder`. If the detail request
+after payment fails, it returns a minimal local fallback containing the payment
+response. UI must label this as pending/unverified rather than inventing detail.
 
 ### Refunds
 
 - `POST /orders/{order}/refunds`
 - `GET /refunds/{refund}`
 
-These routes are deployed but are not yet exposed in the redesigned Flutter UI.
+Flutter submits a reason, optional note, and idempotency key. The existing UI
+does not call the refund-detail route or expose an authoritative estimate.
 
-## Deployed Operator Flow
+## Current Status Mapping Risk
 
-The following routes are backend/admin-only and must not be called by the customer Flutter app:
+Current local statuses:
 
-- `GET /operator/orders/pending-approval`
-- `POST /operator/orders/{order}/confirm-booking`
-- `POST /operator/orders/{order}/reject`
-- `POST /operator/bookings/{booking}/voucher`
+```text
+pending, confirmed, active, completed, refunded, failed
+```
 
-## Current Normalized Discovery
+Multiple raw states map to `pending`. Unknown raw values map to `completed`,
+which can falsely imply success. Preserve `raw_status` and introduce an
+`unknown` or backend-driven presentation before expanding workflows.
 
-The inspected production contract exposes:
+## Proposed Contracts
 
-- `GET /travel/bootstrap`
-- `POST /travel/services/{service}/search`
-- `GET /travel/services/{service}/offers/{offer}`
+These are not deployed contracts until backend route inspection confirms them.
 
-Flutter consumes bootstrap and normalized hotel, flight, and eSIM search responses. On July 26, 2026, bootstrap reported `data_mode: mock` for all three services. Mock offers are display-only and cannot reach wallet checkout.
+### Suggestions
 
-The following capabilities still require stable live contracts or Flutter integration:
+`GET /travel/services/{service}/suggestions?q=&locale=`
 
-- Flight purchase, ticketing, and order artifacts
-- eSIM purchase, installation, and activation
-- Multiple saved travelers
-- Combined Travel and main-wallet activity history
-- General offer revalidation endpoint
+Return stable ID, primary/secondary label, code, type, country, and optional
+coordinates. Include recent/popular groups separately from search matches.
 
-Recommended future routes:
+### Structured Travelers and Contacts
 
-- `POST /travel/services/{service}/offers/{offer}/revalidate`
-- `GET|POST|PATCH /travelers`
-- `GET /activity`
+- `GET|POST /travelers`
+- `PATCH|DELETE /travelers/{traveler}`
 
-These routes must continue returning normalized eCardo schemas regardless of the selected downstream provider.
+Passenger/guest fields must be driven by product, route, nationality, and
+supplier needs. Do not hardcode passport-only rules.
 
-## Repository Mapping
+Reservation should persist:
 
-- `TravelApiRepository`: deployed bootstrap, normalized hotel/flight/eSIM discovery, token exchange, order history, hotel booking, and wallet payment.
-- `TravelRepository`: stable application-facing contract.
-- `TravelApiRepository`: the sole runtime implementation; no local provider/order mock repository remains.
+- Passenger or guest assignment.
+- Lead guest per room.
+- Buyer and notification recipient.
+- Contact used to authorize later changes/cancellation.
+- Explicit rule acknowledgement.
+- Special requests marked as requests, never guarantees.
 
-Order history never displays fake fallback records. Booking creation verifies the returned authoritative amount and currency before wallet capture. No booking or payment operation falls back to a mock success.
+### Cancellation Eligibility and Estimate
+
+`GET /orders/{order}/cancellation-eligibility`
+
+Recommended response:
+
+```json
+{
+  "eligible": true,
+  "expires_at": "2026-08-01T10:00:00Z",
+  "penalty": {"amount": "100", "currency": "USD"},
+  "refundable": {"amount": "400", "currency": "USD"},
+  "refund_destination": "original_wallet",
+  "requires_supplier_review": true,
+  "estimated_completion_at": null,
+  "policy_summary": "backend-authoritative localized text",
+  "version": "eligibility-version"
+}
+```
+
+Refund submission must include the eligibility version or quote ID so changed
+rules cannot be silently accepted.
+
+### Timeline and Recovery
+
+- `GET /orders/{order}/events`
+- `POST /travel/order-recovery`
+
+Events should contain stable type, timestamp, localized-safe presentation,
+support reference, and actions. Recovery may accept booking reference plus a
+verified contact challenge. It must not expose a booking from reference alone.
+
+### Sold-Out Recovery
+
+Future contracts may support notification when inventory returns or alternative
+dates/offers. Automatic purchase requires explicit price ceiling, expiry,
+consent, idempotency, wallet safeguards, and cancellation behavior; do not
+implement it as a client-only feature.
+
+## Parsing Rules
+
+- Treat absent optional fields as absent, not as false facts.
+- Parse strings/numbers defensively.
+- Ignore unknown optional fields.
+- Keep raw status and request/support IDs.
+- Never show supplier HTML without sanitizing/normalizing it server-side.
+- Never send passport, phone, or personal data in analytics.

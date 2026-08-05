@@ -7,7 +7,6 @@ import 'package:qunzo_user/src/common/widgets/common_loading.dart';
 import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 
 import '../bookings/travel_checkout_screen.dart';
-import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
@@ -18,7 +17,7 @@ class EsimIntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final controller = Get.find<TravelController>();
+    final controller = ensureTravelController();
     final service = controller.serviceFor(TravelProductType.esim);
     final heroTitle =
         service?.presentation['hero_title']?.toString() ??
@@ -77,9 +76,9 @@ class EsimIntroScreen extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           _Benefit(
-            icon: Icons.flash_on_rounded,
-            title: localization.travelEsimInstantTitle,
-            subtitle: localization.travelEsimInstantDescription,
+            icon: Icons.phonelink_setup_rounded,
+            title: localization.travelEsimDeviceReadinessTitle,
+            subtitle: localization.travelEsimDeviceReadinessDescription,
           ),
           _Benefit(
             icon: Icons.public_rounded,
@@ -152,6 +151,7 @@ class EsimPackagesScreen extends StatefulWidget {
 
 class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
   final destinationController = TextEditingController();
+  String searchedDestination = '';
 
   @override
   void dispose() {
@@ -162,7 +162,7 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final controller = Get.find<TravelController>();
+    final controller = ensureTravelController();
     final service = controller.serviceFor(TravelProductType.esim);
     final destinationField = service?.searchFields.firstWhereOrNull(
       (field) => field.key == 'country_code',
@@ -184,6 +184,30 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                     prefixIcon: const Icon(
                       Icons.public_rounded,
                       color: TravelTheme.yellow,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  TravelCard(
+                    color: TravelTheme.yellow.withValues(alpha: .1),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.info_outline_rounded,
+                          color: TravelTheme.ink,
+                        ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: Text(
+                            localization.travelEsimCompatibilityNotice,
+                            style: TextStyle(
+                              color: TravelTheme.muted,
+                              fontSize: 11.sp,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -208,6 +232,10 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                       final succeeded = await controller.loadEsimPackages(
                         destination,
                       );
+                      if (!context.mounted) return;
+                      if (succeeded) {
+                        setState(() => searchedDestination = destination);
+                      }
                       if (!succeeded) {
                         showTravelMessage(
                           context,
@@ -218,8 +246,19 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                     },
                   ),
                   SizedBox(height: 20.h),
-                  TravelSectionHeader(title: localization.travelChoosePackage),
+                  TravelSectionHeader(
+                    title: localization.travelChoosePackage,
+                    action: searchedDestination.isEmpty
+                        ? null
+                        : '$searchedDestination · '
+                              '${controller.esimPackages.length}',
+                  ),
                   SizedBox(height: 10.h),
+                  if (searchedDestination.isNotEmpty &&
+                      controller.esimPackages.isEmpty)
+                    TravelEmptyState(
+                      message: localization.travelNoEsimPackages,
+                    ),
                   ...controller.esimPackages.map(
                     (package) => Padding(
                       padding: EdgeInsets.only(bottom: 14.h),
@@ -241,7 +280,7 @@ class _PackageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final controller = Get.find<TravelController>();
+    final controller = ensureTravelController();
     final canPurchase = controller.canPurchase(TravelProductType.esim);
     return TravelCard(
       onTap: canPurchase
@@ -258,6 +297,7 @@ class _PackageCard extends StatelessWidget {
             }
           : null,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -288,11 +328,15 @@ class _PackageCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      localization.travelValidityDays(package.validityDays),
-                      style: TextStyle(
-                        color: TravelTheme.muted,
-                        fontSize: 11.sp,
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Text(
+                        package.destinationCode,
+                        style: TextStyle(
+                          color: TravelTheme.muted,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -309,15 +353,49 @@ class _PackageCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Text(
-                    travelMoney(context, package.total),
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w900,
+                child: _PackageFact(
+                  icon: Icons.public_rounded,
+                  label: localization.travelDestinationCountry,
+                  value: package.destinationCode,
+                  forceLtr: true,
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: _PackageFact(
+                  icon: Icons.calendar_today_rounded,
+                  label: localization.travelEsimValidity,
+                  value: localization.travelValidityDays(package.validityDays),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localization.travelTotal,
+                      style: TextStyle(
+                        color: TravelTheme.muted,
+                        fontSize: 10.sp,
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 2.h),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Text(
+                        travelMoney(context, package.total),
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(
@@ -348,6 +426,65 @@ class _PackageCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PackageFact extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final bool forceLtr;
+
+  const _PackageFact({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.forceLtr = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10.r),
+      decoration: BoxDecoration(
+        color: TravelTheme.background,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 18.r, color: TravelTheme.muted),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: TravelTheme.muted, fontSize: 9.sp),
+                ),
+                SizedBox(height: 2.h),
+                Directionality(
+                  textDirection: forceLtr
+                      ? TextDirection.ltr
+                      : Directionality.of(context),
+                  child: Text(
+                    value,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

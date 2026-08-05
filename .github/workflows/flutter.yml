@@ -23,7 +23,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.44.0"
+          flutter-version: "3.44.6"
           cache: true
 
       - name: Install dependencies
@@ -31,16 +31,12 @@ jobs:
 
       - name: Run Analyze
         run: |
-          flutter analyze > analysis_report.txt 2>&1 || true
-          cat analysis_report.txt
+          flutter analyze 2>&1 | tee analysis_report.txt
 
       - name: Build Release APK
         run: |
-          flutter build apk --release > build_log.txt 2>&1 || true
-          if [ ! -f build/app/outputs/flutter-apk/app-release.apk ]; then
-            cat build_log.txt
-            exit 1
-          fi
+          flutter build apk --release 2>&1 | tee build_log.txt
+          test -f build/app/outputs/flutter-apk/app-release.apk
           echo "APK built successfully!"
 
       - name: Upload APK Artifact
@@ -51,14 +47,22 @@ jobs:
 
       - name: Deploy APK to eCardo Server
         continue-on-error: true
+        env:
+          ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
         run: |
+          if [ -z "$ECARDO_DEPLOY_SECRET" ]; then
+            echo "Skipping deployment because ECARDO_DEPLOY_SECRET is unavailable."
+            exit 0
+          fi
+
           # Extract version from pubspec.yaml (e.g. 1.0.1+2 -> 1.0.1)
           VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
           echo "Deploying version $VERSION"
           
-          curl -X POST https://ecardo.ir/api/user/github-deploy-webhook \
+          curl --fail-with-body --show-error --silent \
+            -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
-            -F "secret=ecardo_secret_deploy_key_2026" \
+            -F "secret=$ECARDO_DEPLOY_SECRET" \
             -F "app_type=user" \
             -F "version=$VERSION" \
             -F "apk=@build/app/outputs/flutter-apk/app-release.apk"
@@ -68,6 +72,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-log
+          if-no-files-found: warn
           path: |
             build_log.txt
             analysis_report.txt

@@ -1410,6 +1410,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otherServicesTitle => 'Other Services';
 
   @override
+  String get dynamicPasswordTitle => 'Dynamic Password';
+
+  @override
+  String get dynamicPasswordDesc => '6-digit code for wallet payment';
+
+  @override
   String get otherServicesQrCode => 'QR Code';
 
   @override
@@ -5710,10 +5716,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get travelDepartureDate => 'Departure date';
 
   @override
+  String get travelReturnDate => 'Return date';
+
+  @override
+  String get travelOneWay => 'One-way';
+
+  @override
+  String get travelRoundTrip => 'Round trip';
+
+  @override
   String get travelAdults => 'Adults';
 
   @override
   String get travelChildren => 'Children';
+
+  @override
+  String get travelInfants => 'Infants';
+
+  @override
+  String get travelCabinClass => 'Cabin class';
+
+  @override
+  String get travelEconomy => 'Economy';
+
+  @override
+  String get travelBusiness => 'Business';
 
   @override
   String get travelSearchFlights => 'Search flights';
@@ -5725,7 +5752,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get travelNoFlightResults => 'No matching flights were found.';
 
   @override
+  String get travelAlternativeFlights => 'Alternative flights.';
+
+  @override
+  String get travelAlternativeFlightsDescription =>
+      'Your exact search has no matches. These upcoming options are shown as alternatives; edit the search to change route or date.';
+
+  @override
   String get travelSelectFlight => 'Select flight';
+
+  @override
+  String get travelSelectReturnFlight => 'Select return flight';
+
+  @override
+  String get travelOutboundFlight => 'Outbound flight';
+
+  @override
+  String get travelReturnFlight => 'Return flight';
 
   @override
   String get travelFlightDetails => 'Flight and passenger details';
@@ -5788,6 +5831,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get travelEsimPackages => 'eSIM packages';
+
+  @override
+  String get travelNoEsimPackages => 'No matching eSIM packages were found.';
 
   @override
   String get travelChoosePackage => 'Choose a package';
@@ -5976,6 +6022,52 @@ class AppLocalizationsEn extends AppLocalizations {
   String get travelTravelerFullName => 'Full name';
 
   @override
+  String get travelFirstName => 'First name';
+
+  @override
+  String get travelLastName => 'Last name';
+
+  @override
+  String get travelBirthDate => 'Date of birth';
+
+  @override
+  String get travelPassportExpiry => 'Passport expiry';
+
+  @override
+  String get travelGender => 'Gender';
+
+  @override
+  String get travelMale => 'Male';
+
+  @override
+  String get travelFemale => 'Female';
+
+  @override
+  String get travelNotificationContact => 'Booking notifications';
+
+  @override
+  String get travelPhone => 'Mobile number';
+
+  @override
+  String get travelEmail => 'Email address';
+
+  @override
+  String get travelPassengerDetailsRequired =>
+      'Complete every passenger and add a mobile number or email for booking updates.';
+
+  @override
+  String get travelAdultPassenger => 'Adult passenger';
+
+  @override
+  String get travelChildPassenger => 'Child passenger';
+
+  @override
+  String get travelInfantPassenger => 'Infant passenger';
+
+  @override
+  String get travelCompleteTravelerDetails => 'Complete traveler details';
+
+  @override
   String get travelPassportNumber => 'Passport number';
 
   @override
@@ -6128,4 +6220,347 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get travelHotelBooking => 'Hotel booking';
+
+  @override
+  String get travelReviewStep => 'Review';
+
+  @override
+  String get travelConfirmationStep => 'Confirmation';
+
+  @override
+  String get travelReviewConfirmation => 'I reviewed and confirm these details';
+
+  @override
+  String get travelReviewConfirmationDescription =>
+      'Confirm the traveler, product, total, and wallet before creating the reservation.';
+
+  @override
+  String get travelReservationHoldActive =>
+      'Complete payment before this reservation expires';
+
+  @override
+  String get travelReservationExpired =>
+      'Reservation expired. Start again to create a new hold.';
+
+  @override
+  String get travelNeedsAttention => 'Needs attention';
+
+  @override
+  String get travelUpcomingAndActive => 'Upcoming and active';
+
+  @override
+  String get travelCancellationsAndRefunds => 'Cancellations and refunds';
+
+  @override
+  String get travelPaymentPending => 'Payment pending';
+
+  @override
+  String get travelPaymentProcessing => 'Payment processing';
+
+  @override
+  String get travelVoucherIssued => 'Voucher issued';
+
+  @override
+  String get travelCancellationRequested => 'Cancellation requested';
+
+  @override
+  String get travelRefundInReview => 'Refund in review';
+
+  @override
+  String get travelCancelled => 'Cancelled';
+
+  @override
+  String get travelExpired => 'Expired';
+
+  @override
+  String get travelStatusUnavailable => 'Status unavailable';
+
+  @override
+  String get travelBookingCancelled => 'Booking cancelled';
+
+  @override
+  String get travelBookingExpired => 'Booking expired';
+
+  @override
+  String get travelCompletePayment => 'Complete payment';
+
+  @override
+  String get travelPaymentIsProcessing => 'Payment is processing';
+
+  @override
+  String get travelFlightRequestSubmitted => 'Flight request submitted';
+
+  @override
+  String get travelEsimRequestSubmitted => 'eSIM request submitted';
+
+  @override
+  String get travelBookingStatusUnavailable => 'Booking status unavailable';
+
+  @override
+  String get travelBookingCancelledDescription =>
+      'This booking is cancelled. No active voucher is available.';
+
+  @override
+  String get travelBookingExpiredDescription =>
+      'The booking hold expired before it reached a confirmed state.';
+
+  @override
+  String get travelCancellationRequestedDescription =>
+      'Your cancellation request is awaiting an authoritative supplier review.';
+
+  @override
+  String get travelRefundInReviewDescription =>
+      'Your refund request is under review. The final amount and timing are not confirmed yet.';
+
+  @override
+  String get travelPaymentPendingDescription =>
+      'Payment has not been confirmed for this booking.';
+
+  @override
+  String get travelPaymentProcessingDescription =>
+      'The wallet result is still being verified. Do not submit another payment.';
+
+  @override
+  String get travelSupplierPendingDescription =>
+      'Payment was received, but supplier confirmation or the travel document is not ready yet.';
+
+  @override
+  String get travelUnknownStatusDescription =>
+      'The latest booking state could not be recognized. Refresh My Bookings before taking further action.';
+
+  @override
+  String get travelConfirmedArtifactPendingDescription =>
+      'The booking is confirmed, but its voucher or ticket is not available yet.';
+
+  @override
+  String get travelStatusReference => 'Status reference';
+
+  @override
+  String get travelRequestRefund => 'Request refund';
+
+  @override
+  String get travelCancelBooking => 'Cancel booking';
+
+  @override
+  String get travelPurchaseDate => 'Purchase date';
+
+  @override
+  String get travelSupplierReference => 'Supplier reference';
+
+  @override
+  String get travelBookingNumber => 'Booking number';
+
+  @override
+  String get travelVoucherNumber => 'Voucher number';
+
+  @override
+  String get travelRoom => 'Room';
+
+  @override
+  String get travelRooms => 'Rooms';
+
+  @override
+  String get travelBoard => 'Board';
+
+  @override
+  String get travelCancellationPolicy => 'Cancellation policy';
+
+  @override
+  String get travelBeneficiary => 'Passenger or beneficiary';
+
+  @override
+  String get travelDeparture => 'Departure';
+
+  @override
+  String get travelArrival => 'Arrival';
+
+  @override
+  String get travelFlightNumber => 'Flight number';
+
+  @override
+  String get travelAirline => 'Airline';
+
+  @override
+  String get travelCabin => 'Cabin';
+
+  @override
+  String get travelBaggage => 'Baggage';
+
+  @override
+  String get travelRefundReviewNotice =>
+      'This sends a request for review. Cancellation and refund are not immediate, and supplier penalties may apply.';
+
+  @override
+  String get travelReason => 'Reason';
+
+  @override
+  String get travelReasonPlansChanged => 'Travel plans changed';
+
+  @override
+  String get travelReasonBookingMistake => 'Booking mistake';
+
+  @override
+  String get travelReasonPersonal => 'Personal reason';
+
+  @override
+  String get travelAdditionalNoteOptional => 'Additional note (optional)';
+
+  @override
+  String get travelKeepBooking => 'Keep booking';
+
+  @override
+  String get travelSubmitRequest => 'Submit request';
+
+  @override
+  String get travelCancellationUnavailable =>
+      'The booking cannot be cancelled from its current state.';
+
+  @override
+  String get travelRefundRequestAwaitingReview =>
+      'Your cancellation and refund request is awaiting review.';
+
+  @override
+  String get travelPriceLowToHigh => 'Price: low to high';
+
+  @override
+  String get travelPriceHighToLow => 'Price: high to low';
+
+  @override
+  String get travelRatingHighToLow => 'Rating: high to low';
+
+  @override
+  String get travelAllRatings => 'All ratings';
+
+  @override
+  String get travelRating => 'Rating';
+
+  @override
+  String get travelSortAndFilter => 'Sort and filter';
+
+  @override
+  String get travelShortestDuration => 'Shortest duration';
+
+  @override
+  String get travelNonRefundable => 'Non-refundable';
+
+  @override
+  String get travelEsimDeviceReadinessTitle => 'Check device compatibility';
+
+  @override
+  String get travelEsimDeviceReadinessDescription =>
+      'Before purchase, confirm that your device supports eSIM and is unlocked for another mobile plan.';
+
+  @override
+  String get travelEsimCompatibilityNotice =>
+      'Package purchase does not guarantee device compatibility. Installation details appear only after the backend marks the eSIM ready.';
+
+  @override
+  String get travelEsimValidity => 'Validity';
+
+  @override
+  String get travelEsimActivationReady =>
+      'Your eSIM installation details are ready.';
+
+  @override
+  String get travelPaymentReceived => 'Payment received';
+
+  @override
+  String get travelPaymentReceivedDescription =>
+      'Payment was received. eCardo Travel is completing supplier confirmation before issuing the final document.';
+
+  @override
+  String get travelSearchFailedDescription =>
+      'Search did not complete. Previous results are still shown when available; edit the search or try again.';
+
+  @override
+  String get travelReservationFailedDescription =>
+      'Reservation could not be created. Your wallet was not charged by this app session.';
+
+  @override
+  String get travelRefundFailedDescription =>
+      'The cancellation or refund request was not submitted. Please review the booking and try again.';
+
+  @override
+  String get travelNoPaymentAttemptedAfterExpiry =>
+      'No payment was attempted or charged in this app session for this expired hold.';
+
+  @override
+  String get travelLastUpdated => 'Last updated';
+
+  @override
+  String get travelJourneySearch => 'Search';
+
+  @override
+  String get travelJourneyCompare => 'Compare';
+
+  @override
+  String get travelJourneyReview => 'Review';
+
+  @override
+  String get travelJourneyPay => 'Pay';
+
+  @override
+  String get travelHotelSearchGuidance =>
+      'Choose the destination, dates, and occupancy. Results and availability always come from the Travel backend.';
+
+  @override
+  String get travelHotelResultsGuidance =>
+      'Compare backend-provided price, rating, facilities, location, rooms, and policies before opening an option.';
+
+  @override
+  String get travelHotelDetailsGuidance =>
+      'Review the property, room facts, occupancy, price, and cancellation rules before continuing.';
+
+  @override
+  String get travelFlightSearchGuidance =>
+      'Choose the route, date, and passenger count. Flight availability and fares always come from the Travel backend.';
+
+  @override
+  String get travelFlightResultsGuidance =>
+      'Compare backend-provided times, airline, cabin, baggage, fare, and refundability before selecting.';
+
+  @override
+  String get travelFlightDetailsGuidance =>
+      'Review the flight, fare components, baggage, passenger count, and cancellation rules before continuing.';
+
+  @override
+  String travelSelectedForComparison(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get travelCompare => 'Compare';
+
+  @override
+  String get travelCompareLimit =>
+      'You can compare up to three options at a time.';
+
+  @override
+  String get travelCompareHotels => 'Compare hotels';
+
+  @override
+  String get travelCompareFlights => 'Compare flights';
+
+  @override
+  String get travelComparisonUsesBackendFacts =>
+      'Only facts returned by the backend are shown. Missing facts are not inferred.';
+
+  @override
+  String get travelAddress => 'Address';
+
+  @override
+  String get travelAircraft => 'Aircraft';
+
+  @override
+  String get travelDescription => 'Description';
+
+  @override
+  String get travelDuration => 'Duration';
+
+  @override
+  String get travelRefundPolicy => 'Refund policy';
+
+  @override
+  String get travelPostPurchaseGuidance =>
+      'Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel.';
 }

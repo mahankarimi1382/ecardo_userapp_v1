@@ -1426,6 +1426,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get otherServicesTitle => 'Другие услуги';
 
   @override
+  String get dynamicPasswordTitle => 'Динамический пароль';
+
+  @override
+  String get dynamicPasswordDesc => '6-значный код для оплаты с кошелька';
+
+  @override
   String get otherServicesQrCode => 'QR-код';
 
   @override
@@ -5624,475 +5630,563 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelTitle => 'eCardo Travel';
 
   @override
-  String get travelHeroEyebrow => 'A better travel experience';
+  String get travelHeroEyebrow => 'Путешествия стали удобнее';
 
   @override
-  String get travelHeroTitle => 'Book your next journey today';
+  String get travelHeroTitle => 'Забронируйте следующую поездку сегодня';
 
   @override
-  String get travelFlights => 'Flights';
+  String get travelFlights => 'Авиабилеты';
 
   @override
-  String get travelHotels => 'Hotels';
+  String get travelHotels => 'Отели';
 
   @override
   String get travelEsim => 'eSIM';
 
   @override
-  String get travelRecentActivity => 'Recent activity';
+  String get travelRecentActivity => 'Недавняя активность';
 
   @override
-  String get travelViewAll => 'View all';
+  String get travelViewAll => 'Показать все';
 
   @override
-  String get travelMainWallet => 'Main eCardo wallet';
+  String get travelMainWallet => 'Основной кошелек eCardo';
 
   @override
   String get travelWalletSharedDescription =>
-      'The same secure wallet you use across eCardo';
+      'Тот же защищенный кошелек, которым вы пользуетесь в eCardo';
 
   @override
-  String get travelHotelSearch => 'Hotel search';
+  String get travelHotelSearch => 'Поиск отелей';
 
   @override
-  String get travelHotelHero => 'Stay somewhere unforgettable';
+  String get travelHotelHero => 'Остановитесь в незабываемом месте';
 
   @override
-  String get travelDestinationCountry => 'Destination country';
+  String get travelDestinationCountry => 'Страна назначения';
 
   @override
-  String get travelDestinationCity => 'City';
+  String get travelDestinationCity => 'Город';
 
   @override
-  String get travelCheckIn => 'Check-in';
+  String get travelCheckIn => 'Заезд';
 
   @override
-  String get travelCheckOut => 'Check-out';
+  String get travelCheckOut => 'Выезд';
 
   @override
-  String get travelGuests => 'Guests';
+  String get travelGuests => 'Гости';
 
   @override
-  String get travelSearchHotels => 'Search hotels';
+  String get travelSearchHotels => 'Искать отели';
 
   @override
-  String get travelRecentSearches => 'Recent searches';
+  String get travelRecentSearches => 'Недавние поиски';
 
   @override
-  String get travelHotelResults => 'Hotel results';
+  String get travelHotelResults => 'Результаты по отелям';
 
   @override
-  String get travelNoHotelResults => 'No matching hotels were found.';
+  String get travelNoHotelResults => 'Подходящие отели не найдены.';
 
   @override
-  String get travelStartingPrice => 'Starting price per stay';
+  String get travelStartingPrice => 'Начальная цена за проживание';
 
   @override
-  String get travelViewDetails => 'View details';
+  String get travelViewDetails => 'Подробнее';
 
   @override
-  String get travelHotelDetails => 'Hotel details';
+  String get travelHotelDetails => 'Детали отеля';
 
   @override
-  String get travelOfferUnavailable => 'This offer is no longer available.';
+  String get travelOfferUnavailable => 'Это предложение больше недоступно.';
 
   @override
-  String get travelReserveHotel => 'Reserve hotel';
+  String get travelReserveHotel => 'Забронировать отель';
 
   @override
-  String get travelIncluded => 'Included';
+  String get travelIncluded => 'Включено';
 
   @override
-  String get travelFree => 'Free';
+  String get travelFree => 'Бесплатно';
 
   @override
-  String get travelAboutHotel => 'About the hotel';
+  String get travelAboutHotel => 'Об отеле';
 
   @override
   String get travelHotelDescription =>
-      'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the eCardo Travel API.';
+      'Комфортное городское размещение с удобными номерами, внимательным сервисом и удобным доступом к главным достопримечательностям. Итоговое описание номера и правила будут предоставлены API eCardo Travel.';
 
   @override
-  String get travelPolicies => 'Policies';
+  String get travelPolicies => 'Правила';
 
   @override
-  String get travelCancellation => 'Cancellation';
+  String get travelCancellation => 'Отмена';
 
   @override
   String get travelCancellationSummary =>
-      'Free cancellation before the stated deadline';
+      'Бесплатная отмена до указанного срока';
 
   @override
-  String get travelFlightSearch => 'Flight search';
+  String get travelFlightSearch => 'Поиск рейсов';
 
   @override
-  String get travelFlightHero => 'Your dream journey starts here';
+  String get travelFlightHero => 'Путешествие мечты начинается здесь';
 
   @override
-  String get travelOrigin => 'Origin';
+  String get travelOrigin => 'Откуда';
 
   @override
-  String get travelDestination => 'Destination';
+  String get travelDestination => 'Куда';
 
   @override
-  String get travelDepartureDate => 'Departure date';
+  String get travelDepartureDate => 'Дата вылета';
 
   @override
-  String get travelAdults => 'Adults';
+  String get travelReturnDate => 'Дата возвращения';
 
   @override
-  String get travelChildren => 'Children';
+  String get travelOneWay => 'В одну сторону';
 
   @override
-  String get travelSearchFlights => 'Search flights';
+  String get travelRoundTrip => 'Туда и обратно';
 
   @override
-  String get travelFlightResults => 'Flight results';
+  String get travelAdults => 'Взрослые';
 
   @override
-  String get travelNoFlightResults => 'No matching flights were found.';
+  String get travelChildren => 'Дети';
 
   @override
-  String get travelSelectFlight => 'Select flight';
+  String get travelInfants => 'Младенцы';
 
   @override
-  String get travelFlightDetails => 'Flight and passenger details';
+  String get travelCabinClass => 'Класс обслуживания';
 
   @override
-  String get travelContinueToPayment => 'Continue to payment';
+  String get travelEconomy => 'Эконом';
 
   @override
-  String get travelPassengerReview => 'Passenger review';
+  String get travelBusiness => 'Бизнес';
 
   @override
-  String get travelPrimaryPassenger => 'Primary passenger';
+  String get travelSearchFlights => 'Искать рейсы';
+
+  @override
+  String get travelFlightResults => 'Результаты по рейсам';
+
+  @override
+  String get travelNoFlightResults => 'Подходящие рейсы не найдены.';
+
+  @override
+  String get travelAlternativeFlights => 'Альтернативные рейсы';
+
+  @override
+  String get travelAlternativeFlightsDescription =>
+      'По точному запросу нет совпадений. Эти ближайшие варианты показаны как альтернативы; измените поиск, чтобы выбрать другой маршрут или дату.';
+
+  @override
+  String get travelSelectFlight => 'Выбрать рейс';
+
+  @override
+  String get travelSelectReturnFlight => 'Выбрать обратный рейс';
+
+  @override
+  String get travelOutboundFlight => 'Рейс туда';
+
+  @override
+  String get travelReturnFlight => 'Обратный рейс';
+
+  @override
+  String get travelFlightDetails => 'Данные рейса и пассажира';
+
+  @override
+  String get travelContinueToPayment => 'Перейти к оплате';
+
+  @override
+  String get travelPassengerReview => 'Проверка пассажира';
+
+  @override
+  String get travelPrimaryPassenger => 'Основной пассажир';
 
   @override
   String get travelPassengerFromProfile =>
-      'Details are shared from your eCardo profile';
+      'Данные берутся из вашего профиля eCardo';
 
   @override
-  String get travelFareDetails => 'Fare details';
+  String get travelFareDetails => 'Детали тарифа';
 
   @override
-  String get travelBaseFare => 'Base fare';
+  String get travelBaseFare => 'Базовый тариф';
 
   @override
-  String get travelTaxesAndFees => 'Taxes and fees';
+  String get travelTaxesAndFees => 'Налоги и сборы';
 
   @override
-  String get travelTotal => 'Total';
+  String get travelTotal => 'Итого';
 
   @override
-  String get travelBrowseEsimPackages => 'Browse eSIM packages';
+  String get travelBrowseEsimPackages => 'Смотреть пакеты eSIM';
 
   @override
-  String get travelEsimIntroTitle => 'Stay connected wherever you travel';
+  String get travelEsimIntroTitle => 'Оставайтесь на связи в поездках';
 
   @override
   String get travelEsimIntroDescription =>
-      'Choose a digital data package, pay from your main eCardo wallet and activate it without replacing your physical SIM.';
+      'Выберите цифровой пакет данных, оплатите из основного кошелька eCardo и активируйте его без замены физической SIM-карты.';
 
   @override
-  String get travelEsimInstantTitle => 'Instant delivery';
+  String get travelEsimInstantTitle => 'Мгновенная доставка';
 
   @override
   String get travelEsimInstantDescription =>
-      'Activation details are available immediately after payment.';
+      'Данные для активации доступны сразу после оплаты.';
 
   @override
-  String get travelEsimCoverageTitle => 'Travel-ready coverage';
+  String get travelEsimCoverageTitle => 'Покрытие для поездок';
 
   @override
   String get travelEsimCoverageDescription =>
-      'Choose local or global packages for your destination.';
+      'Выберите локальные или глобальные пакеты для вашего направления.';
 
   @override
-  String get travelEsimTransparentTitle => 'Transparent pricing';
+  String get travelEsimTransparentTitle => 'Прозрачные цены';
 
   @override
   String get travelEsimTransparentDescription =>
-      'See the backend-confirmed total before you pay.';
+      'Смотрите подтвержденную сервером сумму до оплаты.';
 
   @override
-  String get travelEsimPackages => 'eSIM packages';
+  String get travelEsimPackages => 'Пакеты eSIM';
 
   @override
-  String get travelChoosePackage => 'Choose a package';
+  String get travelNoEsimPackages => 'Подходящие пакеты eSIM не найдены.';
 
   @override
-  String get travelMostPopular => 'Most popular';
+  String get travelChoosePackage => 'Выберите пакет';
 
   @override
-  String get travelSelect => 'Select';
+  String get travelMostPopular => 'Самое популярное';
+
+  @override
+  String get travelSelect => 'Выбрать';
 
   @override
   String travelValidityDays(int days) {
-    return '$days days validity';
+    return 'Срок действия: $days дн.';
   }
 
   @override
-  String get travelWalletCheckout => 'Wallet checkout';
+  String get travelWalletCheckout => 'Оплата кошельком';
 
   @override
-  String get travelBackendConfirmedPrice => 'Price confirmed by eCardo Travel';
+  String get travelBackendConfirmedPrice => 'Цена подтверждена eCardo Travel';
 
   @override
-  String get travelPaymentMethod => 'Payment method';
+  String get travelPaymentMethod => 'Способ оплаты';
 
   @override
-  String get travelAvailableBalance => 'Available balance';
+  String get travelAvailableBalance => 'Доступный баланс';
 
   @override
   String get travelInsufficientBalance =>
-      'Your main wallet balance is insufficient. Add money, then return to refresh checkout.';
+      'На основном кошельке недостаточно средств. Пополните баланс и вернитесь, чтобы обновить оплату.';
 
   @override
-  String get travelPriceSummary => 'Price summary';
+  String get travelPriceSummary => 'Сводка цены';
 
   @override
-  String get travelSubtotal => 'Subtotal';
+  String get travelSubtotal => 'Промежуточный итог';
 
   @override
-  String get travelWalletPayment => 'Wallet payment';
+  String get travelWalletPayment => 'Оплата кошельком';
 
   @override
   String get travelCheckoutSafetyNote =>
-      'Payment is submitted once using an idempotent booking request.';
+      'Платеж отправляется один раз с идемпотентным запросом бронирования.';
 
   @override
-  String get travelPayFromWallet => 'Pay from wallet';
+  String get travelPayFromWallet => 'Оплатить из кошелька';
 
   @override
-  String get travelAddMoney => 'Add money';
+  String get travelAddMoney => 'Пополнить';
 
   @override
-  String get travelPaymentFailed => 'Payment was not completed';
+  String get travelPaymentFailed => 'Оплата не завершена';
 
   @override
   String get travelPaymentFailedDescription =>
-      'Your wallet was not treated as paid. Please review the booking and try again.';
+      'Ваш кошелек не был отмечен как оплаченный. Проверьте бронирование и повторите попытку.';
 
   @override
-  String get travelHotelVoucher => 'Hotel voucher';
+  String get travelHotelVoucher => 'Ваучер отеля';
 
   @override
-  String get travelFlightTicket => 'Flight ticket';
+  String get travelFlightTicket => 'Авиабилет';
 
   @override
-  String get travelEsimActivation => 'eSIM activation';
+  String get travelEsimActivation => 'Активация eSIM';
 
   @override
-  String get travelVoucherReady => 'Your confirmed hotel voucher is ready.';
+  String get travelVoucherReady => 'Подтвержденный ваучер отеля готов.';
 
   @override
-  String get travelTicketReady => 'Your issued flight ticket is ready.';
+  String get travelTicketReady => 'Ваш авиабилет выпущен и готов.';
 
   @override
-  String get travelEsimReady => 'Your eSIM is active and ready to install.';
+  String get travelEsimReady => 'Ваша eSIM активна и готова к установке.';
 
   @override
-  String get travelPurchaseSuccessful => 'Purchase successful';
+  String get travelPurchaseSuccessful => 'Покупка успешна';
 
   @override
-  String get travelReference => 'Reference';
+  String get travelReference => 'Ссылка';
 
   @override
-  String get travelStatus => 'Status';
+  String get travelStatus => 'Статус';
 
   @override
-  String get travelActive => 'Active';
+  String get travelActive => 'Активно';
 
   @override
-  String get travelConfirmed => 'Confirmed';
+  String get travelConfirmed => 'Подтверждено';
 
   @override
-  String get travelCompleted => 'Completed';
+  String get travelCompleted => 'Завершено';
 
   @override
-  String get travelRefunded => 'Refunded';
+  String get travelRefunded => 'Возвращено';
 
   @override
-  String get travelFailed => 'Failed';
+  String get travelFailed => 'Ошибка';
 
   @override
-  String get travelBookingFailed => 'Booking failed';
+  String get travelBookingFailed => 'Бронирование не удалось';
 
   @override
   String get travelBookingFailedDescription =>
-      'This booking did not complete. Review the order status before trying another payment.';
+      'Это бронирование не завершено. Проверьте статус заказа перед повторной оплатой.';
 
   @override
-  String get travelBookingRefunded => 'Booking refunded';
+  String get travelBookingRefunded => 'Бронирование возвращено';
 
   @override
   String get travelBookingRefundedDescription =>
-      'The payment for this booking has been returned to the wallet.';
+      'Оплата за это бронирование возвращена в кошелек.';
 
   @override
-  String get travelPendingConfirmation => 'Pending confirmation';
+  String get travelPendingConfirmation => 'Ожидает подтверждения';
 
   @override
-  String get travelHotelBookingSubmitted => 'Hotel booking submitted';
+  String get travelHotelBookingSubmitted => 'Бронирование отеля отправлено';
 
   @override
   String get travelHotelPendingConfirmationDescription =>
-      'Payment was received. eCardo Travel is confirming the hotel with the authorized supplier before issuing your voucher.';
+      'Оплата получена. eCardo Travel подтверждает отель у авторизованного поставщика перед выпуском ваучера.';
 
   @override
-  String get travelPaidAmount => 'Paid amount';
+  String get travelPaidAmount => 'Оплаченная сумма';
 
   @override
-  String get travelActivationDetails => 'Activation details';
+  String get travelActivationDetails => 'Данные активации';
 
   @override
   String get travelActivationInstructions =>
-      'Open your device cellular settings, add an eSIM and use the secure installation details returned by the eCardo backend.';
+      'Откройте настройки сотовой связи устройства, добавьте eSIM и используйте защищенные данные установки, полученные от сервера eCardo.';
 
   @override
-  String get travelViewMyBookings => 'View my bookings';
+  String get travelViewMyBookings => 'Мои бронирования';
 
   @override
-  String get travelMyBookings => 'My bookings';
+  String get travelMyBookings => 'Мои бронирования';
 
   @override
-  String get travelAllBookings => 'All bookings';
+  String get travelAllBookings => 'Все бронирования';
 
   @override
-  String get travelMyHotels => 'My hotels';
+  String get travelMyHotels => 'Мои отели';
 
   @override
-  String get travelMyFlights => 'My flights';
+  String get travelMyFlights => 'Мои рейсы';
 
   @override
-  String get travelMyEsims => 'My eSIMs';
+  String get travelMyEsims => 'Мои eSIM';
 
   @override
-  String get travelMyHotelsDescription => 'Confirmed stays and hotel vouchers';
+  String get travelMyHotelsDescription =>
+      'Подтвержденные проживания и ваучеры отелей';
 
   @override
-  String get travelMyFlightsDescription => 'Booked flights and issued tickets';
+  String get travelMyFlightsDescription =>
+      'Забронированные рейсы и выпущенные билеты';
 
   @override
-  String get travelMyEsimsDescription => 'Active and previous data packages';
+  String get travelMyEsimsDescription => 'Активные и прошлые пакеты данных';
 
   @override
-  String get travelNoBookings => 'You do not have any travel bookings yet.';
+  String get travelNoBookings => 'У вас пока нет бронирований путешествий.';
 
   @override
-  String get travelNoHotels => 'You do not have any hotel bookings yet.';
+  String get travelNoHotels => 'У вас пока нет бронирований отелей.';
 
   @override
-  String get travelNoFlights => 'You do not have any flight bookings yet.';
+  String get travelNoFlights => 'У вас пока нет бронирований рейсов.';
 
   @override
-  String get travelNoEsims => 'You do not have any eSIM purchases yet.';
+  String get travelNoEsims => 'У вас пока нет покупок eSIM.';
 
   @override
-  String get travelSavedTravelers => 'Saved travelers';
+  String get travelSavedTravelers => 'Сохраненные путешественники';
 
   @override
-  String get travelNoTravelers => 'No saved travelers are available yet.';
+  String get travelNoTravelers => 'Сохраненных путешественников пока нет.';
 
   @override
-  String get travelAddTraveler => 'Add traveler';
+  String get travelAddTraveler => 'Добавить путешественника';
 
   @override
-  String get travelEditTraveler => 'Edit traveler';
+  String get travelEditTraveler => 'Редактировать путешественника';
 
   @override
-  String get travelTravelerFullName => 'Full name';
+  String get travelTravelerFullName => 'Полное имя';
 
   @override
-  String get travelPassportNumber => 'Passport number';
+  String get travelFirstName => 'Имя';
 
   @override
-  String get travelNationalityCode => 'Nationality code';
+  String get travelLastName => 'Фамилия';
 
   @override
-  String get travelNationalityCodeInvalid => 'Enter a two-letter country code';
+  String get travelBirthDate => 'Дата рождения';
 
   @override
-  String get travelFieldRequired => 'This field is required';
+  String get travelPassportExpiry => 'Срок действия паспорта';
 
   @override
-  String get travelSaveTraveler => 'Save traveler';
+  String get travelGender => 'Пол';
 
   @override
-  String get travelAccount => 'Travel account';
+  String get travelMale => 'Мужской';
 
   @override
-  String get travelAccountHolder => 'eCardo member';
+  String get travelFemale => 'Женский';
+
+  @override
+  String get travelNotificationContact => 'Уведомления о бронировании';
+
+  @override
+  String get travelPhone => 'Номер телефона';
+
+  @override
+  String get travelEmail => 'Электронная почта';
+
+  @override
+  String get travelPassengerDetailsRequired =>
+      'Заполните данные всех пассажиров и добавьте телефон или электронную почту для уведомлений.';
+
+  @override
+  String get travelAdultPassenger => 'Взрослый пассажир';
+
+  @override
+  String get travelChildPassenger => 'Ребёнок-пассажир';
+
+  @override
+  String get travelInfantPassenger => 'Младенец-пассажир';
+
+  @override
+  String get travelCompleteTravelerDetails => 'Заполните данные пассажира';
+
+  @override
+  String get travelPassportNumber => 'Номер паспорта';
+
+  @override
+  String get travelNationalityCode => 'Код гражданства';
+
+  @override
+  String get travelNationalityCodeInvalid => 'Введите двухбуквенный код страны';
+
+  @override
+  String get travelFieldRequired => 'Это поле обязательно';
+
+  @override
+  String get travelSaveTraveler => 'Сохранить путешественника';
+
+  @override
+  String get travelAccount => 'Аккаунт путешествий';
+
+  @override
+  String get travelAccountHolder => 'Участник eCardo';
 
   @override
   String get travelMemberDescription =>
-      'Shared profile, wallet and traveler information';
+      'Общий профиль, кошелек и данные путешественника';
 
   @override
-  String get travelMyBookingsDescription => 'Hotels, flights and active eSIMs';
+  String get travelMyBookingsDescription => 'Отели, рейсы и активные eSIM';
 
   @override
   String get travelSavedTravelersDescription =>
-      'Reuse passenger details securely';
+      'Безопасно используйте данные пассажира повторно';
 
   @override
-  String get travelPersonalInformation => 'Personal information';
+  String get travelPersonalInformation => 'Личная информация';
 
   @override
   String get travelPersonalInformationDescription =>
-      'Manage details shared with Travel';
+      'Управление данными, передаваемыми в Travel';
 
   @override
-  String get travelHistory => 'Travel and wallet history';
+  String get travelHistory => 'История путешествий и кошелька';
 
   @override
   String get travelHistoryDescription =>
-      'View purchases and wallet activity together';
+      'Просмотр покупок и активности кошелька вместе';
 
   @override
-  String get travelNoActivity => 'No travel or wallet activity is available.';
+  String get travelNoActivity => 'Нет активности путешествий или кошелька.';
 
   @override
-  String get travelMockIran => 'Iran';
+  String get travelMockIran => 'Иран';
 
   @override
-  String get travelMockTehran => 'Tehran';
+  String get travelMockTehran => 'Тегеран';
 
   @override
-  String get travelMockGuests => '2 adults, 1 child';
+  String get travelMockGuests => '2 взрослых, 1 ребенок';
 
   @override
-  String get travelMockTehranHotels => 'Hotels in Tehran';
+  String get travelMockTehranHotels => 'Отели в Тегеране';
 
   @override
-  String get travelMockHotelEspinas => 'Espinas Palace Hotel';
+  String get travelMockHotelEspinas => 'Отель Espinas Palace';
 
   @override
-  String get travelMockHotelEspinasLocation => 'Saadat Abad, Tehran';
+  String get travelMockHotelEspinasLocation => 'Саадат-Абад, Тегеран';
 
   @override
-  String get travelMockHotelParsian => 'Parsian International Hotel';
+  String get travelMockHotelParsian => 'Отель Parsian International';
 
   @override
-  String get travelMockHotelParsianLocation => 'Valiasr Street, Tehran';
+  String get travelMockHotelParsianLocation => 'Улица Валиаср, Тегеран';
 
   @override
-  String get travelMockHotelVisteria => 'Visteria Hotel';
+  String get travelMockHotelVisteria => 'Отель Visteria';
 
   @override
-  String get travelMockHotelVisteriaLocation => 'Tajrish, Tehran';
+  String get travelMockHotelVisteriaLocation => 'Таджриш, Тегеран';
 
   @override
-  String get travelMockTehranAirport => 'Tehran (THR)';
+  String get travelMockTehranAirport => 'Тегеран (THR)';
 
   @override
-  String get travelMockIstanbulAirport => 'Istanbul (IST)';
+  String get travelMockIstanbulAirport => 'Стамбул (IST)';
 
   @override
-  String get travelMockRouteTehranIstanbul => 'Tehran → Istanbul';
+  String get travelMockRouteTehranIstanbul => 'Тегеран → Стамбул';
 
   @override
-  String get travelMockFlightTehranIstanbul => 'Tehran to Istanbul';
+  String get travelMockFlightTehranIstanbul => 'Тегеран — Стамбул';
 
   @override
   String get travelMockAirlineOne => 'eCardo Air';
@@ -6101,59 +6195,403 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelMockAirlineTwo => 'Atlas Airways';
 
   @override
-  String get travelEsimTurkey => 'Turkey eSIM';
+  String get travelEsimTurkey => 'eSIM Турция';
 
   @override
-  String get travelRecommended => 'Recommended';
+  String get travelRecommended => 'Рекомендуем';
 
   @override
-  String get travelBestValue => 'Best value';
+  String get travelBestValue => 'Лучшая цена';
 
   @override
-  String get travelLuxury => 'Luxury';
+  String get travelLuxury => 'Люкс';
 
   @override
-  String get travelDirect => 'Direct';
+  String get travelDirect => 'Прямой';
 
   @override
-  String get travelLowestPrice => 'Lowest price';
+  String get travelLowestPrice => 'Самая низкая цена';
 
   @override
-  String get travelFeatureBreakfast => 'Breakfast';
+  String get travelFeatureBreakfast => 'Завтрак';
 
   @override
-  String get travelFeaturePool => 'Pool';
+  String get travelFeaturePool => 'Бассейн';
 
   @override
-  String get travelFeatureWifi => 'Wi-Fi';
+  String get travelFeatureWifi => 'Wi‑Fi';
 
   @override
-  String get travelFeatureParking => 'Parking';
+  String get travelFeatureParking => 'Парковка';
 
   @override
-  String get travelFeatureAirportTransfer => 'Airport transfer';
+  String get travelFeatureAirportTransfer => 'Трансфер из аэропорта';
 
   @override
-  String get travelFeatureCabinBag => 'Cabin bag';
+  String get travelFeatureCabinBag => 'Ручная кладь';
 
   @override
-  String get travelFeatureRefundable => 'Refundable';
+  String get travelFeatureRefundable => 'Возвратный';
 
   @override
-  String get travelActivityFlightPurchase => 'Flight purchase';
+  String get travelActivityFlightPurchase => 'Покупка авиабилета';
 
   @override
-  String get travelActivityEsimPurchase => 'eSIM purchase';
+  String get travelActivityEsimPurchase => 'Покупка eSIM';
 
   @override
-  String get travelActivityWalletTopUp => 'Wallet top-up';
+  String get travelActivityWalletTopUp => 'Пополнение кошелька';
 
   @override
-  String get travelDemoOffer => 'Demo offer';
+  String get travelDemoOffer => 'Демо-предложение';
 
   @override
-  String get travelRequiresConfirmation => 'Confirmation required';
+  String get travelRequiresConfirmation => 'Требуется подтверждение';
 
   @override
-  String get travelHotelBooking => 'Hotel booking';
+  String get travelHotelBooking => 'Бронирование отеля';
+
+  @override
+  String get travelReviewStep => 'Проверка';
+
+  @override
+  String get travelConfirmationStep => 'Подтверждение';
+
+  @override
+  String get travelReviewConfirmation => 'Я проверил и подтверждаю эти данные';
+
+  @override
+  String get travelReviewConfirmationDescription =>
+      'Подтвердите пассажира, продукт, итоговую сумму и кошелек перед созданием бронирования.';
+
+  @override
+  String get travelReservationHoldActive =>
+      'Завершите оплату до истечения срока бронирования';
+
+  @override
+  String get travelReservationExpired =>
+      'Бронирование истекло. Начните заново, чтобы создать новое удержание.';
+
+  @override
+  String get travelNeedsAttention => 'Требует внимания';
+
+  @override
+  String get travelUpcomingAndActive => 'Предстоящие и активные';
+
+  @override
+  String get travelCancellationsAndRefunds => 'Отмены и возвраты';
+
+  @override
+  String get travelPaymentPending => 'Оплата ожидается';
+
+  @override
+  String get travelPaymentProcessing => 'Оплата обрабатывается';
+
+  @override
+  String get travelVoucherIssued => 'Ваучер выпущен';
+
+  @override
+  String get travelCancellationRequested => 'Запрошена отмена';
+
+  @override
+  String get travelRefundInReview => 'Возврат на рассмотрении';
+
+  @override
+  String get travelCancelled => 'Отменено';
+
+  @override
+  String get travelExpired => 'Истекло';
+
+  @override
+  String get travelStatusUnavailable => 'Статус недоступен';
+
+  @override
+  String get travelBookingCancelled => 'Бронирование отменено';
+
+  @override
+  String get travelBookingExpired => 'Бронирование истекло';
+
+  @override
+  String get travelCompletePayment => 'Завершить оплату';
+
+  @override
+  String get travelPaymentIsProcessing => 'Оплата обрабатывается';
+
+  @override
+  String get travelFlightRequestSubmitted => 'Запрос на рейс отправлен';
+
+  @override
+  String get travelEsimRequestSubmitted => 'Запрос eSIM отправлен';
+
+  @override
+  String get travelBookingStatusUnavailable => 'Статус бронирования недоступен';
+
+  @override
+  String get travelBookingCancelledDescription =>
+      'Это бронирование отменено. Активный ваучер недоступен.';
+
+  @override
+  String get travelBookingExpiredDescription =>
+      'Удержание бронирования истекло до подтверждения.';
+
+  @override
+  String get travelCancellationRequestedDescription =>
+      'Ваш запрос на отмену ожидает авторитетной проверки поставщиком.';
+
+  @override
+  String get travelRefundInReviewDescription =>
+      'Ваш запрос на возврат рассматривается. Итоговая сумма и сроки еще не подтверждены.';
+
+  @override
+  String get travelPaymentPendingDescription =>
+      'Оплата для этого бронирования не подтверждена.';
+
+  @override
+  String get travelPaymentProcessingDescription =>
+      'Результат кошелька еще проверяется. Не отправляйте повторный платеж.';
+
+  @override
+  String get travelSupplierPendingDescription =>
+      'Оплата получена, но подтверждение поставщика или документ поездки еще не готовы.';
+
+  @override
+  String get travelUnknownStatusDescription =>
+      'Последнее состояние бронирования не распознано. Обновите Мои бронирования перед действиями.';
+
+  @override
+  String get travelConfirmedArtifactPendingDescription =>
+      'Бронирование подтверждено, но ваучер или билет еще недоступны.';
+
+  @override
+  String get travelStatusReference => 'Ссылка на статус';
+
+  @override
+  String get travelRequestRefund => 'Запросить возврат';
+
+  @override
+  String get travelCancelBooking => 'Отменить бронирование';
+
+  @override
+  String get travelPurchaseDate => 'Дата покупки';
+
+  @override
+  String get travelSupplierReference => 'Ссылка поставщика';
+
+  @override
+  String get travelBookingNumber => 'Номер бронирования';
+
+  @override
+  String get travelVoucherNumber => 'Номер ваучера';
+
+  @override
+  String get travelRoom => 'Номер';
+
+  @override
+  String get travelRooms => 'Номера';
+
+  @override
+  String get travelBoard => 'Питание';
+
+  @override
+  String get travelCancellationPolicy => 'Политика отмены';
+
+  @override
+  String get travelBeneficiary => 'Пассажир или получатель';
+
+  @override
+  String get travelDeparture => 'Отправление';
+
+  @override
+  String get travelArrival => 'Прибытие';
+
+  @override
+  String get travelFlightNumber => 'Номер рейса';
+
+  @override
+  String get travelAirline => 'Авиакомпания';
+
+  @override
+  String get travelCabin => 'Класс салона';
+
+  @override
+  String get travelBaggage => 'Багаж';
+
+  @override
+  String get travelRefundReviewNotice =>
+      'Это отправит запрос на рассмотрение. Отмена и возврат не мгновенные; могут применяться штрафы поставщика.';
+
+  @override
+  String get travelReason => 'Причина';
+
+  @override
+  String get travelReasonPlansChanged => 'Планы поездки изменились';
+
+  @override
+  String get travelReasonBookingMistake => 'Ошибка бронирования';
+
+  @override
+  String get travelReasonPersonal => 'Личная причина';
+
+  @override
+  String get travelAdditionalNoteOptional =>
+      'Дополнительная заметка (необязательно)';
+
+  @override
+  String get travelKeepBooking => 'Сохранить бронирование';
+
+  @override
+  String get travelSubmitRequest => 'Отправить запрос';
+
+  @override
+  String get travelCancellationUnavailable =>
+      'Бронирование нельзя отменить в текущем состоянии.';
+
+  @override
+  String get travelRefundRequestAwaitingReview =>
+      'Ваш запрос на отмену и возврат ожидает рассмотрения.';
+
+  @override
+  String get travelPriceLowToHigh => 'Цена: по возрастанию';
+
+  @override
+  String get travelPriceHighToLow => 'Цена: по убыванию';
+
+  @override
+  String get travelRatingHighToLow => 'Рейтинг: по убыванию';
+
+  @override
+  String get travelAllRatings => 'Все рейтинги';
+
+  @override
+  String get travelRating => 'Рейтинг';
+
+  @override
+  String get travelSortAndFilter => 'Сортировка и фильтр';
+
+  @override
+  String get travelShortestDuration => 'Самая короткая длительность';
+
+  @override
+  String get travelNonRefundable => 'Невозвратный';
+
+  @override
+  String get travelEsimDeviceReadinessTitle =>
+      'Проверьте совместимость устройства';
+
+  @override
+  String get travelEsimDeviceReadinessDescription =>
+      'Перед покупкой убедитесь, что устройство поддерживает eSIM и не заблокировано для другого мобильного плана.';
+
+  @override
+  String get travelEsimCompatibilityNotice =>
+      'Покупка пакета не гарантирует совместимость устройства. Детали установки появятся только после готовности eSIM на сервере.';
+
+  @override
+  String get travelEsimValidity => 'Срок действия';
+
+  @override
+  String get travelEsimActivationReady => 'Данные установки eSIM готовы.';
+
+  @override
+  String get travelPaymentReceived => 'Оплата получена';
+
+  @override
+  String get travelPaymentReceivedDescription =>
+      'Оплата получена. eCardo Travel завершает подтверждение поставщика перед выпуском итогового документа.';
+
+  @override
+  String get travelSearchFailedDescription =>
+      'Поиск не завершен. Предыдущие результаты, если они есть, остаются на экране; измените поиск или попробуйте снова.';
+
+  @override
+  String get travelReservationFailedDescription =>
+      'Не удалось создать бронирование. В этой сессии приложения средства с кошелька не списывались.';
+
+  @override
+  String get travelRefundFailedDescription =>
+      'Запрос на отмену или возврат не отправлен. Проверьте бронирование и попробуйте снова.';
+
+  @override
+  String get travelNoPaymentAttemptedAfterExpiry =>
+      'Для этого истекшего удержания в этой сессии приложения оплата не выполнялась и средства не списывались.';
+
+  @override
+  String get travelLastUpdated => 'Последнее обновление';
+
+  @override
+  String get travelJourneySearch => 'Поиск';
+
+  @override
+  String get travelJourneyCompare => 'Сравнение';
+
+  @override
+  String get travelJourneyReview => 'Проверка';
+
+  @override
+  String get travelJourneyPay => 'Оплата';
+
+  @override
+  String get travelHotelSearchGuidance =>
+      'Выберите направление, даты и гостей. Результаты и доступность всегда поступают с сервера Travel.';
+
+  @override
+  String get travelHotelResultsGuidance =>
+      'Перед открытием варианта сравните цену, рейтинг, удобства, расположение, номера и правила с сервера.';
+
+  @override
+  String get travelHotelDetailsGuidance =>
+      'Перед продолжением проверьте объект, номер, размещение, цену и правила отмены.';
+
+  @override
+  String get travelFlightSearchGuidance =>
+      'Выберите маршрут, дату и пассажиров. Наличие и тарифы всегда поступают с сервера Travel.';
+
+  @override
+  String get travelFlightResultsGuidance =>
+      'Перед выбором сравните время, авиакомпанию, класс, багаж, тариф и возвратность с сервера.';
+
+  @override
+  String get travelFlightDetailsGuidance =>
+      'Перед продолжением проверьте рейс, компоненты тарифа, багаж, пассажиров и правила отмены.';
+
+  @override
+  String travelSelectedForComparison(int count) {
+    return 'Выбрано: $count';
+  }
+
+  @override
+  String get travelCompare => 'Сравнить';
+
+  @override
+  String get travelCompareLimit =>
+      'Одновременно можно сравнить не более трёх вариантов.';
+
+  @override
+  String get travelCompareHotels => 'Сравнение отелей';
+
+  @override
+  String get travelCompareFlights => 'Сравнение рейсов';
+
+  @override
+  String get travelComparisonUsesBackendFacts =>
+      'Показаны только данные сервера. Отсутствующие сведения не предполагаются.';
+
+  @override
+  String get travelAddress => 'Адрес';
+
+  @override
+  String get travelAircraft => 'Самолёт';
+
+  @override
+  String get travelDescription => 'Описание';
+
+  @override
+  String get travelDuration => 'Длительность';
+
+  @override
+  String get travelRefundPolicy => 'Правила возврата';
+
+  @override
+  String get travelPostPurchaseGuidance =>
+      'Сохраните номер, обновляйте «Мои бронирования» и используйте только документы, выданные сервером.';
 }

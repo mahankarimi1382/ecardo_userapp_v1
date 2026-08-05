@@ -8,7 +8,7 @@ class DynamicDecimalsHelper {
     final bool dynamicDecimal = currencyCode == siteCurrencyCode;
 
     if (dynamicDecimal) {
-      return int.tryParse(siteCurrencyDecimals!) ?? 2;
+      return int.tryParse(siteCurrencyDecimals ?? "") ?? 2;
     } else {
       return isCrypto ? 8 : 2;
     }
