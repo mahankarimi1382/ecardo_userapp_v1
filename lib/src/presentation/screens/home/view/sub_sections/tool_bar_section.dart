@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:qunzo_user/src/app/constants/app_colors.dart';
 import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:qunzo_user/src/app/routes/routes.dart';
+import 'package:qunzo_user/src/common/widgets/kyc_rank_badge.dart';
 import 'package:qunzo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 class ToolBarSection extends StatelessWidget {
@@ -19,6 +20,17 @@ class ToolBarSection extends StatelessWidget {
         ),
         Row(
           children: [
+            // KYC rank badge (gray/green/gold) next to bell
+            Obx(() {
+              final userData = Get.find<HomeController>()
+                  .userModel
+                  .value
+                  .data;
+              return Padding(
+                padding: const EdgeInsetsDirectional.only(end: 10),
+                child: KycRankBadge(badge: userData?.kycBadge, size: 32),
+              );
+            }),
             GestureDetector(
               onTap: () {
                 Get.toNamed(BaseRoute.notifications);

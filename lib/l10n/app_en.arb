@@ -739,10 +739,10 @@
   "idVerificationHistoryButton": "KYC History",
   "idVerificationCenterTitle": "Verification Center",
   "idVerificationNothingToSubmit": "You have nothing to submit",
-  "kycStatusVerified": "You have submitted your documents and it is verified",
-  "kycStatusPending": "You have submitted your documents and it is awaiting for the approval",
+  "kycStatusVerified": "Verified",
+  "kycStatusPending": "Pending",
   "kycStatusRejected": "Your KYC verification has failed. Please resubmit the documents.",
-  "kycStatusNotSubmitted": "You have not submitted any KYC documents yet",
+  "kycStatusNotSubmitted": "Not verified",
   "comment_kyc_history_screen": "==== KYC History Screen ====",
   "kycHistoryScreenTitle": "KYC History",
   "kycHistoryDate": "Date:",
@@ -2073,5 +2073,11 @@
   "travelDescription": "Description",
   "travelDuration": "Duration",
   "travelRefundPolicy": "Refund policy",
-  "travelPostPurchaseGuidance": "Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel."
+  "travelPostPurchaseGuidance": "Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel.",
+  "otherServicesKycPending": "Your KYC is pending approval; this feature will unlock once verified.",
+  "otherServicesKycUpgradeRequired": "This feature requires a higher KYC level. Please complete verification.",
+  "kycRankBasic": "Basic",
+  "kycRankStandard": "Verified",
+  "kycRankMerchant": "Merchant",
+  "kycStatusFailed": "Rejected"
 }

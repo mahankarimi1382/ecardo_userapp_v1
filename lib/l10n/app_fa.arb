@@ -739,10 +739,10 @@
   "idVerificationHistoryButton": "تاریخچه KYC",
   "idVerificationCenterTitle": "مرکز تأیید",
   "idVerificationNothingToSubmit": "شما چیزی برای ارسال ندارید",
-  "kycStatusVerified": "مدارک شما ارسال و تأیید شده است",
-  "kycStatusPending": "مدارک شما ارسال شده و در انتظار تأیید است",
+  "kycStatusVerified": "تأیید شده",
+  "kycStatusPending": "در انتظار تأیید",
   "kycStatusRejected": "تأیید KYC شما رد شده است. لطفاً مدارک را مجدداً ارسال کنید.",
-  "kycStatusNotSubmitted": "شما هنوز هیچ مدرک KYC ارسال نکرده‌اید",
+  "kycStatusNotSubmitted": "احراز نشده",
   "comment_kyc_history_screen": "==== صفحه تاریخچه KYC ====",
   "kycHistoryScreenTitle": "تاریخچه KYC",
   "kycHistoryDate": "تاریخ:",
@@ -2073,5 +2073,11 @@
   "travelDescription": "توضیحات",
   "travelDuration": "مدت",
   "travelRefundPolicy": "قوانین استرداد",
-  "travelPostPurchaseGuidance": "کد پیگیری را نگه دارید، برای تغییر وضعیت «رزروهای من» را تازه‌سازی کنید و فقط از اسناد صادرشده توسط بک‌اند استفاده کنید."
+  "travelPostPurchaseGuidance": "کد پیگیری را نگه دارید، برای تغییر وضعیت «رزروهای من» را تازه‌سازی کنید و فقط از اسناد صادرشده توسط بک‌اند استفاده کنید.",
+  "otherServicesKycPending": "مدارک هویتی شما در انتظار بررسی است، پس از تأیید فعال خواهد شد.",
+  "otherServicesKycUpgradeRequired": "این قابلیت برای سطح احراز هویت شما فعال نیست. لطفاً مدارک هویتی را تکمیل کنید.",
+  "kycRankBasic": "پایه",
+  "kycRankStandard": "تأییدشده",
+  "kycRankMerchant": "بازرگان",
+  "kycStatusFailed": "رد شده"
 }

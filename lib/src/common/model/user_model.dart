@@ -1,3 +1,5 @@
+import 'kyc_badge_model.dart';
+
 class UserModel {
   String? status;
   String? message;
@@ -59,6 +61,8 @@ class UserData {
   bool? isRejected;
   String? rejectionReason;
   Addons? addons;
+  int? kycLevel;
+  KycBadge? kycBadge;
 
   UserData({
     this.id,
@@ -107,6 +111,8 @@ class UserData {
     this.isRejected,
     this.rejectionReason,
     this.addons,
+    this.kycLevel,
+    this.kycBadge,
   });
 
   UserData.fromJson(Map<String, dynamic> json) {
@@ -158,6 +164,8 @@ class UserData {
     isRejected = json['is_rejected'];
     rejectionReason = json['rejection_reason'];
     addons = json['addons'] != null ? Addons.fromJson(json['addons']) : null;
+    kycLevel = json['kyc_level'];
+    kycBadge = json['kyc_badge'] != null ? KycBadge.fromJson(json['kyc_badge']) : null;
   }
 }
 

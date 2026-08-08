@@ -25,14 +25,31 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
   void _handleKycNavigation({
     required String settingKey,
     required String route,
+    String? featureKey,
   }) {
     final localization = AppLocalizations.of(context)!;
     final kycEnabled = settings.getSetting(settingKey) != "0";
     final userKyc = homeController.userModel.value.data?.kyc ?? 0;
+    final kycBadge = homeController.userModel.value.data?.kycBadge;
 
     if (!kycEnabled && userKyc == 0) {
       ToastHelper().showErrorToast(localization.otherServicesKycVerification);
       return;
+    }
+
+    // MC: block feature based on kyc_level feature flag list (server-driven)
+    if (featureKey != null && kycBadge != null) {
+      final allowed = kycBadge.features.contains(featureKey);
+      final isPending = kycBadge.kycStatus == 'pending';
+      if (!allowed) {
+        ToastHelper().showErrorToast(
+          isPending
+              ? localization.otherServicesKycPending
+              : localization.otherServicesKycUpgradeRequired,
+        );
+        Get.toNamed(BaseRoute.signUpStatus, arguments: {"is_login_state": true});
+        return;
+      }
     }
 
     if (route.isNotEmpty) Get.toNamed(route);
@@ -52,23 +69,27 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         "title": localization.otherServicesQrCode,
         "icon": PngAssets.qrCodeService,
         "navigate": BaseRoute.qrCode,
+        "feature": null,
       },
       {
         "title": localization.otherServicesAddMoney,
         "icon": PngAssets.addMoneyService,
         "navigate": BaseRoute.addMoney,
+        "feature": "add_money",
       },
       if (settings.getSetting("agent_system") == "1")
         {
           "title": localization.otherServicesCashOut,
           "icon": PngAssets.cashOutService,
           "navigate": BaseRoute.cashOut,
+          "feature": "cashout",
         },
       if (settings.getSetting("merchant_system") == "1")
         {
           "title": localization.otherServicesMakePayment,
           "icon": PngAssets.makePaymentService,
           "navigate": BaseRoute.makePayment,
+          "feature": "payment",
         },
       {
         "title": localization.otherServicesTransactions,
@@ -79,16 +100,19 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         "title": localization.otherServicesPaymentLinks,
         "icon": PngAssets.paymentLinksService,
         "navigate": BaseRoute.paymentLinks,
+        "feature": "payment",
       },
       {
         "title": localization.otherServicesRequestMoney,
         "icon": PngAssets.requestMoneyService,
         "navigate": BaseRoute.requestMoney,
+        "feature": "request_money",
       },
       {
         "title": localization.otherServicesGift,
         "icon": PngAssets.giftService,
         "navigate": BaseRoute.giftCode,
+        "feature": "gift",
       },
       {
         "title": localization.otherServicesWallets,
@@ -99,16 +123,19 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         "title": localization.otherServicesWithdraw,
         "icon": PngAssets.withdrawService,
         "navigate": BaseRoute.withdraw,
+        "feature": "withdraw",
       },
       {
         "title": localization.otherServicesExchange,
         "icon": PngAssets.exchangeService,
         "navigate": BaseRoute.exchange,
+        "feature": "exchange",
       },
       {
         "title": localization.otherServicesTransfer,
         "icon": PngAssets.transferService,
         "navigate": BaseRoute.transfer,
+        "feature": "transfer",
       },
       {
         "title": localization.otherServicesInvite,
@@ -119,6 +146,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         "title": localization.otherServicesBillPayment,
         "icon": PngAssets.billPaymentService,
         "navigate": BaseRoute.billPayment,
+        "feature": "payment",
       },
       if (homeController.userModel.value.data?.addons?.virtualCards == true)
         {
@@ -203,12 +231,14 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                         return InkWell(
                           borderRadius: BorderRadius.circular(8),
                           onTap: () {
+                            final featureKey = item["feature"] as String?;
                             switch (title) {
                               case "Gift":
                                 if (settings.getSetting("user_gift") == "1") {
                                   _handleKycNavigation(
                                     settingKey: "kyc_gift",
                                     route: route,
+                                    featureKey: featureKey,
                                   );
                                 } else {
                                   ToastHelper().showErrorToast(
@@ -224,6 +254,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                                   _handleKycNavigation(
                                     settingKey: "kyc_deposit",
                                     route: route,
+                                    featureKey: featureKey,
                                   );
                                 } else {
                                   ToastHelper().showErrorToast(
@@ -234,7 +265,17 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                                 break;
 
                               default:
-                                if (route.isNotEmpty) Get.toNamed(route);
+                                if (route.isNotEmpty) {
+                                  if (featureKey != null) {
+                                    _handleKycNavigation(
+                                      settingKey: "kyc_deposit",
+                                      route: route,
+                                      featureKey: featureKey,
+                                    );
+                                  } else {
+                                    Get.toNamed(route);
+                                  }
+                                }
                                 break;
                             }
                           },
