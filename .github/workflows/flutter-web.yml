@@ -11,15 +11,6 @@ on:
         required: false
         default: '/web-app/'
         type: string
-      renderer:
-        description: 'Web renderer (canvaskit | html | auto)'
-        required: false
-        default: 'canvaskit'
-        type: choice
-        options:
-          - canvaskit
-          - html
-          - auto
 
 jobs:
   build-web:
@@ -104,11 +95,9 @@ jobs:
       - name: Build Web (release)
         run: |
           BASE_HREF="${{ inputs.base_href || '/web-app/' }}"
-          RENDERER="${{ inputs.renderer || 'canvaskit' }}"
-          echo "Building web with base-href=$BASE_HREF renderer=$RENDERER"
+          echo "Building web with base-href=$BASE_HREF"
           flutter build web --release \
             --base-href "$BASE_HREF" \
-            --web-renderer "$RENDERER" \
             --no-tree-shake-icons
           echo "Build output:"
           ls -la build/web/
