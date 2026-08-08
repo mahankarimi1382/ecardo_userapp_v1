@@ -1,0 +1,138 @@
+name: web
+
+on:
+  push:
+    branches:
+      - feature/kyc-multicountry-badge
+      - main
+  workflow_dispatch:
+    inputs:
+      baseHref:
+        description: 'Base href (e.g. /web-app/ or /)'
+        required: false
+        default: '/web-app/'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Flutter Web (release)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Web
+        run: flutter config --enable-web
+
+      - name: Regenerate web scaffold (idempotent)
+        run: |
+          # Only create web scaffold if it's missing the real Flutter template.
+          # We leave web/ as committed; flutter create will NOT overwrite existing files
+          # (index.html, manifest.json, favicon.png, icons/).
+          if [ ! -f "web/index.html" ]; then
+            echo "No web/index.html found; running flutter create..."
+            flutter create . --platforms=web --project-name=qunzo_user --org=com.ecardo
+          else
+            echo "web/index.html already exists; ensuring web/ is registered..."
+            flutter create . --platforms=web --project-name=qunzo_user --org=com.ecardo 2>&1 | tail -5 || true
+          fi
+          ls -la web/
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Analyze
+        run: flutter analyze 2>&1 | tee analyze.txt || { echo "::warning::flutter analyze had issues"; }
+
+      - name: Prepare PWA icons + manifest
+        run: |
+          set -e
+          SRC="ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
+          if [ -f "$SRC" ]; then
+            mkdir -p web/icons
+            cp "$SRC" web/icons/Icon-192.png
+            cp "$SRC" web/icons/Icon-512.png
+            cp "$SRC" web/icons/Icon-maskable-192.png
+            cp "$SRC" web/icons/Icon-maskable-512.png
+            cp "$SRC" web/favicon.png
+          fi
+
+          # Write a clean manifest.json
+          cat > web/manifest.json <<'JSON'
+          {
+            "name": "eCardo Wallet",
+            "short_name": "eCardo",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#7445FF",
+            "theme_color": "#7445FF",
+            "description": "eCardo Multi-Country Digital Wallet",
+            "orientation": "portrait-primary",
+            "prefer_related_applications": [
+              { "platform": "play", "url": "https://ecardo.ir/apk/user/user-release.apk" }
+            ],
+            "icons": [
+              { "src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png" },
+              { "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png" },
+              { "src": "icons/Icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+              { "src": "icons/Icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+            ]
+          }
+          JSON
+
+          # Ensure index.html meta description/title are correct
+          if grep -q '<meta name="description"' web/index.html; then
+            sed -i 's|<meta name="description"[^>]*>|<meta name="description" content="eCardo Multi-Country Digital Wallet">|' web/index.html
+          fi
+          sed -i 's|<title>.*</title>|<title>eCardo Wallet</title>|' web/index.html
+          echo "manifest.json and index.html prepared"
+          ls -la web/ web/icons/
+
+      - name: Build Web (release)
+        run: |
+          BASE_HREF="${{ inputs.baseHref || '/web-app/' }}"
+          echo "==> flutter build web --release --base-href $BASE_HREF"
+          flutter build web --release --base-href "$BASE_HREF" --no-tree-shake-icons
+          echo "==> Build output:"
+          ls -la build/web/
+          echo "==> main.dart.js:"
+          ls -la build/web/main.dart.js
+          echo "==> index.html head:"
+          head -20 build/web/index.html
+
+      - name: Create ZIP artifact
+        run: |
+          cd build/web
+          zip -r9 ../../web-build.zip .
+          cd ../..
+          ls -la web-build.zip
+
+      - name: Upload Web Build (directory)
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Web Build (zip)
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build-zip
+          path: web-build.zip
+          if-no-files-found: error
+          retention-days: 30
