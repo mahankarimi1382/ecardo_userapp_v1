@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="./">
+  <base href="$FLUTTER_BASE_HREF">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="eCardo - Digital Wallet (Multicountry/KYC)">
@@ -27,25 +27,12 @@
     <div class="loading-text">Loading eCardo Wallet...</div>
   </div>
   <script>
-    // Flutter web entrypoint — compatible with Flutter 3.x
-    var serviceWorkerVersion = null;
-    var scriptLoaded = false;
-    function loadMainDartJs() {
-      if (scriptLoaded) return;
-      scriptLoaded = true;
+    window.addEventListener('load', function(ev) {
       var scriptTag = document.createElement('script');
       scriptTag.src = 'main.dart.js';
       scriptTag.type = 'application/javascript';
       document.body.append(scriptTag);
-    }
-    window.addEventListener('load', function(ev) {
-      loadMainDartJs();
     });
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('flutter-first-frame', function () {
-        // navigator.serviceWorker.register('flutter_service_worker.js');
-      });
-    }
   </script>
 </body>
 </html>

@@ -29,7 +29,11 @@ jobs:
           cache: true
 
       - name: Enable web support
-        run: flutter config --enable-web
+        run: |
+          flutter config --enable-web
+          flutter create . --platforms=web --project-name=qunzo_user --org=com.ecardo 2>&1 | tail -10
+          # Ensure our custom index.html stays
+          git checkout web/index.html web/manifest.json 2>/dev/null || true
 
       - name: Install dependencies
         run: flutter pub get
