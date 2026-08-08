@@ -38,7 +38,7 @@ migrate_working_dir/
 /ios/
 /linux/
 /macos/
-/web/
+#/web/  # disabled (multicountry: web support added)
 /windows/
 
 # Local implementation handoff

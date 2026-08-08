@@ -1,9 +1,10 @@
-name: Flutter Android Build
+name: Flutter Android + Web Build
 
 on:
   push:
     branches:
       - main
+      - 'feature/**'
   workflow_dispatch:
 
 jobs:
@@ -24,26 +25,47 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.44.6"
+          channel: "stable"
           cache: true
+
+      - name: Enable web support
+        run: flutter config --enable-web
 
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Generate l10n
+        run: flutter gen-l10n
+
       - name: Run Analyze
-        run: |
-          flutter analyze 2>&1 | tee analysis_report.txt
+        run: flutter analyze 2>&1 | tee analysis_report.txt
 
       - name: Build Release APK
         run: |
-          flutter build apk --release 2>&1 | tee build_log.txt
+          flutter build apk --release 2>&1 | tee build_apk_log.txt
           test -f build/app/outputs/flutter-apk/app-release.apk
           echo "APK built successfully!"
+
+      - name: Build Web
+        run: |
+          flutter build web --release --base-href "/web-app/" 2>&1 | tee build_web_log.txt
+          test -f build/web/index.html
+          cd build/web && zip -r ../../web-build.zip . && cd ../../
+          echo "Web built successfully!"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Upload Web Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: web-build.zip
+          retention-days: 30
 
       - name: Deploy APK to eCardo Server
         continue-on-error: true
@@ -51,14 +73,13 @@ jobs:
           ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
         run: |
           if [ -z "$ECARDO_DEPLOY_SECRET" ]; then
-            echo "Skipping deployment because ECARDO_DEPLOY_SECRET is unavailable."
+            echo "Skipping APK deployment because ECARDO_DEPLOY_SECRET is unavailable."
             exit 0
           fi
 
-          # Extract version from pubspec.yaml (e.g. 1.0.1+2 -> 1.0.1)
-          VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
-          echo "Deploying version $VERSION"
-          
+          VERSION=$(grep -oP "^version:\s*\K[0-9.+]+" pubspec.yaml | head -1 || echo "1.0.0")
+          echo "Deploying APK version $VERSION to ecardo.ir"
+
           curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
@@ -67,12 +88,24 @@ jobs:
             -F "version=$VERSION" \
             -F "apk=@build/app/outputs/flutter-apk/app-release.apk"
 
-      - name: Upload Build Log
+      - name: Deploy Web to eCardo Server (via multipart uploader if available)
+        continue-on-error: true
+        env:
+          ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
+        run: |
+          if [ -z "$ECARDO_DEPLOY_SECRET" ]; then
+            echo "Skipping web deployment because ECARDO_DEPLOY_SECRET is unavailable."
+            exit 0
+          fi
+          echo "Web zip ready for manual deploy to /home/user/web-build.zip"
+
+      - name: Upload Build Logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-log
+          name: build-logs
           if-no-files-found: warn
           path: |
-            build_log.txt
+            build_apk_log.txt
+            build_web_log.txt
             analysis_report.txt
