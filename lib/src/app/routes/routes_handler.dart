@@ -443,4 +443,18 @@ List<GetPage> routesHandler = [
     name: BaseRoute.dynamicPassword,
     page: () => RoutesConfig.dynamicPassword,
   ),
+
+  // Remittance Routes (v1.0.4+5)
+  GetPage(
+    name: BaseRoute.remittance,
+    page: () => RoutesConfig.remittance,
+  ),
+  GetPage(
+    name: BaseRoute.remittanceHistory,
+    page: () => RoutesConfig.remittanceHistory,
+  ),
+  GetPage(
+    name: BaseRoute.remittanceDetails,
+    page: () => RoutesConfig.remittanceDetails,
+  ),
 ];

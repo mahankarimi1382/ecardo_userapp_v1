@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/controller/create_ad_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/widgets/create_ad_eligibility_failed_section.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/widgets/create_ad_placeholder_section.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/controller/create_ad_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/widgets/create_ad_eligibility_failed_section.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/widgets/create_ad_placeholder_section.dart';
 
 class CreateAdScreen extends StatefulWidget {
   const CreateAdScreen({super.key});

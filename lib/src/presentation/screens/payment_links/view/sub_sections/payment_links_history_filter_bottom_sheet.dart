@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
-import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
 
 import '../../../../../../l10n/app_localizations.dart';
 

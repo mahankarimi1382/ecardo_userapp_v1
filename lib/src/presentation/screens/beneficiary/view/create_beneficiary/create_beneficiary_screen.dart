@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
-import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
 
 class CreateBeneficiaryScreen extends StatelessWidget {
   const CreateBeneficiaryScreen({super.key});

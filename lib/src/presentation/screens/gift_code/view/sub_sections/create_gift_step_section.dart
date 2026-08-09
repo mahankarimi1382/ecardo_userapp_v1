@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_code/controller/create_gift_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_amount_step_section.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_review_section.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_success_step_section.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_wallet_section.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_code/controller/create_gift_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_amount_step_section.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_review_section.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_success_step_section.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_code/view/sub_sections/create_gift_wallet_section.dart';
 
 class CreateGiftStepSection extends StatefulWidget {
   const CreateGiftStepSection({super.key});

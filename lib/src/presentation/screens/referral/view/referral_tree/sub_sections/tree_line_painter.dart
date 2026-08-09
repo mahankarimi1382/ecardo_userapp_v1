@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/presentation/screens/referral/view/referral_tree/referral_tree.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/referral/view/referral_tree/referral_tree.dart';
 
 class TreeLinePainter extends CustomPainter {
   final Map<int, NodeInfo> nodeInfos;

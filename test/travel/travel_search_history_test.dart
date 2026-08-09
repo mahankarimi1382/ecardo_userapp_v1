@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/core/models/travel_models.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/core/models/travel_models.dart';
 
 void main() {
   test('hotel search history preserves backend request criteria', () {

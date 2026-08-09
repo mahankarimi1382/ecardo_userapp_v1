@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/common/controller/image_picker/image_picker_controller.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/controller/image_picker/image_picker_controller.dart';
 
 class ImagePickerDropdownBottomSheet extends StatelessWidget {
   const ImagePickerDropdownBottomSheet({super.key});

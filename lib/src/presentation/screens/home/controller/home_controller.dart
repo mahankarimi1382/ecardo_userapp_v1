@@ -5,21 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
-import 'package:qunzo_user/src/common/model/user_model.dart';
-import 'package:qunzo_user/src/common/services/biometric_auth_service.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/network/api/api_path.dart';
-import 'package:qunzo_user/src/network/response/status.dart';
-import 'package:qunzo_user/src/network/service/network_service.dart';
-import 'package:qunzo_user/src/network/service/token_service.dart';
-import 'package:qunzo_user/src/presentation/screens/home/model/dashboard_model.dart';
-import 'package:qunzo_user/src/presentation/screens/transactions/model/transactions_model.dart';
-import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/presentation/screens/home/model/dashboard_model.dart';
+import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
 class HomeController extends GetxController {
   // Global Variable

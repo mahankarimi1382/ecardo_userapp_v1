@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/create_withdraw_account/create_withdraw_account.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/edit_withdraw_account/edit_withdraw_account.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_account_section.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_header_section.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_money_section.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/create_withdraw_account/create_withdraw_account.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/edit_withdraw_account/edit_withdraw_account.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_account_section.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_header_section.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_money_section.dart';
 
 class WithdrawScreen extends StatefulWidget {
   const WithdrawScreen({super.key});

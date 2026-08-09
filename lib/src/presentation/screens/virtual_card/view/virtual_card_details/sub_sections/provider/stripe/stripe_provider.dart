@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/stripe/stripe_card_details_info.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/stripe/stripe_virtual_card.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/stripe/stripe_card_details_info.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/stripe/stripe_virtual_card.dart';
 
 class StripeProvider extends StatelessWidget {
   const StripeProvider({super.key});

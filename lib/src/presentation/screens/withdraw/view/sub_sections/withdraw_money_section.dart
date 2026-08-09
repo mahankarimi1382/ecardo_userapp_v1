@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_amount_step_section.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_review_step_section.dart';
-import 'package:qunzo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_success_step_section.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_amount_step_section.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_review_step_section.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/sub_sections/withdraw_success_step_section.dart';
 
 class WithdrawMoneySection extends StatefulWidget {
   const WithdrawMoneySection({super.key});

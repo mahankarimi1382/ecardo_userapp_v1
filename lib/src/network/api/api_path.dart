@@ -231,4 +231,14 @@ class ApiPath {
       '/user/p2p/verified-trader-application/status';
   static String applyVerificationEndPoint =
       '/user/p2p/verified-trader-application/apply';
+
+  // Remittance Endpoints (v1.0.4+5 — v3.8 API)
+  static const String remittanceMethodsEndpoint = '/user/remittance/methods';
+  static const String remittanceQuoteEndpoint = '/user/remittance/quote';
+  static const String remittanceStoreEndpoint = '/user/remittance/store';
+  static const String remittanceHistoryEndpoint = '/user/remittance/history';
+  static String remittanceShowEndpoint({required String uuid}) =>
+      '/user/remittance/$uuid';
+  static String remittanceUploadEndpoint({required String uuid}) =>
+      '/user/remittance/$uuid/upload';
 }

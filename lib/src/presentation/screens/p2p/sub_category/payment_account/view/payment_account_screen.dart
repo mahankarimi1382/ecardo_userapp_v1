@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/add_payment_method.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/delete_payment_account_dropdown_section.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/edit_payment_account.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/payment_account_details_bottom_sheet.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/add_payment_method.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/delete_payment_account_dropdown_section.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/edit_payment_account.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/payment_account_details_bottom_sheet.dart';
 
 import '../../../../../widgets/no_data_found.dart';
 import '../controller/payment_account_controller.dart';

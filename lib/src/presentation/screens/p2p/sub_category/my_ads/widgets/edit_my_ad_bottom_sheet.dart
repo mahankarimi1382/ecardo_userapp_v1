@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/my_ads/controller/my_ads_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/my_ads/model/my_ads_response_model.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_ads/controller/my_ads_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_ads/model/my_ads_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
 
 import '../../../../../../../l10n/app_localizations.dart';
 

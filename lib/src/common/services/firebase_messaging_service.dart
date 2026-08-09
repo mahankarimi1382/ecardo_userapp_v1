@@ -1,8 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/common/services/local_notifications_service.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/local_notifications_service.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 class FirebaseMessagingService {
   FirebaseMessagingService._internal();

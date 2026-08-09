@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/svg/svg_assets.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/model/p2p_marketplace_response_model.dart'
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/svg/svg_assets.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/model/p2p_marketplace_response_model.dart'
     as marketplace;
-import 'package:qunzo_user/src/presentation/screens/p2p/widgets/p2p_buy_sell_ad_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/widgets/p2p_buy_sell_ad_screen.dart';
 
 class P2pAdCard extends StatelessWidget {
   final marketplace.Ad item;

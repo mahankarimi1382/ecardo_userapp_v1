@@ -6,8 +6,8 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class AppUpdateHelper {
   static Future<void> checkForUpdate(

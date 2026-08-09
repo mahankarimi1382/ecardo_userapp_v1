@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/model/payment_links_history_model.dart';
-import 'package:qunzo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/model/payment_links_history_model.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 
 import '../../../../../../l10n/app_localizations.dart';
 

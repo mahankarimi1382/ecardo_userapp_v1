@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class CommonDefaultAppBar extends StatelessWidget
     implements PreferredSizeWidget {

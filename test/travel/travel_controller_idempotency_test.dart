@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/core/controller/travel_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/core/data/travel_repository.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/core/models/travel_models.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/core/controller/travel_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/core/data/travel_repository.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/core/models/travel_models.dart';
 
 void main() {
   group('TravelController idempotency', () {

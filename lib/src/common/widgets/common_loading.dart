@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class CommonLoading extends StatelessWidget {
   final bool? isColorShow;

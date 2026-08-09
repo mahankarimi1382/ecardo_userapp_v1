@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/controller/p2p_order_details_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_action_buttons_widget.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_timeline_section_widget.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_title_block_widget.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_trader_header_widget.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/controller/p2p_order_details_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_action_buttons_widget.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_timeline_section_widget.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_title_block_widget.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_trader_header_widget.dart';
 
 import '../sub_category/my_order/chat/view/order_chat_screen.dart';
 

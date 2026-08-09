@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/presentation/screens/bill_payment/controller/bill_payment_history_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/controller/gift_card_history_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/virtual_card_transaction_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/bill_payment_history_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_history_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_transaction_controller.dart';
 
 import '../../common/controller/country_controller.dart';
 import '../../common/controller/register_fields_controller.dart';

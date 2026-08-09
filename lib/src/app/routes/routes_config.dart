@@ -1,19 +1,19 @@
 import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart';
-import 'package:qunzo_user/src/presentation/screens/bill_payment/view/data_bundle/data_bundle.dart';
-import 'package:qunzo_user/src/presentation/screens/bill_payment/view/internet/internet.dart';
-import 'package:qunzo_user/src/presentation/screens/bill_payment/view/toll/toll.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/view/gift_card_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/account/travel_account_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/account/travel_history_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/home/travel_home_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/view/p2p_view.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/view/payment_links_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/view/get_card_info/get_card_info.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/view/virtual_card_transaction/virtual_card_transaction.dart';
-import 'package:qunzo_user/src/presentation/widgets/maintenance_mode.dart';
+import 'package:ecardo_user/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart';
+import 'package:ecardo_user/src/presentation/screens/bill_payment/view/data_bundle/data_bundle.dart';
+import 'package:ecardo_user/src/presentation/screens/bill_payment/view/internet/internet.dart';
+import 'package:ecardo_user/src/presentation/screens/bill_payment/view/toll/toll.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/view/gift_card_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/account/travel_account_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/account/travel_history_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/home/travel_home_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/view/p2p_view.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/view/payment_links_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/get_card_info/get_card_info.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/virtual_card_transaction/virtual_card_transaction.dart';
+import 'package:ecardo_user/src/presentation/widgets/maintenance_mode.dart';
 
 import '../../presentation/screens/add_money/view/add_money_history/add_money_history.dart';
 import '../../presentation/screens/add_money/view/add_money_screen.dart';
@@ -212,4 +212,9 @@ class RoutesConfig {
   static const travelHistory = TravelHistoryScreen();
   static const travelAccount = TravelAccountScreen();
   static final dynamicPassword = const DynamicPasswordScreen();
+
+  // Remittance (v1.0.4+5)
+  static const remittance = RemittanceScreen();
+  static const remittanceHistory = RemittanceHistoryScreen();
+  static const remittanceDetails = RemittanceDetailsScreen();
 }

@@ -1,4 +1,4 @@
-import 'package:qunzo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
 
 class ApiResponse<T> {
   final Status? status;

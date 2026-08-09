@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:qunzo_user/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
-import 'package:qunzo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart';
-import 'package:qunzo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart';
-import 'package:qunzo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart';
-import 'package:qunzo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 
 class AuthIdVerificationScreen extends StatefulWidget {
   const AuthIdVerificationScreen({super.key});

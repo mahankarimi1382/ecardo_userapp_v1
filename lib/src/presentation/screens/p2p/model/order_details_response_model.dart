@@ -1,4 +1,4 @@
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/my_order/model/my_order_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/model/my_order_response_model.dart';
 
 class OrderDetailsResponseModel {
   String? status;

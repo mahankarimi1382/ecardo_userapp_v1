@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/helper/dynamic_decimals_helper.dart';
-import 'package:qunzo_user/src/presentation/screens/request_money/controller/received_request_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/request_money/model/received_request_model.dart';
-import 'package:qunzo_user/src/presentation/screens/request_money/view/received_request/sub_sections/accept_request_dropdown.dart';
-import 'package:qunzo_user/src/presentation/screens/request_money/view/received_request/sub_sections/received_request_details.dart';
-import 'package:qunzo_user/src/presentation/screens/request_money/view/sub_sections/request_money_header_section.dart';
-import 'package:qunzo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/request_money/controller/received_request_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/request_money/model/received_request_model.dart';
+import 'package:ecardo_user/src/presentation/screens/request_money/view/received_request/sub_sections/accept_request_dropdown.dart';
+import 'package:ecardo_user/src/presentation/screens/request_money/view/received_request/sub_sections/received_request_details.dart';
+import 'package:ecardo_user/src/presentation/screens/request_money/view/sub_sections/request_money_header_section.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 
 class ReceivedRequest extends StatefulWidget {
   const ReceivedRequest({super.key});

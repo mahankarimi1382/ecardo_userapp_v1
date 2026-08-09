@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/network/api/api_path.dart';
-import 'package:qunzo_user/src/network/response/status.dart';
-import 'package:qunzo_user/src/network/service/network_service.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/model/ads_eligibility_response_model.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/model/create_ad_response_model.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/model/highest_order_price_response_model.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/view/create_ad_success_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/wallets/model/currencies_model.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/model/ads_eligibility_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/model/create_ad_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/model/highest_order_price_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/view/create_ad_success_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
 
 class CreateAdController extends GetxController {
   final RxInt currentStep = 0.obs;

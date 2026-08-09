@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/model/gift_card_product_model.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_details_section.dart';
-import 'package:qunzo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/model/gift_card_product_model.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_details_section.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 
 class GiftCardListSection extends StatefulWidget {
   const GiftCardListSection({super.key});

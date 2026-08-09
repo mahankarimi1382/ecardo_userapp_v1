@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_2_fa_section.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_and_change_passcode_section.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/enable_2_fa_section.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_2_fa_section.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_passcode_section.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_2_fa_section.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_and_change_passcode_section.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/enable_2_fa_section.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_2_fa_section.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_passcode_section.dart';
 
 class TwoFactorAuthentication extends StatefulWidget {
   const TwoFactorAuthentication({super.key});

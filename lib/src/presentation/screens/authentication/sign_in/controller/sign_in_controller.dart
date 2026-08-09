@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
-import 'package:qunzo_user/src/common/model/user_model.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/network/api/api_path.dart';
-import 'package:qunzo_user/src/network/response/status.dart';
-import 'package:qunzo_user/src/network/service/network_service.dart';
-import 'package:qunzo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 
 class SignInController extends GetxController {
   final RxBool isLoading = false.obs;

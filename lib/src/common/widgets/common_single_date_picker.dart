@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class CommonSingleDatePicker extends StatefulWidget {
   final String? hintText;

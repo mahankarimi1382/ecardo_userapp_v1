@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/referral/controller/referral_tree_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/referral/view/referral_tree/sub_sections/referral_tree_widget.dart';
-import 'package:qunzo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/referral/controller/referral_tree_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/referral/view/referral_tree/sub_sections/referral_tree_widget.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 
 class NodeInfo {
   final GlobalKey key;

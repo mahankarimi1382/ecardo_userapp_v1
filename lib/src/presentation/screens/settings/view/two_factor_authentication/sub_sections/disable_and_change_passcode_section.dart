@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/change_passcode_bottom_sheet.dart';
-import 'package:qunzo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/change_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_passcode_bottom_sheet.dart';
 
 class DisableAndChangePasscodeSection extends StatelessWidget {
   const DisableAndChangePasscodeSection({super.key});

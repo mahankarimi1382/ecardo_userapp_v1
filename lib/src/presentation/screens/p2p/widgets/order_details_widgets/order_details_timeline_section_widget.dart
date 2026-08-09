@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/controller/p2p_buy_ad_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/controller/p2p_order_details_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/model/order_details_response_model.dart'
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/controller/p2p_buy_ad_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/controller/p2p_order_details_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/model/order_details_response_model.dart'
     as order_details;
 
 class OrderDetailsTimelineSectionWidget extends StatelessWidget {

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/network/api/api_path.dart';
-import 'package:qunzo_user/src/network/response/status.dart';
-import 'package:qunzo_user/src/network/service/network_service.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/model/ad_details_response_model.dart'
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/model/ad_details_response_model.dart'
     as ad_details;
-import 'package:qunzo_user/src/presentation/screens/p2p/model/ad_payment_method_response_model.dart'
+import 'package:ecardo_user/src/presentation/screens/p2p/model/ad_payment_method_response_model.dart'
     as ad_payment_method;
-import 'package:qunzo_user/src/presentation/screens/p2p/model/order_details_response_model.dart'
+import 'package:ecardo_user/src/presentation/screens/p2p/model/order_details_response_model.dart'
     as order_details;
-import 'package:qunzo_user/src/presentation/screens/p2p/widgets/p2p_order_details_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/widgets/p2p_order_details_screen.dart';
 
 class P2pBuyAdController extends GetxController {
   final int adId;

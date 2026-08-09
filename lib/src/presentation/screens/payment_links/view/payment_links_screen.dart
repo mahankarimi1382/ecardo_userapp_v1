@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_create_section.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_header_section.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_list_section.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_create_section.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_header_section.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_list_section.dart';
 
 import '../../../../app/constants/app_colors.dart';
 

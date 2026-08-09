@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/shared/travel_widgets.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_widgets.dart';
 
 void main() {
   testWidgets('TravelBidiText follows the first strong character', (

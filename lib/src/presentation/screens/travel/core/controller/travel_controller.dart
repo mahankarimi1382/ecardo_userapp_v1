@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/presentation/screens/home/controller/home_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/travel_repository.dart';

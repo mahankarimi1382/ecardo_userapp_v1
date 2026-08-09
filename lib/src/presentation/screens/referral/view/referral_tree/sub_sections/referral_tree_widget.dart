@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:qunzo_user/src/presentation/screens/referral/model/referral_tree_model.dart';
-import 'package:qunzo_user/src/presentation/screens/referral/view/referral_tree/referral_tree.dart';
-import 'package:qunzo_user/src/presentation/screens/referral/view/referral_tree/sub_sections/referral_node.dart';
-import 'package:qunzo_user/src/presentation/screens/referral/view/referral_tree/sub_sections/tree_line_painter.dart';
+import 'package:ecardo_user/src/presentation/screens/referral/model/referral_tree_model.dart';
+import 'package:ecardo_user/src/presentation/screens/referral/view/referral_tree/referral_tree.dart';
+import 'package:ecardo_user/src/presentation/screens/referral/view/referral_tree/sub_sections/referral_node.dart';
+import 'package:ecardo_user/src/presentation/screens/referral/view/referral_tree/sub_sections/tree_line_painter.dart';
 
 class ReferralTreeWidget extends StatefulWidget {
   final ReferralTreeData root;

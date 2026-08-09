@@ -1,8 +1,8 @@
-name: qunzo_user
-description: "A new Flutter project."
+name: ecardo_user
+description: "eCardo — International Financial Super App for users (multi-currency wallet, cards, transfers, remittance, travel, P2P, bill payments)."
 publish_to: 'none'
 
-version: 1.0.3+4
+version: 1.0.4+5
 
 environment:
   sdk: ^3.9.2
@@ -54,6 +54,8 @@ dependencies:
   printing: ^5.14.2
   pdf: ^3.11.3
   cached_network_image: ^3.4.1
+  flutter_secure_storage: ^9.2.2
+  crypto: ^3.0.5
 
 dev_dependencies:
   flutter_test:

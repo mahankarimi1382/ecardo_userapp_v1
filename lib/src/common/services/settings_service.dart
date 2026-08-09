@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/common/model/settings_model.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/network/api/api_path.dart';
-import 'package:qunzo_user/src/network/response/status.dart';
-import 'package:qunzo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/common/model/settings_model.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsService extends GetxService {
@@ -92,17 +93,46 @@ class SettingsService extends GetxService {
     return prefs.getString(currentEmailKey);
   }
 
-  // Saved Logged In User Password
+  // Saved Logged In User Password (SECURE — v1.0.4+5)
+  // Migrated from SharedPreferences to flutter_secure_storage
+  // to prevent plaintext password leaks on rooted devices.
+  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+  );
+
   Future<bool> saveLoggedInUserPassword(String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    currentPassword.value = password;
-    return await prefs.setString(currentPasswordKey, password);
+    try {
+      await _secureStorage.write(key: currentPasswordKey, value: password);
+      currentPassword.value = password;
+      // Also clear any legacy SharedPreferences entry
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(currentPasswordKey);
+      return true;
+    } catch (e) {
+      debugPrint('Failed to save password securely: $e');
+      return false;
+    }
   }
 
   // Get Logged In User Password
   static Future<String?> getLoggedInUserPassword() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(currentPasswordKey);
+    try {
+      final pwd = await _secureStorage.read(key: currentPasswordKey);
+      if (pwd != null) return pwd;
+      // Migrate from legacy storage if secure storage is empty
+      final prefs = await SharedPreferences.getInstance();
+      final legacy = prefs.getString(currentPasswordKey);
+      if (legacy != null) {
+        await _secureStorage.write(key: currentPasswordKey, value: legacy);
+        await prefs.remove(currentPasswordKey);
+        return legacy;
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Failed to read password: $e');
+      return null;
+    }
   }
 
   // Saved Biometric Enable Or Disable

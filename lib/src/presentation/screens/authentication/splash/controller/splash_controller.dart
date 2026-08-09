@@ -1,8 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 class SplashController extends GetxController {
   Future<void> navigateBasedOnAuth() async {

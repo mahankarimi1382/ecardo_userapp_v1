@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/common/controller/country_controller.dart';
-import 'package:qunzo_user/src/common/model/country_model.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
-import 'package:qunzo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
-import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/model/gift_card_product_details_model.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_review_details_section.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/controller/country_controller.dart';
+import 'package:ecardo_user/src/common/model/country_model.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/model/gift_card_product_details_model.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_review_details_section.dart';
 
 class GiftCardDetailsSection extends StatefulWidget {
   final String giftCardId;

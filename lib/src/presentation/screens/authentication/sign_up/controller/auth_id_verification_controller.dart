@@ -4,12 +4,12 @@ import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/network/api/api_path.dart';
-import 'package:qunzo_user/src/network/service/token_service.dart';
-import 'package:qunzo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
 
 class AuthIdVerificationController extends GetxController {
   // Global Variable

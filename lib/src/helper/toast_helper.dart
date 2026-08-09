@@ -1,5 +1,5 @@
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class ToastHelper {
   // Warning Toast Message

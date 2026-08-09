@@ -5,15 +5,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx hide Response;
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/network/api/api_path.dart';
-import 'package:qunzo_user/src/network/response/api_response.dart';
-import 'package:qunzo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/api_response.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 
 class NetworkService extends getx.GetxService {
   // Properties
@@ -67,6 +67,15 @@ class NetworkService extends getx.GetxService {
             options.headers['Authorization'] = 'Bearer $accessToken';
           }
 
+          // v1.0.4+5: Send a request ID header so the backend can correlate
+          // logs with this request. The backend will echo it back in meta.request_id.
+          options.headers['X-Request-ID'] =
+              options.headers['X-Request-ID'] ?? _generateRequestId();
+
+          // v1.0.4+5: Identify the client + version to the backend.
+          options.headers['X-App-Version'] = '1.0.4+5';
+          options.headers['X-Client'] = 'ecardo_user_flutter';
+
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
@@ -77,6 +86,13 @@ class NetworkService extends getx.GetxService {
         },
       ),
     );
+  }
+
+  /// Generate a ULID-like request ID for traceability.
+  String _generateRequestId() {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final random = DateTime.now().microsecondsSinceEpoch % 0xFFFFFF;
+    return 'req-${now.toRadixString(36)}-${random.toRadixString(36).padLeft(6, '0')}';
   }
 
   // ------------------------------ AUTH CALLS ------------------------------ //

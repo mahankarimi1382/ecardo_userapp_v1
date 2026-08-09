@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:qunzo_user/src/common/widgets/common_label_text.dart';
+import 'package:ecardo_user/src/common/widgets/common_label_text.dart';
 
 class CommonRequiredLabelAndDynamicField extends StatelessWidget {
   final String labelText;

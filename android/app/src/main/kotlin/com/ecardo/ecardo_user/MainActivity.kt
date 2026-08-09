@@ -1,4 +1,4 @@
-package com.qunzo.qunzo_user
+package com.ecardo.ecardo_user
 
 import io.flutter.embedding.android.FlutterActivity
 

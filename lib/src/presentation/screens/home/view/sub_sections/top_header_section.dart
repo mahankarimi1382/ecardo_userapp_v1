@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/presentation/screens/home/view/sub_sections/action_button_section.dart';
-import 'package:qunzo_user/src/presentation/screens/home/view/sub_sections/user_profile_section.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/action_button_section.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/user_profile_section.dart';
 
 class TopHeaderSection extends StatelessWidget {
   const TopHeaderSection({super.key});

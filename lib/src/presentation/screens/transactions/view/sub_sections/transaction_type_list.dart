@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/presentation/screens/transactions/controller/transactions_controller.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/transactions/controller/transactions_controller.dart';
 
 class TransactionTypeList extends StatefulWidget {
   const TransactionTypeList({super.key});

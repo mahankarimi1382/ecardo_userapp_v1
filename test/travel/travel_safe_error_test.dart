@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/core/controller/travel_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/travel/shared/travel_widgets.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/core/controller/travel_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_widgets.dart';
 
 void main() {
   group('travelSafeErrorMessage', () {

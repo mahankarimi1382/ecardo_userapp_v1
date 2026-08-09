@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/apply_verification/controller/apply_verification_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/apply_verification/widgets/apply_verification_placeholder_section.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/apply_verification/controller/apply_verification_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/apply_verification/widgets/apply_verification_placeholder_section.dart';
 
 class ApplyVerificationScreen extends StatefulWidget {
   const ApplyVerificationScreen({super.key});

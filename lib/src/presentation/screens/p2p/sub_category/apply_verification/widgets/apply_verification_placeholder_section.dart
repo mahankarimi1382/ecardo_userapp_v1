@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
-import 'package:qunzo_user/src/common/widgets/input_field/common_text_input_filed.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/apply_verification/controller/apply_verification_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/create_ad/widgets/create_ad_eligibility_failed_section.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/apply_verification/controller/apply_verification_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/create_ad/widgets/create_ad_eligibility_failed_section.dart';
 
 class ApplyVerificationPlaceholderSection extends StatelessWidget {
   final ApplyVerificationController controller;

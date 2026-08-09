@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/helper/toast_helper.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/widgets/p2p_order_details_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/my_order/chat/view/order_chat_screen.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/my_order/model/my_order_response_model.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/widgets/p2p_order_details_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/chat/view/order_chat_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/model/my_order_response_model.dart';
 
 class MyOrderCard extends StatelessWidget {
   final Order order;

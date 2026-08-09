@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/model/country_model.dart';
-import 'package:qunzo_user/src/common/widgets/button/common_button.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_holder_model.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/model/country_model.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/model/card_holder_model.dart';
 
 class CardHolderTabSection extends StatelessWidget {
   const CardHolderTabSection({super.key});

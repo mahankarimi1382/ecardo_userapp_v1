@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qunzo_user/src/presentation/screens/virtual_card/model/card_product_model.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/model/card_product_model.dart';
 
 void main() {
   test('parses IRR card product response with string decimals', () {

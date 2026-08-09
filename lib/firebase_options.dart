@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '292987494106',
     projectId: 'ecardo-app',
     storageBucket: 'ecardo-app.firebasestorage.app',
-    iosBundleId: 'com.qunzo.user',
+    iosBundleId: 'com.ecardo.user',
   );
 
 }

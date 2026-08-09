@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
-import 'package:qunzo_user/src/app/config/theme/light_theme.dart';
-import 'package:qunzo_user/src/app/constants/app_strings.dart';
-import 'package:qunzo_user/src/app/bindings/app_bindings.dart';
-import 'package:qunzo_user/src/app/routes/routes.dart';
-import 'package:qunzo_user/src/app/routes/routes_config.dart';
-import 'package:qunzo_user/src/app/routes/routes_handler.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
+import 'package:ecardo_user/src/app/constants/app_strings.dart';
+import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/app/routes/routes_config.dart';
+import 'package:ecardo_user/src/app/routes/routes_handler.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
 
-class QunzoUser extends StatefulWidget {
-  const QunzoUser({super.key});
+class EcardoUser extends StatefulWidget {
+  const EcardoUser({super.key});
 
   @override
-  State<QunzoUser> createState() => _QunzoUserState();
+  State<EcardoUser> createState() => _EcardoUserState();
 }
 
-class _QunzoUserState extends State<QunzoUser> {
+class _EcardoUserState extends State<EcardoUser> {
   Locale _locale = const Locale('en');
 
   @override

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/common/widgets/common_loading.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/my_order/controller/my_order_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/p2p/sub_category/my_order/widgets/my_order_card.dart';
-import 'package:qunzo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/controller/my_order_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/widgets/my_order_card.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 
 class MyOrderScreen extends StatefulWidget {
   const MyOrderScreen({super.key});

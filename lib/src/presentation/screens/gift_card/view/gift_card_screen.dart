@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_header_section.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_history_section.dart';
-import 'package:qunzo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_list_section.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_header_section.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_history_section.dart';
+import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_list_section.dart';
 
 import '../../../../app/constants/app_colors.dart';
 

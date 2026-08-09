@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:qunzo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 
 import '../core/models/travel_models.dart';
 import 'travel_theme.dart';

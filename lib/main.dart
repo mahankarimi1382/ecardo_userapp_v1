@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:qunzo_user/firebase_options.dart';
-import 'package:qunzo_user/src/app/app.dart';
-import 'package:qunzo_user/src/common/services/firebase_messaging_service.dart';
-import 'package:qunzo_user/src/common/services/local_notifications_service.dart';
-import 'package:qunzo_user/src/common/services/settings_service.dart';
-import 'package:qunzo_user/src/network/service/network_service.dart';
-import 'package:qunzo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/firebase_options.dart';
+import 'package:ecardo_user/src/app/app.dart';
+import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
+import 'package:ecardo_user/src/common/services/local_notifications_service.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -28,7 +28,7 @@ Future<void> main() async {
   }
   await _initializeServices();
   _configureUI();
-  runApp(const QunzoUser());
+  runApp(const EcardoUser());
 }
 
 Future<void> _initializeServices() async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qunzo_user/src/app/constants/app_colors.dart';
-import 'package:qunzo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_amount_step_section.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/payment_links/view/sub_sections/payment_links_amount_step_section.dart';
 
 import '../../../../../../l10n/app_localizations.dart';
 
