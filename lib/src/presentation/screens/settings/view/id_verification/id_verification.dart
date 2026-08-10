@@ -8,6 +8,8 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.da
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/id_verification_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_level_roadmap.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/kyc_level_binding.dart';
 
 class IdVerification extends StatefulWidget {
   const IdVerification({super.key});
@@ -64,7 +66,12 @@ class _IdVerificationState extends State<IdVerification> {
                         child: Column(
                           children: [
                             const SizedBox(height: 30),
-                            _buildVerificationSection(),
+                            // v1.0.5: KYC Level Roadmap (نسخه جدید — نمایش سطوح بصری)
+              KycLevelRoadmap(
+                onLevelTap: () {
+                  // هدایت به صفحه‌ی ارسال مدارک KYC
+                },
+              ),
                           ],
                         ),
                       ),

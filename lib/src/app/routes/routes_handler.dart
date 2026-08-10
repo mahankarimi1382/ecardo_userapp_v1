@@ -71,6 +71,7 @@ List<GetPage> routesHandler = [
       CreateGiftBinding(),
       GiftRedeemBinding(),
       GiftHistoryBinding(),
+      KycLevelBinding(),
     ],
   ),
 

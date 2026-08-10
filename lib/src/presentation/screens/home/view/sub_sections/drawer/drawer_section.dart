@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/svg/svg_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 class DrawerSection extends StatelessWidget {
@@ -323,6 +324,23 @@ class _DrawerItem extends StatelessWidget {
               } else {
                 navigateTo();
               }
+            } else if (nav == localization.drawerRemittance) {
+              // v1.0.5: Check KYC level for Remittance
+              try {
+                final kycController = Get.find<KycLevelController>();
+                if (!kycController.hasFeature('remittance')) {
+                  Get.back();
+                  Get.dialog(_KycLevelRequiredDialog(
+                    requiredLevel: 2,
+                    currentLevel: kycController.currentLevel,
+                    featureName: nav,
+                  ));
+                  return;
+                }
+              } catch (_) {
+                // اگر controller ثبت نشده، عبور کن
+              }
+              navigateTo();
             } else if (nav == localization.drawerDashboard) {
               Get.back();
             } else if (nav == localization.drawerMyWallets) {

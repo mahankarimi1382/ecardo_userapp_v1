@@ -241,4 +241,10 @@ class ApiPath {
       '/user/remittance/$uuid';
   static String remittanceUploadEndpoint({required String uuid}) =>
       '/user/remittance/$uuid/upload';
+
+  // KYC Level Endpoints (v1.0.5 — v3.9 API)
+  static const String kycLevelLevelsEndpoint = '/user/kyc-level/levels';
+  static const String kycLevelBadgeEndpoint = '/user/kyc-level/badge';
+  static const String kycLevelStatusEndpoint = '/user/kyc-level/status';
+  static const String kycLevelSubmitEndpoint = '/user/kyc-level/submit';
 }
