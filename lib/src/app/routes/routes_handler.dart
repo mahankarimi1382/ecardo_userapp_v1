@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../bindings/app_bindings.dart';
 import 'routes.dart';
+import '../../presentation/screens/kyc_level/kyc_level_binding.dart';
 import 'routes_config.dart';
 
 List<GetPage> routesHandler = [
