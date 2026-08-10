@@ -153,13 +153,28 @@ class NetworkService extends getx.GetxService {
   }
 
   /// v1.0.5: تلاش برای refresh token
-  /// در حال حاضر backend token expiry ندارد (Sanctum expiration: null)
-  /// ولی این متد برای آینده آماده است.
+  /// از endpoint /api/auth/user/refresh استفاده می‌کند
   Future<bool> _attemptTokenRefresh() async {
     try {
-      // در حال حاضر backend endpoint /api/auth/refresh ندارد
-      // وقتی اضافه شد، این متد فعال می‌شود
-      // فعلاً false برمی‌گرداند تا مستقیم logout شود
+      _log('Attempting token refresh...');
+      final response = await _globalDio.post(
+        '$baseUrl${ApiPath.tokenRefreshEndpoint}',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${_tokenService.accessToken.value}',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final newToken = response.data['data']?['token'];
+        if (newToken != null && newToken is String) {
+          await _tokenService.saveAccessToken(newToken);
+          _log('✓ Token refreshed successfully');
+          return true;
+        }
+      }
+      _log('Token refresh failed: ${response.statusCode}');
       return false;
     } catch (e) {
       _log('Token refresh error: $e');

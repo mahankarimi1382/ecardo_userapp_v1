@@ -247,4 +247,7 @@ class ApiPath {
   static const String kycLevelBadgeEndpoint = '/user/kyc-level/badge';
   static const String kycLevelStatusEndpoint = '/user/kyc-level/status';
   static const String kycLevelSubmitEndpoint = '/user/kyc-level/submit';
+
+  // Auth Refresh (v1.0.5 — v3.9 API)
+  static const String tokenRefreshEndpoint = '/auth/user/refresh';
 }
