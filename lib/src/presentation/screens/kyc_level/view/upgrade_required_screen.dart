@@ -15,9 +15,9 @@ class UpgradeRequiredScreen extends StatelessWidget {
 
   const UpgradeRequiredScreen({
     super.key,
-    required this.requiredLevel,
-    required this.currentLevel,
-    required this.featureName,
+    this.requiredLevel = 2,
+    this.currentLevel = 1,
+    this.featureName = '',
   });
 
   @override

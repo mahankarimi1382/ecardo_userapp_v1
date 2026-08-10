@@ -16,7 +16,7 @@ import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_m
 class KycSubmitWizard extends StatefulWidget {
   final int targetLevel;
 
-  const KycSubmitWizard({super.key, required this.targetLevel});
+  const KycSubmitWizard({super.key, this.targetLevel = 2});
 
   @override
   State<KycSubmitWizard> createState() => _KycSubmitWizardState();
