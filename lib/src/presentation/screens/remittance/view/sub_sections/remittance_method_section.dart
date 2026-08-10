@@ -23,7 +23,7 @@ class RemittanceMethodSection extends StatelessWidget {
               'No remittance methods available. Please try again later.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: AppColors.lightTextSecondary,
+                color: AppColors.lightTextPrimary,
                 fontSize: 14.sp,
               ),
             ),
@@ -110,11 +110,11 @@ class _MethodCard extends StatelessWidget {
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primaryColor.withValues(alpha: 0.05)
+              ? AppColors.lightPrimary.withValues(alpha: 0.05)
               : AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primaryColor : AppColors.lightBorder,
+            color: isSelected ? AppColors.lightPrimary : AppColors.lightBackground,
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -124,12 +124,12 @@ class _MethodCard extends StatelessWidget {
               width: 40.w,
               height: 40.w,
               decoration: BoxDecoration(
-                color: AppColors.primaryColor.withValues(alpha: 0.1),
+                color: AppColors.lightPrimary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.account_balance,
-                color: AppColors.primaryColor,
+                color: AppColors.lightPrimary,
                 size: 20.sp,
               ),
             ),
@@ -152,7 +152,7 @@ class _MethodCard extends StatelessWidget {
                       method.countryCode!.toUpperCase(),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.lightTextPrimary,
                       ),
                     ),
                   ],
@@ -162,7 +162,7 @@ class _MethodCard extends StatelessWidget {
             if (isSelected)
               Icon(
                 Icons.check_circle,
-                color: AppColors.primaryColor,
+                color: AppColors.lightPrimary,
                 size: 20.sp,
               ),
           ],
@@ -186,10 +186,10 @@ class _QuotePreview extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor.withValues(alpha: 0.05),
+        color: AppColors.lightPrimary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.primaryColor.withValues(alpha: 0.2),
+          color: AppColors.lightPrimary.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -198,13 +198,13 @@ class _QuotePreview extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.lock_clock,
-                  color: AppColors.primaryColor, size: 16.sp),
+                  color: AppColors.lightPrimary, size: 16.sp),
               SizedBox(width: 6.w),
               Obx(() => Text(
                     'Rate locked: ${controller.rateExpiresInSeconds.value}s',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.primaryColor,
+                      color: AppColors.lightPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   )),
@@ -226,7 +226,7 @@ class _QuotePreview extends StatelessWidget {
             value: quote.systemFee.toStringAsFixed(2),
           ),
           SizedBox(height: 8.h),
-          Divider(color: AppColors.lightBorder),
+          Divider(color: AppColors.lightBackground),
           SizedBox(height: 8.h),
           _QuoteRow(
             label: 'Total Payable',
@@ -259,7 +259,7 @@ class _QuoteRow extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 13.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
             fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
           ),
         ),

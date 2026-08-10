@@ -54,7 +54,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         ),
 
         SizedBox(height: 24.h),
-        Divider(color: AppColors.lightBorder),
+        Divider(color: AppColors.lightBackground),
         SizedBox(height: 16.h),
 
         // Optional fields based on method
@@ -71,7 +71,7 @@ class RemittanceReceiverSection extends StatelessWidget {
           'Fill in the fields relevant to the selected payout method.',
           style: TextStyle(
             fontSize: 11.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 16.h),
@@ -126,7 +126,7 @@ class RemittanceReceiverSection extends StatelessWidget {
 
   TextStyle _labelStyle() => TextStyle(
         fontSize: 13.sp,
-        color: AppColors.lightTextSecondary,
+        color: AppColors.lightTextPrimary,
       );
 }
 
@@ -152,14 +152,14 @@ class _CountryDropdown extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.lightBorder),
+        border: Border.all(color: AppColors.lightBackground),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value.isEmpty ? null : value,
           hint: Text('Select country',
-              style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextSecondary)),
+              style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextPrimary)),
           isExpanded: true,
           items: countries
               .map((c) => DropdownMenuItem(

@@ -23,7 +23,7 @@ class RemittanceStepper extends StatelessWidget {
         color: AppColors.white,
         border: Border(
           bottom: BorderSide(
-            color: AppColors.lightBorder,
+            color: AppColors.lightBackground,
             width: 0.5,
           ),
         ),
@@ -39,8 +39,8 @@ class RemittanceStepper extends StatelessWidget {
                 height: 2,
                 margin: EdgeInsets.symmetric(horizontal: 4.w),
                 color: isCompleted
-                    ? AppColors.primaryColor
-                    : AppColors.lightBorder,
+                    ? AppColors.lightPrimary
+                    : AppColors.lightBackground,
               ),
             );
           }
@@ -82,17 +82,17 @@ class _StepIndicator extends StatelessWidget {
     Color textColor;
 
     if (isCompleted) {
-      bgColor = AppColors.primaryColor;
+      bgColor = AppColors.lightPrimary;
       iconColor = AppColors.white;
-      textColor = AppColors.primaryColor;
+      textColor = AppColors.lightPrimary;
     } else if (isCurrent) {
-      bgColor = AppColors.primaryColor;
+      bgColor = AppColors.lightPrimary;
       iconColor = AppColors.white;
-      textColor = AppColors.primaryColor;
+      textColor = AppColors.lightPrimary;
     } else {
-      bgColor = AppColors.lightBorder;
-      iconColor = AppColors.lightTextSecondary;
-      textColor = AppColors.lightTextSecondary;
+      bgColor = AppColors.lightBackground;
+      iconColor = AppColors.lightTextPrimary;
+      textColor = AppColors.lightTextPrimary;
     }
 
     return Column(

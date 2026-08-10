@@ -58,7 +58,7 @@ class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
           return Center(
             child: Text(
               'Remittance not found',
-              style: TextStyle(color: AppColors.lightTextSecondary),
+              style: TextStyle(color: AppColors.lightTextPrimary),
             ),
           );
         }
@@ -334,7 +334,7 @@ class _SectionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lightBorder),
+        border: Border.all(color: AppColors.lightBackground),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +378,7 @@ class _DetailRow extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12.sp,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(width: 12.w),
@@ -416,7 +416,7 @@ class _LogEntry extends StatelessWidget {
             width: 8.w,
             height: 8.w,
             decoration: BoxDecoration(
-              color: AppColors.primaryColor,
+              color: AppColors.lightPrimary,
               shape: BoxShape.circle,
             ),
           ),
@@ -439,7 +439,7 @@ class _LogEntry extends StatelessWidget {
                     log.note!,
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -448,7 +448,7 @@ class _LogEntry extends StatelessWidget {
                   _formatLogMeta(log),
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.lightTextPrimary,
                   ),
                 ),
               ],

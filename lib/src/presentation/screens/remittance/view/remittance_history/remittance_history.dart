@@ -63,7 +63,7 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, color: AppColors.primaryColor),
+            icon: const Icon(Icons.add, color: AppColors.lightPrimary),
             onPressed: () => Get.toNamed(BaseRoute.remittance),
           ),
         ],
@@ -122,7 +122,7 @@ class _EmptyState extends StatelessWidget {
             Icon(
               Icons.receipt_long,
               size: 64.sp,
-              color: AppColors.lightBorder,
+              color: AppColors.lightBackground,
             ),
             SizedBox(height: 16.h),
             Text(
@@ -130,7 +130,7 @@ class _EmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: 8.h),
@@ -138,7 +138,7 @@ class _EmptyState extends StatelessWidget {
               'Your remittance history will appear here.',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.lightTextPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -192,7 +192,7 @@ class _RemittanceCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.lightBorder),
+          border: Border.all(color: AppColors.lightBackground),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,7 +246,7 @@ class _RemittanceCard extends StatelessWidget {
                       'Send',
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.lightTextPrimary,
                       ),
                     ),
                     Text(
@@ -260,7 +260,7 @@ class _RemittanceCard extends StatelessWidget {
                   ],
                 ),
                 Icon(Icons.arrow_forward,
-                    color: AppColors.lightTextSecondary, size: 16.sp),
+                    color: AppColors.lightTextPrimary, size: 16.sp),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -268,7 +268,7 @@ class _RemittanceCard extends StatelessWidget {
                       'Receive',
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.lightTextPrimary,
                       ),
                     ),
                     Text(
@@ -286,7 +286,7 @@ class _RemittanceCard extends StatelessWidget {
 
             if (remittance.createdAt != null) ...[
               SizedBox(height: 8.h),
-              Divider(color: AppColors.lightBorder),
+              Divider(color: AppColors.lightBackground),
               SizedBox(height: 8.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -295,14 +295,14 @@ class _RemittanceCard extends StatelessWidget {
                     'Date',
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.lightTextPrimary,
                     ),
                   ),
                   Text(
                     _formatDate(remittance.createdAt!),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.lightTextPrimary,
                     ),
                   ),
                 ],

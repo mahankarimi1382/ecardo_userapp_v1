@@ -51,7 +51,7 @@ class RemittanceSuccessSection extends StatelessWidget {
                     'Your remittance request has been created.',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -66,10 +66,10 @@ class RemittanceSuccessSection extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(14.w),
               decoration: BoxDecoration(
-                color: AppColors.primaryColor.withValues(alpha: 0.05),
+                color: AppColors.lightPrimary.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColors.primaryColor.withValues(alpha: 0.2),
+                  color: AppColors.lightPrimary.withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -114,7 +114,7 @@ class RemittanceSuccessSection extends StatelessWidget {
             'Upload your KYC documents and payment receipt to proceed.',
             style: TextStyle(
               fontSize: 12.sp,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 16.h),
@@ -160,7 +160,7 @@ class _InfoRow extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 12.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(width: 12.w),
@@ -199,11 +199,11 @@ class _AttachmentItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.lightBorder),
+        border: Border.all(color: AppColors.lightBackground),
       ),
       child: Row(
         children: [
-          Icon(_iconForType(type), color: AppColors.primaryColor, size: 20.sp),
+          Icon(_iconForType(type), color: AppColors.lightPrimary, size: 20.sp),
           SizedBox(width: 10.w),
           Expanded(
             child: Column(
@@ -221,7 +221,7 @@ class _AttachmentItem extends StatelessWidget {
                   path.split('/').last,
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.lightTextPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -283,7 +283,7 @@ class _AddDocumentButton extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 14.h),
             decoration: BoxDecoration(
               border: Border.all(
-                color: AppColors.primaryColor,
+                color: AppColors.lightPrimary,
                 width: 1.5,
               ),
               borderRadius: BorderRadius.circular(8),
@@ -292,14 +292,14 @@ class _AddDocumentButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.add, color: AppColors.primaryColor, size: 18.sp),
+                  Icon(Icons.add, color: AppColors.lightPrimary, size: 18.sp),
                   SizedBox(width: 6.w),
                   Text(
                     'Add Document',
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primaryColor,
+                      color: AppColors.lightPrimary,
                     ),
                   ),
                 ],

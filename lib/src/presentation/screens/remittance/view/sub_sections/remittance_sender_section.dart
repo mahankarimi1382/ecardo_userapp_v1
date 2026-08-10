@@ -31,7 +31,7 @@ class RemittanceSenderSection extends StatelessWidget {
           'Full Name',
           style: TextStyle(
             fontSize: 13.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 6.h),
@@ -46,7 +46,7 @@ class RemittanceSenderSection extends StatelessWidget {
           'Country',
           style: TextStyle(
             fontSize: 13.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 6.h),
@@ -61,7 +61,7 @@ class RemittanceSenderSection extends StatelessWidget {
           'Phone Number',
           style: TextStyle(
             fontSize: 13.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 6.h),
@@ -77,7 +77,7 @@ class RemittanceSenderSection extends StatelessWidget {
           'ID Number / National ID',
           style: TextStyle(
             fontSize: 13.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 6.h),
@@ -92,7 +92,7 @@ class RemittanceSenderSection extends StatelessWidget {
           'Sender Type',
           style: TextStyle(
             fontSize: 13.sp,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 6.h),
@@ -146,14 +146,14 @@ class _CountryDropdown extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.lightBorder),
+        border: Border.all(color: AppColors.lightBackground),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value.isEmpty ? null : value,
           hint: Text('Select country',
-              style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextSecondary)),
+              style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextPrimary)),
           isExpanded: true,
           items: countries
               .map((c) => DropdownMenuItem(
@@ -191,11 +191,11 @@ class _TypeChip extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primaryColor.withValues(alpha: 0.1)
+              ? AppColors.lightPrimary.withValues(alpha: 0.1)
               : AppColors.white,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? AppColors.primaryColor : AppColors.lightBorder,
+            color: isSelected ? AppColors.lightPrimary : AppColors.lightBackground,
           ),
         ),
         child: Center(
@@ -205,7 +205,7 @@ class _TypeChip extends StatelessWidget {
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
               color: isSelected
-                  ? AppColors.primaryColor
+                  ? AppColors.lightPrimary
                   : AppColors.lightTextPrimary,
             ),
           ),

@@ -32,7 +32,7 @@ class RemittanceReviewSection extends StatelessWidget {
             'Please review all details before submitting your remittance request.',
             style: TextStyle(
               fontSize: 12.sp,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 20.h),
@@ -193,7 +193,7 @@ class _ReviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lightBorder),
+        border: Border.all(color: AppColors.lightBackground),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +237,7 @@ class _ReviewRow extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12.sp,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(width: 12.w),
