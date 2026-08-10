@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/common/widgets/text_field/common_text_field.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
 /// Step 2: Sender information (name, country, phone, ID, type).
@@ -35,7 +35,7 @@ class RemittanceSenderSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.senderNameController,
           hintText: 'Enter full name',
         ),
@@ -65,7 +65,7 @@ class RemittanceSenderSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.senderPhoneController,
           hintText: '+98 912 345 6789',
           keyboardType: TextInputType.phone,
@@ -81,7 +81,7 @@ class RemittanceSenderSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.senderIdNumberController,
           hintText: 'Enter ID number',
         ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/common/widgets/text_field/common_text_field.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance_model.dart';
 
@@ -67,14 +67,11 @@ class RemittanceMethodSection extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          CommonTextField(
+          CommonTextInputField(
             controller: controller.amountController,
             focusNode: controller.amountFocusNode,
             hintText: 'Enter amount',
             keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
-            ],
           ),
 
           SizedBox(height: 16.h),

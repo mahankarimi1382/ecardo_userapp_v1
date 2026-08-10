@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/common/widgets/text_field/common_text_field.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
 /// Step 3: Receiver information (name, country, phone, bank/alipay/wechat).
@@ -29,7 +29,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         // Full name
         Text('Full Name', style: _labelStyle()),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.receiverNameController,
           hintText: 'Enter receiver full name',
         ),
@@ -47,7 +47,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         // Phone
         Text('Phone Number', style: _labelStyle()),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.receiverPhoneController,
           hintText: '+86 138 0000 0000',
           keyboardType: TextInputType.phone,
@@ -79,7 +79,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         // Bank Name
         Text('Bank Name (optional)', style: _labelStyle()),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.receiverBankNameController,
           hintText: 'Bank of China',
         ),
@@ -88,7 +88,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         // Account Number
         Text('Account Number (optional)', style: _labelStyle()),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.receiverAccountNumberController,
           hintText: '6225 0000 0000 0000',
           keyboardType: TextInputType.number,
@@ -98,7 +98,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         // IBAN
         Text('IBAN (optional)', style: _labelStyle()),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.receiverIbanController,
           hintText: 'GB29 NWBK 6016 1331 9268 19',
         ),
@@ -107,7 +107,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         // Alipay (for Chinese methods)
         Text('Alipay Account (optional)', style: _labelStyle()),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.receiverAlipayController,
           hintText: 'alipay@example.com or phone',
         ),
@@ -116,7 +116,7 @@ class RemittanceReceiverSection extends StatelessWidget {
         // WeChat
         Text('WeChat Account (optional)', style: _labelStyle()),
         SizedBox(height: 6.h),
-        CommonTextField(
+        CommonTextInputField(
           controller: controller.receiverWechatController,
           hintText: 'WeChat ID',
         ),
