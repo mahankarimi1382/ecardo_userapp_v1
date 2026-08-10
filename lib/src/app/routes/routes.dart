@@ -159,4 +159,8 @@ class BaseRoute {
   static const String remittance = "/remittance_route";
   static const String remittanceHistory = "/remittance_history_route";
   static const String remittanceDetails = "/remittance_details_route";
+
+  // KYC Level Routes (v1.0.5)
+  static const String kycSubmitWizard = "/kyc_submit_wizard_route";
+  static const String upgradeRequired = "/upgrade_required_route";
 }

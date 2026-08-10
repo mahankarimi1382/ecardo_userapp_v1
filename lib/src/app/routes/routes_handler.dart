@@ -459,4 +459,14 @@ List<GetPage> routesHandler = [
     name: BaseRoute.remittanceDetails,
     page: () => RoutesConfig.remittanceDetails,
   ),
+
+  // KYC Level Routes (v1.0.5)
+  GetPage(
+    name: BaseRoute.kycSubmitWizard,
+    page: () => RoutesConfig.kycSubmitWizard,
+  ),
+  GetPage(
+    name: BaseRoute.upgradeRequired,
+    page: () => RoutesConfig.upgradeRequired,
+  ),
 ];
