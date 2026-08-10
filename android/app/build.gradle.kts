@@ -26,16 +26,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-
-        // v1.0.4+5: Use network_security_config.xml to disable cleartext + block user CAs
-        androidManifestPlaceholders["usesCleartextTraffic"] = "false"
     }
 
     buildTypes {
         release {
             // TODO: Replace debug signing with a proper upload keystore before Play Store submission.
-            // For now, keep debug signing so existing sideload users don't break, but document that
-            // a release keystore MUST be generated before any production launch.
             signingConfig = signingConfigs.getByName("debug")
 
             // v1.0.4+5: Enable R8 obfuscation + shrinking

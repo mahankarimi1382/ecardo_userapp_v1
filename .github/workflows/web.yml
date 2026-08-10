@@ -28,12 +28,28 @@ jobs:
       - name: Enable Web
         run: flutter config --enable-web
 
-      - name: Regenerate web scaffold
+      - name: Backup custom web files
         run: |
-          if [ ! -f "web/index.html" ]; then
-            flutter create . --platforms=web --project-name=ecardo_user --org=com.ecardo
-          else
-            flutter create . --platforms=web --project-name=ecardo_user --org=com.ecardo 2>&1 | tail -5 || true
+          mkdir -p /tmp/web-backup
+          if [ -f "web/index.html" ]; then
+            cp web/index.html /tmp/web-backup/
+            cp web/manifest.json /tmp/web-backup/ 2>/dev/null || true
+            cp -r web/icons /tmp/web-backup/ 2>/dev/null || true
+            echo "Custom web files backed up"
+          fi
+
+      - name: Ensure web scaffold
+        run: |
+          flutter create . --platforms=web --project-name=ecardo_user --org=com.ecardo 2>&1 | tail -5 || true
+
+      - name: Restore custom web files
+        run: |
+          if [ -f "/tmp/web-backup/index.html" ]; then
+            cp /tmp/web-backup/index.html web/index.html
+            cp /tmp/web-backup/manifest.json web/manifest.json 2>/dev/null || true
+            mkdir -p web/icons
+            cp /tmp/web-backup/icons/* web/icons/ 2>/dev/null || true
+            echo "Custom web files restored"
           fi
 
       - name: Install dependencies
@@ -47,7 +63,7 @@ jobs:
           flutter build web --release --base-href "/web-app/" --no-tree-shake-icons
           ls -la build/web/
 
-      - name: Prepare PWA manifest
+      - name: Prepare PWA icons + manifest
         run: |
           SRC="ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
           if [ -f "$SRC" ]; then
@@ -58,21 +74,6 @@ jobs:
             cp "$SRC" build/web/icons/Icon-maskable-512.png
             cp "$SRC" build/web/favicon.png
           fi
-          cat > build/web/manifest.json <<'JSON'
-          {
-            "name": "eCardo Wallet",
-            "short_name": "eCardo",
-            "start_url": ".",
-            "display": "standalone",
-            "background_color": "#7445FF",
-            "theme_color": "#7445FF",
-            "description": "eCardo Multi-Country Digital Wallet",
-            "icons": [
-              { "src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png" },
-              { "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png" }
-            ]
-          }
-          JSON
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -82,7 +83,6 @@ jobs:
           if-no-files-found: error
 
       # Deploy: push build to 'web-deploy' orphan branch
-      # Server pulls this branch to public/web-app/
       - name: Deploy to web-deploy branch
         run: |
           cd build/web

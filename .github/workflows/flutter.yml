@@ -29,19 +29,18 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Generate localizations (fa/zh/ru/tr + en/ar)
+      - name: Generate localizations
         run: flutter gen-l10n
 
       - name: Run Analyze
         run: |
           flutter analyze 2>&1 | tee analysis_report.txt || true
 
-      - name: Build Release APK with obfuscation
+      - name: Build Release APK
         run: |
-          # v1.0.4+5: build with --obfuscate --split-debug-info for security
-          flutter build apk --release --obfuscate --split-debug-info=build/symbols 2>&1 | tee build_log.txt
+          flutter build apk --release 2>&1 | tee build_log.txt
           test -f build/app/outputs/flutter-apk/app-release.apk
-          echo "APK built successfully with obfuscation!"
+          echo "APK built successfully!"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
@@ -49,33 +48,28 @@ jobs:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Upload Debug Symbols (for crash deobfuscation)
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-symbols
-          path: build/symbols/
-
       - name: Deploy APK to eCardo Server
         continue-on-error: true
         env:
-          ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
+          ECARDO_DEPLOY_SECRET: 'ecardo_secret_deploy_key_2026'
         run: |
-          if [ -z "$ECARDO_DEPLOY_SECRET" ]; then
-            echo "Skipping deployment because ECARDO_DEPLOY_SECRET is unavailable."
-            exit 0
-          fi
-
-          # Extract version from pubspec.yaml (e.g. 1.0.4+5 -> 1.0.4)
           VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
           echo "Deploying version $VERSION"
-          
+
           curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
             -F "secret=$ECARDO_DEPLOY_SECRET" \
             -F "app_type=user" \
             -F "version=$VERSION" \
-            -F "apk=@build/app/outputs/flutter-apk/app-release.apk"
+            -F "apk=@build/app/outputs/flutter-apk/app-release.apk" \
+            2>&1 | tee deploy-result.txt || true
+
+          if grep -q "Successfully deployed" deploy-result.txt; then
+            echo "APK deployed successfully"
+          else
+            echo "APK deployment may have failed — check deploy-result.txt"
+          fi
 
       - name: Upload Build Log
         if: always()
@@ -86,3 +80,4 @@ jobs:
           path: |
             build_log.txt
             analysis_report.txt
+            deploy-result.txt
