@@ -7,6 +7,9 @@ import 'package:ecardo_user/src/presentation/screens/gift_card/view/gift_card_sc
 import 'package:ecardo_user/src/presentation/screens/travel/account/travel_account_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/account/travel_history_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/home/travel_home_screen.dart';
+import '../../presentation/screens/remittance/view/remittance_screen.dart';
+import '../../presentation/screens/remittance/view/remittance_history/remittance_history.dart';
+import '../../presentation/screens/remittance/view/remittance_details/remittance_details.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/view/p2p_view.dart';
 import 'package:ecardo_user/src/presentation/screens/payment_links/view/payment_links_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart';
