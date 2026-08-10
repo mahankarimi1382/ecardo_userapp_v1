@@ -69,10 +69,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
     }
     if (Get.find<SettingsService>().getSetting("kyc_verification") == "1") {
+      // v1.0.4+5: Show actual KYC status text
+      final userKyc = homeController.userModel.value.data?.kyc ?? 0;
+      String kycStatusText;
+      Color kycStatusColor;
+      switch (userKyc) {
+        case 1:
+          kycStatusText = localization.kycStatusVerified;
+          kycStatusColor = AppColors.success;
+          break;
+        case 2:
+          kycStatusText = localization.kycStatusPending;
+          kycStatusColor = AppColors.warning;
+          break;
+        case 3:
+          kycStatusText = localization.kycStatusRejected;
+          kycStatusColor = AppColors.error;
+          break;
+        default:
+          kycStatusText = localization.kycStatusNotSubmitted;
+          kycStatusColor = AppColors.warning;
+      }
       settingsList.insert(3, {
         "icon": PngAssets.idVerificationEndDrawerIcon,
         "title": localization.settingsIdVerification,
         "is_status": true,
+        "status_text": kycStatusText,
+        "status_color": kycStatusColor,
         "navigate": BaseRoute.kycHistory,
       });
     }

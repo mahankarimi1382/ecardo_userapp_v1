@@ -42,144 +42,117 @@ class DrawerSection extends StatelessWidget {
         },
       ];
 
-      final List<Map<String, dynamic>> conditionalItems = [
+      // v1.0.4+5: ALL modules visible — license gate at action time, not navigation
+      // Each item has "setting" key: "always" = always enabled, other = check setting
+      // Disabled items show greyed with lock icon; tapping shows license dialog
+      final List<Map<String, dynamic>> allItems = [
         {
+          "icon": SvgAssets.addMoneyDrawerIcon,
+          "navigation": localization.drawerAddMoney,
+          "navigate": BaseRoute.addMoney,
           "setting": "user_deposit",
-          "position": 2,
-          "item": {
-            "icon": SvgAssets.addMoneyDrawerIcon,
-            "navigation": localization.drawerAddMoney,
-            "navigate": BaseRoute.addMoney,
-          },
         },
         {
+          "icon": SvgAssets.cashOutDrawerIcon,
+          "navigation": localization.drawerCashOut,
+          "navigate": BaseRoute.cashOut,
           "setting": "user_cashout",
-          "position": 3,
-          "item": {
-            "icon": SvgAssets.cashOutDrawerIcon,
-            "navigation": localization.drawerCashOut,
-            "navigate": BaseRoute.cashOut,
-          },
         },
         {
+          "icon": SvgAssets.billPaymentDrawerIcon,
+          "navigation": localization.drawerBillPayments,
+          "navigate": BaseRoute.billPayment,
           "setting": "always",
-          "position": 4,
-          "item": {
-            "icon": SvgAssets.billPaymentDrawerIcon,
-            "navigation": localization.drawerBillPayments,
-            "navigate": BaseRoute.billPayment,
-          },
         },
         {
+          "icon": SvgAssets.billPaymentDrawerIcon,
+          "navigation": localization.drawerRemittance,
+          "navigate": BaseRoute.remittance,
           "setting": "always",
-          "position": 4.5,
-          "item": {
-            "icon": SvgAssets.billPaymentDrawerIcon,
-            "navigation": localization.drawerRemittance,
-            "navigate": BaseRoute.remittance,
-          },
         },
-
-        if (hasVirtualCard)
-          {
-            "setting": "always",
-            "position": 5,
-            "item": {
-              "icon": SvgAssets.virtualCardDrawerIcon,
-              "navigation": localization.drawerVirtualCards,
-              "navigate": BaseRoute.virtualCard,
-            },
-          },
         {
+          "icon": SvgAssets.virtualCardDrawerIcon,
+          "navigation": localization.drawerVirtualCards,
+          "navigate": BaseRoute.virtualCard,
           "setting": "always",
-          "position": hasVirtualCard ? 6 : 5,
-          "item": {
-            "icon": SvgAssets.paymentLinksDrawerIcon,
-            "navigation": localization.drawerPaymentLinks,
-            "navigate": BaseRoute.paymentLinks,
-          },
+          "addon": "virtualCards",
         },
         {
+          "icon": SvgAssets.paymentLinksDrawerIcon,
+          "navigation": localization.drawerPaymentLinks,
+          "navigate": BaseRoute.paymentLinks,
+          "setting": "always",
+        },
+        {
+          "icon": SvgAssets.makePaymentDrawerIcon,
+          "navigation": localization.drawerMakePayment,
+          "navigate": BaseRoute.makePayment,
           "setting": "user_payment",
-          "position": hasVirtualCard ? 7 : 6,
-          "item": {
-            "icon": SvgAssets.makePaymentDrawerIcon,
-            "navigation": localization.drawerMakePayment,
-            "navigate": BaseRoute.makePayment,
-          },
         },
         {
+          "icon": SvgAssets.transferDrawerIcon,
+          "navigation": localization.drawerTransfer,
+          "navigate": BaseRoute.transfer,
           "setting": "user_transfer",
-          "position": hasVirtualCard ? 8 : 7,
-          "item": {
-            "icon": SvgAssets.transferDrawerIcon,
-            "navigation": localization.drawerTransfer,
-            "navigate": BaseRoute.transfer,
-          },
         },
         {
+          "icon": SvgAssets.withdrawDrawerIcon,
+          "navigation": localization.drawerWithdraw,
+          "navigate": BaseRoute.withdraw,
           "setting": "user_withdraw",
-          "position": hasVirtualCard ? 9 : 8,
-          "item": {
-            "icon": SvgAssets.withdrawDrawerIcon,
-            "navigation": localization.drawerWithdraw,
-            "navigate": BaseRoute.withdraw,
-          },
         },
         {
+          "icon": SvgAssets.exchangeDrawerIcon,
+          "navigation": localization.drawerExchange,
+          "navigate": BaseRoute.exchange,
           "setting": "user_exchange",
-          "position": hasVirtualCard ? 10 : 9,
-          "item": {
-            "icon": SvgAssets.exchangeDrawerIcon,
-            "navigation": localization.drawerExchange,
-            "navigate": BaseRoute.exchange,
-          },
         },
         {
+          "icon": SvgAssets.invitingDrawerIcon,
+          "navigation": localization.drawerInviting,
+          "navigate": BaseRoute.referral,
           "setting": "sign_up_referral",
-          "position": hasVirtualCard ? 11 : 10,
-          "item": {
-            "icon": SvgAssets.invitingDrawerIcon,
-            "navigation": localization.drawerInviting,
-            "navigate": BaseRoute.referral,
-          },
         },
-        if (hasGiftCard)
-          {
-            "setting": "always",
-            "position": 12,
-            "item": {
-              "icon": SvgAssets.giftCardDrawerIcon,
-              "navigation": localization.drawerGiftCard,
-              "navigate": BaseRoute.giftCard,
-            },
-          },
-        if (hasP2p)
-          {
-            "setting": "always",
-            "position": 13,
-            "item": {
-              "icon": SvgAssets.p2pDrawerIcon,
-              "navigation": localization.drawerP2pTrading,
-              "navigate": BaseRoute.p2pTrading,
-            },
-          },
+        {
+          "icon": SvgAssets.giftCardDrawerIcon,
+          "navigation": localization.drawerGiftCard,
+          "navigate": BaseRoute.giftCard,
+          "setting": "always",
+          "addon": "giftCards",
+        },
+        {
+          "icon": SvgAssets.p2pDrawerIcon,
+          "navigation": localization.drawerP2pTrading,
+          "navigate": BaseRoute.p2pTrading,
+          "setting": "always",
+          "addon": "p2pTrading",
+        },
       ];
 
-      for (var conditionalItem in conditionalItems) {
-        final settingKey = conditionalItem["setting"] as String;
-        final settingValue = settingsService.getSetting(settingKey);
+      // Add all items — ALL visible, license check at tap time
+      for (var item in allItems) {
+        // Determine if this item is enabled
+        final settingKey = item["setting"] as String;
+        final addonKey = item["addon"] as String?;
+        bool isEnabled = true;
 
-        if (settingValue == "1" || settingKey == "always") {
-          final position = conditionalItem["position"] as int;
-          final item = conditionalItem["item"] as Map<String, dynamic>;
-
-          final insertPosition = position > navigationItemList.length
-              ? navigationItemList.length
-              : position;
-
-          navigationItemList.insert(insertPosition, item);
+        if (settingKey != "always") {
+          isEnabled = settingsService.getSetting(settingKey) == "1";
         }
+
+        if (addonKey != null) {
+          final addonEnabled = addonKey == "virtualCards"
+              ? hasVirtualCard
+              : addonKey == "giftCards"
+                  ? hasGiftCard
+                  : addonKey == "p2pTrading"
+                      ? hasP2p
+                      : true;
+          isEnabled = isEnabled && addonEnabled;
+        }
+
+        item["isEnabled"] = isEnabled;
+        navigationItemList.add(item);
       }
 
       return navigationItemList;
@@ -304,6 +277,35 @@ class _DrawerItem extends StatelessWidget {
           onTap: () {
             final nav = item["navigation"];
             final navigate = item["navigate"].toString();
+            final isEnabled = item["isEnabled"] as bool? ?? true;
+
+            // v1.0.4+5: License gate — if module is disabled, show dialog
+            if (!isEnabled) {
+              Get.back();
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  title: Row(children: [
+                    Icon(Icons.lock_outline, color: AppColors.warning, size: 24),
+                    SizedBox(width: 8),
+                    Text('License Required', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                  ]),
+                  content: Text(
+                    'The "$nav" feature is not available on your current plan.\n\nPlease contact support to activate this module.',
+                    style: TextStyle(fontSize: 14, color: AppColors.lightTextPrimary),
+                  ),
+                  actions: [
+                    TextButton(onPressed: () => Get.back(), child: Text('Close')),
+                    ElevatedButton(
+                      onPressed: () { Get.back(); Get.toNamed(BaseRoute.supportTickets); },
+                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary),
+                      child: Text('Contact Support', style: TextStyle(color: AppColors.white)),
+                    ),
+                  ],
+                ),
+              );
+              return;
+            }
 
             void navigateTo() {
               if (navigate.isNotEmpty) {
@@ -312,68 +314,50 @@ class _DrawerItem extends StatelessWidget {
               }
             }
 
+            // KYC gate — check KYC before navigating to financial modules
+            final userKyc = homeController.userModel.value.data?.kyc ?? 0;
+
             if (nav == localization.drawerTransfer) {
-              if (settingsService.getSetting("kyc_fund_transfer") == "0" &&
-                  homeController.userModel.value.data!.kyc == 0) {
-                ToastHelper().showErrorToast(
-                  localization.drawerKycVerification,
-                );
+              if (settingsService.getSetting("kyc_fund_transfer") == "0" && userKyc == 0) {
+                ToastHelper().showErrorToast(localization.drawerKycVerification);
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerDashboard) {
               Get.back();
             } else if (nav == localization.drawerMyWallets) {
-              if (settingsService.getSetting("kyc_wallet") == "0" &&
-                  homeController.userModel.value.data!.kyc == 0) {
-                ToastHelper().showErrorToast(
-                  localization.drawerKycVerification,
-                );
+              if (settingsService.getSetting("kyc_wallet") == "0" && userKyc == 0) {
+                ToastHelper().showErrorToast(localization.drawerKycVerification);
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerAddMoney) {
-              if (settingsService.getSetting("kyc_deposit") == "0" &&
-                  homeController.userModel.value.data!.kyc == 0) {
-                ToastHelper().showErrorToast(
-                  localization.drawerKycVerification,
-                );
+              if (settingsService.getSetting("kyc_deposit") == "0" && userKyc == 0) {
+                ToastHelper().showErrorToast(localization.drawerKycVerification);
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerCashOut) {
-              if (settingsService.getSetting("kyc_cashout") == "0" &&
-                  homeController.userModel.value.data!.kyc == 0) {
-                ToastHelper().showErrorToast(
-                  localization.drawerKycVerification,
-                );
+              if (settingsService.getSetting("kyc_cashout") == "0" && userKyc == 0) {
+                ToastHelper().showErrorToast(localization.drawerKycVerification);
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerMakePayment) {
-              if (settingsService.getSetting("kyc_payment") == "0" &&
-                  homeController.userModel.value.data!.kyc == 0) {
-                ToastHelper().showErrorToast(
-                  localization.drawerKycVerification,
-                );
+              if (settingsService.getSetting("kyc_payment") == "0" && userKyc == 0) {
+                ToastHelper().showErrorToast(localization.drawerKycVerification);
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerExchange) {
-              if (settingsService.getSetting("kyc_exchange") == "0" &&
-                  homeController.userModel.value.data!.kyc == 0) {
-                ToastHelper().showErrorToast(
-                  localization.drawerKycVerification,
-                );
+              if (settingsService.getSetting("kyc_exchange") == "0" && userKyc == 0) {
+                ToastHelper().showErrorToast(localization.drawerKycVerification);
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerWithdraw) {
-              if (settingsService.getSetting("kyc_withdraw") == "0" &&
-                  homeController.userModel.value.data!.kyc == 0) {
-                ToastHelper().showErrorToast(
-                  localization.drawerKycVerification,
-                );
+              if (settingsService.getSetting("kyc_withdraw") == "0" && userKyc == 0) {
+                ToastHelper().showErrorToast(localization.drawerKycVerification);
               } else {
                 navigateTo();
               }
@@ -388,20 +372,29 @@ class _DrawerItem extends StatelessWidget {
                 SvgPicture.asset(
                   item["icon"],
                   colorFilter: ColorFilter.mode(
-                    AppColors.lightTextPrimary.withValues(alpha: 0.44),
+                    (item["isEnabled"] as bool? ?? true)
+                        ? AppColors.lightTextPrimary.withValues(alpha: 0.44)
+                        : AppColors.lightTextHint.withValues(alpha: 0.3),
                     BlendMode.srcIn,
                   ),
                   width: 20,
                 ),
                 SizedBox(width: 14),
-                Text(
-                  item["navigation"],
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    color: AppColors.lightTextTertiary,
+                Expanded(
+                  child: Text(
+                    item["navigation"],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: (item["isEnabled"] as bool? ?? true)
+                          ? AppColors.lightTextTertiary
+                          : AppColors.lightTextHint,
+                    ),
                   ),
                 ),
+                // Show lock icon for disabled modules
+                if (!(item["isEnabled"] as bool? ?? true))
+                  Icon(Icons.lock_outline, size: 14, color: AppColors.lightTextHint),
               ],
             ),
           ),

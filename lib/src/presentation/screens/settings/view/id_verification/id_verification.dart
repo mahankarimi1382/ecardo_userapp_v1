@@ -129,9 +129,11 @@ class _IdVerificationState extends State<IdVerification> {
   }
 
   Widget _buildVerificationSection() {
-    final kyc = controller.userModel.value.data?.kyc;
+    final kyc = controller.userModel.value.data?.kyc ?? 0;
     final kycInfo = getKycStatusInfo(kyc: kyc);
     final localization = AppLocalizations.of(context)!;
+    final isRejected = controller.userModel.value.data?.isRejected ?? false;
+    final rejectionReason = controller.userModel.value.data?.rejectionReason;
 
     return Container(
       width: double.infinity,
@@ -142,6 +144,7 @@ class _IdVerificationState extends State<IdVerification> {
       ),
       child: Column(
         children: [
+          // Status icon
           Container(
             padding: const EdgeInsets.all(13),
             width: 50,
@@ -153,6 +156,7 @@ class _IdVerificationState extends State<IdVerification> {
             child: Icon(kycInfo.icon, color: AppColors.white),
           ),
           const SizedBox(height: 7),
+          // Title
           Text(
             localization.idVerificationCenterTitle,
             style: TextStyle(
@@ -163,6 +167,7 @@ class _IdVerificationState extends State<IdVerification> {
             ),
           ),
           const SizedBox(height: 4),
+          // Status message
           Padding(
             padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
             child: Text(
@@ -176,9 +181,194 @@ class _IdVerificationState extends State<IdVerification> {
               ),
             ),
           ),
+          const SizedBox(height: 12),
+          // ── KYC Progress Steps ──
+          _buildKycSteps(kyc, localization),
+          // ── Rejection reason (if rejected) ──
+          if (isRejected && rejectionReason != null && rejectionReason.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Container(
+              margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.error_outline, color: AppColors.error, size: 18),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Rejection Reason',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.error,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          rejectionReason,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.lightTextPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          // ── Next steps guidance ──
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+            child: _buildNextStepsGuidance(kyc, localization),
+          ),
         ],
       ),
     );
+  }
+
+  /// Build KYC progress steps (3 steps: Submit → Review → Verified)
+  Widget _buildKycSteps(int kyc, AppLocalizations localization) {
+    final steps = [
+      {'label': 'Submit', 'icon': Icons.upload_file, 'done': kyc >= 2},
+      {'label': 'Review', 'icon': Icons.rate_review, 'done': kyc == 1},
+      {'label': 'Verified', 'icon': Icons.verified_user, 'done': kyc == 1},
+    ];
+
+    return Padding(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+      child: Row(
+        children: List.generate(steps.length * 2 - 1, (index) {
+          if (index.isOdd) {
+            final stepIdx = index ~/ 2;
+            final isCompleted = steps[stepIdx]['done'] as bool;
+            return Expanded(
+              child: Container(
+                height: 2,
+                margin: EdgeInsets.symmetric(horizontal: 4),
+                color: isCompleted ? kycColor(kyc) : AppColors.lightBorder,
+              ),
+            );
+          }
+          final stepIdx = index ~/ 2;
+          final step = steps[stepIdx];
+          final isDone = step['done'] as bool;
+          final isCurrent = (kyc == 2 && stepIdx == 1) || (kyc == 0 && stepIdx == 0);
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isDone ? kycColor(kyc) : (isCurrent ? kycColor(kyc).withValues(alpha: 0.3) : AppColors.lightBorder),
+                  border: isCurrent && !isDone ? Border.all(color: kycColor(kyc), width: 2) : null,
+                ),
+                child: Icon(
+                  isDone ? Icons.check : step['icon'] as IconData,
+                  color: isDone ? AppColors.white : (isCurrent ? kycColor(kyc) : AppColors.lightTextSecondary),
+                  size: 16,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                step['label'] as String,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: isCurrent || isDone ? FontWeight.w700 : FontWeight.w400,
+                  color: isDone || isCurrent ? kycColor(kyc) : AppColors.lightTextSecondary,
+                ),
+              ),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  /// Show next steps guidance based on current KYC status
+  Widget _buildNextStepsGuidance(int kyc, AppLocalizations localization) {
+    String guidance;
+    IconData icon;
+    Color color;
+
+    switch (kyc) {
+      case 0:
+        guidance = 'Your identity is not verified yet. Please submit your documents to unlock all features.';
+        icon = Icons.info_outline;
+        color = AppColors.warning;
+        break;
+      case 1:
+        guidance = 'Your identity has been verified. You have full access to all features.';
+        icon = Icons.check_circle_outline;
+        color = AppColors.success;
+        break;
+      case 2:
+        guidance = 'Your documents are under review. This usually takes 1-2 business days.';
+        icon = Icons.hourglass_top;
+        color = AppColors.warning;
+        break;
+      case 3:
+        guidance = 'Your submission was rejected. Please review the reason above and resubmit.';
+        icon = Icons.error_outline;
+        color = AppColors.error;
+        break;
+      default:
+        guidance = 'Please complete identity verification to unlock all features.';
+        icon = Icons.info_outline;
+        color = AppColors.warning;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: color, size: 18),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              guidance,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.lightTextPrimary,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color kycColor(int kyc) {
+    switch (kyc) {
+      case 1:
+        return AppColors.success;
+      case 2:
+        return AppColors.warning;
+      case 3:
+        return AppColors.error;
+      default:
+        return AppColors.warning;
+    }
   }
 }
 
