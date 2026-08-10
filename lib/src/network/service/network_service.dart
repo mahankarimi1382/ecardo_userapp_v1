@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -54,6 +55,10 @@ class NetworkService extends getx.GetxService {
     _globalDio.interceptors.clear();
   }
 
+  // v1.0.5: Token refresh state — جلوگیری از refresh همزمان
+  bool _isRefreshing = false;
+  final List<void Function(String)> _pendingRequests = [];
+
   // Setup Interceptor
   void _setupInterceptors() {
     _dio.interceptors.clear();
@@ -67,25 +72,99 @@ class NetworkService extends getx.GetxService {
             options.headers['Authorization'] = 'Bearer $accessToken';
           }
 
-          // v1.0.4+5: Send a request ID header so the backend can correlate
-          // logs with this request. The backend will echo it back in meta.request_id.
+          // v1.0.5: Request ID برای traceability
           options.headers['X-Request-ID'] =
               options.headers['X-Request-ID'] ?? _generateRequestId();
 
-          // v1.0.4+5: Identify the client + version to the backend.
-          options.headers['X-App-Version'] = '1.0.4+5';
+          // v1.0.5: Client identification
+          options.headers['X-App-Version'] = '1.0.5';
           options.headers['X-Client'] = 'ecardo_user_flutter';
+          // v1.0.5: Platform identification
+          if (kIsWeb) {
+            options.headers['X-Platform'] = 'web';
+          } else {
+            options.headers['X-Platform'] = Platform.isAndroid
+                ? 'android'
+                : Platform.isIOS
+                    ? 'ios'
+                    : 'unknown';
+          }
 
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
           if (error.response?.statusCode == 401) {
-            _log("Unauthorized. Please login again.");
+            _log("401 Unauthorized — attempting token refresh...");
+
+            // v1.0.5: اگر در حال refresh هستیم، request را صف کنیم
+            if (_isRefreshing) {
+              _pendingRequests.add((newToken) {
+                error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                _dio.fetch(error.requestOptions).then(
+                  (response) => handler.resolve(response),
+                  onError: (e) => handler.next(error),
+                );
+              });
+              return;
+            }
+
+            // تلاش برای refresh
+            _isRefreshing = true;
+            final refreshed = await _attemptTokenRefresh();
+            _isRefreshing = false;
+
+            if (refreshed) {
+              // retry request اصلی
+              final newToken = _tokenService.accessToken.value;
+              if (newToken != null) {
+                error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                try {
+                  final response = await _dio.fetch(error.requestOptions);
+                  handler.resolve(response);
+
+                  // پردازش صف pending requests
+                  for (final callback in _pendingRequests) {
+                    callback(newToken);
+                  }
+                  _pendingRequests.clear();
+                  return;
+                } catch (e) {
+                  _log('Retry failed: $e');
+                }
+              }
+            }
+
+            // refresh ناموفق — logout
+            _log("Token refresh failed — logging out.");
+            await _tokenService.clearToken();
+            _pendingRequests.clear();
+
+            // هدایت به صفحه‌ی login
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (getx.Get.currentRoute != BaseRoute.signIn) {
+                getx.Get.offAllNamed(BaseRoute.signIn);
+              }
+            });
           }
           return handler.next(error);
         },
       ),
     );
+  }
+
+  /// v1.0.5: تلاش برای refresh token
+  /// در حال حاضر backend token expiry ندارد (Sanctum expiration: null)
+  /// ولی این متد برای آینده آماده است.
+  Future<bool> _attemptTokenRefresh() async {
+    try {
+      // در حال حاضر backend endpoint /api/auth/refresh ندارد
+      // وقتی اضافه شد، این متد فعال می‌شود
+      // فعلاً false برمی‌گرداند تا مستقیم logout شود
+      return false;
+    } catch (e) {
+      _log('Token refresh error: $e');
+      return false;
+    }
   }
 
   /// Generate a ULID-like request ID for traceability.
