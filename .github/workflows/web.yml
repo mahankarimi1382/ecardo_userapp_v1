@@ -5,15 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      baseHref:
-        description: 'Base href (e.g. /web-app/ or /)'
-        required: false
-        default: '/web-app/'
-        type: string
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -34,16 +28,13 @@ jobs:
       - name: Enable Web
         run: flutter config --enable-web
 
-      - name: Regenerate web scaffold (idempotent)
+      - name: Regenerate web scaffold
         run: |
           if [ ! -f "web/index.html" ]; then
-            echo "No web/index.html found; running flutter create..."
             flutter create . --platforms=web --project-name=ecardo_user --org=com.ecardo
           else
-            echo "web/index.html already exists; ensuring web/ is registered..."
             flutter create . --platforms=web --project-name=ecardo_user --org=com.ecardo 2>&1 | tail -5 || true
           fi
-          ls -la web/
 
       - name: Install dependencies
         run: flutter pub get
@@ -51,23 +42,23 @@ jobs:
       - name: Generate localizations
         run: flutter gen-l10n
 
-      - name: Analyze
-        run: flutter analyze 2>&1 | tee analyze.txt || { echo "::warning::flutter analyze had issues"; }
-
-      - name: Prepare PWA icons + manifest
+      - name: Build Web (release)
         run: |
-          set -e
+          flutter build web --release --base-href "/web-app/" --no-tree-shake-icons
+          ls -la build/web/
+
+      - name: Prepare PWA manifest
+        run: |
           SRC="ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
           if [ -f "$SRC" ]; then
-            mkdir -p web/icons
-            cp "$SRC" web/icons/Icon-192.png
-            cp "$SRC" web/icons/Icon-512.png
-            cp "$SRC" web/icons/Icon-maskable-192.png
-            cp "$SRC" web/icons/Icon-maskable-512.png
-            cp "$SRC" web/favicon.png
+            mkdir -p build/web/icons
+            cp "$SRC" build/web/icons/Icon-192.png
+            cp "$SRC" build/web/icons/Icon-512.png
+            cp "$SRC" build/web/icons/Icon-maskable-192.png
+            cp "$SRC" build/web/icons/Icon-maskable-512.png
+            cp "$SRC" build/web/favicon.png
           fi
-
-          cat > web/manifest.json <<'JSON'
+          cat > build/web/manifest.json <<'JSON'
           {
             "name": "eCardo Wallet",
             "short_name": "eCardo",
@@ -76,90 +67,31 @@ jobs:
             "background_color": "#7445FF",
             "theme_color": "#7445FF",
             "description": "eCardo Multi-Country Digital Wallet",
-            "orientation": "portrait-primary",
-            "prefer_related_applications": [
-              { "platform": "play", "url": "https://ecardo.ir/apk/user/user-release.apk" }
-            ],
             "icons": [
               { "src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png" },
-              { "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png" },
-              { "src": "icons/Icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-              { "src": "icons/Icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+              { "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png" }
             ]
           }
           JSON
 
-          if grep -q '<meta name="description"' web/index.html; then
-            sed -i 's|<meta name="description"[^>]*>|<meta name="description" content="eCardo Multi-Country Digital Wallet">|' web/index.html
-          fi
-          sed -i 's|<title>.*</title>|<title>eCardo Wallet</title>|' web/index.html
-          echo "manifest.json and index.html prepared"
-
-      - name: Build Web (release)
-        run: |
-          BASE_HREF="${{ inputs.baseHref || '/web-app/' }}"
-          echo "==> flutter build web --release --base-href $BASE_HREF --no-tree-shake-icons"
-          flutter build web --release --base-href "$BASE_HREF" --no-tree-shake-icons
-          echo "==> Build output:"
-          ls -la build/web/
-
-      - name: Create ZIP artifact
-        run: |
-          cd build/web
-          zip -r9 ../../web-build.zip .
-          cd ../..
-          ls -la web-build.zip
-
-      - name: Upload Web Build (directory)
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: build/web/
           if-no-files-found: error
-          retention-days: 30
 
-      - name: Upload Web Build (zip)
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-build-zip
-          path: web-build.zip
-          if-no-files-found: error
-          retention-days: 30
-
-      # ═══ v1.0.4+5: Auto-deploy web build to eCardo server ═══
-      - name: Deploy Web Build to eCardo Server
-        continue-on-error: true
-        env:
-          ECARDO_DEPLOY_SECRET: 'ecardo_secret_deploy_key_2026'
+      # Deploy: push build to 'web-deploy' orphan branch
+      # Server pulls this branch to public/web-app/
+      - name: Deploy to web-deploy branch
         run: |
-          if [ -z "$ECARDO_DEPLOY_SECRET" ]; then
-            echo "Skipping deployment because ECARDO_DEPLOY_SECRET is unavailable."
-            exit 0
-          fi
-
-          VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
-          echo "Deploying web version $VERSION"
-
-          curl --fail-with-body --show-error --silent \
-            -X POST https://ecardo.ir/api/user/github-deploy-web \
-            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
-            -F "secret=$ECARDO_DEPLOY_SECRET" \
-            -F "version=$VERSION" \
-            -F "zip=@web-build.zip" \
-            2>&1 | tee deploy-result.txt
-
-          if grep -q "Successfully deployed" deploy-result.txt; then
-            echo "✓ Web build deployed successfully"
-          else
-            echo "⚠ Deployment may have failed — check deploy-result.txt"
-          fi
-
-      - name: Upload Deploy Log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy-log
-          if-no-files-found: warn
-          path: |
-            deploy-result.txt
-            analyze.txt
+          cd build/web
+          git init
+          git config user.email "ecardo-dev@ecardo.ir"
+          git config user.name "eCardo Web Deploy"
+          git checkout -b web-deploy
+          git add -A
+          git commit -m "web build $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/mahankarimi1382/ecardo_userapp_v1.git"
+          git push origin web-deploy --force
+          echo "Pushed to web-deploy branch"
