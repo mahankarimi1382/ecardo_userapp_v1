@@ -331,7 +331,7 @@ class _DrawerItem extends StatelessWidget {
                 if (!kycController.hasFeature('remittance')) {
                   Get.back();
                   Get.dialog(_KycLevelRequiredDialog(
-                    requiredLevel: 2,
+                    requiredLevel: 3,
                     currentLevel: kycController.currentLevel,
                     featureName: nav,
                   ));

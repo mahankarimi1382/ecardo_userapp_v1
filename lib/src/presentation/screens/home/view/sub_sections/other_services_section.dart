@@ -120,6 +120,11 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         "icon": PngAssets.billPaymentService,
         "navigate": BaseRoute.billPayment,
       },
+      {
+        "title": localization.drawerRemittance,
+        "icon": PngAssets.billPaymentService,
+        "navigate": BaseRoute.remittance,
+      },
       if (homeController.userModel.value.data?.addons?.virtualCards == true)
         {
           "title": localization.otherServicesVirtualCard,
