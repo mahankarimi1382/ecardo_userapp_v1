@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
@@ -24,7 +27,8 @@ class KycSubmitWizard extends StatefulWidget {
 
 class _KycSubmitWizardState extends State<KycSubmitWizard> {
   final KycLevelController controller = Get.find<KycLevelController>();
-  final Map<String, String> _documents = {};
+  final Map<String, File> _documents = {};
+  final ImagePicker _picker = ImagePicker();
   int _currentStep = 0;
 
   @override
@@ -193,11 +197,24 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     );
   }
 
-  void _pickDocument(String docKey) {
-    // شبیه‌سازی آپلود — در نسخه واقعی از image_picker استفاده می‌شود
-    setState(() {
-      _documents[docKey] = 'uploads/kyc/${docKey}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-    });
+  Future<void> _pickDocument(String docKey) async {
+    // v57: استفاده از image_picker برای انتخاب فایل واقعی
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+        maxWidth: 1920,
+        maxHeight: 1080,
+      );
+      if (picked != null) {
+        setState(() {
+          _documents[docKey] = File(picked.path);
+        });
+      }
+    } catch (e) {
+      debugPrint('image_picker error: $e');
+      ToastHelper().showErrorToast('Failed to pick document. Please try again.');
+    }
   }
 
   Future<void> _submit() async {
