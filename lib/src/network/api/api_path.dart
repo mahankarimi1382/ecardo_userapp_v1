@@ -213,8 +213,13 @@ class ApiPath {
   static String orderMessageEndpoint({required String orderId}) =>
       '/user/p2p/orders/$orderId/messages';
 
+  /// دریافت روش‌های پرداخت یک آگهی (GET)
   static String adPaymentMethodEndpoint({required String adId}) =>
       '/user/p2p/ads/$adId/payment-methods';
+
+  /// آپدیت روش پرداخت سفارش (PATCH) — به OrderController وصل است
+  static String updateOrderPaymentMethodEndpoint({required String orderId}) =>
+      '/user/p2p/orders/$orderId/payment-method';
 
   static String cancelAdEndpoint({required String id}) =>
       '/user/p2p/orders/$id/cancel';

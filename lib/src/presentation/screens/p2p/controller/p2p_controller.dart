@@ -50,14 +50,22 @@ class P2pController extends GetxController {
   /// در بازار ایران: پول نقد و جا به جایی حضوری در اولویت هستند
   final Rxn<bool> isCashDollarFilter = Rxn<bool>();
 
-  final List<String> topTabs = const [
-    'P2P',
-    'My Orders',
-    'Payment Accounts',
-    'My Ads',
-    'Create Ad',
-    'Apply Verification',
-  ];
+  /// نام تب‌های بالا — از localization خوانده می‌شود
+  /// fallback انگلیسی برای زمانی که لیدر لود نشده
+  List<String> get topTabs {
+    try {
+      return [
+        localization.p2pP2p,
+        localization.p2pMyOrders,
+        localization.p2pPaymentAccounts,
+        localization.p2pMyAds,
+        localization.p2pCreateAd,
+        localization.p2pApplyVerification,
+      ];
+    } catch (_) {
+      return const ['P2P', 'My Orders', 'Payment Accounts', 'My Ads', 'Create Ad', 'Apply Verification'];
+    }
+  }
 
   final TextEditingController assetController = TextEditingController();
   final TextEditingController fiatController = TextEditingController();

@@ -145,22 +145,20 @@ class P2pOrderDetailsController extends GetxController {
     selectedPaymentMethodId.value = id;
   }
 
+  /// آپدیت روش پرداخت سفارش
+  /// بکند: PATCH /user/p2p/orders/{id}/payment-method
   Future<void> updateOrderPaymentMethod(int newPaymentMethodId) async {
     final currentId = selectedPaymentMethodId.value;
     if (currentId == newPaymentMethodId) {
       return;
     }
 
-    final adId = orderData.value?.adId;
-    if (adId == null) {
-      ToastHelper().showErrorToast('Ad not found for this order');
-      return;
-    }
-
     isUpdatingPaymentMethod.value = true;
     try {
       final response = await Get.find<NetworkService>().post(
-        endpoint: ApiPath.adPaymentMethodEndpoint(adId: '$adId'),
+        endpoint: ApiPath.updateOrderPaymentMethodEndpoint(
+          orderId: '$orderId',
+        ),
         data: <String, dynamic>{
           'payment_method_id': newPaymentMethodId,
           '_method': 'PATCH',
