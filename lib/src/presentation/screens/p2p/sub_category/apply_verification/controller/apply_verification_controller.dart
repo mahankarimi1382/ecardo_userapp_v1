@@ -356,14 +356,15 @@ class ApplyVerificationController extends GetxController {
   }();
 
   /// تشخیص نوع محتوای فایل بر اساس پسوند
-  static dio.ContentType _contentTypeForFile(String fileName) {
+  /// در Dio 5.x از DioMediaType به جای ContentType استفاده شده
+  static dio.DioMediaType _contentTypeForFile(String fileName) {
     final lower = fileName.toLowerCase();
-    if (lower.endsWith('.pdf')) return dio.ContentType('application', 'pdf');
-    if (lower.endsWith('.png')) return dio.ContentType('image', 'png');
+    if (lower.endsWith('.pdf')) return dio.DioMediaType('application', 'pdf');
+    if (lower.endsWith('.png')) return dio.DioMediaType('image', 'png');
     if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) {
-      return dio.ContentType('image', 'jpeg');
+      return dio.DioMediaType('image', 'jpeg');
     }
-    if (lower.endsWith('.webp')) return dio.ContentType('image', 'webp');
-    return dio.ContentType('application', 'octet-stream');
+    if (lower.endsWith('.webp')) return dio.DioMediaType('image', 'webp');
+    return dio.DioMediaType('application', 'octet-stream');
   }
 }
