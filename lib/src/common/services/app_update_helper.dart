@@ -1,8 +1,9 @@
 /// سرویس بررسی و دانلود آپدیت اپلیکیشن
 /// فقط در پلتفرم موبایل (Android/iOS) فعال است
 /// در وب، آپدیت خودکار از طریق کش مرورگر انجام می‌شود
+/// از conditional import استفاده شده تا dart:io فقط در موبایل ایمپورت شود
 
-import 'dart:io' show File, Directory, Platform;
+import 'dart:io' if (dart.library.io) show File, Directory, Platform;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
