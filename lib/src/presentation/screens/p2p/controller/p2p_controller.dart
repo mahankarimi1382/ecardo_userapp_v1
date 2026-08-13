@@ -12,7 +12,17 @@ import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_mo
 import '../../../../../l10n/app_localizations.dart';
 
 class P2pController extends GetxController {
-  final localization = AppLocalizations.of(Get.context!)!;
+  /// لوکالایزیشن با getter lazy ارزیابی می‌شود تا null crash رخ ندهد
+  /// Get.context در زمان ساخت کنترلر ممکن است null باشد
+  AppLocalizations get localization {
+    final ctx = Get.context;
+    if (ctx == null) {
+      debugPrint('[P2pController] Get.context is null, using fallback l10n');
+      return AppLocalizations.of(Get.overlayContext ?? Get.key.currentContext!)!;
+    }
+    return AppLocalizations.of(ctx)!;
+  }
+
   final RxInt selectedTopTabIndex = 0.obs;
   final RxBool cameFromCreateAdSuccess = false.obs;
   final RxInt selectedTradeTypeIndex = 0.obs;

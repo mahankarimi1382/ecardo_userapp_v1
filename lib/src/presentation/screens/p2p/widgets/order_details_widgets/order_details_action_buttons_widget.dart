@@ -24,9 +24,33 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final status = (data.status ?? '').toLowerCase();
+    /// اکشن‌های فروشنده (Seller)
+    /// در وضعیت pending_payment: منتظر پرداخت خریدار - امکان کنسل
+    /// در وضعیت paid: خریدار پرداخت کرده - دکمه تایید دریافت
+    /// در وضعیت disputed: دعوی مطرح شده - فقط نمایش وضعیت
     if (!controller.isBuy) {
       switch (status) {
+        case 'pending_payment':
+          /// فروشنده می‌تواند سفارش را در انتظار پرداخت کنسل کند
+          return Column(
+            children: [
+              Obx(
+                () => CommonButton(
+                  text: localization.p2pCancelOrder,
+                  width: double.infinity,
+                  isLoading: controller.isCancellingOrder.value,
+                  backgroundColor: AppColors.transparent,
+                  textColor: AppColors.lightTextPrimary.withValues(alpha: 0.8),
+                  borderColor: AppColors.lightPrimary.withValues(alpha: 0.45),
+                  borderWidth: 1.2,
+                  onPressed: () => _showCancelConfirmation(),
+                ),
+              ),
+              SizedBox(height: 20.h),
+            ],
+          );
         case 'paid':
+          /// فروشنده پس از تایید پرداخت، دارایی را آزاد می‌کند
           return Column(
             children: [
               Obx(
@@ -42,6 +66,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
             ],
           );
         default:
+          /// سایر وضعیت‌ها (completed, cancelled, expired, disputed): اکشنی لازم نیست
           return const SizedBox.shrink();
       }
     }
