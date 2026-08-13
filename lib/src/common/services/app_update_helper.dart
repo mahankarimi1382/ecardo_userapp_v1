@@ -1,5 +1,11 @@
-import 'dart:io';
+/// سرویس بررسی و دانلود آپدیت اپلیکیشن
+/// فقط در پلتفرم موبایل (Android/iOS) فعال است
+/// در وب، آپدیت خودکار از طریق کش مرورگر انجام می‌شود
+
+import 'dart:io' show File, Directory, Platform;
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
@@ -10,6 +16,9 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class AppUpdateHelper {
+  /// بررسی وجود آپدیت جدید
+  /// در وب: فقط پیام نمایش داده می‌شود (دانلود غیرفعال)
+  /// در موبایل: دیالوگ دانلود و نصب نمایش داده می‌شود
   static Future<void> checkForUpdate(
     BuildContext context, {
     bool showMessageIfNoUpdate = false,
@@ -34,7 +43,13 @@ class AppUpdateHelper {
       }
 
       if (serverVersion != currentVersion && serverVersion.isNotEmpty) {
-        _showUpdateDialog(context, serverVersion, updateLink, forceUpdate);
+        if (kIsWeb) {
+          /// در وب: فقط اطلاع‌رسانی (مرورگر خودش آپدیت می‌کند)
+          _showWebUpdateDialog(context, serverVersion, forceUpdate);
+        } else {
+          /// در موبایل: دانلود و نصب APK
+          _showUpdateDialog(context, serverVersion, updateLink, forceUpdate);
+        }
       } else {
         if (showMessageIfNoUpdate) {
           Get.snackbar('System', 'App is up to date ($currentVersion)');
@@ -45,6 +60,7 @@ class AppUpdateHelper {
     }
   }
 
+  /// دیالوگ آپدیت برای پلتفرم موبایل با گزینه دانلود
   static void _showUpdateDialog(
     BuildContext context,
     String version,
@@ -88,6 +104,53 @@ class AppUpdateHelper {
     );
   }
 
+  /// دیالوگ آپدیت برای پلتفرم وب (فقط اطلاع‌رسانی)
+  /// کاربر باید صفحه را رفرش کند
+  static void _showWebUpdateDialog(
+    BuildContext context,
+    String version,
+    bool forceUpdate,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: !forceUpdate,
+      builder: (ctx) {
+        return PopScope(
+          canPop: !forceUpdate,
+          child: AlertDialog(
+            title: Text('New Update Available ($version)'),
+            content: const Text(
+              'A new version is available. Please refresh the page to get the latest version.',
+            ),
+            actions: [
+              if (!forceUpdate)
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('Later'),
+                ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.lightPrimary,
+                ),
+                onPressed: () {
+                  /// در وب: رفرش صفحه برای دریافت نسخه جدید
+                  Get.closeCurrentDialog();
+                  Get.reload();
+                },
+                child: const Text(
+                  'Refresh Page',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// دانلود و نصب APK (فقط موبایل)
+  /// در وب این متد هرگز فراخوانی نمی‌شود
   static Future<void> _downloadAndInstall(String url) async {
     try {
       var status = await Permission.storage.request();
@@ -121,18 +184,18 @@ class AppUpdateHelper {
         url,
         filePath,
         onReceiveProgress: (rec, total) {
-          // could update UI here if using a stateful widget
+          /// می‌توان در آینده نوار پیشرفت اضافه کرد
         },
       );
 
-      Get.back(); // close progress dialog
+      Get.back(); /// بستن دیالوگ پیشرفت
 
       final result = await OpenFilex.open(filePath);
       if (result.type != ResultType.done) {
         Get.snackbar('Error', 'Failed to open APK: ${result.message}');
       }
     } catch (e) {
-      Get.back(); // close progress dialog
+      Get.back(); /// بستن دیالوگ پیشرفت در صورت خطا
       Get.snackbar('Download Error', 'Could not download the update.');
       debugPrint('Download error: $e');
     }

@@ -5477,6 +5477,48 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get p2pFieldRequired => 'This field is required';
+
+  @override
+  String get p2pPleaseUpload => 'Please upload file for this field';
+
+  @override
+  String get p2pPleaseFill => 'Please fill this field';
+
+  @override
+  String get p2pWriteMessageOrAttach => 'Please write a message or add an attachment';
+
+  @override
+  String get p2pVerificationSubmitted => 'Verification submitted successfully';
+
+  @override
+  String get p2pCashDollar => 'Cash Dollar';
+
+  @override
+  String get p2pInPerson => 'In-Person Exchange';
+
+  @override
+  String get p2pMinutes => 'min';
+
+  @override
+  String get p2pRecipient => 'Recipient';
+
+  @override
+  String get p2pCopied => 'Copied';
+
+  @override
+  String get p2pNoPaymentMethodFound2 => 'No payment method found';
+
+  @override
+  String get p2pTransferInstruction => 'Open ({paymentMethod}) to transfer {amount}';
+
+  @override
+  String get p2pCashTransferInstruction => 'Pay {amount} in cash to the seller';
+
+  @override
+  String get p2pInPersonInstruction => 'Meet the seller in person and pay {amount} in cash';
+
+  @override
   String get edit_my_ad => 'Редактировать мое объявление';
 
   @override

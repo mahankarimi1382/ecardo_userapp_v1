@@ -52,6 +52,10 @@ class Data {
   RecipientPaymentMethod? recipientPaymentMethod;
   bool? chatEnabled;
   DateTime? createdAt;
+  /// نوع بازار: iran یا china
+  String? marketType;
+  /// آیا آگهی/سفارش مربوط به دلار نقد (مبادله حضوری) است
+  bool? isCashDollar;
   DateTime? updatedAt;
 
   Data({
@@ -86,6 +90,8 @@ class Data {
     this.chatEnabled,
     this.createdAt,
     this.updatedAt,
+    this.marketType,
+    this.isCashDollar,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -130,6 +136,8 @@ class Data {
     updatedAt: json["updated_at"] == null
         ? null
         : DateTime.parse(json["updated_at"]),
+    marketType: json["market_type"],
+    isCashDollar: json["is_cash_dollar"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -164,6 +172,8 @@ class Data {
     "chat_enabled": chatEnabled,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
+    "market_type": marketType,
+    "is_cash_dollar": isCashDollar,
   };
 }
 

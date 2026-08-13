@@ -33,6 +33,13 @@ class P2pController extends GetxController {
       <PaymentAccount>[].obs;
   final RxList<int> selectedPaymentMethodIds = <int>[].obs;
 
+  /// فیلتر نوع بازار: null = همه، 'iran' = بازار ایران، 'china' = بازار چین
+  /// از بکند P2P Phase 1 اضافه شده
+  final Rxn<String> selectedMarketType = Rxn<String>();
+  /// فیلتر دلار نقد: null = همه، true = فقط دلار نقد (تبادل حضوری)
+  /// در بازار ایران: پول نقد و جا به جایی حضوری در اولویت هستند
+  final Rxn<bool> isCashDollarFilter = Rxn<bool>();
+
   final List<String> topTabs = const [
     'P2P',
     'My Orders',
@@ -320,6 +327,18 @@ class P2pController extends GetxController {
     }
   }
 
+  /// فیلتر نوع بازار را تنظیم و رفرش می‌کند
+  void onMarketTypeChanged(String? value) {
+    selectedMarketType.value = (value == null || value.isEmpty) ? null : value;
+    fetchMarketplaceAds(isRefresh: true);
+  }
+
+  /// فیلتر دلار نقد را تنظیم و رفرش می‌کند
+  void onCashDollarFilterChanged(bool? value) {
+    isCashDollarFilter.value = value;
+    fetchMarketplaceAds(isRefresh: true);
+  }
+
   Future<void> fetchMarketplaceAds({bool isRefresh = false}) async {
     if (isRefresh) {
       _resetMarketplacePagination();
@@ -340,19 +359,31 @@ class P2pController extends GetxController {
         'type=$marketplaceQueryType',
       ];
 
+      /// فیلتر ارز دارایی
       if (selectedAssetId.value != null) {
         queryParams.add('asset_currency_id=${selectedAssetId.value}');
       }
+      /// فیلتر ارز فیات
       if (selectedFiatId.value != null) {
         queryParams.add('fiat_currency_id=${selectedFiatId.value}');
       }
+      /// فیلتر مبلغ حداقل
       if (selectedAmountValue.value.trim().isNotEmpty) {
         queryParams.add('min_amount=${selectedAmountValue.value.trim()}');
       }
+      /// فیلتر روش‌های پرداخت
       if (selectedPaymentMethodIds.isNotEmpty) {
         for (final paymentMethodId in selectedPaymentMethodIds) {
           queryParams.add('payment_method_id[]=$paymentMethodId');
         }
+      }
+      /// فیلتر نوع بازار (iran/china) - P2P Phase 1
+      if (selectedMarketType.value != null) {
+        queryParams.add('market_type=${selectedMarketType.value}');
+      }
+      /// فیلتر دلار نقد (مبادله حضوری) - P2P Phase 1
+      if (isCashDollarFilter.value != null) {
+        queryParams.add('is_cash_dollar=${isCashDollarFilter.value}');
       }
 
       final response = await Get.find<NetworkService>().get(

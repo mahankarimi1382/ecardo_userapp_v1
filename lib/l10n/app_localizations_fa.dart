@@ -5423,6 +5423,48 @@ class AppLocalizationsFa extends AppLocalizations {
   }
 
   @override
+  String get p2pFieldRequired => 'این فیلد الزامی است';
+
+  @override
+  String get p2pPleaseUpload => 'لطفاً فایل این فیلد را آپلود کنید';
+
+  @override
+  String get p2pPleaseFill => 'لطفاً این فیلد را پر کنید';
+
+  @override
+  String get p2pWriteMessageOrAttach => 'لطفاً پیامی بنویسید یا فایلی پیوست کنید';
+
+  @override
+  String get p2pVerificationSubmitted => 'درخواست تأیید با موفقیت ارسال شد';
+
+  @override
+  String get p2pCashDollar => 'دلار نقد';
+
+  @override
+  String get p2pInPerson => 'تبادل حضوری';
+
+  @override
+  String get p2pMinutes => 'دقیقه';
+
+  @override
+  String get p2pRecipient => 'گیرنده';
+
+  @override
+  String get p2pCopied => 'کپی شد';
+
+  @override
+  String get p2pNoPaymentMethodFound2 => 'روش پرداختی یافت نشد';
+
+  @override
+  String get p2pTransferInstruction => '({paymentMethod}) را باز کرده و {amount} را انتقال دهید';
+
+  @override
+  String get p2pCashTransferInstruction => 'مبلغ {amount} را به صورت نقدی به فروشنده پرداخت کنید';
+
+  @override
+  String get p2pInPersonInstruction => 'با فروشنده به صورت حضوری ملاقات کنید و مبلغ {amount} را نقدی پرداخت کنید';
+
+  @override
   String get edit_my_ad => 'ویرایش آگهی من';
 
   @override

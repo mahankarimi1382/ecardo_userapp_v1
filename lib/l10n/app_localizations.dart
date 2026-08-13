@@ -10292,6 +10292,90 @@ abstract class AppLocalizations {
   /// **'Enter {field}'**
   String p2pEnterField(Object field);
 
+  /// No description provided for @p2pFieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get p2pFieldRequired;
+
+  /// No description provided for @p2pPleaseUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upload file for this field'**
+  String get p2pPleaseUpload;
+
+  /// No description provided for @p2pPleaseFill.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill this field'**
+  String get p2pPleaseFill;
+
+  /// No description provided for @p2pWriteMessageOrAttach.
+  ///
+  /// In en, this message translates to:
+  /// **'Please write a message or add an attachment'**
+  String get p2pWriteMessageOrAttach;
+
+  /// No description provided for @p2pVerificationSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification submitted successfully'**
+  String get p2pVerificationSubmitted;
+
+  /// No description provided for @p2pCashDollar.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Dollar'**
+  String get p2pCashDollar;
+
+  /// No description provided for @p2pInPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'In-Person Exchange'**
+  String get p2pInPerson;
+
+  /// No description provided for @p2pMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get p2pMinutes;
+
+  /// No description provided for @p2pRecipient.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient'**
+  String get p2pRecipient;
+
+  /// No description provided for @p2pCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get p2pCopied;
+
+  /// No description provided for @p2pNoPaymentMethodFound2.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment method found'**
+  String get p2pNoPaymentMethodFound2;
+
+  /// No description provided for @p2pTransferInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ({paymentMethod}) to transfer {amount}'**
+  String get p2pTransferInstruction;
+
+  /// No description provided for @p2pCashTransferInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {amount} in cash to the seller'**
+  String get p2pCashTransferInstruction;
+
+  /// No description provided for @p2pInPersonInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet the seller in person and pay {amount} in cash'**
+  String get p2pInPersonInstruction;
+
   /// No description provided for @edit_my_ad.
   ///
   /// In en, this message translates to:

@@ -1,5 +1,9 @@
-import 'dart:io';
+/// مدل‌های مربوط به فرم درخواست تأیید معامله‌گر تأیید شده P2P
+/// استفاده از XFile به جای dart:io File برای سازگاری با وب و موبایل
 
+import 'package:image_picker/image_picker.dart' show XFile;
+
+/// مدل ساده فیلد فرم (نام، نوع، اعتبارسنجی، دستورالعمل‌ها)
 class ApplyVerificationModel {
   final String name;
   final String type;
@@ -14,8 +18,11 @@ class ApplyVerificationModel {
   });
 }
 
+/// مدل مقدار فایل انتخاب‌شده برای هر فیلد فایلی
+/// از XFile استفاده شده تا هم در موبایل و هم در وب کار کند
+/// dart:io.File فقط در موبایل در دسترس است و در وب خطا می‌دهد
 class ApplyVerificationFieldFileValue {
-  final File file;
+  final XFile file;
   final bool isImage;
   final String name;
 

@@ -41,6 +41,10 @@ class Data {
   String? averageReleaseTime;
   String? lastUpdated;
   String? createdAt;
+  /// نوع بازار: iran یا china
+  String? marketType;
+  /// آیا آگهی/سفارش مربوط به دلار نقد (مبادله حضوری) است
+  bool? isCashDollar;
 
   Data({
     this.id,
@@ -64,6 +68,8 @@ class Data {
     this.averageReleaseTime,
     this.lastUpdated,
     this.createdAt,
+    this.marketType,
+    this.isCashDollar,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -102,6 +108,8 @@ class Data {
     averageReleaseTime: json["average_release_time"],
     lastUpdated: json["last_updated"],
     createdAt: json["created_at"],
+    marketType: json["market_type"],
+    isCashDollar: json["is_cash_dollar"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -128,6 +136,8 @@ class Data {
     "average_release_time": averageReleaseTime,
     "last_updated": lastUpdated,
     "created_at": createdAt,
+    "market_type": marketType,
+    "is_cash_dollar": isCashDollar,
   };
 }
 

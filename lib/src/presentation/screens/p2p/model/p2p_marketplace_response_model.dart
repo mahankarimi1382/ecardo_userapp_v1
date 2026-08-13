@@ -62,6 +62,13 @@ class Ad {
   String? averageReleaseTime;
   String? lastUpdated;
   String? createdAt;
+  /// نوع بازار: iran (بازار ایران - ریال/دلار نقد) یا china (بازار چین)
+  /// از بکند P2P Phase 1 اضافه شده
+  String? marketType;
+  /// آیا آگهی مربوط به دلار نقد (پول نقد حضوری) است
+  /// در بازار ایران: اگر true باشد، مبادله حضوری و نقدی است
+  /// کسر از حساب فروشنده به عنوان تضمین قرارداد عمل می‌کند
+  bool? isCashDollar;
 
   Ad({
     this.id,
@@ -85,6 +92,8 @@ class Ad {
     this.averageReleaseTime,
     this.lastUpdated,
     this.createdAt,
+    this.marketType,
+    this.isCashDollar,
   });
 
   factory Ad.fromJson(Map<String, dynamic> json) => Ad(
@@ -123,6 +132,8 @@ class Ad {
     averageReleaseTime: json["average_release_time"],
     lastUpdated: json["last_updated"],
     createdAt: json["created_at"],
+    marketType: json["market_type"],
+    isCashDollar: json["is_cash_dollar"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -149,6 +160,8 @@ class Ad {
     "average_release_time": averageReleaseTime,
     "last_updated": lastUpdated,
     "created_at": createdAt,
+    "market_type": marketType,
+    "is_cash_dollar": isCashDollar,
   };
 }
 
