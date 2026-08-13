@@ -1,20 +1,16 @@
 /// سرویس بررسی و دانلود آپدیت اپلیکیشن
 /// فقط در پلتفرم موبایل (Android/iOS) فعال است
 /// در وب، آپدیت خودکار از طریق کش مرورگر انجام می‌شود
-/// از conditional import استفاده شده تا dart:io فقط در موبایل ایمپورت شود
 
-import 'dart:io' if (dart.library.io) show File, Directory, Platform;
-
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_filex/open_filex.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+
+/// ایمپورت‌های فقط موبایل — در وب این فایل خالی است
+import 'mobile_update_helper.dart' if (dart.library.html) 'mobile_update_helper_web.dart';
 
 class AppUpdateHelper {
   /// بررسی وجود آپدیت جدید
@@ -135,8 +131,8 @@ class AppUpdateHelper {
                 ),
                 onPressed: () {
                   /// در وب: رفرش صفحه برای دریافت نسخه جدید
-                  Get.closeCurrentDialog();
-                  Get.reload();
+                  Get.back();
+                  Get.offAllNamed('/');
                 },
                 child: const Text(
                   'Refresh Page',
@@ -152,53 +148,8 @@ class AppUpdateHelper {
 
   /// دانلود و نصب APK (فقط موبایل)
   /// در وب این متد هرگز فراخوانی نمی‌شود
+  /// پیاده‌سازی واقعی در mobile_update_helper.dart
   static Future<void> _downloadAndInstall(String url) async {
-    try {
-      var status = await Permission.storage.request();
-      if (!status.isGranted) {
-        Get.snackbar(
-          'Permission Denied',
-          'Storage permission is required to download the update.',
-        );
-        return;
-      }
-
-      Get.dialog(
-        const AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text('Downloading Update...'),
-            ],
-          ),
-        ),
-        barrierDismissible: false,
-      );
-
-      Directory dir = await getApplicationDocumentsDirectory();
-      String filePath = '${dir.path}/app_update.apk';
-
-      Dio dio = Dio();
-      await dio.download(
-        url,
-        filePath,
-        onReceiveProgress: (rec, total) {
-          /// می‌توان در آینده نوار پیشرفت اضافه کرد
-        },
-      );
-
-      Get.back(); /// بستن دیالوگ پیشرفت
-
-      final result = await OpenFilex.open(filePath);
-      if (result.type != ResultType.done) {
-        Get.snackbar('Error', 'Failed to open APK: ${result.message}');
-      }
-    } catch (e) {
-      Get.back(); /// بستن دیالوگ پیشرفت در صورت خطا
-      Get.snackbar('Download Error', 'Could not download the update.');
-      debugPrint('Download error: $e');
-    }
+    await downloadAndInstallApk(url);
   }
 }

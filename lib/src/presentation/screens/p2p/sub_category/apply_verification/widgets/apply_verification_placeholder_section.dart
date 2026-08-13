@@ -1,4 +1,6 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -352,7 +354,7 @@ class ApplyVerificationPlaceholderSection extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: selectedFile.isImage
-                            ? Image.file(selectedFile.file, fit: BoxFit.cover)
+                            ? _buildImageFromFile(selectedFile.file)
                             : Container(
                                 color: AppColors.lightBackground,
                                 alignment: Alignment.center,
@@ -427,6 +429,22 @@ class ApplyVerificationPlaceholderSection extends StatelessWidget {
         ),
       );
     });
+  }
+
+  /// نمایش تصویر انتخاب‌شده (سازگار با وب و موبایل)
+  Widget _buildImageFromFile(XFile xFile) {
+    return FutureBuilder<Uint8List>(
+      future: xFile.readAsBytes(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox(
+            height: 120,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return Image.memory(snapshot.data!, fit: BoxFit.cover);
+      },
+    );
   }
 
   String _formatDate(DateTime? dateTime) {

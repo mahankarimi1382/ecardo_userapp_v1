@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart' as image_picker;
@@ -205,11 +206,7 @@ class _EditPaymentAccountState extends State<EditPaymentAccount> {
           child: selectedImage != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    selectedImage,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  ),
+                  child: _buildImageFromFile(selectedImage),
                 )
               : hasExistingValue
               ? ClipRRect(
@@ -266,5 +263,25 @@ class _EditPaymentAccountState extends State<EditPaymentAccount> {
         ),
       );
     });
+  }
+
+  /// نمایش تصویر انتخاب‌شده (سازگار با وب و موبایل)
+  Widget _buildImageFromFile(image_picker.XFile xFile) {
+    return FutureBuilder<Uint8List>(
+      future: xFile.readAsBytes(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox(
+            height: 120,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return Image.memory(
+          snapshot.data!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        );
+      },
+    );
   }
 }
