@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/id_verification_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_level_roadmap.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/kyc_level_binding.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 
 class IdVerification extends StatefulWidget {
   const IdVerification({super.key});
@@ -69,7 +70,11 @@ class _IdVerificationState extends State<IdVerification> {
                             // v1.0.5: KYC Level Roadmap (نسخه جدید — نمایش سطوح بصری)
               KycLevelRoadmap(
                 onLevelTap: () {
-                  // هدایت به صفحه‌ی ارسال مدارک KYC
+                  // v57: هدایت به صفحه‌ی ارسال مدارک KYC
+                  final kycController = Get.find<KycLevelController>();
+                  final nextLevel = kycController.nextLevel?.level ?? 2;
+                  Get.toNamed(BaseRoute.kycSubmitWizard,
+                      arguments: {'target_level': nextLevel});
                 },
               ),
                           ],
