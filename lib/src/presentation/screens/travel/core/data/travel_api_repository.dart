@@ -1,0 +1,755 @@
+import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
+import 'package:ecardo_user/src/network/service/token_service.dart';
+
+import '../models/travel_models.dart';
+import 'travel_repository.dart';
+
+class TravelApiRepository implements TravelRepository {
+  static const String baseUrl = 'https://trip.ecardo.ir/api/v1';
+
+  final Dio _client;
+  String? _travelAccessToken;
+  DateTime? _travelAccessTokenExpiresAt;
+
+  TravelApiRepository({Dio? client})
+    : _client =
+          client ??
+          Dio(
+            BaseOptions(
+              baseUrl: baseUrl,
+              connectTimeout: const Duration(seconds: 8),
+              receiveTimeout: const Duration(seconds: 30),
+              contentType: Headers.jsonContentType,
+              headers: const {'Accept': 'application/json'},
+            ),
+          );
+
+  @override
+  Future<TravelBootstrap> getBootstrap() async {
+    final response = await _client.get<Map<String, dynamic>>(
+      '/travel/bootstrap',
+      queryParameters: {'locale': _locale},
+      options: _localeOptions(),
+    );
+    final data = _map(response.data?['data']);
+    final services = _listOfMaps(
+      data['services'],
+    ).map(_mapService).whereType<TravelServiceConfig>().toList();
+    return TravelBootstrap(
+      currency: data['currency']?.toString() ?? 'IRR',
+      locale: data['locale']?.toString() ?? 'en',
+      services: services,
+    );
+  }
+
+  @override
+  Future<List<TravelSuggestion>> getSuggestions(
+    TravelProductType type, {
+    String query = '',
+    int limit = 20,
+  }) async {
+    if (type == TravelProductType.esim) return const [];
+    final response = await _client.get<Map<String, dynamic>>(
+      '/travel/services/${type.name}/suggestions',
+      queryParameters: {
+        'query': query.trim(),
+        'limit': limit.clamp(1, 100),
+        'locale': _locale,
+      },
+      options: _localeOptions(),
+    );
+    final data = _map(response.data?['data']);
+    return _listOfMaps(data['suggestions'])
+        .map(
+          (item) => TravelSuggestion(
+            id: item['id']?.toString() ?? '',
+            value: item['value']?.toString() ?? '',
+            title: item['title']?.toString() ?? '',
+            subtitle: item['subtitle']?.toString() ?? '',
+            kind: item['kind']?.toString() ?? '',
+            metadata: _map(item['metadata']),
+          ),
+        )
+        .where((item) => item.value.isNotEmpty && item.title.isNotEmpty)
+        .toList();
+  }
+
+  @override
+  Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async {
+    final offers = await _searchService('hotel', {
+      'city': search.city,
+      'check_in': _date(search.checkInDate),
+      'check_out': _date(search.checkOutDate),
+      'rooms': search.roomCount,
+      'adults': search.adultCount,
+      'children': search.childCount,
+    });
+    return offers
+        .map((offer) => _mapNormalizedOffer(offer, TravelProductType.hotel))
+        .where((offer) => offer.id.isNotEmpty)
+        .toList();
+  }
+
+  @override
+  Future<List<TravelOrder>> getOrders() async {
+    final response = await _authorizedGet('/orders');
+    return _dataList(
+      response.data,
+    ).map(_mapOrder).where((order) => order.id.isNotEmpty).toList();
+  }
+
+  @override
+  Future<TravelTravelerProfile> getTravelerProfile() async {
+    final response = await _authorizedGet('/me/traveler-profile');
+    return _mapTravelerProfile(_map(response.data?['data']));
+  }
+
+  @override
+  Future<TravelTravelerProfile> updateTravelerProfile(
+    TravelPassenger passenger, {
+    String phone = '',
+  }) async {
+    final token = await _ensureTravelAccessToken();
+    final response = await _client.put<Map<String, dynamic>>(
+      '/me/traveler-profile',
+      data: {
+        ...passenger.toJson()..remove('type'),
+        if (phone.trim().isNotEmpty) 'phone': phone.trim(),
+      },
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+    final updated = _mapTravelerProfile(_map(response.data?['data']));
+    return TravelTravelerProfile(
+      complete: updated.complete,
+      passenger: passenger,
+      phone: phone.trim(),
+    );
+  }
+
+  @override
+  Future<TravelReservation> createReservation({
+    required TravelProductType type,
+    required String productId,
+    required TravelMoney expectedTotal,
+    required String idempotencyKey,
+    required TravelBookingDetails bookingDetails,
+  }) async {
+    final checkInDate = bookingDetails.checkInDate;
+    final checkOutDate = bookingDetails.checkOutDate;
+    if (type == TravelProductType.hotel &&
+        (checkInDate == null || checkOutDate == null)) {
+      throw ArgumentError('Hotel booking dates are required.');
+    }
+    final token = await _ensureTravelAccessToken();
+    final isCatalogOffer = productId.startsWith('master_json:');
+    final createResponse = await _client.post<Map<String, dynamic>>(
+      isCatalogOffer ? '/catalog-orders' : '/offer-orders',
+      data: isCatalogOffer
+          ? {
+              'service': type.name,
+              'offer_id': productId,
+              if (bookingDetails.returnOfferId.isNotEmpty)
+                'return_offer_id': bookingDetails.returnOfferId,
+              if (checkInDate != null) 'check_in_date': _date(checkInDate),
+              if (checkOutDate != null) 'check_out_date': _date(checkOutDate),
+              if (bookingDetails.roomId.isNotEmpty)
+                'room_id': bookingDetails.roomId,
+              'room_count': bookingDetails.roomCount,
+              'adult_count': bookingDetails.adultCount,
+              'child_count': bookingDetails.childCount,
+              'infant_count': bookingDetails.infantCount,
+              'search_metadata': {
+                'beneficiary_type': bookingDetails.beneficiaryType,
+                if (bookingDetails.beneficiaryName.isNotEmpty)
+                  'beneficiary_name': bookingDetails.beneficiaryName,
+                if (bookingDetails.roomName.isNotEmpty)
+                  'room_name': bookingDetails.roomName,
+                if (bookingDetails.selectedRooms.isNotEmpty)
+                  'selected_rooms': bookingDetails.selectedRooms
+                      .map((room) => room.toJson())
+                      .toList(),
+                if (bookingDetails.roomGuests.isNotEmpty)
+                  'room_guests': bookingDetails.roomGuests
+                      .map((guest) => guest.toJson())
+                      .toList(),
+                if (bookingDetails.specialRequests.isNotEmpty)
+                  'special_requests': bookingDetails.specialRequests,
+                if (bookingDetails.roomOccupancies.isNotEmpty)
+                  'room_occupancies': bookingDetails.roomOccupancies
+                      .map((room) => room.toJson())
+                      .toList(),
+                if (bookingDetails.cabinClass.isNotEmpty)
+                  'cabin_class': bookingDetails.cabinClass,
+                if (bookingDetails.passengers.isNotEmpty)
+                  'passengers': bookingDetails.passengers
+                      .map((passenger) => passenger.toJson())
+                      .toList(),
+                if (bookingDetails.notificationContact?.isValid == true)
+                  'notification_contact': bookingDetails.notificationContact!
+                      .toJson(),
+              },
+            }
+          : {
+              'offer_id': productId,
+              if (checkInDate != null) 'check_in_date': _date(checkInDate),
+              if (checkOutDate != null) 'check_out_date': _date(checkOutDate),
+              'room_count': bookingDetails.roomCount,
+              'adult_count': bookingDetails.adultCount,
+              'child_count': bookingDetails.childCount,
+            },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Idempotency-Key': idempotencyKey,
+        },
+      ),
+    );
+    final created = _map(createResponse.data?['data']);
+    final orderId = created['id']?.toString() ?? '';
+    if (orderId.isEmpty) {
+      throw StateError('Travel order response did not include an order id.');
+    }
+    final payableAmount = _amount(created['payable_amount']);
+    final payableCurrency =
+        created['currency']?.toString() ?? expectedTotal.currency;
+    if ((payableAmount - expectedTotal.amount).abs() > 0.000001 ||
+        payableCurrency != expectedTotal.currency) {
+      throw StateError(
+        'The authoritative Travel total changed before wallet payment.',
+      );
+    }
+    return TravelReservation(
+      id: orderId,
+      orderNumber: created['order_number']?.toString() ?? orderId,
+      title:
+          created['title']?.toString() ??
+          created['hotel_name']?.toString() ??
+          'travelHotelBooking',
+      type: type,
+      total: TravelMoney(amount: payableAmount, currency: payableCurrency),
+      expiresAt:
+          DateTime.tryParse(created['payment_due_at']?.toString() ?? '') ??
+          DateTime.now().add(const Duration(minutes: 15)),
+    );
+  }
+
+  @override
+  Future<TravelOrder> payReservation({
+    required TravelReservation reservation,
+    required String idempotencyKey,
+  }) async {
+    final token = await _ensureTravelAccessToken();
+    final payResponse = await _client.post<Map<String, dynamic>>(
+      '/orders/${Uri.encodeComponent(reservation.id)}/pay',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Idempotency-Key': idempotencyKey,
+        },
+      ),
+    );
+    final paid = _map(payResponse.data?['data']);
+    final paidStatus = paid['status']?.toString().trim().toLowerCase() ?? '';
+    final paidLifecycleStatus = _orderStatus(paidStatus);
+    if ({
+      TravelOrderStatus.paymentPending,
+      TravelOrderStatus.failed,
+      TravelOrderStatus.expired,
+      TravelOrderStatus.cancelled,
+      TravelOrderStatus.refunded,
+      TravelOrderStatus.unknown,
+    }.contains(paidLifecycleStatus)) {
+      throw StateError(
+        'Travel wallet payment did not reach a successful state.',
+      );
+    }
+    final fallbackOrder = TravelOrder(
+      id: reservation.id,
+      type: reservation.type,
+      titleKey: reservation.title,
+      reference: reservation.orderNumber.isNotEmpty
+          ? reservation.orderNumber
+          : paid['order_number']?.toString() ?? reservation.id,
+      total: TravelMoney(
+        amount: _amount(paid['paid_amount'] ?? reservation.total.amount),
+        currency: paid['currency']?.toString() ?? reservation.total.currency,
+      ),
+      status: paidLifecycleStatus,
+      rawStatus: paidStatus,
+      createdAt: DateTime.now(),
+      details: {
+        'raw_status': paid['status']?.toString() ?? '',
+        'gateway_status': paid['status']?.toString() ?? '',
+      },
+    );
+    try {
+      final orderResponse = await _authorizedGet(
+        '/orders/${Uri.encodeComponent(reservation.id)}',
+      );
+      final order = _map(orderResponse.data?['data']);
+      return order.isEmpty ? fallbackOrder : _mapOrder(order);
+    } catch (_) {
+      return fallbackOrder;
+    }
+  }
+
+  @override
+  Future<TravelOrder> requestRefund({
+    required TravelOrder order,
+    required String reasonCode,
+    String? customerNote,
+    required String idempotencyKey,
+  }) async {
+    final token = await _ensureTravelAccessToken();
+    await _client.post<Map<String, dynamic>>(
+      '/orders/${Uri.encodeComponent(order.id)}/refunds',
+      data: {
+        'reason_code': reasonCode,
+        if (customerNote?.trim().isNotEmpty == true)
+          'customer_note': customerNote!.trim(),
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Idempotency-Key': idempotencyKey,
+        },
+      ),
+    );
+    final response = await _authorizedGet(
+      '/orders/${Uri.encodeComponent(order.id)}',
+    );
+    return _mapOrder(_map(response.data?['data']));
+  }
+
+  Future<Response<Map<String, dynamic>>> _authorizedGet(String path) async {
+    final token = await _ensureTravelAccessToken();
+    return _client.get<Map<String, dynamic>>(
+      path,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
+  TravelTravelerProfile _mapTravelerProfile(Map<String, dynamic> json) {
+    final profile = _map(json['profile']);
+    final birthDate = DateTime.tryParse(
+      profile['birth_date']?.toString() ?? '',
+    );
+    final passportExpiry = DateTime.tryParse(
+      profile['passport_expiry']?.toString() ?? '',
+    );
+    final passenger = TravelPassenger(
+      firstName: profile['first_name']?.toString() ?? '',
+      lastName: profile['last_name']?.toString() ?? '',
+      birthDate: birthDate,
+      gender: profile['gender']?.toString() ?? '',
+      nationalityCode: profile['nationality_code']?.toString() ?? '',
+      passportNumber: profile['passport_number']?.toString() ?? '',
+      passportExpiry: passportExpiry,
+      type: 'adult',
+    );
+    return TravelTravelerProfile(
+      complete: json['complete'] == true || passenger.isComplete,
+      passenger: passenger,
+      phone: profile['phone']?.toString() ?? '',
+    );
+  }
+
+  Future<String> _ensureTravelAccessToken() async {
+    if (_travelAccessToken?.isNotEmpty == true &&
+        _travelAccessTokenExpiresAt?.isAfter(
+              DateTime.now().add(const Duration(seconds: 30)),
+            ) ==
+            true) {
+      return _travelAccessToken!;
+    }
+    if (!Get.isRegistered<TokenService>()) {
+      throw StateError('The eCardo authentication token is unavailable.');
+    }
+    final sourceToken = Get.find<TokenService>().accessToken.value;
+    if (sourceToken?.isNotEmpty != true) {
+      throw StateError('The user must sign in before using Travel.');
+    }
+    final response = await _client.post<Map<String, dynamic>>(
+      '/auth/exchange',
+      data: {'source_token': sourceToken},
+    );
+    final data = _map(response.data?['data']);
+    final token = data['token']?.toString();
+    if (token?.isNotEmpty != true) {
+      throw StateError('Travel token exchange did not return a token.');
+    }
+    _travelAccessToken = token;
+    _travelAccessTokenExpiresAt = DateTime.tryParse(
+      data['expires_at']?.toString() ?? '',
+    );
+    return token!;
+  }
+
+  TravelOrder _mapOrder(Map<String, dynamic> json) {
+    final quote = _map(json['quote']);
+    final request = _map(quote['request']);
+    final hotel = _map(request['hotel']);
+    final booking = _map(json['booking']);
+    final productSnapshot = _map(json['product_snapshot']);
+    final snapshotHotel = _map(productSnapshot['hotel']);
+    final type = switch (productSnapshot['service']?.toString()) {
+      'flight' => TravelProductType.flight,
+      'esim' => TravelProductType.esim,
+      _ => TravelProductType.hotel,
+    };
+    final snapshotOffer = _map(productSnapshot['offer']);
+    final snapshotAttributes = _map(snapshotOffer['attributes']);
+    final snapshotProduct = _map(snapshotOffer['product']);
+    final selectedRoom = _map(snapshotProduct['selected_room']);
+    final searchMetadata = _map(productSnapshot['search_metadata']);
+    final vouchers = _listOfMaps(booking['vouchers']);
+    final voucher = vouchers.isEmpty
+        ? const <String, dynamic>{}
+        : vouchers.first;
+    final rawStatus = json['status']?.toString().trim().toLowerCase() ?? '';
+    return TravelOrder(
+      id: (json['public_id'] ?? json['id'])?.toString() ?? '',
+      type: type,
+      titleKey:
+          hotel['name']?.toString() ??
+          snapshotHotel['name']?.toString() ??
+          productSnapshot['hotel_name']?.toString() ??
+          snapshotOffer['title']?.toString() ??
+          json['hotel_name']?.toString() ??
+          'travelHotelBooking',
+      reference:
+          json['order_number']?.toString() ??
+          booking['supplier_reference']?.toString() ??
+          json['public_id']?.toString() ??
+          '',
+      total: TravelMoney(
+        amount: _amount(
+          json['paid_amount'] ?? json['payable_amount'] ?? json['total_amount'],
+        ),
+        currency: json['currency']?.toString() ?? 'IRR',
+      ),
+      status: _orderStatus(json['status']),
+      rawStatus: rawStatus,
+      createdAt:
+          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
+          DateTime.now(),
+      details: {
+        'raw_status': rawStatus,
+        'approval_status': json['approval_status']?.toString() ?? '',
+        'supplier_reference': booking['supplier_reference']?.toString() ?? '',
+        'booking_number': booking['booking_number']?.toString() ?? '',
+        'voucher_number': voucher['voucher_number']?.toString() ?? '',
+        'voucher_issued_at': voucher['issued_at']?.toString() ?? '',
+        'check_in':
+            (json['check_in_date'] ?? request['check_in_date'])?.toString() ??
+            '',
+        'check_out':
+            (json['check_out_date'] ?? request['check_out_date'])?.toString() ??
+            '',
+        'room': selectedRoom['room_name']?.toString() ?? '',
+        'room_count': json['room_count']?.toString() ?? '',
+        'adult_count': json['adult_count']?.toString() ?? '',
+        'child_count': json['child_count']?.toString() ?? '',
+        'board_type':
+            (snapshotProduct['board_type'] ??
+                    snapshotOffer['board_type'] ??
+                    snapshotAttributes['board_type'])
+                ?.toString() ??
+            '',
+        'cancellation_policy':
+            (snapshotProduct['cancellation_policy'] ??
+                    snapshotOffer['cancellation_policy'] ??
+                    snapshotAttributes['cancellation_policy'])
+                ?.toString() ??
+            '',
+        'beneficiary':
+            searchMetadata['beneficiary_name']?.toString() ??
+            searchMetadata['beneficiary_type']?.toString() ??
+            '',
+        'origin': snapshotAttributes['origin']?.toString() ?? '',
+        'destination': snapshotAttributes['destination']?.toString() ?? '',
+        'departure': snapshotAttributes['departure_time']?.toString() ?? '',
+        'arrival': snapshotAttributes['arrival_time']?.toString() ?? '',
+        'flight_number': snapshotAttributes['flight_number']?.toString() ?? '',
+        'airline': snapshotAttributes['airline_name']?.toString() ?? '',
+        'cabin': snapshotAttributes['cabin_class']?.toString() ?? '',
+        'baggage': snapshotAttributes['baggage']?.toString() ?? '',
+      },
+    );
+  }
+
+  @override
+  Future<List<TravelOffer>> searchFlights(TravelFlightSearch search) async {
+    final offers = await _searchService('flight', {
+      if (search.origin?.isNotEmpty == true) 'origin': search.origin,
+      if (search.destination?.isNotEmpty == true)
+        'destination': search.destination,
+      if (search.departureDate != null)
+        'departure_date': _date(search.departureDate!),
+      if (search.cabinClass.isNotEmpty) 'cabin_class': search.cabinClass,
+      'adults': search.adultCount,
+      'children': search.childCount,
+      'infants': search.infantCount,
+    });
+    return offers
+        .map((offer) => _mapNormalizedOffer(offer, TravelProductType.flight))
+        .where((offer) => offer.id.isNotEmpty)
+        .toList();
+  }
+
+  @override
+  Future<List<TravelOffer>> getUpcomingFlights() =>
+      searchFlights(const TravelFlightSearch());
+
+  @override
+  Future<TravelOffer> getOfferDetails(
+    TravelProductType type,
+    String offerId,
+  ) async {
+    final response = await _client.get<Map<String, dynamic>>(
+      '/travel/services/${type.name}/offers/${Uri.encodeComponent(offerId)}',
+      queryParameters: {'locale': _locale},
+      options: _localeOptions(),
+    );
+    final data = _map(response.data?['data']);
+    return _mapNormalizedOffer(_map(data['offer']), type);
+  }
+
+  @override
+  Future<List<TravelEsimPackage>> getEsimPackages(
+    String destinationCode,
+  ) async {
+    final offers = await _searchService('esim', {
+      'country_code': destinationCode,
+    });
+    return offers
+        .map(_mapEsimPackage)
+        .where((item) => item.id.isNotEmpty)
+        .toList();
+  }
+
+  @override
+  Future<List<TravelTraveler>> getTravelers() =>
+      throw UnsupportedError('Saved travelers are not exposed yet.');
+
+  @override
+  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) =>
+      throw UnsupportedError('Saved travelers are not exposed yet.');
+
+  @override
+  Future<List<TravelActivity>> getActivity() =>
+      throw UnsupportedError('Combined activity is not exposed yet.');
+
+  Future<List<Map<String, dynamic>>> _searchService(
+    String service,
+    Map<String, dynamic> criteria,
+  ) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      '/travel/services/$service/search',
+      queryParameters: {'locale': _locale},
+      data: {'criteria': criteria},
+      options: _localeOptions(),
+    );
+    final data = _map(response.data?['data']);
+    return _listOfMaps(data['offers']);
+  }
+
+  static List<Map<String, dynamic>> _dataList(Map<String, dynamic>? root) {
+    final data = root?['data'];
+    if (data is! List) return const [];
+    return data.whereType<Map>().map(Map<String, dynamic>.from).toList();
+  }
+
+  static List<Map<String, dynamic>> _listOfMaps(dynamic value) {
+    if (value is! List) return const [];
+    return value.whereType<Map>().map(Map<String, dynamic>.from).toList();
+  }
+
+  TravelServiceConfig? _mapService(Map<String, dynamic> json) {
+    final type = switch (json['key']?.toString()) {
+      'hotel' => TravelProductType.hotel,
+      'flight' => TravelProductType.flight,
+      'esim' => TravelProductType.esim,
+      _ => null,
+    };
+    if (type == null) return null;
+    final resultSchema = _map(json['result_schema']);
+    return TravelServiceConfig(
+      type: type,
+      displayName: json['display_name']?.toString() ?? type.name,
+      description: json['description']?.toString() ?? '',
+      iconKey: json['icon_key']?.toString() ?? type.name,
+      accentColor: json['accent_color']?.toString() ?? '',
+      capabilities: _strings(json['capabilities']),
+      searchFields: _listOfMaps(json['search_schema'])
+          .map(
+            (field) => TravelSearchField(
+              key: field['key']?.toString() ?? '',
+              type: field['type']?.toString() ?? 'text',
+              label: field['label']?.toString() ?? '',
+              hint: field['hint']?.toString(),
+              required: field['required'] == true,
+              defaultValue: field['default'] is num
+                  ? field['default'] as num
+                  : num.tryParse(field['default']?.toString() ?? ''),
+              minimum: field['min'] is num
+                  ? field['min'] as num
+                  : num.tryParse(field['min']?.toString() ?? ''),
+              maximum: field['max'] is num
+                  ? field['max'] as num
+                  : num.tryParse(field['max']?.toString() ?? ''),
+            ),
+          )
+          .where((field) => field.key.isNotEmpty)
+          .toList(),
+      presentation: _map(resultSchema['presentation']),
+      dataMode: json['data_mode']?.toString() ?? 'live',
+    );
+  }
+
+  TravelOffer _mapNormalizedOffer(
+    Map<String, dynamic> json,
+    TravelProductType type,
+  ) {
+    final pricing = _localizedMap(json['pricing']);
+    final attributes = _localizedMap(json['attributes']);
+    final product = _localizedMap(json['product']);
+    final policies = _localizedMap(json['policies']);
+    return TravelOffer(
+      id: json['id']?.toString() ?? '',
+      type: type,
+      titleKey: _localizedText(json['title']),
+      subtitleKey: _localizedText(json['subtitle']),
+      badgeKey: _localizedText(json['badge']),
+      imageUrl: json['image_url']?.toString() ?? '',
+      total: TravelMoney(
+        amount: _amount(pricing['total_amount']),
+        currency: pricing['currency']?.toString() ?? 'IRR',
+      ),
+      rating: _amount(attributes['stars']),
+      featureKeys: _strings(json['highlights']).take(4).toList(),
+      product: product,
+      attributes: attributes,
+      policies: policies,
+      actions: _localizedListOfMaps(json['actions']),
+      pricingComponents: _localizedListOfMaps(pricing['components']),
+      metadata: {
+        ...attributes.map(
+          (key, value) => MapEntry(key, value?.toString() ?? ''),
+        ),
+        'provider_key': json['provider_key']?.toString() ?? '',
+        'booking_mode': json['booking_mode']?.toString() ?? '',
+        'departure':
+            attributes['departure_time']?.toString() ??
+            attributes['departure']?.toString() ??
+            '',
+        'arrival':
+            attributes['arrival_time']?.toString() ??
+            attributes['arrival']?.toString() ??
+            '',
+        'duration': attributes['duration']?.toString() ?? '',
+      },
+    );
+  }
+
+  TravelEsimPackage _mapEsimPackage(Map<String, dynamic> json) {
+    final pricing = _map(json['pricing']);
+    final attributes = _map(json['attributes']);
+    final dataGb = attributes['data_gb'];
+    return TravelEsimPackage(
+      id: json['id']?.toString() ?? '',
+      destinationCode: attributes['country_code']?.toString() ?? '',
+      dataLabel: dataGb == null
+          ? '∞'
+          : '${_amount(dataGb).toStringAsFixed(0)} GB',
+      validityDays: _amount(attributes['validity_days']).round(),
+      total: TravelMoney(
+        amount: _amount(pricing['total_amount']),
+        currency: pricing['currency']?.toString() ?? 'IRR',
+      ),
+      isPopular: _strings(
+        json['highlights'],
+      ).any((item) => item.toLowerCase().contains('best')),
+    );
+  }
+
+  static Map<String, dynamic> _map(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+    return const {};
+  }
+
+  List<String> _strings(dynamic value) {
+    if (value is! List) return const [];
+    return value
+        .map((item) {
+          if (item is Map) {
+            return _localizedText(item['label'] ?? item['name'] ?? item['key']);
+          }
+          return _localizedText(item);
+        })
+        .where((item) => item.isNotEmpty)
+        .toList();
+  }
+
+  Map<String, dynamic> _localizedMap(dynamic value) {
+    final localized = _localizedTree(value);
+    if (localized is Map<String, dynamic>) return localized;
+    if (localized is Map) return Map<String, dynamic>.from(localized);
+    return const {};
+  }
+
+  List<Map<String, dynamic>> _localizedListOfMaps(dynamic value) {
+    final localized = _localizedTree(value);
+    if (localized is! List) return const [];
+    return localized.whereType<Map>().map(Map<String, dynamic>.from).toList();
+  }
+
+  dynamic _localizedTree(dynamic value) {
+    if (value is List) return value.map(_localizedTree).toList();
+    if (value is! Map) return value;
+    final map = Map<String, dynamic>.from(value);
+    const localeKeys = {'en', 'fa', 'ar', 'ru', 'zh', 'zh-cn', 'zh_cn'};
+    final normalizedKeys = map.keys.map((key) => key.toLowerCase()).toSet();
+    if (normalizedKeys.isNotEmpty &&
+        normalizedKeys.every(localeKeys.contains)) {
+      return _localizedText(map);
+    }
+    return map.map((key, item) => MapEntry(key, _localizedTree(item)));
+  }
+
+  String _localizedText(dynamic value) {
+    if (value == null) return '';
+    if (value is! Map) return value.toString().trim();
+    final map = Map<String, dynamic>.from(value);
+    final language = _locale;
+    final selected =
+        map[language] ??
+        map[language.replaceAll('-', '_')] ??
+        (language == 'zh' ? map['zh-cn'] ?? map['zh_cn'] : null) ??
+        map['en'] ??
+        map.values.firstOrNull;
+    return selected?.toString().trim() ?? '';
+  }
+
+  static double _amount(dynamic value) {
+    return double.tryParse(value?.toString().replaceAll(',', '') ?? '0') ?? 0;
+  }
+
+  String get _locale => Get.locale?.languageCode.toLowerCase() ?? 'en';
+
+  Options _localeOptions({Map<String, dynamic>? headers}) {
+    return Options(headers: {'X-Locale': _locale, ...?headers});
+  }
+
+  static TravelOrderStatus _orderStatus(dynamic value) {
+    return travelOrderStatusFromRaw(value?.toString() ?? '');
+  }
+
+  static String _date(DateTime value) {
+    final month = value.month.toString().padLeft(2, '0');
+    final day = value.day.toString().padLeft(2, '0');
+    return '${value.year}-$month-$day';
+  }
+}

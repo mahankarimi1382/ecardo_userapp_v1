@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "292987494106",
+    "project_id": "ecardo-app",
+    "storage_bucket": "ecardo-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292987494106:android:3f1e8b21e46ceb2c138fe3",
+        "android_client_info": {
+          "package_name": "com.ecardo.user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPuzlpFKROdqTzLbkvi2QQf1OBU0UsEx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
