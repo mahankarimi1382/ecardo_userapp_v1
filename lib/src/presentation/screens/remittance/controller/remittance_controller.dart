@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
-import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance_model.dart';
@@ -80,7 +79,6 @@ class RemittanceController extends GetxController {
 
   // Rate expiry countdown
   final RxInt rateExpiresInSeconds = 0.obs;
-  int? _rateTimerId;
 
   @override
   void onInit() {
