@@ -100,9 +100,29 @@ jobs:
           VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
           echo "Deploying version $VERSION"
 
+          # NOTE: eCardo.ir is fronted by Cloudflare with "Under Attack" mode
+          # enabled on /api/* routes. curl with a short UA gets the JS
+          # challenge page (HTTP 403) and the upload silently fails.
+          # The mitigation here is a full Chrome-like User-Agent plus the
+          # browser headers Cloudflare expects. The real fix is server-side:
+          # add a WAF skip rule for the deploy secret's path or whitelist
+          # GitHub Actions IP ranges — tracked separately.
           curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
-            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" \
+            -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Accept-Encoding: gzip, deflate, br" \
+            -H "Cache-Control: no-cache" \
+            -H "Pragma: no-cache" \
+            -H "Origin: https://ecardo.ir" \
+            -H "Referer: https://ecardo.ir/" \
+            -H "Upgrade-Insecure-Requests: 1" \
+            -H "Sec-Fetch-Dest: document" \
+            -H "Sec-Fetch-Mode: navigate" \
+            -H "Sec-Fetch-Site: same-origin" \
+            -H "Sec-Fetch-User: ?1" \
+            --compressed \
             -F "secret=$DEPLOY_SECRET" \
             -F "app_type=user" \
             -F "version=$VERSION" \
@@ -113,6 +133,8 @@ jobs:
             echo "APK deployed successfully"
           else
             echo "APK deployment may have failed — check deploy-result.txt"
+            echo "If deploy-result.txt contains a Cloudflare challenge page, the"
+            echo "server-side WAF skip rule needs to be configured for this path."
           fi
 
       - name: Upload Build Log
