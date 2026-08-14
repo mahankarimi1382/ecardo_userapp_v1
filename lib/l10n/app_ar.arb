@@ -356,6 +356,8 @@
   "rate_service_unavailable": "خدمة الأسعار غير متاحة",
   "rate_stale_last_known": "عرض آخر سعر معروف",
   "rate_auto_update_caption": "تحديث تلقائي كل ٦٠ ثانية",
+  "exchangeRate24hChange": "٢٤ ساعة",
+  "exchangeRateLastUpdate": "تحديث",
   "refresh": "تحديث",
   "calculating": "جارٍ الحساب…",
   "comment_exchange_history": "==== Exchange History ====",

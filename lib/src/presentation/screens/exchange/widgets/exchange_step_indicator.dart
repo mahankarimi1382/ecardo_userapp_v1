@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 
 import '../../../../app/constants/app_colors.dart';
 
-/// A minimal three-step progress indicator: ● — ● — ●.
+/// Modern three-step progress indicator with labels.
 ///
-/// Following the Bauhaus / German minimalist convention requested in the
-/// redesign brief: thin connecting lines, small dots, no labels. The active
-/// step fills smoothly via an [AnimatedContainer].
+/// Layout (Bauhaus / German minimalist):
 ///
-/// Reusable — the widget has no exchange-specific dependency. Could be lifted
-/// into `lib/src/common/widgets/` if other multi-step flows (KYC, Add Money,
-/// Withdraw) adopt the same pattern.
+///   ───●────●────●───
+///   Amount Review Done
+///
+/// - Active dot is the brand purple with a soft halo
+/// - Completed dots are filled
+/// - Future dots are hairline grey
+/// - Connecting line is animated with a gradient sweep as the user progresses
+/// - Labels are 11px uppercase Plus Jakarta Sans, tracking 0.4
+///
+/// Reusable — the widget has no exchange-specific dependency beyond the
+/// three label strings.
 class ExchangeStepIndicator extends StatelessWidget {
   const ExchangeStepIndicator({
     super.key,
@@ -18,9 +25,8 @@ class ExchangeStepIndicator extends StatelessWidget {
     this.totalSteps = 3,
     this.activeColor,
     this.inactiveColor,
-    this.lineColor,
-    this.dotSize = 8.0,
-    this.lineLength = 24.0,
+    this.dotSize = 10.0,
+    this.lineLength = 36.0,
   });
 
   /// Zero-indexed current step.
@@ -30,28 +36,34 @@ class ExchangeStepIndicator extends StatelessWidget {
 
   final Color? activeColor;
   final Color? inactiveColor;
-  final Color? lineColor;
 
   final double dotSize;
   final double lineLength;
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final labels = [
+      loc.exchangeAmount,
+      loc.exchangeReviewTitle,
+      loc.exchangeSuccessTitle,
+    ];
+
     final active = activeColor ?? AppColors.lightPrimary;
     final inactive =
-        inactiveColor ?? AppColors.lightTextPrimary.withValues(alpha: 0.15);
-    final line = lineColor ?? inactive;
+        inactiveColor ?? AppColors.lightTextPrimary.withValues(alpha: 0.18);
 
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 18,
-        vertical: 14,
+        horizontal: 24,
+        vertical: 12,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (int i = 0; i < totalSteps; i++) ...[
-            _Dot(
+            _StepDot(
+              label: i < labels.length ? labels[i] : '',
               isActive: i <= currentStep,
               isCurrent: i == currentStep,
               activeColor: active,
@@ -59,10 +71,10 @@ class ExchangeStepIndicator extends StatelessWidget {
               size: dotSize,
             ),
             if (i < totalSteps - 1)
-              _Line(
+              _ConnectorLine(
                 isFilled: i < currentStep,
                 activeColor: active,
-                inactiveColor: line,
+                inactiveColor: inactive,
                 length: lineLength,
               ),
           ],
@@ -72,8 +84,9 @@ class ExchangeStepIndicator extends StatelessWidget {
   }
 }
 
-class _Dot extends StatelessWidget {
-  const _Dot({
+class _StepDot extends StatelessWidget {
+  const _StepDot({
+    required this.label,
     required this.isActive,
     required this.isCurrent,
     required this.activeColor,
@@ -81,6 +94,7 @@ class _Dot extends StatelessWidget {
     required this.size,
   });
 
+  final String label;
   final bool isActive;
   final bool isCurrent;
   final Color activeColor;
@@ -89,34 +103,58 @@ class _Dot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Current step gets a slightly larger dot with a soft halo — adds
-    // motion without breaking the minimalism rule.
-    final effectiveSize = isCurrent ? size * 1.5 : size;
+    final effectiveSize = isCurrent ? size * 1.4 : size;
+    final labelColor = isActive
+        ? AppColors.lightTextPrimary
+        : AppColors.lightTextPrimary.withValues(alpha: 0.50);
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.easeOutQuart,
-      width: effectiveSize,
-      height: effectiveSize,
-      decoration: BoxDecoration(
-        color: isActive ? activeColor : inactiveColor,
-        shape: BoxShape.circle,
-        boxShadow: isCurrent
-            ? [
-                BoxShadow(
-                  color: activeColor.withValues(alpha: 0.30),
-                  blurRadius: 8,
-                  spreadRadius: 0,
-                ),
-              ]
-            : null,
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Dot + halo
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 320),
+          curve: Curves.easeOutQuart,
+          width: effectiveSize,
+          height: effectiveSize,
+          decoration: BoxDecoration(
+            color: isActive ? activeColor : inactiveColor,
+            shape: BoxShape.circle,
+            boxShadow: isCurrent
+                ? [
+                    BoxShadow(
+                      color: activeColor.withValues(alpha: 0.30),
+                      blurRadius: 10,
+                      spreadRadius: 0,
+                    ),
+                  ]
+                : null,
+          ),
+        ),
+        const SizedBox(height: 6),
+        // Label
+        AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 220),
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600,
+            color: labelColor,
+            letterSpacing: 0.4,
+            fontFamily: 'Plus Jakarta Sans',
+          ),
+          child: Text(
+            label.toUpperCase(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _Line extends StatelessWidget {
-  const _Line({
+class _ConnectorLine extends StatelessWidget {
+  const _ConnectorLine({
     required this.isFilled,
     required this.activeColor,
     required this.inactiveColor,
@@ -131,11 +169,16 @@ class _Line extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 280),
+      duration: const Duration(milliseconds: 320),
       curve: Curves.easeOutQuart,
       width: length,
       height: 2,
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 4),
+      margin: const EdgeInsetsDirectional.only(
+        horizontal: 4,
+        // Pull the line up so it visually aligns with the dot center,
+        // not with the dot+label baseline.
+        bottom: 18,
+      ),
       decoration: BoxDecoration(
         color: isFilled ? activeColor : inactiveColor,
         borderRadius: BorderRadius.circular(2),

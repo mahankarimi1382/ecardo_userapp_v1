@@ -25,6 +25,12 @@ class ExchangeRateService extends GetxService {
 
   final ExchangeRateSource _source;
 
+  /// Read-only access to the underlying source so callers (e.g. the
+  /// controller) can read source-specific extras like 24h change_percent
+  /// and English names without breaking the abstraction for the rest of
+  /// the module.
+  ExchangeRateSource get source => _source;
+
   /// Refresh interval. Per spec: every 60 seconds.
   static const Duration refreshInterval = Duration(seconds: 60);
 

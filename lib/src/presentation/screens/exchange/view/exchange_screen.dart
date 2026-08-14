@@ -13,6 +13,14 @@ import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_success_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_step_indicator.dart';
 
+/// Exchange screen — full-bleed, German-minimalist layout.
+///
+/// Hierarchy (top to bottom):
+///   1. Transparent AppBar shell (CommonDefaultAppBar) + CommonAppBar
+///      row with back button + history menu
+///   2. Step indicator — pinned under app bar, always visible
+///   3. Step content — fills the remaining viewport with horizontal
+///      page transitions (SharedAxisTransition)
 class ExchangeScreen extends StatefulWidget {
   const ExchangeScreen({super.key});
 
@@ -28,21 +36,21 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Visibility(
-                visible: controller.currentStep.value == 0 ||
-                    controller.currentStep.value == 1,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Obx(
-                      () => CommonAppBar(
-                        title: localizations.exchangeTitle,
-                        rightSideWidget: controller.currentStep.value == 0
+      // Full-bleed: app bar + step indicator handle their own safe area.
+      body: SafeArea(
+        top: false,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                // Transparent AppBar shell for elevation control
+                const CommonDefaultAppBar(),
+                // Title row + history menu (only on step 0)
+                Obx(
+                  () => CommonAppBar(
+                    title: localizations.exchangeTitle,
+                    rightSideWidget:
+                        controller.currentStep.value == 0
                             ? Padding(
                                 padding: const EdgeInsetsDirectional.only(
                                   end: 8,
@@ -55,42 +63,39 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                 ),
                               )
                             : null,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              // Step indicator — always visible so the user sees progress
-              // even on Success.
-              Obx(
-                () => ExchangeStepIndicator(
-                  currentStep: controller.currentStep.value,
+                const SizedBox(height: 8),
+                // Step indicator — always visible so the user sees
+                // progress even on Success.
+                Obx(
+                  () => ExchangeStepIndicator(
+                    currentStep: controller.currentStep.value,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Obx(
-                  () => controller.isLoading.value
-                      ? CommonLoading()
-                      : _buildStepContent(),
+                Expanded(
+                  child: Obx(
+                    () => controller.isLoading.value
+                        ? const CommonLoading()
+                        : _buildStepContent(),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Obx(
-            () => Visibility(
-              visible: controller.isExchangeWalletLoading.value,
-              child: const CommonLoading(),
+              ],
             ),
-          ),
-        ],
+            Obx(
+              () => Visibility(
+                visible: controller.isExchangeWalletLoading.value,
+                child: const CommonLoading(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   /// Step transitions use SharedAxisTransition from the `animations`
-  /// package — horizontal axis for forward navigation (Amount → Review →
-  /// Success), which matches the left-to-right swipe pattern users
-  /// expect from step indicators.
+  /// package — horizontal axis for forward navigation.
   Widget _buildStepContent() {
     return PageTransitionSwitcher(
       duration: const Duration(milliseconds: 350),
@@ -107,9 +112,6 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
   }
 
   Widget _stepWidget(int step) {
-    // Keying each step by its index forces PageTransitionSwitcher to
-    // rebuild when the step changes — without a key it would treat the
-    // widget as "the same" and skip the animation.
     switch (step) {
       case 0:
         return ExchangeAmountStepSection(key: const ValueKey('amount'));
@@ -184,6 +186,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                             color: AppColors.lightTextPrimary,
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
+                            fontFamily: 'Plus Jakarta Sans',
                           ),
                         ),
                       ),
@@ -198,3 +201,4 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
     );
   }
 }
+

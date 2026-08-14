@@ -92,6 +92,9 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
                 isDisconnected: rateService.isDisconnected.value,
                 lastUpdatedAt: rateService.lastUpdatedAt.value,
                 onManualRefresh: () => rateService.forceRefresh(),
+                changePercent: controller.liveChangePercent.value,
+                fromNameEn: controller.liveFromNameEn.value,
+                toNameEn: controller.liveToNameEn.value,
               ),
             );
           }),

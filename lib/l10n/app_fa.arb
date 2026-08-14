@@ -353,6 +353,8 @@
   "rate_service_unavailable": "سرویس نرخ در دسترس نیست",
   "rate_stale_last_known": "نمایش آخرین نرخ معتبر",
   "rate_auto_update_caption": "به‌روزرسانی خودکار هر ۶۰ ثانیه",
+  "exchangeRate24hChange": "۲۴ ساعت",
+  "exchangeRateLastUpdate": "به‌روزرسانی",
   "refresh": "به‌روزرسانی",
   "calculating": "در حال محاسبه…",
   "comment_exchange_history": "==== Exchange History ====",

@@ -353,6 +353,8 @@
   "rate_service_unavailable": "Rate service unavailable",
   "rate_stale_last_known": "Showing last known rate",
   "rate_auto_update_caption": "Auto-updates every 60s",
+  "exchangeRate24hChange": "24h",
+  "exchangeRateLastUpdate": "Updated",
   "refresh": "Refresh",
   "calculating": "Calculating…",
   "comment_exchange_history": "==== Exchange History ====",

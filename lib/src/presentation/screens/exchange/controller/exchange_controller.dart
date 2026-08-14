@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_config_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_rate_service.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/service/fee_ecardo_rate_source.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pairs_store.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/live_rate_badge.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
@@ -77,6 +78,21 @@ class ExchangeController extends GetxController {
 
   /// Direction derived from [previousRate] → [currentRate].
   final Rx<RateDirection> rateDirection = RateDirection.unknown.obs;
+
+  /// 24h change percentage as reported by the API (e.g. +0.17, -0.21).
+  /// Null until the first successful fetch returns a value (or if the API
+  /// omits it for this pair). When non-null, the [LiveRateBadge] shows this
+  /// value directly — it's more accurate than deriving from two consecutive
+  /// snapshots of the cross-rate (which can be noisy at the second decimal).
+  final Rxn<double> liveChangePercent = Rxn<double>();
+
+  /// English name of the FROM currency as returned by fee.ecardo.ir
+  /// (e.g. "Tether Dollar", "US Dollar"). Surfaced as a subtitle on the
+  /// [LiveRateBadge]. Empty when the API didn't return one.
+  final RxString liveFromNameEn = ''.obs;
+
+  /// English name of the TO currency, same source as [liveFromNameEn].
+  final RxString liveToNameEn = ''.obs;
 
   // ------------------ from / to wallet ------------------
   final RxBool fromWalletBorderFocused = false.obs;
@@ -582,10 +598,15 @@ class ExchangeController extends GetxController {
     final toCode = toWallet.value?.code?.toUpperCase();
     if (fromCode == null || toCode == null) return;
 
-    // The service returns rates expressed in the site currency, so the
-    // cross rate is rate[to] / rate[from].
-    final fromRate = rates[fromCode];
-    final toRate = rates[toCode];
+    // Map wallet currency codes to fee.ecardo.ir's API codes:
+    //   - "IRR" (Iranian Rial) is the base unit — rate = 1.
+    //   - "USDT" appears in the API as "USDT_IRT" (Tether priced in Toman).
+    //   - Everything else (USD, EUR, AED, ...) matches directly.
+    final apiFromCode = _normalizeApiCode(fromCode);
+    final apiToCode = _normalizeApiCode(toCode);
+
+    final fromRate = rates[apiFromCode] ?? (apiFromCode == 'IRR' ? 1.0 : null);
+    final toRate = rates[apiToCode] ?? (apiToCode == 'IRR' ? 1.0 : null);
     if (fromRate == null || toRate == null) return;
     if (fromRate == 0) return;
 
@@ -593,7 +614,31 @@ class ExchangeController extends GetxController {
     if (!newRate.isFinite || newRate <= 0) return;
 
     _bumpLiveRate(newRate);
+
+    // Pull the 24h change_percent straight from the API for the FROM
+    // currency (the badge shows "1 USD = X EUR  +0.17%" — the percent is
+    // the FROM currency's 24h move, which is what users care about).
+    final source = _rateService.source;
+    if (source is FeeEcardoRateSource) {
+      final entries = source.lastEntries;
+      final fromEntry = entries[apiFromCode];
+      final toEntry = entries[apiToCode];
+      liveChangePercent.value = fromEntry?.changePercent;
+      liveFromNameEn.value = fromEntry?.nameEn ?? '';
+      liveToNameEn.value = toEntry?.nameEn ?? '';
+    }
+
     _scheduleLivePreview();
+  }
+
+  /// Maps a wallet currency code to the fee.ecardo.ir API code.
+  ///   - "USDT" → "USDT_IRT"  (Tether is priced in Toman by the API)
+  ///   - "IRR" → "IRR"        (base unit; rate=1, handled by caller)
+  ///   - everything else passes through unchanged
+  String _normalizeApiCode(String walletCode) {
+    final upper = walletCode.toUpperCase();
+    if (upper == 'USDT') return 'USDT_IRT';
+    return upper;
   }
 
   void _bumpLiveRate(double newRate) {
