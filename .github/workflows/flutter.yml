@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      # Required for `gh release create/upload` to push tags and assets
+      contents: write
 
     steps:
       - name: Checkout source
@@ -85,6 +88,44 @@ jobs:
         with:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      # ==========================================================================
+      # Auto-publish to GitHub Releases
+      # --------------------------------------------------------------------------
+      # Creates a release tagged with the pubspec version and uploads the APK as
+      # a release asset. This gives a permanent download URL that bypasses
+      # Cloudflare (which blocks the eCardo.ir deploy webhook) and survives
+      # beyond the 90-day artifact expiry.
+      # Uses GITHUB_TOKEN (auto-provided by Actions) — no PAT needed.
+      # ==========================================================================
+      - name: Publish APK to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
+          TAG="v$VERSION"
+          APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
+          ASSET_NAME="ecardo_user_v${VERSION}.apk"
+
+          echo "Publishing $APK_PATH as release $TAG (asset: $ASSET_NAME)"
+
+          # Delete existing release+tag if present (so re-runs don't fail)
+          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+
+          # Create the release with auto-generated notes
+          gh release create "$TAG" \
+            --title "v${VERSION}" \
+            --notes "Auto-published release from commit ${GITHUB_SHA::7}.
+
+          APK build log: see workflow run artifacts.
+          Source: https://github.com/mahankarimi1382/ecardo_userapp_v1/commit/${GITHUB_SHA}" \
+            --target main
+
+          # Upload the APK as a release asset (up to 2 GB limit)
+          gh release upload "$TAG" "$APK_PATH#$ASSET_NAME" --clobber
+
+          echo "✅ Release $TAG published with APK"
+          gh release view "$TAG" --json assets,url -q '"URL: \(.url)\nAssets: \(.assets | map(.name) | join(", "))"'
 
       - name: Deploy APK to eCardo Server
         continue-on-error: true
