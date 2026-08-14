@@ -117,7 +117,6 @@ class ExchangeController extends GetxController {
   Timer? _amountDebounce;
   Timer? _reviewStaleTimer;
   Worker? _rateServiceWorker;
-  StreamSubscription? _rateSubscription;
 
   @override
   void onInit() {
@@ -127,7 +126,7 @@ class ExchangeController extends GetxController {
 
     // React to live rate updates from the service — only recompute the
     // preview, never steal focus.
-    _rateSubscription = _rateService.rates.listen(_onRatesChanged);
+    _rateServiceWorker = ever(_rateService.rates, _onRatesChanged);
   }
 
   @override
@@ -140,8 +139,6 @@ class ExchangeController extends GetxController {
     _reviewStaleTimer = null;
     _rateServiceWorker?.dispose();
     _rateServiceWorker = null;
-    _rateSubscription?.cancel();
-    _rateSubscription = null;
 
     // Tell the rate service we no longer need rates for our codes.
     final codes = <String>{

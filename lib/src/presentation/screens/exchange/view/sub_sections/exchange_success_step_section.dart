@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -381,8 +382,8 @@ class _CheckPainter extends CustomPainter {
 
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      2 * pi * ringProgress,
+      -math.pi / 2,
+      2 * math.pi * ringProgress,
       false,
       ringPaint,
     );
