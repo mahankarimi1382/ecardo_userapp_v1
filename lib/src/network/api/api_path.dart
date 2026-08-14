@@ -234,8 +234,6 @@ class ApiPath {
       '/user/p2p/orders/$id/release';
 
   // v55 BUG-008 fix: endpoint صحیح برای تغییر متد پرداخت سفارش
-  static String updateOrderPaymentMethodEndpoint({required String orderId}) =>
-      '/user/p2p/orders/$orderId/payment-method';
 
   static String verifiedStatusEndPoint =
       '/user/p2p/verified-trader-application/status';
