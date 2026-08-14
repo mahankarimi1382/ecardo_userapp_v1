@@ -108,7 +108,7 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
                     padding: const EdgeInsetsDirectional.only(bottom: 8),
                     child: Text(
                       loc.exchangeRecentPairs,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.4,

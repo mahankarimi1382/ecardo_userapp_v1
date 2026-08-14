@@ -411,7 +411,7 @@ class _ToCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              const Text(
+              Text(
                 '≈  ',
                 style: TextStyle(
                   fontSize: 14,

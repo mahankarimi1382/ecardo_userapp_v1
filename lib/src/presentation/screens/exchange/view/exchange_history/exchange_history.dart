@@ -233,7 +233,7 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
                                         .split(",")
                                         .first,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       letterSpacing: 0,
                                       fontSize: 14,
                                       color: AppColors.lightTextTertiary,

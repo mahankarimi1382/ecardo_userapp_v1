@@ -3,6 +3,6 @@ import 'package:ecardo_user/src/app/app.dart';
 
 void main() {
   test('constructs the application root', () {
-    expect(const QunzoUser(), isA<QunzoUser>());
+    expect(const EcardoUser(), isA<EcardoUser>());
   });
 }

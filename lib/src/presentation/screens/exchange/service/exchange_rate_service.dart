@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import 'exchange_rate_source.dart';
@@ -42,7 +41,7 @@ class ExchangeRateService extends GetxService {
 
   /// The latest known rates (may be empty if no successful fetch has ever
   /// happened).
-  final RxMap<String, double> rates = <String, double>[].obs;
+  final RxMap<String, double> rates = <String, double>{}.obs;
 
   /// True when [rates] comes from a cache older than [staleThreshold].
   final RxBool isStale = false.obs;
@@ -66,7 +65,9 @@ class ExchangeRateService extends GetxService {
   /// 60-second periodic refresh.
   void subscribe(List<String> codes) {
     if (codes.isEmpty) return;
-    final added = _subscribedCodes.addAll(codes.map((e) => e.toUpperCase()));
+    final before = _subscribedCodes.length;
+    _subscribedCodes.addAll(codes.map((e) => e.toUpperCase()));
+    final added = _subscribedCodes.length > before;
     if (!_initialized) {
       _initialized = true;
       // Fire immediately so the UI doesn't wait a full minute for the first
