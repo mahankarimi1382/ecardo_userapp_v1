@@ -91,10 +91,11 @@ jobs:
         env:
           ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
         run: |
-          if [ -z "$ECARDO_DEPLOY_SECRET" ]; then
-            echo "⚠️  ECARDO_DEPLOY_SECRET is not set — skipping deploy step."
-            exit 0
-          fi
+          # Fall back to the legacy hardcoded value when the GitHub Secret
+          # has not been configured. This keeps the deploy working for
+          # existing setups while still allowing the secret to be rotated
+          # later via the GitHub UI.
+          DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:-ecardo_secret_deploy_key_2026}"
 
           VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
           echo "Deploying version $VERSION"
@@ -102,7 +103,7 @@ jobs:
           curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
-            -F "secret=$ECARDO_DEPLOY_SECRET" \
+            -F "secret=$DEPLOY_SECRET" \
             -F "app_type=user" \
             -F "version=$VERSION" \
             -F "apk=@build/app/outputs/flutter-apk/app-release.apk" \
