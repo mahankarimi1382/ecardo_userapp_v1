@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
@@ -11,28 +12,28 @@ class RemittanceSenderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = Get.find<RemittanceController>();
+    final l = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Sender Information', style: _title()),
+        Text(l.remittanceSenderInfo, style: _title()),
         SizedBox(height: 16.h),
-        _Label('Full Name'),
-        _Field(c.senderNameController, 'Enter full name'),
+        _Label(l.remittanceSenderName),
+        _Field(c.senderNameController, l.remittanceSenderName),
         SizedBox(height: 16.h),
-        _Label('Country'),
-        _CountryDropdown(value: c.selectedSenderCountry.value, onChanged: (v) => c.selectedSenderCountry.value = v ?? ''),
+        _Label(l.remittanceSelectCountry),
+        _CountryDropdown(value: c.selectedSenderCountry.value, onChanged: (v) => c.selectedSenderCountry.value = v ?? '', hint: l.remittanceSelectCountry),
         SizedBox(height: 16.h),
-        _Label('Phone Number'),
+        _Label(l.remittanceSenderPhone),
         _Field(c.senderPhoneController, '+98 912 345 6789', keyboardType: TextInputType.phone),
         SizedBox(height: 16.h),
-        _Label('ID Number / National ID'),
-        _Field(c.senderIdNumberController, 'Enter ID number'),
+        _Label(l.remittanceSenderIdNumber),
+        _Field(c.senderIdNumberController, l.remittanceSenderIdNumber),
         SizedBox(height: 16.h),
-        _Label('Sender Type'),
         Obx(() => Row(children: [
-              Expanded(child: _TypeChip('Individual', 'individual', c.selectedSenderType.value, (v) => c.selectedSenderType.value = v)),
+              Expanded(child: _TypeChip(l.remittanceSenderTypeIndividual, 'individual', c.selectedSenderType.value, (v) => c.selectedSenderType.value = v)),
               SizedBox(width: 8.w),
-              Expanded(child: _TypeChip('Business', 'business', c.selectedSenderType.value, (v) => c.selectedSenderType.value = v)),
+              Expanded(child: _TypeChip(l.remittanceSenderTypeBusiness, 'business', c.selectedSenderType.value, (v) => c.selectedSenderType.value = v)),
             ])),
       ],
     );
@@ -75,7 +76,8 @@ class _Field extends StatelessWidget {
 class _CountryDropdown extends StatelessWidget {
   final String value;
   final ValueChanged<String?> onChanged;
-  const _CountryDropdown({required this.value, required this.onChanged});
+  final String hint;
+  const _CountryDropdown({required this.value, required this.onChanged, required this.hint});
 
   static const countries = [
     ('IR', 'Iran'), ('CN', 'China'), ('TR', 'Turkey'), ('AE', 'UAE'),
@@ -92,7 +94,7 @@ class _CountryDropdown extends StatelessWidget {
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             value: value.isEmpty ? null : value,
-            hint: Text('Select country', style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextHint)),
+            hint: Text(hint, style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextHint)),
             isExpanded: true,
             items: countries.map((c) => DropdownMenuItem(value: c.$1, child: Text('${c.$1} — ${c.$2}', style: TextStyle(fontSize: 14.sp)))).toList(),
             onChanged: onChanged,

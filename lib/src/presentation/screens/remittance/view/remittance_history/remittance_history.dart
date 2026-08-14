@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
@@ -38,6 +39,7 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.lightSurface,
       appBar: AppBar(
@@ -45,7 +47,7 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary), onPressed: () => Get.back()),
-        title: Text('Remittance History', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+        title: Text(l.remittanceHistoryTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
         actions: [
           IconButton(icon: const Icon(Icons.add, color: AppColors.lightPrimary), onPressed: () => Get.toNamed(BaseRoute.remittance)),
         ],
@@ -55,7 +57,7 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.history.isEmpty) {
-          return _EmptyState(onRefresh: () => controller.fetchHistory(refresh: true));
+          return _EmptyState(onRefresh: () => controller.fetchHistory(refresh: true), l: l);
         }
         return RefreshIndicator(
           onRefresh: () => controller.fetchHistory(refresh: true),
@@ -73,6 +75,7 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
                   controller.selectedRemittance.value = controller.history[index];
                   Get.toNamed(BaseRoute.remittanceDetails, arguments: controller.history[index].uuid);
                 },
+                l: l,
               );
             },
           ),
@@ -84,18 +87,19 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
 
 class _EmptyState extends StatelessWidget {
   final VoidCallback onRefresh;
-  const _EmptyState({required this.onRefresh});
+  final AppLocalizations l;
+  const _EmptyState({required this.onRefresh, required this.l});
   @override
   Widget build(BuildContext context) => Center(child: Padding(
     padding: EdgeInsets.all(32.w),
     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Icon(Icons.receipt_long, size: 64.sp, color: AppColors.lightBorder),
       SizedBox(height: 16.h),
-      Text('No remittances yet', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
+      Text(l.remittanceNoHistory, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
       SizedBox(height: 8.h),
-      Text('Your remittance history will appear here.', style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
+      Text(l.remittanceNoHistoryHint, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
       SizedBox(height: 24.h),
-      ElevatedButton(onPressed: onRefresh, child: const Text('Refresh')),
+      ElevatedButton(onPressed: onRefresh, child: Text(l.remittanceRefresh)),
     ]),
   ));
 }
@@ -103,7 +107,8 @@ class _EmptyState extends StatelessWidget {
 class _RemittanceCard extends StatelessWidget {
   final Remittance remittance;
   final VoidCallback onTap;
-  const _RemittanceCard({required this.remittance, required this.onTap});
+  final AppLocalizations l;
+  const _RemittanceCard({required this.remittance, required this.onTap, required this.l});
 
   @override
   Widget build(BuildContext context) {
@@ -121,18 +126,18 @@ class _RemittanceCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-              child: Text(status.label, style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600, color: statusColor)),
+              child: Text(remittanceStatusLabel(status, l), style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600, color: statusColor)),
             ),
           ]),
           SizedBox(height: 12.h),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Send', style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
+              Text(l.remittanceSend, style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
               Text(remittance.sendAmount.toStringAsFixed(2), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
             ]),
             Icon(Icons.arrow_forward, color: AppColors.lightTextSecondary, size: 16.sp),
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text('Receive', style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
+              Text(l.remittanceReceive, style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
               Text(remittance.receiveAmount.toStringAsFixed(2), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
             ]),
           ]),
@@ -141,7 +146,7 @@ class _RemittanceCard extends StatelessWidget {
             Divider(color: AppColors.lightBorder, height: 1),
             SizedBox(height: 8.h),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text('Date', style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
+              Text(l.remittanceDate, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
               Text(_formatDate(remittance.createdAt!), style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
             ]),
           ],

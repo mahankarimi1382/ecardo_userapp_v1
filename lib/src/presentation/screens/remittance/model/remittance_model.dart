@@ -2,6 +2,45 @@
 // Models for the international remittance (حواله بین‌المللی) module
 // Aligned with backend RemittanceService v3.8
 
+import 'package:ecardo_user/l10n/app_localizations.dart';
+
+/// Localized label for a [RemittanceStatus], usable from any widget without
+/// needing a [RemittanceController] reference.
+String remittanceStatusLabel(RemittanceStatus status, AppLocalizations l) {
+  switch (status) {
+    case RemittanceStatus.draft:
+      return l.remittanceStatusDraft;
+    case RemittanceStatus.waitingInformation:
+      return l.remittanceStatusWaitingInformation;
+    case RemittanceStatus.waitingDocuments:
+      return l.remittanceStatusWaitingDocuments;
+    case RemittanceStatus.waitingPayment:
+      return l.remittanceStatusWaitingPayment;
+    case RemittanceStatus.paymentReviewing:
+      return l.remittanceStatusPaymentReviewing;
+    case RemittanceStatus.inProcess:
+      return l.remittanceStatusInProcess;
+    case RemittanceStatus.destinationProcessing:
+      return l.remittanceStatusDestinationProcessing;
+    case RemittanceStatus.destinationPaid:
+      return l.remittanceStatusDestinationPaid;
+    case RemittanceStatus.completed:
+      return l.remittanceStatusCompleted;
+    case RemittanceStatus.rejected:
+      return l.remittanceStatusRejected;
+    case RemittanceStatus.expired:
+      return l.remittanceStatusExpired;
+    case RemittanceStatus.cancelled:
+      return l.remittanceStatusCancelled;
+    case RemittanceStatus.refundRequested:
+      return l.remittanceStatusRefundRequested;
+    case RemittanceStatus.refundCompleted:
+      return l.remittanceStatusRefundCompleted;
+    case RemittanceStatus.unknown:
+      return l.remittanceStatusUnknown;
+  }
+}
+
 /// Status of a remittance request.
 /// Mirrors App\Enums\RemittanceStatus on the backend (14 cases).
 enum RemittanceStatus {
@@ -123,12 +162,22 @@ enum RemittanceStatus {
 }
 
 /// A remittance payout method (e.g. Alipay, WeChat Pay, Bank Transfer).
+///
+/// API contract notes (backend RemittanceMethod model):
+///   - `status` is a boolean column → serialized as `true`/`false` (JSON bool).
+///     Older clients expected `1`/`0` (int). We normalize to int here.
+///   - `fields` is a JSON column → serialized as a JSON array/object (`[]`/`{}`),
+///     `null`, or (legacy) a JSON string. We store the raw decoded value and
+///     expose helpers to access it safely.
+///   - `receive_currency` (nested object) may also be present when eager-loaded;
+///     it is ignored by this model but `receiveCurrencyId` is read from the
+///     flat `receive_currency_id` column.
 class RemittanceMethod {
   final int? id;
   final String? countryCode;
   final String? name;
   final int? receiveCurrencyId;
-  final String? fields; // JSON string of dynamic form fields
+  final dynamic fields; // JSON array / object / null / legacy string
   final int? status;
 
   RemittanceMethod({
@@ -146,8 +195,12 @@ class RemittanceMethod {
       countryCode: json['country_code'] as String?,
       name: json['name'] as String?,
       receiveCurrencyId: json['receive_currency_id'] as int?,
-      fields: json['fields'] as String?,
-      status: json['status'] as int?,
+      // Backend casts `fields` to JSON, so it arrives as a List/Map/null.
+      // Legacy backends may send a JSON string — keep it as-is.
+      fields: json['fields'],
+      // Backend casts `status` to boolean → arrives as `true`/`false`.
+      // Some backends may still send `1`/`0`. Normalize to int?.
+      status: _parseStatus(json['status']),
     );
   }
 
@@ -159,6 +212,37 @@ class RemittanceMethod {
         'fields': fields,
         'status': status,
       };
+
+  /// True when the method is active (status == 1 / true).
+  bool get isActive => status == 1;
+
+  /// `fields` decoded as a List, or null if it isn't a list.
+  List<dynamic>? get fieldsAsList =>
+      fields is List ? fields as List<dynamic> : null;
+
+  /// `fields` decoded as a Map, or null if it isn't a map.
+  Map<String, dynamic>? get fieldsAsMap =>
+      fields is Map ? Map<String, dynamic>.from(fields as Map) : null;
+
+  static int? _parseStatus(dynamic v) {
+    if (v == null) return null;
+    if (v is bool) return v ? 1 : 0;
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    if (v is String) {
+      switch (v.toLowerCase()) {
+        case 'true':
+        case '1':
+        case 'active':
+          return 1;
+        case 'false':
+        case '0':
+        case 'inactive':
+          return 0;
+      }
+    }
+    return null;
+  }
 }
 
 /// Quote returned by /user/remittance/quote.

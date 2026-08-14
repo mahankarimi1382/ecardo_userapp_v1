@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 /// RemittanceStepper — visual progress indicator for the 5-step remittance flow.
@@ -15,7 +16,14 @@ class RemittanceStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stepLabels = ['Amount', 'Sender', 'Receiver', 'Review', 'Done'];
+    final l = AppLocalizations.of(context)!;
+    final stepLabels = [
+      l.remittanceStepAmount,
+      l.remittanceStepSender,
+      l.remittanceStepReceiver,
+      l.remittanceStepReview,
+      l.remittanceStepDone,
+    ];
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
@@ -19,6 +20,7 @@ class RemittanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(RemittanceController());
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.lightSurface,
@@ -37,7 +39,7 @@ class RemittanceScreen extends StatelessWidget {
             }
           },
         ),
-        title: Text('International Remittance', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+        title: Text(l.remittanceTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
         actions: [
           IconButton(
             icon: const Icon(Icons.history, color: AppColors.lightTextPrimary),
@@ -55,7 +57,7 @@ class RemittanceScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             child: _buildStep(controller),
           )),
-          _buildBottomButton(controller),
+          _buildBottomButton(controller, l),
         ]);
       }),
     );
@@ -72,7 +74,7 @@ class RemittanceScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildBottomButton(RemittanceController c) {
+  Widget _buildBottomButton(RemittanceController c, AppLocalizations l) {
     return Obx(() {
       final step = c.currentStep.value;
       final loading = c.isQuoteLoading.value || c.isSubmitLoading.value || c.isUploadLoading.value;
@@ -81,13 +83,13 @@ class RemittanceScreen extends StatelessWidget {
 
       switch (step) {
         case 0:
-          text = 'Get Quote';
+          text = l.remittanceGetQuote;
           onPressed = loading ? null : () async {
             if (await c.requestQuote()) c.nextStep();
           };
           break;
         case 1:
-          text = 'Continue';
+          text = l.remittanceContinue;
           onPressed = () {
             if (c.senderNameController.text.isNotEmpty &&
                 c.senderPhoneController.text.isNotEmpty &&
@@ -95,36 +97,36 @@ class RemittanceScreen extends StatelessWidget {
                 c.selectedSenderCountry.value.isNotEmpty) {
               c.nextStep();
             } else {
-              Get.snackbar('Error', 'Please complete all sender fields', snackPosition: SnackPosition.BOTTOM);
+              Get.snackbar(l.remittanceError, l.remittanceErrCompleteSender, snackPosition: SnackPosition.BOTTOM);
             }
           };
           break;
         case 2:
-          text = 'Continue';
+          text = l.remittanceContinue;
           onPressed = () {
             if (c.receiverNameController.text.isNotEmpty &&
                 c.receiverPhoneController.text.isNotEmpty &&
                 c.selectedReceiverCountry.value.isNotEmpty) {
               c.nextStep();
             } else {
-              Get.snackbar('Error', 'Please complete all receiver fields', snackPosition: SnackPosition.BOTTOM);
+              Get.snackbar(l.remittanceError, l.remittanceErrCompleteReceiver, snackPosition: SnackPosition.BOTTOM);
             }
           };
           break;
         case 3:
-          text = 'Submit Request';
+          text = l.remittanceSubmitRequest;
           onPressed = loading ? null : () async {
             if (await c.createRemittance()) c.nextStep();
           };
           break;
         case 4:
-          text = loading ? 'Uploading...' : 'Upload Documents';
+          text = loading ? l.remittanceUploading : l.remittanceUploadDocuments;
           onPressed = loading ? null : () async {
             if (await c.uploadDocuments()) Get.offAllNamed(BaseRoute.navigation);
           };
           break;
         default:
-          text = 'Continue';
+          text = l.remittanceContinue;
           onPressed = null;
       }
 

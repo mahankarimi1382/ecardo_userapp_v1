@@ -21,6 +21,10 @@ import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance
 class RemittanceController extends GetxController {
   final NetworkService _networkService = Get.find<NetworkService>();
 
+  /// Localization accessor — resolved from the current Get context.
+  /// May be null very early in the lifecycle; callers use the `?.` fallback.
+  AppLocalizations? get _l => AppLocalizations.of(Get.context!);
+
   // Loading states
   final RxBool isMethodsLoading = false.obs;
   final RxBool isQuoteLoading = false.obs;
@@ -122,7 +126,7 @@ class RemittanceController extends GetxController {
             .toList();
       }
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? 'Failed to load methods');
+      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrLoadMethods ?? 'Failed to load methods');
     }
   }
 
@@ -138,18 +142,18 @@ class RemittanceController extends GetxController {
 
   Future<bool> requestQuote() async {
     if (selectedMethod.value == null) {
-      ToastHelper().showErrorToast('Please select a payout method');
+      ToastHelper().showErrorToast(_l?.remittanceErrSelectPayout ?? 'Please select a payout method');
       return false;
     }
 
     final amount = double.tryParse(amountController.text.trim());
     if (amount == null || amount <= 0) {
-      ToastHelper().showErrorToast('Please enter a valid amount');
+      ToastHelper().showErrorToast(_l?.remittanceErrInvalidAmount ?? 'Please enter a valid amount');
       return false;
     }
 
     if (selectedSendCurrencyId.value == 0) {
-      ToastHelper().showErrorToast('Please select a send currency');
+      ToastHelper().showErrorToast(_l?.remittanceErrSelectSendCurrency ?? 'Please select a send currency');
       return false;
     }
 
@@ -172,7 +176,7 @@ class RemittanceController extends GetxController {
         return true;
       }
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? 'Quote failed');
+      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrQuoteFailed ?? 'Quote failed');
     }
     return false;
   }
@@ -203,12 +207,12 @@ class RemittanceController extends GetxController {
   Future<bool> createRemittance() async {
     final quote = currentQuote.value;
     if (quote == null) {
-      ToastHelper().showErrorToast('Please request a quote first');
+      ToastHelper().showErrorToast(_l?.remittanceErrRequestQuoteFirst ?? 'Please request a quote first');
       return false;
     }
 
     if (quote.isExpired) {
-      ToastHelper().showErrorToast('Quote expired. Please request a new one.');
+      ToastHelper().showErrorToast(_l?.remittanceErrQuoteExpired ?? 'Quote expired. Please request a new one.');
       return false;
     }
 
@@ -217,7 +221,7 @@ class RemittanceController extends GetxController {
         senderPhoneController.text.isEmpty ||
         senderIdNumberController.text.isEmpty ||
         selectedSenderCountry.value.isEmpty) {
-      ToastHelper().showErrorToast('Please complete sender information');
+      ToastHelper().showErrorToast(_l?.remittanceErrSenderInfo ?? 'Please complete sender information');
       return false;
     }
 
@@ -225,7 +229,7 @@ class RemittanceController extends GetxController {
     if (receiverNameController.text.isEmpty ||
         receiverPhoneController.text.isEmpty ||
         selectedReceiverCountry.value.isEmpty) {
-      ToastHelper().showErrorToast('Please complete receiver information');
+      ToastHelper().showErrorToast(_l?.remittanceErrReceiverInfo ?? 'Please complete receiver information');
       return false;
     }
 
@@ -276,7 +280,7 @@ class RemittanceController extends GetxController {
         return true;
       }
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? 'Submission failed');
+      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrSubmissionFailed ?? 'Submission failed');
     }
     return false;
   }
@@ -296,12 +300,12 @@ class RemittanceController extends GetxController {
   Future<bool> uploadDocuments() async {
     final remittance = createdRemittance.value;
     if (remittance == null) {
-      ToastHelper().showErrorToast('No remittance to upload to');
+      ToastHelper().showErrorToast(_l?.remittanceErrNoRemittance ?? 'No remittance to upload to');
       return false;
     }
 
     if (pendingAttachments.isEmpty) {
-      ToastHelper().showErrorToast('Please add at least one document');
+      ToastHelper().showErrorToast(_l?.remittanceErrAddDocument ?? 'Please add at least one document');
       return false;
     }
 
@@ -315,11 +319,11 @@ class RemittanceController extends GetxController {
     isUploadLoading.value = false;
 
     if (response.status == Status.completed) {
-      ToastHelper().showSuccessToast('Documents uploaded successfully');
+      ToastHelper().showSuccessToast(_l?.remittanceSuccessUploaded ?? 'Documents uploaded successfully');
       pendingAttachments.clear();
       return true;
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? 'Upload failed');
+      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrUploadFailed ?? 'Upload failed');
     }
     return false;
   }
@@ -382,7 +386,7 @@ class RemittanceController extends GetxController {
         selectedRemittance.value = Remittance.fromJson(data);
       }
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? 'Failed to load details');
+      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrLoadDetails ?? 'Failed to load details');
     }
   }
 
@@ -431,5 +435,50 @@ class RemittanceController extends GetxController {
   String get statusLabel {
     final remittance = createdRemittance.value ?? selectedRemittance.value;
     return remittance?.status.label ?? '';
+  }
+
+  /// Localized status label — preferred over [statusLabel] in UI.
+  String localizedStatusLabel(RemittanceStatus status) {
+    final l = _l;
+    if (l == null) return status.label;
+    switch (status) {
+      case RemittanceStatus.draft:
+        return l.remittanceStatusDraft;
+      case RemittanceStatus.waitingInformation:
+        return l.remittanceStatusWaitingInformation;
+      case RemittanceStatus.waitingDocuments:
+        return l.remittanceStatusWaitingDocuments;
+      case RemittanceStatus.waitingPayment:
+        return l.remittanceStatusWaitingPayment;
+      case RemittanceStatus.paymentReviewing:
+        return l.remittanceStatusPaymentReviewing;
+      case RemittanceStatus.inProcess:
+        return l.remittanceStatusInProcess;
+      case RemittanceStatus.destinationProcessing:
+        return l.remittanceStatusDestinationProcessing;
+      case RemittanceStatus.destinationPaid:
+        return l.remittanceStatusDestinationPaid;
+      case RemittanceStatus.completed:
+        return l.remittanceStatusCompleted;
+      case RemittanceStatus.rejected:
+        return l.remittanceStatusRejected;
+      case RemittanceStatus.expired:
+        return l.remittanceStatusExpired;
+      case RemittanceStatus.cancelled:
+        return l.remittanceStatusCancelled;
+      case RemittanceStatus.refundRequested:
+        return l.remittanceStatusRefundRequested;
+      case RemittanceStatus.refundCompleted:
+        return l.remittanceStatusRefundCompleted;
+      case RemittanceStatus.unknown:
+        return l.remittanceStatusUnknown;
+    }
+  }
+
+  /// Localized label for the current remittance's status.
+  String get localizedStatusLabelCurrent {
+    final remittance = createdRemittance.value ?? selectedRemittance.value;
+    if (remittance == null) return '';
+    return localizedStatusLabel(remittance.status);
   }
 }

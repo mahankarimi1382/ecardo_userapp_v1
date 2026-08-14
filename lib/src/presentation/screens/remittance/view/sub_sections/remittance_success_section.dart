@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
@@ -11,6 +12,7 @@ class RemittanceSuccessSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = Get.find<RemittanceController>();
+    final l = AppLocalizations.of(context)!;
     return Obx(() {
       final r = c.createdRemittance.value;
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -20,9 +22,9 @@ class RemittanceSuccessSection extends StatelessWidget {
             Container(width: 72.w, height: 72.w, decoration: BoxDecoration(color: AppColors.successContainer, shape: BoxShape.circle),
               child: Icon(Icons.check_circle, color: AppColors.success, size: 48.sp)),
             SizedBox(height: 12.h),
-            Text('Request Submitted!', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+            Text(l.remittanceRequestSubmitted, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
             SizedBox(height: 4.h),
-            Text('Your remittance request has been created.', style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
+            Text(l.remittanceRequestCreated, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
           ]),
         )),
         SizedBox(height: 16.h),
@@ -34,21 +36,21 @@ class RemittanceSuccessSection extends StatelessWidget {
             SizedBox(height: 8.h),
             _Info('Reference', r.trx),
             SizedBox(height: 8.h),
-            _Info('Status', r.status.label),
+            _Info(l.remittanceDocumentType, c.localizedStatusLabel(r.status)),
             SizedBox(height: 8.h),
-            _Info('Send Amount', r.sendAmount.toStringAsFixed(2)),
+            _Info(l.remittanceSendAmount, r.sendAmount.toStringAsFixed(2)),
             SizedBox(height: 8.h),
-            _Info('Receive Amount', r.receiveAmount.toStringAsFixed(2)),
+            _Info(l.remittanceReceiveAmount, r.receiveAmount.toStringAsFixed(2)),
           ]),
         ),
         SizedBox(height: 24.h),
-        Text('Upload Documents', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+        Text(l.remittanceUploadDocuments, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
         SizedBox(height: 4.h),
-        Text('Upload your KYC documents and payment receipt to proceed.', style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
+        Text(l.remittanceUploadHint, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
         SizedBox(height: 16.h),
-        Obx(() => c.pendingAttachments.isEmpty ? const SizedBox.shrink() : Column(children: c.pendingAttachments.asMap().entries.map((e) => _AttachmentItem(path: e.value['path'] ?? '', type: e.value['type'] ?? 'other', onRemove: () => c.removeAttachmentAt(e.key))).toList())),
+        Obx(() => c.pendingAttachments.isEmpty ? const SizedBox.shrink() : Column(children: c.pendingAttachments.asMap().entries.map((e) => _AttachmentItem(path: e.value['path'] ?? '', type: e.value['type'] ?? 'other', onRemove: () => c.removeAttachmentAt(e.key), l: l)).toList())),
         SizedBox(height: 12.h),
-        _AddDocumentButton(controller: c),
+        _AddDocumentButton(controller: c, l: l),
       ]);
     });
   }
@@ -68,7 +70,8 @@ class _Info extends StatelessWidget {
 class _AttachmentItem extends StatelessWidget {
   final String path, type;
   final VoidCallback onRemove;
-  const _AttachmentItem({required this.path, required this.type, required this.onRemove});
+  final AppLocalizations l;
+  const _AttachmentItem({required this.path, required this.type, required this.onRemove, required this.l});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -86,13 +89,19 @@ class _AttachmentItem extends StatelessWidget {
         ]),
       );
 
-  String _label(String t) => switch (t) { 'kyc' => 'KYC Document', 'payment_receipt' => 'Payment Receipt', 'payout_receipt' => 'Payout Receipt', _ => 'Document' };
+  String _label(String t) => switch (t) {
+    'kyc'              => l.remittanceDocTypeKyc,
+    'payment_receipt'  => l.remittanceDocTypePaymentReceipt,
+    'payout_receipt'   => l.remittanceDocTypePayoutReceipt,
+    _                  => l.remittanceDocTypeOther,
+  };
   IconData _icon(String t) => switch (t) { 'kyc' => Icons.badge, 'payment_receipt' => Icons.receipt, 'payout_receipt' => Icons.payment, _ => Icons.insert_drive_file };
 }
 
 class _AddDocumentButton extends StatelessWidget {
   final RemittanceController controller;
-  const _AddDocumentButton({required this.controller});
+  final AppLocalizations l;
+  const _AddDocumentButton({required this.controller, required this.l});
 
   @override
   Widget build(BuildContext context) => Obx(() => InkWell(
@@ -104,7 +113,7 @@ class _AddDocumentButton extends StatelessWidget {
           child: Center(child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Icon(Icons.add, color: AppColors.lightPrimary, size: 18.sp),
             SizedBox(width: 6.w),
-            Text('Add Document', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightPrimary)),
+            Text(l.remittanceAddDocument, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightPrimary)),
           ])),
         ),
       ));
@@ -112,26 +121,26 @@ class _AddDocumentButton extends StatelessWidget {
   void _showAddDialog(BuildContext context) {
     String selectedType = 'kyc';
     showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setState) => AlertDialog(
-      title: const Text('Add Document'),
+      title: Text(l.remittanceAddDocument),
       content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('Document Type'),
+        Text(l.remittanceDocumentType),
         SizedBox(height: 8.h),
         DropdownButton<String>(value: selectedType, isExpanded: true,
-          items: const [
-            DropdownMenuItem(value: 'kyc', child: Text('KYC Document')),
-            DropdownMenuItem(value: 'payment_receipt', child: Text('Payment Receipt')),
-            DropdownMenuItem(value: 'payout_receipt', child: Text('Payout Receipt')),
-            DropdownMenuItem(value: 'other', child: Text('Other')),
+          items: [
+            DropdownMenuItem(value: 'kyc', child: Text(l.remittanceDocTypeKyc)),
+            DropdownMenuItem(value: 'payment_receipt', child: Text(l.remittanceDocTypePaymentReceipt)),
+            DropdownMenuItem(value: 'payout_receipt', child: Text(l.remittanceDocTypePayoutReceipt)),
+            DropdownMenuItem(value: 'other', child: Text(l.remittanceDocTypeOther)),
           ],
           onChanged: (v) { if (v != null) setState(() => selectedType = v); },
         ),
       ]),
       actions: [
-        TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+        TextButton(onPressed: () => Get.back(), child: Text(l.remittanceCancel)),
         ElevatedButton(onPressed: () {
           controller.addAttachment('uploads/remittance/doc_${DateTime.now().millisecondsSinceEpoch}.jpg', selectedType);
           Get.back();
-        }, child: const Text('Add')),
+        }, child: Text(l.remittanceAdd)),
       ],
     )));
   }

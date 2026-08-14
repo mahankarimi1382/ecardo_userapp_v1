@@ -6568,4 +6568,212 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get travelPostPurchaseGuidance =>
       'احتفظ بالمرجع، وحدّث حجوزاتي لمتابعة الحالة، واستخدم فقط المستندات التي أصدرها الخادم.';
+  @override
+  String get remittanceTitle => 'International Remittance';
+  @override
+  String get remittanceHistoryTitle => 'Remittance History';
+  @override
+  String get remittanceDetailsTitle => 'Remittance Details';
+  @override
+  String get remittanceSelectPayoutMethod => 'Select Payout Method';
+  @override
+  String get remittanceNoMethods => 'No remittance methods available.\nPlease try again later.';
+  @override
+  String get remittanceSendAmount => 'Send Amount';
+  @override
+  String get remittanceEnterAmount => 'Enter amount';
+  @override
+  String get remittanceUnknownMethod => 'Unknown';
+  @override
+  String remittanceRateLocked(int seconds) => 'Rate locked: ${seconds}s';
+  @override
+  String get remittanceExchangeRate => 'Exchange Rate';
+  @override
+  String get remittanceReceiveAmount => 'Receive Amount';
+  @override
+  String get remittanceSystemFee => 'System Fee';
+  @override
+  String get remittanceTotalPayable => 'Total Payable';
+  @override
+  String get remittanceGetQuote => 'Get Quote';
+  @override
+  String get remittanceStepAmount => 'Amount';
+  @override
+  String get remittanceStepSender => 'Sender';
+  @override
+  String get remittanceStepReceiver => 'Receiver';
+  @override
+  String get remittanceStepReview => 'Review';
+  @override
+  String get remittanceStepDone => 'Done';
+  @override
+  String get remittanceSenderInfo => 'Sender Information';
+  @override
+  String get remittanceSelectCountry => 'Select country';
+  @override
+  String get remittanceSenderTypeIndividual => 'Individual';
+  @override
+  String get remittanceSenderTypeBusiness => 'Business';
+  @override
+  String get remittanceSenderName => 'Full Name';
+  @override
+  String get remittanceSenderPhone => 'Phone Number';
+  @override
+  String get remittanceSenderIdNumber => 'ID Number';
+  @override
+  String get remittanceReceiverInfo => 'Receiver Information';
+  @override
+  String get remittancePayoutDetails => 'Payout Details';
+  @override
+  String get remittancePayoutDetailsHint => 'Fill in the fields relevant to the selected payout method.';
+  @override
+  String get remittanceReceiverName => 'Full Name';
+  @override
+  String get remittanceReceiverPhone => 'Phone Number';
+  @override
+  String get remittanceBankName => 'Bank Name';
+  @override
+  String get remittanceAccountNumber => 'Account Number';
+  @override
+  String get remittanceIban => 'IBAN';
+  @override
+  String get remittanceAlipayAccount => 'Alipay Account';
+  @override
+  String get remittanceWechatAccount => 'WeChat Account';
+  @override
+  String get remittanceReviewConfirm => 'Review & Confirm';
+  @override
+  String get remittanceReviewHint => 'Please review all details before submitting your remittance request.';
+  @override
+  String get remittanceTermsNotice => 'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.';
+  @override
+  String get remittanceReviewSender => 'Sender';
+  @override
+  String get remittanceReviewReceiver => 'Receiver';
+  @override
+  String get remittanceReviewPayment => 'Payment';
+  @override
+  String get remittanceRequestSubmitted => 'Request Submitted!';
+  @override
+  String get remittanceRequestCreated => 'Your remittance request has been created.';
+  @override
+  String get remittanceUploadDocuments => 'Upload Documents';
+  @override
+  String get remittanceUploadHint => 'Upload your KYC documents and payment receipt to proceed.';
+  @override
+  String get remittanceAddDocument => 'Add Document';
+  @override
+  String get remittanceDocumentType => 'Document Type';
+  @override
+  String get remittanceDocTypeKyc => 'KYC Document';
+  @override
+  String get remittanceDocTypePaymentReceipt => 'Payment Receipt';
+  @override
+  String get remittanceDocTypePayoutReceipt => 'Payout Receipt';
+  @override
+  String get remittanceDocTypeOther => 'Other';
+  @override
+  String get remittanceCancel => 'Cancel';
+  @override
+  String get remittanceAdd => 'Add';
+  @override
+  String get remittanceContinue => 'Continue';
+  @override
+  String get remittanceSubmitRequest => 'Submit Request';
+  @override
+  String get remittanceUploading => 'Uploading...';
+  @override
+  String get remittanceRefresh => 'Refresh';
+  @override
+  String get remittanceNoHistory => 'No remittances yet';
+  @override
+  String get remittanceNoHistoryHint => 'Your remittance history will appear here.';
+  @override
+  String get remittanceSend => 'Send';
+  @override
+  String get remittanceReceive => 'Receive';
+  @override
+  String get remittanceDate => 'Date';
+  @override
+  String get remittanceNotFound => 'Remittance not found';
+  @override
+  String get remittanceStatusFinalized => 'This request is finalized.';
+  @override
+  String get remittanceStatusProcessing => 'Your request is being processed.';
+  @override
+  String get remittanceStatusActionNeeded => 'Please complete the required steps.';
+  @override
+  String get remittanceDetailsSectionSender => 'Sender Information';
+  @override
+  String get remittanceDetailsSectionReceiver => 'Receiver Information';
+  @override
+  String get remittanceDetailsSectionPayment => 'Payment Details';
+  @override
+  String get remittanceDetailsSectionTimeline => 'Status Timeline';
+  @override
+  String get remittanceErrLoadMethods => 'Failed to load methods';
+  @override
+  String get remittanceErrSelectPayout => 'Please select a payout method';
+  @override
+  String get remittanceErrInvalidAmount => 'Please enter a valid amount';
+  @override
+  String get remittanceErrSelectSendCurrency => 'Please select a send currency';
+  @override
+  String get remittanceErrQuoteFailed => 'Quote failed';
+  @override
+  String get remittanceErrRequestQuoteFirst => 'Please request a quote first';
+  @override
+  String get remittanceErrQuoteExpired => 'Quote expired. Please request a new one.';
+  @override
+  String get remittanceErrSenderInfo => 'Please complete sender information';
+  @override
+  String get remittanceErrReceiverInfo => 'Please complete receiver information';
+  @override
+  String get remittanceErrSubmissionFailed => 'Submission failed';
+  @override
+  String get remittanceErrNoRemittance => 'No remittance to upload to';
+  @override
+  String get remittanceErrAddDocument => 'Please add at least one document';
+  @override
+  String get remittanceErrUploadFailed => 'Upload failed';
+  @override
+  String get remittanceErrLoadDetails => 'Failed to load details';
+  @override
+  String get remittanceErrCompleteSender => 'Please complete all sender fields';
+  @override
+  String get remittanceErrCompleteReceiver => 'Please complete all receiver fields';
+  @override
+  String get remittanceSuccessUploaded => 'Documents uploaded successfully';
+  @override
+  String get remittanceError => 'Error';
+  @override
+  String get remittanceStatusDraft => 'Draft';
+  @override
+  String get remittanceStatusWaitingInformation => 'Waiting Information';
+  @override
+  String get remittanceStatusWaitingDocuments => 'Waiting Documents';
+  @override
+  String get remittanceStatusWaitingPayment => 'Waiting Payment';
+  @override
+  String get remittanceStatusPaymentReviewing => 'Payment Reviewing';
+  @override
+  String get remittanceStatusInProcess => 'In Process';
+  @override
+  String get remittanceStatusDestinationProcessing => 'Destination Processing';
+  @override
+  String get remittanceStatusDestinationPaid => 'Destination Paid';
+  @override
+  String get remittanceStatusCompleted => 'Completed';
+  @override
+  String get remittanceStatusRejected => 'Rejected';
+  @override
+  String get remittanceStatusExpired => 'Expired';
+  @override
+  String get remittanceStatusCancelled => 'Cancelled';
+  @override
+  String get remittanceStatusRefundRequested => 'Refund Requested';
+  @override
+  String get remittanceStatusRefundCompleted => 'Refund Completed';
+  @override
+  String get remittanceStatusUnknown => 'Unknown';
 }

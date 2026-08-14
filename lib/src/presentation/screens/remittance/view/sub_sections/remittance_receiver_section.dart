@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
@@ -11,39 +12,40 @@ class RemittanceReceiverSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = Get.find<RemittanceController>();
+    final l = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Receiver Information', style: _title()),
+        Text(l.remittanceReceiverInfo, style: _title()),
         SizedBox(height: 16.h),
-        _Label('Full Name'),
-        _Field(c.receiverNameController, 'Enter receiver full name'),
+        _Label(l.remittanceReceiverName),
+        _Field(c.receiverNameController, l.remittanceReceiverName),
         SizedBox(height: 16.h),
-        _Label('Country'),
-        _CountryDropdown(value: c.selectedReceiverCountry.value, onChanged: (v) => c.selectedReceiverCountry.value = v ?? ''),
+        _Label(l.remittanceSelectCountry),
+        _CountryDropdown(value: c.selectedReceiverCountry.value, onChanged: (v) => c.selectedReceiverCountry.value = v ?? '', hint: l.remittanceSelectCountry),
         SizedBox(height: 16.h),
-        _Label('Phone Number'),
+        _Label(l.remittanceReceiverPhone),
         _Field(c.receiverPhoneController, '+86 138 0000 0000', keyboardType: TextInputType.phone),
         SizedBox(height: 24.h),
         Divider(color: AppColors.lightBorder),
         SizedBox(height: 16.h),
-        Text('Payout Details', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
+        Text(l.remittancePayoutDetails, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
         SizedBox(height: 4.h),
-        Text('Fill in the fields relevant to the selected payout method.', style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
+        Text(l.remittancePayoutDetailsHint, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
         SizedBox(height: 16.h),
-        _Label('Bank Name (optional)'),
+        _Label(l.remittanceBankName),
         _Field(c.receiverBankNameController, 'Bank of China'),
         SizedBox(height: 16.h),
-        _Label('Account Number (optional)'),
+        _Label(l.remittanceAccountNumber),
         _Field(c.receiverAccountNumberController, '6225 0000 0000 0000', keyboardType: TextInputType.number),
         SizedBox(height: 16.h),
-        _Label('IBAN (optional)'),
+        _Label(l.remittanceIban),
         _Field(c.receiverIbanController, 'GB29 NWBK 6016 1331 9268 19'),
         SizedBox(height: 16.h),
-        _Label('Alipay Account (optional)'),
+        _Label(l.remittanceAlipayAccount),
         _Field(c.receiverAlipayController, 'alipay@example.com or phone'),
         SizedBox(height: 16.h),
-        _Label('WeChat Account (optional)'),
+        _Label(l.remittanceWechatAccount),
         _Field(c.receiverWechatController, 'WeChat ID'),
       ],
     );
@@ -86,7 +88,8 @@ class _Field extends StatelessWidget {
 class _CountryDropdown extends StatelessWidget {
   final String value;
   final ValueChanged<String?> onChanged;
-  const _CountryDropdown({required this.value, required this.onChanged});
+  final String hint;
+  const _CountryDropdown({required this.value, required this.onChanged, required this.hint});
 
   static const countries = [
     ('IR', 'Iran'), ('CN', 'China'), ('TR', 'Turkey'), ('AE', 'UAE'),
@@ -103,7 +106,7 @@ class _CountryDropdown extends StatelessWidget {
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             value: value.isEmpty ? null : value,
-            hint: Text('Select country', style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextHint)),
+            hint: Text(hint, style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextHint)),
             isExpanded: true,
             items: countries.map((c) => DropdownMenuItem(value: c.$1, child: Text('${c.$1} — ${c.$2}', style: TextStyle(fontSize: 14.sp)))).toList(),
             onChanged: onChanged,

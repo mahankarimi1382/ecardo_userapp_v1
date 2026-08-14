@@ -6576,4 +6576,212 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get travelPostPurchaseGuidance =>
       'کد پیگیری را نگه دارید، برای تغییر وضعیت «رزروهای من» را تازه‌سازی کنید و فقط از اسناد صادرشده توسط بک‌اند استفاده کنید.';
+  @override
+  String get remittanceTitle => 'حواله بین‌الملل';
+  @override
+  String get remittanceHistoryTitle => 'تاریخچه حواله';
+  @override
+  String get remittanceDetailsTitle => 'جزئیات حواله';
+  @override
+  String get remittanceSelectPayoutMethod => 'انتخاب روش پرداخت';
+  @override
+  String get remittanceNoMethods => 'هیچ روش حواله‌ای در دسترس نیست.\nلطفاً بعداً دوباره تلاش کنید.';
+  @override
+  String get remittanceSendAmount => 'مبلغ ارسالی';
+  @override
+  String get remittanceEnterAmount => 'مبلغ را وارد کنید';
+  @override
+  String get remittanceUnknownMethod => 'نامشخص';
+  @override
+  String remittanceRateLocked(int seconds) => 'نرخ قفل‌شده: $seconds ثانیه';
+  @override
+  String get remittanceExchangeRate => 'نرخ تبدیل';
+  @override
+  String get remittanceReceiveAmount => 'مبلغ دریافتی';
+  @override
+  String get remittanceSystemFee => 'کارمزد سیستم';
+  @override
+  String get remittanceTotalPayable => 'مجموع قابل پرداخت';
+  @override
+  String get remittanceGetQuote => 'دریافت پیش‌فاکتور';
+  @override
+  String get remittanceStepAmount => 'مبلغ';
+  @override
+  String get remittanceStepSender => 'فرستنده';
+  @override
+  String get remittanceStepReceiver => 'گیرنده';
+  @override
+  String get remittanceStepReview => 'بازبینی';
+  @override
+  String get remittanceStepDone => 'انجام شد';
+  @override
+  String get remittanceSenderInfo => 'اطلاعات فرستنده';
+  @override
+  String get remittanceSelectCountry => 'انتخاب کشور';
+  @override
+  String get remittanceSenderTypeIndividual => 'حقیقی';
+  @override
+  String get remittanceSenderTypeBusiness => 'حقوقی';
+  @override
+  String get remittanceSenderName => 'نام و نام خانوادگی';
+  @override
+  String get remittanceSenderPhone => 'شماره تلفن';
+  @override
+  String get remittanceSenderIdNumber => 'شماره شناسنامه';
+  @override
+  String get remittanceReceiverInfo => 'اطلاعات گیرنده';
+  @override
+  String get remittancePayoutDetails => 'جزئیات پرداخت';
+  @override
+  String get remittancePayoutDetailsHint => 'فیلدهای مربوط به روش پرداخت انتخاب‌شده را پر کنید.';
+  @override
+  String get remittanceReceiverName => 'نام و نام خانوادگی';
+  @override
+  String get remittanceReceiverPhone => 'شماره تلفن';
+  @override
+  String get remittanceBankName => 'نام بانک';
+  @override
+  String get remittanceAccountNumber => 'شماره حساب';
+  @override
+  String get remittanceIban => 'شبا';
+  @override
+  String get remittanceAlipayAccount => 'حساب الی‌پی';
+  @override
+  String get remittanceWechatAccount => 'حساب وچت';
+  @override
+  String get remittanceReviewConfirm => 'بازبینی و تأیید';
+  @override
+  String get remittanceReviewHint => 'لطفاً قبل از ارسال درخواست حواله، تمام جزئیات را بررسی کنید.';
+  @override
+  String get remittanceTermsNotice => 'با ارسال این درخواست، با قوانین حواله موافقت می‌کنید. نرخ به مدت ۱۵ دقیقه قفل می‌شود. پس از ارسال، باید مدارک احراز هویت و رسید پرداخت را بارگذاری کنید.';
+  @override
+  String get remittanceReviewSender => 'فرستنده';
+  @override
+  String get remittanceReviewReceiver => 'گیرنده';
+  @override
+  String get remittanceReviewPayment => 'پرداخت';
+  @override
+  String get remittanceRequestSubmitted => 'درخواست ارسال شد!';
+  @override
+  String get remittanceRequestCreated => 'درخواست حواله شما ایجاد شد.';
+  @override
+  String get remittanceUploadDocuments => 'بارگذاری مدارک';
+  @override
+  String get remittanceUploadHint => 'برای ادامه، مدارک احراز هویت و رسید پرداخت خود را بارگذاری کنید.';
+  @override
+  String get remittanceAddDocument => 'افزودن مدرک';
+  @override
+  String get remittanceDocumentType => 'نوع مدرک';
+  @override
+  String get remittanceDocTypeKyc => 'مدرک احراز هویت';
+  @override
+  String get remittanceDocTypePaymentReceipt => 'رسید پرداخت';
+  @override
+  String get remittanceDocTypePayoutReceipt => 'رسید پرداخت به گیرنده';
+  @override
+  String get remittanceDocTypeOther => 'سایر';
+  @override
+  String get remittanceCancel => 'انصراف';
+  @override
+  String get remittanceAdd => 'افزودن';
+  @override
+  String get remittanceContinue => 'ادامه';
+  @override
+  String get remittanceSubmitRequest => 'ارسال درخواست';
+  @override
+  String get remittanceUploading => 'در حال بارگذاری...';
+  @override
+  String get remittanceRefresh => 'تازه‌سازی';
+  @override
+  String get remittanceNoHistory => 'هنوز حواله‌ای وجود ندارد';
+  @override
+  String get remittanceNoHistoryHint => 'تاریخچه حواله‌های شما اینجا نمایش داده می‌شود.';
+  @override
+  String get remittanceSend => 'ارسال';
+  @override
+  String get remittanceReceive => 'دریافت';
+  @override
+  String get remittanceDate => 'تاریخ';
+  @override
+  String get remittanceNotFound => 'حواله یافت نشد';
+  @override
+  String get remittanceStatusFinalized => 'این درخواست نهایی شده است.';
+  @override
+  String get remittanceStatusProcessing => 'درخواست شما در حال پردازش است.';
+  @override
+  String get remittanceStatusActionNeeded => 'لطفاً مراحل مورد نیاز را تکمیل کنید.';
+  @override
+  String get remittanceDetailsSectionSender => 'اطلاعات فرستنده';
+  @override
+  String get remittanceDetailsSectionReceiver => 'اطلاعات گیرنده';
+  @override
+  String get remittanceDetailsSectionPayment => 'جزئیات پرداخت';
+  @override
+  String get remittanceDetailsSectionTimeline => 'خط زمانی وضعیت';
+  @override
+  String get remittanceErrLoadMethods => 'بارگذاری روش‌ها ناموفق بود';
+  @override
+  String get remittanceErrSelectPayout => 'لطفاً یک روش پرداخت انتخاب کنید';
+  @override
+  String get remittanceErrInvalidAmount => 'لطفاً یک مبلغ معتبر وارد کنید';
+  @override
+  String get remittanceErrSelectSendCurrency => 'لطفاً ارز ارسالی را انتخاب کنید';
+  @override
+  String get remittanceErrQuoteFailed => 'دریافت پیش‌فاکتور ناموفق بود';
+  @override
+  String get remittanceErrRequestQuoteFirst => 'لطفاً ابتدا پیش‌فاکتور دریافت کنید';
+  @override
+  String get remittanceErrQuoteExpired => 'پیش‌فاکتور منقضی شده است. لطفاً دوباره دریافت کنید.';
+  @override
+  String get remittanceErrSenderInfo => 'لطفاً اطلاعات فرستنده را تکمیل کنید';
+  @override
+  String get remittanceErrReceiverInfo => 'لطفاً اطلاعات گیرنده را تکمیل کنید';
+  @override
+  String get remittanceErrSubmissionFailed => 'ارسال درخواست ناموفق بود';
+  @override
+  String get remittanceErrNoRemittance => 'حواله‌ای برای بارگذاری مدارک وجود ندارد';
+  @override
+  String get remittanceErrAddDocument => 'لطفاً حداقل یک مدرک اضافه کنید';
+  @override
+  String get remittanceErrUploadFailed => 'بارگذاری ناموفق بود';
+  @override
+  String get remittanceErrLoadDetails => 'بارگذاری جزئیات ناموفق بود';
+  @override
+  String get remittanceErrCompleteSender => 'لطفاً تمام فیلدهای فرستنده را تکمیل کنید';
+  @override
+  String get remittanceErrCompleteReceiver => 'لطفاً تمام فیلدهای گیرنده را تکمیل کنید';
+  @override
+  String get remittanceSuccessUploaded => 'مدارک با موفقیت بارگذاری شدند';
+  @override
+  String get remittanceError => 'خطا';
+  @override
+  String get remittanceStatusDraft => 'پیش‌نویس';
+  @override
+  String get remittanceStatusWaitingInformation => 'در انتظار اطلاعات';
+  @override
+  String get remittanceStatusWaitingDocuments => 'در انتظار مدارک';
+  @override
+  String get remittanceStatusWaitingPayment => 'در انتظار پرداخت';
+  @override
+  String get remittanceStatusPaymentReviewing => 'بررسی پرداخت';
+  @override
+  String get remittanceStatusInProcess => 'در حال انجام';
+  @override
+  String get remittanceStatusDestinationProcessing => 'پردازش در مقصد';
+  @override
+  String get remittanceStatusDestinationPaid => 'پرداخت در مقصد انجام شد';
+  @override
+  String get remittanceStatusCompleted => 'تکمیل شد';
+  @override
+  String get remittanceStatusRejected => 'رد شد';
+  @override
+  String get remittanceStatusExpired => 'منقضی شد';
+  @override
+  String get remittanceStatusCancelled => 'لغو شد';
+  @override
+  String get remittanceStatusRefundRequested => 'درخواست بازگشت وجه';
+  @override
+  String get remittanceStatusRefundCompleted => 'بازگشت وجه انجام شد';
+  @override
+  String get remittanceStatusUnknown => 'نامشخص';
 }
