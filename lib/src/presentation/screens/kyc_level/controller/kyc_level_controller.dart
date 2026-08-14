@@ -1,5 +1,7 @@
+import 'dart:io' as dart_io;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -82,31 +84,75 @@ class KycLevelController extends GetxController {
   }
 
   /// ارسال مدارک برای سطح بعدی
+  /// v56 BUG-K003: از FormData برای multipart file upload استفاده می‌کند
   Future<bool> submitDocuments({
     required Map<String, String> documents,
     int? targetLevel,
   }) async {
     isSubmitting.value = true;
-    final response = await _networkService.post(
-      endpoint: ApiPath.kycLevelSubmitEndpoint,
-      data: {
-        'documents': documents,
-        if (targetLevel != null) 'level': targetLevel,
-      },
-    );
-    isSubmitting.value = false;
+    try {
+      // ساخت FormData برای multipart upload
+      final formData = <String, dynamic>{};
+      if (targetLevel != null) {
+        formData['level'] = targetLevel.toString();
+      }
 
-    if (response.status == Status.completed) {
-      ToastHelper().showSuccessToast(
-        response.data?['data']?['message'] ?? 'Documents submitted successfully.',
+      // افزودن فایل‌ها به‌عنوان multipart
+      for (final entry in documents.entries) {
+        final file = dart_io.File(entry.value);
+        if (await file.exists()) {
+          final fileName = entry.value.split('/').last;
+          final mimeType = _getMimeType(fileName);
+          formData['documents[${entry.key}]'] = http_parser.MultipartFile.fromBytes(
+            await file.readAsBytes(),
+            filename: fileName,
+            contentType:MediaType.parse(mimeType),
+          );
+        } else {
+          // اگر فایل موجود نبود، path را به‌عنوان string بفرست
+          formData['documents[${entry.key}]'] = entry.value;
+        }
+      }
+
+      final response = await _networkService.post(
+        endpoint: ApiPath.kycLevelSubmitEndpoint,
+        data: formData,
       );
-      // refresh status
-      await fetchStatus();
-      return true;
-    } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? 'Submission failed.');
+      isSubmitting.value = false;
+
+      if (response.status == Status.completed) {
+        ToastHelper().showSuccessToast(
+          response.data?['data']?['message'] ?? 'Documents submitted successfully.',
+        );
+        await fetchStatus();
+        return true;
+      } else if (response.status == Status.error) {
+        ToastHelper().showErrorToast(response.message ?? 'Submission failed.');
+      }
+    } catch (e) {
+      isSubmitting.value = false;
+      ToastHelper().showErrorToast('Failed to submit documents: $e');
     }
     return false;
+  }
+
+  String _getMimeType(String fileName) {
+    final ext = fileName.toLowerCase().split('.').last;
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      case 'pdf':
+        return 'application/pdf';
+      case 'gif':
+        return 'image/gif';
+      case 'webp':
+        return 'image/webp';
+      default:
+        return 'application/octet-stream';
+    }
   }
 
   /// بررسی دسترسی کاربر به feature خاص

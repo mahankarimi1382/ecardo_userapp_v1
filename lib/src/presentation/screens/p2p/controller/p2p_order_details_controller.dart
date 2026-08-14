@@ -153,12 +153,20 @@ class P2pOrderDetailsController extends GetxController {
       return;
     }
 
+<<<<<<< HEAD
     isUpdatingPaymentMethod.value = true;
     try {
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.updateOrderPaymentMethodEndpoint(
           orderId: '$orderId',
         ),
+=======
+    // v55 BUG-008 fix: استفاده از endpoint صحیح برای تغییر متد پرداخت
+    isUpdatingPaymentMethod.value = true;
+    try {
+      final response = await Get.find<NetworkService>().post(
+        endpoint: ApiPath.updateOrderPaymentMethodEndpoint(orderId: '$orderId'),
+>>>>>>> b72b216 (v57: Add http_parser dependency for KYC multipart upload)
         data: <String, dynamic>{
           'payment_method_id': newPaymentMethodId,
           '_method': 'PATCH',

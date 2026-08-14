@@ -124,7 +124,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
               children: [
                 Icon(isUploaded ? Icons.check_circle : Icons.upload_file, size: 48.sp, color: isUploaded ? AppColors.success : AppColors.lightPrimary),
                 SizedBox(height: 8.h),
-                Text(isUploaded ? 'آپلود شد: ${_documents[docKey]!.split('/').last}' : 'برای آپلود لمس کنید', style: TextStyle(fontSize: 14.sp, color: isUploaded ? AppColors.success : AppColors.lightTextSecondary)),
+                Text(isUploaded ? 'آپلود شد: ${_documents[docKey]!.path.split('/').last}' : 'برای آپلود لمس کنید', style: TextStyle(fontSize: 14.sp, color: isUploaded ? AppColors.success : AppColors.lightTextSecondary)),
                 if (!isUploaded) ...[
                   SizedBox(height: 4.h),
                   Text('فرمت: JPG, PNG, PDF — حداکثر ۵MB', style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextHint)),
@@ -156,7 +156,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
       children: [
         Text('بررسی و ارسال', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
         SizedBox(height: 16.h),
-        ...docs.map((doc) => _ReviewItem(label: _docLabel(doc), fileName: _documents[doc]?.split('/').last ?? 'آپلود نشده', isUploaded: _documents.containsKey(doc))),
+        ...docs.map((doc) => _ReviewItem(label: _docLabel(doc), fileName: _documents[doc]?.path.split('/').last ?? 'آپلود نشده', isUploaded: _documents.containsKey(doc))),
         SizedBox(height: 24.h),
         Container(
           padding: EdgeInsets.all(12.w),
@@ -198,7 +198,11 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   }
 
   Future<void> _pickDocument(String docKey) async {
+<<<<<<< HEAD
     // v57: استفاده از image_picker برای انتخاب فایل واقعی
+=======
+    // v56 BUG-K003: استفاده از image_picker برای انتخاب فایل واقعی
+>>>>>>> b72b216 (v57: Add http_parser dependency for KYC multipart upload)
     try {
       final XFile? picked = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -212,13 +216,22 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
         });
       }
     } catch (e) {
+<<<<<<< HEAD
+=======
+      // اگر image_picker در دسترس نبود، از file_picker استفاده کنیم
+>>>>>>> b72b216 (v57: Add http_parser dependency for KYC multipart upload)
       debugPrint('image_picker error: $e');
       ToastHelper().showErrorToast('Failed to pick document. Please try again.');
     }
   }
 
   Future<void> _submit() async {
-    final success = await controller.submitDocuments(documents: _documents, targetLevel: widget.targetLevel);
+    // v56 BUG-K003: تبدیل File به multipart upload
+    final Map<String, String> docPaths = {};
+    _documents.forEach((key, file) {
+      docPaths[key] = file.path;
+    });
+    final success = await controller.submitDocuments(documents: docPaths, targetLevel: widget.targetLevel);
     if (success) {
       Get.offAllNamed(BaseRoute.navigation);
     }

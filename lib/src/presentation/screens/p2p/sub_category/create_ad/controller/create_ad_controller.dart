@@ -25,6 +25,10 @@ class CreateAdController extends GetxController {
   final RxBool isCreateAdLoading = false.obs;
   final RxBool isCreateAdSuccess = false.obs;
 
+  // v55 BUG-009: افزودن متغیرهای market_type و is_cash_dollar
+  final RxString selectedMarketType = 'iran'.obs;
+  final RxBool isCashDollar = false.obs;
+
   final RxString selectedAsset = ''.obs;
   final RxString selectedFiat = ''.obs;
   final RxString selectedPriceType = ''.obs;
@@ -515,6 +519,11 @@ class CreateAdController extends GetxController {
         'description': termsController.text.trim(),
         'auto_response_message': autoReplyController.text.trim(),
         'payment_method_ids': selectedPaymentMethodIds.toList(),
+        // v55 BUG-009 fix: ارسال market_type و is_cash_dollar (default: iran / false)
+        'market_type': selectedMarketType.value.isNotEmpty
+            ? selectedMarketType.value
+            : 'iran',
+        'is_cash_dollar': isCashDollar.value ? 1 : 0,
       };
 
       final response = await Get.find<NetworkService>().post(

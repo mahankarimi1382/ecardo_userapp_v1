@@ -70,7 +70,7 @@ class _IdVerificationState extends State<IdVerification> {
                             // v1.0.5: KYC Level Roadmap (نسخه جدید — نمایش سطوح بصری)
               KycLevelRoadmap(
                 onLevelTap: () {
-                  // v57: هدایت به صفحه‌ی ارسال مدارک KYC
+                  // v56 BUG-K017: هدایت به صفحه‌ی ارسال مدارک KYC
                   final kycController = Get.find<KycLevelController>();
                   final nextLevel = kycController.nextLevel?.level ?? 2;
                   Get.toNamed(BaseRoute.kycSubmitWizard,
