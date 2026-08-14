@@ -364,7 +364,10 @@ class _WalletAvatar extends StatelessWidget {
               )
             : Center(
                 child: Text(
-                  (wallet.code ?? '?').characters.first.toUpperCase(),
+                  ((wallet.code?.isNotEmpty ?? false)
+                          ? wallet.code!.characters.first
+                          : '?')
+                      .toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     color: AppColors.lightTextTertiary,

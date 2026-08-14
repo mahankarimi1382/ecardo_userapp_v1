@@ -110,48 +110,48 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
 
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-      child: Stack(
-        clipBehavior: Clip.none,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Column(
-            children: [
-              _FromCard(
-                wallet: widget.fromWallet,
-                balanceLabel:
-                    widget.fromBalanceLabel ?? loc.exchangeWalletBalance,
-                amountHintText: widget.amountHintText ?? '',
-                amountController: widget.amountController,
-                amountFocusNode: widget.amountFocusNode,
-                isAmountFocused: widget.isAmountFocused,
-                onTapWallet: () => _openWalletSelector(
-                  context: context,
-                  isFrom: true,
-                ),
-              ),
-              const SizedBox(height: 2),
-              _ToCard(
-                wallet: widget.toWallet,
-                receiveLabel: widget.receiveLabel ?? loc.exchangeAmountReceive,
-                calculatedAmount: widget.calculatedToAmount,
-                isCalculating: widget.isCalculating,
-                onTapWallet: () => _openWalletSelector(
-                  context: context,
-                  isFrom: false,
-                ),
-              ),
-            ],
+          _FromCard(
+            wallet: widget.fromWallet,
+            balanceLabel:
+                widget.fromBalanceLabel ?? loc.exchangeWalletBalance,
+            amountHintText: widget.amountHintText ?? '',
+            amountController: widget.amountController,
+            amountFocusNode: widget.amountFocusNode,
+            isAmountFocused: widget.isAmountFocused,
+            onTapWallet: () => _openWalletSelector(
+              context: context,
+              isFrom: true,
+            ),
           ),
-          // Swap button centred on the seam.
-          Positioned(
-            top: _kFromCardHeight / 2 - _kSwapButtonSize / 2,
-            // Right edge of viewport in LTR, left edge in RTL — but the
-            // design intent is "centred horizontally", so we use center.
-            left: 0,
-            right: 0,
+          // Swap button sits in the gap between the two cards,
+          // overlapping both. We translate it up by half its height so
+          // it visually straddles the seam.
+          Transform.translate(
+            offset: const Offset(0, -_kSwapButtonSize / 2),
             child: Center(
               child: _SwapButton(
                 rotation: _swapRotationController,
                 onTap: _handleSwap,
+              ),
+            ),
+          ),
+          // Pull the to-card up by half the swap button's height so the
+          // total visual gap between cards stays at the swap-button
+          // diameter.
+          Transform.translate(
+            offset: const Offset(0, -_kSwapButtonSize / 2),
+            child: _ToCard(
+              wallet: widget.toWallet,
+              receiveLabel:
+                  widget.receiveLabel ?? loc.exchangeAmountReceive,
+              calculatedAmount: widget.calculatedToAmount,
+              isCalculating: widget.isCalculating,
+              onTapWallet: () => _openWalletSelector(
+                context: context,
+                isFrom: false,
               ),
             ),
           ),
@@ -182,7 +182,6 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
   }
 }
 
-const double _kFromCardHeight = 220;
 const double _kSwapButtonSize = 48;
 
 class _FromCard extends StatelessWidget {
@@ -215,8 +214,13 @@ class _FromCard extends StatelessWidget {
           topEnd: Radius.circular(24),
         ),
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          // Directional — mirrors automatically in RTL.
+          begin: AlignmentDirectional.topStart.resolve(
+            Directionality.of(context),
+          ),
+          end: AlignmentDirectional.bottomEnd.resolve(
+            Directionality.of(context),
+          ),
           colors: const [
             AppColors.lightPrimary,
             AppColors.lightPrimaryDark,
@@ -232,11 +236,13 @@ class _FromCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Soft radial highlight in the top-left — adds depth without
-          // an image asset.
-          Positioned(
+          // Soft radial highlight in the leading-top corner — adds
+          // depth without an image asset. Directional so it mirrors in
+          // RTL.
+          Positioned.directional(
+            textDirection: Directionality.of(context),
             top: -40,
-            left: -40,
+            start: -40,
             child: Container(
               width: 160,
               height: 160,
@@ -542,7 +548,10 @@ class _WalletIcon extends StatelessWidget {
               )
             : Center(
                 child: Text(
-                  (wallet!.code ?? '?').characters.first.toUpperCase(),
+                  ((wallet!.code?.isNotEmpty ?? false)
+                          ? wallet!.code!.characters.first
+                          : '?')
+                      .toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     color: AppColors.lightTextTertiary,
