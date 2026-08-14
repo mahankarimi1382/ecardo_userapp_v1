@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Allows FileProvider to share files stored in the app's internal
+         files directory (used by getApplicationDocumentsDirectory()). -->
+    <files-path
+        name="app_internal_files"
+        path="." />
+    <!-- Allows FileProvider to share files stored in the app's internal
+         cache directory (used by getTemporaryDirectory()). -->
+    <cache-path
+        name="app_internal_cache"
+        path="." />
+    <!-- Allows FileProvider to share files stored in the app's external
+         files directory (used by getExternalStorageDirectories()). -->
+    <external-files-path
+        name="app_external_files"
+        path="." />
+    <!-- Allows FileProvider to share files from the public Downloads folder. -->
+    <external-path
+        name="app_external_storage"
+        path="." />
+</paths>

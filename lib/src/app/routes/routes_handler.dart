@@ -469,4 +469,10 @@ List<GetPage> routesHandler = [
     name: BaseRoute.upgradeRequired,
     page: () => RoutesConfig.upgradeRequired,
   ),
+
+  // App self-update (v1.0.8+8)
+  GetPage(
+    name: BaseRoute.appUpdate,
+    page: () => RoutesConfig.appUpdate,
+  ),
 ];
