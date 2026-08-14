@@ -20,6 +20,13 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Accept Android SDK licenses
+        shell: bash
+        run: |
+          # Pre-accept all Android SDK licenses so that Gradle can install
+          # required components (NDK, CMake, build-tools) non-interactively.
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
