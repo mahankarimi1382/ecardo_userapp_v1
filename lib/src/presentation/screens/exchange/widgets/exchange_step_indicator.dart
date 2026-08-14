@@ -174,7 +174,8 @@ class _ConnectorLine extends StatelessWidget {
       width: length,
       height: 2,
       margin: const EdgeInsetsDirectional.only(
-        horizontal: 4,
+        start: 4,
+        end: 4,
         // Pull the line up so it visually aligns with the dot center,
         // not with the dot+label baseline.
         bottom: 18,
