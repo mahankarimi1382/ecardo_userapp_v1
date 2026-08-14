@@ -105,9 +105,13 @@ jobs:
           VERSION=$(grep -oP "^version:\s*\K[0-9.]+" pubspec.yaml || echo "1.0.0")
           TAG="v$VERSION"
           APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
-          ASSET_NAME="ecardo_user_v${VERSION}.apk"
+          # Stage the APK with a friendly name — `gh release upload` uses the
+          # staged filename as the asset name. The `path#label` syntax is
+          # unreliable across gh versions, so we just rename in-place.
+          STAGED="ecardo_user_v${VERSION}.apk"
+          cp "$APK_PATH" "$STAGED"
 
-          echo "Publishing $APK_PATH as release $TAG (asset: $ASSET_NAME)"
+          echo "Publishing $APK_PATH as release $TAG (asset: $STAGED)"
 
           # Delete existing release+tag if present (so re-runs don't fail)
           gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
@@ -122,7 +126,7 @@ jobs:
             --target main
 
           # Upload the APK as a release asset (up to 2 GB limit)
-          gh release upload "$TAG" "$APK_PATH#$ASSET_NAME" --clobber
+          gh release upload "$TAG" "$STAGED" --clobber
 
           echo "✅ Release $TAG published with APK"
           gh release view "$TAG" --json assets,url -q '"URL: \(.url)\nAssets: \(.assets | map(.name) | join(", "))"'
