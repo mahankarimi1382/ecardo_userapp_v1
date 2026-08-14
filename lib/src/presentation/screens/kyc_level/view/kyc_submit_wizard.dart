@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -198,11 +197,8 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   }
 
   Future<void> _pickDocument(String docKey) async {
-<<<<<<< HEAD
     // v57: استفاده از image_picker برای انتخاب فایل واقعی
-=======
     // v56 BUG-K003: استفاده از image_picker برای انتخاب فایل واقعی
->>>>>>> b72b216 (v57: Add http_parser dependency for KYC multipart upload)
     try {
       final XFile? picked = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -216,10 +212,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
         });
       }
     } catch (e) {
-<<<<<<< HEAD
-=======
       // اگر image_picker در دسترس نبود، از file_picker استفاده کنیم
->>>>>>> b72b216 (v57: Add http_parser dependency for KYC multipart upload)
       debugPrint('image_picker error: $e');
       ToastHelper().showErrorToast('Failed to pick document. Please try again.');
     }
