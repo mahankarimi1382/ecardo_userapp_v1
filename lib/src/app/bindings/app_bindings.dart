@@ -34,6 +34,7 @@ import '../../presentation/screens/cash_out/controller/cash_out_controller.dart'
 import '../../presentation/screens/cash_out/controller/cash_out_history_controller.dart';
 import '../../presentation/screens/exchange/controller/exchange_controller.dart';
 import '../../presentation/screens/exchange/controller/exchange_history_controller.dart';
+import '../../presentation/screens/exchange/service/exchange_rate_service.dart';
 import '../../presentation/screens/gift_code/controller/create_gift_controller.dart';
 import '../../presentation/screens/gift_code/controller/gift_code_controller.dart';
 import '../../presentation/screens/gift_code/controller/gift_history_controller.dart';
@@ -288,6 +289,12 @@ class GiftHistoryBinding implements Bindings {
 class ExchangeBinding implements Bindings {
   @override
   void dependencies() {
+    // Rate service is shared and lives until the user leaves the Exchange
+    // flow entirely. Not permanent — gets cleaned up when the binding is
+    // destroyed, which fires onClose() and cancels the polling timer.
+    if (!Get.isRegistered<ExchangeRateService>()) {
+      Get.put<ExchangeRateService>(ExchangeRateService(), permanent: false);
+    }
     Get.lazyPut<ExchangeController>(() => ExchangeController());
   }
 }
