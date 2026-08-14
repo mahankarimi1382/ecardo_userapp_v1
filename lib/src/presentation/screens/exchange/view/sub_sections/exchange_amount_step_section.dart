@@ -8,9 +8,11 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pairs_store.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_swap_card.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/live_rate_badge.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/rate_alert_placeholder.dart';
 
 /// Step 0 — Amount entry. Renders the unified swap card with the amount
 /// input baked into the FROM side, the live rate badge below it, the fee
@@ -90,6 +92,63 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
                 isDisconnected: rateService.isDisconnected.value,
                 lastUpdatedAt: rateService.lastUpdatedAt.value,
                 onManualRefresh: () => rateService.forceRefresh(),
+              ),
+            );
+          }),
+          const SizedBox(height: 16),
+          // Recent pairs — horizontal scrollable chip row. Hidden if empty.
+          Obx(() {
+            if (controller.recentPairs.isEmpty) return const SizedBox();
+            return Padding(
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(bottom: 8),
+                    child: Text(
+                      loc.exchangeRecentPairs,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.4,
+                        color: AppColors.lightTextTertiary,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 32,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.recentPairs.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 8),
+                      itemBuilder: (_, index) {
+                        final pair = controller.recentPairs[index];
+                        return _RecentPairChip(
+                          pair: pair,
+                          onTap: () => controller.selectRecentPair(pair),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: 16),
+          // Rate alert placeholder (inert — TODO backend)
+          Obx(() {
+            final fromCode = controller.fromWallet.value?.code;
+            final toCode = controller.toWallet.value?.code;
+            if (fromCode == null || toCode == null) {
+              return const SizedBox();
+            }
+            return Padding(
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+              child: RateAlertPlaceholder(
+                fromCode: fromCode,
+                toCode: toCode,
+                currentRate: controller.currentRate.value,
               ),
             );
           }),
@@ -241,6 +300,62 @@ class _QuickChip extends StatelessWidget {
                 letterSpacing: 0,
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RecentPairChip extends StatelessWidget {
+  const _RecentPairChip({required this.pair, required this.onTap});
+
+  final RecentPair pair;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = '${pair.fromCode}-${pair.toCode}';
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          HapticFeedback.selectionClick();
+          onTap();
+        },
+        child: Container(
+          padding: const EdgeInsetsDirectional.symmetric(
+            horizontal: 12,
+            vertical: 6,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.lightPrimary.withValues(alpha: 0.18),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.history_rounded,
+                size: 12,
+                color: AppColors.lightPrimary,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.lightPrimary,
+                  letterSpacing: 0.3,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
           ),
         ),
       ),

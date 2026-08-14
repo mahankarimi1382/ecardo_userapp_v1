@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_config_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_rate_service.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pairs_store.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/live_rate_badge.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
 
@@ -103,6 +104,10 @@ class ExchangeController extends GetxController {
   /// the staleness threshold since entering that step.
   final RxBool isReviewRateStale = false.obs;
 
+  /// Recently used (from, to) currency pairs — loaded from local storage
+  /// on init, persisted when an exchange is confirmed.
+  final RxList<RecentPair> recentPairs = <RecentPair>[].obs;
+
   /// Wall-clock when the user entered the Review step. Used to compute
   /// "60 seconds elapsed" — even if the rate hasn't changed, the user has
   /// been staring at the rate long enough that we should ask them to
@@ -164,8 +169,36 @@ class ExchangeController extends GetxController {
       fetchCurrencies(),
       fetchUser(),
     ]);
+    // Load recent pairs in parallel — non-blocking on the critical path.
+    unawaited(_loadRecentPairs());
     isLoading.value = false;
     _subscribeToRateService();
+  }
+
+  Future<void> _loadRecentPairs() async {
+    try {
+      final pairs = await RecentPairsStore.load();
+      recentPairs.assignAll(pairs);
+    } catch (e) {
+      // Local storage failures are non-fatal — just don't show chips.
+      debugPrint('⚠️ recent pairs load failed: $e');
+    }
+  }
+
+  /// Restores a recent pair into the from/to selectors.
+  void selectRecentPair(RecentPair pair) {
+    final from = fromExchangeWalletsList.firstWhereOrNull(
+      (w) => w.code?.toUpperCase() == pair.fromCode,
+    );
+    final to = toExchangeWalletsList.firstWhereOrNull(
+      (w) => w.code?.toUpperCase() == pair.toCode,
+    );
+    if (from != null && to != null) {
+      fromWallet.value = from;
+      toWallet.value = to;
+      calculateExchange();
+      _subscribeToRateService();
+    }
   }
 
   /// Subscribes the rate service to the currently selected from/to codes.
@@ -637,6 +670,17 @@ class ExchangeController extends GetxController {
       if (response.status == Status.completed) {
         ToastHelper().showSuccessToast(response.data!["message"]);
         successExchangeData.value = response.data!['data'];
+        // Persist this pair as a recent one. Fire-and-forget — never
+        // blocks the success screen.
+        final fromCode = fromWallet.value?.code?.toUpperCase();
+        final toCode = toWallet.value?.code?.toUpperCase();
+        if (fromCode != null && toCode != null) {
+          unawaited(
+            RecentPairsStore.add(
+              RecentPair(fromCode: fromCode, toCode: toCode),
+            ).then((_) => _loadRecentPairs()),
+          );
+        }
         currentStep.value = 2;
       }
     } catch (e, stackTrace) {
