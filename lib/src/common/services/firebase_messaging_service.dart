@@ -43,7 +43,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 /// Override via the constructor when reusing this service in the merchant
 /// or agent apps.
 class FirebaseMessagingService {
-  FirebaseMessagingService._internal({this.updateTopic = 'app_updates_user'});
+  FirebaseMessagingService._internal();
   static final FirebaseMessagingService _instance =
       FirebaseMessagingService._internal();
   factory FirebaseMessagingService.instance() => _instance;

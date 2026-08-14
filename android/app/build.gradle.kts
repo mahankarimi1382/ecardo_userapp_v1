@@ -30,7 +30,7 @@ val keystoreProperties = Properties().apply {
 android {
     namespace = "com.ecardo.user"
     compileSdk = 36
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "28.0.12674087"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
