@@ -1,0 +1,17 @@
+# ============================================================================
+# RELEASE KEYSTORE CONFIG — copy this file to `key.properties` and fill in.
+# ============================================================================
+# The `key.properties` file MUST NEVER be committed to git. It is generated
+# automatically by the GitHub Actions workflow from repository secrets.
+#
+# Required GitHub Secrets (Settings → Secrets and variables → Actions):
+#   SIGNING_KEYSTORE_BASE64  — base64-encoded .keystore file
+#   SIGNING_STORE_PASSWORD   — keystore store password
+#   SIGNING_KEY_ALIAS        — key alias inside the keystore
+#   SIGNING_KEY_PASSWORD     — key password
+# ============================================================================
+
+storeFile=ecardo-release.keystore
+storePassword=********
+keyAlias=ecardo-user
+keyPassword=********

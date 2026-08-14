@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
@@ -100,16 +100,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
     }
     if (Get.find<SettingsService>().getSetting("user_ticket") == "1") {
-      settingsList.add({
-        "icon": PngAssets.arrowRightCommonIcon,
-
-        "title": "Check for Updates",
-
-        "is_status": false,
-
-        "navigate": "update",
-      });
-
       settingsList.insert(4, {
         "icon": PngAssets.supportEndDrawerIcon,
         "title": localization.settingsSupport,
@@ -117,6 +107,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         "navigate": BaseRoute.supportTickets,
       });
     }
+
+    // App self-update entry — always visible, no longer gated on user_ticket.
+    settingsList.add({
+      "icon": PngAssets.arrowRightCommonIcon,
+      "title": "Check for Updates",
+      "is_status": false,
+      "navigate": BaseRoute.appUpdate,
+    });
 
     return PopScope(
       canPop: false,
@@ -176,14 +174,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           localization.settingsSignOut) {
                                         await homeController.submitLogout();
                                       } else {
-                                        if (item["navigate"] == "update") {
-                                          AppUpdateHelper.checkForUpdate(
-                                            context,
-                                            showMessageIfNoUpdate: true,
-                                          );
-                                        } else {
-                                          Get.toNamed(item["navigate"]);
-                                        }
+                                        Get.toNamed(item["navigate"]);
                                       }
                                     },
                                     child: Container(
@@ -323,6 +314,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   return const SizedBox(height: 16);
                                 },
                                 itemCount: settingsList.length,
+                              ),
+                            ),
+                            // ----- Auto-update toggle -----
+                            const SizedBox(height: 16),
+                            Container(
+                              margin: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 18,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.auto_mode_rounded,
+                                    color: AppColors.lightPrimary,
+                                    size: 24,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Auto-update',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16,
+                                            color: AppColors.lightTextTertiary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          'Automatically check and notify about new versions.',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color:
+                                                AppColors.lightTextSecondary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Obx(() {
+                                    final controller = Get.isRegistered<
+                                            AppUpdateController>()
+                                        ? Get.find<AppUpdateController>()
+                                        : null;
+                                    final enabled = controller
+                                            ?.autoUpdateEnabled.value ??
+                                        true;
+                                    return Switch.adaptive(
+                                      value: enabled,
+                                      activeColor: AppColors.lightPrimary,
+                                      onChanged: controller == null
+                                          ? null
+                                          : (v) => controller
+                                              .setAutoUpdateEnabled(v),
+                                    );
+                                  }),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 50),

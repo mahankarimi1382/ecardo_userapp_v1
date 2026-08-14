@@ -163,4 +163,7 @@ class BaseRoute {
   // KYC Level Routes (v1.0.5)
   static const String kycSubmitWizard = "/kyc_submit_wizard_route";
   static const String upgradeRequired = "/upgrade_required_route";
+
+  // App self-update (v1.0.8+8)
+  static const String appUpdate = "/app_update_route";
 }

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/firebase_options.dart';
 import 'package:ecardo_user/src/app/app.dart';
+import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
 import 'package:ecardo_user/src/common/services/local_notifications_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -41,6 +42,13 @@ Future<void> _initializeServices() async {
       localNotificationsService: localNotificationsService,
     );
   }
+  // Register the in-app self-update controller for the user app.
+  // Pass [AppUpdateConfig.merchant] / [AppUpdateConfig.agent] in the
+  // respective merchant / agent apps.
+  Get.put<AppUpdateController>(
+    AppUpdateController(config: AppUpdateConfig.user),
+    permanent: true,
+  );
   Get.put<TokenService>(TokenService());
   Get.put(NetworkService());
 }

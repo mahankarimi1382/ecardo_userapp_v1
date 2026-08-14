@@ -61,3 +61,21 @@
 # ---------- Camera (mobile_scanner + camerawesome) ----------
 -keep class com.google.mlkit.** { *; }
 -dontwarn com.google.mlkit.**
+
+# ---------- open_filex (APK install via FileProvider) ----------
+-keep class com.skypixel.open_filex.** { *; }
+-dontwarn com.skypixel.open_filex.**
+# androidx FileProvider — used by open_filex to share the APK URI
+-keep class androidx.core.content.FileProvider { *; }
+
+# ---------- package_info_plus ----------
+-keep class dev.britannio.package_info_plus.** { *; }
+-dontwarn dev.britannio.package_info_plus.**
+
+# ---------- path_provider ----------
+-keep class io.flutter.plugins.pathprovider.** { *; }
+-dontwarn io.flutter.plugins.pathprovider.**
+
+# ---------- permission_handler ----------
+-keep class com.baseflow.permissionhandler.** { *; }
+-dontwarn com.baseflow.permissionhandler.**
