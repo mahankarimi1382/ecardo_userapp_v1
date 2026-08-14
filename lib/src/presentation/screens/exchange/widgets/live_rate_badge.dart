@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ecardo_user/l10n/app_localizations.dart';
 
 import '../../../../app/constants/app_colors.dart';
 
@@ -85,7 +84,6 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
     final textScale = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.85, 1.15);
 
     final dotColor = widget.isDisconnected
@@ -184,7 +182,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
                 ),
                 const SizedBox(height: 4),
                 // Subtitle: currency names OR status line
-                _buildSubtitle(loc),
+                _buildSubtitle(context),
               ],
             ),
           ),
@@ -200,10 +198,12 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
     );
   }
 
-  Widget _buildSubtitle(AppLocalizations loc) {
+  Widget _buildSubtitle(BuildContext context) {
     if (widget.isDisconnected) {
       return Text(
-        loc.rateServiceUnavailable,
+        _t(context, 'Rate service unavailable',
+            fa: 'سرویس نرخ در دسترس نیست',
+            ar: 'خدمة الأسعار غير متاحة'),
         style: TextStyle(
           fontSize: 11,
           color: AppColors.error,
@@ -216,7 +216,9 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
       return Row(
         children: [
           Text(
-            loc.rateStaleLastKnown,
+            _t(context, 'Showing last known rate',
+                fa: 'نمایش آخرین نرخ معتبر',
+                ar: 'عرض آخر سعر معروف'),
             style: TextStyle(
               fontSize: 11,
               color: AppColors.warning,
@@ -258,7 +260,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
         if (widget.lastUpdatedAt != null) ...[
           const SizedBox(width: 6),
           Text(
-            '${loc.exchangeRateLastUpdate} · ${_formatTimestamp(widget.lastUpdatedAt!)}',
+            '${_t(context, 'Updated', fa: 'به‌روزرسانی', ar: 'تحديث')} · ${_formatTimestamp(widget.lastUpdatedAt!)}',
             style: TextStyle(
               fontSize: 10,
               color: AppColors.lightTextTertiary.withValues(alpha: 0.7),
@@ -289,7 +291,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  loc.refresh,
+                  _t(context, 'Refresh', fa: 'به‌روزرسانی', ar: 'تحديث'),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
@@ -303,6 +305,20 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
         ),
       ],
     );
+  }
+
+  /// Tiny locale-aware string resolver. We bypass AppLocalizations here
+  /// because the project's checked-in app_localizations*.dart files are
+  /// out of sync with the .arb files (the CI runs `flutter gen-l10n`
+  /// but in Flutter 3.44+ the `synthetic-package` option is deprecated
+  /// and the regeneration behavior is inconsistent). Hardcoded strings
+  /// for the 3 supported locales (en/fa/ar) are reliable and tiny.
+  static String _t(BuildContext context, String en,
+      {required String fa, required String ar}) {
+    final lang = Localizations.localeOf(context).languageCode;
+    if (lang == 'fa') return fa;
+    if (lang == 'ar') return ar;
+    return en;
   }
 
   /// "US Dollar → Euro" — uses the API-provided English names when

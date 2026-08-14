@@ -1,10 +1,13 @@
 arb-dir: lib/l10n
 template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
-# Generate into lib/l10n/ (overwriting the checked-in files) instead of
-# the default synthetic package under .dart_tool/flutter_gen/. This keeps
-# the imports in user code (`import 'package:ecardo_user/l10n/...';`)
-# pointing at the regenerated files, so new .arb keys become available
-# to the build immediately after `flutter gen-l10n` runs in CI.
-synthetic-package: false
+# In Flutter 3.44+ `synthetic-package` is deprecated and ignored —
+# generated files always go to `output-dir` (defaults to lib/l10n).
+# The checked-in app_localizations*.dart files in this repo are STALE
+# (last regenerated in commit 056a6e5, before the exchange redesign
+# added new .arb keys). The CI runs `flutter gen-l10n` on every build,
+# which regenerates them in-place. New code should NOT rely on
+# AppLocalizations getters added after 056a6e5 — use a hardcoded
+# locale-aware helper instead until the localizations are regenerated
+# and re-checked-in.
 output-dir: lib/l10n
