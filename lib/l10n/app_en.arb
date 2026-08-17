@@ -2228,5 +2228,6 @@
   "remittanceStatusCancelled": "Cancelled",
   "remittanceStatusRefundRequested": "Refund Requested",
   "remittanceStatusRefundCompleted": "Refund Completed",
-  "remittanceStatusUnknown": "Unknown"
+  "remittanceStatusUnknown": "Unknown",
+  "exchangeCalculating": "Calculating…"
 }

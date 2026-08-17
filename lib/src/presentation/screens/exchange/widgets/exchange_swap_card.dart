@@ -454,6 +454,7 @@ class _ToCard extends StatelessWidget {
 class _CalculatingPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Row(
       children: [
         SizedBox(
@@ -466,7 +467,7 @@ class _CalculatingPlaceholder extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          'calculating'.tr,
+          loc.exchangeCalculating,
           style: TextStyle(
             fontSize: 13,
             color: AppColors.lightTextTertiary,

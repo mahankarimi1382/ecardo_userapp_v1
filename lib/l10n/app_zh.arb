@@ -2185,5 +2185,8 @@
   "remittanceStatusCancelled": "Cancelled",
   "remittanceStatusRefundRequested": "Refund Requested",
   "remittanceStatusRefundCompleted": "Refund Completed",
-  "remittanceStatusUnknown": "Unknown"
+  "remittanceStatusUnknown": "Unknown",
+  "exchangeRateAlertTitle": "汇率提醒",
+  "exchangeRateAlertPlaceholder": "即将推出",
+  "exchangeCalculating": "计算中…"
 }

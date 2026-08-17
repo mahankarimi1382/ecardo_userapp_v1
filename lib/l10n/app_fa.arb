@@ -2239,5 +2239,6 @@
   "remittanceStatusCancelled": "لغو شد",
   "remittanceStatusRefundRequested": "درخواست بازگشت وجه",
   "remittanceStatusRefundCompleted": "بازگشت وجه انجام شد",
-  "remittanceStatusUnknown": "نامشخص"
+  "remittanceStatusUnknown": "نامشخص",
+  "exchangeCalculating": "در حال محاسبه…"
 }

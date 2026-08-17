@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 
 import '../../../../app/constants/app_colors.dart';
 
@@ -21,6 +21,7 @@ class RateAlertPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsetsDirectional.symmetric(
         horizontal: 14,
@@ -47,7 +48,7 @@ class RateAlertPlaceholder extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'exchangeRateAlertTitle'.tr,
+                  loc.exchangeRateAlertTitle,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w800,
@@ -81,7 +82,7 @@ class RateAlertPlaceholder extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              'exchangeRateAlertPlaceholder'.tr,
+              loc.exchangeRateAlertPlaceholder,
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,

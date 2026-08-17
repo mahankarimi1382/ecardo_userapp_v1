@@ -72,6 +72,7 @@ class _EcardoUserState extends State<EcardoUser> {
             Locale('fa'),
             Locale('zh'),
             Locale('ru'),
+            Locale('tr'),
           ],
           builder: (context, widget) {
             return widget ?? const SizedBox.shrink();

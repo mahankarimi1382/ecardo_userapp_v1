@@ -2185,5 +2185,8 @@
   "remittanceStatusCancelled": "Cancelled",
   "remittanceStatusRefundRequested": "Refund Requested",
   "remittanceStatusRefundCompleted": "Refund Completed",
-  "remittanceStatusUnknown": "Unknown"
+  "remittanceStatusUnknown": "Unknown",
+  "exchangeRateAlertTitle": "Kur Alarmı",
+  "exchangeRateAlertPlaceholder": "Yakında",
+  "exchangeCalculating": "Hesaplanıyor…"
 }

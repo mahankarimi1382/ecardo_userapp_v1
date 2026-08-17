@@ -179,8 +179,8 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                             value,
                                           );
                                         },
-                                        selectedValue: ["English", "Arabic", "Persian","Chinese","Russian"],
-                                        dropdownItems: ["English", "Arabic", "Persian","Chinese","Russian"],
+                                        selectedValue: ["English", "Arabic", "Persian","Chinese","Russian","Turkish"],
+                                        dropdownItems: ["English", "Arabic", "Persian","Chinese","Russian","Turkish"],
                                         selectedItem: homeController
                                             .languageController
                                             .text,
