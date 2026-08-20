@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+// v1.0.21+21 — `get` re-exports FormData and MultipartFile from its own
+// http subsystem, which clashes with dio's classes of the same name.
+// Hide them so we can use dio's versions (which is what NetworkService.postMultipart
+// expects). Dio's FormData is the canonical one used throughout the app.
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
