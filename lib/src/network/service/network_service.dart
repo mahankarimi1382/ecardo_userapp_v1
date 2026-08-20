@@ -324,6 +324,47 @@ class NetworkService extends getx.GetxService {
     }
   }
 
+  /// v1.0.21+21 — Multipart POST for file uploads.
+  ///
+  /// Use this instead of [post] when the request body is a `FormData`
+  /// (e.g. uploading files via `MultipartFile.fromFile`). The regular
+  /// [post] method calls `jsonEncode(data)` which would corrupt a
+  /// `FormData` instance — Dio needs the raw `FormData` object so it
+  /// can stream the multipart body and set the Content-Type header
+  /// (with the correct boundary) itself.
+  ///
+  /// The caller is responsible for constructing the `FormData`:
+  /// ```dart
+  /// final formData = FormData.fromMap({
+  ///   'file': await MultipartFile.fromFile('/path/to/file'),
+  /// });
+  /// final response = await networkService.postMultipart(
+  ///   endpoint: '/api/upload',
+  ///   data: formData,
+  /// );
+  /// ```
+  Future<ApiResponse<Map<String, dynamic>>> postMultipart({
+    required String endpoint,
+    required FormData data,
+  }) async {
+    String url = '${_dio.options.baseUrl}$endpoint';
+    _log('📤 POST (multipart) Request URL: $url');
+    _log('📦 POST (multipart) Fields: ${data.fields.length}, Files: ${data.files.length}');
+
+    try {
+      // Pass the FormData directly — Dio auto-sets Content-Type to
+      // multipart/form-data with the proper boundary.
+      final response = await _dio.post(endpoint, data: data);
+      return _handleResponse(response, "POST (multipart)");
+    } on DioException catch (e) {
+      return _handleDioException(e, "POST (multipart)");
+    } catch (e) {
+      _log('POST (multipart) Exception: ${e.toString()}', icon: '❌');
+      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      return ApiResponse.error(e.toString());
+    }
+  }
+
   Future<ApiResponse<Map<String, dynamic>>> put({
     required String endpoint,
     Map<String, dynamic>? data,

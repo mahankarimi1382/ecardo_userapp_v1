@@ -127,28 +127,66 @@ class FeeEcardoRateSource implements ExchangeRateSource {
   }) async {
     if (currencyCodes.isEmpty) return const {};
 
+    // v1.0.21+21 — Restructured so the /rates fallback is actually reached
+    // when the primary /api/v1/rates endpoint throws. Previously the
+    // `catch (DioException)` block returned `{}` immediately, so the
+    // fallback path inside the try block (only reached when parse returned
+    // empty) was unreachable on network errors.
+    //
+    // New flow:
+    //   1. Try GET /api/v1/rates. On any non-fatal outcome (empty parse OR
+    //      DioException OR generic exception), continue to step 2.
+    //   2. Try GET /rates as fallback. If THAT also fails, return {}.
+    Map<String, double> primary = const {};
+    DioException? primaryDioError;
+    Object? primaryGenericError;
+
     try {
       final response = await _client.get<dynamic>('/api/v1/rates');
-      final parsed = _parseResponse(response.data);
-      if (parsed.isEmpty) {
-        // Fall back to the alternative path before giving up. Silent.
-        final fallback = await _client.get<dynamic>('/rates');
-        return _parseResponse(fallback.data);
+      primary = _parseResponse(response.data);
+    } on DioException catch (e, st) {
+      primaryDioError = e;
+      if (kDebugMode) {
+        debugPrint('⚠️ FeeEcardoRateSource primary /api/v1/rates failed: $e');
+        debugPrint('📍 $st');
       }
-      return parsed;
+    } catch (e, st) {
+      primaryGenericError = e;
+      if (kDebugMode) {
+        debugPrint('⚠️ FeeEcardoRateSource primary unexpected error: $e');
+        debugPrint('📍 $st');
+      }
+    }
+
+    // Primary succeeded with non-empty data → done.
+    if (primary.isNotEmpty) return primary;
+
+    // v1.0.21+21 — primary returned empty OR threw: try /rates fallback.
+    try {
+      if (kDebugMode) {
+        debugPrint(
+          'ℹ️ FeeEcardoRateSource primary empty/failed '
+          '(dioError=${primaryDioError != null}, '
+          'genericError=${primaryGenericError != null}) — '
+          'trying /rates fallback...',
+        );
+      }
+      final fallback = await _client.get<dynamic>('/rates');
+      final parsed = _parseResponse(fallback.data);
+      if (parsed.isNotEmpty) return parsed;
     } on DioException catch (e, st) {
       if (kDebugMode) {
-        debugPrint('⚠️ FeeEcardoRateSource.fetchRates() failed: $e');
+        debugPrint('⚠️ FeeEcardoRateSource fallback /rates also failed: $e');
         debugPrint('📍 $st');
       }
-      return const {};
     } catch (e, st) {
       if (kDebugMode) {
-        debugPrint('⚠️ FeeEcardoRateSource unexpected error: $e');
+        debugPrint('⚠️ FeeEcardoRateSource fallback unexpected error: $e');
         debugPrint('📍 $st');
       }
-      return const {};
     }
+
+    return const {};
   }
 
   /// Parses the actual API envelope and returns a flat

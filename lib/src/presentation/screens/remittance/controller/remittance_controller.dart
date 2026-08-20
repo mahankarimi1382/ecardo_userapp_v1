@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -79,6 +81,11 @@ class RemittanceController extends GetxController {
 
   // Rate expiry countdown
   final RxInt rateExpiresInSeconds = 0.obs;
+
+  /// v1.0.21+21 — Cancelable periodic timer for rate expiry countdown.
+  /// Replaces the previous un-cancellable `Future.delayed` loop that leaked
+  /// when the controller was disposed mid-countdown.
+  Timer? _rateTimer;
 
   @override
   void onInit() {
@@ -182,22 +189,27 @@ class RemittanceController extends GetxController {
   void _startRateTimer(int seconds) {
     _stopRateTimer();
     rateExpiresInSeconds.value = seconds;
-    // Simple second-by-second countdown
-    Future<void> tick() async {
-      while (rateExpiresInSeconds.value > 0) {
-        await Future.delayed(const Duration(seconds: 1));
-        if (!isClosed) {
-          rateExpiresInSeconds.value--;
-        } else {
-          break;
-        }
+    if (seconds <= 0) return;
+    // v1.0.21+21: use Timer.periodic so we can cancel it explicitly in
+    // _stopRateTimer() / onClose(). The previous Future.delayed loop was
+    // un-cancellable and kept running after the controller was disposed,
+    // causing a memory leak and possible use-after-close state writes.
+    _rateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (isClosed) {
+        timer.cancel();
+        return;
       }
-    }
-    tick();
+      if (rateExpiresInSeconds.value > 0) {
+        rateExpiresInSeconds.value--;
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
   void _stopRateTimer() {
-    // The future loop auto-stops when value reaches 0 or controller is closed
+    _rateTimer?.cancel();
+    _rateTimer = null;
   }
 
   // ------------------------------ STEP 3: SUBMIT ------------------------------ //
@@ -308,11 +320,34 @@ class RemittanceController extends GetxController {
     }
 
     isUploadLoading.value = true;
-    final response = await _networkService.post(
+
+    // v1.0.21+21 — Backend expects multipart/form-data with one or more
+    // `files[]` MultipartFile entries (Laravel convention for array-of-files).
+    // The previous code sent a JSON array of file paths, which the backend
+    // silently rejected as "no files uploaded".
+    //
+    // `pendingAttachments` items look like: {'path': '/data/.../img.jpg', 'type': 'kyc'}
+    // We send each as its own multipart entry, plus a parallel `types[]`
+    // array so the backend knows which document category each file belongs to.
+    final formData = FormData();
+    final types = <String>[];
+    for (final attachment in pendingAttachments) {
+      final path = attachment['path'];
+      final type = attachment['type'] ?? 'document';
+      if (path == null || path.isEmpty) continue;
+      formData.files.add(
+        MapEntry(
+          'files[]',
+          await MultipartFile.fromFile(path),
+        ),
+      );
+      types.add(type);
+    }
+    formData.fields.add(MapEntry('types[]', types.join(',')));
+
+    final response = await _networkService.postMultipart(
       endpoint: ApiPath.remittanceUploadEndpoint(uuid: remittance.uuid),
-      data: {
-        'files': pendingAttachments.toList(),
-      },
+      data: formData,
     );
     isUploadLoading.value = false;
 

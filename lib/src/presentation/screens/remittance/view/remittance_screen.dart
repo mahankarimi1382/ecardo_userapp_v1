@@ -48,15 +48,22 @@ class RemittanceScreen extends StatelessWidget {
         ],
       ),
       body: Obx(() {
-        if (controller.isMethodsLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        // v1.0.21+21 — Loading state is moved INSIDE the Column so the
+        // AppBar stays visible + interactive while methods are loading.
+        // Previously the entire body (including the AppBar) was replaced
+        // by a CircularProgressIndicator, leaving the user with no way
+        // to press Back / History.
         return Column(children: [
           RemittanceStepper(currentStep: controller.currentStep.value),
-          Expanded(child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-            child: _buildStep(controller),
-          )),
+          Expanded(
+            child: controller.isMethodsLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16.w, vertical: 12.h),
+                    child: _buildStep(controller),
+                  ),
+          ),
           _buildBottomButton(controller, l),
         ]);
       }),
@@ -84,9 +91,15 @@ class RemittanceScreen extends StatelessWidget {
       switch (step) {
         case 0:
           text = l.remittanceGetQuote;
-          onPressed = loading ? null : () async {
-            if (await c.requestQuote()) c.nextStep();
-          };
+          // v1.0.21+21 — visually disable the button until a payout
+          // method is selected. The previous code let the user tap
+          // "Get Quote" even with no method picked, which then triggered
+          // a requestQuote() that always failed validation.
+          onPressed = (loading || c.selectedMethod.value == null)
+              ? null
+              : () async {
+                  if (await c.requestQuote()) c.nextStep();
+                };
           break;
         case 1:
           text = l.remittanceContinue;

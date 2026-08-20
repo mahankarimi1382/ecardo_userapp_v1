@@ -43,34 +43,51 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
           children: [
             Column(
               children: [
-                // Transparent AppBar shell for elevation control
-                const CommonDefaultAppBar(),
-                // Title row + history menu (only on step 0)
-                Obx(
-                  () => CommonAppBar(
-                    title: localizations.exchangeTitle,
-                    rightSideWidget:
-                        controller.currentStep.value == 0
-                            ? Padding(
-                                padding: const EdgeInsetsDirectional.only(
-                                  end: 8,
-                                ),
-                                child: IconButton(
-                                  visualDensity: VisualDensity.compact,
-                                  padding: EdgeInsets.zero,
-                                  onPressed: _showHistoryMenu,
-                                  icon: const Icon(Icons.more_vert),
-                                ),
-                              )
-                            : null,
+                // v1.0.21+21 — Add top padding equal to the status bar
+                // height so the AppBar row doesn't overlap with the
+                // status bar icons. SafeArea(top: false) above means
+                // the system status bar insets are NOT applied here,
+                // so we apply them manually via MediaQuery.paddingOf.
+                // Using EdgeInsetsDirectional only would be wrong here
+                // because the status bar is always on TOP regardless
+                // of LTR/RTL — so EdgeInsets.only(top:) is correct.
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.paddingOf(context).top,
                   ),
-                ),
-                const SizedBox(height: 8),
-                // Step indicator — always visible so the user sees
-                // progress even on Success.
-                Obx(
-                  () => ExchangeStepIndicator(
-                    currentStep: controller.currentStep.value,
+                  child: Column(
+                    children: [
+                      // Transparent AppBar shell for elevation control
+                      const CommonDefaultAppBar(),
+                      // Title row + history menu (only on step 0)
+                      Obx(
+                        () => CommonAppBar(
+                          title: localizations.exchangeTitle,
+                          rightSideWidget:
+                              controller.currentStep.value == 0
+                                  ? Padding(
+                                      padding: const EdgeInsetsDirectional.only(
+                                        end: 8,
+                                      ),
+                                      child: IconButton(
+                                        visualDensity: VisualDensity.compact,
+                                        padding: EdgeInsets.zero,
+                                        onPressed: _showHistoryMenu,
+                                        icon: const Icon(Icons.more_vert),
+                                      ),
+                                    )
+                                  : null,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // Step indicator — always visible so the user sees
+                      // progress even on Success.
+                      Obx(
+                        () => ExchangeStepIndicator(
+                          currentStep: controller.currentStep.value,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
