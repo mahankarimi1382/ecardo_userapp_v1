@@ -127,36 +127,61 @@ jobs:
           print(f"v1 (JAR) signature files: {len(v1_files)}")
           for f in v1_files: print(f"  - {f}")
 
-          # 2. v2/v3 check
+          # 2. v2/v3 check via APK Signing Block
+          # Block layout before Central Directory:
+          #   [leading 8-byte size] [pairs...] [trailing 8-byte size] [16-byte magic]
+          # The trailing size field is at cd_offset-24 .. cd_offset-16.
+          # Pairs END at cd_offset - 24 (i.e. before the trailing size field).
+          # Pairs START at cd_offset - block_size (block_size is the value read
+          # from the trailing size field — it includes pairs + trailing size + magic).
           sig = b"\x50\x4b\x05\x06"
           eocd_pos = data.rfind(sig, max(0, len(data)-65535-22))
           if eocd_pos < 0:
               print("❌ EOCD not found"); sys.exit(1)
           cd_offset = struct.unpack("<I", data[eocd_pos+16:eocd_pos+20])[0]
+          print(f"Central directory offset: {cd_offset:,}")
           v2_found = False
-          if cd_offset >= 24:
+          v3_found = False
+          if cd_offset >= 32:
               magic = data[cd_offset-16:cd_offset]
+              print(f"APK Signing Block magic: {magic!r}")
               if magic == MAGIC:
                   block_size = struct.unpack("<Q", data[cd_offset-24:cd_offset-16])[0]
-                  pos = cd_offset - block_size - 8
-                  while pos < cd_offset - 24:
+                  print(f"Signing block size: {block_size:,} bytes")
+                  # CORRECTED: pairs start at cd_offset - block_size (NOT -8 too early)
+                  pos = cd_offset - block_size
+                  pair_count = 0
+                  while pos < cd_offset - 24 and pair_count < 50:
                       pair_len = struct.unpack("<Q", data[pos:pos+8])[0]
                       pair_id = struct.unpack("<I", data[pos+8:pos+12])[0]
-                      name = {V2_ID:"v2", V3_ID:"v3", V31_ID:"v3.1"}.get(pair_id, f"0x{pair_id:08x}")
-                      if pair_id in (V2_ID, V3_ID, V31_ID):
-                          v2_found = True
-                          print(f"✅ APK Signature Scheme {name} found (size={pair_len:,})")
+                      name = {V2_ID:"v2 (Android 7+)",
+                              V3_ID:"v3 (Android 9+)",
+                              V31_ID:"v3.1 (Android 11+)"}.get(pair_id, f"0x{pair_id:08x}")
+                      print(f"  Pair #{pair_count}: id=0x{pair_id:08X} ({name}), size={pair_len:,}")
+                      if pair_id == V2_ID: v2_found = True
+                      if pair_id == V3_ID: v3_found = True
+                      if pair_id == V31_ID: v3_found = True
                       pos += 8 + pair_len
+                      pair_count += 1
+              else:
+                  print("⚠️  No APK Signing Block (magic mismatch)")
+          else:
+              print("⚠️  Central directory too close to start — no signing block possible")
 
-          if not v1_files and not v2_found:
-              print("")
+          print()
+          print("=" * 60)
+          if v1_files or v2_found or v3_found:
+              print("✅ APK IS SIGNED — installable on Android.")
+              schemes = []
+              if v1_files: schemes.append("v1 (JAR)")
+              if v2_found: schemes.append("v2 (Android 7+)")
+              if v3_found: schemes.append("v3 (Android 9+)")
+              print(f"   Signing schemes found: {', '.join(schemes)}")
+          else:
               print("🔴 FATAL: APK IS COMPLETELY UNSIGNED!")
               print("   Android will refuse to install with: 'There was a problem while parsing the package'")
               print("   Aborting release publish.")
               sys.exit(2)
-
-          print("")
-          print("✅ APK is signed and installable.")
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
