@@ -11,7 +11,7 @@ plugins {
 // ============================================================================
 // Release signing config
 // ----------------------------------------------------------------------------
-// v1.0.15+15 — CRITICAL FIX for "There was a problem while parsing the package"
+// v1.0.16+16 — CRITICAL FIX for "There was a problem while parsing the package"
 //
 // Root cause: when GitHub Secrets (SIGNING_KEYSTORE_BASE64 etc.) were not set,
 // the previous code fell back to `signingConfigs.getByName("debug")`. With
@@ -128,7 +128,7 @@ android {
 // build is reproducible across CI runners. The keystore file is git-ignored
 // (see .gitignore) — it's a build-time artifact, not a source asset.
 // ---------------------------------------------------------------------------
-tasks.register("ensureDebugKeystore") {
+val ensureDebugKeystore = tasks.register("ensureDebugKeystore") {
     val keystoreFile = rootProject.file("debug.keystore")
     outputs.file(keystoreFile)
     doLast {
@@ -155,9 +155,21 @@ tasks.register("ensureDebugKeystore") {
     }
 }
 
-// Hook the keystore-generation task to run before any release build.
-tasks.matching { it.name.startsWith("assemble") && it.name.endsWith("Release") }
-    .configureEach { dependsOn("ensureDebugKeystore") }
+// Hook the keystore-generation task to run before every signing-related task
+// that reads from `debug.keystore`. AGP's task validation is strict: any task
+// that consumes the output of another task MUST declare an explicit
+// dependency, otherwise the build is rejected with "uses this output without
+// declaring an explicit or implicit dependency". The tasks that read the
+// signing config keystore are:
+//   - validateSigning<ConfigName>   (validates the keystore)
+//   - packageRelease                 (packs the APK + signs it)
+//   - assembleRelease                (umbrella task)
+tasks.matching {
+    it.name == "validateSigningRelease" ||
+    it.name == "validateSigningDebugFallback" ||
+    it.name == "packageRelease" ||
+    it.name == "assembleRelease"
+}.configureEach { dependsOn(ensureDebugKeystore) }
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
