@@ -116,7 +116,14 @@ android {
     // -----------------------------------------------------------------------
     signingConfigs {
         create("release") {
-            keystoreProperties["storeFile"]?.let { file(it) }?.let { storeFile = it }
+            // IMPORTANT: resolve the keystore path relative to the rootProject
+            // (android/) directory, NOT the :app module directory (android/app/).
+            // The CI workflow writes the keystore to android/ecardo-release.keystore,
+            // and key.properties contains `storeFile=ecardo-release.keystore` (a
+            // relative path). Using `file(it)` would resolve that to
+            // android/app/ecardo-release.keystore — wrong. Using `rootProject.file(it)`
+            // resolves it correctly to android/ecardo-release.keystore.
+            keystoreProperties["storeFile"]?.let { rootProject.file(it) }?.let { storeFile = it }
             storePassword = keystoreProperties["storePassword"] as String?
             keyAlias = keystoreProperties["keyAlias"] as String?
             keyPassword = keystoreProperties["keyPassword"] as String?
