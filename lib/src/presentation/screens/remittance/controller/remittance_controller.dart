@@ -344,41 +344,22 @@ class RemittanceController extends GetxController {
     );
 
     isSubmitLoading.value = true;
-    // v1.0.23+23 (SB-1) — Backend RemittanceController@store expects a FLAT
-    // payload (quote fields + sender fields + receiver fields all at the
-    // top level). The previous code wrapped them in nested objects
-    // ('quote': {...}, 'sender_info': {...}, 'receiver_info': {...}) which
-    // caused the backend to fail validation with `quote.rate_locked_at
-    // required` because it couldn't see the inner fields.
-    //
-    // We now merge all three maps into a single flat map. The backend's
-    // validation rules map directly to the field names (send_amount,
-    // send_currency_id, method_id, exchange_rate, receive_amount,
-    // system_fee, total_payable, rate_locked_at, rate_expires_at,
-    // sender_name, sender_country, sender_phone, sender_id_number,
-    // sender_type, receiver_name, receiver_country, receiver_phone,
-    // bank_name, account_number, iban, alipay_account, wechat_account).
-    final senderJson = sender.toJson();
-    final receiverJson = receiver.toJson();
-    // Backend uses snake_case `sender_*` / `receiver_*` prefixes —
-    // transform {name, country, phone, id_number, type} →
-    // {sender_name, sender_country, sender_phone, sender_id_number, sender_type}.
-    // Same for receiver.
-    final flatSender = <String, dynamic>{};
-    senderJson.forEach((key, value) {
-      flatSender['sender_$key'] = value;
-    });
-    final flatReceiver = <String, dynamic>{};
-    receiverJson.forEach((key, value) {
-      flatReceiver['receiver_$key'] = value;
-    });
-
+    // v1.0.24+24 (remittance fix) — Backend RemittanceController@store (storeFromQuote)
+    // expects a NESTED payload: { quote: {...}, sender_info: {...}, receiver_info: {...} }.
+    // The previous flat merge caused 422 "sender_info is required". We now send nested
+    // objects exactly as the backend validates:
+    //   quote.{send_amount, send_currency_id, receive_currency_id, method_id,
+    //         exchange_rate, receive_amount, system_fee, total_payable,
+    //         rate_locked_at, rate_expires_at}
+    //   sender_info.{name, country, phone, id_number, type}
+    //   receiver_info.{name, country, phone, bank_name?, account_number?, iban?,
+    //         alipay_account?, wechat_account?}
     final response = await _networkService.post(
       endpoint: ApiPath.remittanceStoreEndpoint,
       data: <String, dynamic>{
-        ...quote.toJson(),
-        ...flatSender,
-        ...flatReceiver,
+        'quote': quote.toJson(),
+        'sender_info': sender.toJson(),
+        'receiver_info': receiver.toJson(),
       },
     );
     isSubmitLoading.value = false;
