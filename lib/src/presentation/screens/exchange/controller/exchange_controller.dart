@@ -185,6 +185,11 @@ class ExchangeController extends GetxController {
       fetchCurrencies(),
       fetchUser(),
     ]);
+    // v1.0.23+23 (E-1) — Load exchange config up-front so the Amount step
+    // can show real fee + total values. Previously this was deferred to
+    // `nextStepWithValidation()` (entering Review), leaving the Amount
+    // step with charge=0 and total=0 until the user pressed Continue.
+    await fetchExchangeConfig();
     // Load recent pairs in parallel — non-blocking on the critical path.
     unawaited(_loadRecentPairs());
     isLoading.value = false;
@@ -331,6 +336,10 @@ class ExchangeController extends GetxController {
         );
         await getExchangeRateConverter();
         _calculateCharge();
+        // v1.0.23+23 (E-1) — After config loads, recompute the Amount
+        // step's charge/total preview so it reflects the real fee rules
+        // immediately (not just when the user types a new amount).
+        _recalculateChargeForAmountStep();
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchExchangeConfig() error: $e');
@@ -664,7 +673,53 @@ class ExchangeController extends GetxController {
     _amountDebounce?.cancel();
     _amountDebounce = Timer(const Duration(milliseconds: 300), () {
       _scheduleLivePreview();
+      // v1.0.23+23 (E-1) — Recompute charge + total on every amount change
+      // so the Amount step's `_FeeAndLimitsSummary` shows real values
+      // instead of zeros. Previously `_calculateCharge()` was only called
+      // from `fetchExchangeConfig()` which runs when entering Review —
+      // leaving the Amount step with charge=0 and total=0 until the user
+      // navigated forward.
+      _recalculateChargeForAmountStep();
     });
+  }
+
+  /// v1.0.23+23 (E-1) — Lightweight charge recompute for the Amount step.
+  ///
+  /// Unlike [_calculateCharge] (which is called from [fetchExchangeConfig]
+  /// and may call the converter endpoint for fixed-charge currency
+  /// conversion), this method only handles the **percentage** charge path
+  /// locally — that covers the common case without an extra network call
+  /// on every keystroke.
+  ///
+  /// For the **fixed** charge path, we keep the last computed
+  /// [charge] value (already converted to the from-currency) and just
+  /// update [totalAmount] = amount + charge. The exact fixed-charge
+  /// conversion is re-fetched when the user enters Review (existing
+  /// behavior) — that's acceptable because the Amount step's fee summary
+  /// is a live preview, not a final value.
+  void _recalculateChargeForAmountStep() {
+    final amount = double.tryParse(amountController.text) ?? 0.0;
+    final settings = exchangeConfigModel.value.data?.settings;
+    if (settings == null) {
+      // Config not loaded yet — can't compute. Leave zeros.
+      charge.value = 0.0;
+      totalAmount.value = amount;
+      return;
+    }
+
+    final userChargeStr = settings.charge ?? '0';
+    final userChargeType = settings.chargeType ?? 'fixed';
+
+    if (userChargeType == 'percentage') {
+      final percent = double.tryParse(userChargeStr) ?? 0.0;
+      charge.value = amount * percent / 100;
+      totalAmount.value = amount + charge.value;
+    } else {
+      // Fixed charge: keep the last `charge` value (which was converted
+      // to the from-currency by [getChargeConverter] when config was
+      // loaded) and just update the total.
+      totalAmount.value = amount + charge.value;
+    }
   }
 
   void _scheduleLivePreview() {
@@ -696,6 +751,21 @@ class ExchangeController extends GetxController {
   Future<void> exchangeWallet() async {
     isExchangeWalletLoading.value = true;
 
+    // v1.0.23+23 (E-3) — Send rate + total + charge to the backend so the
+    // server can validate the rate the user saw at confirm time and reject
+    // the request if the rate has drifted past the server's tolerance.
+    // Previously the request body only contained amount + from_wallet +
+    // to_wallet, so the backend had to re-fetch the rate and compute the
+    // charge itself — opening a window for rate manipulation between the
+    // user pressing Confirm and the server processing the request.
+    //
+    // We use `_lockedReviewRate` (the rate snapshot captured when the user
+    // entered the Review step) instead of `currentRate` (which may have
+    // drifted since then). If `_lockedReviewRate` is null (e.g. the user
+    // somehow bypassed the Review step), we fall back to `currentRate` —
+    // better to send something than nothing.
+    final rateToSend = _lockedReviewRate ?? currentRate.value;
+
     final Map<String, dynamic> requestBody = {
       'amount': amountController.text.trim(),
       'from_wallet': fromWallet.value!.id == 0
@@ -704,6 +774,16 @@ class ExchangeController extends GetxController {
       'to_wallet': toWallet.value!.id == 0
           ? "default"
           : toWallet.value!.id.toString(),
+      // E-3 — additional context for server-side rate validation.
+      'rate': rateToSend.toStringAsFixed(8),
+      'total_amount': totalAmount.value.toStringAsFixed(8),
+      'charge': charge.value.toStringAsFixed(8),
+      'exchange_amount': exchangeAmount.value.toStringAsFixed(8),
+      'exchange_review_rate': exchangeReviewRate.value.toStringAsFixed(8),
+      // ISO timestamp of when the user entered the Review step — the
+      // backend can compare this to its own rate-locked-at window.
+      if (_reviewEnteredAt != null)
+        'rate_locked_at': _reviewEnteredAt!.toUtc().toIso8601String(),
     };
 
     try {

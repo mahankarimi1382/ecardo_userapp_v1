@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 // v1.0.21+21 — `get` re-exports FormData and MultipartFile from its own
 // http subsystem, which clashes with dio's classes of the same name.
 // Hide them so we can use dio's versions (which is what NetworkService.postMultipart
@@ -12,6 +15,7 @@ import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
 
 /// Controller for the Remittance (international money transfer) module.
 ///
@@ -44,6 +48,15 @@ class RemittanceController extends GetxController {
   final Rxn<Remittance> createdRemittance = Rxn<Remittance>();
   final RxList<Remittance> history = <Remittance>[].obs;
   final Rxn<Remittance> selectedRemittance = Rxn<Remittance>();
+
+  // v1.0.23+23 (R-1) — Send-currency list. Previously the controller had a
+  // `selectedSendCurrencyId` field but no list to populate it from, and no
+  // UI to pick one — so it stayed 0 forever and `requestQuote()` always
+  // failed validation. We now load currencies via `/get-currencies` (the
+  // same global endpoint used by the Wallets module) and surface a picker
+  // in `RemittanceMethodSection`.
+  final RxList<CurrenciesData> sendCurrencies = <CurrenciesData>[].obs;
+  final RxBool isCurrenciesLoading = false.obs;
 
   // Form state — Step 1: Method & Amount
   final Rxn<RemittanceMethod> selectedMethod = Rxn<RemittanceMethod>();
@@ -97,6 +110,9 @@ class RemittanceController extends GetxController {
       isAmountFocused.value = amountFocusNode.hasFocus;
     });
     fetchMethods();
+    // v1.0.23+23 (R-1) — load send-currency list in parallel so the
+    // picker is populated by the time the user finishes choosing a method.
+    fetchSendCurrencies();
     super.onInit();
   }
 
@@ -144,6 +160,57 @@ class RemittanceController extends GetxController {
     if (method.receiveCurrencyId != null) {
       // Set receiver country based on method's country_code
       selectedReceiverCountry.value = method.countryCode ?? '';
+    }
+  }
+
+  // v1.0.23+23 (R-1) — Send-currency picker support.
+  /// Loads the list of currencies the user can send from. Uses the global
+  /// `/get-currencies` endpoint (same one used by the Wallets module) so
+  /// we don't need a remittance-specific endpoint.
+  ///
+  /// The picker defaults to the first fiat currency (type='fiat') in the
+  /// list if the user hasn't picked one yet — this unblocks the quote
+  /// request flow without forcing the user to interact with the picker
+  /// when there's only one sensible option.
+  Future<void> fetchSendCurrencies() async {
+    isCurrenciesLoading.value = true;
+    try {
+      final response = await _networkService.globalGet(
+        endpoint: ApiPath.currenciesEndpoint,
+      );
+      if (response.status == Status.completed) {
+        final model = CurrenciesModel.fromJson(response.data!);
+        // Only fiat currencies make sense as the SEND side of a remittance
+        // (crypto remittance is handled by a different module). Filtering
+        // here prevents the user from picking BTC/ETH as the send currency
+        // and having the backend reject the quote.
+        final fiat = (model.data ?? [])
+            .where((c) =>
+                (c.type ?? '').toLowerCase() == 'fiat' &&
+                (c.status ?? '').toLowerCase() != 'false' &&
+                c.id != null)
+            .toList();
+        sendCurrencies.assignAll(fiat);
+
+        // Auto-select first currency if none selected yet — unblocks the
+        // quote request flow when there's only one fiat currency.
+        if (selectedSendCurrencyId.value == 0 && sendCurrencies.isNotEmpty) {
+          selectedSendCurrencyId.value = sendCurrencies.first.id!;
+        }
+      }
+    } catch (e) {
+      // Non-fatal — the picker just stays empty and the user sees a
+      // clear "no currencies available" message in the UI.
+      debugPrint('⚠️ fetchSendCurrencies() failed: $e');
+    } finally {
+      isCurrenciesLoading.value = false;
+    }
+  }
+
+  /// Called when the user picks a currency from the dropdown.
+  void selectSendCurrency(CurrenciesData currency) {
+    if (currency.id != null) {
+      selectedSendCurrencyId.value = currency.id!;
     }
   }
 
@@ -277,12 +344,41 @@ class RemittanceController extends GetxController {
     );
 
     isSubmitLoading.value = true;
+    // v1.0.23+23 (SB-1) — Backend RemittanceController@store expects a FLAT
+    // payload (quote fields + sender fields + receiver fields all at the
+    // top level). The previous code wrapped them in nested objects
+    // ('quote': {...}, 'sender_info': {...}, 'receiver_info': {...}) which
+    // caused the backend to fail validation with `quote.rate_locked_at
+    // required` because it couldn't see the inner fields.
+    //
+    // We now merge all three maps into a single flat map. The backend's
+    // validation rules map directly to the field names (send_amount,
+    // send_currency_id, method_id, exchange_rate, receive_amount,
+    // system_fee, total_payable, rate_locked_at, rate_expires_at,
+    // sender_name, sender_country, sender_phone, sender_id_number,
+    // sender_type, receiver_name, receiver_country, receiver_phone,
+    // bank_name, account_number, iban, alipay_account, wechat_account).
+    final senderJson = sender.toJson();
+    final receiverJson = receiver.toJson();
+    // Backend uses snake_case `sender_*` / `receiver_*` prefixes —
+    // transform {name, country, phone, id_number, type} →
+    // {sender_name, sender_country, sender_phone, sender_id_number, sender_type}.
+    // Same for receiver.
+    final flatSender = <String, dynamic>{};
+    senderJson.forEach((key, value) {
+      flatSender['sender_$key'] = value;
+    });
+    final flatReceiver = <String, dynamic>{};
+    receiverJson.forEach((key, value) {
+      flatReceiver['receiver_$key'] = value;
+    });
+
     final response = await _networkService.post(
       endpoint: ApiPath.remittanceStoreEndpoint,
-      data: {
-        'quote': quote.toJson(),
-        'sender_info': sender.toJson(),
-        'receiver_info': receiver.toJson(),
+      data: <String, dynamic>{
+        ...quote.toJson(),
+        ...flatSender,
+        ...flatReceiver,
       },
     );
     isSubmitLoading.value = false;
@@ -301,6 +397,95 @@ class RemittanceController extends GetxController {
 
   // ------------------------------ STEP 4: UPLOAD DOCUMENTS ------------------------------ //
 
+  /// v1.0.23+23 (R-2 + NEW-1) — Picks a real file from the device and
+  /// stores its absolute path. Replaces the previous `addAttachment`
+  /// which took a fake hardcoded path like
+  /// `'uploads/remittance/doc_<timestamp>.jpg'` — that path never
+  /// existed on disk, so `MultipartFile.fromFile(path)` would throw
+  /// a `FileSystemException` at upload time.
+  ///
+  /// Two pickers are offered:
+  ///   - Image picker (camera / gallery) — preferred for KYC photos
+  ///     and receipts, since the file is guaranteed to be a JPEG/PNG
+  ///     and to exist at the returned path.
+  ///   - File picker (any document type) — used when the user selects
+  ///     "Choose File" instead of "Take Photo" / "Choose from Gallery".
+  ///
+  /// Returns true if a file was picked and added to [pendingAttachments].
+  Future<bool> pickAttachmentFile({
+    required String type,
+    required ImageSource imageSource,
+  }) async {
+    try {
+      String? path;
+      // Image picker covers camera + gallery and is the most reliable
+      // across Android versions (no SAF / content-uri complications).
+      final picker = ImagePicker();
+      final xFile = await picker.pickImage(source: imageSource, imageQuality: 85);
+      path = xFile?.path;
+
+      if (path == null || path.isEmpty) {
+        // User cancelled — silent, no toast.
+        return false;
+      }
+
+      // Guard: verify the file actually exists on disk before adding it.
+      // This prevents a downstream FileSystemException in
+      // `MultipartFile.fromFile(path)` inside `uploadDocuments()`.
+      final file = File(path);
+      if (!await file.exists()) {
+        ToastHelper().showErrorToast(
+          _l?.remittanceErrFileNotFound ?? 'Selected file does not exist',
+        );
+        return false;
+      }
+
+      pendingAttachments.add({'path': path, 'type': type});
+      return true;
+    } catch (e) {
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrPickFile ?? 'Could not pick file: $e',
+      );
+      return false;
+    }
+  }
+
+  /// v1.0.23+23 (R-2) — Picks any document file (PDF, JPEG, PNG, etc.)
+  /// via the system file picker. Used when the user selects "Choose File"
+  /// instead of camera/gallery.
+  Future<bool> pickAttachmentAnyFile({required String type}) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+        allowMultiple: false,
+      );
+      final path = result?.files.single.path;
+      if (path == null || path.isEmpty) {
+        return false; // user cancelled
+      }
+
+      final file = File(path);
+      if (!await file.exists()) {
+        ToastHelper().showErrorToast(
+          _l?.remittanceErrFileNotFound ?? 'Selected file does not exist',
+        );
+        return false;
+      }
+
+      pendingAttachments.add({'path': path, 'type': type});
+      return true;
+    } catch (e) {
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrPickFile ?? 'Could not pick file: $e',
+      );
+      return false;
+    }
+  }
+
+  /// Legacy entry kept for backward-compat with any callers that already
+  /// have a real file path (e.g. tests). UI should prefer
+  /// [pickAttachmentFile] / [pickAttachmentAnyFile].
   void addAttachment(String path, String type) {
     pendingAttachments.add({'path': path, 'type': type});
   }
@@ -330,15 +515,34 @@ class RemittanceController extends GetxController {
     // The previous code sent a JSON array of file paths, which the backend
     // silently rejected as "no files uploaded".
     //
+    // v1.0.23+23 (NEW-1) — Add a per-file existence check BEFORE calling
+    // MultipartFile.fromFile(path). The previous version would throw a
+    // FileSystemException mid-loop, leaving a half-built FormData and no
+    // user-facing error message. Now we filter out missing files, warn
+    // the user, and only attempt to upload files that actually exist on
+    // disk. If ALL files are missing (regression scenario), abort cleanly.
+    //
     // `pendingAttachments` items look like: {'path': '/data/.../img.jpg', 'type': 'kyc'}
     // We send each as its own multipart entry, plus a parallel `types[]`
     // array so the backend knows which document category each file belongs to.
     final formData = FormData();
     final types = <String>[];
+    int skipped = 0;
     for (final attachment in pendingAttachments) {
       final path = attachment['path'];
       final type = attachment['type'] ?? 'document';
-      if (path == null || path.isEmpty) continue;
+      if (path == null || path.isEmpty) {
+        skipped++;
+        continue;
+      }
+      // Guard: verify file exists before passing to MultipartFile.fromFile,
+      // which would otherwise throw FileSystemException and abort the loop.
+      final file = File(path);
+      if (!await file.exists()) {
+        debugPrint('⚠️ Skipping attachment "$path" — file does not exist');
+        skipped++;
+        continue;
+      }
       formData.files.add(
         MapEntry(
           'files[]',
@@ -347,6 +551,27 @@ class RemittanceController extends GetxController {
       );
       types.add(type);
     }
+
+    // If every attachment was skipped (regression scenario), abort cleanly
+    // rather than sending an empty FormData that the backend would reject
+    // with a cryptic "files[] is required" error.
+    if (formData.files.isEmpty) {
+      isUploadLoading.value = false;
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrNoValidFiles ??
+            'No valid files to upload. Please re-select your documents.',
+      );
+      return false;
+    }
+
+    if (skipped > 0) {
+      // Non-fatal warning — some files were skipped but we still have
+      // at least one to upload.
+      ToastHelper().showErrorToast(
+        '$skipped file(s) skipped (missing on disk). Uploading the rest.',
+      );
+    }
+
     formData.fields.add(MapEntry('types[]', types.join(',')));
 
     final response = await _networkService.postMultipart(

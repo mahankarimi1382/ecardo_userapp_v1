@@ -6589,6 +6589,14 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get remittanceSendAmount => 'مبلغ ارسالی';
   @override
+  String get remittanceSendCurrency => 'ارز ارسالی';
+  @override
+  String get remittanceSelectSendCurrency => 'انتخاب ارز ارسالی';
+  @override
+  String get remittanceLoadingCurrencies => 'در حال بارگذاری ارزها…';
+  @override
+  String get remittanceNoCurrencies => 'هیچ ارزی در دسترس نیست';
+  @override
   String get remittanceEnterAmount => 'مبلغ را وارد کنید';
   @override
   String get remittanceUnknownMethod => 'نامشخص';
@@ -6684,6 +6692,18 @@ class AppLocalizationsFa extends AppLocalizations {
   String get remittanceCancel => 'انصراف';
   @override
   String get remittanceAdd => 'افزودن';
+  @override
+  String get remittanceTakePhoto => 'گرفتن عکس';
+  @override
+  String get remittanceChooseFromGallery => 'انتخاب از گالری';
+  @override
+  String get remittanceChooseFile => 'انتخاب فایل';
+  @override
+  String get remittanceErrFileNotFound => 'فایل انتخاب‌شده وجود ندارد';
+  @override
+  String get remittanceErrPickFile => 'انتخاب فایل ممکن نشد';
+  @override
+  String get remittanceErrNoValidFiles => 'هیچ فایل معتبری برای آپلود وجود ندارد. لطفاً مدارک را دوباره انتخاب کنید.';
   @override
   String get remittanceContinue => 'ادامه';
   @override

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -137,14 +138,55 @@ class _ExchangeSuccessStepSectionState
   Widget _buildSummaryCard(AppLocalizations loc) {
     final tx = controller.successExchangeData.value!;
     final bool isCrypto = tx["transaction"]["is_crypto"] == true;
-    final decimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: tx["transaction"]["receive_currency"]?.toString() ?? "",
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      )!,
+
+    // v1.0.23+23 (E-6) — Compute decimals SEPARATELY for each currency
+    // involved in the row, instead of using a single `decimals` value
+    // derived from `receive_currency` for all rows. The previous code
+    // applied the receive-currency's decimal count to pay-currency rows
+    // (Amount, Pay Amount, Charge, Final Amount) — which is wrong when
+    // the two currencies have different decimal conventions (e.g. USD
+    // with 2 decimals vs. BTC with 8 decimals).
+    final payCurrencyCode = tx["transaction"]["pay_currency"]?.toString() ?? '';
+    final receiveCurrencyCode =
+        tx["transaction"]["receive_currency"]?.toString() ?? '';
+    final siteCurrency = settingsService.getSetting("site_currency") ?? "";
+    final siteCurrencyDecimals =
+        settingsService.getSetting("site_currency_decimals") ?? "2";
+
+    final payDecimals = DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: payCurrencyCode,
+      siteCurrencyCode: siteCurrency,
+      siteCurrencyDecimals: siteCurrencyDecimals,
+      isCrypto: isCrypto, // pay side's crypto-ness (rare; usually fiat)
+    );
+    final receiveDecimals = DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: receiveCurrencyCode,
+      siteCurrencyCode: siteCurrency,
+      siteCurrencyDecimals: siteCurrencyDecimals,
       isCrypto: isCrypto,
     );
+
+    // v1.0.23+23 (E-6) — Format `created_at` as a human-readable date
+    // instead of showing the raw ISO 8601 string. We use a locale-aware
+    // DateFormat so the format matches the user's language.
+    //
+    // The backend typically returns ISO 8601 like "2026-08-20T14:32:11Z"
+    // or "2026-08-20 14:32:11". DateTime.tryParse handles both forms.
+    final createdStr = tx["transaction"]["created_at"]?.toString() ?? '';
+    final dt = DateTime.tryParse(createdStr);
+    String formattedDate;
+    if (dt != null) {
+      try {
+        // Use a short, locale-aware pattern: yyyy-MM-dd HH:mm
+        formattedDate = DateFormat('yyyy-MM-dd HH:mm').format(dt);
+      } catch (_) {
+        // Fall back to the raw string if DateFormat throws (shouldn't,
+        // but be defensive — never show a blank date on a success screen).
+        formattedDate = createdStr;
+      }
+    } else {
+      formattedDate = createdStr;
+    }
 
     return Container(
       width: double.infinity,
@@ -158,12 +200,14 @@ class _ExchangeSuccessStepSectionState
       ),
       child: Column(
         children: [
+          // v1.0.23+23 (E-6) — Each row now uses the decimal count that
+          // matches ITS currency, not the receive currency's count.
           _SuccessRow(
             title: loc.exchangeSuccessAmount,
             amount:
                 double.tryParse(controller.amountController.text) ?? 0.0,
-            decimals: decimals,
-            currencyCode: tx["transaction"]["pay_currency"]?.toString(),
+            decimals: payDecimals,
+            currencyCode: payCurrencyCode,
           ),
           _divider(),
           _SuccessRow(
@@ -177,8 +221,8 @@ class _ExchangeSuccessStepSectionState
             amount: double.tryParse(
               tx["transaction"]["pay_amount"].toString(),
             ) ?? 0.0,
-            decimals: decimals,
-            currencyCode: tx["transaction"]["pay_currency"]?.toString(),
+            decimals: payDecimals,
+            currencyCode: payCurrencyCode,
           ),
           _divider(),
           _SuccessRow(
@@ -186,8 +230,8 @@ class _ExchangeSuccessStepSectionState
             amount: double.tryParse(
               tx["transaction"]["amount"].toString(),
             ) ?? 0.0,
-            decimals: decimals,
-            currencyCode: tx["transaction"]["receive_currency"]?.toString(),
+            decimals: receiveDecimals,
+            currencyCode: receiveCurrencyCode,
           ),
           _divider(),
           _SuccessRow(
@@ -195,14 +239,15 @@ class _ExchangeSuccessStepSectionState
             amount: double.tryParse(
               tx["transaction"]["charge"].toString(),
             ) ?? 0.0,
-            decimals: decimals,
-            currencyCode: tx["transaction"]["pay_currency"]?.toString(),
+            decimals: payDecimals,
+            currencyCode: payCurrencyCode,
             amountColor: AppColors.warning,
           ),
           _divider(),
+          // v1.0.23+23 (E-6) — Formatted date instead of raw ISO.
           _SuccessRow(
             title: loc.exchangeSuccessDate,
-            text: tx["transaction"]["created_at"]?.toString() ?? '',
+            text: formattedDate,
           ),
           _divider(),
           _SuccessRow(
@@ -210,8 +255,8 @@ class _ExchangeSuccessStepSectionState
             amount: double.tryParse(
               tx["transaction"]["final_amount"].toString(),
             ) ?? 0.0,
-            decimals: decimals,
-            currencyCode: tx["transaction"]["pay_currency"]?.toString(),
+            decimals: payDecimals,
+            currencyCode: payCurrencyCode,
             emphasize: true,
           ),
         ],
@@ -231,11 +276,18 @@ class _ExchangeSuccessStepSectionState
     HapticFeedback.selectionClick();
     final tx = controller.successExchangeData.value!;
     final t = tx["transaction"];
+    // v1.0.23+23 (E-6) — Format the date in the shared receipt too, so
+    // the recipient sees a readable date instead of an ISO string.
+    final createdStr = t["created_at"]?.toString() ?? '';
+    final dt = DateTime.tryParse(createdStr);
+    final formattedDate = dt != null
+        ? DateFormat('yyyy-MM-dd HH:mm').format(dt)
+        : createdStr;
     final text = StringBuffer()
       ..writeln('eCardo — Exchange Receipt')
       ..writeln('========================')
       ..writeln('Tx ID:        ${t["tnx"]}')
-      ..writeln('Date:         ${t["created_at"]}')
+      ..writeln('Date:         $formattedDate')
       ..writeln(
           'Amount:       ${t["pay_amount"]} ${t["pay_currency"]}')
       ..writeln(

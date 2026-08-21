@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
@@ -137,10 +138,37 @@ class _AddDocumentButton extends StatelessWidget {
       ]),
       actions: [
         TextButton(onPressed: () => Get.back(), child: Text(l.remittanceCancel)),
-        ElevatedButton(onPressed: () {
-          controller.addAttachment('uploads/remittance/doc_${DateTime.now().millisecondsSinceEpoch}.jpg', selectedType);
-          Get.back();
-        }, child: Text(l.remittanceAdd)),
+        // v1.0.23+23 (R-2) — Three real pickers instead of the previous
+        // single fake "Add" button that just inserted a hardcoded path.
+        // Each picker calls the controller with the chosen `selectedType`
+        // so the type is preserved across all three pickers.
+        TextButton(
+          onPressed: () async {
+            Get.back();
+            await controller.pickAttachmentFile(
+              type: selectedType,
+              imageSource: ImageSource.camera,
+            );
+          },
+          child: Text(l.remittanceTakePhoto),
+        ),
+        TextButton(
+          onPressed: () async {
+            Get.back();
+            await controller.pickAttachmentFile(
+              type: selectedType,
+              imageSource: ImageSource.gallery,
+            );
+          },
+          child: Text(l.remittanceChooseFromGallery),
+        ),
+        TextButton(
+          onPressed: () async {
+            Get.back();
+            await controller.pickAttachmentAnyFile(type: selectedType);
+          },
+          child: Text(l.remittanceChooseFile),
+        ),
       ],
     )));
   }

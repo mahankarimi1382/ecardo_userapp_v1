@@ -6336,6 +6336,14 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get remittanceSendAmount => 'Send Amount';
   @override
+  String get remittanceSendCurrency => '发送货币';
+  @override
+  String get remittanceSelectSendCurrency => '选择发送货币';
+  @override
+  String get remittanceLoadingCurrencies => '正在加载货币…';
+  @override
+  String get remittanceNoCurrencies => '没有可用货币';
+  @override
   String get remittanceEnterAmount => 'Enter amount';
   @override
   String get remittanceUnknownMethod => 'Unknown';
@@ -6431,6 +6439,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get remittanceCancel => 'Cancel';
   @override
   String get remittanceAdd => 'Add';
+  @override
+  String get remittanceTakePhoto => '拍照';
+  @override
+  String get remittanceChooseFromGallery => '从相册选择';
+  @override
+  String get remittanceChooseFile => '选择文件';
+  @override
+  String get remittanceErrFileNotFound => '所选文件不存在';
+  @override
+  String get remittanceErrPickFile => '无法选取文件';
+  @override
+  String get remittanceErrNoValidFiles => '没有可上传的有效文件。请重新选择您的文档。';
   @override
   String get remittanceContinue => 'Continue';
   @override

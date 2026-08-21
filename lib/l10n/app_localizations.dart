@@ -12533,6 +12533,10 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   String get remittanceSelectPayoutMethod;
   String get remittanceNoMethods;
   String get remittanceSendAmount;
+  String get remittanceSendCurrency;
+  String get remittanceSelectSendCurrency;
+  String get remittanceLoadingCurrencies;
+  String get remittanceNoCurrencies;
   String get remittanceEnterAmount;
   String get remittanceUnknownMethod;
   String remittanceRateLocked(int seconds);
@@ -12581,6 +12585,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   String get remittanceDocTypeOther;
   String get remittanceCancel;
   String get remittanceAdd;
+  String get remittanceTakePhoto;
+  String get remittanceChooseFromGallery;
+  String get remittanceChooseFile;
+  String get remittanceErrFileNotFound;
+  String get remittanceErrPickFile;
+  String get remittanceErrNoValidFiles;
   String get remittanceContinue;
   String get remittanceSubmitRequest;
   String get remittanceUploading;

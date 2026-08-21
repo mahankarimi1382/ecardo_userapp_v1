@@ -6618,6 +6618,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get remittanceSendAmount => 'Send Amount';
   @override
+  String get remittanceSendCurrency => 'Send Currency';
+  @override
+  String get remittanceSelectSendCurrency => 'Select send currency';
+  @override
+  String get remittanceLoadingCurrencies => 'Loading currencies…';
+  @override
+  String get remittanceNoCurrencies => 'No currencies available';
+  @override
   String get remittanceEnterAmount => 'Enter amount';
   @override
   String get remittanceUnknownMethod => 'Unknown';
@@ -6713,6 +6721,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remittanceCancel => 'Cancel';
   @override
   String get remittanceAdd => 'Add';
+  @override
+  String get remittanceTakePhoto => 'Take Photo';
+  @override
+  String get remittanceChooseFromGallery => 'Choose from Gallery';
+  @override
+  String get remittanceChooseFile => 'Choose File';
+  @override
+  String get remittanceErrFileNotFound => 'Selected file does not exist';
+  @override
+  String get remittanceErrPickFile => 'Could not pick file';
+  @override
+  String get remittanceErrNoValidFiles => 'No valid files to upload. Please re-select your documents.';
   @override
   String get remittanceContinue => 'Continue';
   @override

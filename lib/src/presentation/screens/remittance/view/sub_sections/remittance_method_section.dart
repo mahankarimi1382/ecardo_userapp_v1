@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
 
 /// Step 1: Select payout method + enter amount + see quote.
 class RemittanceMethodSection extends StatelessWidget {
@@ -51,6 +52,26 @@ class RemittanceMethodSection extends StatelessWidget {
                 isSelected: controller.selectedMethod.value?.id == m.id,
                 onTap: () => controller.selectMethod(m),
                 unknownLabel: l.remittanceUnknownMethod,
+              )),
+          SizedBox(height: 24.h),
+          // v1.0.23+23 (R-1) — Send currency picker.
+          // Previously this section was completely missing — the controller
+          // had a `selectedSendCurrencyId` field that was never set, so
+          // `requestQuote()` always failed its `== 0` check.
+          Text(
+            l.remittanceSendCurrency,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.lightTextPrimary,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Obx(() => _SendCurrencyPicker(
+                controller: controller,
+                label: l.remittanceSelectSendCurrency,
+                loadingLabel: l.remittanceLoadingCurrencies,
+                emptyLabel: l.remittanceNoCurrencies,
               )),
           SizedBox(height: 24.h),
           Text(
@@ -135,6 +156,95 @@ class _MethodCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// v1.0.23+23 (R-1) — Dropdown picker for the SEND currency.
+///
+/// Renders one of three states based on the controller's Rx state:
+///   - Loading: a disabled DropdownButton with a "Loading…" hint.
+///   - Empty:    a disabled DropdownButton with an "No currencies" hint.
+///   - Ready:    a DropdownButton bound to `selectedSendCurrencyId`.
+///
+/// Uses a Container wrapper to match the visual style of the amount
+/// input field below it.
+class _SendCurrencyPicker extends StatelessWidget {
+  const _SendCurrencyPicker({
+    required this.controller,
+    required this.label,
+    required this.loadingLabel,
+    required this.emptyLabel,
+  });
+
+  final RemittanceController controller;
+  final String label;
+  final String loadingLabel;
+  final String emptyLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    if (controller.isCurrenciesLoading.value) {
+      return _pickerContainer(
+        child: Row(children: [
+          SizedBox(width: 16.w, height: 16.w, child: const CircularProgressIndicator(strokeWidth: 2)),
+          SizedBox(width: 10.w),
+          Text(loadingLabel, style: TextStyle(fontSize: 13.sp, color: AppColors.lightTextSecondary)),
+        ]),
+      );
+    }
+
+    if (controller.sendCurrencies.isEmpty) {
+      return _pickerContainer(
+        child: Text(emptyLabel, style: TextStyle(fontSize: 13.sp, color: AppColors.lightTextSecondary)),
+      );
+    }
+
+    // Find the currently selected currency object (or null if none).
+    final selectedId = controller.selectedSendCurrencyId.value;
+    CurrenciesData? selected;
+    if (selectedId != 0) {
+      try {
+        selected = controller.sendCurrencies.firstWhere((c) => c.id == selectedId);
+      } catch (_) {
+        selected = null;
+      }
+    }
+
+    return _pickerContainer(
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<CurrenciesData>(
+          value: selected,
+          isExpanded: true,
+          hint: Text(label, style: TextStyle(fontSize: 13.sp, color: AppColors.lightTextSecondary)),
+          items: controller.sendCurrencies.map((c) {
+            final code = (c.code ?? '').toUpperCase();
+            final name = c.name ?? '';
+            final display = name.isEmpty ? code : '$code — $name';
+            return DropdownMenuItem<CurrenciesData>(
+              value: c,
+              child: Text(display,
+                  style: TextStyle(fontSize: 13.sp, color: AppColors.lightTextPrimary),
+                  overflow: TextOverflow.ellipsis),
+            );
+          }).toList(),
+          onChanged: (value) {
+            if (value != null) controller.selectSendCurrency(value);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _pickerContainer({required Widget child}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.lightBorder, width: 1),
+      ),
+      child: child,
     );
   }
 }

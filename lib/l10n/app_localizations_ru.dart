@@ -6649,6 +6649,14 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get remittanceSendAmount => 'Send Amount';
   @override
+  String get remittanceSendCurrency => 'Валюта отправки';
+  @override
+  String get remittanceSelectSendCurrency => 'Выберите валюту отправки';
+  @override
+  String get remittanceLoadingCurrencies => 'Загрузка валют…';
+  @override
+  String get remittanceNoCurrencies => 'Нет доступных валют';
+  @override
   String get remittanceEnterAmount => 'Enter amount';
   @override
   String get remittanceUnknownMethod => 'Unknown';
@@ -6744,6 +6752,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get remittanceCancel => 'Cancel';
   @override
   String get remittanceAdd => 'Add';
+  @override
+  String get remittanceTakePhoto => 'Сделать фото';
+  @override
+  String get remittanceChooseFromGallery => 'Выбрать из галереи';
+  @override
+  String get remittanceChooseFile => 'Выбрать файл';
+  @override
+  String get remittanceErrFileNotFound => 'Выбранный файл не существует';
+  @override
+  String get remittanceErrPickFile => 'Не удалось выбрать файл';
+  @override
+  String get remittanceErrNoValidFiles => 'Нет подходящих файлов для загрузки. Пожалуйста, выберите документы заново.';
   @override
   String get remittanceContinue => 'Continue';
   @override

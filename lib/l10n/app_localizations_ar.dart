@@ -6581,6 +6581,14 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get remittanceSendAmount => 'Send Amount';
   @override
+  String get remittanceSendCurrency => 'عملة الإرسال';
+  @override
+  String get remittanceSelectSendCurrency => 'اختر عملة الإرسال';
+  @override
+  String get remittanceLoadingCurrencies => 'جارٍ تحميل العملات…';
+  @override
+  String get remittanceNoCurrencies => 'لا توجد عملات متاحة';
+  @override
   String get remittanceEnterAmount => 'Enter amount';
   @override
   String get remittanceUnknownMethod => 'Unknown';
@@ -6676,6 +6684,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get remittanceCancel => 'Cancel';
   @override
   String get remittanceAdd => 'Add';
+  @override
+  String get remittanceTakePhoto => 'التقاط صورة';
+  @override
+  String get remittanceChooseFromGallery => 'اختيار من المعرض';
+  @override
+  String get remittanceChooseFile => 'اختيار ملف';
+  @override
+  String get remittanceErrFileNotFound => 'الملف المحدد غير موجود';
+  @override
+  String get remittanceErrPickFile => 'تعذّر اختيار الملف';
+  @override
+  String get remittanceErrNoValidFiles => 'لا توجد ملفات صالحة للرفع. يرجى إعادة تحديد المستندات.';
   @override
   String get remittanceContinue => 'Continue';
   @override
