@@ -349,6 +349,10 @@ class RemittanceReceiverInfo {
   final String? bankName;
   final String? accountNumber;
   final String? iban;
+  // Dynamic method fields (remittance_methods.fields)
+  final String? swift;
+  final String? shabaNumber;
+  final String? usdtAddress;
   // Optional fields for Chinese payout methods
   final String? alipayAccount;
   final String? wechatAccount;
@@ -360,6 +364,9 @@ class RemittanceReceiverInfo {
     this.bankName,
     this.accountNumber,
     this.iban,
+    this.swift,
+    this.shabaNumber,
+    this.usdtAddress,
     this.alipayAccount,
     this.wechatAccount,
   });
@@ -371,6 +378,9 @@ class RemittanceReceiverInfo {
         if (bankName != null) 'bank_name': bankName,
         if (accountNumber != null) 'account_number': accountNumber,
         if (iban != null) 'iban': iban,
+        if (swift != null) 'swift': swift,
+        if (shabaNumber != null) 'shaba_number': shabaNumber,
+        if (usdtAddress != null) 'usdt_address': usdtAddress,
         if (alipayAccount != null) 'alipay_account': alipayAccount,
         if (wechatAccount != null) 'wechat_account': wechatAccount,
       };

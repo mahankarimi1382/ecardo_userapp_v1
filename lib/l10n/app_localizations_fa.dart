@@ -6653,6 +6653,12 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get remittanceIban => 'شبا';
   @override
+  String get remittanceSwift => 'کد سوئیفت';
+  @override
+  String get remittanceShabaNumber => 'شماره شبا';
+  @override
+  String get remittanceUsdtAddress => 'آدرس USDT';
+  @override
   String get remittanceAlipayAccount => 'حساب الی‌پی';
   @override
   String get remittanceWechatAccount => 'حساب وچت';

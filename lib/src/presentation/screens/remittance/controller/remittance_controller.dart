@@ -78,6 +78,9 @@ class RemittanceController extends GetxController {
   final receiverBankNameController = TextEditingController();
   final receiverAccountNumberController = TextEditingController();
   final receiverIbanController = TextEditingController();
+  final receiverSwiftController = TextEditingController();
+  final receiverShabaNumberController = TextEditingController();
+  final receiverUsdtAddressController = TextEditingController();
   final receiverAlipayController = TextEditingController();
   final receiverWechatController = TextEditingController();
   final RxString selectedReceiverCountry = ''.obs;
@@ -128,6 +131,9 @@ class RemittanceController extends GetxController {
     receiverBankNameController.dispose();
     receiverAccountNumberController.dispose();
     receiverIbanController.dispose();
+    receiverSwiftController.dispose();
+    receiverShabaNumberController.dispose();
+    receiverUsdtAddressController.dispose();
     receiverAlipayController.dispose();
     receiverWechatController.dispose();
     _stopRateTimer();
@@ -161,6 +167,35 @@ class RemittanceController extends GetxController {
       // Set receiver country based on method's country_code
       selectedReceiverCountry.value = method.countryCode ?? '';
     }
+  }
+
+  /// Returns the list of dynamic receiver field names required by the
+  /// selected method (from `remittance_methods.fields`), e.g.
+  /// ['bank_name','account_number','swift'] for CN-BANK.
+  /// If the method defines no fields, returns null so the UI can fall back
+  /// to showing all fields (legacy behaviour).
+  List<String>? get requiredReceiverFields {
+    final m = selectedMethod.value;
+    if (m == null) return null;
+    final list = m.fieldsAsList;
+    if (list == null || list.isEmpty) return null;
+    final names = <String>[];
+    for (final f in list) {
+      if (f is Map) {
+        final n = f['name'];
+        if (n is String && n.isNotEmpty) names.add(n);
+      }
+    }
+    return names.isEmpty ? null : names;
+  }
+
+  /// Returns true if the given receiver field should be shown for the
+  /// currently selected method. Falls back to true (show all) when the
+  /// method has no declared fields.
+  bool shouldShowReceiverField(String fieldName) {
+    final required = requiredReceiverFields;
+    if (required == null) return true; // no declared fields -> show all
+    return required.contains(fieldName);
   }
 
   // v1.0.23+23 (R-1) — Send-currency picker support.
@@ -335,6 +370,15 @@ class RemittanceController extends GetxController {
       iban: receiverIbanController.text.trim().isEmpty
           ? null
           : receiverIbanController.text.trim(),
+      swift: receiverSwiftController.text.trim().isEmpty
+          ? null
+          : receiverSwiftController.text.trim(),
+      shabaNumber: receiverShabaNumberController.text.trim().isEmpty
+          ? null
+          : receiverShabaNumberController.text.trim(),
+      usdtAddress: receiverUsdtAddressController.text.trim().isEmpty
+          ? null
+          : receiverUsdtAddressController.text.trim(),
       alipayAccount: receiverAlipayController.text.trim().isEmpty
           ? null
           : receiverAlipayController.text.trim(),

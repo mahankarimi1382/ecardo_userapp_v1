@@ -6400,6 +6400,12 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get remittanceIban => 'IBAN';
   @override
+  String get remittanceSwift => 'SWIFT Code';
+  @override
+  String get remittanceShabaNumber => 'SHABA Number';
+  @override
+  String get remittanceUsdtAddress => 'USDT Address';
+  @override
   String get remittanceAlipayAccount => 'Alipay Account';
   @override
   String get remittanceWechatAccount => 'WeChat Account';

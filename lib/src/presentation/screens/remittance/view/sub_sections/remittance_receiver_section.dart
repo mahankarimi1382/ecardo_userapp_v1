@@ -33,20 +33,47 @@ class RemittanceReceiverSection extends StatelessWidget {
         SizedBox(height: 4.h),
         Text(l.remittancePayoutDetailsHint, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
         SizedBox(height: 16.h),
-        _Label(l.remittanceBankName),
-        _Field(c.receiverBankNameController, 'Bank of China'),
-        SizedBox(height: 16.h),
-        _Label(l.remittanceAccountNumber),
-        _Field(c.receiverAccountNumberController, '6225 0000 0000 0000', keyboardType: TextInputType.number),
-        SizedBox(height: 16.h),
-        _Label(l.remittanceIban),
-        _Field(c.receiverIbanController, 'GB29 NWBK 6016 1331 9268 19'),
-        SizedBox(height: 16.h),
-        _Label(l.remittanceAlipayAccount),
-        _Field(c.receiverAlipayController, 'alipay@example.com or phone'),
-        SizedBox(height: 16.h),
-        _Label(l.remittanceWechatAccount),
-        _Field(c.receiverWechatController, 'WeChat ID'),
+        // Dynamic fields based on the selected method's `fields`.
+        if (c.shouldShowReceiverField('bank_name')) ...[
+          _Label(l.remittanceBankName),
+          _Field(c.receiverBankNameController, 'Bank of China'),
+          SizedBox(height: 16.h),
+        ],
+        if (c.shouldShowReceiverField('account_number')) ...[
+          _Label(l.remittanceAccountNumber),
+          _Field(c.receiverAccountNumberController, '6225 0000 0000 0000', keyboardType: TextInputType.number),
+          SizedBox(height: 16.h),
+        ],
+        if (c.shouldShowReceiverField('iban')) ...[
+          _Label(l.remittanceIban),
+          _Field(c.receiverIbanController, 'GB29 NWBK 6016 1331 9268 19'),
+          SizedBox(height: 16.h),
+        ],
+        if (c.shouldShowReceiverField('swift')) ...[
+          _Label(l.remittanceSwift),
+          _Field(c.receiverSwiftController, 'SWIFT Code'),
+          SizedBox(height: 16.h),
+        ],
+        if (c.shouldShowReceiverField('shaba_number')) ...[
+          _Label(l.remittanceShabaNumber),
+          _Field(c.receiverShabaNumberController, 'IR 12 3456 7890 ...'),
+          SizedBox(height: 16.h),
+        ],
+        if (c.shouldShowReceiverField('usdt_address')) ...[
+          _Label(l.remittanceUsdtAddress),
+          _Field(c.receiverUsdtAddressController, '0x... or Tron address'),
+          SizedBox(height: 16.h),
+        ],
+        if (c.shouldShowReceiverField('alipay_account')) ...[
+          _Label(l.remittanceAlipayAccount),
+          _Field(c.receiverAlipayController, 'alipay@example.com or phone'),
+          SizedBox(height: 16.h),
+        ],
+        if (c.shouldShowReceiverField('wechat_account')) ...[
+          _Label(l.remittanceWechatAccount),
+          _Field(c.receiverWechatController, 'WeChat ID'),
+          SizedBox(height: 16.h),
+        ],
       ],
     );
   }

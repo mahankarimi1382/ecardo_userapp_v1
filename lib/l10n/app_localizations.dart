@@ -12565,6 +12565,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   String get remittanceBankName;
   String get remittanceAccountNumber;
   String get remittanceIban;
+  String get remittanceSwift;
+  String get remittanceShabaNumber;
+  String get remittanceUsdtAddress;
   String get remittanceAlipayAccount;
   String get remittanceWechatAccount;
   String get remittanceReviewConfirm;
