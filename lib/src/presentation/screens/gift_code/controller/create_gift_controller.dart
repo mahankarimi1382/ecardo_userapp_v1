@@ -103,7 +103,11 @@ class CreateGiftController extends GetxController {
       debugPrint('❌ fetchGiftConfig() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
-    } finally {}
+    } finally {
+      // v1.0.24: was `finally {}` — the config spinner never cleared when
+      // the request failed (stuck loading screen).
+      isGiftConfigLoading.value = false;
+    }
   }
 
   // Charge Calculation
@@ -144,7 +148,7 @@ class CreateGiftController extends GetxController {
             ) ??
             0.0;
         totalAmount.value =
-            (double.tryParse(amountController.text)! + charge.value);
+            ((double.tryParse(amountController.text) ?? 0.0) + charge.value);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getChargeConverter() error: $e');
@@ -173,10 +177,12 @@ class CreateGiftController extends GetxController {
       currencyCode: wallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
         "site_currency",
-      )!,
+      ) ??
+      'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
         "site_currency_decimals",
-      )!,
+      ) ??
+      '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -200,6 +206,21 @@ class CreateGiftController extends GetxController {
       ToastHelper().showErrorToast(
         localization.createGiftValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
+          wallet.value!.code!,
+        ),
+      );
+      return false;
+    }
+
+    // v1.0.24: balance guard — the flow used to submit gifts larger than
+    // the wallet balance and only failed after the server rejected them
+    // (mirrors exchange_controller).
+    final double availableBalance =
+        double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
+    if (enteredAmount > availableBalance) {
+      ToastHelper().showErrorToast(
+        localization.exchangeValidationInsufficientBalance(
+          availableBalance.toStringAsFixed(calculateDecimals),
           wallet.value!.code!,
         ),
       );
@@ -238,6 +259,8 @@ class CreateGiftController extends GetxController {
 
   // Create Gift
   Future<void> createGift() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isCreateGiftLoading.isTrue) return;
     isCreateGiftLoading.value = true;
 
     final Map<String, dynamic> requestBody = {

@@ -17,6 +17,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -134,10 +135,15 @@ class AppUpdateHelper {
       context: context,
       barrierDismissible: !forceUpdate,
       builder: (ctx) {
+        // v1.0.24: localized title/buttons (were hardcoded English).
+        final localization = AppLocalizations.of(ctx);
         return PopScope(
           canPop: !forceUpdate,
           child: AlertDialog(
-            title: Text('New Update Available ($version)'),
+            title: Text(
+              localization?.updateAvailableTitle(version) ??
+                  'New Update Available ($version)',
+            ),
             content: const Text(
               'A new version of the application is available. '
               'Please update to continue.',
@@ -146,7 +152,7 @@ class AppUpdateHelper {
               if (!forceUpdate)
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Later'),
+                  child: Text(localization?.updateLater ?? 'Later'),
                 ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -177,10 +183,15 @@ class AppUpdateHelper {
       context: context,
       barrierDismissible: !forceUpdate,
       builder: (ctx) {
+        // v1.0.24: localized title/buttons (were hardcoded English).
+        final localization = AppLocalizations.of(ctx);
         return PopScope(
           canPop: !forceUpdate,
           child: AlertDialog(
-            title: Text('New Update Available ($version)'),
+            title: Text(
+              localization?.updateAvailableTitle(version) ??
+                  'New Update Available ($version)',
+            ),
             content: const Text(
               'A new version is available. Please refresh the page to get '
               'the latest version.',
@@ -189,7 +200,7 @@ class AppUpdateHelper {
               if (!forceUpdate)
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Later'),
+                  child: Text(localization?.updateLater ?? 'Later'),
                 ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(

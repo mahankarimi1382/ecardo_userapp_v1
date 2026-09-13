@@ -21,12 +21,22 @@ class StripeCardTopUpBottomSheet extends StatelessWidget {
     final VirtualCardDetailsController controller = Get.find();
     final SettingsService settingsService = Get.find();
     final localization = AppLocalizations.of(context);
-    final String decimals = settingsService.getSetting(
-      "site_currency_decimals",
-    )!;
-    final String currency = settingsService.getSetting("site_currency")!;
-    final String minimumTopup = settingsService.getSetting("min_card_topup")!;
-    final String maximumTopup = settingsService.getSetting("max_card_topup")!;
+    // v1.0.24: safe-parse with sane defaults — missing/unparseable settings
+    // used to crash the sheet on `double.tryParse(...)!` / `int.parse(...)`.
+    final int decimals = int.tryParse(
+          settingsService.getSetting("site_currency_decimals") ?? '',
+        ) ??
+        2;
+    final String currency =
+        settingsService.getSetting("site_currency") ?? 'USD';
+    final double minimumTopup = double.tryParse(
+          settingsService.getSetting("min_card_topup") ?? '',
+        ) ??
+        1.0;
+    final double maximumTopup = double.tryParse(
+          settingsService.getSetting("max_card_topup") ?? '',
+        ) ??
+        0.0;
 
     return AnimatedContainer(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -142,12 +152,8 @@ class StripeCardTopUpBottomSheet extends StatelessWidget {
                     child: Text(
                       localization.cardTopUpAmountLimits(
                         currency,
-                        double.tryParse(
-                          maximumTopup,
-                        )!.toStringAsFixed(int.parse(decimals)),
-                        double.tryParse(
-                          minimumTopup,
-                        )!.toStringAsFixed(int.parse(decimals)),
+                        maximumTopup.toStringAsFixed(decimals),
+                        minimumTopup.toStringAsFixed(decimals),
                       ),
                       style: const TextStyle(
                         letterSpacing: 0,

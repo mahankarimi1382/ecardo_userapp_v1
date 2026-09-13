@@ -366,7 +366,10 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
     final safeValue = value.trim();
     if (safeValue.isEmpty || safeValue == '--') return;
     await Clipboard.setData(ClipboardData(text: safeValue));
-    ToastHelper().showSuccessToast('Copied');
+    // v1.0.24: localized (was hardcoded 'Copied').
+    ToastHelper().showSuccessToast(
+      AppLocalizations.of(Get.context!)?.p2pCopied ?? 'Copied',
+    );
   }
 
   Widget _imageFieldRow(String title, String imageUrl) {
@@ -504,7 +507,10 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
         currentlySelectedValue: selected,
         textController: textController,
         bottomSheetHeight: 420.h,
-        notFoundText: 'No payment method found',
+        // v1.0.24: localized (was hardcoded English).
+        notFoundText:
+            AppLocalizations.of(Get.context!)?.p2pNoPaymentMethodFound ??
+                'No payment method found',
         onValueSelected: (value) async {
           final selectedValue = value.toString();
           AdPaymentOption? selectedOption;

@@ -10,7 +10,6 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/model/gateway_methods_model.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 import 'package:ecardo_user/src/presentation/widgets/web_view_screen.dart';
@@ -21,7 +20,6 @@ class AddMoneyController extends GetxController {
   final RxBool isPaymentLoading = false.obs;
   final RxBool isGatewayMethodsLoading = false.obs;
   final ImagePicker _picker = ImagePicker();
-  final TokenService tokenService = Get.find<TokenService>();
   final Rxn<Map<String, dynamic>> successPaymentData =
       Rxn<Map<String, dynamic>>();
   final Rxn<Map<String, dynamic>> pendingPaymentData =
@@ -208,6 +206,8 @@ class AddMoneyController extends GetxController {
 
   // Submit Add Money Auto Function
   Future<void> submitAddMoneyAuto() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isPaymentLoading.isTrue) return;
     isPaymentLoading.value = true;
 
     try {
@@ -245,6 +245,8 @@ class AddMoneyController extends GetxController {
 
   // Submit Add Money Manual Function
   Future<void> submitAddMoneyManual() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isPaymentLoading.isTrue) return;
     isPaymentLoading.value = true;
 
     try {
@@ -286,25 +288,18 @@ class AddMoneyController extends GetxController {
         }
       }
 
-      final response = await dio.Dio().post(
-        "${ApiPath.baseUrl}${ApiPath.postAddMoneyEndpoint}",
+      // v1.0.24: was a raw `dio.Dio()` call without timeout/401-refresh —
+      // a dead connection kept the spinner on forever. Route through
+      // NetworkService.postMultipart (timeouts + interceptors + error toasts).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: ApiPath.postAddMoneyEndpoint,
         data: formData,
-        options: dio.Options(
-          headers: {
-            "Accept": "application/json",
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200) {
-        pendingPaymentData.value = response.data['data'];
+      if (response.status == Status.completed) {
+        pendingPaymentData.value = response.data?['data'];
         currentStep.value = 2;
         ToastHelper().showSuccessToast(localization!.addMoneySuccess);
-      }
-    } on dio.DioException catch (e) {
-      if (e.response!.statusCode == 422) {
-        ToastHelper().showErrorToast(e.response!.data["message"]);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitAddMoneyManual() error: $e');

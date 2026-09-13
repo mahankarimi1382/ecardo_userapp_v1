@@ -211,42 +211,47 @@ class ExchangeReviewStepSection extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: CommonIconButton(
-                      onPressed: isStale
-                          ? null
-                          : () async {
-                              HapticFeedback.mediumImpact();
-                              if (controller.userModel.value.data?.passcode ==
-                                  "0") {
-                                controller.exchangeWallet();
-                                return;
-                              }
+                    child: Obx(
+                      () => CommonIconButton(
+                        // v1.0.24: bind to the submit state — a second tap
+                        // while the request is in flight must not fire.
+                        isLoading: controller.isExchangeWalletLoading.value,
+                        onPressed: isStale
+                            ? null
+                            : () async {
+                                HapticFeedback.mediumImpact();
+                                if (controller.userModel.value.data?.passcode ==
+                                    "0") {
+                                  controller.exchangeWallet();
+                                  return;
+                                }
 
-                              final bool isPasscodeEnabled =
-                                  settings.getSetting(
-                                        "exchange_passcode_status",
-                                      ) ==
-                                      "1";
+                                final bool isPasscodeEnabled =
+                                    settings.getSetting(
+                                          "exchange_passcode_status",
+                                        ) ==
+                                        "1";
 
-                              if (isPasscodeEnabled) {
-                                final bool? isVerified =
-                                    await Get.bottomSheet<bool>(
-                                  const VerifyPasscodeBottomSheet(),
-                                );
-                                if (isVerified != true) return;
-                                controller.exchangeWallet();
-                              } else {
-                                controller.exchangeWallet();
-                              }
-                            },
-                      width: double.infinity,
-                      height: 52,
-                      text: loc.exchangeReviewConfirm,
-                      icon: PngAssets.reviewArrowRightCommonIcon,
-                      iconWidth: 18,
-                      iconHeight: 18,
-                      iconAndTextSpace: 8,
-                      isIconRight: true,
+                                if (isPasscodeEnabled) {
+                                  final bool? isVerified =
+                                      await Get.bottomSheet<bool>(
+                                    const VerifyPasscodeBottomSheet(),
+                                  );
+                                  if (isVerified != true) return;
+                                  controller.exchangeWallet();
+                                } else {
+                                  controller.exchangeWallet();
+                                }
+                              },
+                        width: double.infinity,
+                        height: 52,
+                        text: loc.exchangeReviewConfirm,
+                        icon: PngAssets.reviewArrowRightCommonIcon,
+                        iconWidth: 18,
+                        iconHeight: 18,
+                        iconAndTextSpace: 8,
+                        isIconRight: true,
+                      ),
                     ),
                   ),
                 ],

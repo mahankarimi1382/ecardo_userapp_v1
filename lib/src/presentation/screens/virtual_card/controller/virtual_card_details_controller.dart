@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_card_details_bsi_card_provider_model.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart';
@@ -365,11 +366,21 @@ class VirtualCardDetailsController extends GetxController {
   // Validate Amount Step
   bool validateAmountStep() {
     final SettingsService settingsService = Get.find();
-    final String decimals = settingsService.getSetting(
-      "site_currency_decimals",
-    )!;
-    final String minimumTopup = settingsService.getSetting("min_card_topup")!;
-    final String maximumTopup = settingsService.getSetting("max_card_topup")!;
+    // v1.0.24: settings can be missing or unparseable (unloaded splash / bad
+    // server value) — safe-parse with sane defaults instead of crashing on
+    // `double.tryParse(...)!` / `int.parse(...)`.
+    final int decimals = int.tryParse(
+          settingsService.getSetting("site_currency_decimals") ?? '',
+        ) ??
+        2;
+    final double minimumTopup = double.tryParse(
+          settingsService.getSetting("min_card_topup") ?? '',
+        ) ??
+        1.0;
+    final double maximumTopup = double.tryParse(
+          settingsService.getSetting("max_card_topup") ?? '',
+        ) ??
+        0.0;
 
     // Validate Amount
     if (amountController.text.isEmpty) {
@@ -385,21 +396,35 @@ class VirtualCardDetailsController extends GetxController {
       return false;
     }
 
-    if (double.tryParse(minimumTopup)! > 0 &&
-        amount < double.tryParse(minimumTopup)!) {
+    if (minimumTopup > 0 && amount < minimumTopup) {
       ToastHelper().showErrorToast(
         localization!.cardDetailsAmountMinimumLimit(
-          double.tryParse(minimumTopup)!.toStringAsFixed(int.parse(decimals)),
+          minimumTopup.toStringAsFixed(decimals),
         ),
       );
       return false;
     }
 
-    if (double.tryParse(maximumTopup)! > 0 &&
-        amount > double.tryParse(maximumTopup)!) {
+    if (maximumTopup > 0 && amount > maximumTopup) {
       ToastHelper().showErrorToast(
         localization!.cardDetailsAmountMaximumLimit(
-          double.tryParse(maximumTopup)!.toStringAsFixed(int.parse(decimals)),
+          maximumTopup.toStringAsFixed(decimals),
+        ),
+      );
+      return false;
+    }
+
+    // v1.0.24: client-side balance guard — the main wallet must cover the
+    // top-up amount before we hit the API (mirrors exchange_controller).
+    final double walletBalance = double.tryParse(
+          Get.find<HomeController>().userModel.value.data?.balance ?? '',
+        ) ??
+        0.0;
+    if (amount > walletBalance) {
+      ToastHelper().showErrorToast(
+        localization!.exchangeValidationInsufficientBalance(
+          walletBalance.toStringAsFixed(decimals),
+          settingsService.getSetting("site_currency") ?? 'USD',
         ),
       );
       return false;

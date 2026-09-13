@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
@@ -214,7 +215,11 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     } catch (e) {
       // اگر image_picker در دسترس نبود، از file_picker استفاده کنیم
       debugPrint('image_picker error: $e');
-      ToastHelper().showErrorToast('Failed to pick document. Please try again.');
+      // v1.0.24: localized failure toast.
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.pickDocumentFailed ??
+            'Failed to pick document. Please try again.',
+      );
     }
   }
 

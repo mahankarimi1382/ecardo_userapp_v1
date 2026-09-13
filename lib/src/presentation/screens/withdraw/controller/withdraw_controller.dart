@@ -113,7 +113,8 @@ class WithdrawController extends GetxController {
             ) ??
             0.0;
         totalAmount.value =
-            (double.tryParse(amountController.text)! + calculatedCharge.value);
+            ((double.tryParse(amountController.text) ?? 0.0) +
+                calculatedCharge.value);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getChargeConverter() error: $e');
@@ -223,6 +224,8 @@ class WithdrawController extends GetxController {
 
   // Withdraw Function
   Future<void> submitWithdraw() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isWithdrawLoading.isTrue) return;
     isWithdrawLoading.value = true;
 
     try {

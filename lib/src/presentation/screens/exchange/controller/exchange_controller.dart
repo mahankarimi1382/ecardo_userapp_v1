@@ -445,10 +445,11 @@ class ExchangeController extends GetxController {
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: fromWallet.value!.code!,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting("site_currency")!,
-      siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-        "site_currency_decimals",
-      )!,
+      siteCurrencyCode: Get.find<SettingsService>().getSetting("site_currency") ??
+          'USD',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
+          '2',
       isCrypto: fromWallet.value!.isCrypto!,
     );
 
@@ -763,6 +764,8 @@ class ExchangeController extends GetxController {
   // ------------------ exchange wallet submission ------------------
 
   Future<void> exchangeWallet() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isExchangeWalletLoading.isTrue) return;
     isExchangeWalletLoading.value = true;
 
     // v1.0.23+23 (E-3) — Send rate + total + charge to the backend so the

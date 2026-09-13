@@ -11,7 +11,6 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/model/order_message_response_model.dart'
     as chat_model;
 
@@ -43,9 +42,6 @@ class OrderChatController extends GetxController {
 
   /// انتخاب‌گر تصویر
   final ImagePicker _imagePicker = ImagePicker();
-
-  /// سرویس توکن برای احراز هویت
-  final TokenService tokenService = Get.find<TokenService>();
 
   @override
   void onInit() {
@@ -141,29 +137,19 @@ class OrderChatController extends GetxController {
         );
       }
 
-      final response = await dio.Dio().post(
-        '${ApiPath.baseUrl}${ApiPath.orderMessageEndpoint(orderId: orderId)}',
+      // v1.0.24: was a raw `dio.Dio()` call without timeout/401-refresh —
+      // a dead connection kept the spinner on forever. Route through
+      // NetworkService.postMultipart (timeouts + interceptors + error toasts).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: ApiPath.orderMessageEndpoint(orderId: orderId),
         data: formData,
-        options: dio.Options(
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.status == Status.completed) {
         messageController.clear();
         selectedAttachment.value = null;
         await fetchMessages();
       }
-    } on dio.DioException catch (e) {
-      final message = e.response?.data?['message'];
-      ToastHelper().showErrorToast(
-        (message is String && message.isNotEmpty)
-            ? message
-            : AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
     } catch (e, stackTrace) {
       debugPrint('sendMessage() error: $e');
       debugPrint('StackTrace: $stackTrace');

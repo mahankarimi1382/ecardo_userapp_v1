@@ -281,11 +281,13 @@ class ProfileSettingsController extends GetxController {
         genderCode = 'other';
       } else {
         final l = genderLabel.toLowerCase();
+        // v1.0.24: unknown labels fall back to 'other' — the old fallback
+        // silently rewrote unknown values to 'female'.
         genderCode = l == 'male' || l == 'm'
             ? 'male'
-            : l == 'other'
-                ? 'other'
-                : 'female';
+            : l == 'female' || l == 'f'
+                ? 'female'
+                : 'other';
       }
       final formData = dio.FormData.fromMap({
         'first_name': firstNameController.text,

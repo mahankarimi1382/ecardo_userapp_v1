@@ -189,7 +189,8 @@ class P2pController extends GetxController {
 
   Future<void> fetchPaymentMethodsByFiat() async {
     if (selectedFiatId.value == null) {
-      ToastHelper().showErrorToast('Please select fiat first');
+      // v1.0.24: localized toasts (were hardcoded English).
+      ToastHelper().showErrorToast(localization.p2pSelectFiatFirst);
       return;
     }
 
@@ -217,7 +218,7 @@ class P2pController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('fetchPaymentMethodsByFiat() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to load payment methods');
+      ToastHelper().showErrorToast(localization.p2pLoadPaymentMethodsFailed);
     } finally {
       isPaymentMethodsLoading.value = false;
     }
@@ -434,7 +435,7 @@ class P2pController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('fetchMarketplaceAds() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to load marketplace ads');
+      ToastHelper().showErrorToast(localization.p2pLoadAdsFailed);
     } finally {
       isMarketplaceLoading.value = false;
       isMarketplacePaginationLoading.value = false;

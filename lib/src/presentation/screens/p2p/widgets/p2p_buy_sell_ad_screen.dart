@@ -536,7 +536,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
         currentlySelectedValue: selected,
         textController: textController,
         bottomSheetHeight: 420.h,
-        notFoundText: 'No payment method found',
+        // v1.0.24: localized (was hardcoded English).
+        notFoundText:
+            localization.p2pNoPaymentMethodFound,
         onValueSelected: (value) {
           final selectedValue = value.toString();
           AdPaymentOption? selectedOption;

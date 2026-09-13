@@ -664,7 +664,8 @@ class P2pViewScreen extends GetView<P2pController> {
                   if (controller.availablePaymentAccounts.isEmpty) {
                     return Center(
                       child: Text(
-                        'No payment method found',
+                        // v1.0.24: localized (was hardcoded English).
+                        localization.p2pNoPaymentMethodFound,
                         style: TextStyle(
                           letterSpacing: 0,
                           fontWeight: FontWeight.w600,

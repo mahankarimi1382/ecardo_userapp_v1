@@ -126,6 +126,8 @@ class RequestMoneyController extends GetxController {
 
   // Request Money
   Future<void> requestMoney() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isRequestMoneyLoading.isTrue) return;
     isRequestMoneyLoading.value = true;
 
     final Map<String, dynamic> requestBody = {

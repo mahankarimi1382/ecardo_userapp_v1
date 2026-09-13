@@ -20,6 +20,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
@@ -124,9 +125,13 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
   }
 
   Future<bool> _confirmCancelDownload() async {
+    // v1.0.24: localized via Get.context (this is a GetX-managed screen).
+    final localization = AppLocalizations.of(Get.context!);
     final result = await Get.dialog<bool>(
       AlertDialog(
-        title: const Text('Cancel download?'),
+        title: Text(
+          localization?.updateCancelDownloadTitle ?? 'Cancel download?',
+        ),
         content: const Text(
           'The update download is still in progress. '
           'Are you sure you want to cancel?',
@@ -134,7 +139,9 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: const Text('Continue download'),
+            child: Text(
+              localization?.updateContinueDownload ?? 'Continue download',
+            ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(

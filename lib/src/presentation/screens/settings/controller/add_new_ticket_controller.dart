@@ -5,7 +5,8 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/multiple_image_picker_controller.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/support_ticket_controller.dart';
 
 class AddNewTicketController extends GetxController {
@@ -15,7 +16,6 @@ class AddNewTicketController extends GetxController {
   final MultipleImagePickerController multipleImagePickerController = Get.put(
     MultipleImagePickerController(),
   );
-  final TokenService tokenService = Get.find<TokenService>();
   final attachments = <int>[].obs;
   int _nextId = 0;
 
@@ -53,7 +53,6 @@ class AddNewTicketController extends GetxController {
   Future<void> addNewTicket() async {
     isAddTicketLoading.value = true;
     try {
-      final dioInstance = dio.Dio();
       final formDataPayload = dio.FormData.fromMap({
         'title': titleController.text,
         'message': descriptionController.text,
@@ -71,19 +70,16 @@ class AddNewTicketController extends GetxController {
         );
       });
 
-      final response = await dioInstance.post(
-        "${ApiPath.baseUrl}${ApiPath.supportTicketsEndpoint}",
+      // v1.0.24: was a raw `dio.Dio()` call without timeout/401-refresh —
+      // a dead connection kept the spinner on forever. Route through
+      // NetworkService.postMultipart (timeouts + interceptors + error toasts).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: ApiPath.supportTicketsEndpoint,
         data: formDataPayload,
-        options: dio.Options(
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200) {
-        final responseData = response.data;
+      if (response.status == Status.completed) {
+        final responseData = response.data!;
         ToastHelper().showSuccessToast(
           responseData["message"] is String
               ? responseData["message"]
@@ -92,10 +88,6 @@ class AddNewTicketController extends GetxController {
         clearForm();
         Get.back();
         Get.find<SupportTicketController>().fetchSupportTickets();
-      }
-    } on dio.DioException catch (e) {
-      if (e.response!.statusCode == 422) {
-        ToastHelper().showErrorToast(e.response!.data["message"]);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ addNewTicket() error: $e');

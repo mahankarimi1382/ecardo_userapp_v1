@@ -228,7 +228,13 @@ class CreateAdPlaceholderSection extends StatelessWidget {
         SizedBox(height: 30.h),
         _buildLabeledDropdownField(
           label: localization.p2pPriceType,
-          value: controller.selectedPriceType.value,
+          // v1.0.24: display the localized label, the stored value stays
+          // 'Fixed'/'Float' for API compatibility.
+          value: controller.selectedPriceType.value.isEmpty
+              ? ''
+              : controller.selectedPriceType.value == 'Float'
+                  ? localization.p2pFloat
+                  : localization.p2pFixed,
           fullWidth: true,
           onTap: _openPriceTypeDropdown,
           isRequired: true,
@@ -238,7 +244,9 @@ class CreateAdPlaceholderSection extends StatelessWidget {
           () => Text(
             controller.selectedPriceType.value.isEmpty
                 ? localization.p2pPrice
-                : controller.selectedPriceType.value,
+                : controller.selectedPriceType.value == 'Float'
+                    ? localization.p2pFloat
+                    : localization.p2pFixed,
             style: _labelStyle,
           ),
         ),
@@ -618,22 +626,33 @@ class CreateAdPlaceholderSection extends StatelessWidget {
 
   void _openPriceTypeDropdown() {
     final localization = AppLocalizations.of(Get.context!)!;
-    final items = ["Fixed", "Float"];
+    // v1.0.24: display the localized labels, but keep the stored/submitted
+    // wire value ('Fixed'/'Float') intact for API compatibility.
+    final items = [localization.p2pFixed, localization.p2pFloat];
+    final selectedWireValue = controller.selectedPriceType.value;
+    final selectedLabel = selectedWireValue == 'Float'
+        ? localization.p2pFloat
+        : selectedWireValue == 'Fixed'
+            ? localization.p2pFixed
+            : '';
     Get.bottomSheet(
       CommonDropdownBottomSheet(
         title: localization.p2pSelectPriceType,
         isShowTitle: true,
         dropdownItems: items,
         selectedValue: items,
-        selectedItem: controller.selectedPriceType.value,
-        currentlySelectedValue: controller.selectedPriceType.value,
-        textController: TextEditingController(
-          text: controller.selectedPriceType.value,
-        ),
+        selectedItem: selectedLabel,
+        currentlySelectedValue: selectedLabel,
+        textController: TextEditingController(text: selectedLabel),
         bottomSheetHeight: 300.h,
         notFoundText: localization.p2pNoPriceTypeFound,
         onValueSelected: (value) {
-          controller.onPriceTypeSelected(value.toString());
+          // Map the localized label back to the wire value — the controller
+          // and the API payload keep using 'Fixed'/'Float'.
+          final wireValue = value.toString() == localization.p2pFloat
+              ? 'Float'
+              : 'Fixed';
+          controller.onPriceTypeSelected(wireValue);
         },
       ),
     );

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as dio show FormData, MultipartFile;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -76,7 +77,12 @@ class KycLevelController extends GetxController {
 
       if (formData.files.isEmpty && formData.fields.where((f) => f.key.startsWith('documents[')).isEmpty) {
         isSubmitting.value = false;
-        ToastHelper().showErrorToast('Documents are required.');
+        // v1.0.24: localized (nullable l10n — controller may live longer than
+        // the current language context).
+        final localization = AppLocalizations.of(Get.context!);
+        ToastHelper().showErrorToast(
+          localization?.kycDocumentsRequired ?? 'Documents are required.',
+        );
         return false;
       }
 
@@ -90,7 +96,10 @@ class KycLevelController extends GetxController {
         await fetchStatus();
         return true;
       } else if (response.status == Status.error) {
-        ToastHelper().showErrorToast(response.message ?? 'Submission failed.');
+        final localization = AppLocalizations.of(Get.context!);
+        ToastHelper().showErrorToast(
+          response.message ?? localization?.kycUploadFailed ?? 'Upload failed. Please try again.',
+        );
       }
     } catch (e) { isSubmitting.value = false; ToastHelper().showErrorToast('Failed: $e'); }
     return false;

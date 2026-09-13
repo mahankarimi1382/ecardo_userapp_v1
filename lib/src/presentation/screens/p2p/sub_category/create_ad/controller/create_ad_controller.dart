@@ -380,7 +380,10 @@ class CreateAdController extends GetxController {
 
   Future<void> fetchPaymentMethodsByFiat() async {
     if (selectedFiatId.value == null) {
-      ToastHelper().showErrorToast('Please select fiat first');
+      // v1.0.24: localized toast (was hardcoded English).
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.p2pSelectFiatFirst,
+      );
       return;
     }
 

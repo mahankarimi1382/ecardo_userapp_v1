@@ -164,7 +164,7 @@ class CashOutController extends GetxController {
             ) ??
             0.0;
         totalAmount.value =
-            (double.tryParse(amountController.text)! + charge.value);
+            ((double.tryParse(amountController.text) ?? 0.0) + charge.value);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getChargeConverter() error: $e');
@@ -194,10 +194,12 @@ class CashOutController extends GetxController {
       currencyCode: wallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
         "site_currency",
-      )!,
+      ) ??
+      'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
         "site_currency_decimals",
-      )!,
+      ) ??
+      '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -221,6 +223,21 @@ class CashOutController extends GetxController {
       ToastHelper().showErrorToast(
         localization.cashOutValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
+          wallet.value!.code!,
+        ),
+      );
+      return false;
+    }
+
+    // v1.0.24: balance guard — the flow used to submit cash-outs larger than
+    // the wallet balance and only failed after the server rejected them
+    // (mirrors exchange_controller).
+    final double availableBalance =
+        double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
+    if (enteredAmount > availableBalance) {
+      ToastHelper().showErrorToast(
+        localization.exchangeValidationInsufficientBalance(
+          availableBalance.toStringAsFixed(calculateDecimals),
           wallet.value!.code!,
         ),
       );
@@ -259,6 +276,8 @@ class CashOutController extends GetxController {
 
   // Cash Out Function
   Future<void> cashOut() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isCashOutLoading.isTrue) return;
     isCashOutLoading.value = true;
 
     final Map<String, dynamic> requestBody = {

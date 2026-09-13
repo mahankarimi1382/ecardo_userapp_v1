@@ -175,12 +175,29 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                         notFoundText: localization
                                             .endDrawerLanguageNotFound,
                                         onValueSelected: (value) async {
+                                          // v1.0.24: items are NATIVE display
+                                          // names — map back to the locale
+                                          // code before switching.
+                                          final code = HomeController
+                                              .languageNativeNames.entries
+                                              .firstWhere(
+                                                (entry) =>
+                                                    entry.value ==
+                                                    value.toString(),
+                                                orElse: () =>
+                                                    const MapEntry('en', ''),
+                                              )
+                                              .key;
                                           await homeController.changeLanguage(
-                                            value,
+                                            code,
                                           );
                                         },
-                                        selectedValue: ["English", "Arabic", "Persian","Chinese","Russian","Turkish"],
-                                        dropdownItems: ["English", "Arabic", "Persian","Chinese","Russian","Turkish"],
+                                        selectedValue: HomeController
+                                            .languageNativeNames.values
+                                            .toList(),
+                                        dropdownItems: HomeController
+                                            .languageNativeNames.values
+                                            .toList(),
                                         selectedItem: homeController
                                             .languageController
                                             .text,

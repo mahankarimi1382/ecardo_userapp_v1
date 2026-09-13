@@ -340,6 +340,12 @@ class GiftCardController extends GetxController {
         successGiftCardOrderData.value = response.data?['data'];
         Get.off(GiftCardSuccessSection());
       }
+    } catch (e, stackTrace) {
+      // v1.0.24: was try/finally WITHOUT catch — errors escaped unhandled and
+      // the caller never learned the purchase failed.
+      debugPrint('❌ postBuyNowGiftCard() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {
       isBuyNowGiftCardLoading.value = false;
     }

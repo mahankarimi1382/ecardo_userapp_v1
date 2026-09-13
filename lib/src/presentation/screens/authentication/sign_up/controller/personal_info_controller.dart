@@ -192,11 +192,23 @@ class PersonalInfoController extends GetxController {
       }
 
       if (genderController.text.isNotEmpty) {
-        requestBody["gender"] = gender.value == "Male"
-            ? "male"
-            : gender.value == "Female"
-            ? "female"
-            : "other";
+        // v1.0.24 (gender overwrite fix): the dropdown values are LOCALIZED
+        // labels, so comparing with "Male"/"Female" silently rewrote every
+        // non-English submission to "other". Map label→code like
+        // profile_settings_controller does.
+        final loc = AppLocalizations.of(Get.context!)!;
+        final genderLabel = gender.value;
+        final String genderCode;
+        if (genderLabel == loc.commonDropdownMale) {
+          genderCode = 'male';
+        } else if (genderLabel == loc.commonDropdownFemale) {
+          genderCode = 'female';
+        } else if (genderLabel == loc.commonDropdownOther) {
+          genderCode = 'other';
+        } else {
+          genderCode = 'other';
+        }
+        requestBody["gender"] = genderCode;
       }
 
       final response = await Get.find<NetworkService>().post(

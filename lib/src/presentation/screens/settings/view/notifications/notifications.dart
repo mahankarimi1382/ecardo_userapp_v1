@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/notification_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/model/notifications_model.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 import 'package:ecardo_user/src/presentation/widgets/notification_dynamic_icon.dart';
 
 class Notifications extends StatefulWidget {
@@ -102,7 +103,14 @@ class _NotificationsState extends State<Notifications>
                       ),
                       child: controller.isLoading.value
                           ? CommonLoading()
-                          : ListView.builder(
+                          // v1.0.24: guard null/empty payload — the old
+                          // `.data!.notifications![index]` crashed on a null
+                          // or empty list before the first frame rendered.
+                          : (controller.notificationModel.value.data
+                                      ?.notifications?.isEmpty ??
+                                  true)
+                              ? NoDataFound()
+                              : ListView.builder(
                               controller: _scrollController,
                               itemBuilder: (context, index) {
                                 final Notificationss notification = controller

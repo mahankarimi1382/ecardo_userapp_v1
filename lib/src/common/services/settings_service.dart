@@ -214,6 +214,10 @@ class SettingsService extends GetxService {
       ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {
       isSettingsLoading.value = false;
+      // v1.0.24: mark the load attempt as finished even on error/timeout so
+      // the splash screen never hangs waiting for this flag (it used to be
+      // set only on success, leaving splash stuck on a 500/timeout).
+      isSettingsDataLoad.value = true;
     }
   }
 

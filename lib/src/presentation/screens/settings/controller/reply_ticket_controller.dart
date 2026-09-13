@@ -5,9 +5,9 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/multiple_image_picker_controller.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/model/ticket_message_model.dart';
 
 class ReplyTicketController extends GetxController {
@@ -19,7 +19,6 @@ class ReplyTicketController extends GetxController {
   final MultipleImagePickerController controller = Get.put(
     MultipleImagePickerController(),
   );
-  final TokenService tokenService = Get.find<TokenService>();
 
   // Message
   final messageController = TextEditingController();
@@ -46,20 +45,14 @@ class ReplyTicketController extends GetxController {
   Future<void> submitReplayTicket({required String ticketUid}) async {
     isReplayTicketLoading.value = true;
     try {
-      final dioInstance = dio.Dio();
-      dio.Response response;
-
+      // v1.0.24: was a raw `dio.Dio()` call without timeout/401-refresh —
+      // a dead connection kept the spinner on forever. Route through
+      // NetworkService (timeouts + interceptors + error toasts).
+      final ApiResponse<Map<String, dynamic>> response;
       if (controller.attachedImages.isEmpty) {
-        response = await dioInstance.post(
-          "${ApiPath.baseUrl}${ApiPath.supportTicketsEndpoint}/reply/$ticketUid",
+        response = await Get.find<NetworkService>().post(
+          endpoint: "${ApiPath.supportTicketsEndpoint}/reply/$ticketUid",
           data: {'message': messageController.text},
-          options: dio.Options(
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ${tokenService.accessToken.value}',
-            },
-          ),
         );
       } else {
         final formData = dio.FormData();
@@ -78,28 +71,16 @@ class ReplyTicketController extends GetxController {
           );
         });
 
-        response = await dioInstance.post(
-          "${ApiPath.baseUrl}${ApiPath.supportTicketsEndpoint}/reply/$ticketUid",
+        response = await Get.find<NetworkService>().postMultipart(
+          endpoint: "${ApiPath.supportTicketsEndpoint}/reply/$ticketUid",
           data: formData,
-          options: dio.Options(
-            headers: {
-              'Accept': 'application/json',
-              'Authorization': 'Bearer ${tokenService.accessToken.value}',
-            },
-          ),
         );
       }
 
-      if (response.statusCode == 200) {
-        final resData = response.data;
-        ToastHelper().showSuccessToast(resData["message"]);
+      if (response.status == Status.completed) {
+        ToastHelper().showSuccessToast(response.data!["message"]);
         clearForm();
         await fetchTicketMessage(ticketUid: ticketUid);
-      }
-    } on dio.DioException catch (e) {
-      if (e.response!.statusCode == 422) {
-        isReplayTicketLoading.value = false;
-        ToastHelper().showErrorToast(e.response!.data["message"]);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitReplayTicket() error: $e');

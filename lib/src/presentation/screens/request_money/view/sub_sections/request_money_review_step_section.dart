@@ -118,42 +118,48 @@ class RequestMoneyReviewStepSection extends StatelessWidget {
                 ),
                 SizedBox(width: 16),
                 Expanded(
-                  child: CommonIconButton(
-                    onPressed: () async {
-                      if (controller.currentStep.value == 1) {
-                        if (controller.userModel.value.data!.passcode == "0") {
-                          controller.requestMoney();
-                          return;
-                        }
+                  child: Obx(
+                    () => CommonIconButton(
+                      // v1.0.24: bind to the submit state — a second tap
+                      // while the request is in flight must not fire.
+                      isLoading: controller.isRequestMoneyLoading.value,
+                      onPressed: () async {
+                        if (controller.currentStep.value == 1) {
+                          if (controller.userModel.value.data!.passcode ==
+                              "0") {
+                            controller.requestMoney();
+                            return;
+                          }
 
-                        final bool isPasscodeEnabled =
-                            Get.find<SettingsService>().getSetting(
-                              "request_money_accept_passcode_status",
-                            ) ==
-                            "1";
+                          final bool isPasscodeEnabled =
+                              Get.find<SettingsService>().getSetting(
+                                "request_money_accept_passcode_status",
+                              ) ==
+                              "1";
 
-                        if (isPasscodeEnabled) {
-                          final bool? isVerified = await Get.bottomSheet<bool>(
-                            VerifyPasscodeBottomSheet(),
-                          );
-                          if (isVerified != true) return;
-                          controller.requestMoney();
+                          if (isPasscodeEnabled) {
+                            final bool? isVerified = await Get.bottomSheet<bool>(
+                              VerifyPasscodeBottomSheet(),
+                            );
+                            if (isVerified != true) return;
+                            controller.requestMoney();
+                          } else {
+                            controller.requestMoney();
+                          }
                         } else {
-                          controller.requestMoney();
+                          controller.nextStepWithValidation();
                         }
-                      } else {
-                        controller.nextStepWithValidation();
-                      }
-                    },
-                    width: double.infinity,
-                    height: 52,
-                    text:
-                        localization.requestMoneyReviewStepSectionConfirmButton,
-                    icon: PngAssets.reviewArrowRightCommonIcon,
-                    iconWidth: 18,
-                    iconHeight: 18,
-                    iconAndTextSpace: 8,
-                    isIconRight: true,
+                      },
+                      width: double.infinity,
+                      height: 52,
+                      text:
+                          localization.requestMoneyReviewStepSectionConfirmButton,
+                      icon: PngAssets.reviewArrowRightCommonIcon,
+                      iconWidth: 18,
+                      iconHeight: 18,
+                      iconAndTextSpace: 8,
+                      isIconRight: true,
+                    ),
                   ),
                 ),
               ],

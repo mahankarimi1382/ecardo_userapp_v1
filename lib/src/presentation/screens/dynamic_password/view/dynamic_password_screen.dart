@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -37,7 +38,10 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
       final accountNumber = _homeController.userModel.value.data?.accountNumber ?? '';
 
       if (accountNumber.isEmpty) {
-        ToastHelper().showErrorToast('خطا: اطلاعات کاربر یافت نشد');
+        // v1.0.24: localized instead of hardcoded Persian strings.
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(Get.context!)!.dynamicPasswordUserNotFound,
+        );
         setState(() => _isLoading = false);
         return;
       }
@@ -59,7 +63,9 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
           _startCountdown();
         } else {
           ToastHelper().showErrorToast(
-            responseData['message'] ?? 'خطا در تولید رمز',
+            responseData['message'] ??
+                AppLocalizations.of(Get.context!)!
+                    .dynamicPasswordGenerateError,
           );
           setState(() => _isLoading = false);
         }
@@ -95,7 +101,8 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text('رمز پویا'),
+        // v1.0.24: localized instead of hardcoded Persian title.
+        title: Text(AppLocalizations.of(context)!.dynamicPasswordTitle),
         backgroundColor: AppColors.white,
         elevation: 0,
         foregroundColor: AppColors.lightTextPrimary,

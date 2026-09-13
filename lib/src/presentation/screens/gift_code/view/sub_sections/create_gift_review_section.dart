@@ -140,39 +140,45 @@ class CreateGiftReviewSection extends StatelessWidget {
                         ),
                         SizedBox(width: 16),
                         Expanded(
-                          child: CommonIconButton(
-                            onPressed: () async {
-                              if (controller.userModel.value.data!.passcode ==
-                                  "0") {
-                                controller.createGift();
-                                return;
-                              }
+                          child: Obx(
+                            () => CommonIconButton(
+                              // v1.0.24: bind to the submit state — a second
+                              // tap while the request is in flight must not
+                              // fire.
+                              isLoading: controller.isCreateGiftLoading.value,
+                              onPressed: () async {
+                                if (controller.userModel.value.data!.passcode ==
+                                    "0") {
+                                  controller.createGift();
+                                  return;
+                                }
 
-                              final bool isPasscodeEnabled =
-                                  Get.find<SettingsService>().getSetting(
-                                    "gift_passcode_status",
-                                  ) ==
-                                  "1";
+                                final bool isPasscodeEnabled =
+                                    Get.find<SettingsService>().getSetting(
+                                      "gift_passcode_status",
+                                    ) ==
+                                    "1";
 
-                              if (isPasscodeEnabled) {
-                                final bool? isVerified =
-                                    await Get.bottomSheet<bool>(
-                                      VerifyPasscodeBottomSheet(),
-                                    );
-                                if (isVerified != true) return;
-                                controller.createGift();
-                              } else {
-                                controller.createGift();
-                              }
-                            },
-                            width: double.infinity,
-                            height: 52,
-                            text: localizations.createGiftReviewConfirm,
-                            icon: PngAssets.reviewArrowRightCommonIcon,
-                            iconWidth: 18,
-                            iconHeight: 18,
-                            iconAndTextSpace: 8,
-                            isIconRight: true,
+                                if (isPasscodeEnabled) {
+                                  final bool? isVerified =
+                                      await Get.bottomSheet<bool>(
+                                        VerifyPasscodeBottomSheet(),
+                                      );
+                                  if (isVerified != true) return;
+                                  controller.createGift();
+                                } else {
+                                  controller.createGift();
+                                }
+                              },
+                              width: double.infinity,
+                              height: 52,
+                              text: localizations.createGiftReviewConfirm,
+                              icon: PngAssets.reviewArrowRightCommonIcon,
+                              iconWidth: 18,
+                              iconHeight: 18,
+                              iconAndTextSpace: 8,
+                              isIconRight: true,
+                            ),
                           ),
                         ),
                       ],

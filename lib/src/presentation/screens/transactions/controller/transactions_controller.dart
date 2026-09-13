@@ -104,9 +104,11 @@ class TransactionsController extends GetxController {
       currentPage.value = 1;
       hasMorePages.value = true;
 
+      // v1.0.24: refresh must respect the ACTIVE filters — it used to hit
+      // the endpoint without query params and wipe the user's filter.
+      final queryParams = _buildQueryParams();
       final response = await Get.find<NetworkService>().get(
-        endpoint:
-            '${ApiPath.transactionsEndpoint}?page=${currentPage.value}&per_page=15',
+        endpoint: '${ApiPath.transactionsEndpoint}?${queryParams.join('&')}',
       );
 
       if (response.status == Status.completed) {
@@ -141,16 +143,17 @@ class TransactionsController extends GetxController {
 
       if (response.status == Status.completed) {
         final newTransactions = TransactionsModel.fromJson(response.data!);
+        final newPage = newTransactions.data?.transactions ?? [];
 
-        if (newTransactions.data!.transactions!.isEmpty) {
+        if (newPage.isEmpty) {
           hasMorePages.value = false;
         } else {
-          transactionsModel.value.data!.transactions!.addAll(
-            newTransactions.data!.transactions!,
-          );
+          transactionsModel.value.data!.transactions!.addAll(newPage);
           transactionsModel.refresh();
-          if (newTransactions.data!.transactions!.length <
-              transactionsModel.value.data!.meta!.perPage!) {
+          // v1.0.24: compare the LAST PAGE's item count against per_page —
+          // the merged length kept triggering one extra wasted fetch.
+          final int perPage = newTransactions.data?.meta?.perPage ?? 15;
+          if (newPage.length < perPage) {
             hasMorePages.value = false;
           }
         }
@@ -181,16 +184,16 @@ class TransactionsController extends GetxController {
 
       if (response.status == Status.completed) {
         transactionsModel.value = TransactionsModel.fromJson(response.data!);
-        if (transactionsModel.value.data!.transactions == null ||
-            transactionsModel.value.data!.transactions!.isEmpty) {
-          transactionsModel.value.data!.transactions = [];
+        if (transactionsModel.value.data?.transactions?.isEmpty ?? true) {
+          // v1.0.24: `data!` used to crash when the payload had no data.
+          transactionsModel.value.data?.transactions = [];
           hasMorePages.value = false;
         } else if (transactionsModel.value.data!.transactions!.length <
-            transactionsModel.value.data!.meta!.perPage!) {
+            (transactionsModel.value.data!.meta?.perPage ?? 15)) {
           hasMorePages.value = false;
         }
       } else {
-        transactionsModel.value.data!.transactions = [];
+        transactionsModel.value.data?.transactions = [];
         hasMorePages.value = false;
       }
     } catch (e, stackTrace) {

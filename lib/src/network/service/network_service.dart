@@ -29,6 +29,13 @@ class NetworkService extends getx.GetxService {
   // pass-through. Never hardcode a stale version again (S-003/S-022 fix).
   String _appVersion = '';
 
+  /// v1.0.24 (S-023): in-flight Idempotency-Key registry keyed by
+  /// '${method}:$path'. A key is minted when a money POST starts and released
+  /// when that request completes, so an accidental double submission of the
+  /// same logical call REUSES the same key (the server can then collapse it)
+  /// instead of minting a fresh one per request.
+  final Map<String, String> _inflightIdempotency = {};
+
   /// Endpoints that move money — every POST to one of these carries an
   /// Idempotency-Key (the X-Request-ID of the logical call) so the server
   /// (S-023 middleware) can collapse accidental double submissions.
@@ -123,7 +130,9 @@ class NetworkService extends getx.GetxService {
           }
           options.headers['X-Client'] = 'ecardo_user_flutter';
 
-          // v1.0.24 (S-023 client side): money POSTs carry Idempotency-Key
+          // v1.0.24 (S-023 client side): money POSTs carry Idempotency-Key.
+          // The key is reused across an in-flight logical call so a double
+          // submission maps to the same idempotency key server-side.
           if (options.method.toUpperCase() == 'POST' &&
               options.headers['Idempotency-Key'] == null) {
             final path = options.uri.path;
@@ -131,8 +140,12 @@ class NetworkService extends getx.GetxService {
               (suffix) => path.endsWith(suffix),
             );
             if (isMoney) {
+              final mapKey = 'POST:$path';
               options.headers['Idempotency-Key'] =
-                  options.headers['X-Request-ID'];
+                  _inflightIdempotency.putIfAbsent(mapKey, () {
+                    final minted = options.headers['X-Request-ID'] as String?;
+                    return minted ?? _generateRequestId();
+                  });
             }
           }
           // v1.0.5: Platform identification
@@ -148,7 +161,12 @@ class NetworkService extends getx.GetxService {
 
           return handler.next(options);
         },
+        onResponse: (response, handler) {
+          _releaseIdempotencyKey(response.requestOptions);
+          return handler.next(response);
+        },
         onError: (DioException error, handler) async {
+          _releaseIdempotencyKey(error.requestOptions);
           if (error.response?.statusCode == 401) {
             _log("401 Unauthorized — attempting token refresh...");
 
@@ -249,6 +267,19 @@ class NetworkService extends getx.GetxService {
     }
   }
 
+  /// v1.0.24 (S-023): release the in-flight idempotency key once the request
+  /// has finished (success or failure), so the NEXT logical submission mints a
+  /// fresh key. The 401-refresh retry is safe: it re-enters with the key
+  /// already embedded in the request headers, so nothing is re-minted.
+  void _releaseIdempotencyKey(RequestOptions options) {
+    final headerKey = options.headers['Idempotency-Key'];
+    if (headerKey is! String || headerKey.isEmpty) return;
+    final mapKey = '${options.method.toUpperCase()}:${options.uri.path}';
+    if (_inflightIdempotency[mapKey] == headerKey) {
+      _inflightIdempotency.remove(mapKey);
+    }
+  }
+
   /// Generate a ULID-like request ID for traceability.
   String _generateRequestId() {
     final now = DateTime.now().millisecondsSinceEpoch;
@@ -263,7 +294,6 @@ class NetworkService extends getx.GetxService {
     required String email,
     required String password,
   }) async {
-    _dio.interceptors.clear();
     String url = '${_dio.options.baseUrl}${ApiPath.loginEndpoint}';
 
     _log('📤 Login POST Request URL: $url');
@@ -284,7 +314,6 @@ class NetworkService extends getx.GetxService {
         String accessToken = response.data["data"]["token"];
         await _tokenService.clearToken();
         await _tokenService.saveAccessToken(accessToken);
-        _setupInterceptors();
         _log('🔑 Token Saved Successfully');
         return ApiResponse.completed(response.data);
       }
@@ -296,6 +325,12 @@ class NetworkService extends getx.GetxService {
       _log('Login POST Exception: ${e.toString()}', icon: '❌');
       ToastHelper().showErrorToast(localization!.networkErrorGeneric);
       return ApiResponse.error(e.toString());
+    } finally {
+      // v1.0.24: interceptors used to be cleared at the start of login() and
+      // only re-installed on success — after a FAILED login every subsequent
+      // request lost its headers/401 handling. Always (re)install (the
+      // method clears before adding, so no duplicates).
+      _setupInterceptors();
     }
   }
 
@@ -307,7 +342,14 @@ class NetworkService extends getx.GetxService {
     final stopwatch = Stopwatch()..start();
 
     _log('📤 Register POST Request URL: $url');
-    _log('📦 Register POST Request Body: ${jsonEncode(data)}');
+    // v1.0.24: never log plaintext passwords — redact like login() does.
+    final sanitizedBody = Map<String, dynamic>.of(data);
+    for (final key in sanitizedBody.keys.toList()) {
+      if (key.toLowerCase().contains('password')) {
+        sanitizedBody[key] = '<redacted>';
+      }
+    }
+    _log('📦 Register POST Request Body: ${jsonEncode(sanitizedBody)}');
 
     try {
       final response = await _dio.post(
@@ -612,15 +654,21 @@ class NetworkService extends getx.GetxService {
 
     switch (response.statusCode) {
       case 400:
-        final jsonResponse = response.data as Map<String, dynamic>? ?? {};
+        // v1.0.24: safe cast — some servers return an HTML error body which
+        // made `as Map<String, dynamic>?` throw before a message was shown.
+        final jsonResponse = response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : <String, dynamic>{};
         _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse);
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
       case 401:
-        final jsonResponse = response.data as Map<String, dynamic>? ?? {};
-        _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = _errorMessage(jsonResponse);
+        final jsonResponse401 = response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        _log('$requestType Response: ${jsonResponse401.toString()}', icon: '❌');
+        final errorMessages = _errorMessage(jsonResponse401);
         getx.Get.dialog(
           PopScope(
             canPop: false,
@@ -698,23 +746,29 @@ class NetworkService extends getx.GetxService {
       case 403:
       case 404:
       case 422:
-        final jsonResponse = response.data as Map<String, dynamic>? ?? {};
-        _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = _errorMessage(jsonResponse);
+        final jsonResponse4xx = response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        _log('$requestType Response: ${jsonResponse4xx.toString()}', icon: '❌');
+        final errorMessages = _errorMessage(jsonResponse4xx);
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
 
       case 500:
-        final jsonResponse = response.data as Map<String, dynamic>? ?? {};
-        _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = _errorMessage(jsonResponse);
+        final jsonResponse500 = response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        _log('$requestType Response: ${jsonResponse500.toString()}', icon: '❌');
+        final errorMessages = _errorMessage(jsonResponse500);
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
 
       case 503:
-        final jsonResponse = response.data as Map<String, dynamic>? ?? {};
-        _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
-        final errorMessages = _errorMessage(jsonResponse);
+        final jsonResponse503 = response.data is Map<String, dynamic>
+            ? response.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        _log('$requestType Response: ${jsonResponse503.toString()}', icon: '❌');
+        final errorMessages = _errorMessage(jsonResponse503);
         ToastHelper().showErrorToast(errorMessages);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (getx.Get.currentRoute != BaseRoute.maintenanceMode) {

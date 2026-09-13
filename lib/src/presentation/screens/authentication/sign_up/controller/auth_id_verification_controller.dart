@@ -8,7 +8,8 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
 
 class AuthIdVerificationController extends GetxController {
@@ -19,7 +20,6 @@ class AuthIdVerificationController extends GetxController {
   final RxList<Fields> fields = <Fields>[].obs;
   RxSet<String> skippedFields = <String>{}.obs;
   RxMap<String, File?> fieldFiles = <String, File?>{}.obs;
-  final TokenService tokenService = Get.find<TokenService>();
 
   void skipField(String fieldName) {
     skippedFields.add(fieldName);
@@ -79,28 +79,21 @@ class AuthIdVerificationController extends GetxController {
         }
       }
 
-      final response = await dio.Dio().post(
-        "${ApiPath.baseUrl}${ApiPath.userKycEndpoint}",
+      // v1.0.24: was a raw `dio.Dio()` call without timeout/401-refresh —
+      // a dead connection kept the spinner on forever. Route through
+      // NetworkService.postMultipart (timeouts + interceptors + error toasts).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: ApiPath.userKycEndpoint,
         data: formData,
-        options: dio.Options(
-          headers: {
-            "Accept": "application/json",
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.status == Status.completed) {
         resetFields();
         Get.toNamed(
           BaseRoute.signUpStatus,
           arguments: {"is_id_verification": true},
         );
-        ToastHelper().showSuccessToast(response.data["message"]);
-      }
-    } on dio.DioException catch (e) {
-      if (e.response!.statusCode == 422) {
-        ToastHelper().showErrorToast(e.response!.data["message"]);
+        ToastHelper().showSuccessToast(response.data!["message"]);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitIdVerification() error: $e');

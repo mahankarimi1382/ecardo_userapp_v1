@@ -289,18 +289,21 @@ class _DrawerItem extends StatelessWidget {
                   title: Row(children: [
                     Icon(Icons.lock_outline, color: AppColors.warning, size: 24),
                     SizedBox(width: 8),
-                    Text('License Required', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                    Text(
+                      localization.licenseRequiredTitle,
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    ),
                   ]),
                   content: Text(
                     'The "$nav" feature is not available on your current plan.\n\nPlease contact support to activate this module.',
                     style: TextStyle(fontSize: 14, color: AppColors.lightTextPrimary),
                   ),
                   actions: [
-                    TextButton(onPressed: () => Get.back(), child: Text('Close')),
+                    TextButton(onPressed: () => Get.back(), child: Text(localization.commonClose)),
                     ElevatedButton(
                       onPressed: () { Get.back(); Get.toNamed(BaseRoute.supportTickets); },
                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary),
-                      child: Text('Contact Support', style: TextStyle(color: AppColors.white)),
+                      child: Text(localization.contactSupport, style: TextStyle(color: AppColors.white)),
                     ),
                   ],
                 ),

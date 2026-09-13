@@ -10,7 +10,16 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 ///   - logging تلاش‌های ناموفق
 ///   - پیام‌های فارسی بهتر
 class BiometricAuthService {
-  final localization = AppLocalizations.of(Get.context!);
+  /// v1.0.24: localizations are resolved lazily — the service may be
+  /// constructed before a Navigator context exists, and `Get.context!` used
+  /// to throw on construction. Fall back to English literals when l10n is
+  /// unreachable.
+  AppLocalizations? get _localization {
+    final ctx = Get.context;
+    if (ctx == null) return null;
+    return AppLocalizations.of(ctx);
+  }
+
   final LocalAuthentication auth = LocalAuthentication();
 
   /// حداکثر تعداد تلاش بیومتریک قبل از fallback
@@ -30,23 +39,33 @@ class BiometricAuthService {
       final available = await auth.getAvailableBiometrics();
 
       if (!isSupported) {
-        ToastHelper().showErrorToast('دستگاه شما از احراز هویت بیومتریک پشتیبانی نمی‌کند.');
+        ToastHelper().showErrorToast(
+          _localization?.biometricNotAvailable ??
+              'Biometric authentication is not available on this device',
+        );
         return false;
       }
 
       if (canCheck && available.isEmpty) {
-        ToastHelper().showErrorToast('هیچ بیومتریک ثبت نشده است. لطفاً ابتدا اثر انگشت یا چهره را در تنظیمات دستگاه ثبت کنید.');
+        ToastHelper().showErrorToast(
+          _localization?.biometricNotEnrolled ??
+              'No biometric enrolled. Please set up fingerprint',
+        );
         return false;
       }
 
       if (!canCheck) {
-        ToastHelper().showErrorToast('احراز هویت بیومتریک در دسترس نیست.');
+        ToastHelper().showErrorToast(
+          _localization?.biometricNotAvailable ??
+              'Biometric authentication is not available on this device',
+        );
         return false;
       }
 
       // شروع احراز هویت
       final success = await auth.authenticate(
-        localizedReason: 'برای ورود به eCardo احراز هویت کنید',
+        localizedReason: _localization?.biometricReason ??
+            'Authenticate to sign in to eCardo',
         biometricOnly: true,
       );
 
@@ -59,13 +78,15 @@ class BiometricAuthService {
 
         if (remaining > 0) {
           ToastHelper().showErrorToast(
-            'احراز هویت ناموفق بود. $remaining تلاش باقی مانده است.',
+            _localization?.biometricFailedAttempts(remaining) ??
+                'Biometric authentication failed. $remaining attempts remaining',
           );
           return false;
         } else {
           // حداکثر تلاش رسید — fallback
           ToastHelper().showErrorToast(
-            'حداکثر تلاش بیومتریک reached. لطفاً با رمز عبور وارد شوید.',
+            _localization?.biometricMaxAttempts ??
+                'Maximum biometric attempts reached. Please sign in with your password',
           );
           _currentAttempts = 0;
           return false;
@@ -73,7 +94,10 @@ class BiometricAuthService {
       }
     } catch (e) {
       _currentAttempts++;
-      ToastHelper().showErrorToast('خطا در احراز هویت بیومتریک. لطفاً دوباره تلاش کنید.');
+      ToastHelper().showErrorToast(
+        _localization?.biometricGenericError ??
+            'Biometric authentication failed',
+      );
       return false;
     }
   }

@@ -44,9 +44,21 @@ class HomeController extends GetxController {
   final RxString selectedMonth = ''.obs;
   final RxString selectedCrypto = ''.obs;
 
-  // End Drawer Language Variable
+// End Drawer Language Variable
   final RxString language = "".obs;
   final languageController = TextEditingController();
+
+  // v1.0.24: the language picker keys off the locale CODE ('en','fa','zh',
+  // 'ar','ru','tr') while the drawer displays the NATIVE name. The old code
+  // compared English display names, which broke for non-English users.
+  static const Map<String, String> languageNativeNames = {
+    'en': 'English',
+    'fa': 'فارسی',
+    'zh': '中文',
+    'ar': 'العربية',
+    'ru': 'Русский',
+    'tr': 'Türkçe',
+  };
 
   void setScaffoldKey(GlobalKey<ScaffoldState> key) {
     _scaffoldKey = key;
@@ -88,61 +100,33 @@ class HomeController extends GetxController {
 Future<void> _setInitialLanguage() async {
   final savedLocale = await SettingsService.getLanguageLocaleCurrentState();
 
-  if (savedLocale != null) {
-    if (savedLocale == "en") {
-      language.value = "English";
-      languageController.text = "English";
-    } else if (savedLocale == "ar") {
-      language.value = "Arabic";
-      languageController.text = "Arabic";
-    } else if (savedLocale == "fa") {
-      language.value = "Persian";
-      languageController.text = "Persian";
-} else if (savedLocale == "zh") {
-  language.value = "Chinese";  
-  languageController.text = "Chinese";
-} else if (savedLocale == "ru") {
-  language.value = "Russian";
-  languageController.text = "Russian";
-} else if (savedLocale == "tr") {
-  language.value = "Turkish";
-  languageController.text = "Turkish";
-}
-  } else {
-    language.value = "English";
-    languageController.text = "English";
-    await Get.find<SettingsService>().saveLanguageLocaleCurrentState("en");
+  final code = (savedLocale != null &&
+          languageNativeNames.containsKey(savedLocale))
+      ? savedLocale
+      : 'en';
+  final nativeName = languageNativeNames[code]!;
+  language.value = nativeName;
+  languageController.text = nativeName;
+  if (savedLocale == null) {
+    await Get.find<SettingsService>().saveLanguageLocaleCurrentState('en');
   }
 }
 
-  // Language Switching Method
-Future<void> changeLanguage(String languageName) async {
+  // Language Switching Method — keyed off the locale CODE
+Future<void> changeLanguage(String languageCode) async {
   try {
-    language.value = languageName;
-    languageController.text = languageName;
-
-    String localeCode;
-    if (languageName == "English") {
-      localeCode = "en";
-    } else if (languageName == "Arabic") {
-      localeCode = "ar";
-    } else if (languageName == "Persian") {
-      localeCode = "fa";
-    } else if (languageName == "Chinese") {
-      localeCode = "zh";
-    }else if (languageName == "Russian") {
-      localeCode = "ru";
-    } else if (languageName == "Turkish") {
-      localeCode = "tr";
-    } else {
-      localeCode = "en";
-    }
+    final code = languageNativeNames.containsKey(languageCode)
+        ? languageCode
+        : 'en';
+    final nativeName = languageNativeNames[code]!;
+    language.value = nativeName;
+    languageController.text = nativeName;
 
     await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
-      localeCode,
+      code,
     );
 
-    Get.updateLocale(Locale(localeCode));
+    Get.updateLocale(Locale(code));
     } catch (e, stackTrace) {
       debugPrint('❌ changeLanguage() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');

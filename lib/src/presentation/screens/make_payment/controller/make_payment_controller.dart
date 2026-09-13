@@ -123,7 +123,11 @@ class MakePaymentController extends GetxController {
       debugPrint('❌ fetchPaymentSettings() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
-    } finally {}
+    } finally {
+      // v1.0.24: was `finally {}` — the settings spinner never cleared when
+      // the request failed (stuck loading screen).
+      isPaymentSettingsLoading.value = false;
+    }
   }
 
   // Charge Calculation
@@ -163,7 +167,7 @@ class MakePaymentController extends GetxController {
             ) ??
             0.0;
         totalAmount.value =
-            (double.tryParse(amountController.text)! + charge.value);
+            ((double.tryParse(amountController.text) ?? 0.0) + charge.value);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getChargeConverter() error: $e');
@@ -174,6 +178,8 @@ class MakePaymentController extends GetxController {
 
   // Make Payment
   Future<void> makePayment() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isMakePaymentLoading.isTrue) return;
     isMakePaymentLoading.value = true;
 
     final Map<String, dynamic> requestBody = {
@@ -232,10 +238,12 @@ class MakePaymentController extends GetxController {
       currencyCode: wallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
         "site_currency",
-      )!,
+      ) ??
+      'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
         "site_currency_decimals",
-      )!,
+      ) ??
+      '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -259,6 +267,21 @@ class MakePaymentController extends GetxController {
       ToastHelper().showErrorToast(
         localization.makePaymentValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
+          wallet.value!.code!,
+        ),
+      );
+      return false;
+    }
+
+    // v1.0.24: balance guard — the flow used to submit payments larger than
+    // the wallet balance and only failed after the server rejected them
+    // (mirrors exchange_controller).
+    final double availableBalance =
+        double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
+    if (enteredAmount > availableBalance) {
+      ToastHelper().showErrorToast(
+        localization.exchangeValidationInsufficientBalance(
+          availableBalance.toStringAsFixed(calculateDecimals),
           wallet.value!.code!,
         ),
       );

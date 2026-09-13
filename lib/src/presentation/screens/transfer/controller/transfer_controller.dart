@@ -122,7 +122,11 @@ class TransferController extends GetxController {
       debugPrint('❌ fetchTransferConfig() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
-    } finally {}
+    } finally {
+      // v1.0.24: was `finally {}` — the config spinner never cleared when
+      // the request failed (stuck loading screen).
+      isTransferConfigLoading.value = false;
+    }
   }
 
   // Charge Calculation
@@ -164,7 +168,7 @@ class TransferController extends GetxController {
             ) ??
             0.0;
         totalAmount.value =
-            (double.tryParse(amountController.text)! + charge.value);
+            ((double.tryParse(amountController.text) ?? 0.0) + charge.value);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getChargeConverter() error: $e');
@@ -196,10 +200,12 @@ class TransferController extends GetxController {
       currencyCode: wallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
         "site_currency",
-      )!,
+      ) ??
+      'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
         "site_currency_decimals",
-      )!,
+      ) ??
+      '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -230,11 +236,28 @@ class TransferController extends GetxController {
       return false;
     }
 
+    // v1.0.24: balance guard — the flow used to submit transfers larger than
+    // the wallet balance and only failed after the server rejected them
+    // (mirrors exchange_controller).
+    final double availableBalance =
+        double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
+    if (enteredAmount > availableBalance) {
+      ToastHelper().showErrorToast(
+        localization.exchangeValidationInsufficientBalance(
+          availableBalance.toStringAsFixed(calculateDecimals),
+          wallet.value!.code!,
+        ),
+      );
+      return false;
+    }
+
     return true;
   }
 
   // Transfer Amount
   Future<void> transferAmount() async {
+    // v1.0.24: guard against double submission while a request is in flight.
+    if (isTransferAmountLoading.isTrue) return;
     isTransferAmountLoading.value = true;
 
     final Map<String, dynamic> requestBody = {
