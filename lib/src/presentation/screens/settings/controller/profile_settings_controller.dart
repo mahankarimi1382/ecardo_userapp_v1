@@ -10,7 +10,6 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 class ProfileSettingsController extends GetxController {
@@ -21,7 +20,9 @@ class ProfileSettingsController extends GetxController {
   final ImagePickerController imagePickerController = Get.put(
     ImagePickerController(),
   );
-  final TokenService tokenService = Get.find<TokenService>();
+  // PAYMENT-FIX (P-1): the manual `tokenService` bearer header was removed —
+  // NetworkService's interceptor now attaches Authorization from the same
+  // TokenService singleton.
 
   // First Name
   final RxBool isFirstNameFocused = false.obs;
@@ -255,7 +256,6 @@ class ProfileSettingsController extends GetxController {
   Future<void> submitUpdateProfile() async {
     isProfileUpdateLoading.value = true;
     try {
-      final dioInstance = dio.Dio();
       final imageFile = imagePickerController.selectedImage.value;
 
       String formattedDob;
@@ -307,25 +307,24 @@ class ProfileSettingsController extends GetxController {
             filename: imageFile.path.split('/').last,
           ),
       });
-      final response = await dioInstance.post(
-        "${ApiPath.baseUrl}${ApiPath.updateProfileEndpoint}",
+      // PAYMENT-FIX (P-1): was a raw `dio.Dio()` POST (no timeout, no
+      // 401-refresh, and a `e.response!` force-unwrap in the 422 handler).
+      // Same avatar multipart payload is now routed through
+      // NetworkService.postMultipart — timeouts, interceptors and 422 error
+      // toasts come from the shared network layer; the Authorization header
+      // is attached by its interceptor (same token).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: ApiPath.updateProfileEndpoint,
         data: formData,
-        options: dio.Options(
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200) {
-        ToastHelper().showSuccessToast(response.data["message"]);
+      if (response.status == Status.completed) {
+        final message = response.data?['message']?.toString();
+        if (message != null && message.isNotEmpty) {
+          ToastHelper().showSuccessToast(message);
+        }
         Get.back();
         await Get.find<HomeController>().fetchDashboard();
-      }
-    } on dio.DioException catch (e) {
-      if (e.response!.statusCode == 422) {
-        ToastHelper().showErrorToast(e.response!.data["message"]);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitUpdateProfile() error: $e');

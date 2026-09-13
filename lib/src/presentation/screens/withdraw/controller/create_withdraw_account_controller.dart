@@ -9,7 +9,6 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/model/withdraw_method_model.dart';
@@ -19,7 +18,9 @@ class CreateWithdrawAccountController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isWithdrawMethodsLoading = false.obs;
   final RxBool isCreateWithdrawAccountLoading = false.obs;
-  final TokenService tokenService = Get.find<TokenService>();
+  // PAYMENT-FIX (P-1): the manual `tokenService` bearer header was removed —
+  // NetworkService's interceptor now attaches Authorization from the same
+  // TokenService singleton.
   final ImagePicker _picker = ImagePicker();
   final localization = AppLocalizations.of(Get.context!)!;
 
@@ -196,25 +197,23 @@ class CreateWithdrawAccountController extends GetxController {
         }
       }
 
-      final response = await dio.Dio().post(
-        "${ApiPath.baseUrl}${ApiPath.withdrawAccountCreateEndpoint}",
+      // PAYMENT-FIX (P-1): was a raw `dio.Dio()` POST (no timeout, no
+      // 401-refresh, silent failures). Same multipart payload is now routed
+      // through NetworkService.postMultipart — timeouts, interceptors and
+      // 422 error toasts come from the shared network layer; the
+      // Authorization header is attached by its interceptor (same token).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: ApiPath.withdrawAccountCreateEndpoint,
         data: formData,
-        options: dio.Options(
-          headers: {
-            "Accept": "application/json",
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.status == Status.completed) {
         Get.find<WithdrawController>().selectedScreen.value = 1;
-        ToastHelper().showSuccessToast(response.data["message"]);
+        final message = response.data?['message']?.toString();
+        if (message != null && message.isNotEmpty) {
+          ToastHelper().showSuccessToast(message);
+        }
         clearFields();
-      }
-    } on dio.DioException catch (e) {
-      if (e.response?.statusCode == 422) {
-        ToastHelper().showErrorToast(e.response?.data["message"]);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ createWithdrawAccount() error: $e');

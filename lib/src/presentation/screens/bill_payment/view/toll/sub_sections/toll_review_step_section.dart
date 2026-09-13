@@ -137,16 +137,22 @@ class TollReviewStepSection extends StatelessWidget {
                 ),
                 SizedBox(width: 16),
                 Expanded(
-                  child: CommonIconButton(
-                    onPressed: () => controller.submitPayBill(),
-                    width: double.infinity,
-                    height: 52,
-                    text: localization.tollReviewConfirmButton,
-                    icon: PngAssets.reviewArrowRightCommonIcon,
-                    iconWidth: 18,
-                    iconHeight: 18,
-                    iconAndTextSpace: 8,
-                    isIconRight: true,
+                  child: Obx(
+                    () => CommonIconButton(
+                      // PAYMENT-FIX (P-2): bind to the submit state — a
+                      // second tap while the request is in flight must not
+                      // fire (mirrors the cash_out review step).
+                      isLoading: controller.isSubmitLoading.value,
+                      onPressed: () => controller.submitPayBill(),
+                      width: double.infinity,
+                      height: 52,
+                      text: localization.tollReviewConfirmButton,
+                      icon: PngAssets.reviewArrowRightCommonIcon,
+                      iconWidth: 18,
+                      iconHeight: 18,
+                      iconAndTextSpace: 8,
+                      isIconRight: true,
+                    ),
                   ),
                 ),
               ],

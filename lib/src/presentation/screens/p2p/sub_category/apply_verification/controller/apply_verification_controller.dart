@@ -12,7 +12,6 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/apply_verification/model/apply_verification_model.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/apply_verification/model/verification_status_response_model.dart'
     as verification_model;
@@ -27,8 +26,9 @@ class ApplyVerificationController extends GetxController {
 
   /// انتخاب‌گر تصویر (دوربین)
   final ImagePicker _picker = ImagePicker();
-  /// سرویس توکن برای احراز هویت درخواست‌ها
-  final TokenService tokenService = Get.find<TokenService>();
+  // PAYMENT-FIX (P-1): the manual `tokenService` bearer header was removed —
+  // NetworkService's interceptor now attaches Authorization from the same
+  // TokenService singleton.
 
   /// پاسخ وضعیت تأیید فعلی کاربر
   final Rxn<verification_model.VerificationStatusResponseModel>
@@ -305,39 +305,24 @@ class ApplyVerificationController extends GetxController {
         }
       }
 
-      /// ارسال فرم به سرور با هدر احراز هویت
-      final response = await dio.Dio().post(
-        '${ApiPath.baseUrl}${ApiPath.applyVerificationEndPoint}',
+      /// ارسال فرم به سرور
+      /// PAYMENT-FIX (P-1): was a raw `dio.Dio()` POST (no timeout, no
+      /// 401-refresh). Same multipart payload is now routed through
+      /// NetworkService.postMultipart — timeouts, interceptors and 422
+      /// error toasts come from the shared network layer; the Authorization
+      /// header is attached by its interceptor (same token).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: ApiPath.applyVerificationEndPoint,
         data: formData,
-        options: dio.Options(
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.status == Status.completed) {
         ToastHelper().showSuccessToast(
-          (response.data is Map<String, dynamic>)
-              ? (response.data['message'] ??
-                  AppLocalizations.of(Get.context!)?.p2pVerificationSubmitted ??
-                  'Verification submitted successfully')
-              : AppLocalizations.of(Get.context!)?.p2pVerificationSubmitted ??
-                  'Verification submitted successfully',
+          response.data?['message']?.toString() ??
+              AppLocalizations.of(Get.context!)?.p2pVerificationSubmitted ??
+              'Verification submitted successfully',
         );
         await fetchVerificationStatus();
-      }
-    } on dio.DioException catch (e) {
-      if (e.response?.statusCode == 422) {
-        final message = e.response?.data?['message'];
-        ToastHelper().showErrorToast(
-          message is String && message.isNotEmpty
-              ? message
-              : _defaultErrorText,
-        );
-      } else {
-        ToastHelper().showErrorToast(_defaultErrorText);
       }
     } catch (e, stackTrace) {
       debugPrint('onSubmitPressed() error: $e');

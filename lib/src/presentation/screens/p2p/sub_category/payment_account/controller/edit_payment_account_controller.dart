@@ -8,7 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
 
 import 'payment_account_controller.dart';
@@ -21,8 +22,9 @@ class EditPaymentAccountController extends GetxController {
   final RxBool isLoading = false.obs;
   /// انتخاب‌گر تصویر
   final ImagePicker _picker = ImagePicker();
-  /// سرویس توکن برای احراز هویت
-  final TokenService tokenService = Get.find<TokenService>();
+  // PAYMENT-FIX (P-1): the manual `tokenService` bearer header was removed —
+  // NetworkService's interceptor now attaches Authorization from the same
+  // TokenService singleton.
 
   /// فیلدهای داینامیک فرم (کنترلر متن + اعتبارسنجی + نوع + مقدار موجود)
   final RxMap<String, Map<String, dynamic>> dynamicFieldControllers =
@@ -105,24 +107,23 @@ class EditPaymentAccountController extends GetxController {
         }
       }
 
-      final response = await dio.Dio().post(
-        '${ApiPath.baseUrl}${ApiPath.paymentAccountEndpoint}/$accountId',
+      // PAYMENT-FIX (P-1): was a raw `dio.Dio()` POST (no timeout, no
+      // 401-refresh, silent failures). Same multipart payload (including the
+      // Laravel `_method: put` spoof field) is now routed through
+      // NetworkService.postMultipart — timeouts, interceptors and 422 error
+      // toasts come from the shared network layer; the Authorization header
+      // is attached by its interceptor (same token).
+      final response = await Get.find<NetworkService>().postMultipart(
+        endpoint: '${ApiPath.paymentAccountEndpoint}/$accountId',
         data: formData,
-        options: dio.Options(
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${tokenService.accessToken.value}',
-          },
-        ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.status == Status.completed) {
         await Get.find<PaymentAccountController>().onEditSuccess();
-        ToastHelper().showSuccessToast(response.data['message']);
-      }
-    } on dio.DioException catch (e) {
-      if (e.response?.statusCode == 422) {
-        ToastHelper().showErrorToast(e.response?.data['message']);
+        final message = response.data?['message']?.toString();
+        if (message != null && message.isNotEmpty) {
+          ToastHelper().showSuccessToast(message);
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('updatePaymentAccount() error: $e');

@@ -80,6 +80,11 @@ class ApiPath {
   static const String makePaymentEndpoint = '/user/payment/make';
   static const String paymentHistoryEndpoint = '/user/payment/history';
 
+  // Dynamic Password Endpoints
+  // M-3 (PAYMENT-FIX): was hardcoded '/pay/generate-otp' inside
+  // dynamic_password_screen.dart — the literal path value is unchanged.
+  static const String generateDynamicPasswordOtpEndpoint = '/pay/generate-otp';
+
   // Request Money Endpoints
   static const String requestMoneyEndpoint = '/user/request-money';
   static const String requestMoneyHistoryEndpoint =

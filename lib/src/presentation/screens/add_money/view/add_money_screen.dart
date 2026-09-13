@@ -24,7 +24,11 @@ class AddMoneyScreen extends StatefulWidget {
 }
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
-  final AddMoneyController controller = Get.put(AddMoneyController());
+  // M-1 (PAYMENT-FIX): the view used to `Get.put(AddMoneyController())`
+  // alongside AddMoneyBinding (dual, inconsistent DI). The binding registers
+  // the exact same controller with no extra config, so the view now only
+  // looks it up; instantiation/cleanup is owned by the route binding.
+  final AddMoneyController controller = Get.find<AddMoneyController>();
   final String walletId = Get.arguments?["wallet_id"] ?? "";
 
   @override

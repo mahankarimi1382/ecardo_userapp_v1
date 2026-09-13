@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -17,6 +18,11 @@ class ElectricityController extends GetxController {
   final RxDouble payableAmount = 0.0.obs;
   final RxString chargeText = "".obs;
   final RxString rateText = "".obs;
+  // PAYMENT-FIX (P-2): raw backend response body of the last successful
+  // pay-bill call (pass-through, no client model). Surfaced by the result
+  // step so a backend "pending" payment no longer looks like a success.
+  final Rxn<Map<String, dynamic>> lastBillPaymentResult =
+      Rxn<Map<String, dynamic>>();
   final localization = AppLocalizations.of(Get.context!);
 
   // Stepper
@@ -126,6 +132,9 @@ class ElectricityController extends GetxController {
   }
 
   Future<void> submitPayBill() async {
+    // PAYMENT-FIX (P-2): guard against double submission while a request is
+    // in flight (mirrors the v1.0.24 cashOut/add_money guards).
+    if (isSubmitLoading.isTrue) return;
     isSubmitLoading.value = true;
     try {
       final Map<String, dynamic> requestBody = {
@@ -142,9 +151,20 @@ class ElectricityController extends GetxController {
         data: requestBody,
       );
       if (response.status == Status.completed) {
-        ToastHelper().showSuccessToast(response.data!["message"]);
-        resetFields();
+        final message = response.data?['message']?.toString();
+        if (message != null && message.isNotEmpty) {
+          ToastHelper().showSuccessToast(message);
+        }
+        // PAYMENT-FIX (P-2): keep the backend answer (pass-through) and move
+        // to the result step — the backend-driven pending/success state is
+        // now visible instead of a silent reset.
+        lastBillPaymentResult.value = response.data;
+        currentStep.value = 2;
       }
+    } catch (e, stackTrace) {
+      debugPrint('❌ submitPayBill() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {
       isSubmitLoading.value = false;
     }
@@ -229,19 +249,37 @@ class ElectricityController extends GetxController {
         settings.getSetting("site_currency")?.toString() ?? "";
     final amount = double.tryParse(amountController.text) ?? 0.0;
 
+    // PAYMENT-FIX (P-2): `charge!`/`rate!` crashed the review step when the
+    // backend configured a service without them (both are nullable in
+    // PayBillServiceData). Safe-parse with a 0 fallback — the server still
+    // validates the final amounts.
+    final service = serviceData.value;
+    final double serviceCharge = service?.charge ?? 0.0;
+    final double serviceRate = service?.rate ?? 0.0;
+    final String serviceCurrency = service?.currency ?? '';
+
     double charge;
-    if (serviceData.value!.chargeType == 'fixed') {
-      charge = serviceData.value!.charge!.toDouble();
+    if (service?.chargeType == 'fixed') {
+      charge = serviceCharge;
     } else {
-      charge = (amount / 100) * (serviceData.value!.charge!.toDouble());
+      charge = (amount / 100) * serviceCharge;
     }
-    final payable = serviceData.value!.rate! > 0
-        ? ((amount / serviceData.value!.rate!) + charge)
-        : 0.0;
+    final payable = serviceRate > 0 ? ((amount / serviceRate) + charge) : 0.0;
     payableAmount.value = payable;
     chargeText.value = '${charge.toStringAsFixed(decimals)} $currency';
-    rateText.value =
-        '1 $currency = ${serviceData.value!.rate!.toInt()} ${serviceData.value!.currency}';
+    // Integer rates keep the historical compact display; fractional rates
+    // (S-011: server stores DECIMAL, e.g. 0.85) used to truncate to "0" —
+    // format them with the DynamicDecimalsHelper convention instead.
+    final int rateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: serviceCurrency,
+      siteCurrencyCode: currency,
+      siteCurrencyDecimals:
+          settings.getSetting("site_currency_decimals")?.toString(),
+      isCrypto: false,
+    );
+    rateText.value = serviceRate == serviceRate.roundToDouble()
+        ? '1 $currency = ${serviceRate.toInt()} $serviceCurrency'
+        : '1 $currency = ${serviceRate.toStringAsFixed(rateDecimals)} $serviceCurrency';
   }
 
   void resetFields() {
@@ -249,6 +287,7 @@ class ElectricityController extends GetxController {
     payableAmount.value = 0.0;
     chargeText.value = "";
     rateText.value = "";
+    lastBillPaymentResult.value = null;
 
     // Stepper
     currentStep.value = 0;

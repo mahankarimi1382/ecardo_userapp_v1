@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -17,7 +18,14 @@ class DynamicPasswordScreen extends StatefulWidget {
 }
 
 class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
-  final HomeController _homeController = Get.find<HomeController>();
+  // M-2 (PAYMENT-FIX): this route has no binding of its own, so a direct /
+  // deep navigation used to crash on `Get.find<HomeController>()`. Look the
+  // controller up only when it is actually registered; otherwise the account
+  // number stays empty and OTP generation fails with the localized
+  // "user not found" error (fail-closed, no crash).
+  final HomeController? _homeController = Get.isRegistered<HomeController>()
+      ? Get.find<HomeController>()
+      : null;
 
   String? _otpCode;
   int _secondsRemaining = 0;
@@ -31,11 +39,15 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
   }
 
   Future<void> _generateOtp() async {
+    // M-3 (PAYMENT-FIX): in-flight guard — a double tap on generate /
+    // regenerate must not mint two OTPs at once.
+    if (_isLoading) return;
     setState(() => _isLoading = true);
     _timer?.cancel();
 
     try {
-      final accountNumber = _homeController.userModel.value.data?.accountNumber ?? '';
+      final accountNumber =
+          _homeController?.userModel.value.data?.accountNumber ?? '';
 
       if (accountNumber.isEmpty) {
         // v1.0.24: localized instead of hardcoded Persian strings.
@@ -47,7 +59,8 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
       }
 
       final response = await Get.find<NetworkService>().post(
-        endpoint: '/pay/generate-otp',
+        // M-3 (PAYMENT-FIX): path moved into ApiPath (value unchanged).
+        endpoint: ApiPath.generateDynamicPasswordOtpEndpoint,
         data: {'account_number': accountNumber},
       );
 

@@ -297,16 +297,23 @@ class VirtualCardDetailsController extends GetxController {
     final SettingsService settingsService = Get.find();
     baseAmount.value = double.tryParse(amountController.text) ?? 0.0;
 
+    // PAYMENT-FIX (P-3): `getSetting("card_topup_charge")!` and
+    // `double.tryParse(...)!` crashed when the setting was absent or not a
+    // number (e.g. settings not loaded yet). Safe-parse with a 0-charge
+    // fallback, matching the hardened validateAmountStep above.
+    // TODO(lead): confirm whether the backend guarantees the
+    // card_topup_charge / card_topup_charge_type settings; if so, surface a
+    // config error instead of silently computing a 0 charge.
+    final double? chargeSetting = double.tryParse(
+      settingsService.getSetting("card_topup_charge") ?? '',
+    );
+
     if (settingsService.getSetting("card_topup_charge_type") == 'percentage') {
       calculatedCharge.value =
-          (baseAmount.value *
-          double.tryParse(settingsService.getSetting("card_topup_charge")!)! /
-          100);
+          (baseAmount.value * (chargeSetting ?? 0.0) / 100);
     } else if (settingsService.getSetting("card_topup_charge_type") ==
         'fixed') {
-      calculatedCharge.value = double.tryParse(
-        settingsService.getSetting("card_topup_charge")!,
-      )!;
+      calculatedCharge.value = chargeSetting ?? 0.0;
     } else {
       calculatedCharge.value = 0.0;
     }
