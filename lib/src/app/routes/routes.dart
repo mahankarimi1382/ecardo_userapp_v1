@@ -44,6 +44,12 @@ class BaseRoute {
 
   static const String makePayment = "/make_payment_route";
 
+  // TODO(lead): M-6 — dead route constants: no screen/controller for an
+  // invoice flow exists anywhere under lib/src/presentation/screens/ and no
+  // GetPage is registered in routes_handler.dart. Navigating to any of these
+  // falls through to unknownRoute (splash). Keep the constants (removing
+  // them is an API-surface change that needs a product decision) until the
+  // invoice feature is either built or dropped.
   static const String invoice = "/invoice_route";
 
   static const String createInvoice = "/create_invoice_route";
@@ -89,6 +95,9 @@ class BaseRoute {
 
   static const String giftHistory = "/gift_history_route";
 
+  // TODO(lead): M-6 — dead route constant (same situation as invoice*):
+  // no invoiceDetails screen exists under lib/src/presentation/screens/ and
+  // no GetPage is registered in routes_handler.dart.
   static const String invoiceDetails = "/invoice_details_route";
 
   static const String idVerification = "/id_verification_route";

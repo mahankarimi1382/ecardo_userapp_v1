@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../bindings/app_bindings.dart';
 import 'routes.dart';
 import '../../presentation/screens/kyc_level/kyc_level_binding.dart';
+import '../../presentation/screens/settings/view/support_tickets/replay_ticket/replay_ticket.dart';
 import 'routes_config.dart';
 
 List<GetPage> routesHandler = [
@@ -216,6 +217,28 @@ List<GetPage> routesHandler = [
     name: BaseRoute.addNewTicket,
     page: () => RoutesConfig.addNewTicket,
     binding: AddNewTicketBinding(),
+  ),
+
+  // M-6 (v1.0.27) — BaseRoute.replayTicket was a dead constant: the
+  // ReplayTicket screen (settings/support_tickets/replay_ticket) exists and
+  // is opened directly via `Get.to(() => ReplayTicket(ticketUid: ...))` from
+  // support_tickets.dart, but the named route had no GetPage, so any
+  // Get.toNamed(BaseRoute.replayTicket) silently fell through to
+  // unknownRoute (splash). Registered here to complete the unfinished
+  // section ("تکمیل بخش ناتمام").
+  //
+  // The ticket UID is supplied via route arguments, mirroring the widget's
+  // required `ticketUid` constructor parameter; navigation without
+  // arguments degrades gracefully (empty uid → server-side not-found toast)
+  // instead of crashing. No binding is needed: ReplyTicketController is
+  // registered by the screen itself (Get.put in its State). The page widget
+  // is built inline instead of via RoutesConfig because routes_config.dart
+  // is outside this fix's file scope.
+  GetPage(
+    name: BaseRoute.replayTicket,
+    page: () => ReplayTicket(
+      ticketUid: Get.arguments is String ? Get.arguments as String : '',
+    ),
   ),
 
   GetPage(
