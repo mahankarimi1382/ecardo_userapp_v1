@@ -212,22 +212,22 @@ class VirtualCardDetailsController extends GetxController {
     }
     if (funding.minimumTopup > 0 && amount < funding.minimumTopup) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!vcMinTopup(funding.minimumTopup, card?.currency ?? ''),
+        AppLocalizations.of(Get.context!)!.vcMinTopup(funding.minimumTopup, card?.currency ?? ''),
       );
       return;
     }
     if (funding.maximumTopup > 0 && amount > funding.maximumTopup) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!vcMaxTopup(funding.maximumTopup, card?.currency ?? ''),
+        AppLocalizations.of(Get.context!)!.vcMaxTopup(funding.maximumTopup, card?.currency ?? ''),
       );
       return;
     }
     if (fundingSource == 'irr_wallet' && walletId == null) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcSelectIrrWallet);
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcSelectIrrWallet);
       return;
     }
     if (fundingSource == 'gateway' && gatewayMethodId == null) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcSelectGateway);
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcSelectGateway);
       return;
     }
 
@@ -271,13 +271,13 @@ class VirtualCardDetailsController extends GetxController {
         ToastHelper().showErrorToast(
           failureMessage.isNotEmpty
               ? failureMessage
-              : AppLocalizations.of(Get.context!)!vcTopupNotCompleted,
+              : AppLocalizations.of(Get.context!)!.vcTopupNotCompleted,
         );
         return;
       }
 
       ToastHelper().showSuccessToast(
-        response.data!['message']?.toString() ?? AppLocalizations.of(Get.context!)!vcTopupSubmitted,
+        response.data!['message']?.toString() ?? AppLocalizations.of(Get.context!)!.vcTopupSubmitted,
       );
       amountController.clear();
       Get.back();

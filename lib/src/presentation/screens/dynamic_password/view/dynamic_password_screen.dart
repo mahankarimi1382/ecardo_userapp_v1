@@ -70,11 +70,11 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
           setState(() => _isLoading = false);
         }
       } else {
-        ToastHelper().showErrorToast(response.message ?? AppLocalizations.of(Get.context!)!dynamicPasswordServerError);
+        ToastHelper().showErrorToast(response.message ?? AppLocalizations.of(Get.context!)!.dynamicPasswordServerError);
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!dynamicPasswordConnectionError);
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.dynamicPasswordConnectionError);
       setState(() => _isLoading = false);
     }
   }
@@ -123,10 +123,10 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
               child: const Icon(Icons.pin_rounded, size: 40, color: AppColors.lightPrimary),
             ),
             const SizedBox(height: 24),
-            Text(AppLocalizations.of(context)!dynamicPasswordHeading,
+            Text(AppLocalizations.of(context)!.dynamicPasswordHeading,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF0A2540))),
             const SizedBox(height: 8),
-            Text(AppLocalizations.of(context)!dynamicPasswordSubtitle,
+            Text(AppLocalizations.of(context)!.dynamicPasswordSubtitle,
                 style: TextStyle(fontSize: 14, color: Color(0xFF8898AA))),
             const SizedBox(height: 40),
 
@@ -170,7 +170,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(AppLocalizations.of(context)!dynamicPasswordValidity,
+                    Text(AppLocalizations.of(context)!.dynamicPasswordValidity,
                         style: TextStyle(fontSize: 11, color: Color(0xFF8898AA))),
                   ],
                 ),
@@ -179,10 +179,10 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
               ElevatedButton.icon(
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: _otpCode!));
-                  ToastHelper().showSuccessToast(AppLocalizations.of(Get.context!)!dynamicPasswordCopied);
+                  ToastHelper().showSuccessToast(AppLocalizations.of(Get.context!)!.dynamicPasswordCopied);
                 },
                 icon: const Icon(Icons.copy, size: 18),
-                label: Text(AppLocalizations.of(context)!dynamicPasswordCopy),
+                label: Text(AppLocalizations.of(context)!.dynamicPasswordCopy),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.lightPrimary,
                   foregroundColor: Colors.white,
@@ -193,7 +193,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
               const SizedBox(height: 12),
               TextButton(
                 onPressed: _generateOtp,
-                child: Text(AppLocalizations.of(context)!dynamicPasswordRegenerate, style: TextStyle(color: AppColors.lightPrimary)),
+                child: Text(AppLocalizations.of(context)!.dynamicPasswordRegenerate, style: TextStyle(color: AppColors.lightPrimary)),
               ),
             ] else ...[
               SizedBox(
@@ -201,7 +201,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _generateOtp,
                   icon: const Icon(Icons.refresh_rounded),
-                  label: Text(AppLocalizations.of(context)!dynamicPasswordGenerate, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  label: Text(AppLocalizations.of(context)!.dynamicPasswordGenerate, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.lightPrimary,
                     foregroundColor: Colors.white,
@@ -227,7 +227,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      AppLocalizations.of(context)!dynamicPasswordUsageHint,
+                      AppLocalizations.of(context)!.dynamicPasswordUsageHint,
                       style: TextStyle(fontSize: 12, color: Color(0xFF92400E)),
                     ),
                   ),
