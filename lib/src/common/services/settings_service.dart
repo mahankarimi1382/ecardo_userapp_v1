@@ -194,8 +194,13 @@ class SettingsService extends GetxService {
     isSettingsLoading.value = true;
 
     try {
+      // v1.0.26 (UPD-2): v2 alias + per-request cache-buster. The CDN edge
+      // had pinned /api/get-settings, serving a stale app_version to the
+      // update check. A unique query string guarantees a fresh copy (the
+      // server ignores unknown query params).
+      final cacheBuster = DateTime.now().millisecondsSinceEpoch;
       final response = await Get.find<NetworkService>().globalGet(
-        endpoint: ApiPath.getSettingsEndpoint,
+        endpoint: '${ApiPath.getSettingsEndpointV2}?cb=$cacheBuster',
       );
 
       if (response.status == Status.completed) {

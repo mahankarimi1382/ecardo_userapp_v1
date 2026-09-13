@@ -5,6 +5,13 @@ class ApiPath {
   // Common Endpoints
   static const String countriesEndpoint = '/get-countries';
   static const String getSettingsEndpoint = '/get-settings';
+
+  // v1.0.26 (UPD-2): CF-edge-safe alias of /get-settings. The original URL
+  // got pinned STALE in the Cloudflare edge cache (origin served 1.0.25,
+  // edge kept serving 1.0.24), so the update check read a dead version.
+  // The v2 path has no stale edge entry and the response is now also
+  // Cache-Control: no-store server-side.
+  static const String getSettingsEndpointV2 = '/get-settings-v2';
   static const String languagesEndpoint = '/get-languages';
   static const String termsAndConditionsEndpoint = '/terms-conditions';
   static const String getSetupFcm = '/setup-fcm';
