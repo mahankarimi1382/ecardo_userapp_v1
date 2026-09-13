@@ -861,7 +861,7 @@
   "twoFactorAuthenticationScreenTitle": "2FA Authentication",
   "comment_disable_2fa_section": "==== Disable 2FA Section ====",
   "disable2FaSectionTitle": "2FA Authentication",
-  "disable2FaSectionDescription": "noInternetConnectionRetryButton",
+  "disable2FaSectionDescription": "Turning off two-factor authentication reduces your account security. You can enable it again at any time.",
   "disable2FaSectionDisableButton": "Disable 2FA",
   "disable2FaSectionPasswordRequired": "Please enter an password",
   "comment_enable_2fa_section": "==== Enable 2FA Section ====",
@@ -1129,7 +1129,7 @@
   "exchangeValidationEnterAmount": "Please enter an amount",
   "exchangeValidationAmountMinimum": "Minimum amount should be {amount} {currency}",
   "exchangeValidationAmountMaximum": "Maximum amount should be {amount} {currency}",
-    "exchangeValidationInsufficientBalance": "Insufficient balance — available: {amount} {currency}",
+  "exchangeValidationInsufficientBalance": "Insufficient balance — available: {amount} {currency}",
   "comment_create_gift_controller": "==== Create Gift Controller ====",
   "createGiftValidationSelectWallet": "Please select a wallet",
   "createGiftValidationEnterAmount": "Please enter an amount",
@@ -2240,5 +2240,40 @@
   "remittanceStatusRefundRequested": "Refund Requested",
   "remittanceStatusRefundCompleted": "Refund Completed",
   "remittanceStatusUnknown": "Unknown",
-  "exchangeCalculating": "Calculating…"
+  "exchangeCalculating": "Calculating…",
+  "biometricNotAvailable": "Biometric authentication is not available on this device",
+  "biometricSetupFailed": "Failed to start biometric authentication",
+  "biometricFailedAttempts": "Biometric authentication failed. {attempts} attempts remaining",
+  "@biometricFailedAttempts": {
+    "placeholders": {
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "biometricMaxAttempts": "Maximum biometric attempts reached. Please sign in with your password",
+  "biometricReason": "Authenticate to sign in to eCardo",
+  "biometricGenericError": "Biometric authentication failed",
+  "dynamicPasswordUserNotFound": "Error: user information not found",
+  "dynamicPasswordGenerateError": "Failed to generate dynamic password",
+  "licenseRequiredTitle": "License Required",
+  "commonClose": "Close",
+  "contactSupport": "Contact Support",
+  "updateCancelDownloadTitle": "Cancel download?",
+  "updateContinueDownload": "Continue download",
+  "updateAvailableTitle": "New update available ({version})",
+  "@updateAvailableTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateLater": "Later",
+  "kycDocumentsRequired": "Documents are required.",
+  "kycUploadFailed": "Upload failed. Please try again.",
+  "p2pSelectFiatFirst": "Please select a fiat currency first",
+  "p2pLoadPaymentMethodsFailed": "Failed to load payment methods",
+  "p2pLoadAdsFailed": "Failed to load marketplace ads",
+  "pickDocumentFailed": "Failed to pick document. Please try again."
 }
