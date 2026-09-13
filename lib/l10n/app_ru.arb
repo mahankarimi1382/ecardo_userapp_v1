@@ -2201,7 +2201,6 @@
   "exchangeRateAlertPlaceholder": "Скоро",
   "exchangeCalculating": "Расчёт…",
   "hotel_active_filters": "Активные фильтры",
-  "hotel_admin_configured_special_offers_will_appear_": "Специальные предложения, добавленные администратором, появятся здесь.",
   "hotel_all_cities_with_hotels": "Все города с отелями",
   "hotel_all_filters": "Все фильтры",
   "hotel_all_ratings": "Все оценки",
@@ -2359,5 +2358,6 @@
   "p2pSelectFiatFirst": "Сначала выберите фиатную валюту",
   "p2pLoadPaymentMethodsFailed": "Не удалось загрузить способы оплаты",
   "p2pLoadAdsFailed": "Не удалось загрузить объявления",
-  "pickDocumentFailed": "Не удалось выбрать документ. Попробуйте снова."
+  "pickDocumentFailed": "Не удалось выбрать документ. Попробуйте снова.",
+  "hotel_admin_configured_special_offers_will_appear": "Специальные предложения, добавленные администратором, появятся здесь."
 }

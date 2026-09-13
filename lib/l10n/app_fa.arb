@@ -2263,7 +2263,6 @@
   "p2pLoadAdsFailed": "بارگذاری آگهی‌های بازار ناموفق بود",
   "pickDocumentFailed": "انتخاب سند ناموفق بود. لطفاً دوباره تلاش کنید.",
   "hotel_active_filters": "فیلترهای فعال",
-  "hotel_admin_configured_special_offers_will_appear_": "پیشنهادهای ویژه پس از تعریف در پنل مدیریت اینجا نمایش داده می‌شوند.",
   "hotel_all_cities_with_hotels": "همه شهرهای دارای هتل",
   "hotel_all_filters": "همه فیلترها",
   "hotel_all_ratings": "همه امتیازها",
@@ -2360,5 +2359,6 @@
   "vcMinTopup": "حداقل شارژ {amount} {currency} است.",
   "vcMaxTopup": "حداکثر شارژ {amount} {currency} است.",
   "vcTopupNotCompleted": "شارژ کارت تکمیل نشد.",
-  "vcTopupSubmitted": "درخواست شارژ کارت ثبت شد."
+  "vcTopupSubmitted": "درخواست شارژ کارت ثبت شد.",
+  "hotel_admin_configured_special_offers_will_appear": "پیشنهادهای ویژه پس از تعریف در پنل مدیریت اینجا نمایش داده می‌شوند."
 }

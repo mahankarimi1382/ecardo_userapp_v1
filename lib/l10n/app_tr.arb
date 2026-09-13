@@ -2201,7 +2201,6 @@
   "exchangeRateAlertPlaceholder": "Yakında",
   "exchangeCalculating": "Hesaplanıyor…",
   "hotel_active_filters": "Aktif filtreler",
-  "hotel_admin_configured_special_offers_will_appear_": "Yönetici tarafından eklenen özel fırsatlar burada görünecek.",
   "hotel_all_cities_with_hotels": "Otel bulunan tüm şehirler",
   "hotel_all_filters": "Tüm filtreler",
   "hotel_all_ratings": "Tüm puanlar",
@@ -2359,5 +2358,6 @@
   "p2pSelectFiatFirst": "Lütfen önce fiat para birimi seçin",
   "p2pLoadPaymentMethodsFailed": "Ödeme yöntemleri yüklenemedi",
   "p2pLoadAdsFailed": "İlanlar yüklenemedi",
-  "pickDocumentFailed": "Belge seçilemedi. Lütfen tekrar deneyin."
+  "pickDocumentFailed": "Belge seçilemedi. Lütfen tekrar deneyin.",
+  "hotel_admin_configured_special_offers_will_appear": "Yönetici tarafından eklenen özel fırsatlar burada görünecek."
 }

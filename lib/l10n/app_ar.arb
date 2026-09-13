@@ -2231,7 +2231,6 @@
   "remittanceStatusUnknown": "Unknown",
   "exchangeCalculating": "جارٍ الحساب…",
   "hotel_active_filters": "الفلاتر النشطة",
-  "hotel_admin_configured_special_offers_will_appear_": "ستظهر العروض الخاصة المُعدّة من قِبل المسؤول هنا.",
   "hotel_all_cities_with_hotels": "جميع المدن التي بها فنادق",
   "hotel_all_filters": "جميع الفلاتر",
   "hotel_all_ratings": "جميع التقييمات",
@@ -2360,5 +2359,6 @@
   "p2pSelectFiatFirst": "يرجى اختيار عملة نقديّة أولاً",
   "p2pLoadPaymentMethodsFailed": "فشل تحميل طرق الدفع",
   "p2pLoadAdsFailed": "فشل تحميل الإعلانات",
-  "pickDocumentFailed": "فشل اختيار المستند. حاول مرة أخرى."
+  "pickDocumentFailed": "فشل اختيار المستند. حاول مرة أخرى.",
+  "hotel_admin_configured_special_offers_will_appear": "ستظهر العروض الخاصة المُعدّة من قِبل المسؤول هنا."
 }

@@ -272,7 +272,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
             title: AppLocalizations.of(context)!.hotel_special_offers,
             child: options.specialOffers.isEmpty
                 ? Text(
-                    AppLocalizations.of(context)!.hotelAdminConfiguredSpecialOffersWillAppear,
+                    AppLocalizations.of(context)!.hotel_admin_configured_special_offers_will_appear,
                     style: TextStyle(color: TravelTheme.muted),
                   )
                 : Wrap(

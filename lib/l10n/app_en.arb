@@ -2277,7 +2277,6 @@
   "p2pLoadAdsFailed": "Failed to load marketplace ads",
   "pickDocumentFailed": "Failed to pick document. Please try again.",
   "hotel_active_filters": "Active filters",
-  "hotel_admin_configured_special_offers_will_appear_": "Admin-configured special offers will appear here.",
   "hotel_all_cities_with_hotels": "All cities with hotels",
   "hotel_all_filters": "All filters",
   "hotel_all_ratings": "All ratings",
@@ -2456,5 +2455,6 @@
     }
   },
   "vcTopupNotCompleted": "The card top-up could not be completed.",
-  "vcTopupSubmitted": "Card top-up submitted."
+  "vcTopupSubmitted": "Card top-up submitted.",
+  "hotel_admin_configured_special_offers_will_appear": "Admin-configured special offers will appear here."
 }

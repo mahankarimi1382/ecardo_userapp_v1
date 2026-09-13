@@ -2262,7 +2262,6 @@
   "p2pLoadAdsFailed": "加载市场广告失败",
   "pickDocumentFailed": "选择文件失败，请重试。",
   "hotel_active_filters": "当前筛选条件",
-  "hotel_admin_configured_special_offers_will_appear_": "管理员设置的特殊优惠将显示在此处。",
   "hotel_all_cities_with_hotels": "所有有酒店的城市",
   "hotel_all_filters": "全部筛选",
   "hotel_all_ratings": "全部评分",
@@ -2359,5 +2358,6 @@
   "vcMinTopup": "最低充值金额为 {amount} {currency}。",
   "vcMaxTopup": "最高充值金额为 {amount} {currency}。",
   "vcTopupNotCompleted": "卡片充值未能完成。",
-  "vcTopupSubmitted": "卡片充值申请已提交。"
+  "vcTopupSubmitted": "卡片充值申请已提交。",
+  "hotel_admin_configured_special_offers_will_appear": "管理员设置的特殊优惠将显示在此处。"
 }
