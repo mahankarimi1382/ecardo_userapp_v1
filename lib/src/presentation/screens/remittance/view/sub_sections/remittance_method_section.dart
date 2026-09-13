@@ -274,15 +274,17 @@ class _QuotePreview extends StatelessWidget {
                 style: TextStyle(fontSize: 12.sp, color: AppColors.lightPrimary, fontWeight: FontWeight.w600))),
           ]),
           SizedBox(height: 12.h),
-          _Row(l.remittanceExchangeRate, '1 = ${quote.exchangeRate.toStringAsFixed(4)}'),
+          _Row(l.remittanceExchangeRate, '1 = ${quote.exchangeRate.toStringAsFixed(4)}'), // TODO(lead): exchange-rate precision is not exposed by the quote API — 4 kept as-is.
           SizedBox(height: 6.h),
-          _Row(l.remittanceReceiveAmount, quote.receiveAmount.toStringAsFixed(2)),
+          // M-7 — decimals now come from DynamicDecimalsHelper via the
+          // controller (API-driven); falls back to 2 like before.
+          _Row(l.remittanceReceiveAmount, controller.formatAmount(quote.receiveAmount, currencyId: quote.receiveCurrencyId)),
           SizedBox(height: 6.h),
-          _Row(l.remittanceSystemFee, quote.systemFee.toStringAsFixed(2)),
+          _Row(l.remittanceSystemFee, controller.formatAmount(quote.systemFee, currencyId: quote.sendCurrencyId)),
           SizedBox(height: 8.h),
           Divider(color: AppColors.lightBorder, height: 1),
           SizedBox(height: 8.h),
-          _Row(l.remittanceTotalPayable, quote.totalPayable.toStringAsFixed(2), bold: true),
+          _Row(l.remittanceTotalPayable, controller.formatAmount(quote.totalPayable, currencyId: quote.sendCurrencyId), bold: true),
         ],
       ),
     );

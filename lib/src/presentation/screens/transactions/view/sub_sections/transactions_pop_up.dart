@@ -10,6 +10,13 @@ class TransactionsPopUp extends StatelessWidget {
 
   const TransactionsPopUp({super.key, required this.transaction});
 
+  /// M-4 — Backend status casing is not guaranteed (other pages receive
+  /// lowercase statuses, this popup compared against "Success"/"Pending").
+  /// Compare on a normalized (trimmed, lower-cased) form so the styling
+  /// matches whatever casing the API sends. The displayed text still shows
+  /// the raw [transaction.status] unchanged.
+  String get _statusKey => (transaction.status ?? '').trim().toLowerCase();
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -150,15 +157,15 @@ class TransactionsPopUp extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
-                        color: transaction.status == "Success"
+                        color: _statusKey == "success"
                             ? AppColors.success.withValues(alpha: 0.2)
-                            : transaction.status == "Pending"
+                            : _statusKey == "pending"
                             ? AppColors.warning.withValues(alpha: 0.2)
                             : AppColors.error.withValues(alpha: 0.2),
                       ),
-                      color: transaction.status == "Success"
+                      color: _statusKey == "success"
                           ? AppColors.success.withValues(alpha: 0.05)
-                          : transaction.status == "Pending"
+                          : _statusKey == "pending"
                           ? AppColors.warning.withValues(alpha: 0.05)
                           : AppColors.error.withValues(alpha: 0.05),
                     ),
@@ -169,9 +176,9 @@ class TransactionsPopUp extends StatelessWidget {
                         letterSpacing: 0,
                         fontWeight: FontWeight.w600,
                         fontSize: 11,
-                        color: transaction.status == "Success"
+                        color: _statusKey == "success"
                             ? AppColors.success
-                            : transaction.status == "Pending"
+                            : _statusKey == "pending"
                             ? AppColors.warning
                             : AppColors.error,
                       ),

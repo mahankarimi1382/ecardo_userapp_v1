@@ -13,7 +13,19 @@ class RemittanceDetailsScreen extends StatefulWidget {
 }
 
 class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
-  final RemittanceController controller = Get.find<RemittanceController>();
+  // M-2 — Deep-link safety: this route has no GetPage binding, so opening it
+  // directly (push notification / external link) used to crash with
+  // `"RemittanceController" not found`. Reuse the flow controller when it is
+  // already registered (normal navigation from the history list, which also
+  // pre-selects the record), otherwise register it locally — fetchDetails()
+  // below loads everything this screen needs, so a fresh controller works
+  // for direct navigation too.
+  // TODO(lead): add a RemittanceBinding to /remittance_details_route (and the
+  // other remittance routes) in routes_handler.dart as the single DI source.
+  final RemittanceController controller =
+      Get.isRegistered<RemittanceController>()
+          ? Get.find<RemittanceController>()
+          : Get.put(RemittanceController());
 
   @override
   void initState() {
@@ -46,11 +58,15 @@ class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
             _Card('Tracking', [_Row('UUID', r.uuid), _Row('Reference', r.trx), if (r.createdAt != null) _Row('Created', _formatDate(r.createdAt!))]),
             SizedBox(height: 16.h),
             _Card(l.remittancePayoutDetails, [
-              _Row(l.remittanceSendAmount, r.sendAmount.toStringAsFixed(2)),
+              // M-7 — decimals now come from DynamicDecimalsHelper via the
+              // controller (API-driven); falls back to 2 like before.
+              _Row(l.remittanceSendAmount, controller.formatAmount(r.sendAmount, currencyId: r.sendCurrencyId)),
+              // TODO(lead): exchange-rate precision is not exposed by the
+              // remittance API payload — 4 kept as-is to preserve display.
               _Row(l.remittanceExchangeRate, r.exchangeRate.toStringAsFixed(4)),
-              _Row(l.remittanceReceiveAmount, r.receiveAmount.toStringAsFixed(2)),
-              _Row(l.remittanceSystemFee, r.systemFee.toStringAsFixed(2)),
-              _Row(l.remittanceTotalPayable, r.totalPayable.toStringAsFixed(2), bold: true),
+              _Row(l.remittanceReceiveAmount, controller.formatAmount(r.receiveAmount, currencyId: r.receiveCurrencyId)),
+              _Row(l.remittanceSystemFee, controller.formatAmount(r.systemFee, currencyId: r.sendCurrencyId)),
+              _Row(l.remittanceTotalPayable, controller.formatAmount(r.totalPayable, currencyId: r.sendCurrencyId), bold: true),
             ]),
             SizedBox(height: 16.h),
             if (r.senderInfo != null) _Card(l.remittanceReviewSender, [

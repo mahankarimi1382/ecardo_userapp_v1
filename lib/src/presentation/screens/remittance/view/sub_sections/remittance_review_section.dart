@@ -25,11 +25,13 @@ class RemittanceReviewSection extends StatelessWidget {
           SizedBox(height: 20.h),
           _Card(l.remittancePayoutDetails, [
             _Row(l.remittanceSelectPayoutMethod, m?.name ?? '-'),
-            _Row(l.remittanceSendAmount, q?.sendAmount.toStringAsFixed(2) ?? '-'),
-            _Row(l.remittanceExchangeRate, q != null ? '1 = ${q.exchangeRate.toStringAsFixed(4)}' : '-'),
-            _Row(l.remittanceReceiveAmount, q?.receiveAmount.toStringAsFixed(2) ?? '-'),
-            _Row(l.remittanceSystemFee, q?.systemFee.toStringAsFixed(2) ?? '-'),
-            _Row(l.remittanceTotalPayable, q?.totalPayable.toStringAsFixed(2) ?? '-', bold: true),
+            // M-7 — decimals now come from DynamicDecimalsHelper via the
+            // controller (API-driven); falls back to 2 like before.
+            _Row(l.remittanceSendAmount, q == null ? '-' : c.formatAmount(q.sendAmount, currencyId: q.sendCurrencyId)),
+            _Row(l.remittanceExchangeRate, q != null ? '1 = ${q.exchangeRate.toStringAsFixed(4)}' : '-'), // TODO(lead): exchange-rate precision is not exposed by the quote API — 4 kept as-is.
+            _Row(l.remittanceReceiveAmount, q == null ? '-' : c.formatAmount(q.receiveAmount, currencyId: q.receiveCurrencyId)),
+            _Row(l.remittanceSystemFee, q == null ? '-' : c.formatAmount(q.systemFee, currencyId: q.sendCurrencyId)),
+            _Row(l.remittanceTotalPayable, q == null ? '-' : c.formatAmount(q.totalPayable, currencyId: q.sendCurrencyId), bold: true),
           ]),
           SizedBox(height: 16.h),
           _Card(l.remittanceReviewSender, [

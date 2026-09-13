@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 // expects). Dio's FormData is the canonical one used throughout the app.
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -690,9 +692,57 @@ class RemittanceController extends GetxController {
     rateExpiresInSeconds.value = 0;
   }
 
-  String formatAmount(double amount) {
-    return amount.toStringAsFixed(2);
+  /// M-7 — Resolve display decimals for a currency id from API-provided data
+  /// (the currency `code` from the /get-currencies payload loaded in
+  /// [fetchSendCurrencies] + the `site_currency` / `site_currency_decimals`
+  /// settings) via [DynamicDecimalsHelper] — the exact pattern used by the
+  /// request_money / add_money / transfer / exchange modules.
+  ///
+  /// Behaviour contract:
+  ///   • currency unknown / list not loaded yet → helper's fiat default (2),
+  ///     i.e. identical to the previously hardcoded `toStringAsFixed(2)`;
+  ///   • currency == site currency → decimals come from the backend setting
+  ///     `site_currency_decimals` (never hardcoded client-side).
+  ///
+  /// TODO(lead): neither the /get-currencies payload nor the remittance
+  /// quote/record payloads expose a per-currency decimals column (they carry
+  /// currency IDs only). If the backend adds `currency_decimals` to either
+  /// response, prefer that field over this settings-based lookup.
+  int decimalsForCurrencyId(int? currencyId) {
+    String code = '';
+    if (currencyId != null) {
+      for (final currency in sendCurrencies) {
+        if (currency.id == currencyId) {
+          code = currency.code ?? '';
+          break;
+        }
+      }
+    }
+    return DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: code,
+      // `?? ''` (instead of request_money's `!`) keeps this crash-free when a
+      // setting is missing: an empty code makes the helper fall back to 2.
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? '',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
+              '',
+      // Remittance is fiat-only — sendCurrencies is filtered to fiat in
+      // fetchSendCurrencies(), and payout currencies are fiat as well.
+      isCrypto: false,
+    );
   }
+
+  /// Formats an amount with API-driven decimals.
+  ///
+  /// [currencyId] defaults to the currently selected send currency. Callers
+  /// displaying a stored record/quote should pass the record's own
+  /// sendCurrencyId / receiveCurrencyId so the decimals always match the
+  /// currency the amount is denominated in.
+  String formatAmount(double amount, {int? currencyId}) =>
+      amount.toStringAsFixed(
+        decimalsForCurrencyId(currencyId ?? selectedSendCurrencyId.value),
+      );
 
   String get statusLabel {
     final remittance = createdRemittance.value ?? selectedRemittance.value;

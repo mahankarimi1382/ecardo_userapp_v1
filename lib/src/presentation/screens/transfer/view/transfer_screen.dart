@@ -22,6 +22,15 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
+  // M-1 — Get.put is LOAD-BEARING here, not a redundant duplicate:
+  // TransferBinding only `lazyPut`s the controller, and navigation_screen
+  // deletes it every time the user leaves the transfer tab — the registry
+  // entry is already gone when the tab is re-entered, so a plain
+  // Get.find() would crash. The view re-registration is what keeps the
+  // bottom-nav tab lifecycle working (GetX `put` returns the registered
+  // instance when one exists, so both entry paths stay consistent).
+  // TODO(lead): switch TransferBinding to `Get.lazyPut(..., fenix: true)`
+  // (or move the tab-switch cleanup) before replacing this with Get.find().
   final TransferController controller = Get.put(TransferController());
   final HomeController homeController = Get.find();
 

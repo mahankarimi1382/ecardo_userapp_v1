@@ -36,6 +36,17 @@ class _RequestMoneySuccessStepSectionState
       isCrypto: controller.wallet.value!.isCrypto!,
     );
 
+    // M-8 — `charge` / `final_amount` arrive from the backend success payload
+    // as dynamic values; the previous `double.tryParse(x.toString())!` chain
+    // crashed the success step whenever either was null or non-numeric.
+    // Safe-parse with a 0.0 fallback instead — valid values render exactly
+    // as before.
+    final dynamic requestData = controller.successPaymentData.value?["request"];
+    final double successChargeValue =
+        double.tryParse(requestData?["charge"]?.toString() ?? '') ?? 0.0;
+    final double successFinalAmountValue =
+        double.tryParse(requestData?["final_amount"]?.toString() ?? '') ?? 0.0;
+
     return Obx(
       () => controller.isRequestMoneyLoading.value
           ? CommonLoading()
@@ -128,7 +139,7 @@ class _RequestMoneySuccessStepSectionState
                             title: localization
                                 .requestMoneySuccessStepSectionCharge,
                             content:
-                                "${double.tryParse(controller.successPaymentData.value!["request"]["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${successChargeValue.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -141,7 +152,7 @@ class _RequestMoneySuccessStepSectionState
                             title: localization
                                 .requestMoneySuccessStepSectionFinalAmount,
                             content:
-                                "${double.tryParse(controller.successPaymentData.value!["request"]["final_amount"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${successFinalAmountValue.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.success,
                           ),
                           const SizedBox(height: 20),

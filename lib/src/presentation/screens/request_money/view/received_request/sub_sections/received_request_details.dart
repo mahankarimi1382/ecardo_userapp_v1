@@ -17,6 +17,15 @@ class ReceivedRequestDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final SettingsService settingsService = Get.find();
     final localization = AppLocalizations.of(context)!;
+
+    // M-8 — `charge` / `finalAmount` are backend-provided strings;
+    // `double.tryParse(x!)!` crashed the details sheet whenever either was
+    // null or non-numeric. Safe-parse with a 0.0 fallback instead — valid
+    // values render exactly as before.
+    final double chargeValue = double.tryParse(request.charge ?? '') ?? 0.0;
+    final double finalAmountValue =
+        double.tryParse(request.finalAmount ?? '') ?? 0.0;
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: request.currency!,
       siteCurrencyCode: settingsService.getSetting("site_currency")!,
@@ -81,14 +90,14 @@ class ReceivedRequestDetails extends StatelessWidget {
                     _buildDetailRow(
                       label: localization.receivedRequestDetailsCharge,
                       content:
-                          "${double.tryParse(request.charge!)!.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${chargeValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
                       contentColor: AppColors.error,
                     ),
 
                     _buildDetailRow(
                       label: localization.receivedRequestDetailsFinalAmount,
                       content:
-                          "${double.tryParse(request.finalAmount!)!.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
                       contentColor: AppColors.success,
                     ),
 

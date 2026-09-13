@@ -20,6 +20,12 @@ class AcceptRequestDropdown extends StatelessWidget {
     final SettingsService settingsService = Get.find();
     final localization = AppLocalizations.of(context)!;
 
+    // M-8 — `finalAmount` is a backend-provided string; the previous
+    // `double.tryParse(x!)!` chain crashed when it was null or non-numeric.
+    // Safe-parse with a 0.0 fallback — valid values render as before.
+    final double finalAmountValue =
+        double.tryParse(request.finalAmount ?? '') ?? 0.0;
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: request.currency!,
       siteCurrencyCode: settingsService.getSetting("site_currency")!,
@@ -108,7 +114,7 @@ class AcceptRequestDropdown extends StatelessWidget {
                       context,
                       title: localization.acceptRequestDropdownPayableAmount,
                       content:
-                          "${double.tryParse(request.finalAmount!)!.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
                       contentColor: AppColors.success,
                     ),
                     const SizedBox(height: 10),

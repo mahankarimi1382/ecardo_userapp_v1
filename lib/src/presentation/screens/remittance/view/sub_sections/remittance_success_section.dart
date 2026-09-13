@@ -39,9 +39,11 @@ class RemittanceSuccessSection extends StatelessWidget {
             SizedBox(height: 8.h),
             _Info(l.remittanceDocumentType, c.localizedStatusLabel(r.status)),
             SizedBox(height: 8.h),
-            _Info(l.remittanceSendAmount, r.sendAmount.toStringAsFixed(2)),
+            // M-7 — decimals now come from DynamicDecimalsHelper via the
+            // controller (API-driven); falls back to 2 like before.
+            _Info(l.remittanceSendAmount, c.formatAmount(r.sendAmount, currencyId: r.sendCurrencyId)),
             SizedBox(height: 8.h),
-            _Info(l.remittanceReceiveAmount, r.receiveAmount.toStringAsFixed(2)),
+            _Info(l.remittanceReceiveAmount, c.formatAmount(r.receiveAmount, currencyId: r.receiveCurrencyId)),
           ]),
         ),
         SizedBox(height: 24.h),

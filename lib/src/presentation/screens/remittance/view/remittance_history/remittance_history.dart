@@ -14,7 +14,17 @@ class RemittanceHistoryScreen extends StatefulWidget {
 }
 
 class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
-  final RemittanceController controller = Get.put(RemittanceController());
+  // M-1 — guarded find-or-put: reuse the flow controller already registered
+  // by remittance_screen (same instance the details screen reads), or
+  // register it locally when this route is opened directly. There is no
+  // GetPage binding for /remittance_history_route, so registration must
+  // stay view-side for now.
+  // TODO(lead): introduce a RemittanceBinding in routes_handler.dart as the
+  // single DI source for /remittance_route, /remittance_history_route and
+  // /remittance_details_route (shared RemittanceController).
+  final RemittanceController controller = Get.isRegistered<RemittanceController>()
+      ? Get.find<RemittanceController>()
+      : Get.put(RemittanceController());
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -71,6 +81,7 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
               }
               return _RemittanceCard(
                 remittance: controller.history[index],
+                controller: controller,
                 onTap: () {
                   controller.selectedRemittance.value = controller.history[index];
                   Get.toNamed(BaseRoute.remittanceDetails, arguments: controller.history[index].uuid);
@@ -106,9 +117,10 @@ class _EmptyState extends StatelessWidget {
 
 class _RemittanceCard extends StatelessWidget {
   final Remittance remittance;
+  final RemittanceController controller;
   final VoidCallback onTap;
   final AppLocalizations l;
-  const _RemittanceCard({required this.remittance, required this.onTap, required this.l});
+  const _RemittanceCard({required this.remittance, required this.controller, required this.onTap, required this.l});
 
   @override
   Widget build(BuildContext context) {
@@ -133,12 +145,14 @@ class _RemittanceCard extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(l.remittanceSend, style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
-              Text(remittance.sendAmount.toStringAsFixed(2), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
+              // M-7 — decimals now come from DynamicDecimalsHelper via the
+              // controller (API-driven); falls back to 2 like before.
+              Text(controller.formatAmount(remittance.sendAmount, currencyId: remittance.sendCurrencyId), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
             ]),
             Icon(Icons.arrow_forward, color: AppColors.lightTextSecondary, size: 16.sp),
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
               Text(l.remittanceReceive, style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
-              Text(remittance.receiveAmount.toStringAsFixed(2), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
+              Text(controller.formatAmount(remittance.receiveAmount, currencyId: remittance.receiveCurrencyId), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
             ]),
           ]),
           if (remittance.createdAt != null) ...[
