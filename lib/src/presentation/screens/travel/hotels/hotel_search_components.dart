@@ -8,6 +8,7 @@ import 'package:shamsi_date/shamsi_date.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 
 String hotelFlowText(BuildContext context, String fa, String en) {
   return Localizations.localeOf(context).languageCode == 'fa' ? fa : en;
@@ -95,11 +96,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
   Widget build(BuildContext context) {
     final visible = suggestions.take(visibleCount).toList();
     return TravelPage(
-      title: hotelFlowText(
-        context,
-        'شهر یا هتل مقصد',
-        'Destination city or hotel',
-      ),
+      title: AppLocalizations.of(context)!.hotelDestinationCityOrHotel,
       child: Column(
         children: [
           Padding(
@@ -109,11 +106,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
               autofocus: true,
               onChanged: _search,
               decoration: InputDecoration(
-                hintText: hotelFlowText(
-                  context,
-                  'نام شهر یا هتل را جستجو کنید',
-                  'Search by city or hotel name',
-                ),
+                hintText: AppLocalizations.of(context)!.hotelSearchByCityOrHotelName,
                 prefixIcon: const Icon(
                   Icons.search_rounded,
                   color: TravelTheme.purple,
@@ -136,12 +129,8 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
               alignment: AlignmentDirectional.centerStart,
               child: Text(
                 queryController.text.trim().isEmpty
-                    ? hotelFlowText(
-                        context,
-                        'همه شهرهای دارای هتل',
-                        'All cities with hotels',
-                      )
-                    : hotelFlowText(context, 'نتایج جستجو', 'Search results'),
+                    ? AppLocalizations.of(context)!.hotelAllCitiesWithHotels
+                    : AppLocalizations.of(context)!.hotelSearchResults,
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
@@ -152,11 +141,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : visible.isEmpty
                 ? TravelEmptyState(
-                    message: hotelFlowText(
-                      context,
-                      'شهر یا هتلی با این نام پیدا نشد.',
-                      'No matching city or hotel was found.',
-                    ),
+                    message: AppLocalizations.of(context)!.hotelNoMatchingCityOrHotelWasFound,
                   )
                 : ListView.separated(
                     controller: scrollController,
@@ -198,11 +183,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                                   ? null
                                   : TravelBidiText(suggestion.subtitle))
                             : Text(
-                                hotelFlowText(
-                                  context,
-                                  '$hotelCount هتل',
-                                  '$hotelCount hotels',
-                                ),
+                                AppLocalizations.of(context)!.hotelHotelsCount(hotelCount),
                               ),
                         trailing: const Icon(Icons.chevron_right_rounded),
                         onTap: () => Navigator.of(context).pop(suggestion),
@@ -272,7 +253,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
         ? values.whereType<DateTime>().elementAt(1)
         : null;
     return TravelPage(
-      title: hotelFlowText(context, 'انتخاب تاریخ اقامت', 'Select stay dates'),
+      title: AppLocalizations.of(context)!.hotelSelectStayDates,
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.r),
@@ -287,7 +268,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
               minimumSize: const Size.fromHeight(52),
             ),
             child: Text(
-              hotelFlowText(context, 'تأیید تاریخ‌ها', 'Confirm dates'),
+              AppLocalizations.of(context)!.hotelConfirmDates,
             ),
           ),
         ),
@@ -304,13 +285,13 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                       ButtonSegment(
                         value: true,
                         label: Text(
-                          hotelFlowText(context, 'تقویم شمسی', 'Persian'),
+                          AppLocalizations.of(context)!.hotelPersian,
                         ),
                       ),
                       ButtonSegment(
                         value: false,
                         label: Text(
-                          hotelFlowText(context, 'تقویم میلادی', 'Gregorian'),
+                          AppLocalizations.of(context)!.hotelGregorian,
                         ),
                       ),
                     ],
@@ -323,22 +304,14 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                     children: [
                       Expanded(
                         child: _SelectedDateSummary(
-                          label: hotelFlowText(
-                            context,
-                            'تاریخ ورود',
-                            'Check-in',
-                          ),
+                          label: AppLocalizations.of(context)!.hotelCheckIn,
                           value: start == null ? '—' : _dateLabel(start),
                         ),
                       ),
                       const Icon(Icons.arrow_forward_rounded),
                       Expanded(
                         child: _SelectedDateSummary(
-                          label: hotelFlowText(
-                            context,
-                            'تاریخ خروج',
-                            'Check-out',
-                          ),
+                          label: AppLocalizations.of(context)!.hotelCheckOut,
                           value: end == null ? '—' : _dateLabel(end),
                         ),
                       ),
@@ -347,11 +320,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                   if (start != null && end != null) ...[
                     SizedBox(height: 10.h),
                     Text(
-                      hotelFlowText(
-                        context,
-                        '${end.difference(start).inDays} شب',
-                        '${end.difference(start).inDays} nights',
-                      ),
+                      AppLocalizations.of(context)!.hotelNightsCount(end.difference(start).inDays),
                       style: const TextStyle(
                         color: TravelTheme.purple,
                         fontWeight: FontWeight.w900,

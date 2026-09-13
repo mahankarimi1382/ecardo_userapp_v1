@@ -212,22 +212,22 @@ class VirtualCardDetailsController extends GetxController {
     }
     if (funding.minimumTopup > 0 && amount < funding.minimumTopup) {
       ToastHelper().showErrorToast(
-        'The minimum top-up is ${funding.minimumTopup} ${card?.currency ?? ''}.',
+        AppLocalizations.of(Get.context!)!vcMinTopup(funding.minimumTopup, card?.currency ?? ''),
       );
       return;
     }
     if (funding.maximumTopup > 0 && amount > funding.maximumTopup) {
       ToastHelper().showErrorToast(
-        'The maximum top-up is ${funding.maximumTopup} ${card?.currency ?? ''}.',
+        AppLocalizations.of(Get.context!)!vcMaxTopup(funding.maximumTopup, card?.currency ?? ''),
       );
       return;
     }
     if (fundingSource == 'irr_wallet' && walletId == null) {
-      ToastHelper().showErrorToast('Select an IRR wallet.');
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcSelectIrrWallet);
       return;
     }
     if (fundingSource == 'gateway' && gatewayMethodId == null) {
-      ToastHelper().showErrorToast('Select a payment gateway.');
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcSelectGateway);
       return;
     }
 
@@ -271,13 +271,13 @@ class VirtualCardDetailsController extends GetxController {
         ToastHelper().showErrorToast(
           failureMessage.isNotEmpty
               ? failureMessage
-              : 'The card top-up could not be completed.',
+              : AppLocalizations.of(Get.context!)!vcTopupNotCompleted,
         );
         return;
       }
 
       ToastHelper().showSuccessToast(
-        response.data!['message']?.toString() ?? 'Card top-up submitted.',
+        response.data!['message']?.toString() ?? AppLocalizations.of(Get.context!)!vcTopupSubmitted,
       );
       amountController.clear();
       Get.back();

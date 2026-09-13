@@ -143,11 +143,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
       showTravelMessage(
         context,
         title: localization.travelHotelSearch,
-        message: hotelFlowText(
-          context,
-          'شهر یا هتل مقصد را انتخاب کنید.',
-          'Select a destination city or hotel.',
-        ),
+        message: AppLocalizations.of(context)!.hotelSelectADestinationCityOrHotel,
       );
       return;
     }
@@ -253,11 +249,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         color: TravelTheme.purple,
                       ),
                       suffixIcon: const Icon(Icons.chevron_right_rounded),
-                      labelText: hotelFlowText(
-                        context,
-                        'تاریخ ورود و خروج',
-                        'Check-in and check-out',
-                      ),
+                      labelText: AppLocalizations.of(context)!.hotelCheckInAndCheckOut,
                     ),
                     child: Text(
                       '${MaterialLocalizations.of(context).formatCompactDate(checkInDate)}'
@@ -265,7 +257,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                       '${MaterialLocalizations.of(context).formatCompactDate(checkOutDate)}'
                       '  •  '
                       '${checkOutDate.difference(checkInDate).inDays} '
-                      '${hotelFlowText(context, 'شب', 'nights')}',
+                      '${AppLocalizations.of(context)!.hotelNights}',
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
                   ),
@@ -303,7 +295,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
           ),
           SizedBox(height: 24.h),
           TravelSectionHeader(
-            title: hotelFlowText(context, 'شهرهای محبوب', 'Popular cities'),
+            title: AppLocalizations.of(context)!.hotelPopularCities,
           ),
           SizedBox(height: 10.h),
           if (popularCities.isEmpty && discoveryLoading)
@@ -342,11 +334,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                             style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
                           Text(
-                            hotelFlowText(
-                              context,
-                              '$count هتل',
-                              '$count hotels',
-                            ),
+                            AppLocalizations.of(context)!.hotelHotelsCount(count),
                             style: TextStyle(
                               color: TravelTheme.muted,
                               fontSize: 10.sp,
@@ -361,11 +349,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
             ),
           SizedBox(height: 24.h),
           TravelSectionHeader(
-            title: hotelFlowText(
-              context,
-              'هتل‌های پیشنهادی',
-              'Recommended hotels',
-            ),
+            title: AppLocalizations.of(context)!.hotelRecommendedHotels,
           ),
           SizedBox(height: 10.h),
           Wrap(
@@ -387,11 +371,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
             const Center(child: CircularProgressIndicator())
           else if (recommendedHotels.isEmpty)
             TravelEmptyState(
-              message: hotelFlowText(
-                context,
-                'هتل پیشنهادی برای این شهر موجود نیست.',
-                'No recommended hotels are available for this city.',
-              ),
+              message: AppLocalizations.of(context)!.hotelNoRecommendedHotelsAreAvailableForThis,
             )
           else
             SizedBox(
@@ -817,7 +797,7 @@ class _HotelResultsScreenState extends State<HotelResultsScreen> {
           children: [
             ListTile(
               title: Text(
-                hotelFlowText(context, 'همه امتیازها', 'All ratings'),
+                AppLocalizations.of(context)!.hotelAllRatings,
               ),
               onTap: () => Navigator.of(context).pop(),
             ),
@@ -1044,12 +1024,8 @@ class _HotelResultActions extends StatelessWidget {
                 avatar: const Icon(Icons.tune_rounded, size: 18),
                 label: Text(
                   activeFilters
-                      ? hotelFlowText(
-                          context,
-                          'فیلترهای فعال',
-                          'Active filters',
-                        )
-                      : hotelFlowText(context, 'همه فیلترها', 'All filters'),
+                      ? AppLocalizations.of(context)!.hotelActiveFilters
+                      : AppLocalizations.of(context)!.hotelAllFilters,
                 ),
                 onPressed: onFilters,
               ),
@@ -1061,7 +1037,7 @@ class _HotelResultActions extends StatelessWidget {
                 ),
               FilterChip(
                 avatar: const Icon(Icons.local_offer_outlined, size: 18),
-                label: Text(hotelFlowText(context, 'تخفیف‌دار', 'Discounted')),
+                label: Text(AppLocalizations.of(context)!.hotelDiscounted),
                 selected: discountedOnly,
                 onSelected: (_) => onDiscount(),
               ),
@@ -1750,11 +1726,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            hotelFlowText(
-                              context,
-                              '$selectedRoomCount اتاق برای $nights شب',
-                              '$selectedRoomCount rooms for $nights nights',
-                            ),
+                            AppLocalizations.of(context)!.hotelRoomsForNights(selectedRoomCount, nights),
                             style: TextStyle(
                               color: TravelTheme.muted,
                               fontSize: 10.sp,
@@ -1781,11 +1753,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                       width: 150.w,
                       child: CommonButton(
                         width: double.infinity,
-                        text: hotelFlowText(
-                          context,
-                          'ادامه رزرو',
-                          'Continue booking',
-                        ),
+                        text: AppLocalizations.of(context)!.hotelContinueBooking,
                         backgroundColor: TravelTheme.purple,
                         onPressed: canCheckout
                             ? () {
@@ -1833,23 +1801,23 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       _SectionChip(
-                        label: hotelFlowText(context, 'معرفی', 'Overview'),
+                        label: AppLocalizations.of(context)!.hotelOverview,
                         onTap: () => _scrollTo(_overviewKey),
                       ),
                       _SectionChip(
-                        label: hotelFlowText(context, 'امکانات', 'Features'),
+                        label: AppLocalizations.of(context)!.hotelFeatures,
                         onTap: () => _scrollTo(_featuresKey),
                       ),
                       _SectionChip(
-                        label: hotelFlowText(context, 'اتاق‌ها', 'Rooms'),
+                        label: AppLocalizations.of(context)!.hotelRooms,
                         onTap: () => _scrollTo(_roomsKey),
                       ),
                       _SectionChip(
-                        label: hotelFlowText(context, 'قوانین', 'Rules'),
+                        label: AppLocalizations.of(context)!.hotelRules,
                         onTap: () => _scrollTo(_rulesKey),
                       ),
                       _SectionChip(
-                        label: hotelFlowText(context, 'نظرات', 'Reviews'),
+                        label: AppLocalizations.of(context)!.hotelReviews,
                         onTap: () => _scrollTo(_reviewsKey),
                       ),
                     ],
@@ -1931,8 +1899,8 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                   ),
                   child: Text(
                     _showAllDescription
-                        ? hotelFlowText(context, 'نمایش کمتر', 'Show less')
-                        : hotelFlowText(context, 'نمایش بیشتر', 'Show more'),
+                        ? AppLocalizations.of(context)!.hotelShowLess
+                        : AppLocalizations.of(context)!.hotelShowMore,
                   ),
                 ),
               ],
@@ -1959,12 +1927,8 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                     ),
                     label: Text(
                       _showAllAmenities
-                          ? hotelFlowText(context, 'نمایش کمتر', 'Show less')
-                          : hotelFlowText(
-                              context,
-                              'نمایش همه امکانات',
-                              'Show more',
-                            ),
+                          ? AppLocalizations.of(context)!.hotelShowLess
+                          : AppLocalizations.of(context)!.hotelShowMore2,
                     ),
                   ),
               ],
@@ -1975,18 +1939,14 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                   children: [
                     Expanded(
                       child: TravelSectionHeader(
-                        title: hotelFlowText(
-                          context,
-                          'اتاق‌های موجود',
-                          'Available rooms',
-                        ),
+                        title: AppLocalizations.of(context)!.hotelAvailableRooms,
                       ),
                     ),
                     TextButton.icon(
                       onPressed: () => _changeDates(controller),
                       icon: const Icon(Icons.edit_calendar_outlined),
                       label: Text(
-                        hotelFlowText(context, 'تغییر تاریخ', 'Edit dates'),
+                        AppLocalizations.of(context)!.hotelEditDates,
                       ),
                     ),
                   ],
@@ -2006,7 +1966,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                           '${MaterialLocalizations.of(context).formatCompactDate(bookingDetails.checkInDate!)}'
                           ' – '
                           '${MaterialLocalizations.of(context).formatCompactDate(bookingDetails.checkOutDate!)}'
-                          ' • $nights ${hotelFlowText(context, 'شب', 'nights')}',
+                          ' • $nights ${AppLocalizations.of(context)!.hotelNights}',
                           style: const TextStyle(fontWeight: FontWeight.w800),
                         ),
                       ),
@@ -2036,11 +1996,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                 SizedBox(height: 24.h),
                 SizedBox(key: _reviewsKey),
                 TravelSectionHeader(
-                  title: hotelFlowText(
-                    context,
-                    'امتیاز و نظر کاربران',
-                    'Guest ratings and reviews',
-                  ),
+                  title: AppLocalizations.of(context)!.hotelGuestRatingsAndReviews,
                 ),
                 SizedBox(height: 10.h),
                 _ExpandableProviderMapCard(values: reviews),
@@ -2068,11 +2024,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
               )) ...[
                 SizedBox(height: 26.h),
                 TravelSectionHeader(
-                  title: hotelFlowText(
-                    context,
-                    'هتل‌های مشابه',
-                    'Similar hotels',
-                  ),
+                  title: AppLocalizations.of(context)!.hotelSimilarHotels,
                 ),
                 SizedBox(height: 10.h),
                 SizedBox(
@@ -2124,7 +2076,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                 backgroundColor: TravelTheme.purple,
                 foregroundColor: Colors.white,
                 icon: const Icon(Icons.bed_rounded),
-                label: Text(hotelFlowText(context, 'اتاق‌ها', 'Rooms')),
+                label: Text(AppLocalizations.of(context)!.hotelRooms),
               ),
             ),
         ],
@@ -2316,16 +2268,8 @@ class _ProviderRoomCard extends StatelessWidget {
                   ),
                   Text(
                     quantity == 0
-                        ? hotelFlowText(
-                            context,
-                            'قیمت برای $nights شب و یک اتاق',
-                            'Price for $nights nights and one room',
-                          )
-                        : hotelFlowText(
-                            context,
-                            '$quantity اتاق × $nights شب',
-                            '$quantity rooms × $nights nights',
-                          ),
+                        ? AppLocalizations.of(context)!.hotelPriceNightsOneRoom(nights)
+                        : AppLocalizations.of(context)!.hotelRoomsTimesNights(quantity, nights),
                     style: TextStyle(color: TravelTheme.muted, fontSize: 10.sp),
                   ),
                 ],
@@ -2355,7 +2299,7 @@ class _ProviderRoomCard extends StatelessWidget {
                       ),
                       icon: const Icon(Icons.info_outline_rounded),
                       label: Text(
-                        hotelFlowText(context, 'جزئیات و قوانین', 'Details'),
+                        AppLocalizations.of(context)!.hotelDetails,
                       ),
                     ),
                     const Spacer(),
@@ -2406,7 +2350,7 @@ class _RoomDetailsScreen extends StatelessWidget {
     final currency = room['currency']?.toString() ?? 'IRR';
     final cancellation = _providerCancellationSummary(context, room);
     return TravelPage(
-      title: hotelFlowText(context, 'جزئیات اتاق', 'Room details'),
+      title: AppLocalizations.of(context)!.hotelRoomDetails,
       child: ListView(
         padding: EdgeInsets.all(20.r),
         children: [
@@ -2425,11 +2369,7 @@ class _RoomDetailsScreen extends StatelessWidget {
             SizedBox(height: 12.h),
             TravelCard(
               child: _PolicyRow(
-                title: hotelFlowText(
-                  context,
-                  'قیمت یک اتاق برای $nights شب',
-                  'One room for $nights nights',
-                ),
+                title: AppLocalizations.of(context)!.hotelOneRoomNights(nights),
                 value: travelMoney(
                   context,
                   TravelMoney(amount: price * nights, currency: currency),
@@ -2447,7 +2387,7 @@ class _RoomDetailsScreen extends StatelessWidget {
           if (values.isNotEmpty) ...[
             SizedBox(height: 20.h),
             TravelSectionHeader(
-              title: hotelFlowText(context, 'اطلاعات اتاق', 'Room information'),
+              title: AppLocalizations.of(context)!.hotelRoomInformation,
             ),
             SizedBox(height: 10.h),
             _ProviderMapCard(values: values),
@@ -2489,8 +2429,8 @@ class _ExpandableProviderMapCardState
             ),
             label: Text(
               expanded
-                  ? hotelFlowText(context, 'نمایش کمتر', 'Show less')
-                  : hotelFlowText(context, 'نمایش بیشتر', 'Show more'),
+                  ? AppLocalizations.of(context)!.hotelShowLess
+                  : AppLocalizations.of(context)!.hotelShowMore,
             ),
           ),
       ],

@@ -179,7 +179,7 @@ class CreateVirtualCardController extends GetxController {
       );
       if (response.status != Status.completed || response.data == null) {
         cardProductsError.value =
-            response.message ?? 'Unable to load IRR card products.';
+            response.message ?? AppLocalizations.of(Get.context!)!vcUnableLoadProducts;
         return;
       }
 
@@ -197,7 +197,7 @@ class CreateVirtualCardController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCardProducts() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      cardProductsError.value = 'Unable to load IRR card products.';
+      cardProductsError.value = AppLocalizations.of(Get.context!)!vcUnableLoadProducts;
     } finally {
       hasLoadedCardProducts.value = true;
       isCardProductsLoading.value = false;
@@ -420,7 +420,7 @@ class CreateVirtualCardController extends GetxController {
           status == 'failed' ||
           status == 'cancelled') {
         ToastHelper().showErrorToast(
-          failureMessage ?? 'The card order could not be completed.',
+          failureMessage ?? AppLocalizations.of(Get.context!)!vcOrderNotCompleted,
         );
         return;
       }
@@ -474,36 +474,36 @@ class CreateVirtualCardController extends GetxController {
   bool validateIrrCardFields() {
     final product = selectedCardProduct.value;
     if (product == null) {
-      ToastHelper().showErrorToast('Card product is unavailable.');
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcProductUnavailable);
       return false;
     }
 
     final amount = int.tryParse(amountController.text.replaceAll(',', ''));
     if (amount == null || amount <= 0) {
-      ToastHelper().showErrorToast('Enter a valid amount in Iranian rials.');
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcEnterValidAmountIrr);
       return false;
     }
     if (product.minimumInitialLoad > 0 &&
         amount < product.minimumInitialLoad) {
       ToastHelper().showErrorToast(
-        'The minimum initial load is ${product.minimumInitialLoad} IRR.',
+        AppLocalizations.of(Get.context!)!vcMinInitialLoad(product.minimumInitialLoad),
       );
       return false;
     }
     if (product.maximumInitialLoad > 0 &&
         amount > product.maximumInitialLoad) {
       ToastHelper().showErrorToast(
-        'The maximum initial load is ${product.maximumInitialLoad} IRR.',
+        AppLocalizations.of(Get.context!)!vcMaxInitialLoad(product.maximumInitialLoad),
       );
       return false;
     }
     if (fundingSource.value == 'irr_wallet' &&
         selectedIrrWallet.value == null) {
-      ToastHelper().showErrorToast('Select an IRR wallet.');
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcSelectIrrWallet);
       return false;
     }
     if (fundingSource.value == 'gateway' && selectedGateway.value == null) {
-      ToastHelper().showErrorToast('Select a payment gateway.');
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcSelectGateway);
       return false;
     }
     if (selectedTab.value && selectedCardHolder.value == null) {
@@ -520,7 +520,7 @@ class CreateVirtualCardController extends GetxController {
         (holder?.state ?? stateController.text.trim()).isEmpty ||
         (holder?.postalCode ?? postalCodeController.text.trim()).isEmpty ||
         (holder?.address ?? addressController.text.trim()).isEmpty) {
-      ToastHelper().showErrorToast('Complete the cardholder information.');
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!vcCompleteCardholder);
       return false;
     }
     if (!GetUtils.isEmail(email)) {
@@ -545,10 +545,10 @@ class CreateVirtualCardController extends GetxController {
 
   String _cardOrderStatusMessage(String status) {
     return switch (status) {
-      'payment_pending' => 'Card order created and awaiting payment.',
-      'pending' || 'provisioning' => 'Card provisioning is in progress.',
-      'active' || 'completed' => 'Your card is ready.',
-      _ => 'Card order created.',
+      'payment_pending' => AppLocalizations.of(Get.context!)!vcStatusPaymentPending,
+      'pending' || 'provisioning' => AppLocalizations.of(Get.context!)!vcStatusProvisioning,
+      'active' || 'completed' => AppLocalizations.of(Get.context!)!vcStatusReady,
+      _ => AppLocalizations.of(Get.context!)!vcStatusCreated,
     };
   }
 

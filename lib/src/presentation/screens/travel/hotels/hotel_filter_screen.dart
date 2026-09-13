@@ -5,6 +5,7 @@ import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'hotel_search_components.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 
 class HotelFilterState {
   final String name;
@@ -166,7 +167,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
         value.priceRange ??
         RangeValues(options.minimumPrice, options.maximumPrice);
     return TravelPage(
-      title: hotelFlowText(context, 'فیلتر هتل‌ها', 'Hotel filters'),
+      title: AppLocalizations.of(context)!.hotelHotelFilters,
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.r),
@@ -179,7 +180,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               minimumSize: const Size.fromHeight(52),
             ),
             child: Text(
-              hotelFlowText(context, 'اعمال فیلترها', 'Apply filters'),
+              AppLocalizations.of(context)!.hotelApplyFilters,
             ),
           ),
         ),
@@ -191,11 +192,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
             children: [
               Expanded(
                 child: Text(
-                  hotelFlowText(
-                    context,
-                    'نتایج را دقیق‌تر کنید',
-                    'Refine your results',
-                  ),
+                  AppLocalizations.of(context)!.hotelRefineYourResults,
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w900,
@@ -207,7 +204,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
                   value = const HotelFilterState();
                   nameController.clear();
                 }),
-                child: Text(hotelFlowText(context, 'پاک کردن', 'Clear all')),
+                child: Text(AppLocalizations.of(context)!.hotelClearAll),
               ),
             ],
           ),
@@ -215,27 +212,19 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
           TextField(
             controller: nameController,
             decoration: InputDecoration(
-              labelText: hotelFlowText(
-                context,
-                'جستجوی نام هتل',
-                'Search hotel name',
-              ),
+              labelText: AppLocalizations.of(context)!.hotelSearchHotelName,
               prefixIcon: const Icon(Icons.search_rounded),
             ),
           ),
           SizedBox(height: 12.h),
           _SwitchFilter(
-            title: hotelFlowText(
-              context,
-              'فقط هتل‌های دارای تخفیف',
-              'Discounted hotels only',
-            ),
+            title: AppLocalizations.of(context)!.hotelDiscountedHotelsOnly,
             value: value.discountedOnly,
             onChanged: (next) =>
                 setState(() => value = value.copyWith(discountedOnly: next)),
           ),
           _FilterSection(
-            title: hotelFlowText(context, 'محدوده قیمت', 'Price range'),
+            title: AppLocalizations.of(context)!.hotelPriceRange,
             child: Column(
               children: [
                 RangeSlider(
@@ -259,7 +248,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
           ),
           if (options.stars.isNotEmpty)
             _FilterSection(
-              title: hotelFlowText(context, 'ستاره هتل', 'Hotel stars'),
+              title: AppLocalizations.of(context)!.hotelHotelStars,
               child: Wrap(
                 spacing: 8.w,
                 children: (options.stars.toList()..sort())
@@ -280,14 +269,10 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               ),
             ),
           _FilterSection(
-            title: hotelFlowText(context, 'پیشنهادهای ویژه', 'Special offers'),
+            title: AppLocalizations.of(context)!.hotelSpecialOffers,
             child: options.specialOffers.isEmpty
                 ? Text(
-                    hotelFlowText(
-                      context,
-                      'پیشنهادهای ویژه پس از تعریف در پنل مدیریت اینجا نمایش داده می‌شوند.',
-                      'Admin-configured special offers will appear here.',
-                    ),
+                    AppLocalizations.of(context)!.hotelAdminConfiguredSpecialOffersWillAppear,
                     style: TextStyle(color: TravelTheme.muted),
                   )
                 : Wrap(
@@ -312,7 +297,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
           ),
           if (features.isNotEmpty)
             _FilterSection(
-              title: hotelFlowText(context, 'امکانات هتل', 'Hotel features'),
+              title: AppLocalizations.of(context)!.hotelHotelFeatures,
               child: _ExpandableFilterChips(
                 values: features,
                 selected: value.features,
@@ -329,7 +314,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
             ),
           if (types.isNotEmpty)
             _FilterSection(
-              title: hotelFlowText(context, 'نوع اقامتگاه', 'Property type'),
+              title: AppLocalizations.of(context)!.hotelPropertyType,
               child: _ExpandableFilterChips(
                 values: types,
                 selected: value.propertyTypes,
@@ -346,7 +331,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               ),
             ),
           _FilterSection(
-            title: hotelFlowText(context, 'امتیاز کاربران', 'Guest rating'),
+            title: AppLocalizations.of(context)!.hotelGuestRating,
             child: Wrap(
               spacing: 8.w,
               children: [3.0, 3.5, 4.0, 4.5]
@@ -366,11 +351,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
             ),
           ),
           _SwitchFilter(
-            title: hotelFlowText(
-              context,
-              'فقط هتل‌های دارای اتاق موجود',
-              'Hotels with available rooms only',
-            ),
+            title: AppLocalizations.of(context)!.hotelHotelsWithAvailableRoomsOnly,
             value: value.availableRoomsOnly,
             onChanged: (next) => setState(
               () => value = value.copyWith(availableRoomsOnly: next),
@@ -470,8 +451,8 @@ class _ExpandableFilterChips extends StatelessWidget {
             ),
             label: Text(
               expanded
-                  ? hotelFlowText(context, 'نمایش کمتر', 'Show less')
-                  : hotelFlowText(context, 'نمایش بیشتر', 'Show more'),
+                  ? AppLocalizations.of(context)!.hotelShowLess
+                  : AppLocalizations.of(context)!.hotelShowMore,
             ),
           ),
       ],

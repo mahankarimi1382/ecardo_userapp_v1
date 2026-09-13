@@ -2275,5 +2275,186 @@
   "p2pSelectFiatFirst": "Please select a fiat currency first",
   "p2pLoadPaymentMethodsFailed": "Failed to load payment methods",
   "p2pLoadAdsFailed": "Failed to load marketplace ads",
-  "pickDocumentFailed": "Failed to pick document. Please try again."
+  "pickDocumentFailed": "Failed to pick document. Please try again.",
+  "hotel_active_filters": "Active filters",
+  "hotel_admin_configured_special_offers_will_appear_": "Admin-configured special offers will appear here.",
+  "hotel_all_cities_with_hotels": "All cities with hotels",
+  "hotel_all_filters": "All filters",
+  "hotel_all_ratings": "All ratings",
+  "hotel_apply_filters": "Apply filters",
+  "hotel_available_rooms": "Available rooms",
+  "hotel_by_continuing_you_accept_the": "By continuing, you accept the ",
+  "hotel_check_in": "Check-in",
+  "hotel_check_in_and_check_out": "Check-in and check-out",
+  "hotel_check_out": "Check-out",
+  "hotel_checking_availability": "Checking availability",
+  "hotel_clear_all": "Clear all",
+  "hotel_close": "Close",
+  "hotel_complete_the_reservator_and_room_caretaker_i": "Complete the reservator and room caretaker information.",
+  "hotel_confirm_dates": "Confirm dates",
+  "hotel_continue_booking": "Continue booking",
+  "hotel_destination_city_or_hotel": "Destination city or hotel",
+  "hotel_details": "Details",
+  "hotel_discounted": "Discounted",
+  "hotel_discounted_hotels_only": "Discounted hotels only",
+  "hotel_edit_dates": "Edit dates",
+  "hotel_features": "Features",
+  "hotel_for_example_non_smoking_room_or_estimated_ar": "For example, non-smoking room or estimated arrival time",
+  "hotel_gregorian": "Gregorian",
+  "hotel_guest_rating": "Guest rating",
+  "hotel_guest_ratings_and_reviews": "Guest ratings and reviews",
+  "hotel_hotel_features": "Hotel features",
+  "hotel_hotel_filters": "Hotel filters",
+  "hotel_hotel_stars": "Hotel stars",
+  "hotel_hotels_with_available_rooms_only": "Hotels with available rooms only",
+  "hotel_nights": "nights",
+  "hotel_no_matching_city_or_hotel_was_found": "No matching city or hotel was found.",
+  "hotel_no_recommended_hotels_are_available_for_this": "No recommended hotels are available for this city.",
+  "hotel_only_one_responsible_guest_is_needed_for_eac": "Only one responsible guest is needed for each room; you do not need to enter every passenger.",
+  "hotel_overview": "Overview",
+  "hotel_passenger_information": "Passenger information",
+  "hotel_persian": "Persian",
+  "hotel_popular_cities": "Popular cities",
+  "hotel_price_range": "Price range",
+  "hotel_property_type": "Property type",
+  "hotel_recommended_hotels": "Recommended hotels",
+  "hotel_refine_your_results": "Refine your results",
+  "hotel_reservation_details_and_every_order_update_w": "Reservation details and every order update will be sent to the reservator.",
+  "hotel_reservator_information": "Reservator information",
+  "hotel_reviews": "Reviews",
+  "hotel_room": "Room",
+  "hotel_room_caretakers": "Room caretakers",
+  "hotel_room_details": "Room details",
+  "hotel_room_information": "Room information",
+  "hotel_rooms": "Rooms",
+  "hotel_rules": "Rules",
+  "hotel_search_by_city_or_hotel_name": "Search by city or hotel name",
+  "hotel_search_hotel_name": "Search hotel name",
+  "hotel_search_results": "Search results",
+  "hotel_select_a_destination_city_or_hotel": "Select a destination city or hotel.",
+  "hotel_select_stay_dates": "Select stay dates",
+  "hotel_show_less": "Show less",
+  "hotel_show_more": "Show more",
+  "hotel_show_more_2": "Show more",
+  "hotel_similar_hotels": "Similar hotels",
+  "hotel_special_offers": "Special offers",
+  "hotel_special_requests_optional": "Special requests (optional)",
+  "hotel_terms_and_privacy_policy": "Terms and privacy policy",
+  "hotel_terms_and_privacy_policy_2": "terms and privacy policy",
+  "hotel_the_terms_for_this_service_are_admin_control": "The terms for this service are admin-controlled. Review hotel, cancellation, refund, and privacy rules before payment.",
+  "hotelHotelsCount": "{count} hotels",
+  "@hotelHotelsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hotelRoomsForNights": "{rooms} rooms for {nights} nights",
+  "@hotelRoomsForNights": {
+    "placeholders": {
+      "rooms": {
+        "type": "int"
+      },
+      "nights": {
+        "type": "int"
+      }
+    }
+  },
+  "hotelPriceNightsOneRoom": "Price for {nights} nights and one room",
+  "@hotelPriceNightsOneRoom": {
+    "placeholders": {
+      "nights": {
+        "type": "int"
+      }
+    }
+  },
+  "hotelRoomsTimesNights": "{quantity} rooms × {nights} nights",
+  "@hotelRoomsTimesNights": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "nights": {
+        "type": "int"
+      }
+    }
+  },
+  "hotelOneRoomNights": "One room for {nights} nights",
+  "@hotelOneRoomNights": {
+    "placeholders": {
+      "nights": {
+        "type": "int"
+      }
+    }
+  },
+  "hotelNightsCount": "{count} nights",
+  "@hotelNightsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dynamicPasswordServerError": "Error communicating with the server.",
+  "dynamicPasswordConnectionError": "Connection error.",
+  "dynamicPasswordHeading": "Dynamic Password",
+  "dynamicPasswordSubtitle": "A 6-digit code for paying from your wallet.",
+  "dynamicPasswordValidity": "Valid for 60 seconds — single use only.",
+  "dynamicPasswordCopied": "Code copied.",
+  "dynamicPasswordCopy": "Copy code",
+  "dynamicPasswordRegenerate": "Generate a new code",
+  "dynamicPasswordGenerate": "Generate dynamic password",
+  "dynamicPasswordUsageHint": "Enter this code on the payment page. It is valid for 60 seconds and can be used only once.",
+  "vcUnableLoadProducts": "Unable to load card products.",
+  "vcOrderNotCompleted": "The card order could not be completed.",
+  "vcProductUnavailable": "Card product is unavailable.",
+  "vcEnterValidAmountIrr": "Enter a valid amount in Iranian rials.",
+  "vcMinInitialLoad": "The minimum initial load is {amount} IRR.",
+  "@vcMinInitialLoad": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      }
+    }
+  },
+  "vcMaxInitialLoad": "The maximum initial load is {amount} IRR.",
+  "@vcMaxInitialLoad": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      }
+    }
+  },
+  "vcSelectIrrWallet": "Select an IRR wallet.",
+  "vcSelectGateway": "Select a payment gateway.",
+  "vcCompleteCardholder": "Complete the cardholder information.",
+  "vcStatusPaymentPending": "Card order created and awaiting payment.",
+  "vcStatusProvisioning": "Card provisioning is in progress.",
+  "vcStatusReady": "Your card is ready.",
+  "vcStatusCreated": "Card order created.",
+  "vcMinTopup": "The minimum top-up is {amount} {currency}.",
+  "@vcMinTopup": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "vcMaxTopup": "The maximum top-up is {amount} {currency}.",
+  "@vcMaxTopup": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "vcTopupNotCompleted": "The card top-up could not be completed.",
+  "vcTopupSubmitted": "Card top-up submitted."
 }

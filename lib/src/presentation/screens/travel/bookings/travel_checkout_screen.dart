@@ -329,16 +329,8 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                             if (!_hasValidHotelDetails) {
                               showTravelMessage(
                                 context,
-                                title: hotelFlowText(
-                                  context,
-                                  'اطلاعات رزروکننده',
-                                  'Reservator information',
-                                ),
-                                message: hotelFlowText(
-                                  context,
-                                  'اطلاعات رزروکننده و سرپرست هر اتاق را کامل کنید.',
-                                  'Complete the reservator and room caretaker information.',
-                                ),
+                                title: AppLocalizations.of(context)!.hotelReservatorInformation,
+                                message: AppLocalizations.of(context)!.hotelCompleteTheReservatorAndRoomCaretakerI,
                               );
                               return;
                             }
@@ -616,11 +608,7 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               TravelCard(
                 color: TravelTheme.purple.withValues(alpha: .07),
                 child: Text(
-                  hotelFlowText(
-                    context,
-                    'اطلاعات رزرو و تمام تغییرات این سفارش برای رزروکننده ارسال می‌شود.',
-                    'Reservation details and every order update will be sent to the reservator.',
-                  ),
+                  AppLocalizations.of(context)!.hotelReservationDetailsAndEveryOrderUpdateW,
                   style: TextStyle(
                     color: TravelTheme.muted,
                     fontSize: 11.sp,
@@ -680,19 +668,11 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               ),
               SizedBox(height: 18.h),
               TravelSectionHeader(
-                title: hotelFlowText(
-                  context,
-                  'سرپرست اتاق‌ها',
-                  'Room caretakers',
-                ),
+                title: AppLocalizations.of(context)!.hotelRoomCaretakers,
               ),
               SizedBox(height: 8.h),
               Text(
-                hotelFlowText(
-                  context,
-                  'برای هر اتاق فقط اطلاعات یک نفر مسئول لازم است؛ نیازی به ثبت اطلاعات همه مسافران نیست.',
-                  'Only one responsible guest is needed for each room; you do not need to enter every passenger.',
-                ),
+                AppLocalizations.of(context)!.hotelOnlyOneResponsibleGuestIsNeededForEac,
                 style: TextStyle(
                   color: TravelTheme.muted,
                   fontSize: 11.sp,
@@ -711,17 +691,9 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 maxLines: 8,
                 maxLength: 1000,
                 decoration: InputDecoration(
-                  labelText: hotelFlowText(
-                    context,
-                    'درخواست‌های ویژه (اختیاری)',
-                    'Special requests (optional)',
-                  ),
+                  labelText: AppLocalizations.of(context)!.hotelSpecialRequestsOptional,
                   alignLabelWithHint: true,
-                  hintText: hotelFlowText(
-                    context,
-                    'مانند اتاق غیرسیگاری، طبقه خاص یا زمان تقریبی ورود',
-                    'For example, non-smoking room or estimated arrival time',
-                  ),
+                  hintText: AppLocalizations.of(context)!.hotelForExampleNonSmokingRoomOrEstimatedAr,
                 ),
               ),
             ] else
@@ -883,22 +855,14 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 alignment: WrapAlignment.center,
                 children: [
                   Text(
-                    hotelFlowText(
-                      context,
-                      'با ادامه، ',
-                      'By continuing, you accept the ',
-                    ),
+                    AppLocalizations.of(context)!.hotelByContinuingYouAcceptThe,
                   ),
                   TextButton(
                     onPressed: () => showDialog<void>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text(
-                          hotelFlowText(
-                            context,
-                            'شرایط استفاده و حریم خصوصی',
-                            'Terms and privacy policy',
-                          ),
+                          AppLocalizations.of(context)!.hotelTermsAndPrivacyPolicy,
                         ),
                         content: SingleChildScrollView(
                           child: Text(
@@ -906,29 +870,21 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                                     .serviceFor(widget.type)
                                     ?.presentation['terms_text']
                                     ?.toString() ??
-                                hotelFlowText(
-                                  context,
-                                  'متن شرایط این خدمت از پنل مدیریت سفر قابل تنظیم است. پیش از پرداخت، قوانین هتل، لغو، بازپرداخت و حریم خصوصی را بررسی کنید.',
-                                  'The terms for this service are admin-controlled. Review hotel, cancellation, refund, and privacy rules before payment.',
-                                ),
+                                AppLocalizations.of(context)!.hotelTheTermsForThisServiceAreAdminControl,
                           ),
                         ),
                         actions: [
                           TextButton(
                             onPressed: Navigator.of(context).pop,
                             child: Text(
-                              hotelFlowText(context, 'بستن', 'Close'),
+                              AppLocalizations.of(context)!.hotelClose,
                             ),
                           ),
                         ],
                       ),
                     ),
                     child: Text(
-                      hotelFlowText(
-                        context,
-                        'شرایط استفاده و حریم خصوصی',
-                        'terms and privacy policy',
-                      ),
+                      AppLocalizations.of(context)!.hotelTermsAndPrivacyPolicy2,
                     ),
                   ),
                 ],
@@ -1124,8 +1080,8 @@ class _CheckoutProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     final labels = type == TravelProductType.hotel
         ? <String>[
-            hotelFlowText(context, 'اطلاعات مسافر', 'Passenger information'),
-            hotelFlowText(context, 'بررسی ظرفیت', 'Checking availability'),
+            AppLocalizations.of(context)!.hotelPassengerInformation,
+            AppLocalizations.of(context)!.hotelCheckingAvailability,
             localization.travelPaymentMethod,
           ]
         : <String>[
@@ -1296,7 +1252,7 @@ class _HotelRoomGuestEditor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${form.roomName} • ${hotelFlowText(context, 'اتاق', 'Room')} ${form.roomIndex}',
+            '${form.roomName} • ${AppLocalizations.of(context)!.hotelRoom} ${form.roomIndex}',
             style: const TextStyle(fontWeight: FontWeight.w900),
           ),
           SizedBox(height: 10.h),
