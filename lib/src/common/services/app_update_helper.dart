@@ -90,15 +90,18 @@ class AppUpdateHelper {
   ///
   /// Skipped entirely when:
   ///   - the platform is web
-  ///   - the user has disabled auto-update
-  ///   - the user has already been prompted about this version
+  ///   - the update is optional and the user has disabled auto-update
+  ///   - the update is optional and the user has already been prompted
   ///   - the running version is already up to date
+  ///
+  /// v1.0.26 (UPD-5): FORCED updates bypass the auto-update toggle and the
+  /// already-prompted gate — the admin explicitly required every old client
+  /// to be prompted, and the server 426-gate blocks their API calls anyway.
   static Future<void> maybeAutoPromptForUpdate(BuildContext context) async {
     if (kIsWeb) return;
     if (!Get.isRegistered<AppUpdateController>()) return;
 
     final controller = Get.find<AppUpdateController>();
-    if (!controller.autoUpdateEnabled.value) return;
 
     try {
       final settings = Get.find<SettingsService>();
@@ -106,18 +109,54 @@ class AppUpdateHelper {
       final link = settings.getSetting('app_update_link') ?? '';
       if (server.isEmpty || link.isEmpty) return;
 
+      final force = settings.getSetting('app_force_update') == '1';
+
       final available = await controller.isNewVersionAvailable();
       if (!available) return;
 
-      final shouldPrompt = await controller.shouldAutoPrompt(server);
-      if (!shouldPrompt) return;
+      if (!force) {
+        if (!controller.autoUpdateEnabled.value) return;
 
-      final force =
-          settings.getSetting('app_force_update') == '1';
+        final shouldPrompt = await controller.shouldAutoPrompt(server);
+        if (!shouldPrompt) return;
+      }
+
       _showMobileUpdateDialog(context, server, link, force);
       await controller.markVersionAsPrompted(server);
     } catch (e) {
       debugPrint('Auto-prompt update check error: $e');
+    }
+  }
+
+  /// v1.0.26 (UPD-5): server-driven force update — the API answered 426
+  /// (CheckAppVersion middleware). Shows the non-dismissible update dialog
+  /// with the settings download link. A static guard keeps parallel 426
+  /// responses from stacking dialogs; it stays set for the whole session
+  /// because the user cannot use the app until they update anyway.
+  static bool _serverForcedDialogShown = false;
+
+  static void handleServerForcedUpdate(Map<String, dynamic>? body) {
+    if (kIsWeb) return;
+    if (_serverForcedDialogShown) return;
+    if (!Get.isRegistered<AppUpdateController>()) return;
+
+    try {
+      final settings = Get.find<SettingsService>();
+      final latest = (body?['latest_version'] ??
+              settings.getSetting('app_version') ??
+              '')
+          .toString();
+      final link = settings.getSetting('app_update_link') ?? '';
+      if (latest.isEmpty || link.isEmpty) return;
+
+      final controller = Get.find<AppUpdateController>();
+      controller.serverVersion.value = latest;
+      controller.forceUpdate.value = true;
+
+      _serverForcedDialogShown = true;
+      _showMobileUpdateDialog(Get.context!, latest, link, true);
+    } catch (e) {
+      debugPrint('Server forced-update handling failed: $e');
     }
   }
 

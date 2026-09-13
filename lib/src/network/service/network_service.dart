@@ -11,6 +11,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -231,10 +232,33 @@ class NetworkService extends getx.GetxService {
               }
             });
           }
+
+          // v1.0.26 (UPD-5): server-side force update — CheckAppVersion
+          // answers 426 when the running version is older than the published
+          // one and force update is enabled. Surface the non-dismissible
+          // update dialog instead of a generic request error.
+          if (error.response?.statusCode == 426) {
+            _handleServerForcedUpdate(error.response?.data);
+          }
           return handler.next(error);
         },
       ),
     );
+  }
+
+  /// v1.0.26 (UPD-5): show the force-update dialog when the server answers
+  /// 426. The dialog downloads from the settings app_update_link (the GitHub
+  /// release asset). Guarded inside AppUpdateHelper so concurrent 426s from
+  /// parallel requests surface the dialog only once.
+  void _handleServerForcedUpdate(dynamic data) {
+    try {
+      final body = data is Map
+          ? Map<String, dynamic>.from(data)
+          : (data is String ? jsonDecode(data) as Map<String, dynamic> : null);
+      AppUpdateHelper.handleServerForcedUpdate(body);
+    } catch (e) {
+      _log('426 handling failed: $e');
+    }
   }
 
   /// v1.0.5: تلاش برای refresh token
