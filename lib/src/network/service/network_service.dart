@@ -347,7 +347,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "Login POST");
     } catch (e) {
       _log('Login POST Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     } finally {
       // v1.0.24: interceptors used to be cleared at the start of login() and
@@ -404,7 +408,11 @@ class NetworkService extends getx.GetxService {
       stopwatch.stop();
       _log('⏱️ Register Time: ${stopwatch.elapsedMilliseconds}ms');
       _log('Register Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -424,7 +432,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "GET");
     } catch (e) {
       _log('GET Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -453,7 +465,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "POST");
     } catch (e) {
       _log('POST Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -494,7 +510,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "POST (multipart)");
     } catch (e) {
       _log('POST (multipart) Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -523,7 +543,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "PUT");
     } catch (e) {
       _log('PUT Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -552,7 +576,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "DELETE");
     } catch (e) {
       _log('DELETE Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -584,7 +612,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "Global POST");
     } catch (e) {
       _log('Global POST Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -606,7 +638,11 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "Global GET");
     } catch (e) {
       _log('Global GET Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(localization!.networkErrorGeneric);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
       return ApiResponse.error(e.toString());
     }
   }
@@ -634,7 +670,10 @@ class NetworkService extends getx.GetxService {
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {
       _log('$requestType TimeoutException: Request timed out', icon: '⏳');
-      ToastHelper().showErrorToast(localization!.networkErrorTimeout);
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization with English fallback (was `localization!`).
+        localization?.networkErrorTimeout ?? 'Request timed out. Please try again.',
+      );
       return ApiResponse.error('Request timed out');
     }
 
@@ -645,7 +684,10 @@ class NetworkService extends getx.GetxService {
 
     // Generic error
     _log('$requestType DioException: ${e.message}', icon: '🚫');
-    ToastHelper().showErrorToast(localization!.networkErrorOccurred);
+    ToastHelper().showErrorToast(
+      // P-4: null-safe localization with English fallback (was `localization!`).
+      localization?.networkErrorOccurred ?? 'An error occurred. Please try again.',
+    );
     return ApiResponse.error(e.message ?? 'An error occurred');
   }
 
@@ -728,7 +770,7 @@ class NetworkService extends getx.GetxService {
                       Column(
                         children: [
                           Text(
-                            localization!.unauthorizedDialogTitle,
+                            localization?.unauthorizedDialogTitle ?? 'Unauthorized',
                             style: TextStyle(
                               letterSpacing: 0,
                               fontWeight: FontWeight.w700,
@@ -739,7 +781,8 @@ class NetworkService extends getx.GetxService {
                           const SizedBox(height: 10),
                           Text(
                             textAlign: TextAlign.center,
-                            localization!.unauthorizedDialogDescription,
+                            localization?.unauthorizedDialogDescription ??
+                                'You are not authorized to access this resource. Please log in again!',
                             style: TextStyle(
                               letterSpacing: 0,
                               fontWeight: FontWeight.w400,
@@ -754,7 +797,7 @@ class NetworkService extends getx.GetxService {
                         borderRadius: 8,
                         width: 60,
                         height: 35,
-                        text: localization!.unauthorizedDialogButton,
+                        text: localization?.unauthorizedDialogButton ?? 'OK',
                         onPressed: () => getx.Get.offAllNamed(BaseRoute.signIn),
                       ),
                     ],
@@ -803,7 +846,11 @@ class NetworkService extends getx.GetxService {
 
       default:
         _log('Unknown Error: ${response.statusCode}', icon: '❓');
-        ToastHelper().showErrorToast(localization!.networkErrorOccurred);
+        ToastHelper().showErrorToast(
+          // P-4: null-safe localization with English fallback (was `localization!`).
+          localization?.networkErrorOccurred ??
+              'An error occurred. Please try again.',
+        );
         return ApiResponse.error('Error occurred: ${response.statusCode}');
     }
   }
