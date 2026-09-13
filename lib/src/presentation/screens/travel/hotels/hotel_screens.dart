@@ -1928,7 +1928,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                     label: Text(
                       _showAllAmenities
                           ? AppLocalizations.of(context)!.hotel_show_less
-                          : AppLocalizations.of(context)!.hotelShowMore2,
+                          : AppLocalizations.of(context)!.hotel_show_more_2,
                     ),
                   ),
               ],

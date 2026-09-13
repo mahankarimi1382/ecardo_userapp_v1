@@ -884,7 +884,7 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                       ),
                     ),
                     child: Text(
-                      AppLocalizations.of(context)!.hotelTermsAndPrivacyPolicy2,
+                      AppLocalizations.of(context)!.hotel_terms_and_privacy_policy_2,
                     ),
                   ),
                 ],
