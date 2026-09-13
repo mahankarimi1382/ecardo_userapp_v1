@@ -9,16 +9,17 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get comment_common_maintenance => '==== 维护 ====';
+  String get comment_common_maintenance => '==== Maintenance ====';
 
   @override
-  String get maintenanceTitle => '系统维护中';
+  String get maintenanceTitle => '维护中';
 
   @override
   String get maintenanceSubtitle => '我们正在进行计划维护以改善您的体验。';
 
   @override
-  String get comment_common_alert_bottom_sheet => '==== 警报底部表单 ====';
+  String get comment_common_alert_bottom_sheet =>
+      '==== Alert Bottom Sheet ====';
 
   @override
   String get alertBottonSheetConfirmButton => '确认';
@@ -27,22 +28,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get alertBottonSheetCancelButton => '取消';
 
   @override
-  String get comment_all_controller_load_Error => '==== 所有控制器加载错误 ====';
+  String get comment_all_controller_load_Error =>
+      '==== All Controller Load Error ====';
 
   @override
-  String get allControllerLoadError => '出了点问题！';
+  String get allControllerLoadError => '出错了！';
 
   @override
-  String get comment_common_exit_application => '==== 退出应用 ====';
+  String get comment_common_exit_application => '==== Exit Application ====';
 
   @override
   String get exitApplicationTitle => '退出应用';
 
   @override
-  String get exitApplicationMessage => '您确定要退出应用吗？';
+  String get exitApplicationMessage => '确定要退出应用吗？';
 
   @override
-  String get comment_common_dropdown => '==== 通用下拉菜单 ====';
+  String get comment_common_dropdown => '==== Common Dropdown ====';
 
   @override
   String get commonDropdownSelectGender => '选择性别';
@@ -63,13 +65,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commonDropdownOther => '其他';
 
   @override
-  String get comment_welcome => '==== 欢迎页面 ====';
+  String get comment_welcome => '==== Welcome Screen ====';
 
   @override
-  String get welcomeTitle => '欢迎来到 Qunzo';
+  String get welcomeTitle => '欢迎使用 eCardo';
 
   @override
-  String get welcomeDescription => 'Qunzo 为您提供多钱包管理、即时兑换和安全交易。';
+  String get welcomeDescription => 'eCardo 提供多钱包管理、即时兑换和安全交易功能。';
 
   @override
   String get welcomeSignIn => '登录';
@@ -78,13 +80,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get welcomeCreateAccount => '创建账户';
 
   @override
-  String get comment_sign_in => '==== 登录页面 ====';
+  String get comment_sign_in => '==== Sign In Screen ====';
 
   @override
   String get signInWelcomeBack => '欢迎回来！';
 
   @override
-  String get signInSubtitle => '加入并立即掌控您的财务';
+  String get signInSubtitle => '立即开始管理您的财务';
 
   @override
   String get signInEmail => '邮箱';
@@ -99,31 +101,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get signInButton => '登录';
 
   @override
-  String get signInNotRegistered => '还未注册？ ';
+  String get signInNotRegistered => '还未注册？';
 
   @override
   String get signInCreateAccount => '创建账户';
 
   @override
-  String get signInBiometricErrorFirstTime => '首次请使用邮箱和密码登录';
+  String get signInBiometricErrorFirstTime => '首次登录需使用邮箱和密码';
 
   @override
-  String get signInBiometricErrorNotEnabled => '您的生物识别未启用';
+  String get signInBiometricErrorNotEnabled => '您尚未启用生物识别';
 
   @override
-  String get signInRegistrationDisabled => '注册已禁用';
+  String get signInRegistrationDisabled => '注册功能已关闭';
 
   @override
-  String get signInValidationEmailRequired => '邮箱字段为必填';
+  String get signInValidationEmailRequired => '请输入邮箱';
 
   @override
-  String get signInValidationPasswordRequired => '密码字段为必填';
+  String get signInValidationPasswordRequired => '请输入密码';
 
   @override
-  String get comment_two_factor_auth => '==== 双因素认证页面 ====';
+  String get comment_two_factor_auth =>
+      '==== Two Factor Authentication Screen ====';
 
   @override
-  String get twoFactorAuthTitle => '验证双因素认证';
+  String get twoFactorAuthTitle => '两步验证（2FA）';
 
   @override
   String get twoFactorAuthSubtitle => '通过 Google Authenticator 应用输入验证码';
@@ -135,22 +138,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get twoFactorAuthVerifyButton => '验证';
 
   @override
-  String get twoFactorAuthBackTo => '返回？ ';
+  String get twoFactorAuthBackTo => '返回 ';
 
   @override
   String get twoFactorAuthSignIn => '登录';
 
   @override
-  String get twoFactorAuthOtpRequired => 'OTP 字段为必填';
+  String get twoFactorAuthOtpRequired => '请输入 OTP';
 
   @override
-  String get comment_forgot_password => '==== 忘记密码页面 ====';
+  String get comment_forgot_password => '==== Forgot Password Screen ====';
 
   @override
   String get forgotPasswordTitle => '重置您的密码';
 
   @override
-  String get forgotPasswordSubtitle => '别担心！请输入您的邮箱以重置密码。';
+  String get forgotPasswordSubtitle => '别担心，这是常有的事。输入您的邮箱以重置密码。';
 
   @override
   String get forgotPasswordEmail => '邮箱';
@@ -159,17 +162,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get forgotPasswordButton => '忘记密码';
 
   @override
-  String get forgotPasswordBackTo => '返回？ ';
+  String get forgotPasswordBackTo => '返回 ';
 
   @override
   String get forgotPasswordSignIn => '登录';
 
   @override
-  String get forgotPasswordEmailRequired => '邮箱字段为必填';
+  String get forgotPasswordEmailRequired => '请输入邮箱';
 
   @override
   String get comment_forgot_password_pin_verification =>
-      '==== 忘记密码 PIN 验证页面 ====';
+      '==== Forgot Password Pin Verification Screen ====';
 
   @override
   String get forgotPasswordPinVerifyTitle => '验证邮箱';
@@ -181,7 +184,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get forgotPasswordPinEnterOtp => '输入 OTP';
 
   @override
-  String get forgotPasswordPinOtpCountdown => 'OTP 剩余';
+  String get forgotPasswordPinOtpCountdown => 'OTP 倒计时';
 
   @override
   String get forgotPasswordPinVerifyButton => '验证 OTP';
@@ -193,16 +196,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get forgotPasswordPinResend => '重新发送';
 
   @override
-  String get forgotPasswordPinOtpRequired => 'OTP 字段为必填';
+  String get forgotPasswordPinOtpRequired => '请输入 OTP';
 
   @override
-  String get comment_reset_password => '==== 重置密码页面 ====';
+  String get comment_reset_password => '==== Reset Password Screen ====';
 
   @override
   String get resetPasswordTitle => '重置密码';
 
   @override
-  String get resetPasswordSubtitle => '请输入您的密码并确认密码。';
+  String get resetPasswordSubtitle => '请输入并确认您的新密码。';
 
   @override
   String get resetPasswordPassword => '密码';
@@ -220,34 +223,35 @@ class AppLocalizationsZh extends AppLocalizations {
   String get resetPasswordSignIn => '登录';
 
   @override
-  String get resetPasswordValidationRequired => '密码为必填';
+  String get resetPasswordValidationRequired => '请输入密码';
 
   @override
   String get resetPasswordValidationMinLength => '密码至少需要 8 个字符';
 
   @override
-  String get resetPasswordValidationConfirmRequired => '请确认您的密码';
+  String get resetPasswordValidationConfirmRequired => '请确认密码';
 
   @override
-  String get resetPasswordValidationMismatch => '密码不匹配';
+  String get resetPasswordValidationMismatch => '两次输入的密码不一致';
 
   @override
-  String get comment_auth_id_verification => '==== 身份验证页面 ====';
+  String get comment_auth_id_verification =>
+      '==== Auth ID Verification Screen ====';
 
   @override
-  String get authIdVerificationInvalidFieldType => '无效的字段类型';
+  String get authIdVerificationInvalidFieldType => '字段类型无效';
 
   @override
   String get authIdVerificationUnknownFieldType => '未知字段类型： ';
 
   @override
-  String get comment_camera_type_section => '==== 相机类型部分 ====';
+  String get comment_camera_type_section => '==== Camera Type Section ====';
 
   @override
   String get cameraTypeBack => '返回';
 
   @override
-  String get cameraTypeNotAvailable => '不可用';
+  String get cameraTypeNotAvailable => 'N/A';
 
   @override
   String get cameraTypeButton => '相机';
@@ -256,13 +260,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cameraTypeSkip => '跳过';
 
   @override
-  String get comment_file_type_section => '==== 文件类型部分 ====';
+  String get comment_file_type_section => '==== File Type Section ====';
 
   @override
   String get fileTypeBack => '返回';
 
   @override
-  String get fileTypeNotAvailable => '不可用';
+  String get fileTypeNotAvailable => 'N/A';
 
   @override
   String get fileTypeChooseFile => '选择文件';
@@ -271,13 +275,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fileTypeSkip => '跳过';
 
   @override
-  String get comment_front_camera_type_section => '==== 前置相机类型部分 ====';
+  String get comment_front_camera_type_section =>
+      '==== Front Camera Type Section ====';
 
   @override
   String get frontCameraTypeBack => '返回';
 
   @override
-  String get frontCameraTypeNotAvailable => '不可用';
+  String get frontCameraTypeNotAvailable => 'N/A';
 
   @override
   String get frontCameraTypeButton => '前置相机';
@@ -286,10 +291,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get frontCameraTypeSkip => '跳过';
 
   @override
-  String get comment_kyc_submission_section => '==== KYC 提交部分 ====';
+  String get comment_kyc_submission_section =>
+      '==== KYC Submission Section ====';
 
   @override
-  String get kycSubmissionIdVerification => '身份验证';
+  String get kycSubmissionIdVerification => '证件验证';
 
   @override
   String get kycSubmissionSubmit => '提交';
@@ -304,13 +310,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get kycSubmissionRetake => '重新拍摄';
 
   @override
-  String get comment_email_screen => '==== 邮箱页面 ====';
+  String get comment_email_screen => '==== Email Screen ====';
 
   @override
   String get emailScreenCreateAccount => '创建您的账户';
 
   @override
-  String get emailScreenSubtitle => '加入并立即掌控您的财务';
+  String get emailScreenSubtitle => '立即加入，掌控您的财务';
 
   @override
   String get emailScreenEmail => '邮箱';
@@ -328,28 +334,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get emailScreenEmailRequired => '请输入邮箱';
 
   @override
-  String get comment_personal_info_screen => '==== 个人信息页面 ====';
+  String get comment_personal_info_screen => '==== Personal Info Screen ====';
 
   @override
   String get personalInfoTitle => '您的信息';
 
   @override
-  String get personalInfoSubtitle => '请输入您的法定信息以继续。';
+  String get personalInfoSubtitle => '输入您的法定信息以继续。';
 
   @override
-  String get personalInfoFirstName => '名字';
+  String get personalInfoFirstName => '名';
 
   @override
-  String get personalInfoLastName => '姓氏';
+  String get personalInfoLastName => '姓';
 
   @override
   String get personalInfoUserName => '用户名';
 
   @override
-  String get personalInfoCountry => '国家';
+  String get personalInfoCountry => '国家/地区';
 
   @override
-  String get personalInfoSelectCountry => '选择国家';
+  String get personalInfoSelectCountry => '选择国家/地区';
 
   @override
   String get personalInfoPhoneNo => '电话号码';
@@ -361,34 +367,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String get personalInfoContinue => '继续';
 
   @override
-  String get personalInfoValidationFirstNameRequired => '名字为必填';
+  String get personalInfoValidationFirstNameRequired => '请输入名字';
 
   @override
-  String get personalInfoValidationLastNameRequired => '姓氏为必填';
+  String get personalInfoValidationLastNameRequired => '请输入姓氏';
 
   @override
-  String get personalInfoValidationUserNameRequired => '用户名为必填';
+  String get personalInfoValidationUserNameRequired => '请输入用户名';
 
   @override
-  String get personalInfoValidationCountryRequired => '国家为必填';
+  String get personalInfoValidationCountryRequired => '请选择国家/地区';
 
   @override
-  String get personalInfoValidationPhoneRequired => '电话号码为必填';
+  String get personalInfoValidationPhoneRequired => '请输入电话号码';
 
   @override
-  String get personalInfoValidationReferralCodeRequired => '推荐码为必填';
+  String get personalInfoValidationReferralCodeRequired => '请输入推荐码';
 
   @override
-  String get personalInfoValidationGenderRequired => '性别为必填';
+  String get personalInfoValidationGenderRequired => '请选择性别';
 
   @override
-  String get comment_setup_password_screen => '==== 设置密码页面 ====';
+  String get comment_setup_password_screen => '==== Setup Password Screen ====';
 
   @override
   String get setupPasswordTitle => '设置密码';
 
   @override
-  String get setupPasswordSubtitle => '创建强密码并确认';
+  String get setupPasswordSubtitle => '创建一个强密码并进行确认';
 
   @override
   String get setupPasswordPassword => '密码';
@@ -397,7 +403,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get setupPasswordConfirmPassword => '确认密码';
 
   @override
-  String get setupPasswordAgreeTerms => '我同意 ';
+  String get setupPasswordAgreeTerms => '我已阅读并同意 ';
 
   @override
   String get setupPasswordTermsConditions => '条款与条件';
@@ -406,28 +412,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get setupPasswordButton => '设置密码';
 
   @override
-  String get setupPasswordValidationRequired => '密码为必填';
+  String get setupPasswordValidationRequired => '请输入密码';
 
   @override
   String get setupPasswordValidationMinLength => '密码至少需要 8 个字符';
 
   @override
-  String get setupPasswordValidationConfirmRequired => '请确认您的密码';
+  String get setupPasswordValidationConfirmRequired => '请确认密码';
 
   @override
-  String get setupPasswordValidationMismatch => '密码不匹配';
+  String get setupPasswordValidationMismatch => '两次输入的密码不一致';
 
   @override
-  String get setupPasswordValidationTermsRequired => '请接受条款和条件';
+  String get setupPasswordValidationTermsRequired => '请先同意条款与条件';
 
   @override
-  String get comment_sign_up_status_screen => '==== 注册状态页面 ====';
+  String get comment_sign_up_status_screen => '==== Sign Up Status Screen ====';
 
   @override
-  String get signUpStatusTitle => '您当前的状态';
+  String get signUpStatusTitle => '您的当前状态';
 
   @override
-  String get signUpStatusSubtitle => '一个简单的 4 步流程来保护您的 Qunzo 账户';
+  String get signUpStatusSubtitle => '只需 4 步，保障您的 eCardo 账户安全';
 
   @override
   String get signUpStatusStep => '步骤';
@@ -460,25 +466,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get signUpStatusSubmitAgain => '重新提交';
 
   @override
-  String get signUpStatusDashboard => '仪表板';
+  String get signUpStatusDashboard => '总览';
 
   @override
   String get signUpStatusBack => '返回';
 
   @override
-  String get signUpStatusErrorProcessing => '处理下一步时出错。请重试。';
+  String get signUpStatusErrorProcessing => '处理下一步时出错，请重试。';
 
   @override
   String get signUpStatusVerificationTypeEmpty => '验证类型为空！';
 
   @override
-  String get signUpStatusErrorLoadingTypes => '加载验证类型时出错。请重试。';
+  String get signUpStatusErrorLoadingTypes => '加载验证类型时出错，请重试。';
 
   @override
   String get signUpStatusDropdownTwoVerificationNotFound => '未找到验证类型';
 
   @override
-  String get comment_verify_email_screen => '==== 验证邮箱页面 ====';
+  String get comment_verify_email_screen => '==== Verify Email Screen ====';
 
   @override
   String get verifyEmailTitle => '验证邮箱';
@@ -490,7 +496,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get verifyEmailEnterOtp => '输入 OTP';
 
   @override
-  String get verifyEmailResendAvailable => '可重新发送剩余';
+  String get verifyEmailResendAvailable => '可重新发送：';
 
   @override
   String get verifyEmailRequestNewOtp => '您现在可以请求新的 OTP';
@@ -505,34 +511,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String get verifyEmailResend => '重新发送';
 
   @override
-  String get verifyEmailOtpRequired => 'OTP 字段为必填';
+  String get verifyEmailOtpRequired => '请输入 OTP';
 
   @override
-  String get comment_add_money_screen => '==== 添加资金页面 ====';
+  String get comment_add_money_screen => '==== Add Money Screen ====';
 
   @override
-  String get addMoneyTitle => '添加资金';
+  String get addMoneyTitle => '充值';
 
   @override
   String get addMoneyBalance => '余额';
 
   @override
-  String get addMoneyHistory => '添加资金记录';
+  String get addMoneyHistory => '充值历史记录';
 
   @override
   String get addMoneyWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_add_money_amount_step => '==== 添加资金金额步骤 ====';
+  String get comment_add_money_amount_step => '==== Add Money Amount Step ====';
 
   @override
   String get addMoneyGateway => '支付网关';
 
   @override
-  String get addMoneyGatewayNotFound => '未找到网关';
+  String get addMoneyGatewayNotFound => '未找到支付网关';
 
   @override
-  String get addMoneySelectGateway => '选择网关';
+  String get addMoneySelectGateway => '选择支付网关';
 
   @override
   String get addMoneyCharge => '手续费：';
@@ -544,19 +550,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMoneyMin => '最低';
 
   @override
-  String get addMoneyMax => '和最高';
+  String get addMoneyMax => '至最高';
 
   @override
-  String get addMoneyWriteHere => '在此输入...';
+  String get addMoneyWriteHere => '请输入...';
 
   @override
-  String get addMoneyAddMoneyButton => '添加资金';
+  String get addMoneyAddMoneyButton => '充值';
 
   @override
-  String get comment_add_money_pending_step => '==== 添加资金待处理步骤 ====';
+  String get comment_add_money_pending_step =>
+      '==== Add Money Pending Step ====';
 
   @override
-  String get addMoneyPendingTitle => '您的存款流程正在\n处理中';
+  String get addMoneyPendingTitle => '您的充值正在\n处理中';
 
   @override
   String get addMoneyPendingAmount => '金额';
@@ -580,16 +587,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMoneyPendingFinalAmount => '最终金额';
 
   @override
-  String get addMoneyPendingDepositAgain => '再次存款';
+  String get addMoneyPendingDepositAgain => '再次充值';
 
   @override
   String get addMoneyPendingBackHome => '返回首页';
 
   @override
-  String get comment_add_money_review_step => '==== 添加资金审核步骤 ====';
+  String get comment_add_money_review_step => '==== Add Money Review Step ====';
 
   @override
-  String get addMoneyReviewTitle => '审核详情';
+  String get addMoneyReviewTitle => '确认信息';
 
   @override
   String get addMoneyReviewAmount => '金额';
@@ -604,7 +611,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMoneyReviewCharge => '手续费';
 
   @override
-  String get addMoneyReviewTotal => '总计';
+  String get addMoneyReviewTotal => '合计';
 
   @override
   String get addMoneyReviewBack => '返回';
@@ -616,10 +623,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMoneyReviewNoFileUploaded => '未上传文件';
 
   @override
-  String get comment_add_money_success_step => '==== 添加资金成功步骤 ====';
+  String get comment_add_money_success_step =>
+      '==== Add Money Success Step ====';
 
   @override
-  String get addMoneySuccessTitle => '存款成功！';
+  String get addMoneySuccessTitle => '充值成功！';
 
   @override
   String get addMoneySuccessAmount => '金额';
@@ -637,19 +645,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMoneySuccessFinalAmount => '最终金额';
 
   @override
-  String get addMoneySuccessAddMoneyAgain => '再次添加资金';
+  String get addMoneySuccessAddMoneyAgain => '再次充值';
 
   @override
   String get addMoneySuccessBackHome => '返回首页';
 
   @override
-  String get comment_add_money_history => '==== 添加资金记录 ====';
+  String get comment_add_money_history => '==== Add Money History ====';
 
   @override
-  String get addMoneyHistoryTitle => '添加资金记录';
+  String get addMoneyHistoryTitle => '充值历史记录';
 
   @override
-  String get comment_add_money_filter_bottom_sheet => '==== 添加资金筛选底部表单 ====';
+  String get comment_add_money_filter_bottom_sheet =>
+      '==== Add Money Filter Bottom Sheet ====';
 
   @override
   String get addMoneyFilterTransactionId => '交易 ID';
@@ -661,7 +670,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMoneyFilterSuccess => '成功';
 
   @override
-  String get addMoneyFilterPending => '待处理';
+  String get addMoneyFilterPending => '处理中';
 
   @override
   String get addMoneyFilterFailed => '失败';
@@ -673,13 +682,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addMoneyFilterReset => '重置';
 
   @override
-  String get comment_create_beneficiary_screen => '==== 创建受益人页面 ====';
+  String get comment_create_beneficiary_screen =>
+      '==== Create Beneficiary Screen ====';
 
   @override
-  String get createBeneficiaryTitle => '创建新受益人';
+  String get createBeneficiaryTitle => '新建收款人';
 
   @override
-  String get createBeneficiaryAccountNumber => '账户号码';
+  String get createBeneficiaryAccountNumber => '账号';
 
   @override
   String get createBeneficiaryNickName => '昵称';
@@ -688,13 +698,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createBeneficiaryCreateButton => '创建';
 
   @override
-  String get createBeneficiaryValidationAccountNumber => '请填写账户号码';
+  String get createBeneficiaryValidationAccountNumber => '请填写账号';
 
   @override
   String get createBeneficiaryValidationNickName => '请填写昵称';
 
   @override
-  String get comment_update_beneficiary_screen => '==== 更新受益人页面 ====';
+  String get comment_update_beneficiary_screen =>
+      '==== Update Beneficiary Screen ====';
 
   @override
   String get updateBeneficiaryTitle => '更新';
@@ -709,28 +720,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updateBeneficiaryValidationNickName => '请填写昵称';
 
   @override
-  String get comment_account_user_types => '==== 账户用户类型 ====';
+  String get comment_account_user_types => '==== Account User Types ====';
 
   @override
   String get accountUserMerchant => '商户';
 
   @override
-  String get accountUserBeneficiary => '受益人';
+  String get accountUserBeneficiary => '收款人';
 
   @override
   String get accountUserAgent => '代理';
 
   @override
-  String get comment_cash_out_screen => '==== 提现页面 ====';
+  String get comment_cash_out_screen => '==== Cash Out Screen ====';
 
   @override
   String get cashOutTitle => '从代理提现';
 
   @override
-  String get cashOutHistory => '提现记录';
+  String get cashOutHistory => '提现历史记录';
 
   @override
-  String get comment_cash_out_amount_step => '==== 提现金额步骤 ====';
+  String get comment_cash_out_amount_step => '==== Cash Out Amount Step ====';
 
   @override
   String get cashOutAgentId => '代理 ID';
@@ -742,13 +753,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cashOutMin => '最低';
 
   @override
-  String get cashOutMax => '和最高';
+  String get cashOutMax => '至最高';
 
   @override
   String get cashOutButton => '提现';
 
   @override
-  String get cashOutSavedAgents => '已保存代理';
+  String get cashOutSavedAgents => '已保存的代理';
 
   @override
   String get cashOutAgents => '代理';
@@ -757,16 +768,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cashOutAddAgent => '添加代理';
 
   @override
-  String get cashOutAid => 'AID：';
+  String get cashOutAid => 'AID:';
 
   @override
-  String get cashOutQrInvalidDigits => '无效的二维码。代理 AID 必须仅为数字。';
+  String get cashOutQrInvalidDigits => '无效的二维码。代理 AID 只能包含数字。';
 
   @override
   String get cashOutQrInvalidPrefix => '无效的二维码。未找到 AID 前缀。';
 
   @override
-  String get cashOutDeleteConfirm => '您确定吗？';
+  String get cashOutDeleteConfirm => '确定吗？';
 
   @override
   String get cashOutDeleteMessage => '您要删除此代理吗？';
@@ -778,10 +789,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cashOutCancelButton => '取消';
 
   @override
-  String get comment_cash_out_review_step => '==== 提现审核步骤 ====';
+  String get comment_cash_out_review_step => '==== Cash Out Review Step ====';
 
   @override
-  String get cashOutReviewTitle => '审核详情';
+  String get cashOutReviewTitle => '确认信息';
 
   @override
   String get cashOutReviewAmount => '金额';
@@ -805,7 +816,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cashOutReviewConfirm => '确认';
 
   @override
-  String get comment_cash_out_success_step => '==== 提现成功步骤 ====';
+  String get comment_cash_out_success_step => '==== Cash Out Success Step ====';
 
   @override
   String get cashOutSuccessTitle => '提现成功！';
@@ -838,7 +849,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cashOutSuccessBackHome => '返回首页';
 
   @override
-  String get comment_cash_out_wallets_section => '==== 提现钱包部分 ====';
+  String get comment_cash_out_wallets_section =>
+      '==== Cash Out Wallets Section ====';
 
   @override
   String get cashOutWalletsBalance => '余额';
@@ -847,13 +859,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cashOutWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_cash_out_history => '==== 提现记录 ====';
+  String get comment_cash_out_history => '==== Cash Out History ====';
 
   @override
-  String get cashOutHistoryTitle => '提现记录';
+  String get cashOutHistoryTitle => '提现历史记录';
 
   @override
-  String get comment_cash_out_filter_bottom_sheet => '==== 提现筛选底部表单 ====';
+  String get comment_cash_out_filter_bottom_sheet =>
+      '==== Cash Out Filter Bottom Sheet ====';
 
   @override
   String get cashOutFilterTransactionId => '交易 ID';
@@ -868,16 +881,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cashOutFilterReset => '重置';
 
   @override
-  String get comment_exchange_screen => '==== 兑换页面 ====';
+  String get comment_exchange_screen => '==== Exchange Screen ====';
 
   @override
-  String get exchangeTitle => '兑换钱包';
+  String get exchangeTitle => '钱包兑换';
 
   @override
-  String get exchangeHistory => '兑换记录';
+  String get exchangeHistory => '兑换历史记录';
 
   @override
-  String get comment_exchange_amount_step => '==== 兑换金额步骤 ====';
+  String get comment_exchange_amount_step => '==== Exchange Amount Step ====';
 
   @override
   String get exchangeAmount => '金额';
@@ -886,22 +899,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeMin => '最低';
 
   @override
-  String get exchangeMax => '和最高';
+  String get exchangeMax => '至最高';
 
   @override
   String get exchangeButton => '兑换';
 
   @override
-  String get comment_exchange_review_step => '==== 兑换审核步骤 ====';
+  String get comment_exchange_review_step => '==== Exchange Review Step ====';
 
   @override
-  String get exchangeReviewTitle => '审核详情';
+  String get exchangeReviewTitle => '确认信息';
 
   @override
   String get exchangeReviewAmount => '金额';
 
   @override
-  String get exchangeReviewFromWallet => '从钱包';
+  String get exchangeReviewFromWallet => '源钱包';
 
   @override
   String get exchangeReviewCharge => '手续费';
@@ -910,7 +923,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeReviewTotalAmount => '总金额';
 
   @override
-  String get exchangeReviewToWallet => '至钱包';
+  String get exchangeReviewToWallet => '目标钱包';
 
   @override
   String get exchangeReviewExchangeRate => '汇率';
@@ -925,7 +938,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeReviewConfirm => '确认';
 
   @override
-  String get comment_exchange_success_step => '==== 兑换成功步骤 ====';
+  String get comment_exchange_success_step => '==== Exchange Success Step ====';
 
   @override
   String get exchangeSuccessTitle => '兑换成功！';
@@ -940,7 +953,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeSuccessPayAmount => '支付金额';
 
   @override
-  String get exchangeSuccessConvertedAmount => '兑换金额';
+  String get exchangeSuccessConvertedAmount => '兑换所得金额';
 
   @override
   String get exchangeSuccessCharge => '手续费';
@@ -958,7 +971,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeSuccessBackHome => '返回首页';
 
   @override
-  String get comment_exchange_wallet_section => '==== 兑换钱包部分 ====';
+  String get comment_exchange_wallet_section =>
+      '==== Exchange Wallet Section ====';
 
   @override
   String get exchangeWalletBalance => '余额';
@@ -967,16 +981,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_exchange_wallet_to_wallet => '==== 钱包对钱包兑换 ====';
+  String get comment_exchange_wallet_to_wallet =>
+      '==== Exchange Wallet To Wallet ====';
 
   @override
   String get exchangeWalletToWallet => '钱包对钱包';
 
   @override
-  String get exchangeFromWallet => '从钱包';
+  String get exchangeFromWallet => '源钱包';
 
   @override
-  String get exchangeToWallet => '至钱包';
+  String get exchangeToWallet => '目标钱包';
 
   @override
   String get exchangeRate => '汇率： ';
@@ -985,13 +1000,107 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeWalletToWalletWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_exchange_history => '==== 兑换记录 ====';
+  String get exchangeWalletSectionFiat => '法定货币';
 
   @override
-  String get exchangeHistoryTitle => '兑换记录';
+  String get exchangeWalletSectionCrypto => '加密资产';
 
   @override
-  String get comment_exchange_filter_bottom_sheet => '==== 兑换筛选底部表单 ====';
+  String get exchangeAmountReceive => '您将收到';
+
+  @override
+  String get exchangeAmountSend => '您支付';
+
+  @override
+  String get exchangeContinue => '继续';
+
+  @override
+  String get exchangeQuickPercent25 => '25%';
+
+  @override
+  String get exchangeQuickPercent50 => '50%';
+
+  @override
+  String get exchangeQuickPercent75 => '75%';
+
+  @override
+  String get exchangeQuickMax => '最高';
+
+  @override
+  String get exchangeMinHint => '最低';
+
+  @override
+  String get exchangeMaxHint => '最高';
+
+  @override
+  String get exchangeReviewRateLockedAt => '汇率已在确认时锁定';
+
+  @override
+  String get exchangeReviewRateStaleBanner => '汇率已更新，请重新查看并确认。';
+
+  @override
+  String get exchangeSuccessShareReceipt => '分享收据';
+
+  @override
+  String get exchangeSuccessBackToWallet => '返回钱包';
+
+  @override
+  String get exchangeRateDisconnectedBanner => '汇率服务暂时不可用。';
+
+  @override
+  String get exchangeRateStaleNotice => '正在显示最近一次已知汇率';
+
+  @override
+  String get exchangeRateAutoCaption => '每 60 秒自动更新';
+
+  @override
+  String get exchangeRecentPairs => '最近交易对';
+
+  @override
+  String get exchangeRateAlertTitle => '汇率提醒';
+
+  @override
+  String get exchangeRateAlertHint => '汇率达到以下数值时通知我';
+
+  @override
+  String get exchangeRateAlertSet => '设置提醒';
+
+  @override
+  String get exchangeRateAlertPlaceholder => '即将推出';
+
+  @override
+  String get exchangeRateServiceRefresh => '刷新';
+
+  @override
+  String get rate_service_unavailable => '汇率服务不可用';
+
+  @override
+  String get rate_stale_last_known => '正在显示最近一次已知汇率';
+
+  @override
+  String get rate_auto_update_caption => '每 60 秒自动更新';
+
+  @override
+  String get exchangeRate24hChange => '24小时';
+
+  @override
+  String get exchangeRateLastUpdate => '更新于';
+
+  @override
+  String get refresh => '刷新';
+
+  @override
+  String get calculating => '正在计算…';
+
+  @override
+  String get comment_exchange_history => '==== Exchange History ====';
+
+  @override
+  String get exchangeHistoryTitle => '兑换历史记录';
+
+  @override
+  String get comment_exchange_filter_bottom_sheet =>
+      '==== Exchange Filter Bottom Sheet ====';
 
   @override
   String get exchangeFilterTransactionId => '交易 ID';
@@ -1006,7 +1115,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exchangeFilterReset => '重置';
 
   @override
-  String get comment_gift_code_screen => '==== 礼品码页面 ====';
+  String get comment_gift_code_screen => '==== Gift Code Screen ====';
 
   @override
   String get giftCodeTitle => '礼品码';
@@ -1015,7 +1124,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftCodeCreateGift => '创建礼品';
 
   @override
-  String get comment_create_gift_amount_step => '==== 创建礼品金额步骤 ====';
+  String get comment_create_gift_amount_step =>
+      '==== Create Gift Amount Step ====';
 
   @override
   String get createGiftAmount => '金额';
@@ -1024,16 +1134,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createGiftMin => '最低';
 
   @override
-  String get createGiftMax => '和最高';
+  String get createGiftMax => '至最高';
 
   @override
   String get createGiftButton => '创建礼品';
 
   @override
-  String get comment_create_gift_review_section => '==== 创建礼品审核部分 ====';
+  String get comment_create_gift_review_section =>
+      '==== Create Gift Review Section ====';
 
   @override
-  String get createGiftReviewTitle => '审核详情';
+  String get createGiftReviewTitle => '确认信息';
 
   @override
   String get createGiftReviewAmount => '金额';
@@ -1054,10 +1165,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createGiftReviewConfirm => '确认';
 
   @override
-  String get comment_create_gift_success_step => '==== 创建礼品成功步骤 ====';
+  String get comment_create_gift_success_step =>
+      '==== Create Gift Success Step ====';
 
   @override
-  String get createGiftSuccessTitle => '创建礼品成功！';
+  String get createGiftSuccessTitle => '礼品创建成功！';
 
   @override
   String get createGiftSuccessAmount => '金额';
@@ -1069,7 +1181,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createGiftSuccessFinalAmount => '最终金额';
 
   @override
-  String get createGiftSuccessCreatedAt => '创建于';
+  String get createGiftSuccessCreatedAt => '创建时间';
 
   @override
   String get createGiftSuccessCreateAgain => '再次创建礼品码';
@@ -1078,7 +1190,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createGiftSuccessBackHome => '返回首页';
 
   @override
-  String get comment_create_gift_wallet_section => '==== 创建礼品钱包部分 ====';
+  String get comment_create_gift_wallet_section =>
+      '==== Create Gift Wallet Section ====';
 
   @override
   String get createGiftWalletBalance => '余额';
@@ -1087,25 +1200,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createGiftWalletWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_gift_code_header_section => '==== 礼品码头部部分 ====';
+  String get comment_gift_code_header_section =>
+      '==== Gift Code Header Section ====';
 
   @override
   String get giftCodeHeaderTitle => '礼品码';
 
   @override
-  String get giftCodeHeaderGiftRedeem => '礼品兑换';
+  String get giftCodeHeaderGiftRedeem => '礼品码兑换';
 
   @override
   String get giftCodeHeaderMyGift => '我的礼品';
 
   @override
-  String get giftCodeHeaderGiftRedeemHistory => '礼品兑换记录';
+  String get giftCodeHeaderGiftRedeemHistory => '兑换历史记录';
 
   @override
-  String get comment_gift_history => '==== 礼品记录 ====';
+  String get comment_gift_history => '==== Gift History ====';
 
   @override
-  String get giftHistoryCreatedAt => '创建于：';
+  String get giftHistoryCreatedAt => '创建时间：';
 
   @override
   String get giftHistoryStatus => '状态： ';
@@ -1120,7 +1234,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftHistoryCodeCopied => '礼品码已复制';
 
   @override
-  String get comment_gift_history_filter_bottom_sheet => '==== 礼品记录筛选底部表单 ====';
+  String get comment_gift_history_filter_bottom_sheet =>
+      '==== Gift History Filter Bottom Sheet ====';
 
   @override
   String get giftHistoryFilterGiftCode => '礼品码';
@@ -1129,7 +1244,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftHistoryFilterButton => '筛选';
 
   @override
-  String get comment_gift_redeem_section => '==== 礼品兑换部分 ====';
+  String get comment_gift_redeem_section => '==== Gift Redeem Section ====';
 
   @override
   String get giftRedeemGiftCode => '礼品码';
@@ -1141,13 +1256,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftRedeemValidation => '请输入礼品码';
 
   @override
-  String get comment_gift_redeem_history => '==== 礼品兑换记录 ====';
+  String get comment_gift_redeem_history => '==== Gift Redeem History ====';
 
   @override
-  String get giftRedeemHistoryTitle => '我的兑换记录';
+  String get giftRedeemHistoryTitle => '我的兑换历史记录';
 
   @override
-  String get giftRedeemHistoryCreatedAt => '创建于：';
+  String get giftRedeemHistoryCreatedAt => '创建时间：';
 
   @override
   String get giftRedeemHistoryStatus => '状态： ';
@@ -1162,10 +1277,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftRedeemHistoryCodeCopied => '礼品码已复制';
 
   @override
-  String get comment_gift_redeem_filter_bottom_sheet => '==== 礼品兑换筛选底部表单 ====';
+  String get comment_gift_redeem_filter_bottom_sheet =>
+      '==== Gift Redeem Filter Bottom Sheet ====';
 
   @override
-  String get giftRedeemFilterCode => '代码';
+  String get giftRedeemFilterCode => '礼品码';
 
   @override
   String get giftRedeemFilterButton => '筛选';
@@ -1174,22 +1290,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftRedeemFilterReset => '重置';
 
   @override
-  String get comment_drawer_section => '==== 侧边栏部分 ====';
+  String get comment_drawer_section => '==== Drawer Section ====';
 
   @override
-  String get drawerDashboard => '仪表板';
+  String get drawerDashboard => '总览';
 
   @override
   String get drawerMyWallets => '我的钱包';
 
   @override
-  String get drawerAddMoney => '添加资金';
+  String get drawerAddMoney => '充值';
 
   @override
   String get drawerCashOut => '提现';
 
   @override
   String get drawerBillPayments => '账单支付';
+
+  @override
+  String get drawerRemittance => '国际汇款';
 
   @override
   String get drawerVirtualCards => '虚拟卡';
@@ -1219,19 +1338,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get drawerP2pTrading => 'P2P 交易';
 
   @override
-  String get drawerKycVerification => '请验证您的 KYC！';
+  String get drawerKycVerification => '请完成身份认证（KYC）！';
 
   @override
-  String get comment_end_drawer_section => '==== 结束侧边栏部分 ====';
+  String get comment_end_drawer_section => '==== End Drawer Section ====';
 
   @override
-  String get endDrawerProfileSettings => '个人设置';
+  String get endDrawerProfileSettings => '个人资料设置';
 
   @override
   String get endDrawerChangePassword => '修改密码';
 
   @override
-  String get endDrawerAllNotification => '所有通知';
+  String get endDrawerAllNotification => '全部通知';
 
   @override
   String get endDrawerHelpSupport => '帮助与支持';
@@ -1252,7 +1371,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get endDrawerChooseLanguage => '选择语言';
 
   @override
-  String get comment_recent_transaction_details => '==== 最近交易详情 ====';
+  String get comment_recent_transaction_details =>
+      '==== Recent Transaction Details ====';
 
   @override
   String get transactionDetailsTitle => '交易详情';
@@ -1282,16 +1402,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transactionStatusSuccess => '成功';
 
   @override
-  String get transactionStatusPending => '待处理';
+  String get transactionStatusPending => '处理中';
 
   @override
   String get transactionStatusFailed => '失败';
 
   @override
-  String get comment_wallet_details => '==== 钱包详情 ====';
+  String get comment_wallet_details => '==== Wallet Details ====';
 
   @override
-  String get walletDetailsHistory => '记录';
+  String get walletDetailsHistory => '历史记录';
 
   @override
   String get walletDetailsAvailableBalance => '可用余额';
@@ -1303,16 +1423,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get walletDetailsWithdraw => '提现';
 
   @override
-  String get walletDetailsUserDepositNotEnabled => '用户存款未启用';
+  String get walletDetailsUserDepositNotEnabled => '用户充值未开通';
 
   @override
-  String get walletDetailsUserWithdrawNotEnabled => '用户提现未启用';
+  String get walletDetailsUserWithdrawNotEnabled => '用户提现未开通';
 
   @override
   String get walletDetailsWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_action_button_section => '==== 操作按钮部分 ====';
+  String get comment_action_button_section => '==== Action Button Section ====';
 
   @override
   String get actionButtonTransfer => '转账';
@@ -1321,25 +1441,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get actionButtonWithdraw => '提现';
 
   @override
-  String get actionButtonPayment => '支付';
+  String get actionButtonPayment => '付款';
 
   @override
   String get actionButtonExchange => '兑换';
 
   @override
-  String get actionButtonUserTransferNotEnabled => '用户转账未启用';
+  String get actionButtonUserTransferNotEnabled => '用户转账未开通';
 
   @override
-  String get actionButtonUserWithdrawNotEnabled => '用户提现未启用';
+  String get actionButtonUserWithdrawNotEnabled => '用户提现未开通';
 
   @override
-  String get actionButtonUserPaymentNotEnabled => '用户支付未启用';
+  String get actionButtonUserPaymentNotEnabled => '用户付款未开通';
 
   @override
-  String get actionButtonUserExchangeNotEnabled => '用户兑换未启用';
+  String get actionButtonUserExchangeNotEnabled => '用户兑换未开通';
 
   @override
-  String get comment_my_wallet_section => '==== 我的钱包部分 ====';
+  String get comment_my_wallet_section => '==== My Wallet Section ====';
 
   @override
   String get myWalletSectionTitle => '我的钱包';
@@ -1351,13 +1471,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get myWalletWithdraw => '提现';
 
   @override
-  String get myWalletUserDepositNotEnabled => '用户存款未启用';
+  String get myWalletUserDepositNotEnabled => '用户充值未开通';
 
   @override
-  String get myWalletUserWithdrawNotEnabled => '用户提现未启用';
+  String get myWalletUserWithdrawNotEnabled => '用户提现未开通';
 
   @override
-  String get comment_other_services_section => '==== 其他服务部分 ====';
+  String get comment_other_services_section =>
+      '==== Other Services Section ====';
 
   @override
   String get otherServicesTitle => '其他服务';
@@ -1366,13 +1487,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dynamicPasswordTitle => '动态密码';
 
   @override
-  String get dynamicPasswordDesc => '用于钱包支付的 6 位验证码';
+  String get dynamicPasswordDesc => '用于钱包支付的 6 位动态码';
 
   @override
   String get otherServicesQrCode => '二维码';
 
   @override
-  String get otherServicesAddMoney => '添加资金';
+  String get otherServicesAddMoney => '充值';
 
   @override
   String get otherServicesCashOut => '提现';
@@ -1384,10 +1505,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get otherServicesTransactions => '交易';
 
   @override
-  String get otherServicesInvoice => '发票';
+  String get otherServicesInvoice => '账单';
 
   @override
-  String get otherServicesRequestMoney => '请求资金';
+  String get otherServicesRequestMoney => '收款请求';
 
   @override
   String get otherServicesGift => '礼品';
@@ -1408,7 +1529,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get otherServicesInvite => '邀请';
 
   @override
-  String get otherServicesBillPayment => '账单支付';
+  String get otherServicesBillPayment => '账单缴费';
 
   @override
   String get otherServicesVirtualCard => '虚拟卡';
@@ -1423,67 +1544,68 @@ class AppLocalizationsZh extends AppLocalizations {
   String get otherServicesPaymentLinks => '支付链接';
 
   @override
-  String get otherServicesKycVerification => '请验证您的 KYC！';
+  String get otherServicesKycVerification => '请完成身份认证（KYC）！';
 
   @override
-  String get otherServicesUserGiftNotEnabled => '用户礼品未启用';
+  String get otherServicesUserGiftNotEnabled => '用户礼品功能未开通';
 
   @override
-  String get otherServicesUserDepositNotEnabled => '用户存款未启用';
+  String get otherServicesUserDepositNotEnabled => '用户充值未开通';
 
   @override
-  String get otherServicesUserCashOutNotEnabled => '用户提现未启用';
+  String get otherServicesUserCashOutNotEnabled => '用户提现未开通';
 
   @override
-  String get otherServicesUserPaymentNotEnabled => '用户支付未启用';
+  String get otherServicesUserPaymentNotEnabled => '用户付款未开通';
 
   @override
-  String get otherServicesUserRequestMoneyNotEnabled => '用户请求资金未启用';
+  String get otherServicesUserRequestMoneyNotEnabled => '用户收款请求未开通';
 
   @override
-  String get otherServicesUserInvoiceNotEnabled => '用户发票未启用';
+  String get otherServicesUserInvoiceNotEnabled => '用户账单功能未开通';
 
   @override
-  String get comment_recent_transactions_section => '==== 最近交易部分 ====';
+  String get comment_recent_transactions_section =>
+      '==== Recent Transactions Section ====';
 
   @override
-  String get recentTransactionsTitle => '最近';
+  String get recentTransactionsTitle => '最近交易';
 
   @override
-  String get comment_section_header => '==== 部分标题 ====';
+  String get comment_section_header => '==== Section Header ====';
 
   @override
   String get sectionHeaderSeeAll => '查看全部';
 
   @override
-  String get comment_sign_up_bonus_popup => '==== 注册奖金弹窗 ====';
+  String get comment_sign_up_bonus_popup => '==== Sign Up Bonus Popup ====';
 
   @override
   String get signUpBonusCongratulations => '恭喜！';
 
   @override
-  String get signUpBonusReceived => '您已收到奖金';
+  String get signUpBonusReceived => '您已获得注册奖励';
 
   @override
-  String get comment_user_profile_section => '==== 用户资料部分 ====';
+  String get comment_user_profile_section => '==== User Profile Section ====';
 
   @override
   String get userProfileHello => '您好，👋';
 
   @override
-  String get userProfileUid => 'UID：';
+  String get userProfileUid => 'UID:';
 
   @override
   String get userProfileCopied => '已复制';
 
   @override
-  String get comment_invoice_screen => '==== 发票页面 ====';
+  String get comment_invoice_screen => '==== Invoice Screen ====';
 
   @override
-  String get invoiceTitle => '发票';
+  String get invoiceTitle => '账单';
 
   @override
-  String get invoiceCreateInvoice => '创建发票';
+  String get invoiceCreateInvoice => '创建账单';
 
   @override
   String get invoiceAmount => '金额：';
@@ -1510,25 +1632,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get invoiceUnpaid => '未支付';
 
   @override
-  String get comment_update_invoice => '==== 更新发票 ====';
+  String get comment_update_invoice => '==== Update Invoice ====';
 
   @override
-  String get updateInvoiceTitle => '更新发票';
+  String get updateInvoiceTitle => '更新账单';
 
   @override
-  String get updateInvoiceItems => '发票项目';
+  String get updateInvoiceItems => '账单条目';
 
   @override
-  String get updateInvoiceAddItem => '添加项目';
+  String get updateInvoiceAddItem => '添加条目';
 
   @override
-  String get updateInvoiceButton => '更新发票';
+  String get updateInvoiceButton => '更新账单';
 
   @override
-  String get comment_update_invoice_add_item => '==== 更新发票添加项目 ====';
+  String get comment_update_invoice_add_item =>
+      '==== Update Invoice Add Item ====';
 
   @override
-  String get updateInvoiceItemName => '项目名称';
+  String get updateInvoiceItemName => '条目名称';
 
   @override
   String get updateInvoiceQuantity => '数量';
@@ -1540,13 +1663,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updateInvoiceSubTotal => '小计';
 
   @override
-  String get comment_update_invoice_information => '==== 更新发票信息 ====';
+  String get comment_update_invoice_information =>
+      '==== Update Invoice Information ====';
 
   @override
-  String get updateInvoiceInformationTitle => '发票信息';
+  String get updateInvoiceInformationTitle => '账单信息';
 
   @override
-  String get updateInvoiceTo => '发票至';
+  String get updateInvoiceTo => '账单接收方';
 
   @override
   String get updateInvoiceEmailAddress => '邮箱地址';
@@ -1585,7 +1709,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updateInvoicePaymentStatusNotFound => '未找到支付状态';
 
   @override
-  String get comment_invoice_status_options => '==== 发票状态选项 ====';
+  String get comment_invoice_status_options =>
+      '==== Invoice Status Options ====';
 
   @override
   String get invoiceStatusDraft => '草稿';
@@ -1600,19 +1725,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get invoiceStatusUnpaid => '未支付';
 
   @override
-  String get comment_invoice_details => '==== 发票详情 ====';
+  String get comment_invoice_details => '==== Invoice Details ====';
 
   @override
-  String get invoiceDetailsTitle => '发票';
+  String get invoiceDetailsTitle => '账单';
 
   @override
-  String get invoiceDetailsReference => '编号：';
+  String get invoiceDetailsReference => 'Ref:';
 
   @override
   String get invoiceDetailsIssued => '开具：';
 
   @override
-  String get invoiceDetailsName => '名称';
+  String get invoiceDetailsName => '姓名';
 
   @override
   String get invoiceDetailsEmail => '邮箱';
@@ -1630,7 +1755,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get invoiceDetailsStatus => '状态';
 
   @override
-  String get invoiceDetailsItemName => '项目名称';
+  String get invoiceDetailsItemName => '条目名称';
 
   @override
   String get invoiceDetailsQuantity => '数量';
@@ -1645,7 +1770,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get invoiceDetailsPayNow => '立即支付';
 
   @override
-  String get invoiceDetailsPrintInvoice => '打印发票';
+  String get invoiceDetailsPrintInvoice => '打印账单';
 
   @override
   String get invoiceDetailsPaid => '已支付';
@@ -1654,10 +1779,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get invoiceDetailsUnpaid => '未支付';
 
   @override
-  String get comment_invoice_pdf => '==== 发票 PDF ====';
+  String get comment_invoice_pdf => '==== Invoice PDF ====';
 
   @override
-  String get invoicePdfReference => '编号：';
+  String get invoicePdfReference => 'Ref:';
 
   @override
   String get invoicePdfIssued => '开具：';
@@ -1678,7 +1803,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get invoicePdfCharge => '手续费：';
 
   @override
-  String get invoicePdfItemName => '项目名称';
+  String get invoicePdfItemName => '条目名称';
 
   @override
   String get invoicePdfQuantity => '数量';
@@ -1702,28 +1827,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get invoicePdfThanks => '感谢您的购买。';
 
   @override
-  String get comment_create_invoice => '==== 创建发票 ====';
+  String get comment_create_invoice => '==== Create Invoice ====';
 
   @override
-  String get createInvoiceTitle => '创建发票';
+  String get createInvoiceTitle => '创建账单';
 
   @override
-  String get createInvoiceItems => '发票项目';
+  String get createInvoiceItems => '账单条目';
 
   @override
-  String get createInvoiceAddItem => '添加项目';
+  String get createInvoiceAddItem => '添加条目';
 
   @override
-  String get createInvoiceButton => '创建发票';
+  String get createInvoiceButton => '创建账单';
 
   @override
   String get createInvoiceStatusDraft => '草稿';
 
   @override
-  String get comment_create_invoice_add_item_section => '==== 创建发票添加项目部分 ====';
+  String get comment_create_invoice_add_item_section =>
+      '==== Create Invoice Add Item Section ====';
 
   @override
-  String get createInvoiceAddItemSectionItemName => '项目名称';
+  String get createInvoiceAddItemSectionItemName => '条目名称';
 
   @override
   String get createInvoiceAddItemSectionQuantity => '数量';
@@ -1735,13 +1861,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createInvoiceAddItemSectionSubTotal => '小计';
 
   @override
-  String get comment_create_invoice_information_section => '==== 创建发票信息部分 ====';
+  String get comment_create_invoice_information_section =>
+      '==== Create Invoice Information Section ====';
 
   @override
-  String get createInvoiceInformationSectionTitle => '发票信息';
+  String get createInvoiceInformationSectionTitle => '账单信息';
 
   @override
-  String get createInvoiceInformationSectionInvoiceTo => '发票至';
+  String get createInvoiceInformationSectionInvoiceTo => '账单接收方';
 
   @override
   String get createInvoiceInformationSectionEmailAddress => '邮箱地址';
@@ -1777,7 +1904,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createInvoiceInformationSectionStatusPublished => '已发布';
 
   @override
-  String get comment_make_payment_screen => '==== 付款页面 ====';
+  String get comment_make_payment_screen => '==== Make Payment Screen ====';
 
   @override
   String get makePaymentScreenTitle => '付款';
@@ -1789,10 +1916,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makePaymentScreenBalance => '余额';
 
   @override
-  String get makePaymentScreenHistory => '付款记录';
+  String get makePaymentScreenHistory => '付款历史记录';
 
   @override
-  String get comment_make_payment_amount_step_section => '==== 付款金额步骤部分 ====';
+  String get comment_make_payment_amount_step_section =>
+      '==== Make Payment Amount Step Section ====';
 
   @override
   String get makePaymentAmountStepSectionMerchantId => '商户 ID';
@@ -1804,17 +1932,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makePaymentAmountStepSectionMinLimit => '最低';
 
   @override
-  String get makePaymentAmountStepSectionMaxLimit => '和最高';
+  String get makePaymentAmountStepSectionMaxLimit => '至最高';
 
   @override
   String get makePaymentAmountStepSectionMakePaymentButton => '付款';
 
   @override
-  String get makePaymentAmountStepSectionSavedMerchantsButton => '已保存商户';
+  String get makePaymentAmountStepSectionSavedMerchantsButton => '已保存的商户';
 
   @override
   String get makePaymentAmountStepSectionInvalidQrCodeDigits =>
-      '无效的二维码。商户 MID 必须仅为数字。';
+      '无效的二维码。商户 MID 只能包含数字。';
 
   @override
   String get makePaymentAmountStepSectionInvalidQrCodePrefix =>
@@ -1827,10 +1955,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makePaymentAmountStepSectionAddMerchant => '添加商户';
 
   @override
-  String get makePaymentAmountStepSectionMidLabel => 'MID：';
+  String get makePaymentAmountStepSectionMidLabel => 'MID:';
 
   @override
-  String get makePaymentAmountStepSectionDeleteConfirmationTitle => '您确定吗？';
+  String get makePaymentAmountStepSectionDeleteConfirmationTitle => '确定吗？';
 
   @override
   String get makePaymentAmountStepSectionDeleteConfirmationMessage =>
@@ -1843,10 +1971,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makePaymentAmountStepSectionCancelButton => '取消';
 
   @override
-  String get comment_make_payment_review_step_section => '==== 付款审核步骤部分 ====';
+  String get comment_make_payment_review_step_section =>
+      '==== Make Payment Review Step Section ====';
 
   @override
-  String get makePaymentReviewStepSectionTitle => '审核详情';
+  String get makePaymentReviewStepSectionTitle => '确认信息';
 
   @override
   String get makePaymentReviewStepSectionAmount => '金额';
@@ -1870,7 +1999,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makePaymentReviewStepSectionConfirmButton => '确认';
 
   @override
-  String get comment_make_payment_success_step_section => '==== 付款成功步骤部分 ====';
+  String get comment_make_payment_success_step_section =>
+      '==== Make Payment Success Step Section ====';
 
   @override
   String get makePaymentSuccessStepSectionTitle => '付款成功！';
@@ -1903,13 +2033,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makePaymentSuccessStepSectionBackHomeButton => '返回首页';
 
   @override
-  String get comment_make_payment_history_screen => '==== 付款记录页面 ====';
+  String get comment_make_payment_history_screen =>
+      '==== Make Payment History Screen ====';
 
   @override
-  String get makePaymentHistoryScreenTitle => '付款记录';
+  String get makePaymentHistoryScreenTitle => '付款历史记录';
 
   @override
-  String get comment_make_payment_filter_bottom_sheet => '==== 付款筛选底部表单 ====';
+  String get comment_make_payment_filter_bottom_sheet =>
+      '==== Make Payment Filter Bottom Sheet ====';
 
   @override
   String get makePaymentFilterTransactionId => '交易 ID';
@@ -1924,7 +2056,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get makePaymentFilterResetButton => '重置';
 
   @override
-  String get comment_qr_code_screen => '==== 二维码页面 ====';
+  String get comment_qr_code_screen => '==== QR Code Screen ====';
 
   @override
   String get qrCodeScreenTitle => '我的二维码';
@@ -1933,31 +2065,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get qrCodeScreenDownloadButton => '下载';
 
   @override
-  String get qrCodeScreenPermissionRequired => '需要权限。请在设置中允许。';
+  String get qrCodeScreenPermissionRequired => '需要相关权限，请在设置中允许。';
 
   @override
   String get qrCodeScreenDownloadSuccess => '下载成功！';
 
   @override
-  String get comment_referral_screen => '==== 推荐页面 ====';
+  String get comment_referral_screen => '==== Referral Screen ====';
 
   @override
-  String get referralScreenTitle => '推荐';
+  String get referralScreenTitle => '推荐计划';
 
   @override
   String get referralScreenEarnAmount => '赚取';
 
   @override
-  String get referralScreenAfterInviting => '邀请后';
+  String get referralScreenAfterInviting => '邀请';
 
   @override
-  String get referralScreenOneMember => '一位成员';
+  String get referralScreenOneMember => '一位成员后';
 
   @override
-  String get referralScreenNoCode => '无代码';
+  String get referralScreenNoCode => '无推荐码';
 
   @override
-  String get referralScreenCodeCopied => '代码已复制';
+  String get referralScreenCodeCopied => '推荐码已复制';
 
   @override
   String get referralScreenShareButton => '分享';
@@ -1966,7 +2098,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get referralScreenReferredFriends => '已推荐好友';
 
   @override
-  String get comment_referred_friends_screen => '==== 已推荐好友页面 ====';
+  String get comment_referred_friends_screen =>
+      '==== Referred Friends Screen ====';
 
   @override
   String get referredFriendsScreenTitle => '已推荐好友';
@@ -1975,7 +2108,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get referredFriendsScreenReferralTreeButton => '推荐树';
 
   @override
-  String get comment_referred_friend_list => '==== 已推荐好友列表 ====';
+  String get comment_referred_friend_list => '==== Referred Friend List ====';
 
   @override
   String get referredFriendListJoinedOn => '加入于';
@@ -1987,20 +2120,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get referredFriendListInactive => '不活跃';
 
   @override
-  String get comment_referral_tree_screen => '==== 推荐树页面 ====';
+  String get comment_referral_tree_screen => '==== Referral Tree Screen ====';
 
   @override
   String get referralTreeScreenTitle => '推荐树';
 
   @override
-  String get comment_request_money_screen => '==== 请求资金页面 ====';
+  String get comment_request_money_screen => '==== Request Money Screen ====';
 
   @override
-  String get requestMoneyScreenTitle => '请求资金';
+  String get requestMoneyScreenTitle => '收款请求';
 
   @override
   String get comment_request_money_amount_step_section =>
-      '==== 请求资金金额步骤部分 ====';
+      '==== Request Money Amount Step Section ====';
 
   @override
   String get requestMoneyAmountStepSectionRecipientId => '收款人 ID';
@@ -2012,43 +2145,44 @@ class AppLocalizationsZh extends AppLocalizations {
   String get requestMoneyAmountStepSectionMin => '最低';
 
   @override
-  String get requestMoneyAmountStepSectionMax => '和最高';
+  String get requestMoneyAmountStepSectionMax => '至最高';
 
   @override
   String get requestMoneyAmountStepSectionNote => '备注';
 
   @override
-  String get requestMoneyAmountStepSectionRequestMoneyButton => '请求资金';
+  String get requestMoneyAmountStepSectionRequestMoneyButton => '发起收款请求';
 
   @override
   String get requestMoneyAmountStepSectionInvalidQrCodeDigits =>
-      '无效的二维码。收款人 UID 必须仅为数字。';
+      '无效的二维码。收款人 UID 只能包含数字。';
 
   @override
   String get requestMoneyAmountStepSectionInvalidQrCodePrefix =>
       '无效的二维码。未找到 UID 前缀。';
 
   @override
-  String get comment_request_money_header_section => '==== 请求资金头部部分 ====';
+  String get comment_request_money_header_section =>
+      '==== Request Money Header Section ====';
 
   @override
-  String get requestMoneyHeaderSectionTitle => '请求资金';
+  String get requestMoneyHeaderSectionTitle => '收款请求';
 
   @override
-  String get requestMoneyHeaderSectionRequestMoneyButton => '请求资金';
+  String get requestMoneyHeaderSectionRequestMoneyButton => '发起收款请求';
 
   @override
-  String get requestMoneyHeaderSectionReceivedRequestButton => '已收到请求';
+  String get requestMoneyHeaderSectionReceivedRequestButton => '收到的请求';
 
   @override
-  String get requestMoneyHeaderSectionHistory => '请求资金记录';
+  String get requestMoneyHeaderSectionHistory => '收款请求历史记录';
 
   @override
   String get comment_request_money_review_step_section =>
-      '==== 请求资金审核步骤部分 ====';
+      '==== Request Money Review Step Section ====';
 
   @override
-  String get requestMoneyReviewStepSectionTitle => '审核详情';
+  String get requestMoneyReviewStepSectionTitle => '确认信息';
 
   @override
   String get requestMoneyReviewStepSectionAmount => '金额';
@@ -2067,10 +2201,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get comment_request_money_success_step_section =>
-      '==== 请求资金成功步骤部分 ====';
+      '==== Request Money Success Step Section ====';
 
   @override
-  String get requestMoneySuccessStepSectionTitle => '请求资金成功！';
+  String get requestMoneySuccessStepSectionTitle => '收款请求发送成功！';
 
   @override
   String get requestMoneySuccessStepSectionAmount => '金额';
@@ -2097,7 +2231,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get requestMoneySuccessStepSectionBackHomeButton => '返回首页';
 
   @override
-  String get comment_request_money_wallet_section => '==== 请求资金钱包部分 ====';
+  String get comment_request_money_wallet_section =>
+      '==== Request Money Wallet Section ====';
 
   @override
   String get requestMoneyWalletSectionBalance => '余额';
@@ -2106,25 +2241,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get requestMoneyWalletSectionWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_request_money_history_screen => '==== 请求资金记录页面 ====';
+  String get comment_request_money_history_screen =>
+      '==== Request Money History Screen ====';
 
   @override
-  String get requestMoneyHistoryScreenTitle => '请求资金记录';
+  String get requestMoneyHistoryScreenTitle => '收款请求历史记录';
 
   @override
-  String get requestMoneyHistoryRequestedAt => '请求于：';
+  String get requestMoneyHistoryRequestedAt => '请求时间：';
 
   @override
   String get requestMoneyHistoryStatus => '状态： ';
 
   @override
-  String get comment_request_money_history_details => '==== 请求资金记录详情 ====';
+  String get comment_request_money_history_details =>
+      '==== Request Money History Details ====';
 
   @override
   String get requestMoneyHistoryDetailsRequestEmail => '请求邮箱';
 
   @override
-  String get requestMoneyHistoryDetailsCurrency => '货币';
+  String get requestMoneyHistoryDetailsCurrency => '币种';
 
   @override
   String get requestMoneyHistoryDetailsCharge => '手续费';
@@ -2133,16 +2270,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get requestMoneyHistoryDetailsFinalAmount => '最终金额';
 
   @override
-  String get requestMoneyHistoryDetailsRequestAt => '请求于';
+  String get requestMoneyHistoryDetailsRequestAt => '请求时间';
 
   @override
   String get requestMoneyHistoryDetailsStatus => '状态';
 
   @override
-  String get comment_received_request_screen => '==== 已收到请求页面 ====';
+  String get comment_received_request_screen =>
+      '==== Received Request Screen ====';
 
   @override
-  String get receivedRequestRequestedAt => '请求于：';
+  String get receivedRequestRequestedAt => '请求时间：';
 
   @override
   String get receivedRequestStatus => '状态： ';
@@ -2154,13 +2292,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get receivedRequestAcceptButton => '接受';
 
   @override
-  String get comment_accept_request_dropdown => '==== 接受请求下拉菜单 ====';
+  String get comment_accept_request_dropdown =>
+      '==== Accept Request Dropdown ====';
 
   @override
-  String get acceptRequestDropdownTitle => '您确定吗？';
+  String get acceptRequestDropdownTitle => '确定吗？';
 
   @override
-  String get acceptRequestDropdownMessage => '您要接受此资金请求吗？';
+  String get acceptRequestDropdownMessage => '您要接受此收款请求吗？';
 
   @override
   String get acceptRequestDropdownPayableAmount => '应付金额：';
@@ -2172,7 +2311,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get acceptRequestDropdownRequesterNote => '请求人备注：';
 
   @override
-  String get acceptRequestDropdownNoteNotFound => '未找到备注';
+  String get acceptRequestDropdownNoteNotFound => '无备注';
 
   @override
   String get acceptRequestDropdownAcceptButton => '接受';
@@ -2181,13 +2320,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get acceptRequestDropdownCancelButton => '取消';
 
   @override
-  String get comment_received_request_details => '==== 已收到请求详情 ====';
+  String get comment_received_request_details =>
+      '==== Received Request Details ====';
 
   @override
   String get receivedRequestDetailsRequestEmail => '请求邮箱';
 
   @override
-  String get receivedRequestDetailsCurrency => '货币';
+  String get receivedRequestDetailsCurrency => '币种';
 
   @override
   String get receivedRequestDetailsCharge => '手续费';
@@ -2196,13 +2336,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get receivedRequestDetailsFinalAmount => '最终金额';
 
   @override
-  String get receivedRequestDetailsRequestAt => '请求于';
+  String get receivedRequestDetailsRequestAt => '请求时间';
 
   @override
   String get receivedRequestDetailsStatus => '状态';
 
   @override
-  String get comment_change_password_screen => '==== 修改密码页面 ====';
+  String get comment_change_password_screen =>
+      '==== Change Password Screen ====';
 
   @override
   String get changePasswordScreenTitle => '修改密码';
@@ -2220,37 +2361,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String get changePasswordSaveChangesButton => '保存更改';
 
   @override
-  String get comment_id_verification_screen => '==== 身份验证页面 ====';
+  String get comment_id_verification_screen =>
+      '==== ID Verification Screen ====';
 
   @override
   String get idVerificationScreenTitle => 'KYC';
 
   @override
-  String get idVerificationHistoryButton => 'KYC 记录';
+  String get idVerificationHistoryButton => '身份认证（KYC）历史记录';
 
   @override
   String get idVerificationCenterTitle => '验证中心';
 
   @override
-  String get idVerificationNothingToSubmit => '您没有需要提交的内容';
+  String get idVerificationNothingToSubmit => '暂无可提交的内容';
 
   @override
-  String get kycStatusVerified => '您已提交文件并通过验证';
+  String get kycStatusVerified => '您已提交证件并通过验证';
 
   @override
-  String get kycStatusPending => '您已提交文件，正在等待批准';
+  String get kycStatusPending => '您已提交证件，正在等待审核';
 
   @override
-  String get kycStatusRejected => '您的 KYC 验证失败。请重新提交文件。';
+  String get kycStatusRejected => '您的身份认证（KYC）未通过，请重新提交证件。';
 
   @override
-  String get kycStatusNotSubmitted => '您尚未提交任何 KYC 文件';
+  String get kycStatusNotSubmitted => '您尚未提交任何身份认证（KYC）证件';
 
   @override
-  String get comment_kyc_history_screen => '==== KYC 记录页面 ====';
+  String get comment_kyc_history_screen => '==== KYC History Screen ====';
 
   @override
-  String get kycHistoryScreenTitle => 'KYC 记录';
+  String get kycHistoryScreenTitle => '身份认证（KYC）历史记录';
 
   @override
   String get kycHistoryDate => '日期：';
@@ -2259,10 +2401,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get kycHistoryStatus => '状态： ';
 
   @override
-  String get kycHistoryStatusPending => '待处理';
+  String get kycHistoryStatusPending => '处理中';
 
   @override
-  String get kycHistoryStatusApproved => '已批准';
+  String get kycHistoryStatusApproved => '已通过';
 
   @override
   String get kycHistoryStatusRejected => '已拒绝';
@@ -2271,52 +2413,54 @@ class AppLocalizationsZh extends AppLocalizations {
   String get kycHistoryViewButton => '查看';
 
   @override
-  String get comment_kyc_details_bottom_sheet => '==== KYC 详情底部表单 ====';
+  String get comment_kyc_details_bottom_sheet =>
+      '==== KYC Details Bottom Sheet ====';
 
   @override
-  String get kycDetailsTitle => 'KYC 详情';
+  String get kycDetailsTitle => '身份认证（KYC）详情';
 
   @override
   String get kycDetailsStatus => '状态：';
 
   @override
-  String get kycDetailsCreatedAt => '创建于：';
+  String get kycDetailsCreatedAt => '创建时间：';
 
   @override
   String get kycDetailsMessageFromAdmin => '管理员留言：';
 
   @override
-  String get kycDetailsSubmittedData => '已提交数据';
+  String get kycDetailsSubmittedData => '已提交资料';
 
   @override
-  String get kycDetailsStatusPending => '待处理';
+  String get kycDetailsStatusPending => '处理中';
 
   @override
-  String get kycDetailsStatusApproved => '已批准';
+  String get kycDetailsStatusApproved => '已通过';
 
   @override
   String get kycDetailsStatusRejected => '已拒绝';
 
   @override
-  String get comment_notifications_screen => '==== 通知页面 ====';
+  String get comment_notifications_screen => '==== Notifications Screen ====';
 
   @override
-  String get notificationsScreenTitle => '所有通知';
+  String get notificationsScreenTitle => '全部通知';
 
   @override
-  String get notificationsMarkAllReadButton => '全部标记为已读';
+  String get notificationsMarkAllReadButton => '全部标为已读';
 
   @override
-  String get comment_profile_settings_screen => '==== 个人设置页面 ====';
+  String get comment_profile_settings_screen =>
+      '==== Profile Settings Screen ====';
 
   @override
-  String get profileSettingsScreenTitle => '个人设置';
+  String get profileSettingsScreenTitle => '个人资料设置';
 
   @override
-  String get profileSettingsFirstName => '名字';
+  String get profileSettingsFirstName => '名';
 
   @override
-  String get profileSettingsLastName => '姓氏';
+  String get profileSettingsLastName => '姓';
 
   @override
   String get profileSettingsUserName => '用户名';
@@ -2334,16 +2478,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileSettingsPhone => '电话';
 
   @override
-  String get profileSettingsCountry => '国家';
+  String get profileSettingsCountry => '国家/地区';
 
   @override
   String get profileSettingsCity => '城市';
 
   @override
-  String get profileSettingsZipCode => '邮编';
+  String get profileSettingsZipCode => '邮政编码';
 
   @override
-  String get profileSettingsJoiningDate => '加入日期';
+  String get profileSettingsJoiningDate => '注册日期';
 
   @override
   String get profileSettingsAddress => '地址';
@@ -2367,31 +2511,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileSettingsSelectGender => '选择性别';
 
   @override
-  String get profileSettingsCountryTitle => '国家';
+  String get profileSettingsCountryTitle => '国家/地区';
 
   @override
-  String get profileSettingsCountryNotFound => '未找到国家';
+  String get profileSettingsCountryNotFound => '未找到国家/地区';
 
   @override
-  String get profileSettingsSelectCountry => '选择国家';
+  String get profileSettingsSelectCountry => '选择国家/地区';
 
   @override
   String get profileSettingsSaveChangesButton => '保存更改';
 
   @override
-  String get comment_support_tickets_screen => '==== 支持工单页面 ====';
+  String get comment_support_tickets_screen =>
+      '==== Support Tickets Screen ====';
 
   @override
-  String get supportTicketsScreenTitle => '支持工单';
+  String get supportTicketsScreenTitle => '工单';
 
   @override
   String get supportTicketsCreateTicketButton => '创建工单';
 
   @override
-  String get supportTicketsLastUpdate => '最后更新';
+  String get supportTicketsLastUpdate => '最近更新';
 
   @override
-  String get supportTicketsRequestedAt => '请求于';
+  String get supportTicketsRequestedAt => '请求时间';
 
   @override
   String get supportTicketsPriorityHigh => '高';
@@ -2406,7 +2551,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get supportTicketsStatus => '状态： ';
 
   @override
-  String get supportTicketsStatusOpen => '开放';
+  String get supportTicketsStatusOpen => '开启';
 
   @override
   String get supportTicketsStatusClose => '关闭';
@@ -2415,7 +2560,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get supportTicketsReplyButton => '回复';
 
   @override
-  String get comment_ticket_details => '==== 工单详情 ====';
+  String get comment_ticket_details => '==== Ticket Details ====';
 
   @override
   String get ticketDetailsTitle => '工单详情';
@@ -2424,16 +2569,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ticketDetailsTicketId => '工单 ID';
 
   @override
-  String get ticketDetailsCategory => '类别';
+  String get ticketDetailsCategory => '分类';
 
   @override
   String get ticketDetailsPriority => '优先级';
 
   @override
-  String get ticketDetailsCreatedOn => '创建于';
+  String get ticketDetailsCreatedOn => '创建时间';
 
   @override
-  String get ticketDetailsLastUpdated => '最后更新';
+  String get ticketDetailsLastUpdated => '最近更新';
 
   @override
   String get ticketDetailsPriorityHigh => '高';
@@ -2445,16 +2590,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ticketDetailsPriorityLow => '低';
 
   @override
-  String get comment_replay_ticket_screen => '==== 回复工单页面 ====';
+  String get comment_replay_ticket_screen => '==== Replay Ticket Screen ====';
 
   @override
   String get replayTicketMarkAsClosedButton => '标记为已关闭';
 
   @override
-  String get replayTicketMessageHint => '输入您的消息...';
+  String get replayTicketMessageHint => '输入您的留言...';
 
   @override
-  String get replayTicketEmptyMessageError => '请输入消息';
+  String get replayTicketEmptyMessageError => '请输入留言内容';
 
   @override
   String get replayTicketAttachmentsLabel => '附件：';
@@ -2466,10 +2611,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayTicketAttachmentPreviewTitle => '附件预览';
 
   @override
-  String get replayTicketAttachmentError => '出了点问题！';
+  String get replayTicketAttachmentError => '出错了！';
 
   @override
-  String get comment_add_new_ticket_screen => '==== 添加新工单页面 ====';
+  String get comment_add_new_ticket_screen => '==== Add New Ticket Screen ====';
 
   @override
   String get addNewTicketScreenTitle => '创建工单';
@@ -2484,86 +2629,87 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addNewTicketAttachments => '附件';
 
   @override
-  String get addNewTicketAttachFile => '附加文件';
+  String get addNewTicketAttachFile => '添加附件';
 
   @override
   String get addNewTicketAddButton => '添加工单';
 
   @override
-  String get comment_two_factor_authentication_screen => '==== 双因素认证页面 ====';
+  String get comment_two_factor_authentication_screen =>
+      '==== Two Factor Authentication Screen ====';
 
   @override
-  String get twoFactorAuthenticationScreenTitle => '2FA 认证';
+  String get twoFactorAuthenticationScreenTitle => '两步验证（2FA）';
 
   @override
-  String get comment_disable_2fa_section => '==== 禁用 2FA 部分 ====';
+  String get comment_disable_2fa_section => '==== Disable 2FA Section ====';
 
   @override
-  String get disable2FaSectionTitle => '2FA 认证';
+  String get disable2FaSectionTitle => '两步验证（2FA）';
 
   @override
-  String get disable2FaSectionDescription => 'noInternetConnectionRetryButton';
+  String get disable2FaSectionDescription => '请输入密码以关闭两步验证（2FA）';
 
   @override
-  String get disable2FaSectionDisableButton => '禁用 2FA';
+  String get disable2FaSectionDisableButton => '关闭两步验证';
 
   @override
   String get disable2FaSectionPasswordRequired => '请输入密码';
 
   @override
-  String get comment_enable_2fa_section => '==== 启用 2FA 部分 ====';
+  String get comment_enable_2fa_section => '==== Enable 2FA Section ====';
 
   @override
-  String get enable2FaSectionTitle => '2FA 认证';
+  String get enable2FaSectionTitle => '两步验证（2FA）';
 
   @override
   String get enable2FaSectionDescription =>
-      '使用 Google Authenticator 应用扫描二维码以启用 2FA';
+      '使用 Google Authenticator\n应用扫描二维码以启用两步验证';
 
   @override
-  String get enable2FaSectionPinLabel => '来自 Google Authenticator 应用的 PIN';
+  String get enable2FaSectionPinLabel => 'Google Authenticator 应用中的 PIN 码';
 
   @override
-  String get enable2FaSectionEnableButton => '启用 2FA';
+  String get enable2FaSectionEnableButton => '启用两步验证';
 
   @override
-  String get enable2FaSectionPinRequired => '请输入 Google 认证 PIN';
+  String get enable2FaSectionPinRequired => '请输入 Google 身份验证器 PIN 码';
 
   @override
-  String get comment_generate_2fa_section => '==== 生成 2FA 部分 ====';
+  String get comment_generate_2fa_section => '==== Generate 2FA Section ====';
 
   @override
-  String get generate2FaSectionTitle => '2FA 认证';
+  String get generate2FaSectionTitle => '两步验证（2FA）';
 
   @override
-  String get generate2FaSectionDescription => '使用双因素认证增强您的账户安全';
+  String get generate2FaSectionDescription => '使用两步验证（2FA）提升账户安全性';
 
   @override
-  String get generate2FaSectionGenerateButton => '生成 2FA';
+  String get generate2FaSectionGenerateButton => '生成两步验证';
 
   @override
-  String get comment_settings_screen => '==== 设置页面 ====';
+  String get comment_settings_screen => '==== Settings Screen ====';
 
   @override
   String get settingsScreenTitle => '设置';
 
   @override
-  String get settingsProfileSettings => '个人设置';
+  String get settingsProfileSettings => '个人资料设置';
 
   @override
   String get settingsChangePassword => '修改密码';
 
   @override
-  String get settingsAllNotification => '所有通知';
+  String get settingsAllNotification => '全部通知';
 
   @override
-  String get settingsTwoFactorAuthentication => '2FA 认证';
+  String get settingsTwoFactorAuthentication => '两步验证（2FA）';
 
   @override
-  String get settingsIdVerification => '身份验证';
+  String get settingsIdVerification => '证件验证';
 
   @override
-  String get settingsSupport => '支持';
+  String get settingsSupport => '客服支持';
 
   @override
   String get settingsSignOut => '退出登录';
@@ -2572,22 +2718,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsKycVerified => '已验证';
 
   @override
-  String get settingsKycPending => '待处理';
+  String get settingsKycPending => '处理中';
 
   @override
-  String get settingsKycFailed => '失败';
+  String get settingsKycFailed => '已失败';
 
   @override
   String get settingsKycNotSubmitted => '未提交';
 
   @override
-  String get comment_transactions_screen => '==== 交易页面 ====';
+  String get comment_transactions_screen => '==== Transactions Screen ====';
 
   @override
   String get transactionsScreenTitle => '我的交易';
 
   @override
-  String get comment_transactions_popup => '==== 交易弹窗 ====';
+  String get comment_transactions_popup => '==== Transactions Popup ====';
 
   @override
   String get transactionsPopupDate => '日期';
@@ -2611,7 +2757,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transactionsPopupStatus => '状态';
 
   @override
-  String get comment_transaction_filter_bottom_sheet => '==== 交易筛选底部表单 ====';
+  String get comment_transaction_filter_bottom_sheet =>
+      '==== Transaction Filter Bottom Sheet ====';
 
   @override
   String get transactionFilterTransactionId => '交易 ID';
@@ -2626,26 +2773,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transactionFilterResetButton => '重置';
 
   @override
-  String get comment_transfer_screen => '==== 转账页面 ====';
+  String get comment_transfer_screen => '==== Transfer Screen ====';
 
   @override
   String get transferScreenTitle => '转账';
 
   @override
-  String get transferHistoryTransferHistory => '转账记录';
+  String get transferHistoryTransferHistory => '转账历史记录';
 
   @override
-  String get transferHistoryReceivedHistory => '收到记录';
+  String get transferHistoryReceivedHistory => '收款历史记录';
 
   @override
-  String get comment_transfer_received_history_screen => '==== 转账收到记录页面 ====';
+  String get comment_transfer_received_history_screen =>
+      '==== Transfer Received History Screen ====';
 
   @override
-  String get transferReceivedHistoryScreenTitle => '收到记录';
+  String get transferReceivedHistoryScreenTitle => '收款历史记录';
 
   @override
   String get comment_transfer_received_filter_bottom_sheet =>
-      '==== 转账收到筛选底部表单 ====';
+      '==== Transfer Received Filter Bottom Sheet ====';
 
   @override
   String get transferReceivedFilterTransactionId => '交易 ID';
@@ -2660,14 +2808,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferReceivedFilterResetButton => '重置';
 
   @override
-  String get comment_transfer_history_screen => '==== 转账记录页面 ====';
+  String get comment_transfer_history_screen =>
+      '==== Transfer History Screen ====';
 
   @override
-  String get transferHistoryScreenTitle => '转账记录';
+  String get transferHistoryScreenTitle => '转账历史记录';
 
   @override
   String get comment_transfer_transaction_filter_bottom_sheet =>
-      '==== 转账交易筛选底部表单 ====';
+      '==== Transfer Transaction Filter Bottom Sheet ====';
 
   @override
   String get transferTransactionFilterTransactionId => '交易 ID';
@@ -2682,7 +2831,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferTransactionFilterResetButton => '重置';
 
   @override
-  String get comment_transfer_amount_step_section => '==== 转账金额步骤部分 ====';
+  String get comment_transfer_amount_step_section =>
+      '==== Transfer Amount Step Section ====';
 
   @override
   String get transferAmountStepSectionRecipientUid => '收款人 UID';
@@ -2694,36 +2844,36 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferAmountStepSectionMin => '最低';
 
   @override
-  String get transferAmountStepSectionMax => '和最高';
+  String get transferAmountStepSectionMax => '至最高';
 
   @override
   String get transferAmountStepSectionTransferMoneyButton => '转账';
 
   @override
-  String get transferAmountStepSectionSavedBeneficiaryButton => '已保存受益人';
+  String get transferAmountStepSectionSavedBeneficiaryButton => '已保存的收款人';
 
   @override
   String get transferAmountStepSectionInvalidQrCodeDigits =>
-      '无效的二维码。收款人 UID 必须仅为数字。';
+      '无效的二维码。收款人 UID 只能包含数字。';
 
   @override
   String get transferAmountStepSectionInvalidQrCodePrefix =>
       '无效的二维码。未找到 UID 前缀。';
 
   @override
-  String get transferAmountStepSectionBeneficiariesTitle => '受益人';
+  String get transferAmountStepSectionBeneficiariesTitle => '收款人';
 
   @override
-  String get transferAmountStepSectionAddBeneficiary => '添加受益人';
+  String get transferAmountStepSectionAddBeneficiary => '添加收款人';
 
   @override
-  String get transferAmountStepSectionUidLabel => 'UID：';
+  String get transferAmountStepSectionUidLabel => 'UID:';
 
   @override
-  String get transferAmountStepSectionDeleteConfirmationTitle => '您确定吗？';
+  String get transferAmountStepSectionDeleteConfirmationTitle => '确定吗？';
 
   @override
-  String get transferAmountStepSectionDeleteConfirmationMessage => '您要删除此受益人吗？';
+  String get transferAmountStepSectionDeleteConfirmationMessage => '您要删除此收款人吗？';
 
   @override
   String get transferAmountStepSectionDeleteButton => '删除';
@@ -2732,10 +2882,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferAmountStepSectionCancelButton => '取消';
 
   @override
-  String get comment_transfer_review_step_section => '==== 转账审核步骤部分 ====';
+  String get comment_transfer_review_step_section =>
+      '==== Transfer Review Step Section ====';
 
   @override
-  String get transferReviewStepSectionTitle => '审核详情';
+  String get transferReviewStepSectionTitle => '确认信息';
 
   @override
   String get transferReviewStepSectionAmount => '金额';
@@ -2759,7 +2910,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferReviewStepSectionConfirmButton => '确认';
 
   @override
-  String get comment_transfer_success_step_section => '==== 转账成功步骤部分 ====';
+  String get comment_transfer_success_step_section =>
+      '==== Transfer Success Step Section ====';
 
   @override
   String get transferSuccessStepSectionTitle => '转账成功！';
@@ -2795,7 +2947,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferSuccessStepSectionBackHomeButton => '返回首页';
 
   @override
-  String get comment_transfer_wallet_section => '==== 转账钱包部分 ====';
+  String get comment_transfer_wallet_section =>
+      '==== Transfer Wallet Section ====';
 
   @override
   String get transferWalletSectionBalance => '余额';
@@ -2804,16 +2957,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transferWalletSectionWalletsNotFound => '未找到钱包';
 
   @override
-  String get comment_wallets_screen => '==== 钱包页面 ====';
+  String get comment_wallets_screen => '==== Wallets Screen ====';
 
   @override
   String get walletsScreenTitle => '我的钱包';
 
   @override
-  String get comment_delete_wallet_bottom_sheet => '==== 删除钱包底部表单 ====';
+  String get comment_delete_wallet_bottom_sheet =>
+      '==== Delete Wallet Bottom Sheet ====';
 
   @override
-  String get deleteWalletBottomSheetTitle => '您确定吗？';
+  String get deleteWalletBottomSheetTitle => '确定吗？';
 
   @override
   String get deleteWalletBottomSheetMessage => '您要删除此钱包吗？';
@@ -2825,7 +2979,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteWalletBottomSheetCancelButton => '取消';
 
   @override
-  String get comment_wallet_list_section => '==== 钱包列表部分 ====';
+  String get comment_wallet_list_section => '==== Wallet List Section ====';
 
   @override
   String get walletListSectionTopUpButton => '充值';
@@ -2834,31 +2988,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get walletListSectionWithdrawButton => '提现';
 
   @override
-  String get walletListSectionUserDepositNotEnabled => '用户存款未启用';
+  String get walletListSectionUserDepositNotEnabled => '用户充值未开通';
 
   @override
-  String get walletListSectionUserWithdrawNotEnabled => '用户提现未启用';
+  String get walletListSectionUserWithdrawNotEnabled => '用户提现未开通';
 
   @override
-  String get comment_create_new_wallet_screen => '==== 创建新钱包页面 ====';
+  String get comment_create_new_wallet_screen =>
+      '==== Create New Wallet Screen ====';
 
   @override
   String get createNewWalletScreenTitle => '创建新钱包';
 
   @override
-  String get createNewWalletCurrency => '货币';
+  String get createNewWalletCurrency => '币种';
 
   @override
-  String get createNewWalletSelectCurrency => '选择货币';
+  String get createNewWalletSelectCurrency => '选择币种';
 
   @override
-  String get createNewWalletCurrencyNotFound => '未找到货币';
+  String get createNewWalletCurrencyNotFound => '未找到币种';
 
   @override
   String get createNewWalletCreateButton => '创建';
 
   @override
-  String get comment_withdraw_screen => '==== 提现页面 ====';
+  String get comment_withdraw_screen => '==== Withdraw Screen ====';
 
   @override
   String get withdrawScreenTitle => '提现';
@@ -2867,14 +3022,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawScreenAddAccountButton => '添加账户';
 
   @override
-  String get comment_withdraw_history_screen => '==== 提现记录页面 ====';
+  String get comment_withdraw_history_screen =>
+      '==== Withdraw History Screen ====';
 
   @override
-  String get withdrawHistoryScreenTitle => '提现记录';
+  String get withdrawHistoryScreenTitle => '提现历史记录';
 
   @override
   String get comment_withdraw_transaction_filter_bottom_sheet =>
-      '==== 提现交易筛选底部表单 ====';
+      '==== Withdraw Transaction Filter Bottom Sheet ====';
 
   @override
   String get withdrawTransactionFilterTransactionId => '交易 ID';
@@ -2889,10 +3045,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawTransactionFilterResetButton => '重置';
 
   @override
-  String get comment_delete_account_dropdown_section => '==== 删除账户下拉部分 ====';
+  String get comment_delete_account_dropdown_section =>
+      '==== Delete Account Dropdown Section ====';
 
   @override
-  String get deleteAccountDropdownTitle => '您确定吗？';
+  String get deleteAccountDropdownTitle => '确定吗？';
 
   @override
   String get deleteAccountDropdownMessage => '您要删除此账户吗？';
@@ -2905,7 +3062,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get comment_withdraw_account_filter_bottom_sheet =>
-      '==== 提现账户筛选底部表单 ====';
+      '==== Withdraw Account Filter Bottom Sheet ====';
 
   @override
   String get withdrawAccountFilterMethodName => '方式名称';
@@ -2914,13 +3071,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawAccountFilterApplyButton => '筛选';
 
   @override
-  String get comment_withdraw_account_section => '==== 提现账户部分 ====';
+  String get comment_withdraw_account_section =>
+      '==== Withdraw Account Section ====';
 
   @override
-  String get withdrawAccountSectionTitle => '所有账户';
+  String get withdrawAccountSectionTitle => '全部账户';
 
   @override
-  String get comment_withdraw_amount_step_section => '==== 提现金额步骤部分 ====';
+  String get comment_withdraw_amount_step_section =>
+      '==== Withdraw Amount Step Section ====';
 
   @override
   String get withdrawAmountStepSectionWithdrawAccount => '提现账户';
@@ -2932,7 +3091,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawAmountStepSectionMin => '最低';
 
   @override
-  String get withdrawAmountStepSectionMax => '和最高';
+  String get withdrawAmountStepSectionMax => '至最高';
 
   @override
   String get withdrawAmountStepSectionWithdrawMoneyButton => '提现';
@@ -2944,7 +3103,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawAmountStepSectionNoAccountsFound => '未找到提现账户';
 
   @override
-  String get withdrawAmountStepSectionCurrencyLabel => '货币：';
+  String get withdrawAmountStepSectionCurrencyLabel => '币种：';
 
   @override
   String get withdrawAmountStepSectionMinDescription => '最低：';
@@ -2953,7 +3112,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawAmountStepSectionMaxDescription => '最高：';
 
   @override
-  String get comment_withdraw_header_section => '==== 提现头部部分 ====';
+  String get comment_withdraw_header_section =>
+      '==== Withdraw Header Section ====';
 
   @override
   String get withdrawHeaderSectionTitle => '提现';
@@ -2965,13 +3125,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawHeaderSectionWithdrawAccountButton => '提现账户';
 
   @override
-  String get withdrawHeaderSectionHistory => '提现记录';
+  String get withdrawHeaderSectionHistory => '提现历史记录';
 
   @override
-  String get comment_withdraw_review_step_section => '==== 提现审核步骤部分 ====';
+  String get comment_withdraw_review_step_section =>
+      '==== Withdraw Review Step Section ====';
 
   @override
-  String get withdrawReviewStepSectionTitle => '审核详情';
+  String get withdrawReviewStepSectionTitle => '确认信息';
 
   @override
   String get withdrawReviewStepSectionAmount => '金额';
@@ -2989,7 +3150,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawReviewStepSectionConfirmButton => '确认';
 
   @override
-  String get comment_withdraw_success_step_section => '==== 提现成功步骤部分 ====';
+  String get comment_withdraw_success_step_section =>
+      '==== Withdraw Success Step Section ====';
 
   @override
   String get withdrawSuccessStepSectionTitle => '提现成功！';
@@ -3016,7 +3178,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get withdrawSuccessStepSectionBackHomeButton => '返回首页';
 
   @override
-  String get comment_edit_withdraw_account_screen => '==== 编辑提现账户页面 ====';
+  String get comment_edit_withdraw_account_screen =>
+      '==== Edit Withdraw Account Screen ====';
 
   @override
   String get editWithdrawAccountTitle => '更新提现账户';
@@ -3028,7 +3191,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get editWithdrawAccountMethodNameHint => '输入方式名称';
 
   @override
-  String get editWithdrawAccountFieldHint => '在此输入...';
+  String get editWithdrawAccountFieldHint => '请输入...';
 
   @override
   String get editWithdrawAccountGenericFieldHint => '输入';
@@ -3037,7 +3200,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get editWithdrawAccountUpdateButton => '更新账户';
 
   @override
-  String get comment_create_withdraw_account_screen => '==== 创建提现账户页面 ====';
+  String get comment_create_withdraw_account_screen =>
+      '==== Create Withdraw Account Screen ====';
 
   @override
   String get createWithdrawAccountTitle => '创建提现账户';
@@ -3064,16 +3228,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createWithdrawAccountWithdrawMethodNotFound => '未找到提现方式';
 
   @override
-  String get createWithdrawAccountFieldHint => '在此输入...';
+  String get createWithdrawAccountFieldHint => '请输入...';
 
   @override
-  String get comment_dynamic_attachment_preview => '==== 动态附件预览 ====';
+  String get comment_dynamic_attachment_preview =>
+      '==== Dynamic Attachment Preview ====';
 
   @override
   String get dynamicAttachmentPreviewTitle => '附件预览';
 
   @override
-  String get comment_no_internet_connection => '==== 无网络连接 ====';
+  String get comment_no_internet_connection =>
+      '==== No Internet Connection ====';
 
   @override
   String get noInternetConnectionTitle => '无网络连接';
@@ -3085,16 +3251,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noInternetConnectionRetryButton => '重试';
 
   @override
-  String get comment_qr_scanner_screen => '==== 二维码扫描页面 ====';
+  String get comment_qr_scanner_screen => '==== QR Scanner Screen ====';
 
   @override
-  String get qrScannerScreenInstruction => '将二维码置于框内进行扫描';
+  String get qrScannerScreenInstruction => '将二维码放入取景框内进行扫描';
 
   @override
   String get qrScannerScreenProcessing => '处理中...';
 
   @override
-  String get comment_webview_screen => '==== WebView 页面 ====';
+  String get comment_webview_screen => '==== WebView Screen ====';
 
   @override
   String get webViewScreenPaymentSuccessful => '支付成功！';
@@ -3107,43 +3273,45 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get comment_common_country_dropdown_bottom_sheet =>
-      '==== 通用国家下拉底部表单 ====';
+      '==== Common Country Dropdown Bottom Sheet ====';
 
   @override
   String get commonCountryDropdownSearchHint => '搜索';
 
   @override
-  String get commonCountryDropdownNotFound => '未找到国家';
+  String get commonCountryDropdownNotFound => '未找到国家/地区';
 
   @override
-  String get comment_common_dropdown_bottom_sheet => '==== 通用下拉底部表单 ====';
+  String get comment_common_dropdown_bottom_sheet =>
+      '==== Common Dropdown Bottom Sheet ====';
 
   @override
   String get commonDropdownSearchHint => '搜索';
 
   @override
   String get comment_common_dropdown_bottom_sheet_three =>
-      '==== 通用下拉底部表单三 ====';
+      '==== Common Dropdown Bottom Sheet Three ====';
 
   @override
   String get commonDropdownThreeSearchHint => '搜索';
 
   @override
-  String get comment_common_dropdown_bottom_sheet_two => '==== 通用下拉底部表单二 ====';
+  String get comment_common_dropdown_bottom_sheet_two =>
+      '==== Common Dropdown Bottom Sheet Two ====';
 
   @override
   String get commonDropdownTwoSearchHint => '搜索';
 
   @override
   String get comment_common_dropdown_wallet_bottom_sheet =>
-      '==== 通用钱包下拉底部表单 ====';
+      '==== Common Dropdown Wallet Bottom Sheet ====';
 
   @override
   String get commonDropdownWalletTitle => '选择钱包';
 
   @override
   String get comment_image_picker_dropdown_bottom_sheet =>
-      '==== 图片选择下拉底部表单 ====';
+      '==== Image Picker Dropdown Bottom Sheet ====';
 
   @override
   String get imagePickerDropdownTitle => '选择图片来源';
@@ -3152,11 +3320,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get imagePickerDropdownCamera => '相机';
 
   @override
-  String get imagePickerDropdownGallery => '图库';
+  String get imagePickerDropdownGallery => '相册';
 
   @override
   String get comment_multiple_image_picker_dropdown_bottom_sheet =>
-      '==== 多图片选择下拉底部表单 ====';
+      '==== Multiple Image Picker Dropdown Bottom Sheet ====';
 
   @override
   String get multipleImagePickerDropdownTitle => '图片来源';
@@ -3165,10 +3333,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get multipleImagePickerDropdownCamera => '相机';
 
   @override
-  String get multipleImagePickerDropdownGallery => '图库';
+  String get multipleImagePickerDropdownGallery => '相册';
 
   @override
-  String get comment_navigation_screen => '==== 导航页面 ====';
+  String get comment_navigation_screen => '==== Navigation Screen ====';
 
   @override
   String get bottomNavHome => '首页';
@@ -3183,40 +3351,43 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bottomNavSettings => '设置';
 
   @override
-  String get qrInvalidFormat => '无效的二维码格式。仅接受 AID、MID 或 UID 代码。';
+  String get qrInvalidFormat => '无效的二维码格式。仅支持 AID、MID 或 UID 码。';
 
   @override
-  String get userTransferNotEnabled => '用户转账未启用';
+  String get userTransferNotEnabled => '用户转账未开通';
 
   @override
-  String get userGiftNotEnabled => '用户礼品未启用';
+  String get userGiftNotEnabled => '用户礼品功能未开通';
 
   @override
-  String get comment_image_picker_controller => '==== 图片选择控制器 ====';
+  String get comment_image_picker_controller =>
+      '==== Image Picker Controller ====';
 
   @override
-  String get imagePickerGalleryError => '从图库选择图片失败';
+  String get imagePickerGalleryError => '无法从相册选择图片';
 
   @override
-  String get imagePickerCameraError => '从相机选择图片失败';
+  String get imagePickerCameraError => '无法从相机拍摄图片';
 
   @override
-  String get comment_multiple_image_picker_controller => '==== 多图片选择控制器 ====';
+  String get comment_multiple_image_picker_controller =>
+      '==== Multiple Image Picker Controller ====';
 
   @override
-  String get multipleImagePickerGalleryError => '从图库选择图片失败';
+  String get multipleImagePickerGalleryError => '无法从相册选择图片';
 
   @override
-  String get multipleImagePickerCameraError => '从相机选择图片失败';
+  String get multipleImagePickerCameraError => '无法从相机拍摄图片';
 
   @override
-  String get comment_biometric_auth_service => '==== 生物识别认证服务 ====';
+  String get comment_biometric_auth_service =>
+      '==== Biometric Auth Service ====';
 
   @override
   String get biometricDeviceNotSupported => '此设备不支持生物识别。';
 
   @override
-  String get biometricNotEnrolled => '未注册生物识别。请设置指纹';
+  String get biometricNotEnrolled => '未录入生物识别信息，请先设置指纹';
 
   @override
   String get biometricUnavailable => '生物识别功能当前不可用。';
@@ -3228,40 +3399,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String get biometricCheckFailed => '无法检查生物识别可用性。';
 
   @override
-  String get biometricAuthReason => '验证以登录';
+  String get biometricAuthReason => '进行验证以登录';
 
   @override
-  String get comment_network_service => '==== 网络服务 ====';
+  String get comment_network_service => '==== Network Service ====';
 
   @override
-  String get networkErrorGeneric => '发生意外错误。请重试。';
+  String get networkErrorGeneric => '发生网络错误，请重试';
 
   @override
-  String get networkErrorTimeout => '请求超时。请重试。';
+  String get networkErrorTimeout => '请求超时';
 
   @override
-  String get networkErrorOccurred => '发生错误。请重试。';
+  String get networkErrorOccurred => '网络出现问题';
 
   @override
   String get unauthorizedDialogTitle => '未授权';
 
   @override
-  String get unauthorizedDialogDescription => '您无权访问此资源。请重新登录！';
+  String get unauthorizedDialogDescription => '您无权访问此资源。请重新登录。';
 
   @override
-  String get unauthorizedDialogButton => '确定';
+  String get unauthorizedDialogButton => '知道了';
 
   @override
-  String get comment_add_money_controller => '==== 添加资金控制器 ====';
+  String get comment_add_money_controller => '==== Add Money Controller ====';
 
   @override
-  String get addMoneySuccess => '资金添加成功';
+  String get addMoneySuccess => '充值成功';
 
   @override
   String get addMoneyValidationSelectWallet => '请选择钱包';
 
   @override
-  String get addMoneyValidationSelectGateway => '请选择网关';
+  String get addMoneyValidationSelectGateway => '请选择支付网关';
 
   @override
   String get addMoneyValidationEnterAmount => '请输入金额';
@@ -3271,12 +3442,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String addMoneyValidationAmountMinimum(Object amount) {
-    return '金额不得超过 $amount';
+    return '金额不能低于 $amount';
   }
 
   @override
   String addMoneyValidationAmountMaximum(Object amount) {
-    return '金额不得超过 $amount';
+    return '金额不能超过 $amount';
   }
 
   @override
@@ -3286,11 +3457,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String addMoneyValidationFillField(Object fieldName) {
-    return '请填写 $fieldName 字段';
+    return '请填写 $fieldName';
   }
 
   @override
-  String get comment_cash_out_controller => '==== 提现控制器 ====';
+  String get comment_cash_out_controller => '==== Cash Out Controller ====';
 
   @override
   String get cashOutValidationSelectWallet => '请选择钱包';
@@ -3312,10 +3483,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_exchange_controller => '==== 兑换控制器 ====';
+  String get comment_exchange_controller => '==== Exchange Controller ====';
 
   @override
-  String get exchangeValidationSelectFromWallet => '请选择来源钱包';
+  String get exchangeValidationSelectFromWallet => '请选择源钱包';
 
   @override
   String get exchangeValidationSelectToWallet => '请选择目标钱包';
@@ -3334,7 +3505,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_create_gift_controller => '==== 创建礼品控制器 ====';
+  String exchangeValidationInsufficientBalance(Object amount, Object currency) {
+    return '余额不足，可用余额：$amount $currency';
+  }
+
+  @override
+  String get comment_create_gift_controller =>
+      '==== Create Gift Controller ====';
 
   @override
   String get createGiftValidationSelectWallet => '请选择钱包';
@@ -3353,41 +3530,42 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_home_controller => '==== 首页控制器 ====';
+  String get comment_home_controller => '==== Home Controller ====';
 
   @override
-  String get homeLanguageChangeFailed => '更改语言失败';
+  String get homeLanguageChangeFailed => '语言切换失败';
 
   @override
   String get homeBiometricDeviceNotSupported => '此设备不支持生物识别。';
 
   @override
-  String get homeBiometricAuthenticationFailed => '认证失败。生物识别设置未更改。';
+  String get homeBiometricAuthenticationFailed => '认证失败，生物识别设置未更改。';
 
   @override
-  String get homeBiometricEnabledSuccess => '生物识别启用成功';
+  String get homeBiometricEnabledSuccess => '生物识别已启用';
 
   @override
-  String get homeBiometricDisabledSuccess => '生物识别禁用成功';
+  String get homeBiometricDisabledSuccess => '生物识别已关闭';
 
   @override
   String get homeBiometricNotFoundTitle => '未找到生物识别';
 
   @override
   String get homeBiometricNotFoundDescription =>
-      '此设备上未注册指纹或生物识别。您可以从系统设置中进行设置。';
+      '此设备未录入指纹或生物识别信息。您可以在系统设置中进行设置。';
 
   @override
   String get homeBiometricOpenSettings => '打开安全设置';
 
   @override
-  String get homeIosBiometricSetup => '请前往 设置 > Face ID 与密码 设置生物识别。';
+  String get homeIosBiometricSetup => '请前往“设置”>“面容 ID 与密码”以设置生物识别。';
 
   @override
-  String get comment_create_invoice_controller => '==== 创建发票控制器 ====';
+  String get comment_create_invoice_controller =>
+      '==== Create Invoice Controller ====';
 
   @override
-  String get createInvoiceValidationEnterInvoiceTo => '请输入发票接收人';
+  String get createInvoiceValidationEnterInvoiceTo => '请输入账单接收方';
 
   @override
   String get createInvoiceValidationEnterEmailAddress => '请输入邮箱地址';
@@ -3406,23 +3584,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String createInvoiceValidationItemNameRequired(Object itemNumber) {
-    return '项目 $itemNumber：名称为必填';
+    return '条目 $itemNumber：名称必填';
   }
 
   @override
   String createInvoiceValidationItemQuantityGreaterThanZero(Object itemNumber) {
-    return '项目 $itemNumber：数量必须大于 0';
+    return '条目 $itemNumber：数量必须大于 0';
   }
 
   @override
   String createInvoiceValidationItemUnitPriceGreaterThanZero(
     Object itemNumber,
   ) {
-    return '项目 $itemNumber：单价必须大于 0';
+    return '条目 $itemNumber：单价必须大于 0';
   }
 
   @override
-  String get comment_make_payment_controller => '==== 付款控制器 ====';
+  String get comment_make_payment_controller =>
+      '==== Make Payment Controller ====';
 
   @override
   String get makePaymentValidationSelectWallet => '请选择钱包';
@@ -3444,7 +3623,8 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_request_money_controller => '==== 请求资金控制器 ====';
+  String get comment_request_money_controller =>
+      '==== Request Money Controller ====';
 
   @override
   String get requestMoneyValidationSelectWallet => '请选择钱包';
@@ -3466,7 +3646,8 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_add_new_ticket_controller => '==== 添加新工单控制器 ====';
+  String get comment_add_new_ticket_controller =>
+      '==== Add New Ticket Controller ====';
 
   @override
   String get addNewTicketSuccess => '工单创建成功';
@@ -3478,7 +3659,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addNewValidationEnterDescription => '请输入描述';
 
   @override
-  String get comment_change_password_controller => '==== 修改密码控制器 ====';
+  String get comment_change_password_controller =>
+      '==== Change Password Controller ====';
 
   @override
   String get changePasswordValidationEnterCurrentPassword => '请输入当前密码';
@@ -3493,10 +3675,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get changePasswordValidationEnterConfirmPassword => '请输入确认密码';
 
   @override
-  String get changePasswordValidationPasswordsDoNotMatch => '密码不匹配';
+  String get changePasswordValidationPasswordsDoNotMatch => '两次输入的密码不一致';
 
   @override
-  String get comment_transfer_controller => '==== 转账控制器 ====';
+  String get comment_transfer_controller => '==== Transfer Controller ====';
 
   @override
   String get transferValidationSelectWallet => '请选择钱包';
@@ -3519,16 +3701,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get comment_create_withdraw_account_controller =>
-      '==== 创建提现账户控制器 ====';
+      '==== Create Withdraw Account Controller ====';
 
   @override
   String createWithdrawAccountFileRequiredError(Object fieldName) {
-    return '$fieldName 需要文件';
+    return '$fieldName 需要上传文件';
   }
 
   @override
   String createWithdrawAccountFieldRequiredError(Object fieldName) {
-    return '字段 $fieldName 为必填';
+    return '字段 $fieldName 为必填项';
   }
 
   @override
@@ -3547,11 +3729,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String createWithdrawAccountValidationFillField(Object fieldName) {
-    return '请填写 $fieldName 字段';
+    return '请填写 $fieldName';
   }
 
   @override
-  String get comment_withdraw_controller => '==== 提现控制器 ====';
+  String get comment_withdraw_controller => '==== Withdraw Controller ====';
 
   @override
   String get withdrawValidationSelectWithdrawAccount => '请选择提现账户';
@@ -3570,10 +3752,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_airtime_controller => '==== 话费控制器 ====';
+  String get comment_airtime_controller => '==== Airtime Controller ====';
 
   @override
-  String get airtimeCountryRequired => '请选择国家';
+  String get airtimeCountryRequired => '请选择国家/地区';
 
   @override
   String get airtimeServiceRequired => '请选择服务';
@@ -3590,10 +3772,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_cable_controller => '==== 有线电视控制器 ====';
+  String get comment_cable_controller => '==== Cable Controller ====';
 
   @override
-  String get cableCountryRequired => '请选择国家';
+  String get cableCountryRequired => '请选择国家/地区';
 
   @override
   String get cableServiceRequired => '请选择服务';
@@ -3610,10 +3792,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_toll_controller => '==== 通行费控制器 ====';
+  String get comment_toll_controller => '==== Toll Controller ====';
 
   @override
-  String get tollCountryRequired => '请选择国家';
+  String get tollCountryRequired => '请选择国家/地区';
 
   @override
   String get tollServiceRequired => '请选择服务';
@@ -3630,10 +3812,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_electricity_controller => '==== 电费控制器 ====';
+  String get comment_electricity_controller =>
+      '==== Electricity Controller ====';
 
   @override
-  String get electricityCountryRequired => '请选择国家';
+  String get electricityCountryRequired => '请选择国家/地区';
 
   @override
   String get electricityServiceRequired => '请选择服务';
@@ -3650,10 +3833,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_internet_controller => '==== 互联网控制器 ====';
+  String get comment_internet_controller => '==== Internet Controller ====';
 
   @override
-  String get internetCountryRequired => '请选择国家';
+  String get internetCountryRequired => '请选择国家/地区';
 
   @override
   String get internetServiceRequired => '请选择服务';
@@ -3670,10 +3853,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_data_bundle_controller => '==== 数据包控制器 ====';
+  String get comment_data_bundle_controller =>
+      '==== Data Bundle Controller ====';
 
   @override
-  String get dataBundleCountryRequired => '请选择国家';
+  String get dataBundleCountryRequired => '请选择国家/地区';
 
   @override
   String get dataBundleServiceRequired => '请选择服务';
@@ -3690,25 +3874,26 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get comment_airtime_screen => '==== 话费页面 ====';
+  String get comment_airtime_screen => '==== Airtime Screen ====';
 
   @override
-  String get airtimeAppBarTitle => '话费';
+  String get airtimeAppBarTitle => '话费充值';
 
   @override
-  String get comment_airtime_amount_section => '==== 话费金额步骤部分 ====';
+  String get comment_airtime_amount_section =>
+      '==== Airtime Amount Step Section ====';
 
   @override
-  String get airtimeCountryLabel => '国家';
+  String get airtimeCountryLabel => '国家/地区';
 
   @override
-  String get airtimeCountryHint => '选择国家';
+  String get airtimeCountryHint => '选择国家/地区';
 
   @override
-  String get airtimeCountrySelectTitle => '选择国家';
+  String get airtimeCountrySelectTitle => '选择国家/地区';
 
   @override
-  String get airtimeCountryNotFound => '未找到国家';
+  String get airtimeCountryNotFound => '未找到国家/地区';
 
   @override
   String get airtimeServiceLabel => '服务';
@@ -3729,10 +3914,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get airtimePayButton => '立即支付';
 
   @override
-  String get comment_airtime_review_section => '==== 话费审核步骤部分 ====';
+  String get comment_airtime_review_section =>
+      '==== Airtime Review Step Section ====';
 
   @override
-  String get airtimeReviewTitle => '审核详情';
+  String get airtimeReviewTitle => '确认信息';
 
   @override
   String get airtimeReviewAmountLabel => '金额';
@@ -3753,16 +3939,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get airtimeReviewConfirmButton => '确认';
 
   @override
-  String get comment_bill_payment_history => '==== 账单支付记录 ====';
+  String get comment_bill_payment_history => '==== Bill Payment History ====';
 
   @override
-  String get billPaymentHistoryTitle => '账单支付记录';
+  String get billPaymentHistoryTitle => '账单缴费历史记录';
 
   @override
-  String get comment_bill_payment_details => '==== 账单支付详情表单 ====';
+  String get comment_bill_payment_details =>
+      '==== Bill Payment Details Sheet ====';
 
   @override
-  String get billPaymentDetailsTitle => '账单支付详情';
+  String get billPaymentDetailsTitle => '账单缴费详情';
 
   @override
   String get billPaymentDetailsTime => '时间';
@@ -3780,25 +3967,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get billPaymentDetailsStatus => '状态';
 
   @override
-  String get comment_cable_screen => '==== 有线电视页面 ====';
+  String get comment_cable_screen => '==== Cable Screen ====';
 
   @override
   String get cableTitle => '有线电视';
 
   @override
-  String get comment_cable_amount_section => '==== 有线电视金额步骤部分 ====';
+  String get comment_cable_amount_section =>
+      '==== Cable Amount Step Section ====';
 
   @override
-  String get cableCountryLabel => '国家';
+  String get cableCountryLabel => '国家/地区';
 
   @override
-  String get cableCountryHint => '选择国家';
+  String get cableCountryHint => '选择国家/地区';
 
   @override
-  String get cableCountrySelectTitle => '选择国家';
+  String get cableCountrySelectTitle => '选择国家/地区';
 
   @override
-  String get cableCountryNotFound => '未找到国家';
+  String get cableCountryNotFound => '未找到国家/地区';
 
   @override
   String get cableServiceLabel => '服务';
@@ -3819,10 +4007,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cablePayButton => '立即支付';
 
   @override
-  String get comment_cable_review_section => '==== 有线电视审核步骤部分 ====';
+  String get comment_cable_review_section =>
+      '==== Cable Review Step Section ====';
 
   @override
-  String get cableReviewTitle => '审核详情';
+  String get cableReviewTitle => '确认信息';
 
   @override
   String get cableReviewAmountLabel => '金额';
@@ -3843,25 +4032,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cableReviewConfirmButton => '确认';
 
   @override
-  String get comment_toll_screen => '==== 通行费页面 ====';
+  String get comment_toll_screen => '==== Toll Screen ====';
 
   @override
-  String get tollTitle => '通行费';
+  String get tollTitle => '过路费';
 
   @override
-  String get comment_toll_amount_section => '==== 通行费金额步骤部分 ====';
+  String get comment_toll_amount_section =>
+      '==== Toll Amount Step Section ====';
 
   @override
-  String get tollCountryLabel => '国家';
+  String get tollCountryLabel => '国家/地区';
 
   @override
-  String get tollCountryHint => '选择国家';
+  String get tollCountryHint => '选择国家/地区';
 
   @override
-  String get tollCountrySelectTitle => '选择国家';
+  String get tollCountrySelectTitle => '选择国家/地区';
 
   @override
-  String get tollCountryNotFound => '未找到国家';
+  String get tollCountryNotFound => '未找到国家/地区';
 
   @override
   String get tollServiceLabel => '服务';
@@ -3882,10 +4072,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tollPayButton => '立即支付';
 
   @override
-  String get comment_toll_review_section => '==== 通行费审核步骤部分 ====';
+  String get comment_toll_review_section =>
+      '==== Toll Review Step Section ====';
 
   @override
-  String get tollReviewTitle => '审核详情';
+  String get tollReviewTitle => '确认信息';
 
   @override
   String get tollReviewAmountLabel => '金额';
@@ -3906,25 +4097,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tollReviewConfirmButton => '确认';
 
   @override
-  String get comment_electricity_screen => '==== 电费页面 ====';
+  String get comment_electricity_screen => '==== Electricity Screen ====';
 
   @override
   String get electricityTitle => '电费';
 
   @override
-  String get comment_electricity_amount_section => '==== 电费金额步骤部分 ====';
+  String get comment_electricity_amount_section =>
+      '==== Electricity Amount Step Section ====';
 
   @override
-  String get electricityCountryLabel => '国家';
+  String get electricityCountryLabel => '国家/地区';
 
   @override
-  String get electricityCountryHint => '选择国家';
+  String get electricityCountryHint => '选择国家/地区';
 
   @override
-  String get electricityCountrySelectTitle => '选择国家';
+  String get electricityCountrySelectTitle => '选择国家/地区';
 
   @override
-  String get electricityCountryNotFound => '未找到国家';
+  String get electricityCountryNotFound => '未找到国家/地区';
 
   @override
   String get electricityServiceLabel => '服务';
@@ -3945,10 +4137,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get electricityPayButton => '立即支付';
 
   @override
-  String get comment_electricity_review_section => '==== 电费审核步骤部分 ====';
+  String get comment_electricity_review_section =>
+      '==== Electricity Review Step Section ====';
 
   @override
-  String get electricityReviewTitle => '审核详情';
+  String get electricityReviewTitle => '确认信息';
 
   @override
   String get electricityReviewAmountLabel => '金额';
@@ -3969,25 +4162,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get electricityReviewConfirmButton => '确认';
 
   @override
-  String get comment_internet_screen => '==== 互联网页面 ====';
+  String get comment_internet_screen => '==== Internet Screen ====';
 
   @override
-  String get internetTitle => '互联网';
+  String get internetTitle => '网络费';
 
   @override
-  String get comment_internet_amount_section => '==== 互联网金额步骤部分 ====';
+  String get comment_internet_amount_section =>
+      '==== Internet Amount Step Section ====';
 
   @override
-  String get internetCountryLabel => '国家';
+  String get internetCountryLabel => '国家/地区';
 
   @override
-  String get internetCountryHint => '选择国家';
+  String get internetCountryHint => '选择国家/地区';
 
   @override
-  String get internetCountrySelectTitle => '选择国家';
+  String get internetCountrySelectTitle => '选择国家/地区';
 
   @override
-  String get internetCountryNotFound => '未找到国家';
+  String get internetCountryNotFound => '未找到国家/地区';
 
   @override
   String get internetServiceLabel => '服务';
@@ -4008,10 +4202,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get internetPayButton => '立即支付';
 
   @override
-  String get comment_internet_review_section => '==== 互联网审核步骤部分 ====';
+  String get comment_internet_review_section =>
+      '==== Internet Review Step Section ====';
 
   @override
-  String get internetReviewTitle => '审核详情';
+  String get internetReviewTitle => '确认信息';
 
   @override
   String get internetReviewAmountLabel => '金额';
@@ -4032,25 +4227,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get internetReviewConfirmButton => '确认';
 
   @override
-  String get comment_data_bundle_screen => '==== 数据包页面 ====';
+  String get comment_data_bundle_screen => '==== Data Bundle Screen ====';
 
   @override
-  String get dataBundleTitle => '数据包';
+  String get dataBundleTitle => '流量套餐';
 
   @override
-  String get comment_data_bundle_amount_section => '==== 数据包金额步骤部分 ====';
+  String get comment_data_bundle_amount_section =>
+      '==== Data Bundle Amount Step Section ====';
 
   @override
-  String get dataBundleCountryLabel => '国家';
+  String get dataBundleCountryLabel => '国家/地区';
 
   @override
-  String get dataBundleCountryHint => '选择国家';
+  String get dataBundleCountryHint => '选择国家/地区';
 
   @override
-  String get dataBundleCountrySelectTitle => '选择国家';
+  String get dataBundleCountrySelectTitle => '选择国家/地区';
 
   @override
-  String get dataBundleCountryNotFound => '未找到国家';
+  String get dataBundleCountryNotFound => '未找到国家/地区';
 
   @override
   String get dataBundleServiceLabel => '服务';
@@ -4071,10 +4267,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataBundlePayButton => '立即支付';
 
   @override
-  String get comment_data_bundle_review_section => '==== 数据包审核步骤部分 ====';
+  String get comment_data_bundle_review_section =>
+      '==== Data Bundle Review Step Section ====';
 
   @override
-  String get dataBundleReviewTitle => '审核详情';
+  String get dataBundleReviewTitle => '确认信息';
 
   @override
   String get dataBundleReviewAmountLabel => '金额';
@@ -4095,34 +4292,36 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataBundleReviewConfirmButton => '确认';
 
   @override
-  String get comment_bill_payment_screen => '==== 账单支付主页面 ====';
+  String get comment_bill_payment_screen =>
+      '==== Bill Payment Main Screen ====';
 
   @override
-  String get billPaymentScreenTitle => '账单支付';
+  String get billPaymentScreenTitle => '账单缴费';
 
   @override
-  String get billPaymentAirtime => '话费';
+  String get billPaymentAirtime => '话费充值';
 
   @override
   String get billPaymentElectricity => '电费';
 
   @override
-  String get billPaymentInternet => '互联网';
+  String get billPaymentInternet => '网络费';
 
   @override
-  String get billPaymentDataBundle => '数据包';
+  String get billPaymentDataBundle => '流量套餐';
 
   @override
   String get billPaymentCables => '有线电视';
 
   @override
-  String get billPaymentToll => '通行费';
+  String get billPaymentToll => '过路费';
 
   @override
-  String get comment_create_virtual_card_controller => '==== 创建虚拟卡控制器 ====';
+  String get comment_create_virtual_card_controller =>
+      '==== Create Virtual Card Controller ====';
 
   @override
-  String get createCardProviderRequired => '请选择卡提供商';
+  String get createCardProviderRequired => '请选择发卡机构';
 
   @override
   String get createCardHolderRequired => '请选择持卡人';
@@ -4140,7 +4339,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createPhoneNumberRequired => '请输入电话号码';
 
   @override
-  String get createCountryRequired => '请选择国家';
+  String get createCountryRequired => '请选择国家/地区';
 
   @override
   String get createCityRequired => '请输入城市';
@@ -4155,7 +4354,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createAddressRequired => '请输入地址';
 
   @override
-  String get comment_virtual_card_details_controller => '==== 虚拟卡详情控制器 ====';
+  String get comment_virtual_card_details_controller =>
+      '==== Virtual Card Details Controller ====';
 
   @override
   String get cardDetailsEnterAmount => '请输入金额';
@@ -4165,25 +4365,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String cardDetailsAmountMinimumLimit(Object amount) {
-    return '金额不得超过 $amount';
+    return '金额不能低于 $amount';
   }
 
   @override
   String cardDetailsAmountMaximumLimit(Object amount) {
-    return '金额不得超过 $amount';
+    return '金额不能超过 $amount';
   }
 
   @override
-  String get comment_card_holder_tab_section => '==== 持卡人标签部分 ====';
+  String get comment_card_holder_tab_section =>
+      '==== Card Holder Tab Section ====';
 
   @override
-  String get cardHolderTabExistingCardholders => '现有持卡人';
+  String get cardHolderTabExistingCardholders => '已有持卡人';
 
   @override
   String get cardHolderTabCreateCardholder => '创建持卡人';
 
   @override
-  String get comment_choose_card_holder_section => '==== 选择持卡人部分 ====';
+  String get comment_choose_card_holder_section =>
+      '==== Choose Card Holder Section ====';
 
   @override
   String get chooseCardHolderLabel => '持卡人';
@@ -4198,19 +4400,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chooseCardHolderButtonCreate => '立即创建';
 
   @override
-  String get comment_choose_card_provider_section => '==== 选择卡提供商部分 ====';
+  String get comment_choose_card_provider_section =>
+      '==== Choose Card Provider Section ====';
 
   @override
-  String get chooseCardProviderLabel => '卡提供商';
+  String get chooseCardProviderLabel => '发卡机构';
 
   @override
-  String get chooseCardProviderDropdownNotFound => '未找到卡提供商';
+  String get chooseCardProviderDropdownNotFound => '未找到发卡机构';
 
   @override
-  String get chooseCardProviderDropdownTitle => '选择卡提供商';
+  String get chooseCardProviderDropdownTitle => '选择发卡机构';
 
   @override
-  String get comment_create_new_card_holder_section => '==== 创建新持卡人部分 ====';
+  String get comment_create_new_card_holder_section =>
+      '==== Create New Card Holder Section ====';
 
   @override
   String get createCardHolderLabelName => '姓名';
@@ -4222,13 +4426,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createCardHolderLabelPhoneNumber => '电话号码';
 
   @override
-  String get createCardHolderLabelCountry => '国家';
+  String get createCardHolderLabelCountry => '国家/地区';
 
   @override
-  String get createCardHolderDropdownCountryNotFound => '未找到国家';
+  String get createCardHolderDropdownCountryNotFound => '未找到国家/地区';
 
   @override
-  String get createCardHolderDropdownCountryTitle => '选择国家';
+  String get createCardHolderDropdownCountryTitle => '选择国家/地区';
 
   @override
   String get createCardHolderLabelCity => '城市';
@@ -4246,76 +4450,78 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createCardHolderButtonCreate => '立即创建';
 
   @override
-  String get comment_create_virtual_card_screen => '==== 创建虚拟卡页面 ====';
+  String get comment_create_virtual_card_screen =>
+      '==== Create Virtual Card Screen ====';
 
   @override
   String get createVirtualCardAppBarTitle => '创建新卡';
 
   @override
-  String get comment_get_card_info_screen => '==== 获取卡信息页面 ====';
+  String get comment_get_card_info_screen => '==== Get Card Info Screen ====';
 
   @override
-  String get getCardInfoAppBarTitle => '获取卡';
+  String get getCardInfoAppBarTitle => '获取虚拟卡';
 
   @override
-  String get getCardInfoBenefitsTitle => '虚拟卡的好处';
+  String get getCardInfoBenefitsTitle => '虚拟卡的优势';
 
   @override
-  String get getCardInfoBenefitSecurityTitle => '更好的安全性';
+  String get getCardInfoBenefitSecurityTitle => '更安全';
 
   @override
   String get getCardInfoBenefitSecuritySubtitle => '您的真实卡号保持隐藏';
 
   @override
-  String get getCardInfoBenefitShoppingTitle => '安全的在线购物';
+  String get getCardInfoBenefitShoppingTitle => '安心网购';
 
   @override
   String get getCardInfoBenefitShoppingSubtitle => '仅为在线购物创建虚拟卡';
 
   @override
-  String get getCardInfoBenefitActivationTitle => '快速且简单激活';
+  String get getCardInfoBenefitActivationTitle => '快捷激活';
 
   @override
-  String get getCardInfoBenefitActivationSubtitle => '无需实体交付';
+  String get getCardInfoBenefitActivationSubtitle => '无需实体卡邮寄';
 
   @override
   String get getCardInfoButtonContinue => '继续';
 
   @override
-  String get comment_card_details_info => '==== 卡详情信息 ====';
+  String get comment_card_details_info => '==== Card Details Info ====';
 
   @override
-  String get cardDetailsInfoTitle => '卡详情';
+  String get cardDetailsInfoTitle => '卡片详情';
 
   @override
-  String get cardDetailsCardTypeLabel => '卡类型';
+  String get cardDetailsCardTypeLabel => '卡片类型';
 
   @override
-  String get cardDetailsCardTypeValue => '虚拟';
+  String get cardDetailsCardTypeValue => '虚拟卡';
 
   @override
   String get cardDetailsBillingAddressLabel => '账单地址';
 
   @override
-  String get cardDetailsCardCurrencyLabel => '卡货币';
+  String get cardDetailsCardCurrencyLabel => '卡片币种';
 
   @override
   String get bsicardsCardDetailsCurrencyValue => 'USD';
 
   @override
-  String get cardDetailsCardCreatedLabel => '卡创建';
+  String get cardDetailsCardCreatedLabel => '卡片已创建';
 
   @override
-  String get cardDetailsStatusButtonActive => '活跃';
+  String get cardDetailsStatusButtonActive => '已激活';
 
   @override
-  String get cardDetailsStatusButtonInactive => '不活跃';
+  String get cardDetailsStatusButtonInactive => '未激活';
 
   @override
-  String get comment_card_top_up_bottom_sheet => '==== 卡充值底部表单 ====';
+  String get comment_card_top_up_bottom_sheet =>
+      '==== Card Top Up Bottom Sheet ====';
 
   @override
-  String get cardTopUpTitle => '卡余额充值';
+  String get cardTopUpTitle => '卡片余额充值';
 
   @override
   String get cardTopUpMainWalletBalance => '主钱包余额';
@@ -4325,7 +4531,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String cardTopUpAmountLimits(Object currency, Object max, Object min) {
-    return '最低 $min $currency 最高 $max $currency';
+    return '最低 $min $currency，最高 $max $currency';
   }
 
   @override
@@ -4341,7 +4547,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cardTopUpButtonTopupNow => '立即充值';
 
   @override
-  String get bsicardsTopUpInfoMessage => '请将资金发送至提供的加密地址。交易确认后，余额将添加到您的卡中。';
+  String get bsicardsTopUpInfoMessage => '请将资金发送至提供的加密货币地址。交易确认后，余额将添加到您的卡片。';
 
   @override
   String get bsicardsTopUpCopyButton => '复制';
@@ -4350,16 +4556,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bsicardsTopUpCopySuccess => '地址已复制';
 
   @override
-  String get comment_virtual_card_display => '==== 虚拟卡显示 ====';
+  String get comment_virtual_card_display => '==== Virtual Card Display ====';
 
   @override
-  String get virtualCardExpiryDateLabel => '到期日期';
+  String get virtualCardExpiryDateLabel => '有效期';
 
   @override
   String get virtualCardCvcLabel => 'CVC';
 
   @override
-  String get comment_virtual_card_details_screen => '==== 虚拟卡详情页面 ====';
+  String get comment_virtual_card_details_screen =>
+      '==== Virtual Card Details Screen ====';
 
   @override
   String get virtualCardDetailsAppBarTitle => '虚拟卡详情';
@@ -4368,137 +4575,145 @@ class AppLocalizationsZh extends AppLocalizations {
   String get virtualCardDetailsFloatingButton => '添加余额';
 
   @override
-  String get comment_virtual_card_transaction_screen => '==== 虚拟卡交易页面 ====';
+  String get comment_virtual_card_transaction_screen =>
+      '==== Virtual Card Transaction Screen ====';
 
   @override
-  String get virtualCardTransactionAppBarTitle => '卡交易';
+  String get virtualCardTransactionAppBarTitle => '卡片交易';
 
   @override
   String get virtualCardTransactionSyncButton => '同步';
 
   @override
-  String get comment_virtual_card_screen => '==== 虚拟卡页面 ====';
+  String get comment_virtual_card_screen => '==== Virtual Card Screen ====';
 
   @override
   String get virtualCardScreenAppBarTitle => '虚拟卡';
 
   @override
-  String get virtualCardCardExpiryDateLabel => '到期日期';
+  String get virtualCardCardExpiryDateLabel => '有效期';
 
   @override
   String get virtualCardCardCvcLabel => 'CVC';
 
   @override
-  String get virtualCardCreateCardTitle => '创建您的虚拟卡以开始使用';
+  String get virtualCardCreateCardTitle => '创建您的虚拟卡即可开始使用';
 
   @override
-  String get virtualCardCreateCardButton => '创建卡';
+  String get virtualCardCreateCardButton => '创建卡片';
 
   @override
-  String get comment_verify_passcode_controller => '==== 验证密码控制器 ====';
+  String get comment_verify_passcode_controller =>
+      '==== Verify Passcode Controller ====';
 
   @override
-  String get verifyPasscodeValidationEnterPasscode => '请输入您的密码';
+  String get verifyPasscodeValidationEnterPasscode => '请输入安全码';
 
   @override
-  String get comment_change_passcode_bottom_sheet => '==== 修改密码底部表单 ====';
+  String get comment_change_passcode_bottom_sheet =>
+      '==== Change Passcode Bottom Sheet ====';
 
   @override
-  String get changePasscodeTitle => '修改密码';
+  String get changePasscodeTitle => '修改安全码';
 
   @override
-  String get changePasscodeLabelOldPasscode => '旧密码';
+  String get changePasscodeLabelOldPasscode => '旧安全码';
 
   @override
-  String get changePasscodeLabelNewPasscode => '新密码';
+  String get changePasscodeLabelNewPasscode => '新安全码';
 
   @override
-  String get changePasscodeLabelConfirmPasscode => '确认密码';
+  String get changePasscodeLabelConfirmPasscode => '确认安全码';
 
   @override
-  String get changePasscodeButtonChange => '修改密码';
+  String get changePasscodeButtonChange => '修改安全码';
 
   @override
   String get comment_disable_and_change_passcode_section =>
-      '==== 禁用和修改密码部分 ====';
+      '==== Disable and Change Passcode Section ====';
 
   @override
-  String get disableChangePasscodeTitle => '密码';
+  String get disableChangePasscodeTitle => '安全码';
 
   @override
-  String get disableChangePasscodeButtonChange => '修改密码';
+  String get disableChangePasscodeButtonChange => '修改安全码';
 
   @override
-  String get disableChangePasscodeButtonDisable => '禁用密码';
+  String get disableChangePasscodeButtonDisable => '停用安全码';
 
   @override
-  String get comment_disable_passcode_bottom_sheet => '==== 禁用密码底部表单 ====';
+  String get comment_disable_passcode_bottom_sheet =>
+      '==== Disable Passcode Bottom Sheet ====';
 
   @override
-  String get disablePasscodeTitle => '禁用密码';
+  String get disablePasscodeTitle => '停用安全码';
 
   @override
   String get disablePasscodeLabelPassword => '密码';
 
   @override
-  String get disablePasscodeButtonDisable => '禁用密码';
+  String get disablePasscodeButtonDisable => '停用安全码';
 
   @override
-  String get comment_generate_passcode_bottom_sheet => '==== 生成密码底部表单 ====';
+  String get comment_generate_passcode_bottom_sheet =>
+      '==== Generate Passcode Bottom Sheet ====';
 
   @override
-  String get generatePasscodeTitle => '添加密码';
+  String get generatePasscodeTitle => '添加安全码';
 
   @override
-  String get generatePasscodeLabelPasscode => '密码';
+  String get generatePasscodeLabelPasscode => '安全码';
 
   @override
-  String get generatePasscodeLabelConfirmPasscode => '确认密码';
+  String get generatePasscodeLabelConfirmPasscode => '确认安全码';
 
   @override
   String get generatePasscodeButtonConfirm => '确认';
 
   @override
-  String get comment_generate_passcode_section => '==== 生成密码部分 ====';
+  String get comment_generate_passcode_section =>
+      '==== Generate Passcode Section ====';
 
   @override
-  String get generatePasscodeSectionTitle => '密码';
+  String get generatePasscodeSectionTitle => '安全码';
 
   @override
-  String get generatePasscodeSectionDescription => '创建安全密码以快速访问您的账户';
+  String get generatePasscodeSectionDescription => '创建安全码以便快速访问您的账户';
 
   @override
-  String get generatePasscodeSectionButtonGenerate => '生成密码';
+  String get generatePasscodeSectionButtonGenerate => '生成安全码';
 
   @override
-  String get comment_verify_passcode_bottom_sheet => '==== 验证密码底部表单 ====';
+  String get comment_verify_passcode_bottom_sheet =>
+      '==== Verify Passcode Bottom Sheet ====';
 
   @override
-  String get verifyPasscodeTitle => '确认您的密码';
+  String get verifyPasscodeTitle => '确认您的安全码';
 
   @override
-  String get verifyPasscodeLabelPasscode => '密码';
+  String get verifyPasscodeLabelPasscode => '安全码';
 
   @override
   String get verifyPasscodeButtonConfirm => '确认';
 
   @override
-  String get comment_payment_links_amount_section => '==== 支付链接金额部分 ====';
+  String get comment_payment_links_amount_section =>
+      '==== Payment Links Amount Section ====';
 
   @override
   String get paymentLinksAmountSectionTitle => '金额';
 
   @override
-  String get paymentLinksCurrencyLabel => '货币';
+  String get paymentLinksCurrencyLabel => '币种';
 
   @override
-  String get paymentLinksCurrencyHint => '选择货币';
+  String get paymentLinksCurrencyHint => '选择币种';
 
   @override
-  String get paymentLinksCurrencyDropdownTitle => '货币';
+  String get paymentLinksCurrencyDropdownTitle => '币种';
 
   @override
-  String get paymentLinksCurrencyNotFound => '未找到货币';
+  String get paymentLinksCurrencyNotFound => '未找到币种';
 
   @override
   String get paymentLinksNoteLabel => '备注';
@@ -4507,14 +4722,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paymentLinksCreateLinkButton => '创建链接';
 
   @override
-  String get comment_payment_links_create_section => '==== 支付链接创建部分 ====';
+  String get comment_payment_links_create_section =>
+      '==== Payment Links Create Section ====';
 
   @override
   String get paymentLinksInstructionText =>
-      '您可以创建无需指定金额或货币的支付链接。付款人可以在付款时填写账户和货币。';
+      '您可以创建不指定金额或币种的支付链接。付款人可在支付时填写账户和币种。';
 
   @override
-  String get comment_payment_links_header_section => '==== 支付链接头部部分 ====';
+  String get comment_payment_links_header_section =>
+      '==== Payment Links Header Section ====';
 
   @override
   String get paymentLinksAppBarTitle => '支付链接';
@@ -4527,7 +4744,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get comment_payment_links_history_filter_bottom_sheet =>
-      '==== 支付链接记录筛选底部表单 ====';
+      '==== Payment Links History Filter Bottom Sheet ====';
 
   @override
   String get paymentLinksFilterNumberLabel => '编号';
@@ -4536,10 +4753,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paymentLinksFilterButton => '筛选';
 
   @override
-  String get comment_payment_links_list_section => '==== 支付链接列表部分 ====';
+  String get comment_payment_links_list_section =>
+      '==== Payment Links List Section ====';
 
   @override
-  String get paymentLinksListItemCreatedAt => '创建于： ';
+  String get paymentLinksListItemCreatedAt => '创建时间： ';
 
   @override
   String get paymentLinksListItemStatus => '状态： ';
@@ -4551,23 +4769,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get paymentLinksStatusUnpaid => '未支付';
 
   @override
-  String get paymentLinksCopySuccessToast => '支付链接代码已复制';
+  String get paymentLinksCopySuccessToast => '支付链接码已复制';
 
   @override
-  String get comment_gift_card_header_section => '---- 礼品卡头部部分 ----';
+  String get comment_gift_card_header_section =>
+      '---- Gift Card Header Section ----';
 
   @override
   String get giftCardHeaderTitle => '礼品卡';
 
   @override
-  String get giftCardHeaderTabCards => '卡';
+  String get giftCardHeaderTabCards => '卡片';
 
   @override
-  String get giftCardHeaderTabHistory => '记录';
+  String get giftCardHeaderTabHistory => '历史记录';
 
   @override
   String get comment_gift_card_history_filter_bottom_sheet =>
-      '---- 礼品卡记录筛选底部表单 ----';
+      '---- Gift Card History Filter Bottom Sheet ----';
 
   @override
   String get giftCardHistoryFilterSearchLabel => '搜索';
@@ -4576,51 +4795,53 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftCardHistoryFilterSearchButton => '搜索';
 
   @override
-  String get comment_gift_card_filter_bottom_sheet => '---- 礼品卡筛选底部表单 ----';
+  String get comment_gift_card_filter_bottom_sheet =>
+      '---- Gift Card Filter Bottom Sheet ----';
 
   @override
   String get giftCardFilterGiftCardLabel => '礼品卡';
 
   @override
-  String get giftCardFilterCountryLabel => '国家';
+  String get giftCardFilterCountryLabel => '国家/地区';
 
   @override
-  String get giftCardFilterCountrySelectTitle => '选择国家';
+  String get giftCardFilterCountrySelectTitle => '选择国家/地区';
 
   @override
   String get giftCardFilterAllOption => '全部';
 
   @override
-  String get giftCardFilterCountryNotFound => '未找到国家';
+  String get giftCardFilterCountryNotFound => '未找到国家/地区';
 
   @override
-  String get giftCardFilterCategoryLabel => '类别';
+  String get giftCardFilterCategoryLabel => '分类';
 
   @override
-  String get giftCardFilterCategorySelectTitle => '选择类别';
+  String get giftCardFilterCategorySelectTitle => '选择分类';
 
   @override
-  String get giftCardFilterCategoryNotFound => '未找到类别';
+  String get giftCardFilterCategoryNotFound => '未找到分类';
 
   @override
   String get giftCardFilterSearchButton => '搜索';
 
   @override
-  String get comment_gift_card_history_details => '---- 礼品卡记录详情 ----';
+  String get comment_gift_card_history_details =>
+      '---- Gift Card History Details ----';
 
   @override
   String get giftCardHistoryDetailsTitle => '交易详情';
 
   @override
   String giftCardHistoryQtyLabel(Object qty) {
-    return '数量 : $qty';
+    return '数量：$qty';
   }
 
   @override
   String get giftCardTransactionIdLabel => '交易 ID';
 
   @override
-  String get giftCardProductNameLabel => '产品名称';
+  String get giftCardProductNameLabel => '商品名称';
 
   @override
   String get giftCardSenderNameLabel => '发送人姓名';
@@ -4638,19 +4859,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftCardTotalAmountLabel => '总金额';
 
   @override
-  String get comment_gift_card_review_details => '---- 礼品卡审核详情 ----';
+  String get comment_gift_card_review_details =>
+      '---- Gift Card Review Details ----';
 
   @override
-  String get giftCardReviewDetailsTitle => '审核详情';
+  String get giftCardReviewDetailsTitle => '确认信息';
 
   @override
   String get giftCardSubTotalLabel => '小计';
 
   @override
-  String get giftCardTotalFeeLabel => '总费用';
+  String get giftCardTotalFeeLabel => '手续费合计';
 
   @override
-  String get giftCardTotalLabel => '总计';
+  String get giftCardTotalLabel => '合计';
 
   @override
   String get giftCardReviewBackButton => '返回';
@@ -4659,10 +4881,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftCardReviewPayNowButton => '立即支付';
 
   @override
-  String get comment_gift_card_success_section => '---- 礼品卡成功部分 ----';
+  String get comment_gift_card_success_section =>
+      '---- Gift Card Success Section ----';
 
   @override
-  String get giftCardSuccessTitle => '礼品卡订单已成功下单！';
+  String get giftCardSuccessTitle => '礼品卡下单成功！';
 
   @override
   String get giftCardSuccessGiftCardsButton => '礼品卡';
@@ -4671,7 +4894,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftCardSuccessBackHomeButton => '返回首页';
 
   @override
-  String get comment_gift_card_amount_validation => '---- 礼品卡控制器金额验证 ----';
+  String get comment_gift_card_amount_validation =>
+      '---- Gift Card Controller Amount Validation ----';
 
   @override
   String get giftCardAmountRequired => '请输入金额';
@@ -4681,16 +4905,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String giftCardAmountMinError(Object min) {
-    return '金额不得超过 $min';
+    return '金额不能低于 $min';
   }
 
   @override
   String giftCardAmountMaxError(Object max) {
-    return '金额不得超过 $max';
+    return '金额不能超过 $max';
   }
 
   @override
-  String get comment_gift_card_user_validation => '---- 礼品卡控制器用户验证 ----';
+  String get comment_gift_card_user_validation =>
+      '---- Gift Card Controller User Validation ----';
 
   @override
   String get giftCardEmailRequired => '请输入邮箱';
@@ -4699,16 +4924,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftCardEmailInvalid => '请输入有效的邮箱';
 
   @override
-  String get giftCardCountryRequired => '请选择国家';
+  String get giftCardCountryRequired => '请选择国家/地区';
 
   @override
-  String get giftCardPhoneRequired => '请输入电话';
+  String get giftCardPhoneRequired => '请输入电话号码';
 
   @override
   String get giftCardNameRequired => '请输入姓名';
 
   @override
-  String get comment_gift_card_details_section => '---- 礼品卡详情部分 ----';
+  String get comment_gift_card_details_section =>
+      '---- Gift Card Details Section ----';
 
   @override
   String get giftCardDetailsTitle => '礼品卡详情';
@@ -4725,13 +4951,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get giftCardEmailLabel => '邮箱';
 
   @override
-  String get giftCardCountryLabel => '国家';
+  String get giftCardCountryLabel => '国家/地区';
 
   @override
-  String get giftCardSelectCountryTitle => '选择国家';
+  String get giftCardSelectCountryTitle => '选择国家/地区';
 
   @override
-  String get giftCardCountryNotFound => '未找到国家';
+  String get giftCardCountryNotFound => '未找到国家/地区';
 
   @override
   String get giftCardPhoneLabel => '电话';
@@ -4761,7 +4987,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pCreateAd => '创建广告';
 
   @override
-  String get p2pApplyVerification => '申请验证';
+  String get p2pApplyVerification => '申请认证';
 
   @override
   String get p2pP2p => 'P2P';
@@ -4782,10 +5008,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pSelectFiat => '选择法币';
 
   @override
-  String get p2pBuy => '购买';
+  String get p2pBuy => '买入';
 
   @override
-  String get p2pSell => '出售';
+  String get p2pSell => '卖出';
 
   @override
   String get p2pAmount => '金额';
@@ -4797,7 +5023,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pOrders => '订单';
 
   @override
-  String get p2pCompletion => '完成';
+  String get p2pCompletion => '完成度';
 
   @override
   String get p2pLimit => '限额';
@@ -4824,7 +5050,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pYouPay => '您支付';
 
   @override
-  String get p2pYouSell => '您出售';
+  String get p2pYouSell => '您卖出';
 
   @override
   String get p2pYouReceive => '您收到';
@@ -4842,25 +5068,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pNoPaymentMethodFound => '未找到支付方式';
 
   @override
-  String get p2pAdvertisersTerms => '广告商条款（请仔细阅读）';
+  String get p2pAdvertisersTerms => '广告主条款（请仔细阅读）';
 
   @override
-  String get p2pPaymentTimeLimit => '支付时间限制';
+  String get p2pPaymentTimeLimit => '支付时限';
 
   @override
-  String get p2pAvgReleaseTime => '平均释放时间';
+  String get p2pAvgReleaseTime => '平均放币时间';
 
   @override
   String get p2pNoTermsProvided => '未提供条款';
 
   @override
-  String get p2pOrderNumber => '订单编号';
+  String get p2pOrderNumber => '订单号';
 
   @override
-  String get p2pSearchOrderNumber => '搜索订单编号';
+  String get p2pSearchOrderNumber => '搜索订单号';
 
   @override
-  String get p2pOrderNumberCopied => '订单编号已复制';
+  String get p2pOrderNumberCopied => '订单号已复制';
 
   @override
   String get p2pCopied => '已复制';
@@ -4881,22 +5107,64 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pChange => '更改';
 
   @override
-  String get p2pRecipient => '收款人';
+  String get p2pRecipient => '收款方';
 
   @override
   String get p2pView => '查看';
 
   @override
-  String get p2pFilterAmount => '筛选金额';
+  String get p2pFilterAmount => '按金额筛选';
 
   @override
   String get p2pEnterAmount => '输入金额';
 
   @override
-  String get p2pFilterPaymentMethod => '筛选支付方式';
+  String get p2pFilterPaymentMethod => '按支付方式筛选';
 
   @override
   String get p2pUnableToLoadImage => '无法加载图片';
+
+  @override
+  String get p2pFieldRequired => '此字段为必填项';
+
+  @override
+  String get p2pPleaseUpload => '请为此字段上传文件';
+
+  @override
+  String get p2pPleaseFill => '请填写此字段';
+
+  @override
+  String get p2pWriteMessageOrAttach => '请输入留言或添加附件';
+
+  @override
+  String get p2pVerificationSubmitted => '验证已成功提交';
+
+  @override
+  String get p2pCashDollar => '现金美元';
+
+  @override
+  String get p2pInPerson => '当面兑换';
+
+  @override
+  String get p2pMinutes => '分钟';
+
+  @override
+  String get p2pNoPaymentMethodFound2 => '未找到支付方式';
+
+  @override
+  String p2pTransferInstruction(Object amount, Object paymentMethod) {
+    return '打开（$paymentMethod）并转账 $amount';
+  }
+
+  @override
+  String p2pCashTransferInstruction(Object amount) {
+    return '请以现金方式向卖家支付 $amount';
+  }
+
+  @override
+  String p2pInPersonInstruction(Object amount) {
+    return '与卖家当面交易并以现金支付 $amount';
+  }
 
   @override
   String get p2pUnableToLoadAttachment => '无法加载附件';
@@ -4908,7 +5176,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pCancelOrder => '取消订单';
 
   @override
-  String get p2pDisputeOrder => '争议订单';
+  String get p2pDisputeOrder => '发起争议';
 
   @override
   String get p2pPaymentReceived => '已收到付款';
@@ -4917,16 +5185,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pEnterDisputeReason => '输入争议原因';
 
   @override
-  String get p2pWriteYourReason => '写下您的原因...';
+  String get p2pWriteYourReason => '请填写您的原因...';
 
   @override
   String get p2pEnterReason => '输入原因';
 
   @override
-  String get p2pReasonIsRequired => '原因为必填';
+  String get p2pReasonIsRequired => '原因必填';
 
   @override
-  String get p2pCancelOrderConfirmation => '您确定要取消此订单吗？';
+  String get p2pCancelOrderConfirmation => '确定要取消此订单吗？';
 
   @override
   String get p2pOrderCompleted => '订单已完成';
@@ -4935,28 +5203,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pOrderCancelled => '订单已取消';
 
   @override
-  String get p2pPendingRelease => '待释放';
+  String get p2pPendingRelease => '待放币';
 
   @override
-  String get p2pOrderDisputed => '订单已争议';
+  String get p2pOrderDisputed => '订单争议中';
 
   @override
   String get p2pOrderExpired => '订单已过期';
 
   @override
-  String get p2pBuyerMarkedAsPaid => '买家标记为已支付';
+  String get p2pBuyerMarkedAsPaid => '买家已标记付款';
 
   @override
-  String get p2pOrderCreatedPayTheSellerWithin => '订单已创建，请在规定时间内支付卖家';
+  String get p2pOrderCreatedPayTheSellerWithin => '订单已创建，请在以下时间内向卖家付款';
 
   @override
-  String get p2pBuyerHasNotPaidYetPaymentDueWithin => '买家尚未支付。付款期限剩余';
+  String get p2pBuyerHasNotPaidYetPaymentDueWithin => '买家尚未付款，需在以下时间内完成支付';
 
   @override
-  String get p2pSellerFundsLockedInEscrow => '卖家的资金已锁定在托管中。我们的支持团队将审核证据并尽快回复。';
+  String get p2pSellerFundsLockedInEscrow => '卖家的资金已锁定在托管中。我们的客服团队将审核证据并尽快回复。';
 
   @override
-  String get p2pYourLockedAssetsInEscrow => '您的锁定资产已在托管中。我们的支持团队将尽快审核此争议。';
+  String get p2pYourLockedAssetsInEscrow => '您被锁定的资产正在托管中。我们的客服团队将尽快审核此争议。';
 
   @override
   String get p2pPaymentNotCompletedInAllowedTime => '您未在允许的时间内完成付款。';
@@ -4970,10 +5238,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get p2pVerifyAmountAndSender => '请验证您账户中的金额和发送人详情，然后继续释放操作。';
+  String get p2pVerifyAmountAndSender => '请核实您账户中的金额与付款方信息，然后继续放币操作。';
 
   @override
-  String get p2pTransferFundsToSeller => '将资金转至下面提供的卖家账户。';
+  String get p2pTransferFundsToSeller => '请向下述卖家账户转账。';
 
   @override
   String get p2pNotifySeller => '通知卖家';
@@ -4982,13 +5250,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pConfirmPaymentReceived => '确认已收到付款';
 
   @override
-  String get p2pConfirmPaymentReceivedDescription => '确认收到付款后，点击下面的“已收到付款”按钮。';
+  String get p2pConfirmPaymentReceivedDescription => '确认已收到付款后，请点击下方“已收到付款”按钮。';
 
   @override
-  String get p2pNotifySellerDescription => '付款后，请记得点击“已转账，通知卖家”按钮以便卖家释放加密货币。';
+  String get p2pNotifySellerDescription => '付款后，请记得点击“已转账，通知卖家”按钮，以便卖家放行加密货币。';
 
   @override
-  String get p2pAllAccount => '所有账户';
+  String get p2pAllAccount => '全部账户';
 
   @override
   String get p2pAddPaymentMethod => '添加支付方式';
@@ -5018,16 +5286,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pDone => '完成';
 
   @override
-  String get p2pIWantToBuy => '我想购买';
+  String get p2pIWantToBuy => '我想买入';
 
   @override
-  String get p2pIWantToSell => '我想出售';
+  String get p2pIWantToSell => '我想卖出';
 
   @override
   String get p2pAsset => '资产';
 
   @override
-  String get p2pWithFiat => '使用法币';
+  String get p2pWithFiat => '兑换法币';
 
   @override
   String get p2pPriceType => '价格类型';
@@ -5042,13 +5310,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pTotalAmount => '总金额';
 
   @override
-  String get p2pSelectAtLeastOnePaymentMethod => '至少选择一种支付方式';
+  String get p2pSelectAtLeastOnePaymentMethod => '请至少选择一种支付方式';
 
   @override
   String get p2pAdd => '添加';
-
-  @override
-  String get p2pMinutes => '分钟';
 
   @override
   String get p2pTerms => '条款';
@@ -5081,11 +5346,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pAdsSubmittedUnderReview => '广告已提交，正在审核中。';
 
   @override
-  String get p2pAdPublishedDescription => '您的广告已发布，用户现在可以下单。请注意新订单提示。';
+  String get p2pAdPublishedDescription => '您的广告已发布，用户可以下单。请留意新订单提示。';
 
   @override
-  String get p2pAdUnderReviewDescription =>
-      '您的广告正在审核中。一旦批准，它将被发布，用户可以下单。请注意新订单提示。';
+  String get p2pAdUnderReviewDescription => '您的广告正在审核中。通过后将发布，用户即可下单。请留意新订单提示。';
 
   @override
   String get p2pAdNumber => '广告编号';
@@ -5097,22 +5361,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pGoToMyAds => '前往我的广告';
 
   @override
-  String get p2pEligibilityValidationFailed => '资格验证失败';
+  String get p2pEligibilityValidationFailed => '资格验证未通过';
 
   @override
   String get p2pPleaseFulfillRequirements => '请满足以下要求：';
 
   @override
-  String get p2pNotEligibleCreateAd => '您当前不符合创建广告的资格。';
+  String get p2pNotEligibleCreateAd => '您目前不符合创建广告的条件。';
 
   @override
-  String get p2pCompletedTradeQty => '已完成交易数量';
+  String get p2pCompletedTradeQty => '已完成交易笔数';
 
   @override
   String get p2pStatus => '状态';
 
   @override
-  String get p2pAdsView => '广告查看';
+  String get p2pAdsView => '广告视图';
 
   @override
   String get p2pAdNumberTitle => '广告编号';
@@ -5127,22 +5391,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pPriceExchangeRate => '价格\n汇率';
 
   @override
-  String get p2pLastUpdated => '最后更新';
+  String get p2pLastUpdated => '最近更新';
 
   @override
   String get p2pCreateTime => '创建时间';
 
   @override
-  String get p2pDeleteAdConfirmation => '您确定要删除此广告吗？';
+  String get p2pDeleteAdConfirmation => '确定要删除此广告吗？';
 
   @override
   String get p2pFiat => '法币';
 
   @override
-  String get p2pCryptoAmount => '加密货币金额';
+  String get p2pCryptoAmount => '加密货币数量';
 
   @override
-  String get p2pCounterparty => '对手方';
+  String get p2pCounterparty => '交易对方';
 
   @override
   String get p2pChat => '聊天';
@@ -5157,7 +5421,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pCamera => '相机';
 
   @override
-  String get p2pGallery => '图库';
+  String get p2pGallery => '相册';
 
   @override
   String get p2pAttachment => '附件';
@@ -5166,93 +5430,51 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pUser => '用户';
 
   @override
-  String get p2pYouAreVerifiedTrader => '您是已验证交易者';
+  String get p2pYouAreVerifiedTrader => '您是已认证的商家';
 
   @override
-  String get p2pVerifiedTraderStatusActive => '您的已验证交易者状态为活跃。';
+  String get p2pVerifiedTraderStatusActive => '您的认证商家状态已生效。';
 
   @override
-  String get p2pVerificationUnderReview => '验证正在审核中';
+  String get p2pVerificationUnderReview => '认证审核中';
 
   @override
-  String get p2pVerificationRequestUnderReview => '您的验证请求当前正在审核中。';
+  String get p2pVerificationRequestUnderReview => '您的认证申请正在审核中。';
 
   @override
   String get p2pSubmittedOn => '提交于';
 
   @override
-  String get p2pVerificationDataUnavailable => '验证数据不可用';
+  String get p2pVerificationDataUnavailable => '认证数据不可用';
 
   @override
-  String get p2pPleaseRefreshAndTryAgain => '请刷新并重试。';
+  String get p2pPleaseRefreshAndTryAgain => '请刷新后重试。';
 
   @override
-  String get p2pPreviousVerificationRejected => '之前的验证请求已被拒绝';
+  String get p2pPreviousVerificationRejected => '上次认证申请被拒绝';
 
   @override
   String get p2pReason => '原因';
 
   @override
-  String get p2pCorrectInformationApplyAgain => '请更正信息并重新申请。';
+  String get p2pCorrectInformationApplyAgain => '请更正信息后重新申请。';
 
   @override
-  String get p2pApplyVerificationTitle => '申请验证';
+  String get p2pApplyVerificationTitle => '申请认证';
 
   @override
-  String get p2pFillRequiredFieldsVerification => '填写所有必填字段以提交验证。';
+  String get p2pFillRequiredFieldsVerification => '填写所有必填字段以提交认证。';
 
   @override
-  String get p2pNoVerificationFormFieldsFound => '未找到验证表单字段。';
+  String get p2pNoVerificationFormFieldsFound => '未找到认证表单字段。';
 
   @override
-  String get p2pSubmitVerification => '提交验证';
+  String get p2pSubmitVerification => '提交认证';
 
   @override
   String p2pEnterField(Object field) {
     return '输入 $field';
   }
-
-  @override
-  String get p2pFieldRequired => 'This field is required';
-
-  @override
-  String get p2pPleaseUpload => 'Please upload file for this field';
-
-  @override
-  String get p2pPleaseFill => 'Please fill this field';
-
-  @override
-  String get p2pWriteMessageOrAttach => 'Please write a message or add an attachment';
-
-  @override
-  String get p2pVerificationSubmitted => 'Verification submitted successfully';
-
-  @override
-  String get p2pCashDollar => 'Cash Dollar';
-
-  @override
-  String get p2pInPerson => 'In-Person Exchange';
-
-  @override
-  String get p2pMinutes => 'min';
-
-  @override
-  String get p2pRecipient => 'Recipient';
-
-  @override
-  String get p2pCopied => 'Copied';
-
-  @override
-  String get p2pNoPaymentMethodFound2 => 'No payment method found';
-
-  @override
-  String get p2pTransferInstruction => 'Open ({paymentMethod}) to transfer {amount}';
-
-  @override
-  String get p2pCashTransferInstruction => 'Pay {amount} in cash to the seller';
-
-  @override
-  String get p2pInPersonInstruction => 'Meet the seller in person and pay {amount} in cash';
 
   @override
   String get edit_my_ad => '编辑我的广告';
@@ -5270,7 +5492,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get max_amount => '最高金额';
 
   @override
-  String get payment_duration => '支付时长';
+  String get payment_duration => '支付时限';
 
   @override
   String get payment_method => '支付方式';
@@ -5303,10 +5525,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get error_max_zero => '最高金额不能为零';
 
   @override
-  String get error_min_greater => '最低金额不能大于最高金额';
+  String get error_min_greater => '最低金额不能高于最高金额';
 
   @override
-  String get error_payment_duration_zero => '支付时长不能为零';
+  String get error_payment_duration_zero => '支付时限不能为零';
 
   @override
   String get error_select_payment => '请选择支付方式';
@@ -5354,7 +5576,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fiatCurrency => '法币';
 
   @override
-  String get assetCurrency => '资产货币';
+  String get assetCurrency => '资产币种';
 
   @override
   String get reset => '重置';
@@ -5375,7 +5597,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectFiatCurrency => '选择法币';
 
   @override
-  String get selectAssetCurrency => '选择资产货币';
+  String get selectAssetCurrency => '选择资产币种';
 
   @override
   String get noStatusFound => '未找到状态';
@@ -5390,7 +5612,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noFiatCurrencyFound => '未找到法币';
 
   @override
-  String get noAssetCurrencyFound => '未找到资产货币';
+  String get noAssetCurrencyFound => '未找到资产币种';
 
   @override
   String get filterPaymentAccount => '筛选支付账户';
@@ -5399,19 +5621,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get filterMyOrder => '筛选我的订单';
 
   @override
-  String get comment_travel => '==== eCardo 旅行 ====';
+  String get comment_travel => '==== eCardo Travel ====';
 
   @override
   String get travelTitle => 'eCardo 旅行';
 
   @override
-  String get travelHeroEyebrow => '更好的旅行体验';
+  String get travelHeroEyebrow => '更美好的旅行体验';
 
   @override
-  String get travelHeroTitle => '立即预订下一段旅程';
+  String get travelHeroTitle => '立即预订您的下一段旅程';
 
   @override
-  String get travelFlights => '航班';
+  String get travelFlights => '机票';
 
   @override
   String get travelHotels => '酒店';
@@ -5420,7 +5642,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelEsim => 'eSIM';
 
   @override
-  String get travelRecentActivity => '最近活动';
+  String get travelRecentActivity => '最近动态';
 
   @override
   String get travelViewAll => '查看全部';
@@ -5429,7 +5651,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMainWallet => 'eCardo 主钱包';
 
   @override
-  String get travelWalletSharedDescription => '与你在 eCardo 中使用的同一个安全钱包';
+  String get travelWalletSharedDescription => '与您在 eCardo 全站使用的同一个安全钱包';
 
   @override
   String get travelHotelSearch => '酒店搜索';
@@ -5438,7 +5660,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelHotelHero => '入住难忘之地';
 
   @override
-  String get travelDestinationCountry => '目的地国家';
+  String get travelDestinationCountry => '目的地国家/地区';
 
   @override
   String get travelDestinationCity => '城市';
@@ -5450,7 +5672,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelCheckOut => '退房';
 
   @override
-  String get travelGuests => '住客';
+  String get travelGuests => '客人';
 
   @override
   String get travelSearchHotels => '搜索酒店';
@@ -5480,17 +5702,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelReserveHotel => '预订酒店';
 
   @override
-  String get travelIncluded => '已包含';
+  String get travelIncluded => '包含';
 
   @override
   String get travelFree => '免费';
 
   @override
-  String get travelAboutHotel => '关于酒店';
+  String get travelAboutHotel => '酒店介绍';
 
   @override
   String get travelHotelDescription =>
-      '精致的城市住宿，提供舒适客房、贴心服务，并可便捷前往主要景点。最终房间内容和政策将由 eCardo Travel API 提供。';
+      '舒适客房、贴心服务，便捷通往主要景点的高品质城市住宿。最终房型内容与政策将由 eCardo Travel API 提供。';
 
   @override
   String get travelPolicies => '政策';
@@ -5499,13 +5721,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelCancellation => '取消';
 
   @override
-  String get travelCancellationSummary => '在规定截止时间前可免费取消';
+  String get travelCancellationSummary => '在规定期限前可免费取消';
 
   @override
-  String get travelFlightSearch => '航班搜索';
+  String get travelFlightSearch => '机票搜索';
 
   @override
-  String get travelFlightHero => '梦想旅程从这里开始';
+  String get travelFlightHero => '您的梦想之旅从这里开始';
 
   @override
   String get travelOrigin => '出发地';
@@ -5544,20 +5766,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelBusiness => '商务舱';
 
   @override
-  String get travelSearchFlights => '搜索航班';
+  String get travelSearchFlights => '搜索机票';
 
   @override
-  String get travelFlightResults => '航班结果';
+  String get travelFlightResults => '机票结果';
 
   @override
   String get travelNoFlightResults => '未找到匹配的航班。';
 
   @override
-  String get travelAlternativeFlights => '备选航班';
+  String get travelAlternativeFlights => '备选航班。';
 
   @override
   String get travelAlternativeFlightsDescription =>
-      '你的精确搜索没有匹配结果。以下临近选项仅作为备选；可编辑搜索以更改路线或日期。';
+      '您的精确搜索没有匹配结果。以下即将出发的选项作为备选展示；您可以修改搜索以更改航线或日期。';
 
   @override
   String get travelSelectFlight => '选择航班';
@@ -5572,22 +5794,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelReturnFlight => '返程航班';
 
   @override
-  String get travelFlightDetails => '航班和乘客详情';
+  String get travelFlightDetails => '航班与乘客信息';
 
   @override
   String get travelContinueToPayment => '继续支付';
 
   @override
-  String get travelPassengerReview => '乘客确认';
+  String get travelPassengerReview => '乘客信息确认';
 
   @override
   String get travelPrimaryPassenger => '主要乘客';
 
   @override
-  String get travelPassengerFromProfile => '详情来自你的 eCardo 个人资料';
+  String get travelPassengerFromProfile => '详细信息来自您的 eCardo 个人资料';
 
   @override
-  String get travelFareDetails => '票价详情';
+  String get travelFareDetails => '票价明细';
 
   @override
   String get travelBaseFare => '基础票价';
@@ -5602,7 +5824,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelBrowseEsimPackages => '浏览 eSIM 套餐';
 
   @override
-  String get travelEsimIntroTitle => '无论去哪里都保持连接';
+  String get travelEsimIntroTitle => '无论去哪儿都保持在线';
 
   @override
   String get travelEsimIntroDescription =>
@@ -5612,19 +5834,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelEsimInstantTitle => '即时交付';
 
   @override
-  String get travelEsimInstantDescription => '付款后可立即获取激活详情。';
+  String get travelEsimInstantDescription => '支付完成后立即可用激活信息。';
 
   @override
-  String get travelEsimCoverageTitle => '旅行覆盖';
+  String get travelEsimCoverageTitle => '旅行适用的覆盖范围';
 
   @override
-  String get travelEsimCoverageDescription => '为目的地选择本地或全球套餐。';
+  String get travelEsimCoverageDescription => '为您的目的地选择本地或全球套餐。';
 
   @override
-  String get travelEsimTransparentTitle => '透明定价';
+  String get travelEsimTransparentTitle => '价格透明';
 
   @override
-  String get travelEsimTransparentDescription => '付款前查看后端确认的总价。';
+  String get travelEsimTransparentDescription => '支付前即可看到后端确认的总价。';
 
   @override
   String get travelEsimPackages => 'eSIM 套餐';
@@ -5643,14 +5865,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String travelValidityDays(int days) {
-    return '有效期 $days 天';
+    return '$days 天有效期';
   }
 
   @override
   String get travelWalletCheckout => '钱包结账';
 
   @override
-  String get travelBackendConfirmedPrice => '价格由 eCardo Travel 确认';
+  String get travelBackendConfirmedPrice => '由 eCardo Travel 确认的价格';
 
   @override
   String get travelPaymentMethod => '支付方式';
@@ -5659,10 +5881,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelAvailableBalance => '可用余额';
 
   @override
-  String get travelInsufficientBalance => '你的主钱包余额不足。请充值后返回刷新结账。';
+  String get travelInsufficientBalance => '您的主钱包余额不足。请先充值，然后返回刷新结账。';
 
   @override
-  String get travelPriceSummary => '价格摘要';
+  String get travelPriceSummary => '价格汇总';
 
   @override
   String get travelSubtotal => '小计';
@@ -5671,7 +5893,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelWalletPayment => '钱包支付';
 
   @override
-  String get travelCheckoutSafetyNote => '支付将通过幂等预订请求仅提交一次。';
+  String get travelCheckoutSafetyNote => '支付通过幂等预订请求仅提交一次。';
 
   @override
   String get travelPayFromWallet => '从钱包支付';
@@ -5683,7 +5905,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelPaymentFailed => '支付未完成';
 
   @override
-  String get travelPaymentFailedDescription => '你的钱包未被视为已支付。请检查预订并重试。';
+  String get travelPaymentFailedDescription => '您的钱包未被视为已支付。请核对预订信息后重试。';
 
   @override
   String get travelHotelVoucher => '酒店凭证';
@@ -5695,13 +5917,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelEsimActivation => 'eSIM 激活';
 
   @override
-  String get travelVoucherReady => '你的酒店确认凭证已准备好。';
+  String get travelVoucherReady => '您确认的酒店凭证已就绪。';
 
   @override
-  String get travelTicketReady => '你的机票已出票并准备好。';
+  String get travelTicketReady => '您的机票已出票就绪。';
 
   @override
-  String get travelEsimReady => '你的 eSIM 已激活，可安装。';
+  String get travelEsimReady => '您的 eSIM 已激活，可以安装。';
 
   @override
   String get travelPurchaseSuccessful => '购买成功';
@@ -5713,7 +5935,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelStatus => '状态';
 
   @override
-  String get travelActive => '有效';
+  String get travelActive => '生效中';
 
   @override
   String get travelConfirmed => '已确认';
@@ -5725,13 +5947,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelRefunded => '已退款';
 
   @override
-  String get travelFailed => '失败';
+  String get travelFailed => '已失败';
 
   @override
   String get travelBookingFailed => '预订失败';
 
   @override
-  String get travelBookingFailedDescription => '此预订未完成。再次付款前请查看订单状态。';
+  String get travelBookingFailedDescription => '此预订未完成。请先查看订单状态，再尝试其他支付。';
 
   @override
   String get travelBookingRefunded => '预订已退款';
@@ -5740,14 +5962,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelBookingRefundedDescription => '此预订的付款已退回钱包。';
 
   @override
-  String get travelPendingConfirmation => '等待确认';
+  String get travelPendingConfirmation => '待确认';
 
   @override
   String get travelHotelBookingSubmitted => '酒店预订已提交';
 
   @override
   String get travelHotelPendingConfirmationDescription =>
-      '已收到付款。eCardo Travel 正在向授权供应商确认酒店，然后签发凭证。';
+      '付款已收到。eCardo Travel 正在向授权供应商确认酒店，随后为您出票。';
 
   @override
   String get travelPaidAmount => '已付金额';
@@ -5757,7 +5979,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelActivationInstructions =>
-      '打开设备蜂窝网络设置，添加 eSIM，并使用 eCardo 后端返回的安全安装详情。';
+      '打开设备的蜂窝网络设置，添加 eSIM，并使用 eCardo 后端返回的安全安装信息。';
 
   @override
   String get travelViewMyBookings => '查看我的预订';
@@ -5766,43 +5988,43 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMyBookings => '我的预订';
 
   @override
-  String get travelAllBookings => '所有预订';
+  String get travelAllBookings => '全部预订';
 
   @override
   String get travelMyHotels => '我的酒店';
 
   @override
-  String get travelMyFlights => '我的航班';
+  String get travelMyFlights => '我的机票';
 
   @override
   String get travelMyEsims => '我的 eSIM';
 
   @override
-  String get travelMyHotelsDescription => '已确认住宿和酒店凭证';
+  String get travelMyHotelsDescription => '已确认的住宿和酒店凭证';
 
   @override
   String get travelMyFlightsDescription => '已预订航班和已出票机票';
 
   @override
-  String get travelMyEsimsDescription => '当前和历史流量套餐';
+  String get travelMyEsimsDescription => '生效中及历史流量套餐';
 
   @override
-  String get travelNoBookings => '你还没有任何旅行预订。';
+  String get travelNoBookings => '您还没有任何旅行预订。';
 
   @override
-  String get travelNoHotels => '你还没有任何酒店预订。';
+  String get travelNoHotels => '您还没有任何酒店预订。';
 
   @override
-  String get travelNoFlights => '你还没有任何航班预订。';
+  String get travelNoFlights => '您还没有任何机票预订。';
 
   @override
-  String get travelNoEsims => '你还没有任何 eSIM 购买。';
+  String get travelNoEsims => '您还没有购买过任何 eSIM。';
 
   @override
-  String get travelSavedTravelers => '已保存旅客';
+  String get travelSavedTravelers => '已保存的旅客';
 
   @override
-  String get travelNoTravelers => '还没有已保存的旅客。';
+  String get travelNoTravelers => '暂无已保存的旅客。';
 
   @override
   String get travelAddTraveler => '添加旅客';
@@ -5811,7 +6033,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelEditTraveler => '编辑旅客';
 
   @override
-  String get travelTravelerFullName => '全名';
+  String get travelTravelerFullName => '姓名';
 
   @override
   String get travelFirstName => '名';
@@ -5823,7 +6045,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelBirthDate => '出生日期';
 
   @override
-  String get travelPassportExpiry => '护照有效期';
+  String get travelPassportExpiry => '护照有效期至';
 
   @override
   String get travelGender => '性别';
@@ -5841,10 +6063,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelPhone => '手机号码';
 
   @override
-  String get travelEmail => '电子邮箱';
+  String get travelEmail => '邮箱地址';
 
   @override
-  String get travelPassengerDetailsRequired => '请填写所有乘客信息，并添加手机号码或电子邮箱以接收预订更新。';
+  String get travelPassengerDetailsRequired => '请填写每位乘客的信息，并添加手机号码或邮箱以接收预订动态。';
 
   @override
   String get travelAdultPassenger => '成人乘客';
@@ -5856,7 +6078,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelInfantPassenger => '婴儿乘客';
 
   @override
-  String get travelCompleteTravelerDetails => '完善乘客信息';
+  String get travelCompleteTravelerDetails => '完善旅客信息';
 
   @override
   String get travelPassportNumber => '护照号码';
@@ -5865,7 +6087,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelNationalityCode => '国籍代码';
 
   @override
-  String get travelNationalityCodeInvalid => '请输入两位国家代码';
+  String get travelNationalityCodeInvalid => '请输入两位字母的国家/地区代码';
 
   @override
   String get travelFieldRequired => '此字段为必填项';
@@ -5880,28 +6102,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelAccountHolder => 'eCardo 会员';
 
   @override
-  String get travelMemberDescription => '共享个人资料、钱包和旅客信息';
+  String get travelMemberDescription => '共享的个人资料、钱包和旅客信息';
 
   @override
-  String get travelMyBookingsDescription => '酒店、航班和有效 eSIM';
+  String get travelMyBookingsDescription => '酒店、机票和生效中的 eSIM';
 
   @override
-  String get travelSavedTravelersDescription => '安全复用乘客详情';
+  String get travelSavedTravelersDescription => '安全复用乘客信息';
 
   @override
   String get travelPersonalInformation => '个人信息';
 
   @override
-  String get travelPersonalInformationDescription => '管理与旅行共享的详情';
+  String get travelPersonalInformationDescription => '管理与旅行服务共享的详细信息';
 
   @override
-  String get travelHistory => '旅行和钱包历史';
+  String get travelHistory => '旅行与钱包历史记录';
 
   @override
-  String get travelHistoryDescription => '一起查看购买和钱包活动';
+  String get travelHistoryDescription => '在一起查看购买记录和钱包动态';
 
   @override
-  String get travelNoActivity => '暂无旅行或钱包活动。';
+  String get travelNoActivity => '暂无旅行或钱包动态。';
 
   @override
   String get travelMockIran => '伊朗';
@@ -5910,28 +6132,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMockTehran => '德黑兰';
 
   @override
-  String get travelMockGuests => '2 位成人，1 位儿童';
+  String get travelMockGuests => '2 名成人，1 名儿童';
 
   @override
-  String get travelMockTehranHotels => '德黑兰酒店';
+  String get travelMockTehranHotels => '德黑兰的酒店';
 
   @override
-  String get travelMockHotelEspinas => 'Espinas Palace 酒店';
+  String get travelMockHotelEspinas => '埃斯皮纳斯宫酒店';
 
   @override
-  String get travelMockHotelEspinasLocation => '萨达特阿巴德，德黑兰';
+  String get travelMockHotelEspinasLocation => '德黑兰萨达塔阿巴德区';
 
   @override
-  String get travelMockHotelParsian => 'Parsian International 酒店';
+  String get travelMockHotelParsian => '帕尔斯国际酒店';
 
   @override
-  String get travelMockHotelParsianLocation => '瓦利阿斯尔街，德黑兰';
+  String get travelMockHotelParsianLocation => '德黑兰瓦利阿斯尔街';
 
   @override
-  String get travelMockHotelVisteria => 'Visteria 酒店';
+  String get travelMockHotelVisteria => '维斯特利亚酒店';
 
   @override
-  String get travelMockHotelVisteriaLocation => '塔杰里什，德黑兰';
+  String get travelMockHotelVisteriaLocation => '德黑兰塔季里什';
 
   @override
   String get travelMockTehranAirport => '德黑兰 (THR)';
@@ -5943,7 +6165,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMockRouteTehranIstanbul => '德黑兰 → 伊斯坦布尔';
 
   @override
-  String get travelMockFlightTehranIstanbul => '德黑兰至伊斯坦布尔';
+  String get travelMockFlightTehranIstanbul => '德黑兰飞往伊斯坦布尔';
 
   @override
   String get travelMockAirlineOne => 'eCardo Air';
@@ -5958,43 +6180,43 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelRecommended => '推荐';
 
   @override
-  String get travelBestValue => '最划算';
+  String get travelBestValue => '高性价比';
 
   @override
   String get travelLuxury => '豪华';
 
   @override
-  String get travelDirect => '直达';
+  String get travelDirect => '直飞';
 
   @override
-  String get travelLowestPrice => '最低价';
+  String get travelLowestPrice => '最低价格';
 
   @override
-  String get travelFeatureBreakfast => '早餐';
+  String get travelFeatureBreakfast => '含早餐';
 
   @override
   String get travelFeaturePool => '泳池';
 
   @override
-  String get travelFeatureWifi => 'Wi‑Fi';
+  String get travelFeatureWifi => 'Wi-Fi';
 
   @override
-  String get travelFeatureParking => '停车';
+  String get travelFeatureParking => '停车场';
 
   @override
   String get travelFeatureAirportTransfer => '机场接送';
 
   @override
-  String get travelFeatureCabinBag => '随身行李';
+  String get travelFeatureCabinBag => '手提行李';
 
   @override
   String get travelFeatureRefundable => '可退款';
 
   @override
-  String get travelActivityFlightPurchase => '购买航班';
+  String get travelActivityFlightPurchase => '机票购买';
 
   @override
-  String get travelActivityEsimPurchase => '购买 eSIM';
+  String get travelActivityEsimPurchase => 'eSIM 购买';
 
   @override
   String get travelActivityWalletTopUp => '钱包充值';
@@ -6009,40 +6231,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelHotelBooking => '酒店预订';
 
   @override
-  String get travelReviewStep => '审核';
+  String get travelReviewStep => '确认';
 
   @override
-  String get travelConfirmationStep => '确认';
+  String get travelConfirmationStep => '确认完成';
 
   @override
-  String get travelReviewConfirmation => '我已查看并确认这些详情';
+  String get travelReviewConfirmation => '我已核对并确认以上信息';
 
   @override
-  String get travelReviewConfirmationDescription => '创建预订前，请确认旅客、产品、总额和钱包。';
+  String get travelReviewConfirmationDescription => '创建预订前，请确认旅客、产品、总价和钱包信息。';
 
   @override
-  String get travelReservationHoldActive => '请在预订过期前完成付款';
+  String get travelReservationHoldActive => '请在此预订保留失效前完成支付';
 
   @override
-  String get travelReservationExpired => '预订已过期。请重新开始创建新的保留。';
+  String get travelReservationExpired => '预订保留已过期。请重新开始以创建新的保留。';
 
   @override
-  String get travelNeedsAttention => '需要处理';
+  String get travelNeedsAttention => '需要关注';
 
   @override
-  String get travelUpcomingAndActive => '即将开始和有效';
+  String get travelUpcomingAndActive => '即将到来且生效中';
 
   @override
-  String get travelCancellationsAndRefunds => '取消和退款';
+  String get travelCancellationsAndRefunds => '取消与退款';
 
   @override
-  String get travelPaymentPending => '付款待处理';
+  String get travelPaymentPending => '待支付';
 
   @override
-  String get travelPaymentProcessing => '付款处理中';
+  String get travelPaymentProcessing => '支付处理中';
 
   @override
-  String get travelVoucherIssued => '凭证已签发';
+  String get travelVoucherIssued => '凭证已出';
 
   @override
   String get travelCancellationRequested => '已请求取消';
@@ -6066,49 +6288,49 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelBookingExpired => '预订已过期';
 
   @override
-  String get travelCompletePayment => '完成付款';
+  String get travelCompletePayment => '完成支付';
 
   @override
-  String get travelPaymentIsProcessing => '付款正在处理';
+  String get travelPaymentIsProcessing => '支付处理中';
 
   @override
-  String get travelFlightRequestSubmitted => '航班请求已提交';
+  String get travelFlightRequestSubmitted => '机票申请已提交';
 
   @override
-  String get travelEsimRequestSubmitted => 'eSIM 请求已提交';
+  String get travelEsimRequestSubmitted => 'eSIM 申请已提交';
 
   @override
   String get travelBookingStatusUnavailable => '预订状态不可用';
 
   @override
-  String get travelBookingCancelledDescription => '此预订已取消。没有可用的有效凭证。';
+  String get travelBookingCancelledDescription => '此预订已取消，没有可用的有效凭证。';
 
   @override
   String get travelBookingExpiredDescription => '预订保留在确认前已过期。';
 
   @override
-  String get travelCancellationRequestedDescription => '您的取消请求正在等待供应商权威审核。';
+  String get travelCancellationRequestedDescription => '您的取消申请正在等待权威供应商审核。';
 
   @override
-  String get travelRefundInReviewDescription => '您的退款请求正在审核中。最终金额和时间尚未确认。';
+  String get travelRefundInReviewDescription => '您的退款申请正在审核中。最终金额和时间尚未确认。';
 
   @override
   String get travelPaymentPendingDescription => '此预订的付款尚未确认。';
 
   @override
-  String get travelPaymentProcessingDescription => '钱包结果仍在验证中。请勿再次提交付款。';
+  String get travelPaymentProcessingDescription => '钱包支付结果仍在核实中。请勿再次提交支付。';
 
   @override
-  String get travelSupplierPendingDescription => '已收到付款，但供应商确认或旅行文件尚未准备好。';
+  String get travelSupplierPendingDescription => '付款已收到，但供应商确认或旅行单据尚未就绪。';
 
   @override
-  String get travelUnknownStatusDescription => '无法识别最新预订状态。请先刷新“我的预订”。';
+  String get travelUnknownStatusDescription => '无法识别最新的预订状态。请刷新“我的预订”后再进行其他操作。';
 
   @override
-  String get travelConfirmedArtifactPendingDescription => '预订已确认，但凭证或机票尚不可用。';
+  String get travelConfirmedArtifactPendingDescription => '预订已确认，但凭证或机票尚未可提供。';
 
   @override
-  String get travelStatusReference => '状态参考';
+  String get travelStatusReference => '状态说明';
 
   @override
   String get travelRequestRefund => '申请退款';
@@ -6120,7 +6342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelPurchaseDate => '购买日期';
 
   @override
-  String get travelSupplierReference => '供应商参考';
+  String get travelSupplierReference => '供应商参考号';
 
   @override
   String get travelBookingNumber => '预订编号';
@@ -6132,16 +6354,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelRoom => '房间';
 
   @override
-  String get travelRooms => '房间数';
+  String get travelRooms => '房间';
 
   @override
-  String get travelBoard => '膳食';
+  String get travelBoard => '餐食';
 
   @override
   String get travelCancellationPolicy => '取消政策';
 
   @override
-  String get travelBeneficiary => '旅客或受益人';
+  String get travelBeneficiary => '乘客或收款人';
 
   @override
   String get travelDeparture => '出发';
@@ -6162,34 +6384,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelBaggage => '行李';
 
   @override
-  String get travelRefundReviewNotice => '这会发送审核请求。取消和退款不会立即完成，且可能产生供应商罚金。';
+  String get travelRefundReviewNotice => '此操作将提交审核申请。取消和退款不会立即生效，且可能产生供应商罚金。';
 
   @override
   String get travelReason => '原因';
 
   @override
-  String get travelReasonPlansChanged => '旅行计划变更';
+  String get travelReasonPlansChanged => '行程有变';
 
   @override
-  String get travelReasonBookingMistake => '预订错误';
+  String get travelReasonBookingMistake => '预订有误';
 
   @override
   String get travelReasonPersonal => '个人原因';
 
   @override
-  String get travelAdditionalNoteOptional => '附加备注（可选）';
+  String get travelAdditionalNoteOptional => '补充说明（可选）';
 
   @override
   String get travelKeepBooking => '保留预订';
 
   @override
-  String get travelSubmitRequest => '提交请求';
+  String get travelSubmitRequest => '提交申请';
 
   @override
-  String get travelCancellationUnavailable => '当前状态下无法取消此预订。';
+  String get travelCancellationUnavailable => '此预订当前状态无法取消。';
 
   @override
-  String get travelRefundRequestAwaitingReview => '您的取消和退款请求正在等待审核。';
+  String get travelRefundRequestAwaitingReview => '您的取消和退款申请正在等待审核。';
 
   @override
   String get travelPriceLowToHigh => '价格：从低到高';
@@ -6207,7 +6429,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelRating => '评分';
 
   @override
-  String get travelSortAndFilter => '排序和筛选';
+  String get travelSortAndFilter => '排序与筛选';
 
   @override
   String get travelShortestDuration => '最短时长';
@@ -6220,70 +6442,70 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelEsimDeviceReadinessDescription =>
-      '购买前，请确认您的设备支持 eSIM，并且未锁定其他移动套餐。';
+      '购买前，请确认您的设备支持 eSIM，且已解锁可使用其他运营商套餐。';
 
   @override
   String get travelEsimCompatibilityNotice =>
-      '购买套餐不保证设备兼容。只有后端标记 eSIM 就绪后才会显示安装详情。';
+      '购买套餐并不保证设备兼容。安装信息仅在后端将 eSIM 标记为就绪后才会显示。';
 
   @override
   String get travelEsimValidity => '有效期';
 
   @override
-  String get travelEsimActivationReady => '您的 eSIM 安装详情已准备好。';
+  String get travelEsimActivationReady => '您的 eSIM 安装信息已就绪。';
 
   @override
   String get travelPaymentReceived => '已收到付款';
 
   @override
   String get travelPaymentReceivedDescription =>
-      '已收到付款。eCardo Travel 正在完成供应商确认，然后签发最终文件。';
+      '付款已收到。eCardo Travel 正在完成供应商确认，随后出具最终单据。';
 
   @override
-  String get travelSearchFailedDescription => '搜索未完成。如有之前结果，将继续显示；请编辑搜索或重试。';
+  String get travelSearchFailedDescription => '搜索未完成。如可用，仍会显示之前的结果；您可以修改搜索后重试。';
 
   @override
-  String get travelReservationFailedDescription => '无法创建预订。此应用会话未从您的钱包扣款。';
+  String get travelReservationFailedDescription => '无法创建预订。本次应用会话未从您的钱包扣款。';
 
   @override
-  String get travelRefundFailedDescription => '取消或退款请求未提交。请查看预订并重试。';
+  String get travelRefundFailedDescription => '取消或退款申请未提交。请核对预订信息后重试。';
 
   @override
-  String get travelNoPaymentAttemptedAfterExpiry => '此过期保留在本应用会话中未尝试付款，也未扣款。';
+  String get travelNoPaymentAttemptedAfterExpiry => '此保留过期后，本次应用会话未尝试或发生任何扣款。';
 
   @override
-  String get travelLastUpdated => '最后更新';
+  String get travelLastUpdated => '最近更新';
 
   @override
   String get travelJourneySearch => '搜索';
 
   @override
-  String get travelJourneyCompare => '比较';
+  String get travelJourneyCompare => '对比';
 
   @override
-  String get travelJourneyReview => '核对';
+  String get travelJourneyReview => '确认';
 
   @override
   String get travelJourneyPay => '支付';
 
   @override
-  String get travelHotelSearchGuidance => '选择目的地、日期和入住人数。结果与可订状态始终来自旅行后端。';
+  String get travelHotelSearchGuidance => '选择目的地、日期和入住人数。结果与可订情况始终来自旅行后端。';
 
   @override
-  String get travelHotelResultsGuidance => '打开选项前，请比较后端返回的价格、评分、设施、位置、房型和政策。';
+  String get travelHotelResultsGuidance => '打开选项前，请对比后端提供的价格、评分、设施、位置、房间和政策。';
 
   @override
-  String get travelHotelDetailsGuidance => '继续前，请核对住宿、房型、入住人数、价格和取消政策。';
+  String get travelHotelDetailsGuidance => '继续之前，请核对酒店、房型信息、入住人数、价格和取消规则。';
 
   @override
-  String get travelFlightSearchGuidance => '选择航线、日期和乘客人数。航班余位和票价始终来自旅行后端。';
+  String get travelFlightSearchGuidance => '选择航线、日期和乘客人数。航班可用性与票价始终来自旅行后端。';
 
   @override
   String get travelFlightResultsGuidance =>
-      '选择前，请比较后端返回的时间、航空公司、舱位、行李、票价和退改信息。';
+      '选择前，请对比后端提供的时间、航空公司、舱位、行李、票价和退款条件。';
 
   @override
-  String get travelFlightDetailsGuidance => '继续前，请核对航班、票价组成、行李、乘客人数和取消政策。';
+  String get travelFlightDetailsGuidance => '继续之前，请核对航班、票价构成、行李、乘客人数和取消规则。';
 
   @override
   String travelSelectedForComparison(int count) {
@@ -6291,19 +6513,19 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get travelCompare => '比较';
+  String get travelCompare => '对比';
 
   @override
-  String get travelCompareLimit => '每次最多可比较三个选项。';
+  String get travelCompareLimit => '每次最多可对比三个选项。';
 
   @override
-  String get travelCompareHotels => '比较酒店';
+  String get travelCompareHotels => '对比酒店';
 
   @override
-  String get travelCompareFlights => '比较航班';
+  String get travelCompareFlights => '对比航班';
 
   @override
-  String get travelComparisonUsesBackendFacts => '仅显示后端返回的事实，不推测缺失信息。';
+  String get travelComparisonUsesBackendFacts => '仅显示后端返回的信息。缺失的信息不作推断。';
 
   @override
   String get travelAddress => '地址';
@@ -6312,7 +6534,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelAircraft => '机型';
 
   @override
-  String get travelDescription => '说明';
+  String get travelDescription => '描述';
 
   @override
   String get travelDuration => '时长';
@@ -6322,233 +6544,743 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelPostPurchaseGuidance =>
-      '请保留订单编号，刷新“我的预订”查看状态变化，并仅使用后端已签发的旅行凭证。';
+      '请保存好参考号，通过“我的预订”刷新状态变化，出行时仅使用后端已出具的正式单据。';
+
   @override
-  String get remittanceTitle => 'International Remittance';
+  String get remittanceTitle => '国际汇款';
+
   @override
-  String get remittanceHistoryTitle => 'Remittance History';
+  String get remittanceHistoryTitle => '汇款历史记录';
+
   @override
-  String get remittanceDetailsTitle => 'Remittance Details';
+  String get remittanceDetailsTitle => '汇款详情';
+
   @override
-  String get remittanceSelectPayoutMethod => 'Select Payout Method';
+  String get remittanceSelectPayoutMethod => '选择收款方式';
+
   @override
-  String get remittanceNoMethods => 'No remittance methods available.\nPlease try again later.';
+  String get remittanceNoMethods => '暂无可用汇款方式。\n请稍后重试。';
+
   @override
-  String get remittanceSendAmount => 'Send Amount';
+  String get remittanceSendAmount => '汇款金额';
+
   @override
   String get remittanceSendCurrency => '发送货币';
+
   @override
   String get remittanceSelectSendCurrency => '选择发送货币';
+
   @override
   String get remittanceLoadingCurrencies => '正在加载货币…';
+
   @override
   String get remittanceNoCurrencies => '没有可用货币';
+
   @override
-  String get remittanceEnterAmount => 'Enter amount';
+  String get remittanceEnterAmount => '输入金额';
+
   @override
-  String get remittanceUnknownMethod => 'Unknown';
+  String get remittanceUnknownMethod => '未知';
+
   @override
-  String remittanceRateLocked(int seconds) => 'Rate locked: ${seconds}s';
+  String remittanceRateLocked(int seconds) {
+    return '汇率已锁定：$seconds 秒';
+  }
+
   @override
-  String get remittanceExchangeRate => 'Exchange Rate';
+  String get remittanceExchangeRate => '汇率';
+
   @override
-  String get remittanceReceiveAmount => 'Receive Amount';
+  String get remittanceReceiveAmount => '到账金额';
+
   @override
-  String get remittanceSystemFee => 'System Fee';
+  String get remittanceSystemFee => '系统手续费';
+
   @override
-  String get remittanceTotalPayable => 'Total Payable';
+  String get remittanceTotalPayable => '应付总额';
+
   @override
-  String get remittanceGetQuote => 'Get Quote';
+  String get remittanceGetQuote => '获取报价';
+
   @override
-  String get remittanceStepAmount => 'Amount';
+  String get remittanceStepAmount => '金额';
+
   @override
-  String get remittanceStepSender => 'Sender';
+  String get remittanceStepSender => '汇款人';
+
   @override
-  String get remittanceStepReceiver => 'Receiver';
+  String get remittanceStepReceiver => '收款人';
+
   @override
-  String get remittanceStepReview => 'Review';
+  String get remittanceStepReview => '确认';
+
   @override
-  String get remittanceStepDone => 'Done';
+  String get remittanceStepDone => '完成';
+
   @override
-  String get remittanceSenderInfo => 'Sender Information';
+  String get remittanceSenderInfo => '汇款人信息';
+
   @override
-  String get remittanceSelectCountry => 'Select country';
+  String get remittanceSelectCountry => '选择国家/地区';
+
   @override
-  String get remittanceSenderTypeIndividual => 'Individual';
+  String get remittanceSenderTypeIndividual => '个人';
+
   @override
-  String get remittanceSenderTypeBusiness => 'Business';
+  String get remittanceSenderTypeBusiness => '企业';
+
   @override
-  String get remittanceSenderName => 'Full Name';
+  String get remittanceSenderName => '姓名';
+
   @override
-  String get remittanceSenderPhone => 'Phone Number';
+  String get remittanceSenderPhone => '电话号码';
+
   @override
-  String get remittanceSenderIdNumber => 'ID Number';
+  String get remittanceSenderIdNumber => '证件号码';
+
   @override
-  String get remittanceReceiverInfo => 'Receiver Information';
+  String get remittanceReceiverInfo => '收款人信息';
+
   @override
-  String get remittancePayoutDetails => 'Payout Details';
+  String get remittancePayoutDetails => '收款详情';
+
   @override
-  String get remittancePayoutDetailsHint => 'Fill in the fields relevant to the selected payout method.';
+  String get remittancePayoutDetailsHint => '请填写与所选收款方式相关的字段。';
+
   @override
-  String get remittanceReceiverName => 'Full Name';
+  String get remittanceReceiverName => '姓名';
+
   @override
-  String get remittanceReceiverPhone => 'Phone Number';
+  String get remittanceReceiverPhone => '电话号码';
+
   @override
-  String get remittanceBankName => 'Bank Name';
+  String get remittanceBankName => '银行名称';
+
   @override
-  String get remittanceAccountNumber => 'Account Number';
+  String get remittanceAccountNumber => '账号';
+
   @override
   String get remittanceIban => 'IBAN';
+
   @override
-  String get remittanceAlipayAccount => 'Alipay Account';
+  String get remittanceAlipayAccount => '支付宝账户';
+
   @override
-  String get remittanceWechatAccount => 'WeChat Account';
+  String get remittanceWechatAccount => '微信账户';
+
   @override
-  String get remittanceReviewConfirm => 'Review & Confirm';
+  String get remittanceReviewConfirm => '核对并确认';
+
   @override
-  String get remittanceReviewHint => 'Please review all details before submitting your remittance request.';
+  String get remittanceReviewHint => '提交汇款申请前，请核对所有信息。';
+
   @override
-  String get remittanceTermsNotice => 'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.';
+  String get remittanceTermsNotice =>
+      '提交即表示您同意我们的汇款条款。汇率将锁定 15 分钟。提交后您需要上传身份认证（KYC）证件和付款凭证。';
+
   @override
-  String get remittanceReviewSender => 'Sender';
+  String get remittanceReviewSender => '汇款人';
+
   @override
-  String get remittanceReviewReceiver => 'Receiver';
+  String get remittanceReviewReceiver => '收款人';
+
   @override
-  String get remittanceReviewPayment => 'Payment';
+  String get remittanceReviewPayment => '支付';
+
   @override
-  String get remittanceRequestSubmitted => 'Request Submitted!';
+  String get remittanceRequestSubmitted => '申请已提交！';
+
   @override
-  String get remittanceRequestCreated => 'Your remittance request has been created.';
+  String get remittanceRequestCreated => '您的汇款申请已创建。';
+
   @override
-  String get remittanceUploadDocuments => 'Upload Documents';
+  String get remittanceUploadDocuments => '上传文件';
+
   @override
-  String get remittanceUploadHint => 'Upload your KYC documents and payment receipt to proceed.';
+  String get remittanceUploadHint => '请上传您的身份认证（KYC）证件和付款凭证以继续。';
+
   @override
-  String get remittanceAddDocument => 'Add Document';
+  String get remittanceAddDocument => '添加文件';
+
   @override
-  String get remittanceDocumentType => 'Document Type';
+  String get remittanceDocumentType => '文件类型';
+
   @override
-  String get remittanceDocTypeKyc => 'KYC Document';
+  String get remittanceDocTypeKyc => '身份认证（KYC）文件';
+
   @override
-  String get remittanceDocTypePaymentReceipt => 'Payment Receipt';
+  String get remittanceDocTypePaymentReceipt => '付款凭证';
+
   @override
-  String get remittanceDocTypePayoutReceipt => 'Payout Receipt';
+  String get remittanceDocTypePayoutReceipt => '放款凭证';
+
   @override
-  String get remittanceDocTypeOther => 'Other';
+  String get remittanceDocTypeOther => '其他';
+
   @override
-  String get remittanceCancel => 'Cancel';
+  String get remittanceCancel => '取消';
+
   @override
-  String get remittanceAdd => 'Add';
+  String get remittanceAdd => '添加';
+
   @override
   String get remittanceTakePhoto => '拍照';
+
   @override
   String get remittanceChooseFromGallery => '从相册选择';
+
   @override
   String get remittanceChooseFile => '选择文件';
+
   @override
   String get remittanceErrFileNotFound => '所选文件不存在';
+
   @override
   String get remittanceErrPickFile => '无法选取文件';
+
   @override
   String get remittanceErrNoValidFiles => '没有可上传的有效文件。请重新选择您的文档。';
+
   @override
-  String get remittanceContinue => 'Continue';
+  String get remittanceContinue => '继续';
+
   @override
-  String get remittanceSubmitRequest => 'Submit Request';
+  String get remittanceSubmitRequest => '提交申请';
+
   @override
-  String get remittanceUploading => 'Uploading...';
+  String get remittanceUploading => '上传中...';
+
   @override
-  String get remittanceRefresh => 'Refresh';
+  String get remittanceRefresh => '刷新';
+
   @override
-  String get remittanceNoHistory => 'No remittances yet';
+  String get remittanceNoHistory => '暂无汇款记录';
+
   @override
-  String get remittanceNoHistoryHint => 'Your remittance history will appear here.';
+  String get remittanceNoHistoryHint => '您的汇款历史记录将显示在这里。';
+
   @override
-  String get remittanceSend => 'Send';
+  String get remittanceSend => '汇出';
+
   @override
-  String get remittanceReceive => 'Receive';
+  String get remittanceReceive => '收到';
+
   @override
-  String get remittanceDate => 'Date';
+  String get remittanceDate => '日期';
+
   @override
-  String get remittanceNotFound => 'Remittance not found';
+  String get remittanceNotFound => '未找到汇款';
+
   @override
-  String get remittanceStatusFinalized => 'This request is finalized.';
+  String get remittanceStatusFinalized => '此申请已办结。';
+
   @override
-  String get remittanceStatusProcessing => 'Your request is being processed.';
+  String get remittanceStatusProcessing => '您的申请正在处理中。';
+
   @override
-  String get remittanceStatusActionNeeded => 'Please complete the required steps.';
+  String get remittanceStatusActionNeeded => '请完成所需步骤。';
+
   @override
-  String get remittanceDetailsSectionSender => 'Sender Information';
+  String get remittanceDetailsSectionSender => '汇款人信息';
+
   @override
-  String get remittanceDetailsSectionReceiver => 'Receiver Information';
+  String get remittanceDetailsSectionReceiver => '收款人信息';
+
   @override
-  String get remittanceDetailsSectionPayment => 'Payment Details';
+  String get remittanceDetailsSectionPayment => '支付详情';
+
   @override
-  String get remittanceDetailsSectionTimeline => 'Status Timeline';
+  String get remittanceDetailsSectionTimeline => '状态时间线';
+
   @override
-  String get remittanceErrLoadMethods => 'Failed to load methods';
+  String get remittanceErrLoadMethods => '加载方式失败';
+
   @override
-  String get remittanceErrSelectPayout => 'Please select a payout method';
+  String get remittanceErrSelectPayout => '请选择收款方式';
+
   @override
-  String get remittanceErrInvalidAmount => 'Please enter a valid amount';
+  String get remittanceErrInvalidAmount => '请输入有效金额';
+
   @override
-  String get remittanceErrSelectSendCurrency => 'Please select a send currency';
+  String get remittanceErrSelectSendCurrency => '请选择汇出币种';
+
   @override
-  String get remittanceErrQuoteFailed => 'Quote failed';
+  String get remittanceErrQuoteFailed => '获取报价失败';
+
   @override
-  String get remittanceErrRequestQuoteFirst => 'Please request a quote first';
+  String get remittanceErrRequestQuoteFirst => '请先获取报价';
+
   @override
-  String get remittanceErrQuoteExpired => 'Quote expired. Please request a new one.';
+  String get remittanceErrQuoteExpired => '报价已过期，请重新获取。';
+
   @override
-  String get remittanceErrSenderInfo => 'Please complete sender information';
+  String get remittanceErrSenderInfo => '请完善汇款人信息';
+
   @override
-  String get remittanceErrReceiverInfo => 'Please complete receiver information';
+  String get remittanceErrReceiverInfo => '请完善收款人信息';
+
   @override
-  String get remittanceErrSubmissionFailed => 'Submission failed';
+  String get remittanceErrSubmissionFailed => '提交失败';
+
   @override
-  String get remittanceErrNoRemittance => 'No remittance to upload to';
+  String get remittanceErrNoRemittance => '没有可上传文件的汇款';
+
   @override
-  String get remittanceErrAddDocument => 'Please add at least one document';
+  String get remittanceErrAddDocument => '请至少添加一份文件';
+
   @override
-  String get remittanceErrUploadFailed => 'Upload failed';
+  String get remittanceErrUploadFailed => '上传失败';
+
   @override
-  String get remittanceErrLoadDetails => 'Failed to load details';
+  String get remittanceErrLoadDetails => '加载详情失败';
+
   @override
-  String get remittanceErrCompleteSender => 'Please complete all sender fields';
+  String get remittanceErrCompleteSender => '请填写所有汇款人字段';
+
   @override
-  String get remittanceErrCompleteReceiver => 'Please complete all receiver fields';
+  String get remittanceErrCompleteReceiver => '请填写所有收款人字段';
+
   @override
-  String get remittanceSuccessUploaded => 'Documents uploaded successfully';
+  String get remittanceSuccessUploaded => '文件上传成功';
+
   @override
-  String get remittanceError => 'Error';
+  String get remittanceError => '错误';
+
   @override
-  String get remittanceStatusDraft => 'Draft';
+  String get remittanceStatusDraft => '草稿';
+
   @override
-  String get remittanceStatusWaitingInformation => 'Waiting Information';
+  String get remittanceStatusWaitingInformation => '待补充信息';
+
   @override
-  String get remittanceStatusWaitingDocuments => 'Waiting Documents';
+  String get remittanceStatusWaitingDocuments => '待上传文件';
+
   @override
-  String get remittanceStatusWaitingPayment => 'Waiting Payment';
+  String get remittanceStatusWaitingPayment => '待付款';
+
   @override
-  String get remittanceStatusPaymentReviewing => 'Payment Reviewing';
+  String get remittanceStatusPaymentReviewing => '付款审核中';
+
   @override
-  String get remittanceStatusInProcess => 'In Process';
+  String get remittanceStatusInProcess => '处理中';
+
   @override
-  String get remittanceStatusDestinationProcessing => 'Destination Processing';
+  String get remittanceStatusDestinationProcessing => '目的地处理中';
+
   @override
-  String get remittanceStatusDestinationPaid => 'Destination Paid';
+  String get remittanceStatusDestinationPaid => '目的地已付款';
+
   @override
-  String get remittanceStatusCompleted => 'Completed';
+  String get remittanceStatusCompleted => '已完成';
+
   @override
-  String get remittanceStatusRejected => 'Rejected';
+  String get remittanceStatusRejected => '已拒绝';
+
   @override
-  String get remittanceStatusExpired => 'Expired';
+  String get remittanceStatusExpired => '已过期';
+
   @override
-  String get remittanceStatusCancelled => 'Cancelled';
+  String get remittanceStatusCancelled => '已取消';
+
   @override
-  String get remittanceStatusRefundRequested => 'Refund Requested';
+  String get remittanceStatusRefundRequested => '已申请退款';
+
   @override
-  String get remittanceStatusRefundCompleted => 'Refund Completed';
+  String get remittanceStatusRefundCompleted => '退款完成';
+
   @override
-  String get remittanceStatusUnknown => 'Unknown';
+  String get remittanceStatusUnknown => '未知';
+
+  @override
+  String get exchangeCalculating => '计算中…';
+
+  @override
+  String get biometricNotAvailable => '此设备不支持生物识别认证';
+
+  @override
+  String get biometricSetupFailed => '无法启动生物识别认证';
+
+  @override
+  String biometricFailedAttempts(int attempts) {
+    return '生物识别认证失败，还可尝试 $attempts 次';
+  }
+
+  @override
+  String get biometricMaxAttempts => '生物识别尝试次数已达上限，请使用密码登录';
+
+  @override
+  String get biometricReason => '进行身份验证以登录 eCardo';
+
+  @override
+  String get biometricGenericError => '生物识别认证失败';
+
+  @override
+  String get dynamicPasswordUserNotFound => '错误：未找到用户信息';
+
+  @override
+  String get dynamicPasswordGenerateError => '生成动态密码失败';
+
+  @override
+  String get licenseRequiredTitle => '需要许可证';
+
+  @override
+  String get commonClose => '关闭';
+
+  @override
+  String get contactSupport => '联系客服';
+
+  @override
+  String get updateCancelDownloadTitle => '取消下载？';
+
+  @override
+  String get updateContinueDownload => '继续下载';
+
+  @override
+  String updateAvailableTitle(String version) {
+    return '有新版本可用（$version）';
+  }
+
+  @override
+  String get updateLater => '稍后';
+
+  @override
+  String get kycDocumentsRequired => '需要上传证件文件。';
+
+  @override
+  String get kycUploadFailed => '上传失败，请重试。';
+
+  @override
+  String get p2pSelectFiatFirst => '请先选择一种法定货币';
+
+  @override
+  String get p2pLoadPaymentMethodsFailed => '加载支付方式失败';
+
+  @override
+  String get p2pLoadAdsFailed => '加载市场广告失败';
+
+  @override
+  String get pickDocumentFailed => '选择文件失败，请重试。';
+
+  @override
+  String get hotel_active_filters => '当前筛选条件';
+
+  @override
+  String get hotel_all_cities_with_hotels => '所有有酒店的城市';
+
+  @override
+  String get hotel_all_filters => '全部筛选';
+
+  @override
+  String get hotel_all_ratings => '全部评分';
+
+  @override
+  String get hotel_apply_filters => '应用筛选';
+
+  @override
+  String get hotel_available_rooms => '可订客房';
+
+  @override
+  String get hotel_by_continuing_you_accept_the => '继续即表示您接受 ';
+
+  @override
+  String get hotel_check_in => '入住';
+
+  @override
+  String get hotel_check_in_and_check_out => '入住和退房';
+
+  @override
+  String get hotel_check_out => '退房';
+
+  @override
+  String get hotel_checking_availability => '正在查询空房情况';
+
+  @override
+  String get hotel_clear_all => '全部清除';
+
+  @override
+  String get hotel_close => '关闭';
+
+  @override
+  String get hotel_complete_the_reservator_and_room_caretaker_i =>
+      '请完整填写预订人和各客房负责人的信息。';
+
+  @override
+  String get hotel_confirm_dates => '确认日期';
+
+  @override
+  String get hotel_continue_booking => '继续预订';
+
+  @override
+  String get hotel_destination_city_or_hotel => '目的地城市或酒店';
+
+  @override
+  String get hotel_details => '详情';
+
+  @override
+  String get hotel_discounted => '特惠';
+
+  @override
+  String get hotel_discounted_hotels_only => '仅显示特惠酒店';
+
+  @override
+  String get hotel_edit_dates => '修改日期';
+
+  @override
+  String get hotel_features => '设施';
+
+  @override
+  String get hotel_for_example_non_smoking_room_or_estimated_ar =>
+      '例如：无烟房或预计到达时间';
+
+  @override
+  String get hotel_gregorian => '公历';
+
+  @override
+  String get hotel_guest_rating => '住客评分';
+
+  @override
+  String get hotel_guest_ratings_and_reviews => '住客评分与点评';
+
+  @override
+  String get hotel_hotel_features => '酒店设施';
+
+  @override
+  String get hotel_hotel_filters => '酒店筛选';
+
+  @override
+  String get hotel_hotel_stars => '酒店星级';
+
+  @override
+  String get hotel_hotels_with_available_rooms_only => '仅显示有可订客房的酒店';
+
+  @override
+  String get hotel_nights => '晚';
+
+  @override
+  String get hotel_no_matching_city_or_hotel_was_found => '未找到匹配的城市或酒店。';
+
+  @override
+  String get hotel_no_recommended_hotels_are_available_for_this => '该城市暂无推荐酒店。';
+
+  @override
+  String get hotel_only_one_responsible_guest_is_needed_for_eac =>
+      '每间客房只需填写一位负责住客，无需录入每位乘客的信息。';
+
+  @override
+  String get hotel_overview => '概览';
+
+  @override
+  String get hotel_passenger_information => '乘客信息';
+
+  @override
+  String get hotel_persian => '波斯历';
+
+  @override
+  String get hotel_popular_cities => '热门城市';
+
+  @override
+  String get hotel_price_range => '价格范围';
+
+  @override
+  String get hotel_property_type => '住宿类型';
+
+  @override
+  String get hotel_recommended_hotels => '推荐酒店';
+
+  @override
+  String get hotel_refine_your_results => '进一步筛选结果';
+
+  @override
+  String get hotel_reservation_details_and_every_order_update_w =>
+      '预订详情及订单的所有更新都将发送给预订人。';
+
+  @override
+  String get hotel_reservator_information => '预订人信息';
+
+  @override
+  String get hotel_reviews => '点评';
+
+  @override
+  String get hotel_room => '客房';
+
+  @override
+  String get hotel_room_caretakers => '客房负责人';
+
+  @override
+  String get hotel_room_details => '客房详情';
+
+  @override
+  String get hotel_room_information => '客房信息';
+
+  @override
+  String get hotel_rooms => '客房';
+
+  @override
+  String get hotel_rules => '规定';
+
+  @override
+  String get hotel_search_by_city_or_hotel_name => '按城市或酒店名称搜索';
+
+  @override
+  String get hotel_search_hotel_name => '搜索酒店名称';
+
+  @override
+  String get hotel_search_results => '搜索结果';
+
+  @override
+  String get hotel_select_a_destination_city_or_hotel => '请选择目的地城市或酒店。';
+
+  @override
+  String get hotel_select_stay_dates => '选择入住日期';
+
+  @override
+  String get hotel_show_less => '收起';
+
+  @override
+  String get hotel_show_more => '显示更多';
+
+  @override
+  String get hotel_show_more_2 => '显示更多';
+
+  @override
+  String get hotel_similar_hotels => '相似酒店';
+
+  @override
+  String get hotel_special_offers => '特别优惠';
+
+  @override
+  String get hotel_special_requests_optional => '特殊要求（可选）';
+
+  @override
+  String get hotel_terms_and_privacy_policy => '使用条款和隐私政策';
+
+  @override
+  String get hotel_terms_and_privacy_policy_2 => '使用条款和隐私政策';
+
+  @override
+  String get hotel_the_terms_for_this_service_are_admin_control =>
+      '本服务条款由管理员配置。付款前请查阅酒店、取消、退款及隐私相关规定。';
+
+  @override
+  String hotelHotelsCount(String count) {
+    return '$count 家酒店';
+  }
+
+  @override
+  String hotelRoomsForNights(int rooms, int nights) {
+    return '$rooms 间客房，共 $nights 晚';
+  }
+
+  @override
+  String hotelPriceNightsOneRoom(int nights) {
+    return '一间客房 $nights 晚的价格';
+  }
+
+  @override
+  String hotelRoomsTimesNights(int quantity, int nights) {
+    return '$quantity 间客房 × $nights 晚';
+  }
+
+  @override
+  String hotelOneRoomNights(int nights) {
+    return '一间客房，$nights 晚';
+  }
+
+  @override
+  String hotelNightsCount(int count) {
+    return '$count 晚';
+  }
+
+  @override
+  String get dynamicPasswordServerError => '与服务器通信出错。';
+
+  @override
+  String get dynamicPasswordConnectionError => '网络连接错误。';
+
+  @override
+  String get dynamicPasswordHeading => '动态密码';
+
+  @override
+  String get dynamicPasswordSubtitle => '用于从钱包付款的 6 位数字密码。';
+
+  @override
+  String get dynamicPasswordValidity => '有效期 60 秒，仅可使用一次。';
+
+  @override
+  String get dynamicPasswordCopied => '动态密码已复制。';
+
+  @override
+  String get dynamicPasswordCopy => '复制动态密码';
+
+  @override
+  String get dynamicPasswordRegenerate => '生成新的动态密码';
+
+  @override
+  String get dynamicPasswordGenerate => '生成动态密码';
+
+  @override
+  String get dynamicPasswordUsageHint => '请在支付页面输入此动态密码。有效期为 60 秒，仅可使用一次。';
+
+  @override
+  String get vcUnableLoadProducts => '无法加载卡片产品。';
+
+  @override
+  String get vcOrderNotCompleted => '卡订单未能完成。';
+
+  @override
+  String get vcProductUnavailable => '卡片产品不可用。';
+
+  @override
+  String get vcEnterValidAmountIrr => '请输入有效的伊朗里亚尔金额。';
+
+  @override
+  String vcMinInitialLoad(num amount) {
+    return '最低初始充值金额为 $amount IRR。';
+  }
+
+  @override
+  String vcMaxInitialLoad(num amount) {
+    return '最高初始充值金额为 $amount IRR。';
+  }
+
+  @override
+  String get vcSelectIrrWallet => '请选择 IRR 钱包。';
+
+  @override
+  String get vcSelectGateway => '请选择支付网关。';
+
+  @override
+  String get vcCompleteCardholder => '请完善持卡人信息。';
+
+  @override
+  String get vcStatusPaymentPending => '卡订单已创建，等待付款。';
+
+  @override
+  String get vcStatusProvisioning => '正在为您开卡。';
+
+  @override
+  String get vcStatusReady => '您的卡片已就绪。';
+
+  @override
+  String get vcStatusCreated => '卡订单已创建。';
+
+  @override
+  String vcMinTopup(num amount, String currency) {
+    return '最低充值金额为 $amount $currency。';
+  }
+
+  @override
+  String vcMaxTopup(num amount, String currency) {
+    return '最高充值金额为 $amount $currency。';
+  }
+
+  @override
+  String get vcTopupNotCompleted => '卡片充值未能完成。';
+
+  @override
+  String get vcTopupSubmitted => '卡片充值申请已提交。';
+
+  @override
+  String get hotel_admin_configured_special_offers_will_appear =>
+      '管理员设置的特殊优惠将显示在此处。';
 }

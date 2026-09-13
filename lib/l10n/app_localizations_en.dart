@@ -70,11 +70,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comment_welcome => '==== Welcome Screen ====';
 
   @override
-  String get welcomeTitle => 'Welcome to Qunzo';
+  String get welcomeTitle => 'Welcome to eCardo';
 
   @override
   String get welcomeDescription =>
-      'Qunzo Empowers you with Multi-Wallet Management, Instant Swaps, and Secure Transactions.';
+      'eCardo Empowers you with Multi-Wallet Management, Instant Swaps, and Secure Transactions.';
 
   @override
   String get welcomeSignIn => 'Sign In';
@@ -450,7 +450,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signUpStatusSubtitle =>
-      'A Quick 4-Step Process to Keep Your Qunzo Account Secure';
+      'A Quick 4-Step Process to Keep Your eCardo Account Secure';
 
   @override
   String get signUpStatusStep => 'Step';
@@ -1022,6 +1022,101 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exchangeWalletToWalletWalletsNotFound => 'Wallets Not Found';
 
   @override
+  String get exchangeWalletSectionFiat => 'Fiat currencies';
+
+  @override
+  String get exchangeWalletSectionCrypto => 'Crypto assets';
+
+  @override
+  String get exchangeAmountReceive => 'You will receive';
+
+  @override
+  String get exchangeAmountSend => 'You send';
+
+  @override
+  String get exchangeContinue => 'Continue';
+
+  @override
+  String get exchangeQuickPercent25 => '25%';
+
+  @override
+  String get exchangeQuickPercent50 => '50%';
+
+  @override
+  String get exchangeQuickPercent75 => '75%';
+
+  @override
+  String get exchangeQuickMax => 'Max';
+
+  @override
+  String get exchangeMinHint => 'Min';
+
+  @override
+  String get exchangeMaxHint => 'Max';
+
+  @override
+  String get exchangeReviewRateLockedAt => 'Rate locked at confirmation';
+
+  @override
+  String get exchangeReviewRateStaleBanner =>
+      'Rate has been updated. Please review and confirm again.';
+
+  @override
+  String get exchangeSuccessShareReceipt => 'Share Receipt';
+
+  @override
+  String get exchangeSuccessBackToWallet => 'Back to Wallet';
+
+  @override
+  String get exchangeRateDisconnectedBanner =>
+      'Rate service is temporarily unavailable.';
+
+  @override
+  String get exchangeRateStaleNotice => 'Showing last known rate';
+
+  @override
+  String get exchangeRateAutoCaption => 'Auto-updates every 60s';
+
+  @override
+  String get exchangeRecentPairs => 'Recent pairs';
+
+  @override
+  String get exchangeRateAlertTitle => 'Rate Alert';
+
+  @override
+  String get exchangeRateAlertHint => 'Notify me when rate reaches';
+
+  @override
+  String get exchangeRateAlertSet => 'Set Alert';
+
+  @override
+  String get exchangeRateAlertPlaceholder => 'Coming soon';
+
+  @override
+  String get exchangeRateServiceRefresh => 'Refresh';
+
+  @override
+  String get rate_service_unavailable => 'Rate service unavailable';
+
+  @override
+  String get rate_stale_last_known => 'Showing last known rate';
+
+  @override
+  String get rate_auto_update_caption => 'Auto-updates every 60s';
+
+  @override
+  String get exchangeRate24hChange => '24h';
+
+  @override
+  String get exchangeRateLastUpdate => 'Updated';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get calculating => 'Calculating…';
+
+  @override
   String get comment_exchange_history => '==== Exchange History ====';
 
   @override
@@ -1235,6 +1330,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drawerBillPayments => 'Bill Payments';
+
+  @override
+  String get drawerRemittance => 'Remittance';
 
   @override
   String get drawerVirtualCards => 'Virtual Cards';
@@ -2589,7 +2687,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get disable2FaSectionTitle => '2FA Authentication';
 
   @override
-  String get disable2FaSectionDescription => 'noInternetConnectionRetryButton';
+  String get disable2FaSectionDescription =>
+      'Turning off two-factor authentication reduces your account security. You can enable it again at any time.';
 
   @override
   String get disable2FaSectionDisableButton => 'Disable 2FA';
@@ -3469,6 +3568,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String exchangeValidationAmountMaximum(Object amount, Object currency) {
     return 'Maximum amount should be $amount $currency';
+  }
+
+  @override
+  String exchangeValidationInsufficientBalance(Object amount, Object currency) {
+    return 'Insufficient balance — available: $amount $currency';
   }
 
   @override
@@ -5115,6 +5219,49 @@ class AppLocalizationsEn extends AppLocalizations {
   String get p2pUnableToLoadImage => 'Unable to load image';
 
   @override
+  String get p2pFieldRequired => 'This field is required';
+
+  @override
+  String get p2pPleaseUpload => 'Please upload file for this field';
+
+  @override
+  String get p2pPleaseFill => 'Please fill this field';
+
+  @override
+  String get p2pWriteMessageOrAttach =>
+      'Please write a message or add an attachment';
+
+  @override
+  String get p2pVerificationSubmitted => 'Verification submitted successfully';
+
+  @override
+  String get p2pCashDollar => 'Cash Dollar';
+
+  @override
+  String get p2pInPerson => 'In-Person Exchange';
+
+  @override
+  String get p2pMinutes => 'Minutes';
+
+  @override
+  String get p2pNoPaymentMethodFound2 => 'No payment method found';
+
+  @override
+  String p2pTransferInstruction(Object amount, Object paymentMethod) {
+    return 'Open ($paymentMethod) to transfer $amount';
+  }
+
+  @override
+  String p2pCashTransferInstruction(Object amount) {
+    return 'Pay $amount in cash to the seller';
+  }
+
+  @override
+  String p2pInPersonInstruction(Object amount) {
+    return 'Meet the seller in person and pay $amount in cash';
+  }
+
+  @override
   String get p2pUnableToLoadAttachment => 'Unable to load attachment';
 
   @override
@@ -5274,9 +5421,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get p2pAdd => 'Add';
-
-  @override
-  String get p2pMinutes => 'Minutes';
 
   @override
   String get p2pTerms => 'Terms';
@@ -5449,48 +5593,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String p2pEnterField(Object field) {
     return 'Enter $field';
   }
-
-  @override
-  String get p2pFieldRequired => 'This field is required';
-
-  @override
-  String get p2pPleaseUpload => 'Please upload file for this field';
-
-  @override
-  String get p2pPleaseFill => 'Please fill this field';
-
-  @override
-  String get p2pWriteMessageOrAttach => 'Please write a message or add an attachment';
-
-  @override
-  String get p2pVerificationSubmitted => 'Verification submitted successfully';
-
-  @override
-  String get p2pCashDollar => 'Cash Dollar';
-
-  @override
-  String get p2pInPerson => 'In-Person Exchange';
-
-  @override
-  String get p2pMinutes => 'min';
-
-  @override
-  String get p2pRecipient => 'Recipient';
-
-  @override
-  String get p2pCopied => 'Copied';
-
-  @override
-  String get p2pNoPaymentMethodFound2 => 'No payment method found';
-
-  @override
-  String get p2pTransferInstruction => 'Open ({paymentMethod}) to transfer {amount}';
-
-  @override
-  String get p2pCashTransferInstruction => 'Pay {amount} in cash to the seller';
-
-  @override
-  String get p2pInPersonInstruction => 'Meet the seller in person and pay {amount} in cash';
 
   @override
   String get edit_my_ad => 'Edit My Ad';
@@ -6605,232 +6707,767 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get travelPostPurchaseGuidance =>
       'Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel.';
+
   @override
   String get remittanceTitle => 'International Remittance';
+
   @override
   String get remittanceHistoryTitle => 'Remittance History';
+
   @override
   String get remittanceDetailsTitle => 'Remittance Details';
+
   @override
   String get remittanceSelectPayoutMethod => 'Select Payout Method';
+
   @override
-  String get remittanceNoMethods => 'No remittance methods available.\nPlease try again later.';
+  String get remittanceNoMethods =>
+      'No remittance methods available.\nPlease try again later.';
+
   @override
   String get remittanceSendAmount => 'Send Amount';
+
   @override
   String get remittanceSendCurrency => 'Send Currency';
+
   @override
   String get remittanceSelectSendCurrency => 'Select send currency';
+
   @override
   String get remittanceLoadingCurrencies => 'Loading currencies…';
+
   @override
   String get remittanceNoCurrencies => 'No currencies available';
+
   @override
   String get remittanceEnterAmount => 'Enter amount';
+
   @override
   String get remittanceUnknownMethod => 'Unknown';
+
   @override
-  String remittanceRateLocked(int seconds) => 'Rate locked: ${seconds}s';
+  String remittanceRateLocked(int seconds) {
+    return 'Rate locked: ${seconds}s';
+  }
+
   @override
   String get remittanceExchangeRate => 'Exchange Rate';
+
   @override
   String get remittanceReceiveAmount => 'Receive Amount';
+
   @override
   String get remittanceSystemFee => 'System Fee';
+
   @override
   String get remittanceTotalPayable => 'Total Payable';
+
   @override
   String get remittanceGetQuote => 'Get Quote';
+
   @override
   String get remittanceStepAmount => 'Amount';
+
   @override
   String get remittanceStepSender => 'Sender';
+
   @override
   String get remittanceStepReceiver => 'Receiver';
+
   @override
   String get remittanceStepReview => 'Review';
+
   @override
   String get remittanceStepDone => 'Done';
+
   @override
   String get remittanceSenderInfo => 'Sender Information';
+
   @override
   String get remittanceSelectCountry => 'Select country';
+
   @override
   String get remittanceSenderTypeIndividual => 'Individual';
+
   @override
   String get remittanceSenderTypeBusiness => 'Business';
+
   @override
   String get remittanceSenderName => 'Full Name';
+
   @override
   String get remittanceSenderPhone => 'Phone Number';
+
   @override
   String get remittanceSenderIdNumber => 'ID Number';
+
   @override
   String get remittanceReceiverInfo => 'Receiver Information';
+
   @override
   String get remittancePayoutDetails => 'Payout Details';
+
   @override
-  String get remittancePayoutDetailsHint => 'Fill in the fields relevant to the selected payout method.';
+  String get remittancePayoutDetailsHint =>
+      'Fill in the fields relevant to the selected payout method.';
+
   @override
   String get remittanceReceiverName => 'Full Name';
+
   @override
   String get remittanceReceiverPhone => 'Phone Number';
+
   @override
   String get remittanceBankName => 'Bank Name';
+
   @override
   String get remittanceAccountNumber => 'Account Number';
+
   @override
   String get remittanceIban => 'IBAN';
+
   @override
   String get remittanceAlipayAccount => 'Alipay Account';
+
   @override
   String get remittanceWechatAccount => 'WeChat Account';
+
   @override
   String get remittanceReviewConfirm => 'Review & Confirm';
+
   @override
-  String get remittanceReviewHint => 'Please review all details before submitting your remittance request.';
+  String get remittanceReviewHint =>
+      'Please review all details before submitting your remittance request.';
+
   @override
-  String get remittanceTermsNotice => 'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.';
+  String get remittanceTermsNotice =>
+      'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.';
+
   @override
   String get remittanceReviewSender => 'Sender';
+
   @override
   String get remittanceReviewReceiver => 'Receiver';
+
   @override
   String get remittanceReviewPayment => 'Payment';
+
   @override
   String get remittanceRequestSubmitted => 'Request Submitted!';
+
   @override
-  String get remittanceRequestCreated => 'Your remittance request has been created.';
+  String get remittanceRequestCreated =>
+      'Your remittance request has been created.';
+
   @override
   String get remittanceUploadDocuments => 'Upload Documents';
+
   @override
-  String get remittanceUploadHint => 'Upload your KYC documents and payment receipt to proceed.';
+  String get remittanceUploadHint =>
+      'Upload your KYC documents and payment receipt to proceed.';
+
   @override
   String get remittanceAddDocument => 'Add Document';
+
   @override
   String get remittanceDocumentType => 'Document Type';
+
   @override
   String get remittanceDocTypeKyc => 'KYC Document';
+
   @override
   String get remittanceDocTypePaymentReceipt => 'Payment Receipt';
+
   @override
   String get remittanceDocTypePayoutReceipt => 'Payout Receipt';
+
   @override
   String get remittanceDocTypeOther => 'Other';
+
   @override
   String get remittanceCancel => 'Cancel';
+
   @override
   String get remittanceAdd => 'Add';
+
   @override
   String get remittanceTakePhoto => 'Take Photo';
+
   @override
   String get remittanceChooseFromGallery => 'Choose from Gallery';
+
   @override
   String get remittanceChooseFile => 'Choose File';
+
   @override
   String get remittanceErrFileNotFound => 'Selected file does not exist';
+
   @override
   String get remittanceErrPickFile => 'Could not pick file';
+
   @override
-  String get remittanceErrNoValidFiles => 'No valid files to upload. Please re-select your documents.';
+  String get remittanceErrNoValidFiles =>
+      'No valid files to upload. Please re-select your documents.';
+
   @override
   String get remittanceContinue => 'Continue';
+
   @override
   String get remittanceSubmitRequest => 'Submit Request';
+
   @override
   String get remittanceUploading => 'Uploading...';
+
   @override
   String get remittanceRefresh => 'Refresh';
+
   @override
   String get remittanceNoHistory => 'No remittances yet';
+
   @override
-  String get remittanceNoHistoryHint => 'Your remittance history will appear here.';
+  String get remittanceNoHistoryHint =>
+      'Your remittance history will appear here.';
+
   @override
   String get remittanceSend => 'Send';
+
   @override
   String get remittanceReceive => 'Receive';
+
   @override
   String get remittanceDate => 'Date';
+
   @override
   String get remittanceNotFound => 'Remittance not found';
+
   @override
   String get remittanceStatusFinalized => 'This request is finalized.';
+
   @override
   String get remittanceStatusProcessing => 'Your request is being processed.';
+
   @override
-  String get remittanceStatusActionNeeded => 'Please complete the required steps.';
+  String get remittanceStatusActionNeeded =>
+      'Please complete the required steps.';
+
   @override
   String get remittanceDetailsSectionSender => 'Sender Information';
+
   @override
   String get remittanceDetailsSectionReceiver => 'Receiver Information';
+
   @override
   String get remittanceDetailsSectionPayment => 'Payment Details';
+
   @override
   String get remittanceDetailsSectionTimeline => 'Status Timeline';
+
   @override
   String get remittanceErrLoadMethods => 'Failed to load methods';
+
   @override
   String get remittanceErrSelectPayout => 'Please select a payout method';
+
   @override
   String get remittanceErrInvalidAmount => 'Please enter a valid amount';
+
   @override
   String get remittanceErrSelectSendCurrency => 'Please select a send currency';
+
   @override
   String get remittanceErrQuoteFailed => 'Quote failed';
+
   @override
   String get remittanceErrRequestQuoteFirst => 'Please request a quote first';
+
   @override
-  String get remittanceErrQuoteExpired => 'Quote expired. Please request a new one.';
+  String get remittanceErrQuoteExpired =>
+      'Quote expired. Please request a new one.';
+
   @override
   String get remittanceErrSenderInfo => 'Please complete sender information';
+
   @override
-  String get remittanceErrReceiverInfo => 'Please complete receiver information';
+  String get remittanceErrReceiverInfo =>
+      'Please complete receiver information';
+
   @override
   String get remittanceErrSubmissionFailed => 'Submission failed';
+
   @override
   String get remittanceErrNoRemittance => 'No remittance to upload to';
+
   @override
   String get remittanceErrAddDocument => 'Please add at least one document';
+
   @override
   String get remittanceErrUploadFailed => 'Upload failed';
+
   @override
   String get remittanceErrLoadDetails => 'Failed to load details';
+
   @override
   String get remittanceErrCompleteSender => 'Please complete all sender fields';
+
   @override
-  String get remittanceErrCompleteReceiver => 'Please complete all receiver fields';
+  String get remittanceErrCompleteReceiver =>
+      'Please complete all receiver fields';
+
   @override
   String get remittanceSuccessUploaded => 'Documents uploaded successfully';
+
   @override
   String get remittanceError => 'Error';
+
   @override
   String get remittanceStatusDraft => 'Draft';
+
   @override
   String get remittanceStatusWaitingInformation => 'Waiting Information';
+
   @override
   String get remittanceStatusWaitingDocuments => 'Waiting Documents';
+
   @override
   String get remittanceStatusWaitingPayment => 'Waiting Payment';
+
   @override
   String get remittanceStatusPaymentReviewing => 'Payment Reviewing';
+
   @override
   String get remittanceStatusInProcess => 'In Process';
+
   @override
   String get remittanceStatusDestinationProcessing => 'Destination Processing';
+
   @override
   String get remittanceStatusDestinationPaid => 'Destination Paid';
+
   @override
   String get remittanceStatusCompleted => 'Completed';
+
   @override
   String get remittanceStatusRejected => 'Rejected';
+
   @override
   String get remittanceStatusExpired => 'Expired';
+
   @override
   String get remittanceStatusCancelled => 'Cancelled';
+
   @override
   String get remittanceStatusRefundRequested => 'Refund Requested';
+
   @override
   String get remittanceStatusRefundCompleted => 'Refund Completed';
+
   @override
   String get remittanceStatusUnknown => 'Unknown';
+
+  @override
+  String get exchangeCalculating => 'Calculating…';
+
+  @override
+  String get biometricNotAvailable =>
+      'Biometric authentication is not available on this device';
+
+  @override
+  String get biometricSetupFailed => 'Failed to start biometric authentication';
+
+  @override
+  String biometricFailedAttempts(int attempts) {
+    return 'Biometric authentication failed. $attempts attempts remaining';
+  }
+
+  @override
+  String get biometricMaxAttempts =>
+      'Maximum biometric attempts reached. Please sign in with your password';
+
+  @override
+  String get biometricReason => 'Authenticate to sign in to eCardo';
+
+  @override
+  String get biometricGenericError => 'Biometric authentication failed';
+
+  @override
+  String get dynamicPasswordUserNotFound => 'Error: user information not found';
+
+  @override
+  String get dynamicPasswordGenerateError =>
+      'Failed to generate dynamic password';
+
+  @override
+  String get licenseRequiredTitle => 'License Required';
+
+  @override
+  String get commonClose => 'Close';
+
+  @override
+  String get contactSupport => 'Contact Support';
+
+  @override
+  String get updateCancelDownloadTitle => 'Cancel download?';
+
+  @override
+  String get updateContinueDownload => 'Continue download';
+
+  @override
+  String updateAvailableTitle(String version) {
+    return 'New update available ($version)';
+  }
+
+  @override
+  String get updateLater => 'Later';
+
+  @override
+  String get kycDocumentsRequired => 'Documents are required.';
+
+  @override
+  String get kycUploadFailed => 'Upload failed. Please try again.';
+
+  @override
+  String get p2pSelectFiatFirst => 'Please select a fiat currency first';
+
+  @override
+  String get p2pLoadPaymentMethodsFailed => 'Failed to load payment methods';
+
+  @override
+  String get p2pLoadAdsFailed => 'Failed to load marketplace ads';
+
+  @override
+  String get pickDocumentFailed => 'Failed to pick document. Please try again.';
+
+  @override
+  String get hotel_active_filters => 'Active filters';
+
+  @override
+  String get hotel_all_cities_with_hotels => 'All cities with hotels';
+
+  @override
+  String get hotel_all_filters => 'All filters';
+
+  @override
+  String get hotel_all_ratings => 'All ratings';
+
+  @override
+  String get hotel_apply_filters => 'Apply filters';
+
+  @override
+  String get hotel_available_rooms => 'Available rooms';
+
+  @override
+  String get hotel_by_continuing_you_accept_the =>
+      'By continuing, you accept the ';
+
+  @override
+  String get hotel_check_in => 'Check-in';
+
+  @override
+  String get hotel_check_in_and_check_out => 'Check-in and check-out';
+
+  @override
+  String get hotel_check_out => 'Check-out';
+
+  @override
+  String get hotel_checking_availability => 'Checking availability';
+
+  @override
+  String get hotel_clear_all => 'Clear all';
+
+  @override
+  String get hotel_close => 'Close';
+
+  @override
+  String get hotel_complete_the_reservator_and_room_caretaker_i =>
+      'Complete the reservator and room caretaker information.';
+
+  @override
+  String get hotel_confirm_dates => 'Confirm dates';
+
+  @override
+  String get hotel_continue_booking => 'Continue booking';
+
+  @override
+  String get hotel_destination_city_or_hotel => 'Destination city or hotel';
+
+  @override
+  String get hotel_details => 'Details';
+
+  @override
+  String get hotel_discounted => 'Discounted';
+
+  @override
+  String get hotel_discounted_hotels_only => 'Discounted hotels only';
+
+  @override
+  String get hotel_edit_dates => 'Edit dates';
+
+  @override
+  String get hotel_features => 'Features';
+
+  @override
+  String get hotel_for_example_non_smoking_room_or_estimated_ar =>
+      'For example, non-smoking room or estimated arrival time';
+
+  @override
+  String get hotel_gregorian => 'Gregorian';
+
+  @override
+  String get hotel_guest_rating => 'Guest rating';
+
+  @override
+  String get hotel_guest_ratings_and_reviews => 'Guest ratings and reviews';
+
+  @override
+  String get hotel_hotel_features => 'Hotel features';
+
+  @override
+  String get hotel_hotel_filters => 'Hotel filters';
+
+  @override
+  String get hotel_hotel_stars => 'Hotel stars';
+
+  @override
+  String get hotel_hotels_with_available_rooms_only =>
+      'Hotels with available rooms only';
+
+  @override
+  String get hotel_nights => 'nights';
+
+  @override
+  String get hotel_no_matching_city_or_hotel_was_found =>
+      'No matching city or hotel was found.';
+
+  @override
+  String get hotel_no_recommended_hotels_are_available_for_this =>
+      'No recommended hotels are available for this city.';
+
+  @override
+  String get hotel_only_one_responsible_guest_is_needed_for_eac =>
+      'Only one responsible guest is needed for each room; you do not need to enter every passenger.';
+
+  @override
+  String get hotel_overview => 'Overview';
+
+  @override
+  String get hotel_passenger_information => 'Passenger information';
+
+  @override
+  String get hotel_persian => 'Persian';
+
+  @override
+  String get hotel_popular_cities => 'Popular cities';
+
+  @override
+  String get hotel_price_range => 'Price range';
+
+  @override
+  String get hotel_property_type => 'Property type';
+
+  @override
+  String get hotel_recommended_hotels => 'Recommended hotels';
+
+  @override
+  String get hotel_refine_your_results => 'Refine your results';
+
+  @override
+  String get hotel_reservation_details_and_every_order_update_w =>
+      'Reservation details and every order update will be sent to the reservator.';
+
+  @override
+  String get hotel_reservator_information => 'Reservator information';
+
+  @override
+  String get hotel_reviews => 'Reviews';
+
+  @override
+  String get hotel_room => 'Room';
+
+  @override
+  String get hotel_room_caretakers => 'Room caretakers';
+
+  @override
+  String get hotel_room_details => 'Room details';
+
+  @override
+  String get hotel_room_information => 'Room information';
+
+  @override
+  String get hotel_rooms => 'Rooms';
+
+  @override
+  String get hotel_rules => 'Rules';
+
+  @override
+  String get hotel_search_by_city_or_hotel_name =>
+      'Search by city or hotel name';
+
+  @override
+  String get hotel_search_hotel_name => 'Search hotel name';
+
+  @override
+  String get hotel_search_results => 'Search results';
+
+  @override
+  String get hotel_select_a_destination_city_or_hotel =>
+      'Select a destination city or hotel.';
+
+  @override
+  String get hotel_select_stay_dates => 'Select stay dates';
+
+  @override
+  String get hotel_show_less => 'Show less';
+
+  @override
+  String get hotel_show_more => 'Show more';
+
+  @override
+  String get hotel_show_more_2 => 'Show more';
+
+  @override
+  String get hotel_similar_hotels => 'Similar hotels';
+
+  @override
+  String get hotel_special_offers => 'Special offers';
+
+  @override
+  String get hotel_special_requests_optional => 'Special requests (optional)';
+
+  @override
+  String get hotel_terms_and_privacy_policy => 'Terms and privacy policy';
+
+  @override
+  String get hotel_terms_and_privacy_policy_2 => 'terms and privacy policy';
+
+  @override
+  String get hotel_the_terms_for_this_service_are_admin_control =>
+      'The terms for this service are admin-controlled. Review hotel, cancellation, refund, and privacy rules before payment.';
+
+  @override
+  String hotelHotelsCount(String count) {
+    return '$count hotels';
+  }
+
+  @override
+  String hotelRoomsForNights(int rooms, int nights) {
+    return '$rooms rooms for $nights nights';
+  }
+
+  @override
+  String hotelPriceNightsOneRoom(int nights) {
+    return 'Price for $nights nights and one room';
+  }
+
+  @override
+  String hotelRoomsTimesNights(int quantity, int nights) {
+    return '$quantity rooms × $nights nights';
+  }
+
+  @override
+  String hotelOneRoomNights(int nights) {
+    return 'One room for $nights nights';
+  }
+
+  @override
+  String hotelNightsCount(int count) {
+    return '$count nights';
+  }
+
+  @override
+  String get dynamicPasswordServerError =>
+      'Error communicating with the server.';
+
+  @override
+  String get dynamicPasswordConnectionError => 'Connection error.';
+
+  @override
+  String get dynamicPasswordHeading => 'Dynamic Password';
+
+  @override
+  String get dynamicPasswordSubtitle =>
+      'A 6-digit code for paying from your wallet.';
+
+  @override
+  String get dynamicPasswordValidity =>
+      'Valid for 60 seconds — single use only.';
+
+  @override
+  String get dynamicPasswordCopied => 'Code copied.';
+
+  @override
+  String get dynamicPasswordCopy => 'Copy code';
+
+  @override
+  String get dynamicPasswordRegenerate => 'Generate a new code';
+
+  @override
+  String get dynamicPasswordGenerate => 'Generate dynamic password';
+
+  @override
+  String get dynamicPasswordUsageHint =>
+      'Enter this code on the payment page. It is valid for 60 seconds and can be used only once.';
+
+  @override
+  String get vcUnableLoadProducts => 'Unable to load card products.';
+
+  @override
+  String get vcOrderNotCompleted => 'The card order could not be completed.';
+
+  @override
+  String get vcProductUnavailable => 'Card product is unavailable.';
+
+  @override
+  String get vcEnterValidAmountIrr => 'Enter a valid amount in Iranian rials.';
+
+  @override
+  String vcMinInitialLoad(num amount) {
+    return 'The minimum initial load is $amount IRR.';
+  }
+
+  @override
+  String vcMaxInitialLoad(num amount) {
+    return 'The maximum initial load is $amount IRR.';
+  }
+
+  @override
+  String get vcSelectIrrWallet => 'Select an IRR wallet.';
+
+  @override
+  String get vcSelectGateway => 'Select a payment gateway.';
+
+  @override
+  String get vcCompleteCardholder => 'Complete the cardholder information.';
+
+  @override
+  String get vcStatusPaymentPending =>
+      'Card order created and awaiting payment.';
+
+  @override
+  String get vcStatusProvisioning => 'Card provisioning is in progress.';
+
+  @override
+  String get vcStatusReady => 'Your card is ready.';
+
+  @override
+  String get vcStatusCreated => 'Card order created.';
+
+  @override
+  String vcMinTopup(num amount, String currency) {
+    return 'The minimum top-up is $amount $currency.';
+  }
+
+  @override
+  String vcMaxTopup(num amount, String currency) {
+    return 'The maximum top-up is $amount $currency.';
+  }
+
+  @override
+  String get vcTopupNotCompleted => 'The card top-up could not be completed.';
+
+  @override
+  String get vcTopupSubmitted => 'Card top-up submitted.';
+
+  @override
+  String get hotel_admin_configured_special_offers_will_appear =>
+      'Admin-configured special offers will appear here.';
 }

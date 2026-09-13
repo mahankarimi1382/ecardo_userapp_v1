@@ -4,36 +4,36 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Russian (`ru`).
-class AppLocalizationsRu extends AppLocalizations {
-  AppLocalizationsRu([String locale = 'ru']) : super(locale);
+/// The translations for Turkish (`tr`).
+class AppLocalizationsTr extends AppLocalizations {
+  AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
   String get comment_common_maintenance => '==== Maintenance ====';
 
   @override
-  String get maintenanceTitle => 'Технические работы';
+  String get maintenanceTitle => 'Bakım Çalışması';
 
   @override
   String get maintenanceSubtitle =>
-      'Мы выполняем плановое обслуживание для улучшения вашего опыта.';
+      'Deneyiminizi iyileştirmek için planlı bakım yapıyoruz.';
 
   @override
   String get comment_common_alert_bottom_sheet =>
       '==== Alert Bottom Sheet ====';
 
   @override
-  String get alertBottonSheetConfirmButton => 'Подтвердить';
+  String get alertBottonSheetConfirmButton => 'Onayla';
 
   @override
-  String get alertBottonSheetCancelButton => 'Отмена';
+  String get alertBottonSheetCancelButton => 'İptal';
 
   @override
   String get comment_all_controller_load_Error =>
       '==== All Controller Load Error ====';
 
   @override
-  String get allControllerLoadError => 'Произошла ошибка!';
+  String get allControllerLoadError => 'Bir hata oluştu!';
 
   @override
   String get comment_common_exit_application => '==== Exit Application ====';
@@ -70,44 +70,44 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comment_welcome => '==== Welcome Screen ====';
 
   @override
-  String get welcomeTitle => 'Добро пожаловать в eCardo';
+  String get welcomeTitle => 'eCardo\'ya Hoş Geldiniz';
 
   @override
   String get welcomeDescription =>
-      'eCardo предоставляет управление несколькими кошельками, мгновенный обмен и безопасные транзакции.';
+      'eCardo size çoklu cüzdan yönetimi, anlık dönüşüm ve güvenli işlemler sunar.';
 
   @override
-  String get welcomeSignIn => 'Войти';
+  String get welcomeSignIn => 'Giriş Yap';
 
   @override
-  String get welcomeCreateAccount => 'Создать аккаунт';
+  String get welcomeCreateAccount => 'Hesap Oluştur';
 
   @override
   String get comment_sign_in => '==== Sign In Screen ====';
 
   @override
-  String get signInWelcomeBack => 'С возвращением!';
+  String get signInWelcomeBack => 'Tekrar Hoş Geldiniz!';
 
   @override
-  String get signInSubtitle => 'Возьмите под контроль свои финансы уже сегодня';
+  String get signInSubtitle => 'Bugün finansalarınızın kontrolünü ele alın';
 
   @override
-  String get signInEmail => 'Эл. почта';
+  String get signInEmail => 'E-posta';
 
   @override
-  String get signInPassword => 'Пароль';
+  String get signInPassword => 'Şifre';
 
   @override
-  String get signInForgotPassword => 'Забыли пароль';
+  String get signInForgotPassword => 'Şifremi unuttum';
 
   @override
-  String get signInButton => 'Войти';
+  String get signInButton => 'Giriş Yap';
 
   @override
-  String get signInNotRegistered => 'Ещё не зарегистрированы? ';
+  String get signInNotRegistered => 'Henüz kayıt olmadınız mı? ';
 
   @override
-  String get signInCreateAccount => 'Создать аккаунт';
+  String get signInCreateAccount => 'Hesap oluştur';
 
   @override
   String get signInBiometricErrorFirstTime =>
@@ -1022,19 +1022,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get exchangeWalletToWalletWalletsNotFound => 'Wallets Not Found';
 
   @override
-  String get exchangeWalletSectionFiat => 'Фиатные валюты';
+  String get exchangeWalletSectionFiat => 'Fiat para birimleri';
 
   @override
-  String get exchangeWalletSectionCrypto => 'Криптоактивы';
+  String get exchangeWalletSectionCrypto => 'Kripto varlıklar';
 
   @override
-  String get exchangeAmountReceive => 'Вы получите';
+  String get exchangeAmountReceive => 'Alacağınız';
 
   @override
-  String get exchangeAmountSend => 'Вы отправляете';
+  String get exchangeAmountSend => 'Gönderdiğiniz';
 
   @override
-  String get exchangeContinue => 'Продолжить';
+  String get exchangeContinue => 'Devam et';
 
   @override
   String get exchangeQuickPercent25 => '25%';
@@ -1046,76 +1046,75 @@ class AppLocalizationsRu extends AppLocalizations {
   String get exchangeQuickPercent75 => '75%';
 
   @override
-  String get exchangeQuickMax => 'Макс';
+  String get exchangeQuickMax => 'Maks';
 
   @override
-  String get exchangeMinHint => 'Мин';
+  String get exchangeMinHint => 'Min';
 
   @override
-  String get exchangeMaxHint => 'Макс';
+  String get exchangeMaxHint => 'Maks';
 
   @override
-  String get exchangeReviewRateLockedAt =>
-      'Курс зафиксирован при подтверждении';
+  String get exchangeReviewRateLockedAt => 'Kur onayda sabitlendi';
 
   @override
   String get exchangeReviewRateStaleBanner =>
-      'Курс обновлён. Проверьте и подтвердите снова.';
+      'Kur güncellendi. Lütfen tekrar gözden geçirin ve onaylayın.';
 
   @override
-  String get exchangeSuccessShareReceipt => 'Поделиться квитанцией';
+  String get exchangeSuccessShareReceipt => 'Makbuzu paylaş';
 
   @override
-  String get exchangeSuccessBackToWallet => 'В кошелёк';
+  String get exchangeSuccessBackToWallet => 'Cüzdana dön';
 
   @override
   String get exchangeRateDisconnectedBanner =>
-      'Сервис курсов временно недоступен.';
+      'Kur servisi geçici olarak kullanılamıyor.';
 
   @override
-  String get exchangeRateStaleNotice => 'Показан последний известный курс';
+  String get exchangeRateStaleNotice => 'Bilinen son kur gösteriliyor';
 
   @override
-  String get exchangeRateAutoCaption => 'Автообновление каждые 60 с';
+  String get exchangeRateAutoCaption => 'Her 60 saniyede otomatik güncellenir';
 
   @override
-  String get exchangeRecentPairs => 'Недавние пары';
+  String get exchangeRecentPairs => 'Son çiftler';
 
   @override
-  String get exchangeRateAlertTitle => 'Оповещение о курсе';
+  String get exchangeRateAlertTitle => 'Kur Alarmı';
 
   @override
-  String get exchangeRateAlertHint => 'Уведомить, когда курс достигнет';
+  String get exchangeRateAlertHint => 'Kura ulaştığında bana bildir';
 
   @override
-  String get exchangeRateAlertSet => 'Установить оповещение';
+  String get exchangeRateAlertSet => 'Uyarı kur';
 
   @override
-  String get exchangeRateAlertPlaceholder => 'Скоро';
+  String get exchangeRateAlertPlaceholder => 'Yakında';
 
   @override
-  String get exchangeRateServiceRefresh => 'Обновить';
+  String get exchangeRateServiceRefresh => 'Yenile';
 
   @override
-  String get rate_service_unavailable => 'Сервис курсов недоступен';
+  String get rate_service_unavailable => 'Kur servisi kullanılamıyor';
 
   @override
-  String get rate_stale_last_known => 'Показан последний известный курс';
+  String get rate_stale_last_known => 'Bilinen son kur gösteriliyor';
 
   @override
-  String get rate_auto_update_caption => 'Автообновление каждые 60 с';
+  String get rate_auto_update_caption => 'Her 60 saniyede otomatik güncellenir';
 
   @override
-  String get exchangeRate24hChange => '24ч';
+  String get exchangeRate24hChange => '24s';
 
   @override
-  String get exchangeRateLastUpdate => 'Обновлено';
+  String get exchangeRateLastUpdate => 'Güncellendi';
 
   @override
-  String get refresh => 'Обновить';
+  String get refresh => 'Yenile';
 
   @override
-  String get calculating => 'Расчёт…';
+  String get calculating => 'Hesaplanıyor…';
 
   @override
   String get comment_exchange_history => '==== Exchange History ====';
@@ -1318,31 +1317,31 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comment_drawer_section => '==== Drawer Section ====';
 
   @override
-  String get drawerDashboard => 'Панель управления';
+  String get drawerDashboard => 'Kontrol Paneli';
 
   @override
-  String get drawerMyWallets => 'Мои кошельки';
+  String get drawerMyWallets => 'Cüzdanlarım';
 
   @override
-  String get drawerAddMoney => 'Пополнить';
+  String get drawerAddMoney => 'Para Yükle';
 
   @override
-  String get drawerCashOut => 'Вывести';
+  String get drawerCashOut => 'Para Çek';
 
   @override
-  String get drawerBillPayments => 'Оплата счетов';
+  String get drawerBillPayments => 'Fatura Ödemeleri';
 
   @override
-  String get drawerRemittance => 'Международный перевод';
+  String get drawerRemittance => 'Uluslararası Havale';
 
   @override
-  String get drawerVirtualCards => 'Виртуальные карты';
+  String get drawerVirtualCards => 'Sanal Kartlar';
 
   @override
-  String get drawerPaymentLinks => 'Платёжные ссылки';
+  String get drawerPaymentLinks => 'Ödeme Bağlantıları';
 
   @override
-  String get drawerMakePayment => 'Оплатить';
+  String get drawerMakePayment => 'Ödeme Yap';
 
   @override
   String get drawerTransfer => 'Transfer';
@@ -3467,22 +3466,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comment_network_service => '==== Network Service ====';
 
   @override
-  String get networkErrorGeneric => 'Сетевая ошибка';
+  String get networkErrorGeneric => 'Ağ hatası';
 
   @override
-  String get networkErrorTimeout => 'Время ожидания истекло';
+  String get networkErrorTimeout => 'İstek zaman aşımına uğradı';
 
   @override
-  String get networkErrorOccurred => 'Произошла сетевая ошибка';
+  String get networkErrorOccurred => 'Ağ hatası oluştu';
 
   @override
-  String get unauthorizedDialogTitle => 'Не авторизован';
+  String get unauthorizedDialogTitle => 'Yetkisiz';
 
   @override
-  String get unauthorizedDialogDescription => 'Пожалуйста, войдите снова';
+  String get unauthorizedDialogDescription => 'Lütfen tekrar giriş yapın';
 
   @override
-  String get unauthorizedDialogButton => 'Войти';
+  String get unauthorizedDialogButton => 'Giriş Yap';
 
   @override
   String get comment_add_money_controller => '==== Add Money Controller ====';
@@ -5217,46 +5216,45 @@ class AppLocalizationsRu extends AppLocalizations {
   String get p2pUnableToLoadImage => 'Unable to load image';
 
   @override
-  String get p2pFieldRequired => 'Это поле обязательно';
+  String get p2pFieldRequired => 'Bu alan zorunludur';
 
   @override
-  String get p2pPleaseUpload => 'Загрузите файл для этого поля';
+  String get p2pPleaseUpload => 'Bu alan için dosya yükleyin';
 
   @override
-  String get p2pPleaseFill => 'Заполните это поле';
+  String get p2pPleaseFill => 'Bu alanı doldurun';
 
   @override
-  String get p2pWriteMessageOrAttach =>
-      'Напишите сообщение или добавьте вложение';
+  String get p2pWriteMessageOrAttach => 'Lütfen mesaj yazın veya dosya ekleyin';
 
   @override
-  String get p2pVerificationSubmitted => 'Заявка на верификацию отправлена';
+  String get p2pVerificationSubmitted => 'Doğrulama başarıyla gönderildi';
 
   @override
-  String get p2pCashDollar => 'Наличные доллары';
+  String get p2pCashDollar => 'Nakit Dolar';
 
   @override
-  String get p2pInPerson => 'Обмен при встрече';
+  String get p2pInPerson => 'Yüz yüze değişim';
 
   @override
   String get p2pMinutes => 'Minutes';
 
   @override
-  String get p2pNoPaymentMethodFound2 => 'Способ оплаты не найден';
+  String get p2pNoPaymentMethodFound2 => 'Ödeme yöntemi bulunamadı';
 
   @override
   String p2pTransferInstruction(Object amount, Object paymentMethod) {
-    return 'Откройте ($paymentMethod) и переведите $amount';
+    return '($paymentMethod) uygulamasını açıp $amount gönderin';
   }
 
   @override
   String p2pCashTransferInstruction(Object amount) {
-    return 'Передайте $amount наличными продавцу';
+    return 'Satıcıya $amount nakit ödeyin';
   }
 
   @override
   String p2pInPersonInstruction(Object amount) {
-    return 'Встретьтесь с продавцом и передайте $amount наличными';
+    return 'Satıcıyla yüz yüze buluşup $amount nakit ödeyin';
   }
 
   @override
@@ -6726,16 +6724,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get remittanceSendAmount => 'Send Amount';
 
   @override
-  String get remittanceSendCurrency => 'Валюта отправки';
+  String get remittanceSendCurrency => 'Gönderim Para Birimi';
 
   @override
-  String get remittanceSelectSendCurrency => 'Выберите валюту отправки';
+  String get remittanceSelectSendCurrency => 'Gönderim para birimini seçin';
 
   @override
-  String get remittanceLoadingCurrencies => 'Загрузка валют…';
+  String get remittanceLoadingCurrencies => 'Para birimleri yükleniyor…';
 
   @override
-  String get remittanceNoCurrencies => 'Нет доступных валют';
+  String get remittanceNoCurrencies => 'Kullanılabilir para birimi yok';
 
   @override
   String get remittanceEnterAmount => 'Enter amount';
@@ -6889,23 +6887,23 @@ class AppLocalizationsRu extends AppLocalizations {
   String get remittanceAdd => 'Add';
 
   @override
-  String get remittanceTakePhoto => 'Сделать фото';
+  String get remittanceTakePhoto => 'Fotoğraf Çek';
 
   @override
-  String get remittanceChooseFromGallery => 'Выбрать из галереи';
+  String get remittanceChooseFromGallery => 'Galeriden Seç';
 
   @override
-  String get remittanceChooseFile => 'Выбрать файл';
+  String get remittanceChooseFile => 'Dosya Seç';
 
   @override
-  String get remittanceErrFileNotFound => 'Выбранный файл не существует';
+  String get remittanceErrFileNotFound => 'Seçilen dosya mevcut değil';
 
   @override
-  String get remittanceErrPickFile => 'Не удалось выбрать файл';
+  String get remittanceErrPickFile => 'Dosya seçilemedi';
 
   @override
   String get remittanceErrNoValidFiles =>
-      'Нет подходящих файлов для загрузки. Пожалуйста, выберите документы заново.';
+      'Yüklenecek geçerli dosya yok. Lütfen belgelerinizi yeniden seçin.';
 
   @override
   String get remittanceContinue => 'Continue';
@@ -7063,415 +7061,414 @@ class AppLocalizationsRu extends AppLocalizations {
   String get remittanceStatusUnknown => 'Unknown';
 
   @override
-  String get exchangeCalculating => 'Расчёт…';
+  String get exchangeCalculating => 'Hesaplanıyor…';
 
   @override
   String get biometricNotAvailable =>
-      'Биометрическая аутентификация недоступна на этом устройстве';
+      'Bu cihazda biyometrik kimlik doğrulama kullanılamıyor';
 
   @override
   String get biometricSetupFailed =>
-      'Не удалось запустить биометрическую аутентификацию';
+      'Biyometrik kimlik doğrulama başlatılamadı';
 
   @override
   String biometricFailedAttempts(int attempts) {
-    return 'Биометрия не пройдена. Осталось попыток: $attempts';
+    return 'Biyometrik doğrulama başarısız. $attempts deneme kaldı';
   }
 
   @override
   String get biometricMaxAttempts =>
-      'Достигнут лимит биометрических попыток. Войдите с паролем';
+      'Maksimum biyometrik deneme yapıldı. Lütfen şifrenizle giriş yapın';
 
   @override
-  String get biometricReason => 'Пройдите аутентификацию для входа в eCardo';
+  String get biometricReason =>
+      'eCardo\'ya giriş için kimlik doğrulaması yapın';
 
   @override
-  String get biometricGenericError =>
-      'Биометрическая аутентификация не пройдена';
+  String get biometricGenericError => 'Biyometrik kimlik doğrulama başarısız';
 
   @override
   String get dynamicPasswordUserNotFound =>
-      'Ошибка: данные пользователя не найдены';
+      'Hata: kullanıcı bilgisi bulunamadı';
 
   @override
-  String get dynamicPasswordGenerateError =>
-      'Не удалось создать динамический пароль';
+  String get dynamicPasswordGenerateError => 'Dinamik şifre oluşturulamadı';
 
   @override
-  String get licenseRequiredTitle => 'Требуется лицензия';
+  String get licenseRequiredTitle => 'Lisans gerekli';
 
   @override
-  String get commonClose => 'Закрыть';
+  String get commonClose => 'Kapat';
 
   @override
-  String get contactSupport => 'Связаться с поддержкой';
+  String get contactSupport => 'Desteğe ulaşın';
 
   @override
-  String get updateCancelDownloadTitle => 'Отменить загрузку?';
+  String get updateCancelDownloadTitle => 'İndirme iptal edilsin mi?';
 
   @override
-  String get updateContinueDownload => 'Продолжить загрузку';
+  String get updateContinueDownload => 'İndirmeye devam et';
 
   @override
   String updateAvailableTitle(String version) {
-    return 'Доступно обновление ($version)';
+    return 'Yeni güncelleme var ($version)';
   }
 
   @override
-  String get updateLater => 'Позже';
+  String get updateLater => 'Daha sonra';
 
   @override
-  String get kycDocumentsRequired => 'Необходимы документы.';
+  String get kycDocumentsRequired => 'Belgeler gereklidir.';
 
   @override
-  String get kycUploadFailed => 'Не удалось загрузить. Попробуйте снова.';
+  String get kycUploadFailed => 'Yükleme başarısız. Lütfen tekrar deneyin.';
 
   @override
-  String get p2pSelectFiatFirst => 'Сначала выберите фиатную валюту';
+  String get p2pSelectFiatFirst => 'Lütfen önce fiat para birimi seçin';
 
   @override
-  String get p2pLoadPaymentMethodsFailed =>
-      'Не удалось загрузить способы оплаты';
+  String get p2pLoadPaymentMethodsFailed => 'Ödeme yöntemleri yüklenemedi';
 
   @override
-  String get p2pLoadAdsFailed => 'Не удалось загрузить объявления';
+  String get p2pLoadAdsFailed => 'İlanlar yüklenemedi';
 
   @override
-  String get pickDocumentFailed =>
-      'Не удалось выбрать документ. Попробуйте снова.';
+  String get pickDocumentFailed => 'Belge seçilemedi. Lütfen tekrar deneyin.';
 
   @override
-  String get hotel_active_filters => 'Активные фильтры';
+  String get hotel_active_filters => 'Aktif filtreler';
 
   @override
-  String get hotel_all_cities_with_hotels => 'Все города с отелями';
+  String get hotel_all_cities_with_hotels => 'Otel bulunan tüm şehirler';
 
   @override
-  String get hotel_all_filters => 'Все фильтры';
+  String get hotel_all_filters => 'Tüm filtreler';
 
   @override
-  String get hotel_all_ratings => 'Все оценки';
+  String get hotel_all_ratings => 'Tüm puanlar';
 
   @override
-  String get hotel_apply_filters => 'Применить фильтры';
+  String get hotel_apply_filters => 'Filtreleri uygula';
 
   @override
-  String get hotel_available_rooms => 'Доступные номера';
+  String get hotel_available_rooms => 'Müsait odalar';
 
   @override
-  String get hotel_by_continuing_you_accept_the => 'Продолжая, вы принимаете ';
+  String get hotel_by_continuing_you_accept_the =>
+      'Devam ederek şunları kabul edersiniz: ';
 
   @override
-  String get hotel_check_in => 'Заезд';
+  String get hotel_check_in => 'Giriş';
 
   @override
-  String get hotel_check_in_and_check_out => 'Заезд и выезд';
+  String get hotel_check_in_and_check_out => 'Giriş ve çıkış';
 
   @override
-  String get hotel_check_out => 'Выезд';
+  String get hotel_check_out => 'Çıkış';
 
   @override
-  String get hotel_checking_availability => 'Проверка наличия мест';
+  String get hotel_checking_availability => 'Müsaitlik kontrol ediliyor';
 
   @override
-  String get hotel_clear_all => 'Очистить всё';
+  String get hotel_clear_all => 'Tümünü temizle';
 
   @override
-  String get hotel_close => 'Закрыть';
+  String get hotel_close => 'Kapat';
 
   @override
   String get hotel_complete_the_reservator_and_room_caretaker_i =>
-      'Заполните данные бронирующего и ответственных за номера.';
+      'Rezervasyon yaptıran kişi ve oda sorumluları bilgilerini tamamlayın.';
 
   @override
-  String get hotel_confirm_dates => 'Подтвердить даты';
+  String get hotel_confirm_dates => 'Tarihleri onayla';
 
   @override
-  String get hotel_continue_booking => 'Продолжить бронирование';
+  String get hotel_continue_booking => 'Rezervasyona devam et';
 
   @override
-  String get hotel_destination_city_or_hotel => 'Город или отель назначения';
+  String get hotel_destination_city_or_hotel => 'Varış şehri veya oteli';
 
   @override
-  String get hotel_details => 'Подробнее';
+  String get hotel_details => 'Detaylar';
 
   @override
-  String get hotel_discounted => 'Со скидкой';
+  String get hotel_discounted => 'İndirimli';
 
   @override
-  String get hotel_discounted_hotels_only => 'Только отели со скидкой';
+  String get hotel_discounted_hotels_only => 'Sadece indirimli oteller';
 
   @override
-  String get hotel_edit_dates => 'Изменить даты';
+  String get hotel_edit_dates => 'Tarihleri düzenle';
 
   @override
-  String get hotel_features => 'Удобства';
+  String get hotel_features => 'Özellikler';
 
   @override
   String get hotel_for_example_non_smoking_room_or_estimated_ar =>
-      'Например, номер для некурящих или предполагаемое время прибытия';
+      'Örneğin, sigara içilmeyen oda veya tahmini varış saati';
 
   @override
-  String get hotel_gregorian => 'Григорианский календарь';
+  String get hotel_gregorian => 'Miladi takvim';
 
   @override
-  String get hotel_guest_rating => 'Оценка гостей';
+  String get hotel_guest_rating => 'Konuk puanı';
 
   @override
-  String get hotel_guest_ratings_and_reviews => 'Оценки и отзывы гостей';
+  String get hotel_guest_ratings_and_reviews => 'Konuk puanları ve yorumları';
 
   @override
-  String get hotel_hotel_features => 'Удобства отеля';
+  String get hotel_hotel_features => 'Otel olanakları';
 
   @override
-  String get hotel_hotel_filters => 'Фильтры отелей';
+  String get hotel_hotel_filters => 'Otel filtreleri';
 
   @override
-  String get hotel_hotel_stars => 'Звёзды отеля';
+  String get hotel_hotel_stars => 'Otel yıldızları';
 
   @override
   String get hotel_hotels_with_available_rooms_only =>
-      'Только отели со свободными номерами';
+      'Sadece müsait odası olan oteller';
 
   @override
-  String get hotel_nights => 'ночей';
+  String get hotel_nights => 'gece';
 
   @override
   String get hotel_no_matching_city_or_hotel_was_found =>
-      'Город или отель с таким названием не найден.';
+      'Bu isimle eşleşen şehir veya otel bulunamadı.';
 
   @override
   String get hotel_no_recommended_hotels_are_available_for_this =>
-      'Для этого города нет рекомендуемых отелей.';
+      'Bu şehir için önerilen otel bulunmuyor.';
 
   @override
   String get hotel_only_one_responsible_guest_is_needed_for_eac =>
-      'Для каждого номера достаточно данных одного ответственного гостя; вводить данные всех пассажиров не требуется.';
+      'Her oda için yalnızca bir sorumlu konuk bilgisi yeterlidir; tüm yolcuların bilgilerini girmeniz gerekmez.';
 
   @override
-  String get hotel_overview => 'Обзор';
+  String get hotel_overview => 'Genel bakış';
 
   @override
-  String get hotel_passenger_information => 'Данные пассажира';
+  String get hotel_passenger_information => 'Yolcu bilgileri';
 
   @override
-  String get hotel_persian => 'Персидский календарь';
+  String get hotel_persian => 'İran (Fars) takvimi';
 
   @override
-  String get hotel_popular_cities => 'Популярные города';
+  String get hotel_popular_cities => 'Popüler şehirler';
 
   @override
-  String get hotel_price_range => 'Диапазон цен';
+  String get hotel_price_range => 'Fiyat aralığı';
 
   @override
-  String get hotel_property_type => 'Тип размещения';
+  String get hotel_property_type => 'Tesis türü';
 
   @override
-  String get hotel_recommended_hotels => 'Рекомендуемые отели';
+  String get hotel_recommended_hotels => 'Önerilen oteller';
 
   @override
-  String get hotel_refine_your_results => 'Уточните результаты';
+  String get hotel_refine_your_results => 'Sonuçları daralt';
 
   @override
   String get hotel_reservation_details_and_every_order_update_w =>
-      'Данные брони и все изменения заказа будут отправлены бронирующему.';
+      'Rezervasyon ayrıntıları ve siparişle ilgili tüm güncellemeler rezervasyon yaptıran kişiye gönderilecek.';
 
   @override
-  String get hotel_reservator_information => 'Данные бронирующего';
+  String get hotel_reservator_information =>
+      'Rezervasyon yaptıran kişi bilgileri';
 
   @override
-  String get hotel_reviews => 'Отзывы';
+  String get hotel_reviews => 'Yorumlar';
 
   @override
-  String get hotel_room => 'Номер';
+  String get hotel_room => 'Oda';
 
   @override
-  String get hotel_room_caretakers => 'Ответственные за номера';
+  String get hotel_room_caretakers => 'Oda sorumluları';
 
   @override
-  String get hotel_room_details => 'Детали номера';
+  String get hotel_room_details => 'Oda detayları';
 
   @override
-  String get hotel_room_information => 'Информация о номере';
+  String get hotel_room_information => 'Oda bilgileri';
 
   @override
-  String get hotel_rooms => 'Номера';
+  String get hotel_rooms => 'Odalar';
 
   @override
-  String get hotel_rules => 'Правила';
+  String get hotel_rules => 'Kurallar';
 
   @override
   String get hotel_search_by_city_or_hotel_name =>
-      'Поиск по городу или названию отеля';
+      'Şehir veya otel adına göre ara';
 
   @override
-  String get hotel_search_hotel_name => 'Поиск по названию отеля';
+  String get hotel_search_hotel_name => 'Otel adına göre ara';
 
   @override
-  String get hotel_search_results => 'Результаты поиска';
+  String get hotel_search_results => 'Arama sonuçları';
 
   @override
   String get hotel_select_a_destination_city_or_hotel =>
-      'Выберите город или отель назначения.';
+      'Varış şehri veya oteli seçin.';
 
   @override
-  String get hotel_select_stay_dates => 'Выберите даты проживания';
+  String get hotel_select_stay_dates => 'Konaklama tarihlerini seçin';
 
   @override
-  String get hotel_show_less => 'Свернуть';
+  String get hotel_show_less => 'Daha az göster';
 
   @override
-  String get hotel_show_more => 'Показать ещё';
+  String get hotel_show_more => 'Daha fazla göster';
 
   @override
-  String get hotel_show_more_2 => 'Показать все удобства';
+  String get hotel_show_more_2 => 'Tüm olanakları göster';
 
   @override
-  String get hotel_similar_hotels => 'Похожие отели';
+  String get hotel_similar_hotels => 'Benzer oteller';
 
   @override
-  String get hotel_special_offers => 'Специальные предложения';
+  String get hotel_special_offers => 'Özel fırsatlar';
 
   @override
-  String get hotel_special_requests_optional =>
-      'Особые пожелания (необязательно)';
+  String get hotel_special_requests_optional => 'Özel istekler (isteğe bağlı)';
 
   @override
   String get hotel_terms_and_privacy_policy =>
-      'Условия и политика конфиденциальности';
+      'Kullanım koşulları ve gizlilik politikası';
 
   @override
   String get hotel_terms_and_privacy_policy_2 =>
-      'условия и политику конфиденциальности';
+      'kullanım koşulları ve gizlilik politikası';
 
   @override
   String get hotel_the_terms_for_this_service_are_admin_control =>
-      'Условия этой услуги задаются администратором. Перед оплатой ознакомьтесь с правилами отеля, отмены, возврата средств и конфиденциальности.';
+      'Bu hizmetin koşulları yönetici tarafından belirlenir. Ödeme yapmadan önce otel, iptal, iade ve gizlilik kurallarını inceleyin.';
 
   @override
   String hotelHotelsCount(String count) {
-    return '$count отелей';
+    return '$count otel';
   }
 
   @override
   String hotelRoomsForNights(int rooms, int nights) {
-    return '$rooms номеров на $nights ночей';
+    return '$rooms oda, $nights gece';
   }
 
   @override
   String hotelPriceNightsOneRoom(int nights) {
-    return 'Цена за $nights ночей и один номер';
+    return '$nights gece ve bir oda için fiyat';
   }
 
   @override
   String hotelRoomsTimesNights(int quantity, int nights) {
-    return '$quantity номеров × $nights ночей';
+    return '$quantity oda × $nights gece';
   }
 
   @override
   String hotelOneRoomNights(int nights) {
-    return 'Один номер на $nights ночей';
+    return 'Bir oda, $nights gece';
   }
 
   @override
   String hotelNightsCount(int count) {
-    return '$count ночей';
+    return '$count gece';
   }
 
   @override
-  String get dynamicPasswordServerError => 'Ошибка связи с сервером.';
+  String get dynamicPasswordServerError => 'Sunucu ile iletişim hatası.';
 
   @override
-  String get dynamicPasswordConnectionError => 'Ошибка соединения.';
+  String get dynamicPasswordConnectionError => 'Bağlantı hatası.';
 
   @override
-  String get dynamicPasswordHeading => 'Динамический пароль';
+  String get dynamicPasswordHeading => 'Dinamik Şifre';
 
   @override
   String get dynamicPasswordSubtitle =>
-      'Шестизначный код для оплаты из кошелька.';
+      'Cüzdanınızdan ödeme yapmak için 6 haneli bir kod.';
 
   @override
   String get dynamicPasswordValidity =>
-      'Действует 60 секунд — только одно использование.';
+      '60 saniye geçerlidir — yalnızca bir kez kullanılabilir.';
 
   @override
-  String get dynamicPasswordCopied => 'Код скопирован.';
+  String get dynamicPasswordCopied => 'Kod kopyalandı.';
 
   @override
-  String get dynamicPasswordCopy => 'Копировать код';
+  String get dynamicPasswordCopy => 'Kodu kopyala';
 
   @override
-  String get dynamicPasswordRegenerate => 'Сгенерировать новый код';
+  String get dynamicPasswordRegenerate => 'Yeni kod oluştur';
 
   @override
-  String get dynamicPasswordGenerate => 'Сгенерировать динамический пароль';
+  String get dynamicPasswordGenerate => 'Dinamik şifre oluştur';
 
   @override
   String get dynamicPasswordUsageHint =>
-      'Введите этот код на странице оплаты. Код действует 60 секунд и может быть использован только один раз.';
+      'Bu kodu ödeme sayfasına girin. Kod 60 saniye geçerlidir ve yalnızca bir kez kullanılabilir.';
 
   @override
-  String get vcUnableLoadProducts => 'Не удалось загрузить продукты карт.';
+  String get vcUnableLoadProducts => 'Kart ürünleri yüklenemedi.';
 
   @override
-  String get vcOrderNotCompleted => 'Не удалось завершить заказ карты.';
+  String get vcOrderNotCompleted => 'Kart siparişi tamamlanamadı.';
 
   @override
-  String get vcProductUnavailable => 'Продукт карты недоступен.';
+  String get vcProductUnavailable => 'Kart ürünü kullanılamıyor.';
 
   @override
   String get vcEnterValidAmountIrr =>
-      'Введите корректную сумму в иранских риалах.';
+      'İran riyali cinsinden geçerli bir tutar girin.';
 
   @override
   String vcMinInitialLoad(num amount) {
-    return 'Минимальное первоначальное пополнение — $amount IRR.';
+    return 'Minimum ilk yükleme tutarı $amount IRR\'dir.';
   }
 
   @override
   String vcMaxInitialLoad(num amount) {
-    return 'Максимальное первоначальное пополнение — $amount IRR.';
+    return 'Maksimum ilk yükleme tutarı $amount IRR\'dir.';
   }
 
   @override
-  String get vcSelectIrrWallet => 'Выберите кошелёк IRR.';
+  String get vcSelectIrrWallet => 'Bir IRR cüzdanı seçin.';
 
   @override
-  String get vcSelectGateway => 'Выберите платёжный шлюз.';
+  String get vcSelectGateway => 'Bir ödeme sağlayıcısı seçin.';
 
   @override
-  String get vcCompleteCardholder => 'Заполните данные держателя карты.';
+  String get vcCompleteCardholder => 'Kart sahibi bilgilerini tamamlayın.';
 
   @override
-  String get vcStatusPaymentPending => 'Заказ карты создан и ожидает оплаты.';
+  String get vcStatusPaymentPending =>
+      'Kart siparişi oluşturuldu ve ödeme bekleniyor.';
 
   @override
-  String get vcStatusProvisioning => 'Выполняется выпуск карты.';
+  String get vcStatusProvisioning => 'Kartınız hazırlanıyor.';
 
   @override
-  String get vcStatusReady => 'Ваша карта готова.';
+  String get vcStatusReady => 'Kartınız hazır.';
 
   @override
-  String get vcStatusCreated => 'Заказ карты создан.';
+  String get vcStatusCreated => 'Kart siparişi oluşturuldu.';
 
   @override
   String vcMinTopup(num amount, String currency) {
-    return 'Минимальное пополнение — $amount $currency.';
+    return 'Minimum yükleme tutarı $amount $currency.';
   }
 
   @override
   String vcMaxTopup(num amount, String currency) {
-    return 'Максимальное пополнение — $amount $currency.';
+    return 'Maksimum yükleme tutarı $amount $currency.';
   }
 
   @override
-  String get vcTopupNotCompleted => 'Не удалось завершить пополнение карты.';
+  String get vcTopupNotCompleted => 'Kart yüklemesi tamamlanamadı.';
 
   @override
-  String get vcTopupSubmitted => 'Заявка на пополнение карты отправлена.';
+  String get vcTopupSubmitted => 'Kart yükleme talebi gönderildi.';
 
   @override
   String get hotel_admin_configured_special_offers_will_appear =>
-      'Специальные предложения, добавленные администратором, появятся здесь.';
+      'Yönetici tarafından eklenen özel fırsatlar burada görünecek.';
 }

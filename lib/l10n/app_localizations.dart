@@ -9,6 +9,7 @@ import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_fa.dart';
 import 'app_localizations_ru.dart';
+import 'app_localizations_tr.dart';
 import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -101,6 +102,7 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('fa'),
     Locale('ru'),
+    Locale('tr'),
     Locale('zh'),
   ];
 
@@ -221,13 +223,13 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Qunzo'**
+  /// **'Welcome to eCardo'**
   String get welcomeTitle;
 
   /// No description provided for @welcomeDescription.
   ///
   /// In en, this message translates to:
-  /// **'Qunzo Empowers you with Multi-Wallet Management, Instant Swaps, and Secure Transactions.'**
+  /// **'eCardo Empowers you with Multi-Wallet Management, Instant Swaps, and Secure Transactions.'**
   String get welcomeDescription;
 
   /// No description provided for @welcomeSignIn.
@@ -941,7 +943,7 @@ abstract class AppLocalizations {
   /// No description provided for @signUpStatusSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'A Quick 4-Step Process to Keep Your Qunzo Account Secure'**
+  /// **'A Quick 4-Step Process to Keep Your eCardo Account Secure'**
   String get signUpStatusSubtitle;
 
   /// No description provided for @signUpStatusStep.
@@ -2054,6 +2056,192 @@ abstract class AppLocalizations {
   /// **'Wallets Not Found'**
   String get exchangeWalletToWalletWalletsNotFound;
 
+  /// No description provided for @exchangeWalletSectionFiat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiat currencies'**
+  String get exchangeWalletSectionFiat;
+
+  /// No description provided for @exchangeWalletSectionCrypto.
+  ///
+  /// In en, this message translates to:
+  /// **'Crypto assets'**
+  String get exchangeWalletSectionCrypto;
+
+  /// No description provided for @exchangeAmountReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'You will receive'**
+  String get exchangeAmountReceive;
+
+  /// No description provided for @exchangeAmountSend.
+  ///
+  /// In en, this message translates to:
+  /// **'You send'**
+  String get exchangeAmountSend;
+
+  /// No description provided for @exchangeContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get exchangeContinue;
+
+  /// No description provided for @exchangeQuickPercent25.
+  ///
+  /// In en, this message translates to:
+  /// **'25%'**
+  String get exchangeQuickPercent25;
+
+  /// No description provided for @exchangeQuickPercent50.
+  ///
+  /// In en, this message translates to:
+  /// **'50%'**
+  String get exchangeQuickPercent50;
+
+  /// No description provided for @exchangeQuickPercent75.
+  ///
+  /// In en, this message translates to:
+  /// **'75%'**
+  String get exchangeQuickPercent75;
+
+  /// No description provided for @exchangeQuickMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get exchangeQuickMax;
+
+  /// No description provided for @exchangeMinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get exchangeMinHint;
+
+  /// No description provided for @exchangeMaxHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get exchangeMaxHint;
+
+  /// No description provided for @exchangeReviewRateLockedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate locked at confirmation'**
+  String get exchangeReviewRateLockedAt;
+
+  /// No description provided for @exchangeReviewRateStaleBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate has been updated. Please review and confirm again.'**
+  String get exchangeReviewRateStaleBanner;
+
+  /// No description provided for @exchangeSuccessShareReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Receipt'**
+  String get exchangeSuccessShareReceipt;
+
+  /// No description provided for @exchangeSuccessBackToWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Wallet'**
+  String get exchangeSuccessBackToWallet;
+
+  /// No description provided for @exchangeRateDisconnectedBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate service is temporarily unavailable.'**
+  String get exchangeRateDisconnectedBanner;
+
+  /// No description provided for @exchangeRateStaleNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing last known rate'**
+  String get exchangeRateStaleNotice;
+
+  /// No description provided for @exchangeRateAutoCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-updates every 60s'**
+  String get exchangeRateAutoCaption;
+
+  /// No description provided for @exchangeRecentPairs.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent pairs'**
+  String get exchangeRecentPairs;
+
+  /// No description provided for @exchangeRateAlertTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Alert'**
+  String get exchangeRateAlertTitle;
+
+  /// No description provided for @exchangeRateAlertHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify me when rate reaches'**
+  String get exchangeRateAlertHint;
+
+  /// No description provided for @exchangeRateAlertSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Alert'**
+  String get exchangeRateAlertSet;
+
+  /// No description provided for @exchangeRateAlertPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get exchangeRateAlertPlaceholder;
+
+  /// No description provided for @exchangeRateServiceRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get exchangeRateServiceRefresh;
+
+  /// No description provided for @rate_service_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate service unavailable'**
+  String get rate_service_unavailable;
+
+  /// No description provided for @rate_stale_last_known.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing last known rate'**
+  String get rate_stale_last_known;
+
+  /// No description provided for @rate_auto_update_caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-updates every 60s'**
+  String get rate_auto_update_caption;
+
+  /// No description provided for @exchangeRate24hChange.
+  ///
+  /// In en, this message translates to:
+  /// **'24h'**
+  String get exchangeRate24hChange;
+
+  /// No description provided for @exchangeRateLastUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get exchangeRateLastUpdate;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @calculating.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating…'**
+  String get calculating;
+
   /// No description provided for @comment_exchange_history.
   ///
   /// In en, this message translates to:
@@ -2467,6 +2655,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bill Payments'**
   String get drawerBillPayments;
+
+  /// No description provided for @drawerRemittance.
+  ///
+  /// In en, this message translates to:
+  /// **'Remittance'**
+  String get drawerRemittance;
 
   /// No description provided for @drawerVirtualCards.
   ///
@@ -5075,7 +5269,7 @@ abstract class AppLocalizations {
   /// No description provided for @disable2FaSectionDescription.
   ///
   /// In en, this message translates to:
-  /// **'noInternetConnectionRetryButton'**
+  /// **'Turning off two-factor authentication reduces your account security. You can enable it again at any time.'**
   String get disable2FaSectionDescription;
 
   /// No description provided for @disable2FaSectionDisableButton.
@@ -6679,6 +6873,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maximum amount should be {amount} {currency}'**
   String exchangeValidationAmountMaximum(Object amount, Object currency);
+
+  /// No description provided for @exchangeValidationInsufficientBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient balance — available: {amount} {currency}'**
+  String exchangeValidationInsufficientBalance(Object amount, Object currency);
 
   /// No description provided for @comment_create_gift_controller.
   ///
@@ -9674,6 +9874,78 @@ abstract class AppLocalizations {
   /// **'Unable to load image'**
   String get p2pUnableToLoadImage;
 
+  /// No description provided for @p2pFieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get p2pFieldRequired;
+
+  /// No description provided for @p2pPleaseUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upload file for this field'**
+  String get p2pPleaseUpload;
+
+  /// No description provided for @p2pPleaseFill.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill this field'**
+  String get p2pPleaseFill;
+
+  /// No description provided for @p2pWriteMessageOrAttach.
+  ///
+  /// In en, this message translates to:
+  /// **'Please write a message or add an attachment'**
+  String get p2pWriteMessageOrAttach;
+
+  /// No description provided for @p2pVerificationSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification submitted successfully'**
+  String get p2pVerificationSubmitted;
+
+  /// No description provided for @p2pCashDollar.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Dollar'**
+  String get p2pCashDollar;
+
+  /// No description provided for @p2pInPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'In-Person Exchange'**
+  String get p2pInPerson;
+
+  /// No description provided for @p2pMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get p2pMinutes;
+
+  /// No description provided for @p2pNoPaymentMethodFound2.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment method found'**
+  String get p2pNoPaymentMethodFound2;
+
+  /// No description provided for @p2pTransferInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ({paymentMethod}) to transfer {amount}'**
+  String p2pTransferInstruction(Object amount, Object paymentMethod);
+
+  /// No description provided for @p2pCashTransferInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {amount} in cash to the seller'**
+  String p2pCashTransferInstruction(Object amount);
+
+  /// No description provided for @p2pInPersonInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet the seller in person and pay {amount} in cash'**
+  String p2pInPersonInstruction(Object amount);
+
   /// No description provided for @p2pUnableToLoadAttachment.
   ///
   /// In en, this message translates to:
@@ -9967,12 +10239,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add'**
   String get p2pAdd;
-
-  /// No description provided for @p2pMinutes.
-  ///
-  /// In en, this message translates to:
-  /// **'Minutes'**
-  String get p2pMinutes;
 
   /// No description provided for @p2pTerms.
   ///
@@ -10291,90 +10557,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter {field}'**
   String p2pEnterField(Object field);
-
-  /// No description provided for @p2pFieldRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'This field is required'**
-  String get p2pFieldRequired;
-
-  /// No description provided for @p2pPleaseUpload.
-  ///
-  /// In en, this message translates to:
-  /// **'Please upload file for this field'**
-  String get p2pPleaseUpload;
-
-  /// No description provided for @p2pPleaseFill.
-  ///
-  /// In en, this message translates to:
-  /// **'Please fill this field'**
-  String get p2pPleaseFill;
-
-  /// No description provided for @p2pWriteMessageOrAttach.
-  ///
-  /// In en, this message translates to:
-  /// **'Please write a message or add an attachment'**
-  String get p2pWriteMessageOrAttach;
-
-  /// No description provided for @p2pVerificationSubmitted.
-  ///
-  /// In en, this message translates to:
-  /// **'Verification submitted successfully'**
-  String get p2pVerificationSubmitted;
-
-  /// No description provided for @p2pCashDollar.
-  ///
-  /// In en, this message translates to:
-  /// **'Cash Dollar'**
-  String get p2pCashDollar;
-
-  /// No description provided for @p2pInPerson.
-  ///
-  /// In en, this message translates to:
-  /// **'In-Person Exchange'**
-  String get p2pInPerson;
-
-  /// No description provided for @p2pMinutes.
-  ///
-  /// In en, this message translates to:
-  /// **'min'**
-  String get p2pMinutes;
-
-  /// No description provided for @p2pRecipient.
-  ///
-  /// In en, this message translates to:
-  /// **'Recipient'**
-  String get p2pRecipient;
-
-  /// No description provided for @p2pCopied.
-  ///
-  /// In en, this message translates to:
-  /// **'Copied'**
-  String get p2pCopied;
-
-  /// No description provided for @p2pNoPaymentMethodFound2.
-  ///
-  /// In en, this message translates to:
-  /// **'No payment method found'**
-  String get p2pNoPaymentMethodFound2;
-
-  /// No description provided for @p2pTransferInstruction.
-  ///
-  /// In en, this message translates to:
-  /// **'Open ({paymentMethod}) to transfer {amount}'**
-  String get p2pTransferInstruction;
-
-  /// No description provided for @p2pCashTransferInstruction.
-  ///
-  /// In en, this message translates to:
-  /// **'Pay {amount} in cash to the seller'**
-  String get p2pCashTransferInstruction;
-
-  /// No description provided for @p2pInPersonInstruction.
-  ///
-  /// In en, this message translates to:
-  /// **'Meet the seller in person and pay {amount} in cash'**
-  String get p2pInPersonInstruction;
 
   /// No description provided for @edit_my_ad.
   ///
@@ -12487,6 +12669,1416 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel.'**
   String get travelPostPurchaseGuidance;
+
+  /// No description provided for @remittanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'International Remittance'**
+  String get remittanceTitle;
+
+  /// No description provided for @remittanceHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remittance History'**
+  String get remittanceHistoryTitle;
+
+  /// No description provided for @remittanceDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remittance Details'**
+  String get remittanceDetailsTitle;
+
+  /// No description provided for @remittanceSelectPayoutMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Payout Method'**
+  String get remittanceSelectPayoutMethod;
+
+  /// No description provided for @remittanceNoMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'No remittance methods available.\nPlease try again later.'**
+  String get remittanceNoMethods;
+
+  /// No description provided for @remittanceSendAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Amount'**
+  String get remittanceSendAmount;
+
+  /// No description provided for @remittanceSendCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Currency'**
+  String get remittanceSendCurrency;
+
+  /// No description provided for @remittanceSelectSendCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Select send currency'**
+  String get remittanceSelectSendCurrency;
+
+  /// No description provided for @remittanceLoadingCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading currencies…'**
+  String get remittanceLoadingCurrencies;
+
+  /// No description provided for @remittanceNoCurrencies.
+  ///
+  /// In en, this message translates to:
+  /// **'No currencies available'**
+  String get remittanceNoCurrencies;
+
+  /// No description provided for @remittanceEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter amount'**
+  String get remittanceEnterAmount;
+
+  /// No description provided for @remittanceUnknownMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get remittanceUnknownMethod;
+
+  /// No description provided for @remittanceRateLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate locked: {seconds}s'**
+  String remittanceRateLocked(int seconds);
+
+  /// No description provided for @remittanceExchangeRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange Rate'**
+  String get remittanceExchangeRate;
+
+  /// No description provided for @remittanceReceiveAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive Amount'**
+  String get remittanceReceiveAmount;
+
+  /// No description provided for @remittanceSystemFee.
+  ///
+  /// In en, this message translates to:
+  /// **'System Fee'**
+  String get remittanceSystemFee;
+
+  /// No description provided for @remittanceTotalPayable.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Payable'**
+  String get remittanceTotalPayable;
+
+  /// No description provided for @remittanceGetQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Quote'**
+  String get remittanceGetQuote;
+
+  /// No description provided for @remittanceStepAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get remittanceStepAmount;
+
+  /// No description provided for @remittanceStepSender.
+  ///
+  /// In en, this message translates to:
+  /// **'Sender'**
+  String get remittanceStepSender;
+
+  /// No description provided for @remittanceStepReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver'**
+  String get remittanceStepReceiver;
+
+  /// No description provided for @remittanceStepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get remittanceStepReview;
+
+  /// No description provided for @remittanceStepDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get remittanceStepDone;
+
+  /// No description provided for @remittanceSenderInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Sender Information'**
+  String get remittanceSenderInfo;
+
+  /// No description provided for @remittanceSelectCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Select country'**
+  String get remittanceSelectCountry;
+
+  /// No description provided for @remittanceSenderTypeIndividual.
+  ///
+  /// In en, this message translates to:
+  /// **'Individual'**
+  String get remittanceSenderTypeIndividual;
+
+  /// No description provided for @remittanceSenderTypeBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get remittanceSenderTypeBusiness;
+
+  /// No description provided for @remittanceSenderName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get remittanceSenderName;
+
+  /// No description provided for @remittanceSenderPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get remittanceSenderPhone;
+
+  /// No description provided for @remittanceSenderIdNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'ID Number'**
+  String get remittanceSenderIdNumber;
+
+  /// No description provided for @remittanceReceiverInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver Information'**
+  String get remittanceReceiverInfo;
+
+  /// No description provided for @remittancePayoutDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Payout Details'**
+  String get remittancePayoutDetails;
+
+  /// No description provided for @remittancePayoutDetailsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in the fields relevant to the selected payout method.'**
+  String get remittancePayoutDetailsHint;
+
+  /// No description provided for @remittanceReceiverName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get remittanceReceiverName;
+
+  /// No description provided for @remittanceReceiverPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get remittanceReceiverPhone;
+
+  /// No description provided for @remittanceBankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Name'**
+  String get remittanceBankName;
+
+  /// No description provided for @remittanceAccountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Number'**
+  String get remittanceAccountNumber;
+
+  /// No description provided for @remittanceIban.
+  ///
+  /// In en, this message translates to:
+  /// **'IBAN'**
+  String get remittanceIban;
+
+  /// No description provided for @remittanceAlipayAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Alipay Account'**
+  String get remittanceAlipayAccount;
+
+  /// No description provided for @remittanceWechatAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'WeChat Account'**
+  String get remittanceWechatAccount;
+
+  /// No description provided for @remittanceReviewConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Confirm'**
+  String get remittanceReviewConfirm;
+
+  /// No description provided for @remittanceReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review all details before submitting your remittance request.'**
+  String get remittanceReviewHint;
+
+  /// No description provided for @remittanceTermsNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.'**
+  String get remittanceTermsNotice;
+
+  /// No description provided for @remittanceReviewSender.
+  ///
+  /// In en, this message translates to:
+  /// **'Sender'**
+  String get remittanceReviewSender;
+
+  /// No description provided for @remittanceReviewReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver'**
+  String get remittanceReviewReceiver;
+
+  /// No description provided for @remittanceReviewPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get remittanceReviewPayment;
+
+  /// No description provided for @remittanceRequestSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Submitted!'**
+  String get remittanceRequestSubmitted;
+
+  /// No description provided for @remittanceRequestCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Your remittance request has been created.'**
+  String get remittanceRequestCreated;
+
+  /// No description provided for @remittanceUploadDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Documents'**
+  String get remittanceUploadDocuments;
+
+  /// No description provided for @remittanceUploadHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your KYC documents and payment receipt to proceed.'**
+  String get remittanceUploadHint;
+
+  /// No description provided for @remittanceAddDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Document'**
+  String get remittanceAddDocument;
+
+  /// No description provided for @remittanceDocumentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Type'**
+  String get remittanceDocumentType;
+
+  /// No description provided for @remittanceDocTypeKyc.
+  ///
+  /// In en, this message translates to:
+  /// **'KYC Document'**
+  String get remittanceDocTypeKyc;
+
+  /// No description provided for @remittanceDocTypePaymentReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Receipt'**
+  String get remittanceDocTypePaymentReceipt;
+
+  /// No description provided for @remittanceDocTypePayoutReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Payout Receipt'**
+  String get remittanceDocTypePayoutReceipt;
+
+  /// No description provided for @remittanceDocTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get remittanceDocTypeOther;
+
+  /// No description provided for @remittanceCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get remittanceCancel;
+
+  /// No description provided for @remittanceAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get remittanceAdd;
+
+  /// No description provided for @remittanceTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get remittanceTakePhoto;
+
+  /// No description provided for @remittanceChooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get remittanceChooseFromGallery;
+
+  /// No description provided for @remittanceChooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose File'**
+  String get remittanceChooseFile;
+
+  /// No description provided for @remittanceErrFileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected file does not exist'**
+  String get remittanceErrFileNotFound;
+
+  /// No description provided for @remittanceErrPickFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not pick file'**
+  String get remittanceErrPickFile;
+
+  /// No description provided for @remittanceErrNoValidFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid files to upload. Please re-select your documents.'**
+  String get remittanceErrNoValidFiles;
+
+  /// No description provided for @remittanceContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get remittanceContinue;
+
+  /// No description provided for @remittanceSubmitRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Request'**
+  String get remittanceSubmitRequest;
+
+  /// No description provided for @remittanceUploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading...'**
+  String get remittanceUploading;
+
+  /// No description provided for @remittanceRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get remittanceRefresh;
+
+  /// No description provided for @remittanceNoHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No remittances yet'**
+  String get remittanceNoHistory;
+
+  /// No description provided for @remittanceNoHistoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your remittance history will appear here.'**
+  String get remittanceNoHistoryHint;
+
+  /// No description provided for @remittanceSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get remittanceSend;
+
+  /// No description provided for @remittanceReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive'**
+  String get remittanceReceive;
+
+  /// No description provided for @remittanceDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get remittanceDate;
+
+  /// No description provided for @remittanceNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Remittance not found'**
+  String get remittanceNotFound;
+
+  /// No description provided for @remittanceStatusFinalized.
+  ///
+  /// In en, this message translates to:
+  /// **'This request is finalized.'**
+  String get remittanceStatusFinalized;
+
+  /// No description provided for @remittanceStatusProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request is being processed.'**
+  String get remittanceStatusProcessing;
+
+  /// No description provided for @remittanceStatusActionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete the required steps.'**
+  String get remittanceStatusActionNeeded;
+
+  /// No description provided for @remittanceDetailsSectionSender.
+  ///
+  /// In en, this message translates to:
+  /// **'Sender Information'**
+  String get remittanceDetailsSectionSender;
+
+  /// No description provided for @remittanceDetailsSectionReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver Information'**
+  String get remittanceDetailsSectionReceiver;
+
+  /// No description provided for @remittanceDetailsSectionPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Details'**
+  String get remittanceDetailsSectionPayment;
+
+  /// No description provided for @remittanceDetailsSectionTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Status Timeline'**
+  String get remittanceDetailsSectionTimeline;
+
+  /// No description provided for @remittanceErrLoadMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load methods'**
+  String get remittanceErrLoadMethods;
+
+  /// No description provided for @remittanceErrSelectPayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a payout method'**
+  String get remittanceErrSelectPayout;
+
+  /// No description provided for @remittanceErrInvalidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid amount'**
+  String get remittanceErrInvalidAmount;
+
+  /// No description provided for @remittanceErrSelectSendCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a send currency'**
+  String get remittanceErrSelectSendCurrency;
+
+  /// No description provided for @remittanceErrQuoteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Quote failed'**
+  String get remittanceErrQuoteFailed;
+
+  /// No description provided for @remittanceErrRequestQuoteFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please request a quote first'**
+  String get remittanceErrRequestQuoteFirst;
+
+  /// No description provided for @remittanceErrQuoteExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Quote expired. Please request a new one.'**
+  String get remittanceErrQuoteExpired;
+
+  /// No description provided for @remittanceErrSenderInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete sender information'**
+  String get remittanceErrSenderInfo;
+
+  /// No description provided for @remittanceErrReceiverInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete receiver information'**
+  String get remittanceErrReceiverInfo;
+
+  /// No description provided for @remittanceErrSubmissionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Submission failed'**
+  String get remittanceErrSubmissionFailed;
+
+  /// No description provided for @remittanceErrNoRemittance.
+  ///
+  /// In en, this message translates to:
+  /// **'No remittance to upload to'**
+  String get remittanceErrNoRemittance;
+
+  /// No description provided for @remittanceErrAddDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add at least one document'**
+  String get remittanceErrAddDocument;
+
+  /// No description provided for @remittanceErrUploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed'**
+  String get remittanceErrUploadFailed;
+
+  /// No description provided for @remittanceErrLoadDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load details'**
+  String get remittanceErrLoadDetails;
+
+  /// No description provided for @remittanceErrCompleteSender.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete all sender fields'**
+  String get remittanceErrCompleteSender;
+
+  /// No description provided for @remittanceErrCompleteReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete all receiver fields'**
+  String get remittanceErrCompleteReceiver;
+
+  /// No description provided for @remittanceSuccessUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents uploaded successfully'**
+  String get remittanceSuccessUploaded;
+
+  /// No description provided for @remittanceError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get remittanceError;
+
+  /// No description provided for @remittanceStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get remittanceStatusDraft;
+
+  /// No description provided for @remittanceStatusWaitingInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting Information'**
+  String get remittanceStatusWaitingInformation;
+
+  /// No description provided for @remittanceStatusWaitingDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting Documents'**
+  String get remittanceStatusWaitingDocuments;
+
+  /// No description provided for @remittanceStatusWaitingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting Payment'**
+  String get remittanceStatusWaitingPayment;
+
+  /// No description provided for @remittanceStatusPaymentReviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Reviewing'**
+  String get remittanceStatusPaymentReviewing;
+
+  /// No description provided for @remittanceStatusInProcess.
+  ///
+  /// In en, this message translates to:
+  /// **'In Process'**
+  String get remittanceStatusInProcess;
+
+  /// No description provided for @remittanceStatusDestinationProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination Processing'**
+  String get remittanceStatusDestinationProcessing;
+
+  /// No description provided for @remittanceStatusDestinationPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination Paid'**
+  String get remittanceStatusDestinationPaid;
+
+  /// No description provided for @remittanceStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get remittanceStatusCompleted;
+
+  /// No description provided for @remittanceStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get remittanceStatusRejected;
+
+  /// No description provided for @remittanceStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get remittanceStatusExpired;
+
+  /// No description provided for @remittanceStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get remittanceStatusCancelled;
+
+  /// No description provided for @remittanceStatusRefundRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Requested'**
+  String get remittanceStatusRefundRequested;
+
+  /// No description provided for @remittanceStatusRefundCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund Completed'**
+  String get remittanceStatusRefundCompleted;
+
+  /// No description provided for @remittanceStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get remittanceStatusUnknown;
+
+  /// No description provided for @exchangeCalculating.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating…'**
+  String get exchangeCalculating;
+
+  /// No description provided for @biometricNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication is not available on this device'**
+  String get biometricNotAvailable;
+
+  /// No description provided for @biometricSetupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to start biometric authentication'**
+  String get biometricSetupFailed;
+
+  /// No description provided for @biometricFailedAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication failed. {attempts} attempts remaining'**
+  String biometricFailedAttempts(int attempts);
+
+  /// No description provided for @biometricMaxAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum biometric attempts reached. Please sign in with your password'**
+  String get biometricMaxAttempts;
+
+  /// No description provided for @biometricReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate to sign in to eCardo'**
+  String get biometricReason;
+
+  /// No description provided for @biometricGenericError.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication failed'**
+  String get biometricGenericError;
+
+  /// No description provided for @dynamicPasswordUserNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: user information not found'**
+  String get dynamicPasswordUserNotFound;
+
+  /// No description provided for @dynamicPasswordGenerateError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate dynamic password'**
+  String get dynamicPasswordGenerateError;
+
+  /// No description provided for @licenseRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'License Required'**
+  String get licenseRequiredTitle;
+
+  /// No description provided for @commonClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get commonClose;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get contactSupport;
+
+  /// No description provided for @updateCancelDownloadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel download?'**
+  String get updateCancelDownloadTitle;
+
+  /// No description provided for @updateContinueDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue download'**
+  String get updateContinueDownload;
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New update available ({version})'**
+  String updateAvailableTitle(String version);
+
+  /// No description provided for @updateLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get updateLater;
+
+  /// No description provided for @kycDocumentsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents are required.'**
+  String get kycDocumentsRequired;
+
+  /// No description provided for @kycUploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed. Please try again.'**
+  String get kycUploadFailed;
+
+  /// No description provided for @p2pSelectFiatFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a fiat currency first'**
+  String get p2pSelectFiatFirst;
+
+  /// No description provided for @p2pLoadPaymentMethodsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load payment methods'**
+  String get p2pLoadPaymentMethodsFailed;
+
+  /// No description provided for @p2pLoadAdsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load marketplace ads'**
+  String get p2pLoadAdsFailed;
+
+  /// No description provided for @pickDocumentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick document. Please try again.'**
+  String get pickDocumentFailed;
+
+  /// No description provided for @hotel_active_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Active filters'**
+  String get hotel_active_filters;
+
+  /// No description provided for @hotel_all_cities_with_hotels.
+  ///
+  /// In en, this message translates to:
+  /// **'All cities with hotels'**
+  String get hotel_all_cities_with_hotels;
+
+  /// No description provided for @hotel_all_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'All filters'**
+  String get hotel_all_filters;
+
+  /// No description provided for @hotel_all_ratings.
+  ///
+  /// In en, this message translates to:
+  /// **'All ratings'**
+  String get hotel_all_ratings;
+
+  /// No description provided for @hotel_apply_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply filters'**
+  String get hotel_apply_filters;
+
+  /// No description provided for @hotel_available_rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Available rooms'**
+  String get hotel_available_rooms;
+
+  /// No description provided for @hotel_by_continuing_you_accept_the.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you accept the '**
+  String get hotel_by_continuing_you_accept_the;
+
+  /// No description provided for @hotel_check_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get hotel_check_in;
+
+  /// No description provided for @hotel_check_in_and_check_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in and check-out'**
+  String get hotel_check_in_and_check_out;
+
+  /// No description provided for @hotel_check_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get hotel_check_out;
+
+  /// No description provided for @hotel_checking_availability.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking availability'**
+  String get hotel_checking_availability;
+
+  /// No description provided for @hotel_clear_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get hotel_clear_all;
+
+  /// No description provided for @hotel_close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get hotel_close;
+
+  /// No description provided for @hotel_complete_the_reservator_and_room_caretaker_i.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the reservator and room caretaker information.'**
+  String get hotel_complete_the_reservator_and_room_caretaker_i;
+
+  /// No description provided for @hotel_confirm_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm dates'**
+  String get hotel_confirm_dates;
+
+  /// No description provided for @hotel_continue_booking.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue booking'**
+  String get hotel_continue_booking;
+
+  /// No description provided for @hotel_destination_city_or_hotel.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination city or hotel'**
+  String get hotel_destination_city_or_hotel;
+
+  /// No description provided for @hotel_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get hotel_details;
+
+  /// No description provided for @hotel_discounted.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounted'**
+  String get hotel_discounted;
+
+  /// No description provided for @hotel_discounted_hotels_only.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounted hotels only'**
+  String get hotel_discounted_hotels_only;
+
+  /// No description provided for @hotel_edit_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit dates'**
+  String get hotel_edit_dates;
+
+  /// No description provided for @hotel_features.
+  ///
+  /// In en, this message translates to:
+  /// **'Features'**
+  String get hotel_features;
+
+  /// No description provided for @hotel_for_example_non_smoking_room_or_estimated_ar.
+  ///
+  /// In en, this message translates to:
+  /// **'For example, non-smoking room or estimated arrival time'**
+  String get hotel_for_example_non_smoking_room_or_estimated_ar;
+
+  /// No description provided for @hotel_gregorian.
+  ///
+  /// In en, this message translates to:
+  /// **'Gregorian'**
+  String get hotel_gregorian;
+
+  /// No description provided for @hotel_guest_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest rating'**
+  String get hotel_guest_rating;
+
+  /// No description provided for @hotel_guest_ratings_and_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest ratings and reviews'**
+  String get hotel_guest_ratings_and_reviews;
+
+  /// No description provided for @hotel_hotel_features.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel features'**
+  String get hotel_hotel_features;
+
+  /// No description provided for @hotel_hotel_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel filters'**
+  String get hotel_hotel_filters;
+
+  /// No description provided for @hotel_hotel_stars.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel stars'**
+  String get hotel_hotel_stars;
+
+  /// No description provided for @hotel_hotels_with_available_rooms_only.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotels with available rooms only'**
+  String get hotel_hotels_with_available_rooms_only;
+
+  /// No description provided for @hotel_nights.
+  ///
+  /// In en, this message translates to:
+  /// **'nights'**
+  String get hotel_nights;
+
+  /// No description provided for @hotel_no_matching_city_or_hotel_was_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching city or hotel was found.'**
+  String get hotel_no_matching_city_or_hotel_was_found;
+
+  /// No description provided for @hotel_no_recommended_hotels_are_available_for_this.
+  ///
+  /// In en, this message translates to:
+  /// **'No recommended hotels are available for this city.'**
+  String get hotel_no_recommended_hotels_are_available_for_this;
+
+  /// No description provided for @hotel_only_one_responsible_guest_is_needed_for_eac.
+  ///
+  /// In en, this message translates to:
+  /// **'Only one responsible guest is needed for each room; you do not need to enter every passenger.'**
+  String get hotel_only_one_responsible_guest_is_needed_for_eac;
+
+  /// No description provided for @hotel_overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get hotel_overview;
+
+  /// No description provided for @hotel_passenger_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger information'**
+  String get hotel_passenger_information;
+
+  /// No description provided for @hotel_persian.
+  ///
+  /// In en, this message translates to:
+  /// **'Persian'**
+  String get hotel_persian;
+
+  /// No description provided for @hotel_popular_cities.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular cities'**
+  String get hotel_popular_cities;
+
+  /// No description provided for @hotel_price_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Price range'**
+  String get hotel_price_range;
+
+  /// No description provided for @hotel_property_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Property type'**
+  String get hotel_property_type;
+
+  /// No description provided for @hotel_recommended_hotels.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended hotels'**
+  String get hotel_recommended_hotels;
+
+  /// No description provided for @hotel_refine_your_results.
+  ///
+  /// In en, this message translates to:
+  /// **'Refine your results'**
+  String get hotel_refine_your_results;
+
+  /// No description provided for @hotel_reservation_details_and_every_order_update_w.
+  ///
+  /// In en, this message translates to:
+  /// **'Reservation details and every order update will be sent to the reservator.'**
+  String get hotel_reservation_details_and_every_order_update_w;
+
+  /// No description provided for @hotel_reservator_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Reservator information'**
+  String get hotel_reservator_information;
+
+  /// No description provided for @hotel_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get hotel_reviews;
+
+  /// No description provided for @hotel_room.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get hotel_room;
+
+  /// No description provided for @hotel_room_caretakers.
+  ///
+  /// In en, this message translates to:
+  /// **'Room caretakers'**
+  String get hotel_room_caretakers;
+
+  /// No description provided for @hotel_room_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Room details'**
+  String get hotel_room_details;
+
+  /// No description provided for @hotel_room_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Room information'**
+  String get hotel_room_information;
+
+  /// No description provided for @hotel_rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get hotel_rooms;
+
+  /// No description provided for @hotel_rules.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules'**
+  String get hotel_rules;
+
+  /// No description provided for @hotel_search_by_city_or_hotel_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by city or hotel name'**
+  String get hotel_search_by_city_or_hotel_name;
+
+  /// No description provided for @hotel_search_hotel_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Search hotel name'**
+  String get hotel_search_hotel_name;
+
+  /// No description provided for @hotel_search_results.
+  ///
+  /// In en, this message translates to:
+  /// **'Search results'**
+  String get hotel_search_results;
+
+  /// No description provided for @hotel_select_a_destination_city_or_hotel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a destination city or hotel.'**
+  String get hotel_select_a_destination_city_or_hotel;
+
+  /// No description provided for @hotel_select_stay_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'Select stay dates'**
+  String get hotel_select_stay_dates;
+
+  /// No description provided for @hotel_show_less.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get hotel_show_less;
+
+  /// No description provided for @hotel_show_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get hotel_show_more;
+
+  /// No description provided for @hotel_show_more_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get hotel_show_more_2;
+
+  /// No description provided for @hotel_similar_hotels.
+  ///
+  /// In en, this message translates to:
+  /// **'Similar hotels'**
+  String get hotel_similar_hotels;
+
+  /// No description provided for @hotel_special_offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Special offers'**
+  String get hotel_special_offers;
+
+  /// No description provided for @hotel_special_requests_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Special requests (optional)'**
+  String get hotel_special_requests_optional;
+
+  /// No description provided for @hotel_terms_and_privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and privacy policy'**
+  String get hotel_terms_and_privacy_policy;
+
+  /// No description provided for @hotel_terms_and_privacy_policy_2.
+  ///
+  /// In en, this message translates to:
+  /// **'terms and privacy policy'**
+  String get hotel_terms_and_privacy_policy_2;
+
+  /// No description provided for @hotel_the_terms_for_this_service_are_admin_control.
+  ///
+  /// In en, this message translates to:
+  /// **'The terms for this service are admin-controlled. Review hotel, cancellation, refund, and privacy rules before payment.'**
+  String get hotel_the_terms_for_this_service_are_admin_control;
+
+  /// No description provided for @hotelHotelsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} hotels'**
+  String hotelHotelsCount(String count);
+
+  /// No description provided for @hotelRoomsForNights.
+  ///
+  /// In en, this message translates to:
+  /// **'{rooms} rooms for {nights} nights'**
+  String hotelRoomsForNights(int rooms, int nights);
+
+  /// No description provided for @hotelPriceNightsOneRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Price for {nights} nights and one room'**
+  String hotelPriceNightsOneRoom(int nights);
+
+  /// No description provided for @hotelRoomsTimesNights.
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} rooms × {nights} nights'**
+  String hotelRoomsTimesNights(int quantity, int nights);
+
+  /// No description provided for @hotelOneRoomNights.
+  ///
+  /// In en, this message translates to:
+  /// **'One room for {nights} nights'**
+  String hotelOneRoomNights(int nights);
+
+  /// No description provided for @hotelNightsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} nights'**
+  String hotelNightsCount(int count);
+
+  /// No description provided for @dynamicPasswordServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error communicating with the server.'**
+  String get dynamicPasswordServerError;
+
+  /// No description provided for @dynamicPasswordConnectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error.'**
+  String get dynamicPasswordConnectionError;
+
+  /// No description provided for @dynamicPasswordHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic Password'**
+  String get dynamicPasswordHeading;
+
+  /// No description provided for @dynamicPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A 6-digit code for paying from your wallet.'**
+  String get dynamicPasswordSubtitle;
+
+  /// No description provided for @dynamicPasswordValidity.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid for 60 seconds — single use only.'**
+  String get dynamicPasswordValidity;
+
+  /// No description provided for @dynamicPasswordCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied.'**
+  String get dynamicPasswordCopied;
+
+  /// No description provided for @dynamicPasswordCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get dynamicPasswordCopy;
+
+  /// No description provided for @dynamicPasswordRegenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate a new code'**
+  String get dynamicPasswordRegenerate;
+
+  /// No description provided for @dynamicPasswordGenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate dynamic password'**
+  String get dynamicPasswordGenerate;
+
+  /// No description provided for @dynamicPasswordUsageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter this code on the payment page. It is valid for 60 seconds and can be used only once.'**
+  String get dynamicPasswordUsageHint;
+
+  /// No description provided for @vcUnableLoadProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load card products.'**
+  String get vcUnableLoadProducts;
+
+  /// No description provided for @vcOrderNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The card order could not be completed.'**
+  String get vcOrderNotCompleted;
+
+  /// No description provided for @vcProductUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Card product is unavailable.'**
+  String get vcProductUnavailable;
+
+  /// No description provided for @vcEnterValidAmountIrr.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount in Iranian rials.'**
+  String get vcEnterValidAmountIrr;
+
+  /// No description provided for @vcMinInitialLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'The minimum initial load is {amount} IRR.'**
+  String vcMinInitialLoad(num amount);
+
+  /// No description provided for @vcMaxInitialLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'The maximum initial load is {amount} IRR.'**
+  String vcMaxInitialLoad(num amount);
+
+  /// No description provided for @vcSelectIrrWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an IRR wallet.'**
+  String get vcSelectIrrWallet;
+
+  /// No description provided for @vcSelectGateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a payment gateway.'**
+  String get vcSelectGateway;
+
+  /// No description provided for @vcCompleteCardholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the cardholder information.'**
+  String get vcCompleteCardholder;
+
+  /// No description provided for @vcStatusPaymentPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Card order created and awaiting payment.'**
+  String get vcStatusPaymentPending;
+
+  /// No description provided for @vcStatusProvisioning.
+  ///
+  /// In en, this message translates to:
+  /// **'Card provisioning is in progress.'**
+  String get vcStatusProvisioning;
+
+  /// No description provided for @vcStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your card is ready.'**
+  String get vcStatusReady;
+
+  /// No description provided for @vcStatusCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Card order created.'**
+  String get vcStatusCreated;
+
+  /// No description provided for @vcMinTopup.
+  ///
+  /// In en, this message translates to:
+  /// **'The minimum top-up is {amount} {currency}.'**
+  String vcMinTopup(num amount, String currency);
+
+  /// No description provided for @vcMaxTopup.
+  ///
+  /// In en, this message translates to:
+  /// **'The maximum top-up is {amount} {currency}.'**
+  String vcMaxTopup(num amount, String currency);
+
+  /// No description provided for @vcTopupNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The card top-up could not be completed.'**
+  String get vcTopupNotCompleted;
+
+  /// No description provided for @vcTopupSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Card top-up submitted.'**
+  String get vcTopupSubmitted;
+
+  /// No description provided for @hotel_admin_configured_special_offers_will_appear.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin-configured special offers will appear here.'**
+  String get hotel_admin_configured_special_offers_will_appear;
 }
 
 class _AppLocalizationsDelegate
@@ -12499,8 +14091,14 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['ar', 'en', 'fa', 'ru', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'ar',
+    'en',
+    'fa',
+    'ru',
+    'tr',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -12517,6 +14115,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsFa();
     case 'ru':
       return AppLocalizationsRu();
+    case 'tr':
+      return AppLocalizationsTr();
     case 'zh':
       return AppLocalizationsZh();
   }
@@ -12527,118 +14127,4 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
     'that was used.',
   );
-  String get remittanceTitle;
-  String get remittanceHistoryTitle;
-  String get remittanceDetailsTitle;
-  String get remittanceSelectPayoutMethod;
-  String get remittanceNoMethods;
-  String get remittanceSendAmount;
-  String get remittanceSendCurrency;
-  String get remittanceSelectSendCurrency;
-  String get remittanceLoadingCurrencies;
-  String get remittanceNoCurrencies;
-  String get remittanceEnterAmount;
-  String get remittanceUnknownMethod;
-  String remittanceRateLocked(int seconds);
-  String get remittanceExchangeRate;
-  String get remittanceReceiveAmount;
-  String get remittanceSystemFee;
-  String get remittanceTotalPayable;
-  String get remittanceGetQuote;
-  String get remittanceStepAmount;
-  String get remittanceStepSender;
-  String get remittanceStepReceiver;
-  String get remittanceStepReview;
-  String get remittanceStepDone;
-  String get remittanceSenderInfo;
-  String get remittanceSelectCountry;
-  String get remittanceSenderTypeIndividual;
-  String get remittanceSenderTypeBusiness;
-  String get remittanceSenderName;
-  String get remittanceSenderPhone;
-  String get remittanceSenderIdNumber;
-  String get remittanceReceiverInfo;
-  String get remittancePayoutDetails;
-  String get remittancePayoutDetailsHint;
-  String get remittanceReceiverName;
-  String get remittanceReceiverPhone;
-  String get remittanceBankName;
-  String get remittanceAccountNumber;
-  String get remittanceIban;
-  String get remittanceAlipayAccount;
-  String get remittanceWechatAccount;
-  String get remittanceReviewConfirm;
-  String get remittanceReviewHint;
-  String get remittanceTermsNotice;
-  String get remittanceReviewSender;
-  String get remittanceReviewReceiver;
-  String get remittanceReviewPayment;
-  String get remittanceRequestSubmitted;
-  String get remittanceRequestCreated;
-  String get remittanceUploadDocuments;
-  String get remittanceUploadHint;
-  String get remittanceAddDocument;
-  String get remittanceDocumentType;
-  String get remittanceDocTypeKyc;
-  String get remittanceDocTypePaymentReceipt;
-  String get remittanceDocTypePayoutReceipt;
-  String get remittanceDocTypeOther;
-  String get remittanceCancel;
-  String get remittanceAdd;
-  String get remittanceTakePhoto;
-  String get remittanceChooseFromGallery;
-  String get remittanceChooseFile;
-  String get remittanceErrFileNotFound;
-  String get remittanceErrPickFile;
-  String get remittanceErrNoValidFiles;
-  String get remittanceContinue;
-  String get remittanceSubmitRequest;
-  String get remittanceUploading;
-  String get remittanceRefresh;
-  String get remittanceNoHistory;
-  String get remittanceNoHistoryHint;
-  String get remittanceSend;
-  String get remittanceReceive;
-  String get remittanceDate;
-  String get remittanceNotFound;
-  String get remittanceStatusFinalized;
-  String get remittanceStatusProcessing;
-  String get remittanceStatusActionNeeded;
-  String get remittanceDetailsSectionSender;
-  String get remittanceDetailsSectionReceiver;
-  String get remittanceDetailsSectionPayment;
-  String get remittanceDetailsSectionTimeline;
-  String get remittanceErrLoadMethods;
-  String get remittanceErrSelectPayout;
-  String get remittanceErrInvalidAmount;
-  String get remittanceErrSelectSendCurrency;
-  String get remittanceErrQuoteFailed;
-  String get remittanceErrRequestQuoteFirst;
-  String get remittanceErrQuoteExpired;
-  String get remittanceErrSenderInfo;
-  String get remittanceErrReceiverInfo;
-  String get remittanceErrSubmissionFailed;
-  String get remittanceErrNoRemittance;
-  String get remittanceErrAddDocument;
-  String get remittanceErrUploadFailed;
-  String get remittanceErrLoadDetails;
-  String get remittanceErrCompleteSender;
-  String get remittanceErrCompleteReceiver;
-  String get remittanceSuccessUploaded;
-  String get remittanceError;
-  String get remittanceStatusDraft;
-  String get remittanceStatusWaitingInformation;
-  String get remittanceStatusWaitingDocuments;
-  String get remittanceStatusWaitingPayment;
-  String get remittanceStatusPaymentReviewing;
-  String get remittanceStatusInProcess;
-  String get remittanceStatusDestinationProcessing;
-  String get remittanceStatusDestinationPaid;
-  String get remittanceStatusCompleted;
-  String get remittanceStatusRejected;
-  String get remittanceStatusExpired;
-  String get remittanceStatusCancelled;
-  String get remittanceStatusRefundRequested;
-  String get remittanceStatusRefundCompleted;
-  String get remittanceStatusUnknown;
 }
