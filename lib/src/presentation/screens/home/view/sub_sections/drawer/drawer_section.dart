@@ -338,7 +338,17 @@ class _DrawerItem extends StatelessWidget {
                   return;
                 }
               } catch (_) {
-                // اگر controller ثبت نشده، عبور کن
+                // v1.0.24 (fail-closed): the old silent `catch (_) {}` let
+                // the user into remittance when the KYC controller was not
+                // registered — a gate that silently opens. Now the item is
+                // blocked with the KYC dialog until the controller exists.
+                Get.back();
+                Get.dialog(_KycLevelRequiredDialog(
+                  requiredLevel: 3,
+                  currentLevel: 0,
+                  featureName: nav,
+                ));
+                return;
               }
               navigateTo();
             } else if (nav == localization.drawerDashboard) {

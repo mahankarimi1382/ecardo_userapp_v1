@@ -51,9 +51,9 @@ class UserProfileSection extends StatelessWidget {
                     homeController
                             .dashboardModel
                             .value
-                            .data!
-                            .info!
-                            .timeWiseWish ??
+                            .data
+                            ?.info
+                            ?.timeWiseWish ??
                         "",
                     style: TextStyle(
                       letterSpacing: 0,
@@ -67,7 +67,7 @@ class UserProfileSection extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          homeController.dashboardModel.value.data!.user!.userName ?? "",
+                          homeController.dashboardModel.value.data?.user?.userName ?? "",
                           maxLines: 2,
                           style: TextStyle(
                             letterSpacing: 0,

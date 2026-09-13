@@ -25,7 +25,9 @@ class PayBillServiceData {
   String? countryCode;
   List<String>? fields;
   String? currency;
-  int? rate;
+  // S-011: server stores rate as DECIMAL (e.g. 0.85) — an int crashed with
+  // type 'double' is not a subtype of type 'int'.
+  double? rate;
   int? amount;
   int? minAmount;
   int? maxAmount;
@@ -58,7 +60,7 @@ class PayBillServiceData {
     fields = json['fields'] != null ? List<String>.from(json['fields']) : [];
 
     currency = json['currency'];
-    rate = json['rate'];
+    rate = (json['rate'] as num?)?.toDouble();
     amount = json['amount'];
     minAmount = json['min_amount'];
     maxAmount = json['max_amount'];

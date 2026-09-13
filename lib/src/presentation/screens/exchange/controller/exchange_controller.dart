@@ -480,6 +480,20 @@ class ExchangeController extends GetxController {
       return false;
     }
 
+    // v1.0.24: balance guard — the flow used to submit exchanges larger than
+    // the wallet balance and only failed after the server rejected them.
+    final double availableBalance =
+        double.tryParse(fromWallet.value!.balance ?? '') ?? 0.0;
+    if (enteredAmount > availableBalance) {
+      ToastHelper().showErrorToast(
+        localization.exchangeValidationInsufficientBalance(
+          availableBalance.toStringAsFixed(calculateDecimals),
+          fromWallet.value!.code!,
+        ),
+      );
+      return false;
+    }
+
     return true;
   }
 

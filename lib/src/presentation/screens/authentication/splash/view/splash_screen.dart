@@ -22,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _logoController;
   late AnimationController _textController;
   late AnimationController _backgroundController;
+  Worker? _settingsWorker; // v1.0.24: disposed with the state
 
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -110,7 +111,9 @@ class _SplashScreenState extends State<SplashScreen>
       }
     });
 
-    ever(settingsService.isSettingsDataLoad, (isLoaded) {
+    // v1.0.24: store the worker and dispose it in dispose() — an orphaned
+    // ever() here survived screen disposal and could re-trigger navigation.
+    _settingsWorker = ever(settingsService.isSettingsDataLoad, (isLoaded) {
       if (isLoaded == true) {
         Future.delayed(const Duration(seconds: 2), () {
           splashController.navigateBasedOnAuth();
@@ -131,6 +134,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
+    _settingsWorker?.dispose();
     _logoController.dispose();
     _textController.dispose();
     _backgroundController.dispose();

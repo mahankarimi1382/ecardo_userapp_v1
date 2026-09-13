@@ -300,7 +300,7 @@ class CreateWithdrawAccountController extends GetxController {
     withdrawMethodList.clear();
     dynamicFieldControllers.clear();
     methodNameController.clear();
-    methodName.value == "";
+    methodName.value = ""; // v1.0.24: was `==` (no-op) — field never cleared
     selectedImages.clear();
     isWalletFocused.value = false;
     isWithdrawMethodFocused.value = false;

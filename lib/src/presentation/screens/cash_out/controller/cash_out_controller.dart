@@ -119,7 +119,11 @@ class CashOutController extends GetxController {
       debugPrint('❌ fetchCashOutConfig() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
-    } finally {}
+    } finally {
+      // v1.0.24: was `finally {}` — the config spinner never cleared when
+      // the request failed (stuck loading screen).
+      isCashoutConfigLoading.value = false;
+    }
   }
 
   // Charge Calculation

@@ -113,6 +113,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
       await file.writeAsBytes(pngBytes);
       ToastHelper().showSuccessToast(localization.qrCodeScreenDownloadSuccess);
-    } finally {}
+    } catch (e) {
+      // v1.0.24: was `finally {}` — permission races / null boundary / write
+      // errors were swallowed and the tap silently did nothing.
+      debugPrint('❌ downloadQr() error: $e');
+      ToastHelper().showErrorToast(localization.allControllerLoadError);
+    }
   }
 }

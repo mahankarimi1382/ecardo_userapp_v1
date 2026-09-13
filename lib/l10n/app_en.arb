@@ -1129,6 +1129,7 @@
   "exchangeValidationEnterAmount": "Please enter an amount",
   "exchangeValidationAmountMinimum": "Minimum amount should be {amount} {currency}",
   "exchangeValidationAmountMaximum": "Maximum amount should be {amount} {currency}",
+    "exchangeValidationInsufficientBalance": "Insufficient balance — available: {amount} {currency}",
   "comment_create_gift_controller": "==== Create Gift Controller ====",
   "createGiftValidationSelectWallet": "Please select a wallet",
   "createGiftValidationEnterAmount": "Please enter an amount",

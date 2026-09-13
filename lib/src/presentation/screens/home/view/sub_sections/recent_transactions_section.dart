@@ -27,7 +27,8 @@ class RecentTransactionsSection extends StatelessWidget {
             onTap: () => Get.toNamed(BaseRoute.transactions),
           ),
           const SizedBox(height: 10),
-          homeController.transactionsModel.value.data!.transactions!.isEmpty
+          (homeController.transactionsModel.value.data?.transactions?.isEmpty ??
+                  true)
               ? NoDataFound()
               : Container(
                   margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
@@ -188,11 +189,12 @@ class RecentTransactionsSection extends StatelessWidget {
                       );
                     },
                     itemCount: homeController
-                        .transactionsModel
-                        .value
-                        .data!
-                        .transactions!
-                        .length,
+                            .transactionsModel
+                            .value
+                            .data
+                            ?.transactions
+                            ?.length ??
+                        0,
                   ),
                 ),
         ],

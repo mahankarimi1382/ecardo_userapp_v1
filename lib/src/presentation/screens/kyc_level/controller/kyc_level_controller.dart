@@ -1,3 +1,7 @@
+import 'dart:io' show File;
+
+import 'package:dio/dio.dart' show FormData, MultipartFile;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -38,15 +42,47 @@ class KycLevelController extends GetxController {
     await fetchLevels();
   }
 
+  /// S-019 — submit KYC documents as a real multipart upload.
+  ///
+  /// The server (`api/user/kyc-level/submit`) accepts each document under the
+  /// key `documents[<name>]` either as an uploaded FILE (preferred — it runs
+  /// the ImageUploadTrait on it) or as a plain string. This method used to
+  /// JSON-encode local file *paths* into `{'documents': {...}}`, which the
+  /// server stored as unreachable path strings.
+  ///
+  /// Behaviour now:
+  ///  - value is an existing local file  -> MultipartFile under documents[key]
+  ///  - value is anything else (e.g. an already-uploaded server path on web)
+  ///      -> plain string field under documents[key]
   Future<bool> submitDocuments({required Map<String, String> documents, int? targetLevel}) async {
     isSubmitting.value = true;
     try {
-      final response = await _networkService.post(
+      final formData = FormData();
+      if (targetLevel != null) {
+        formData.fields.add(MapEntry('level', targetLevel.toString()));
+      }
+
+      for (final entry in documents.entries) {
+        final key = 'documents[${entry.key}]';
+        final isLocalFile = !kIsWeb && entry.value.isNotEmpty && File(entry.value).existsSync();
+        if (isLocalFile) {
+          formData.files.add(
+            MapEntry(key, await MultipartFile.fromFile(entry.value)),
+          );
+        } else {
+          formData.fields.add(MapEntry(key, entry.value));
+        }
+      }
+
+      if (formData.files.isEmpty && formData.fields.where((f) => f.key.startsWith('documents[')).isEmpty) {
+        isSubmitting.value = false;
+        ToastHelper().showErrorToast('Documents are required.');
+        return false;
+      }
+
+      final response = await _networkService.postMultipart(
         endpoint: ApiPath.kycLevelSubmitEndpoint,
-        data: {
-          'documents': documents,
-          if (targetLevel != null) 'level': targetLevel,
-        },
+        data: formData,
       );
       isSubmitting.value = false;
       if (response.status == Status.completed) {

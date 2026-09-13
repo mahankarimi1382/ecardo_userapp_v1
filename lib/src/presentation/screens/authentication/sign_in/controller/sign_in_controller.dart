@@ -131,8 +131,13 @@ class SignInController extends GetxController {
       if (response.status == Status.completed) {
         userModel.value = UserModel.fromJson(response.data!);
 
-        if (userModel.value.data!.twoFa == true &&
-            Get.find<SettingsService>().getSetting("fa_verification") == "1") {
+        // v1.0.24 (2FA bypass fix): when the user has 2FA enabled the client
+        // MUST route to the verification screen. The previous condition
+        // additionally required the local `fa_verification` setting to be
+        // exactly "1" — if that setting was missing/“0” the check was
+        // silently skipped and the app continued to the account even for
+        // 2FA-protected users. Server-side TwoFaCheck remains the real gate.
+        if (userModel.value.data!.twoFa == true) {
           Get.toNamed(BaseRoute.twoFactorAuth);
         } else {
           await Get.find<SettingsService>().saveLoggedInUserEmail(

@@ -266,11 +266,31 @@ class ProfileSettingsController extends GetxController {
       } catch (e) {
         formattedDob = dateOfBirth.value;
       }
+      // v1.0.24 (gender overwrite fix): compare against the LOCALIZED labels
+      // (dropdown values are localized). The old `== "Male"` compared a
+      // Persian/Arabic label with an English literal and silently rewrote
+      // every non-English profile to "female"; "Other" also became "female".
+      final genderLabel = gender.value;
+      final String genderCode;
+      if (genderLabel == localization.profileSettingsGenderMale) {
+        genderCode = 'male';
+      } else if (genderLabel == localization.profileSettingsGenderFemale) {
+        genderCode = 'female';
+      } else if (genderLabel == localization.profileSettingsGenderOther) {
+        genderCode = 'other';
+      } else {
+        final l = genderLabel.toLowerCase();
+        genderCode = l == 'male' || l == 'm'
+            ? 'male'
+            : l == 'other'
+                ? 'other'
+                : 'female';
+      }
       final formData = dio.FormData.fromMap({
         'first_name': firstNameController.text,
         'last_name': lastNameController.text,
         'username': userNameController.text,
-        'gender': gender.value == "Male" ? "male" : "female",
+        'gender': genderCode,
         if (dateOfBirth.isNotEmpty) 'date_of_birth': formattedDob,
         'email': emailAddressController.text,
         'phone': phoneController.text,

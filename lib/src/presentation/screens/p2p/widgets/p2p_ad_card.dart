@@ -180,7 +180,11 @@ class P2pAdCard extends StatelessWidget {
                             Get.to(
                               () => P2pBuySellAdScreen(
                                 adId: adId,
-                                isSellMode: actionLabel == 'Sell',
+                                // v1.0.24: mode is derived from the ad type,
+                                // not from a localized label comparison
+                                // (old `actionLabel == 'Sell'` broke in
+                                // non-English locales).
+                                isSellMode: isAdTypeBuy,
                               ),
                             );
                           },

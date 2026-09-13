@@ -1130,6 +1130,7 @@
   "exchangeValidationEnterAmount": "يرجى إدخال المبلغ",
   "exchangeValidationAmountMinimum": "الحد الأدنى للمبلغ هو {amount} {currency}",
   "exchangeValidationAmountMaximum": "الحد الأقصى للمبلغ هو {amount} {currency}",
+    "exchangeValidationInsufficientBalance": "الرصيد غير كافٍ — المتاح: {amount} {currency}",
   "comment_create_gift_controller": "==== Create Gift Controller ====",
   "createGiftValidationSelectWallet": "يرجى اختيار محفظة",
   "createGiftValidationEnterAmount": "يرجى إدخال المبلغ",

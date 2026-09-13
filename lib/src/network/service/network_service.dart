@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx hide Response;
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -23,6 +24,23 @@ class NetworkService extends getx.GetxService {
   final String baseUrl = ApiPath.baseUrl;
   late TokenService _tokenService;
 
+  // Real app version (from pubspec via package_info_plus). Until resolved we
+  // send an empty value — the server treats a missing/unparseable header as
+  // pass-through. Never hardcode a stale version again (S-003/S-022 fix).
+  String _appVersion = '';
+
+  /// Endpoints that move money — every POST to one of these carries an
+  /// Idempotency-Key (the X-Request-ID of the logical call) so the server
+  /// (S-023 middleware) can collapse accidental double submissions.
+  static const List<String> _idempotentEndpointSuffixes = [
+    '/user/pay-bill',
+    '/user/transfer',
+    '/user/cashout',
+    '/user/gifts',
+    '/user/withdraw',
+    '/user/exchange',
+  ];
+
   AppLocalizations? get localization {
     final ctx = getx.Get.context;
     if (ctx == null) return null;
@@ -36,6 +54,17 @@ class NetworkService extends getx.GetxService {
     _tokenService = getx.Get.find<TokenService>();
     _configureHttpClient();
     _configureGlobalHttpClient();
+    _resolveAppVersion();
+  }
+
+  Future<void> _resolveAppVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      _appVersion = info.version;
+      if (kDebugMode) debugPrint('📱 X-App-Version resolved: $_appVersion');
+    } catch (e) {
+      debugPrint('⚠️ Could not resolve app version: $e');
+    }
   }
 
   // Config for secured dio
@@ -43,6 +72,11 @@ class NetworkService extends getx.GetxService {
     _dio.options.baseUrl = baseUrl;
     _dio.options.contentType = 'application/json';
     _dio.options.headers['Accept'] = 'application/json';
+    // v1.0.24: explicit timeouts — requests used to hang indefinitely on a
+    // dead connection, keeping spinners on screen forever.
+    _dio.options.connectTimeout = const Duration(seconds: 15);
+    _dio.options.receiveTimeout = const Duration(seconds: 30);
+    _dio.options.sendTimeout = const Duration(seconds: 30);
     _dio.interceptors.clear();
     _setupInterceptors();
   }
@@ -52,12 +86,18 @@ class NetworkService extends getx.GetxService {
     _globalDio.options.baseUrl = baseUrl;
     _globalDio.options.contentType = 'application/json';
     _globalDio.options.headers['Accept'] = 'application/json';
+    _globalDio.options.connectTimeout = const Duration(seconds: 15);
+    _globalDio.options.receiveTimeout = const Duration(seconds: 30);
+    _globalDio.options.sendTimeout = const Duration(seconds: 30);
     _globalDio.interceptors.clear();
   }
 
   // v1.0.5: Token refresh state — جلوگیری از refresh همزمان
+  // v1.0.24: queued callbacks now take a nullable token — null means the
+  // refresh FAILED and the queued request must be failed too (they used to
+  // hang forever when the refresh errored out).
   bool _isRefreshing = false;
-  final List<void Function(String)> _pendingRequests = [];
+  final List<void Function(String?)> _pendingRequests = [];
 
   // Setup Interceptor
   void _setupInterceptors() {
@@ -66,7 +106,8 @@ class NetworkService extends getx.GetxService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           String? accessToken = _tokenService.accessToken.value;
-          _log('🔑 Token: $accessToken');
+          // v1.0.24: never log the raw token (was: full bearer leak in logs).
+          _log('🔑 Token: ${accessToken == null || accessToken.isEmpty ? '<none>' : '<redacted ${accessToken.length} chars>'}');
 
           if (accessToken != null && accessToken.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $accessToken';
@@ -76,9 +117,24 @@ class NetworkService extends getx.GetxService {
           options.headers['X-Request-ID'] =
               options.headers['X-Request-ID'] ?? _generateRequestId();
 
-          // v1.0.5: Client identification
-          options.headers['X-App-Version'] = '1.0.5';
+          // v1.0.24: real version instead of hardcoded '1.0.5'
+          if (_appVersion.isNotEmpty) {
+            options.headers['X-App-Version'] = _appVersion;
+          }
           options.headers['X-Client'] = 'ecardo_user_flutter';
+
+          // v1.0.24 (S-023 client side): money POSTs carry Idempotency-Key
+          if (options.method.toUpperCase() == 'POST' &&
+              options.headers['Idempotency-Key'] == null) {
+            final path = options.uri.path;
+            final isMoney = _idempotentEndpointSuffixes.any(
+              (suffix) => path.endsWith(suffix),
+            );
+            if (isMoney) {
+              options.headers['Idempotency-Key'] =
+                  options.headers['X-Request-ID'];
+            }
+          }
           // v1.0.5: Platform identification
           if (kIsWeb) {
             options.headers['X-Platform'] = 'web';
@@ -99,6 +155,11 @@ class NetworkService extends getx.GetxService {
             // v1.0.5: اگر در حال refresh هستیم، request را صف کنیم
             if (_isRefreshing) {
               _pendingRequests.add((newToken) {
+                if (newToken == null) {
+                  // refresh failed meanwhile — fail this queued request too
+                  handler.next(error);
+                  return;
+                }
                 error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
                 _dio.fetch(error.requestOptions).then(
                   (response) => handler.resolve(response),
@@ -114,19 +175,21 @@ class NetworkService extends getx.GetxService {
             _isRefreshing = false;
 
             if (refreshed) {
-              // retry request اصلی
               final newToken = _tokenService.accessToken.value;
               if (newToken != null) {
+                // v1.0.24: drain the queue FIRST (with the new token) so the
+                // queued requests can never be left hanging, then retry the
+                // original request.
+                final queued = List<void Function(String?)>.of(_pendingRequests);
+                _pendingRequests.clear();
+                for (final callback in queued) {
+                  callback(newToken);
+                }
+
                 error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
                 try {
                   final response = await _dio.fetch(error.requestOptions);
                   handler.resolve(response);
-
-                  // پردازش صف pending requests
-                  for (final callback in _pendingRequests) {
-                    callback(newToken);
-                  }
-                  _pendingRequests.clear();
                   return;
                 } catch (e) {
                   _log('Retry failed: $e');
@@ -134,10 +197,14 @@ class NetworkService extends getx.GetxService {
               }
             }
 
-            // refresh ناموفق — logout
+            // refresh ناموفق — logout + fail every queued request explicitly
             _log("Token refresh failed — logging out.");
             await _tokenService.clearToken();
+            final queued = List<void Function(String?)>.of(_pendingRequests);
             _pendingRequests.clear();
+            for (final callback in queued) {
+              callback(null); // null => handler.next(error) for that request
+            }
 
             // هدایت به صفحه‌ی login
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -200,9 +267,8 @@ class NetworkService extends getx.GetxService {
     String url = '${_dio.options.baseUrl}${ApiPath.loginEndpoint}';
 
     _log('📤 Login POST Request URL: $url');
-    _log(
-      '📦 Login POST Request Body: {"email": $email, "password": $password}',
-    );
+    // v1.0.24: never log the password — only the (non-secret) email.
+    _log('📦 Login POST Request Body: {"email": $email, "password": "<redacted>"}');
 
     try {
       final response = await _dio.post(
@@ -211,7 +277,8 @@ class NetworkService extends getx.GetxService {
       );
 
       _log('✅ Login POST Status Code: ${response.statusCode}');
-      _log('✅ Login POST Response: ${response.data}');
+      // v1.0.24: response contains the bearer token — do not log it raw.
+      _log('✅ Login POST Response: <received, token not logged>');
 
       if (response.statusCode == 200) {
         String accessToken = response.data["data"]["token"];
@@ -250,7 +317,8 @@ class NetworkService extends getx.GetxService {
 
       stopwatch.stop();
       _log('✅ Register Status Code: ${response.statusCode}');
-      _log('✅ Register Response: ${response.data}');
+      // v1.0.24: response contains the bearer token — do not log it raw.
+      _log('✅ Register Response: <received, token not logged>');
       _log('⏱️ Register Time: ${stopwatch.elapsedMilliseconds}ms');
 
       if (response.statusCode == 200) {

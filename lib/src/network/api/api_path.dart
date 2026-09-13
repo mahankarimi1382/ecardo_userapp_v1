@@ -14,6 +14,10 @@ class ApiPath {
   static String translationEndpoint({required String languageCode}) =>
       '/change-language/$languageCode';
 
+  /// S-024 — authoritative payment status for a gateway transaction.
+  /// Returns {data: {tnx, payment_status, success, amount, currency}}.
+  static String paymentStatusEndpoint(String tnx) => '/user/payment-status/$tnx';
+
   static String getConverterEndpoint({
     required String amount,
     required String currencyCode,
