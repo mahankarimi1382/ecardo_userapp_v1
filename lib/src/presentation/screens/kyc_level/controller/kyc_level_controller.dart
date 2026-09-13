@@ -1,6 +1,6 @@
 import 'dart:io' show File;
 
-import 'package:dio/dio.dart' show FormData, MultipartFile;
+import 'package:dio/dio.dart' as dio show FormData, MultipartFile;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,7 +57,7 @@ class KycLevelController extends GetxController {
   Future<bool> submitDocuments({required Map<String, String> documents, int? targetLevel}) async {
     isSubmitting.value = true;
     try {
-      final formData = FormData();
+      final formData = dio.FormData();
       if (targetLevel != null) {
         formData.fields.add(MapEntry('level', targetLevel.toString()));
       }
@@ -67,7 +67,7 @@ class KycLevelController extends GetxController {
         final isLocalFile = !kIsWeb && entry.value.isNotEmpty && File(entry.value).existsSync();
         if (isLocalFile) {
           formData.files.add(
-            MapEntry(key, await MultipartFile.fromFile(entry.value)),
+            MapEntry(key, await dio.MultipartFile.fromFile(entry.value)),
           );
         } else {
           formData.fields.add(MapEntry(key, entry.value));

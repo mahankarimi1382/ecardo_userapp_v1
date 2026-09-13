@@ -270,13 +270,14 @@ class ProfileSettingsController extends GetxController {
       // (dropdown values are localized). The old `== "Male"` compared a
       // Persian/Arabic label with an English literal and silently rewrote
       // every non-English profile to "female"; "Other" also became "female".
+      final loc = AppLocalizations.of(Get.context!)!;
       final genderLabel = gender.value;
       final String genderCode;
-      if (genderLabel == localization.profileSettingsGenderMale) {
+      if (genderLabel == loc.profileSettingsGenderMale) {
         genderCode = 'male';
-      } else if (genderLabel == localization.profileSettingsGenderFemale) {
+      } else if (genderLabel == loc.profileSettingsGenderFemale) {
         genderCode = 'female';
-      } else if (genderLabel == localization.profileSettingsGenderOther) {
+      } else if (genderLabel == loc.profileSettingsGenderOther) {
         genderCode = 'other';
       } else {
         final l = genderLabel.toLowerCase();
