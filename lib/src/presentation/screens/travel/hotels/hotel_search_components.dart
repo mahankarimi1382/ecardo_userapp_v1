@@ -183,7 +183,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                                   ? null
                                   : TravelBidiText(suggestion.subtitle))
                             : Text(
-                                AppLocalizations.of(context)!.hotelHotelsCount(hotelCount),
+                                AppLocalizations.of(context)!.hotelHotelsCount(hotelCount.toString()),
                               ),
                         trailing: const Icon(Icons.chevron_right_rounded),
                         onTap: () => Navigator.of(context).pop(suggestion),
