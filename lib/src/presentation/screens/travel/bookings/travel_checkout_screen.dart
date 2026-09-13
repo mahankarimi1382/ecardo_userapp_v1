@@ -329,8 +329,8 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                             if (!_hasValidHotelDetails) {
                               showTravelMessage(
                                 context,
-                                title: AppLocalizations.of(context)!.hotelReservatorInformation,
-                                message: AppLocalizations.of(context)!.hotelCompleteTheReservatorAndRoomCaretakerI,
+                                title: AppLocalizations.of(context)!.hotel_reservator_information,
+                                message: AppLocalizations.of(context)!.hotel_complete_the_reservator_and_room_caretaker_i,
                               );
                               return;
                             }
@@ -608,7 +608,7 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               TravelCard(
                 color: TravelTheme.purple.withValues(alpha: .07),
                 child: Text(
-                  AppLocalizations.of(context)!.hotelReservationDetailsAndEveryOrderUpdateW,
+                  AppLocalizations.of(context)!.hotel_reservation_details_and_every_order_update_w,
                   style: TextStyle(
                     color: TravelTheme.muted,
                     fontSize: 11.sp,
@@ -668,11 +668,11 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               ),
               SizedBox(height: 18.h),
               TravelSectionHeader(
-                title: AppLocalizations.of(context)!.hotelRoomCaretakers,
+                title: AppLocalizations.of(context)!.hotel_room_caretakers,
               ),
               SizedBox(height: 8.h),
               Text(
-                AppLocalizations.of(context)!.hotelOnlyOneResponsibleGuestIsNeededForEac,
+                AppLocalizations.of(context)!.hotel_only_one_responsible_guest_is_needed_for_eac,
                 style: TextStyle(
                   color: TravelTheme.muted,
                   fontSize: 11.sp,
@@ -691,9 +691,9 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 maxLines: 8,
                 maxLength: 1000,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.hotelSpecialRequestsOptional,
+                  labelText: AppLocalizations.of(context)!.hotel_special_requests_optional,
                   alignLabelWithHint: true,
-                  hintText: AppLocalizations.of(context)!.hotelForExampleNonSmokingRoomOrEstimatedAr,
+                  hintText: AppLocalizations.of(context)!.hotel_for_example_non_smoking_room_or_estimated_ar,
                 ),
               ),
             ] else
@@ -855,14 +855,14 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 alignment: WrapAlignment.center,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.hotelByContinuingYouAcceptThe,
+                    AppLocalizations.of(context)!.hotel_by_continuing_you_accept_the,
                   ),
                   TextButton(
                     onPressed: () => showDialog<void>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text(
-                          AppLocalizations.of(context)!.hotelTermsAndPrivacyPolicy,
+                          AppLocalizations.of(context)!.hotel_terms_and_privacy_policy,
                         ),
                         content: SingleChildScrollView(
                           child: Text(
@@ -870,14 +870,14 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                                     .serviceFor(widget.type)
                                     ?.presentation['terms_text']
                                     ?.toString() ??
-                                AppLocalizations.of(context)!.hotelTheTermsForThisServiceAreAdminControl,
+                                AppLocalizations.of(context)!.hotel_the_terms_for_this_service_are_admin_control,
                           ),
                         ),
                         actions: [
                           TextButton(
                             onPressed: Navigator.of(context).pop,
                             child: Text(
-                              AppLocalizations.of(context)!.hotelClose,
+                              AppLocalizations.of(context)!.hotel_close,
                             ),
                           ),
                         ],
@@ -1080,8 +1080,8 @@ class _CheckoutProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     final labels = type == TravelProductType.hotel
         ? <String>[
-            AppLocalizations.of(context)!.hotelPassengerInformation,
-            AppLocalizations.of(context)!.hotelCheckingAvailability,
+            AppLocalizations.of(context)!.hotel_passenger_information,
+            AppLocalizations.of(context)!.hotel_checking_availability,
             localization.travelPaymentMethod,
           ]
         : <String>[
@@ -1252,7 +1252,7 @@ class _HotelRoomGuestEditor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${form.roomName} • ${AppLocalizations.of(context)!.hotelRoom} ${form.roomIndex}',
+            '${form.roomName} • ${AppLocalizations.of(context)!.hotel_room} ${form.roomIndex}',
             style: const TextStyle(fontWeight: FontWeight.w900),
           ),
           SizedBox(height: 10.h),

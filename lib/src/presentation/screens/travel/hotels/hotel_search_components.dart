@@ -96,7 +96,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
   Widget build(BuildContext context) {
     final visible = suggestions.take(visibleCount).toList();
     return TravelPage(
-      title: AppLocalizations.of(context)!.hotelDestinationCityOrHotel,
+      title: AppLocalizations.of(context)!.hotel_destination_city_or_hotel,
       child: Column(
         children: [
           Padding(
@@ -106,7 +106,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
               autofocus: true,
               onChanged: _search,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.hotelSearchByCityOrHotelName,
+                hintText: AppLocalizations.of(context)!.hotel_search_by_city_or_hotel_name,
                 prefixIcon: const Icon(
                   Icons.search_rounded,
                   color: TravelTheme.purple,
@@ -129,8 +129,8 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
               alignment: AlignmentDirectional.centerStart,
               child: Text(
                 queryController.text.trim().isEmpty
-                    ? AppLocalizations.of(context)!.hotelAllCitiesWithHotels
-                    : AppLocalizations.of(context)!.hotelSearchResults,
+                    ? AppLocalizations.of(context)!.hotel_all_cities_with_hotels
+                    : AppLocalizations.of(context)!.hotel_search_results,
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
@@ -141,7 +141,7 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : visible.isEmpty
                 ? TravelEmptyState(
-                    message: AppLocalizations.of(context)!.hotelNoMatchingCityOrHotelWasFound,
+                    message: AppLocalizations.of(context)!.hotel_no_matching_city_or_hotel_was_found,
                   )
                 : ListView.separated(
                     controller: scrollController,
@@ -253,7 +253,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
         ? values.whereType<DateTime>().elementAt(1)
         : null;
     return TravelPage(
-      title: AppLocalizations.of(context)!.hotelSelectStayDates,
+      title: AppLocalizations.of(context)!.hotel_select_stay_dates,
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.r),
@@ -268,7 +268,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
               minimumSize: const Size.fromHeight(52),
             ),
             child: Text(
-              AppLocalizations.of(context)!.hotelConfirmDates,
+              AppLocalizations.of(context)!.hotel_confirm_dates,
             ),
           ),
         ),
@@ -285,13 +285,13 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                       ButtonSegment(
                         value: true,
                         label: Text(
-                          AppLocalizations.of(context)!.hotelPersian,
+                          AppLocalizations.of(context)!.hotel_persian,
                         ),
                       ),
                       ButtonSegment(
                         value: false,
                         label: Text(
-                          AppLocalizations.of(context)!.hotelGregorian,
+                          AppLocalizations.of(context)!.hotel_gregorian,
                         ),
                       ),
                     ],
@@ -304,14 +304,14 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                     children: [
                       Expanded(
                         child: _SelectedDateSummary(
-                          label: AppLocalizations.of(context)!.hotelCheckIn,
+                          label: AppLocalizations.of(context)!.hotel_check_in,
                           value: start == null ? '—' : _dateLabel(start),
                         ),
                       ),
                       const Icon(Icons.arrow_forward_rounded),
                       Expanded(
                         child: _SelectedDateSummary(
-                          label: AppLocalizations.of(context)!.hotelCheckOut,
+                          label: AppLocalizations.of(context)!.hotel_check_out,
                           value: end == null ? '—' : _dateLabel(end),
                         ),
                       ),

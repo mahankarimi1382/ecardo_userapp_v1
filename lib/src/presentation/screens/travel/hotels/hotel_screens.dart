@@ -143,7 +143,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
       showTravelMessage(
         context,
         title: localization.travelHotelSearch,
-        message: AppLocalizations.of(context)!.hotelSelectADestinationCityOrHotel,
+        message: AppLocalizations.of(context)!.hotel_select_a_destination_city_or_hotel,
       );
       return;
     }
@@ -249,7 +249,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         color: TravelTheme.purple,
                       ),
                       suffixIcon: const Icon(Icons.chevron_right_rounded),
-                      labelText: AppLocalizations.of(context)!.hotelCheckInAndCheckOut,
+                      labelText: AppLocalizations.of(context)!.hotel_check_in_and_check_out,
                     ),
                     child: Text(
                       '${MaterialLocalizations.of(context).formatCompactDate(checkInDate)}'
@@ -257,7 +257,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                       '${MaterialLocalizations.of(context).formatCompactDate(checkOutDate)}'
                       '  •  '
                       '${checkOutDate.difference(checkInDate).inDays} '
-                      '${AppLocalizations.of(context)!.hotelNights}',
+                      '${AppLocalizations.of(context)!.hotel_nights}',
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
                   ),
@@ -295,7 +295,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
           ),
           SizedBox(height: 24.h),
           TravelSectionHeader(
-            title: AppLocalizations.of(context)!.hotelPopularCities,
+            title: AppLocalizations.of(context)!.hotel_popular_cities,
           ),
           SizedBox(height: 10.h),
           if (popularCities.isEmpty && discoveryLoading)
@@ -349,7 +349,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
             ),
           SizedBox(height: 24.h),
           TravelSectionHeader(
-            title: AppLocalizations.of(context)!.hotelRecommendedHotels,
+            title: AppLocalizations.of(context)!.hotel_recommended_hotels,
           ),
           SizedBox(height: 10.h),
           Wrap(
@@ -371,7 +371,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
             const Center(child: CircularProgressIndicator())
           else if (recommendedHotels.isEmpty)
             TravelEmptyState(
-              message: AppLocalizations.of(context)!.hotelNoRecommendedHotelsAreAvailableForThis,
+              message: AppLocalizations.of(context)!.hotel_no_recommended_hotels_are_available_for_this,
             )
           else
             SizedBox(
@@ -797,7 +797,7 @@ class _HotelResultsScreenState extends State<HotelResultsScreen> {
           children: [
             ListTile(
               title: Text(
-                AppLocalizations.of(context)!.hotelAllRatings,
+                AppLocalizations.of(context)!.hotel_all_ratings,
               ),
               onTap: () => Navigator.of(context).pop(),
             ),
@@ -1024,8 +1024,8 @@ class _HotelResultActions extends StatelessWidget {
                 avatar: const Icon(Icons.tune_rounded, size: 18),
                 label: Text(
                   activeFilters
-                      ? AppLocalizations.of(context)!.hotelActiveFilters
-                      : AppLocalizations.of(context)!.hotelAllFilters,
+                      ? AppLocalizations.of(context)!.hotel_active_filters
+                      : AppLocalizations.of(context)!.hotel_all_filters,
                 ),
                 onPressed: onFilters,
               ),
@@ -1037,7 +1037,7 @@ class _HotelResultActions extends StatelessWidget {
                 ),
               FilterChip(
                 avatar: const Icon(Icons.local_offer_outlined, size: 18),
-                label: Text(AppLocalizations.of(context)!.hotelDiscounted),
+                label: Text(AppLocalizations.of(context)!.hotel_discounted),
                 selected: discountedOnly,
                 onSelected: (_) => onDiscount(),
               ),
@@ -1753,7 +1753,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                       width: 150.w,
                       child: CommonButton(
                         width: double.infinity,
-                        text: AppLocalizations.of(context)!.hotelContinueBooking,
+                        text: AppLocalizations.of(context)!.hotel_continue_booking,
                         backgroundColor: TravelTheme.purple,
                         onPressed: canCheckout
                             ? () {
@@ -1801,23 +1801,23 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       _SectionChip(
-                        label: AppLocalizations.of(context)!.hotelOverview,
+                        label: AppLocalizations.of(context)!.hotel_overview,
                         onTap: () => _scrollTo(_overviewKey),
                       ),
                       _SectionChip(
-                        label: AppLocalizations.of(context)!.hotelFeatures,
+                        label: AppLocalizations.of(context)!.hotel_features,
                         onTap: () => _scrollTo(_featuresKey),
                       ),
                       _SectionChip(
-                        label: AppLocalizations.of(context)!.hotelRooms,
+                        label: AppLocalizations.of(context)!.hotel_rooms,
                         onTap: () => _scrollTo(_roomsKey),
                       ),
                       _SectionChip(
-                        label: AppLocalizations.of(context)!.hotelRules,
+                        label: AppLocalizations.of(context)!.hotel_rules,
                         onTap: () => _scrollTo(_rulesKey),
                       ),
                       _SectionChip(
-                        label: AppLocalizations.of(context)!.hotelReviews,
+                        label: AppLocalizations.of(context)!.hotel_reviews,
                         onTap: () => _scrollTo(_reviewsKey),
                       ),
                     ],
@@ -1899,8 +1899,8 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                   ),
                   child: Text(
                     _showAllDescription
-                        ? AppLocalizations.of(context)!.hotelShowLess
-                        : AppLocalizations.of(context)!.hotelShowMore,
+                        ? AppLocalizations.of(context)!.hotel_show_less
+                        : AppLocalizations.of(context)!.hotel_show_more,
                   ),
                 ),
               ],
@@ -1927,7 +1927,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                     ),
                     label: Text(
                       _showAllAmenities
-                          ? AppLocalizations.of(context)!.hotelShowLess
+                          ? AppLocalizations.of(context)!.hotel_show_less
                           : AppLocalizations.of(context)!.hotelShowMore2,
                     ),
                   ),
@@ -1939,14 +1939,14 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                   children: [
                     Expanded(
                       child: TravelSectionHeader(
-                        title: AppLocalizations.of(context)!.hotelAvailableRooms,
+                        title: AppLocalizations.of(context)!.hotel_available_rooms,
                       ),
                     ),
                     TextButton.icon(
                       onPressed: () => _changeDates(controller),
                       icon: const Icon(Icons.edit_calendar_outlined),
                       label: Text(
-                        AppLocalizations.of(context)!.hotelEditDates,
+                        AppLocalizations.of(context)!.hotel_edit_dates,
                       ),
                     ),
                   ],
@@ -1966,7 +1966,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                           '${MaterialLocalizations.of(context).formatCompactDate(bookingDetails.checkInDate!)}'
                           ' – '
                           '${MaterialLocalizations.of(context).formatCompactDate(bookingDetails.checkOutDate!)}'
-                          ' • $nights ${AppLocalizations.of(context)!.hotelNights}',
+                          ' • $nights ${AppLocalizations.of(context)!.hotel_nights}',
                           style: const TextStyle(fontWeight: FontWeight.w800),
                         ),
                       ),
@@ -1996,7 +1996,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                 SizedBox(height: 24.h),
                 SizedBox(key: _reviewsKey),
                 TravelSectionHeader(
-                  title: AppLocalizations.of(context)!.hotelGuestRatingsAndReviews,
+                  title: AppLocalizations.of(context)!.hotel_guest_ratings_and_reviews,
                 ),
                 SizedBox(height: 10.h),
                 _ExpandableProviderMapCard(values: reviews),
@@ -2024,7 +2024,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
               )) ...[
                 SizedBox(height: 26.h),
                 TravelSectionHeader(
-                  title: AppLocalizations.of(context)!.hotelSimilarHotels,
+                  title: AppLocalizations.of(context)!.hotel_similar_hotels,
                 ),
                 SizedBox(height: 10.h),
                 SizedBox(
@@ -2076,7 +2076,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                 backgroundColor: TravelTheme.purple,
                 foregroundColor: Colors.white,
                 icon: const Icon(Icons.bed_rounded),
-                label: Text(AppLocalizations.of(context)!.hotelRooms),
+                label: Text(AppLocalizations.of(context)!.hotel_rooms),
               ),
             ),
         ],
@@ -2299,7 +2299,7 @@ class _ProviderRoomCard extends StatelessWidget {
                       ),
                       icon: const Icon(Icons.info_outline_rounded),
                       label: Text(
-                        AppLocalizations.of(context)!.hotelDetails,
+                        AppLocalizations.of(context)!.hotel_details,
                       ),
                     ),
                     const Spacer(),
@@ -2350,7 +2350,7 @@ class _RoomDetailsScreen extends StatelessWidget {
     final currency = room['currency']?.toString() ?? 'IRR';
     final cancellation = _providerCancellationSummary(context, room);
     return TravelPage(
-      title: AppLocalizations.of(context)!.hotelRoomDetails,
+      title: AppLocalizations.of(context)!.hotel_room_details,
       child: ListView(
         padding: EdgeInsets.all(20.r),
         children: [
@@ -2387,7 +2387,7 @@ class _RoomDetailsScreen extends StatelessWidget {
           if (values.isNotEmpty) ...[
             SizedBox(height: 20.h),
             TravelSectionHeader(
-              title: AppLocalizations.of(context)!.hotelRoomInformation,
+              title: AppLocalizations.of(context)!.hotel_room_information,
             ),
             SizedBox(height: 10.h),
             _ProviderMapCard(values: values),
@@ -2429,8 +2429,8 @@ class _ExpandableProviderMapCardState
             ),
             label: Text(
               expanded
-                  ? AppLocalizations.of(context)!.hotelShowLess
-                  : AppLocalizations.of(context)!.hotelShowMore,
+                  ? AppLocalizations.of(context)!.hotel_show_less
+                  : AppLocalizations.of(context)!.hotel_show_more,
             ),
           ),
       ],

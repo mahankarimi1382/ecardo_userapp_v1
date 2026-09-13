@@ -167,7 +167,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
         value.priceRange ??
         RangeValues(options.minimumPrice, options.maximumPrice);
     return TravelPage(
-      title: AppLocalizations.of(context)!.hotelHotelFilters,
+      title: AppLocalizations.of(context)!.hotel_hotel_filters,
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.r),
@@ -180,7 +180,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               minimumSize: const Size.fromHeight(52),
             ),
             child: Text(
-              AppLocalizations.of(context)!.hotelApplyFilters,
+              AppLocalizations.of(context)!.hotel_apply_filters,
             ),
           ),
         ),
@@ -192,7 +192,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
             children: [
               Expanded(
                 child: Text(
-                  AppLocalizations.of(context)!.hotelRefineYourResults,
+                  AppLocalizations.of(context)!.hotel_refine_your_results,
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w900,
@@ -204,7 +204,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
                   value = const HotelFilterState();
                   nameController.clear();
                 }),
-                child: Text(AppLocalizations.of(context)!.hotelClearAll),
+                child: Text(AppLocalizations.of(context)!.hotel_clear_all),
               ),
             ],
           ),
@@ -212,19 +212,19 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
           TextField(
             controller: nameController,
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.hotelSearchHotelName,
+              labelText: AppLocalizations.of(context)!.hotel_search_hotel_name,
               prefixIcon: const Icon(Icons.search_rounded),
             ),
           ),
           SizedBox(height: 12.h),
           _SwitchFilter(
-            title: AppLocalizations.of(context)!.hotelDiscountedHotelsOnly,
+            title: AppLocalizations.of(context)!.hotel_discounted_hotels_only,
             value: value.discountedOnly,
             onChanged: (next) =>
                 setState(() => value = value.copyWith(discountedOnly: next)),
           ),
           _FilterSection(
-            title: AppLocalizations.of(context)!.hotelPriceRange,
+            title: AppLocalizations.of(context)!.hotel_price_range,
             child: Column(
               children: [
                 RangeSlider(
@@ -248,7 +248,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
           ),
           if (options.stars.isNotEmpty)
             _FilterSection(
-              title: AppLocalizations.of(context)!.hotelHotelStars,
+              title: AppLocalizations.of(context)!.hotel_hotel_stars,
               child: Wrap(
                 spacing: 8.w,
                 children: (options.stars.toList()..sort())
@@ -269,7 +269,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               ),
             ),
           _FilterSection(
-            title: AppLocalizations.of(context)!.hotelSpecialOffers,
+            title: AppLocalizations.of(context)!.hotel_special_offers,
             child: options.specialOffers.isEmpty
                 ? Text(
                     AppLocalizations.of(context)!.hotelAdminConfiguredSpecialOffersWillAppear,
@@ -297,7 +297,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
           ),
           if (features.isNotEmpty)
             _FilterSection(
-              title: AppLocalizations.of(context)!.hotelHotelFeatures,
+              title: AppLocalizations.of(context)!.hotel_hotel_features,
               child: _ExpandableFilterChips(
                 values: features,
                 selected: value.features,
@@ -314,7 +314,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
             ),
           if (types.isNotEmpty)
             _FilterSection(
-              title: AppLocalizations.of(context)!.hotelPropertyType,
+              title: AppLocalizations.of(context)!.hotel_property_type,
               child: _ExpandableFilterChips(
                 values: types,
                 selected: value.propertyTypes,
@@ -331,7 +331,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               ),
             ),
           _FilterSection(
-            title: AppLocalizations.of(context)!.hotelGuestRating,
+            title: AppLocalizations.of(context)!.hotel_guest_rating,
             child: Wrap(
               spacing: 8.w,
               children: [3.0, 3.5, 4.0, 4.5]
@@ -351,7 +351,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
             ),
           ),
           _SwitchFilter(
-            title: AppLocalizations.of(context)!.hotelHotelsWithAvailableRoomsOnly,
+            title: AppLocalizations.of(context)!.hotel_hotels_with_available_rooms_only,
             value: value.availableRoomsOnly,
             onChanged: (next) => setState(
               () => value = value.copyWith(availableRoomsOnly: next),
@@ -451,8 +451,8 @@ class _ExpandableFilterChips extends StatelessWidget {
             ),
             label: Text(
               expanded
-                  ? AppLocalizations.of(context)!.hotelShowLess
-                  : AppLocalizations.of(context)!.hotelShowMore,
+                  ? AppLocalizations.of(context)!.hotel_show_less
+                  : AppLocalizations.of(context)!.hotel_show_more,
             ),
           ),
       ],
