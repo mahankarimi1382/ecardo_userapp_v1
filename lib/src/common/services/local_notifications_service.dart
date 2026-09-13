@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotificationsService {
@@ -9,6 +10,18 @@ class LocalNotificationsService {
   late FlutterLocalNotificationsPlugin _plugin;
   bool _initialized = false;
   int _id = 0;
+
+  /// AUTH-BIO (A-2): single notification-tap router. FirebaseMessagingService
+  /// registers itself here during its init() so every local-notification tap
+  /// is routed through the same payload→route mapping as FCM push taps.
+  void Function(String? payload)? _tapHandler;
+
+  /// Registers (or clears with null) the tap handler invoked whenever the
+  /// user taps a notification while the app is alive (foreground or
+  /// background-but-running).
+  void setNotificationTapHandler(void Function(String? payload)? handler) {
+    _tapHandler = handler;
+  }
 
   Future<void> init() async {
     if (_initialized) return;
@@ -29,7 +42,12 @@ class LocalNotificationsService {
       iOS: iosSettings,
     );
 
-    await _plugin.initialize(initSettings);
+    // AUTH-BIO (A-2): previously no response callback was registered, so
+    // tapping a local notification did nothing.
+    await _plugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: _onNotificationResponse,
+    );
 
     const channel = AndroidNotificationChannel(
       'channel_id',
@@ -45,6 +63,22 @@ class LocalNotificationsService {
         ?.createNotificationChannel(channel);
 
     _initialized = true;
+  }
+
+  /// AUTH-BIO (A-2): forwards taps on regular notifications (not action
+  /// buttons) to the registered router. Unknown payloads are handled
+  /// gracefully by the router — it never throws.
+  void _onNotificationResponse(NotificationResponse response) {
+    // Only taps on the notification body route somewhere; action-button
+    // responses have no payload contract in this app.
+    if (response.notificationResponseType !=
+        NotificationResponseType.selectedNotification) {
+      return;
+    }
+    if (kDebugMode) {
+      debugPrint('Local notification tapped: ${response.payload}');
+    }
+    _tapHandler?.call(response.payload);
   }
 
   Future<void> showNotification(

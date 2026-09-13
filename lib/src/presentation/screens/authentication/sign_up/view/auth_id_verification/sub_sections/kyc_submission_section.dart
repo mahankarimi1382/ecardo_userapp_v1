@@ -145,14 +145,20 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
           return;
         }
 
-        if (nextUnprocessedField != null) {
-          final result = await _navigateToFieldScreen(nextUnprocessedField);
+        // Lead fix (wave Task-10): `nextUnprocessedField` is a mutated local
+        // captured by this closure, so flow analysis cannot promote it after
+        // the null check (new SDK surfaces this as
+        // unchecked_use_of_nullable_value). Copying it into a final local
+        // restores promotion and keeps the await-safe null guarantee.
+        final Fields? fieldToProcess = nextUnprocessedField;
+        if (fieldToProcess != null) {
+          final result = await _navigateToFieldScreen(fieldToProcess);
 
           if (result != null) {
-            controller.fieldFiles[nextUnprocessedField.name ?? ""] = result;
+            controller.fieldFiles[fieldToProcess.name ?? ""] = result;
 
             controller.currentFieldIndex.value = controller.fields.indexOf(
-              nextUnprocessedField,
+              fieldToProcess,
             );
           }
         }

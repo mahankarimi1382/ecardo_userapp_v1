@@ -3,6 +3,10 @@
 
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- AUTH-BIO (A-1): explicit Android 13+ runtime notification permission.
+         firebase_messaging usually merges this via manifest merge, but an
+         explicit entry is required to guarantee the runtime gate below. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Storage permissions for in-app APK download (Android 12 and below) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -15,9 +19,9 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <!-- Required to install APK packages downloaded by the app (Android 8+) -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <!-- Optional: allows the app to be notified of package install state changes -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+    <!-- AUTH-BIO (A-5): QUERY_ALL_PACKAGES removed — no Dart code queries the
+         package list (verified via codebase grep); the APK-install flow is
+         covered by REQUEST_INSTALL_PACKAGES + the <queries> intents below. -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
@@ -64,6 +68,13 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- AUTH-BIO (A-1): route FCM notification messages into the channel
+             created by LocalNotificationsService ('channel_id') instead of
+             FCM's fallback 'Miscellaneous' channel. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="channel_id" />
     </application>
     <queries>
         <intent>

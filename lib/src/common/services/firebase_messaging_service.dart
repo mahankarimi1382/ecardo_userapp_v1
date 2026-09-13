@@ -31,13 +31,21 @@
 // to get the canonical values.
 // ============================================================================
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/local_notifications_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
 
 /// The FCM topic this app instance subscribes to for app-update broadcasts.
 /// Override via the constructor when reusing this service in the merchant
@@ -65,6 +73,12 @@ class FirebaseMessagingService {
   }) async {
     _localNotificationsService = localNotificationsService;
 
+    // AUTH-BIO (A-2): route local-notification taps through the same
+    // payload→route mapping used for FCM push taps.
+    localNotificationsService.setNotificationTapHandler(
+      _onLocalNotificationTap,
+    );
+
     await _requestPermission();
     await _handlePushNotificationsToken();
     await _subscribeToUpdateTopic();
@@ -89,6 +103,43 @@ class FirebaseMessagingService {
   // ===========================================================================
 
   Future<void> _requestPermission() async {
+    // AUTH-BIO (A-1): Android 13+ needs an explicit POST_NOTIFICATIONS
+    // runtime request. permission_handler (already the app's standard for
+    // storage/install permissions) is the single user-facing gate here:
+    //   - already granted/limited → no prompt needed.
+    //   - permanently denied      → no prompt possible anymore.
+    //   - anything else           → one permission_handler prompt; FCM's own
+    //     requestPermission prompt is then skipped so the user never faces
+    //     two consecutive system dialogs.
+    try {
+      var status = await Permission.notification.status;
+      if (!status.isGranted &&
+          !status.isLimited &&
+          !status.isPermanentlyDenied) {
+        status = await Permission.notification.request();
+      }
+      if (kDebugMode) {
+        print('Notification permission (permission_handler): $status');
+      }
+      if (status.isGranted || status.isLimited) return;
+
+      // Not granted: report the FCM-side status WITHOUT prompting again.
+      final settings =
+          await FirebaseMessaging.instance.getNotificationSettings();
+      if (kDebugMode) {
+        print('Notification permission: ${settings.authorizationStatus}');
+      }
+      return;
+    } catch (e) {
+      if (kDebugMode) {
+        print(
+          'permission_handler notification gate failed ($e) — falling back '
+          'to FCM requestPermission',
+        );
+      }
+    }
+
+    // Fallback (plugin failure only): original FCM prompt path.
     final settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
       badge: true,
@@ -111,7 +162,68 @@ class FirebaseMessagingService {
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
       await Get.find<SettingsService>().saveFcmToken(newToken);
       if (kDebugMode) print('FCM Token refreshed: $newToken');
+
+      // AUTH-BIO (A-3): push the fresh token to the backend immediately when
+      // a session exists, reusing the SAME getSetupFcm call the login flow
+      // performs. When logged out, skip silently — registration happens at
+      // the next login.
+      try {
+        final loginState = await SettingsService.getLoginCurrentState();
+        if (loginState != null && loginState.isNotEmpty) {
+          await registerTokenWithBackend();
+        } else if (kDebugMode) {
+          print(
+            'FCM token refresh: not logged in — skipping backend registration',
+          );
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('FCM token refresh: backend registration skipped: $e');
+        }
+      }
     });
+  }
+
+  /// AUTH-BIO (A-3): backend registration of the current FCM token — the
+  /// SAME endpoint and payload shape the login path uses (device_id,
+  /// device_type, fcm_token → getSetupFcm). SignInController delegates here
+  /// after login and onTokenRefresh calls it directly, so there is a single
+  /// source of truth for the payload.
+  Future<void> registerTokenWithBackend() async {
+    try {
+      final deviceInfoPlugin = DeviceInfoPlugin();
+      final savedFcmToken = await SettingsService.getFcmToken();
+
+      String deviceId = '';
+      String deviceType = '';
+
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfoPlugin.androidInfo;
+        deviceId = androidInfo.id;
+        deviceType = 'android';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfoPlugin.iosInfo;
+        deviceId = iosInfo.identifierForVendor ?? '';
+        deviceType = 'ios';
+      } else {
+        deviceId = 'unknown';
+        deviceType = 'unknown';
+      }
+
+      await Get.find<NetworkService>().post(
+        endpoint: ApiPath.getSetupFcm,
+        data: {
+          'device_id': deviceId,
+          'device_type': deviceType,
+          'fcm_token': savedFcmToken,
+        },
+      );
+    } catch (e, s) {
+      // Silent by design: a failed re-registration must never disturb the
+      // user; the next login re-registers anyway.
+      debugPrint('❌ registerTokenWithBackend() error: $e');
+      debugPrint('📍 StackTrace: $s');
+    }
   }
 
   // ===========================================================================
@@ -144,13 +256,21 @@ class FirebaseMessagingService {
       return;
     }
 
-    // Default: show as local notification
+    // Default: show as local notification. AUTH-BIO (A-2): the payload is
+    // now structured JSON (was `data.toString()`, which could not be parsed
+    // back on tap) so the tap router can deep-link to the right screen.
     final notification = message.notification;
     if (notification != null) {
+      String payload;
+      try {
+        payload = data.isEmpty ? '' : jsonEncode(data);
+      } catch (_) {
+        payload = data.toString();
+      }
       _localNotificationsService?.showNotification(
         notification.title,
         notification.body,
-        data.toString(),
+        payload,
       );
     }
   }
@@ -160,9 +280,127 @@ class FirebaseMessagingService {
       print('Notification opened: ${message.data}');
     }
 
-    final type = message.data['type'];
-    if (type == 'app_update') {
+    // app_update keeps its dedicated handling (unchanged behaviour).
+    if (message.data['type'] == 'app_update') {
       _openUpdateScreen();
+      return;
+    }
+
+    // AUTH-BIO (A-2): route every other payload through the shared router.
+    _routeFromNotificationData(message.data);
+  }
+
+  // ===========================================================================
+  // Notification tap routing (AUTH-BIO / A-2)
+  // ===========================================================================
+
+  /// Single entry point for taps on LOCAL notifications. The payload is JSON
+  /// for FCM-originated notifications and the bare string 'app_update' for
+  /// the update notification.
+  void _onLocalNotificationTap(String? payload) {
+    Map<String, dynamic> data = const {};
+
+    if (payload != null && payload.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(payload);
+        if (decoded is Map<String, dynamic>) {
+          data = decoded;
+        } else {
+          data = {'type': payload};
+        }
+      } catch (_) {
+        // Not JSON (e.g. the plain 'app_update' payload or a legacy
+        // `data.toString()` payload): treat the whole string as the type.
+        data = {'type': payload};
+      }
+    }
+
+    _routeFromNotificationData(data);
+  }
+
+  /// Maps notification `data` to an existing route. Unknown/missing payloads
+  /// fall back to home — this function must never throw.
+  Future<void> _routeFromNotificationData(Map<String, dynamic> data) async {
+    try {
+      final type = data['type']?.toString();
+
+      if (type == 'app_update') {
+        _openUpdateScreen();
+        return;
+      }
+
+      final target = _routeForNotificationType(type);
+      if (target == null) return;
+
+      // Never deep-link into account screens without a session — the auth
+      // flow owns navigation in that case.
+      final loginState = await SettingsService.getLoginCurrentState();
+      if (loginState == null || loginState.isEmpty) {
+        if (kDebugMode) {
+          print('Notification tap ignored (no session): type=$type');
+        }
+        return;
+      }
+
+      final ctx = _lastContext ?? Get.context;
+      if (ctx == null) {
+        // Cold start straight from a notification tap: init() processes
+        // getInitialMessage before runApp() has built a navigator.
+        // TODO(lead): defer initial-message routing until the first frame
+        // (needs a hook in the app bootstrap) — same limitation as the
+        // pre-existing app_update cold-start path.
+        if (kDebugMode) {
+          print('Notification tap ignored (navigator not ready): type=$type');
+        }
+        return;
+      }
+
+      // Home is the default fallback — avoid stacking a second navigation
+      // shell when we are already there.
+      if (target == BaseRoute.navigation && Get.currentRoute == target) return;
+
+      Get.toNamed(target);
+    } catch (e) {
+      // Unknown payload shapes or a failing route must never crash the app.
+      debugPrint('❌ _routeFromNotificationData() error: $e');
+    }
+  }
+
+  /// Type→route vocabulary mirrors what the backend actually sends for
+  /// in-app notifications (see NotificationDynamicIcon.getNotificationIcon,
+  /// which renders the same `type` values in the notifications list).
+  String? _routeForNotificationType(String? type) {
+    switch (type) {
+      case 'app_update':
+        return BaseRoute.appUpdate; // handled above, kept for completeness
+
+      // Transaction / money-movement events → transactions history.
+      case 'user_manual_deposit_approved':
+      case 'user_manual_deposit_rejected':
+      case 'user_invoice_payment':
+      case 'user_request_money':
+      case 'user_request_money_accepted':
+      case 'user_receive_money':
+      case 'user_cash_in':
+      case 'user_gift_redeemed':
+      case 'user_referral_join':
+      case 'withdraw_approved':
+      case 'withdraw_rejected':
+        return BaseRoute.transactions;
+
+      // Support tickets → tickets list.
+      case 'user_ticket_reply':
+      case 'user_ticket_closed':
+        return BaseRoute.supportTickets;
+
+      // KYC decisions → KYC history.
+      case 'kyc_action':
+        return BaseRoute.kycHistory;
+
+      // Everything else (user_mail, email_verification, forgot_password,
+      // unknown future types) → home.
+      default:
+        return BaseRoute.navigation;
     }
   }
 

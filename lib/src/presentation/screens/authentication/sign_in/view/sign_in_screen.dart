@@ -8,7 +8,6 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
-import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/bottom_sheet/common_alert_bottom_sheet.dart';
@@ -294,87 +293,16 @@ class _SignInScreenState extends State<SignInScreen> {
                           ],
                         ),
                         SizedBox(height: 50.h),
-                        Obx(
-                          () => Material(
-                            color: AppColors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(100.r),
-                              onTap: () async {
-                                controller.isPressed.value = true;
-                                await Future.delayed(
-                                  const Duration(milliseconds: 100),
-                                );
-
-                                final savedEmail =
-                                    await SettingsService.getLoggedInUserEmail();
-                                final savedPassword =
-                                    await SettingsService.getLoggedInUserPassword();
-
-                                if (savedEmail == null ||
-                                    savedPassword == null) {
-                                  ToastHelper().showErrorToast(
-                                    localizations.signInBiometricErrorFirstTime,
-                                  );
-                                  controller.isPressed.value = false;
-                                  return;
-                                }
-
-                                if (!controller.isBiometricEnable.value) {
-                                  ToastHelper().showErrorToast(
-                                    localizations
-                                        .signInBiometricErrorNotEnabled,
-                                  );
-                                  controller.isPressed.value = false;
-                                  return;
-                                }
-
-                                final bioAuth = BiometricAuthService();
-                                bool success = await bioAuth
-                                    .authenticateWithBiometrics();
-
-                                if (success) {
-                                  controller.biometricEmail.value = savedEmail;
-                                  controller.biometricPassword.value =
-                                      savedPassword;
-                                  await controller.submitSignIn(
-                                    useBiometric: true,
-                                  );
-                                }
-
-                                controller.isPressed.value = false;
-                              },
-                              onTapCancel: () {
-                                controller.isPressed.value = false;
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 100),
-                                padding: EdgeInsets.all(10.w),
-                                width: 60.w,
-                                height: 60.w,
-                                transform: Matrix4.identity()
-                                  ..scaleByDouble(
-                                    controller.isPressed.value ? 0.95 : 1.0,
-                                    controller.isPressed.value ? 0.95 : 1.0,
-                                    controller.isPressed.value ? 0.95 : 1.0,
-                                    1.0,
-                                  ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100.r),
-                                  border: Border.all(
-                                    width: 1.5.w,
-                                    color: AppColors.lightPrimary.withValues(
-                                      alpha: 0.20,
-                                    ),
-                                  ),
-                                ),
-                                child: Image.asset(
-                                  PngAssets.fingerprintCommonIcon,
-                                  color: AppColors.lightPrimary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // AUTH-BIO (primary directive): the biometric
+                        // fingerprint icon was REMOVED from this screen. The
+                        // biometric gate now runs automatically after splash
+                        // (SplashController._tryAutoBiometricLogin). All
+                        // underlying storage/flag logic is untouched: the
+                        // `current_biometric` flag is still written by the
+                        // end-drawer toggle (HomeController.toggleBiometric)
+                        // and read by the splash gate; the saved
+                        // credentials + submitSignIn(useBiometric:) chain in
+                        // SignInController are reused by that gate.
                       ],
                     ),
                   ),

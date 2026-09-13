@@ -1,11 +1,9 @@
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -35,11 +33,22 @@ class SignInController extends GetxController {
   final RxString biometricEmail = "".obs;
   final RxString biometricPassword = "".obs;
 
+  // AUTH-BIO follow-up (wave Task-10, QA-VALIDATE finding): credentials
+  // staged for persistence AFTER a successful 2FA verification. The non-2FA
+  // branch saves them immediately; 2FA users must get the same treatment or
+  // the splash biometric gate can never be satisfied for them.
+  final RxString pendingTwoFaEmail = "".obs;
+  final RxString pendingTwoFaPassword = "".obs;
+
   @override
   void onInit() {
     super.onInit();
     clearSignUpStatus();
-    setLogInState();
+    // AUTH-BIO (A-4): `logged_in` used to be persisted HERE — before the
+    // user actually signed in — which corrupted the state semantics (splash
+    // sent every visitor back to sign-in forever). Persistence now happens
+    // in fetchUser() only after the full auth chain succeeds (and after the
+    // 2FA verification for 2FA users — see TwoFactorAuthController).
     loadSavedEmail();
     loadBiometricStatus();
 
@@ -63,6 +72,8 @@ class SignInController extends GetxController {
   }
 
   Future<void> setLogInState() async {
+    // AUTH-BIO (A-4): called only after the full auth chain succeeds
+    // (fetchUser / 2FA verification), never at controller init.
     await settingsService.saveLoginCurrentState("logged_in");
   }
 
@@ -138,6 +149,13 @@ class SignInController extends GetxController {
         // silently skipped and the app continued to the account even for
         // 2FA-protected users. Server-side TwoFaCheck remains the real gate.
         if (userModel.value.data!.twoFa == true) {
+          // AUTH-BIO follow-up: stash the would-be-saved credentials so
+          // TwoFactorAuthController persists them once the full auth chain
+          // completes (same expressions as the non-2FA branch below).
+          pendingTwoFaEmail.value =
+              useBiometric ? biometricEmail.value : emailController.text;
+          pendingTwoFaPassword.value =
+              useBiometric ? biometricPassword.value : passwordController.text;
           Get.toNamed(BaseRoute.twoFactorAuth);
         } else {
           await Get.find<SettingsService>().saveLoggedInUserEmail(
@@ -146,6 +164,10 @@ class SignInController extends GetxController {
           await Get.find<SettingsService>().saveLoggedInUserPassword(
             useBiometric ? biometricPassword.value : passwordController.text,
           );
+
+          // AUTH-BIO (A-4): persist `logged_in` only after the full auth
+          // chain (login → FCM registration → fetchUser) has succeeded.
+          await setLogInState();
 
           if (userModel.value.data!.boardingSteps?.completed == true) {
             Get.offAllNamed(BaseRoute.navigation);
@@ -175,33 +197,10 @@ class SignInController extends GetxController {
     required bool useBiometric,
   }) async {
     try {
-      final deviceInfoPlugin = DeviceInfoPlugin();
-      final savedFcmToken = await SettingsService.getFcmToken();
-
-      String deviceId = '';
-      String deviceType = '';
-
-      if (Platform.isAndroid) {
-        final androidInfo = await deviceInfoPlugin.androidInfo;
-        deviceId = androidInfo.id;
-        deviceType = 'android';
-      } else if (Platform.isIOS) {
-        final iosInfo = await deviceInfoPlugin.iosInfo;
-        deviceId = iosInfo.identifierForVendor ?? '';
-        deviceType = 'ios';
-      } else {
-        deviceId = 'unknown';
-        deviceType = 'unknown';
-      }
-
-      await Get.find<NetworkService>().post(
-        endpoint: ApiPath.getSetupFcm,
-        data: {
-          'device_id': deviceId,
-          'device_type': deviceType,
-          'fcm_token': savedFcmToken,
-        },
-      );
+      // AUTH-BIO (A-3): single source of truth for the getSetupFcm device
+      // registration (shared with the token-refresh path in
+      // FirebaseMessagingService). Same endpoint, same payload shape.
+      await FirebaseMessagingService.instance().registerTokenWithBackend();
     } catch (e, s) {
       debugPrint('❌ postFcmNotification() error: $e');
       debugPrint('📍 StackTrace: $s');
