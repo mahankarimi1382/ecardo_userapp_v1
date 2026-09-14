@@ -12,11 +12,14 @@
 //   * a link into Bill Payment History where the authoritative server-side
 //     status lives.
 //
-// TODO(lead): the exact success payload of `POST /user/pay-bill` is not
-// contractual in the client (no response model exists). Message/status are
-/// therefore rendered as null-safe pass-throughs; once the backend confirms
-/// the payload shape (e.g. `data.status` / `data.tnx`), consider a typed
-/// model and a dedicated pending/success visual per status.
+// CONTRACT (confirmed server-side, T11-2 — backend commit e2833416 on
+// fix/phase2-remediation): `POST /api/user/pay-bill` now returns
+//   {status:'success', message, data:{status:'Completed'|'Pending'|..., amount, charge}}
+// where data.status mirrors the BillStatus enum (ucfirst). The status row
+// below renders `data.status`; rendering stays a null-safe pass-through, so
+// an older backend without `data` simply hides the row (safe fallback).
+// A typed client model + dedicated pending/success visuals remain optional
+// polish for a future wave.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';

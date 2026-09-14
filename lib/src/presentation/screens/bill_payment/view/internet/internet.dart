@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/bill_payment/view/sub_secti
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/internet_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/internet/sub_sections/internet_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/internet/sub_sections/internet_review_step_section.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class Internet extends StatefulWidget {
   const Internet({super.key});
@@ -109,7 +110,7 @@ class _InternetState extends State<Internet> {
       chargeValue: controller.chargeText.value,
       payableLabel: localization.internetReviewPayableAmountLabel,
       payableValue:
-          "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency",
+          "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency",
       statusLabel: localization.billPaymentDetailsStatus,
       historyButtonLabel: localization.billPaymentHistoryTitle,
       closeButtonLabel: localization.commonClose,

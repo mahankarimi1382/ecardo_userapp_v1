@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class WithdrawReviewStepSection extends StatelessWidget {
   const WithdrawReviewStepSection({super.key});
@@ -63,7 +64,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title:
                                   localization.withdrawReviewStepSectionAmount,
                               content:
-                                  "${double.tryParse(controller.amountController.text)!.toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  "${CurrencyFormatter.format(double.tryParse(controller.amountController.text)!, decimals: calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
                               contentColor: AppColors.success,
                             ),
                           ),
@@ -79,7 +80,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title:
                                   localization.withdrawReviewStepSectionCharge,
                               content:
-                                  "${controller.calculatedCharge.value.toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  "${CurrencyFormatter.format(controller.calculatedCharge.value, decimals: calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
                               contentColor: AppColors.error,
                             ),
                           ),
@@ -95,7 +96,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title: localization
                                   .withdrawReviewStepSectionTotalAmount,
                               content:
-                                  "${(controller.totalAmount).toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  "${CurrencyFormatter.format((controller.totalAmount), decimals: calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
                               contentColor: AppColors.success,
                             ),
                           ),

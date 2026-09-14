@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/presentation/screens/gift_code/controller/gift_r
 import 'package:ecardo_user/src/presentation/screens/gift_code/model/gift_redeem_history_model.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_code/view/gift_redeem_history/sub_sections/gift_redeem_transaction_filter_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class GiftRedeemHistory extends StatefulWidget {
   const GiftRedeemHistory({super.key});
@@ -291,7 +292,7 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                                 ),
                               ),
                               Text(
-                                "${double.tryParse(gift.amount!)!.toStringAsFixed(calculateDecimals)} ${gift.currency}",
+                                "${CurrencyFormatter.format(double.tryParse(gift.amount!)!, decimals: calculateDecimals)} ${gift.currency}",
                                 style: TextStyle(
                                   letterSpacing: 0,
                                   fontWeight: FontWeight.w900,

@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_code/controller/create_gift_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class CreateGiftSuccessStepSection extends StatefulWidget {
   const CreateGiftSuccessStepSection({super.key});
@@ -87,7 +88,7 @@ class _CreateGiftSuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localizations.createGiftSuccessAmount,
                             content:
-                                "${double.tryParse(controller.successCreateGiftData.value!["gift"]["amount"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.successCreateGiftData.value!["gift"]["amount"].toString())!, decimals: calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
                             contentColor: AppColors.success,
                           ),
                           const SizedBox(height: 20),
@@ -99,7 +100,7 @@ class _CreateGiftSuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localizations.createGiftSuccessCharge,
                             content:
-                                "${double.tryParse(controller.successCreateGiftData.value!["gift"]["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.successCreateGiftData.value!["gift"]["charge"].toString())!, decimals: calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -111,7 +112,7 @@ class _CreateGiftSuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localizations.createGiftSuccessFinalAmount,
                             content:
-                                "${double.tryParse(controller.successCreateGiftData.value!["gift"]["final_amount"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.successCreateGiftData.value!["gift"]["final_amount"].toString())!, decimals: calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
                             contentColor: AppColors.success,
                           ),
                           const SizedBox(height: 20),

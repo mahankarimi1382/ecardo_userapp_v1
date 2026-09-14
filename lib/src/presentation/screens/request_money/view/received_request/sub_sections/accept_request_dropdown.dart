@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/received_request_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/model/received_request_model.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class AcceptRequestDropdown extends StatelessWidget {
   final Requests request;
@@ -114,7 +115,7 @@ class AcceptRequestDropdown extends StatelessWidget {
                       context,
                       title: localization.acceptRequestDropdownPayableAmount,
                       content:
-                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${CurrencyFormatter.format(finalAmountValue, decimals: calculateDecimals)} ${request.currency}",
                       contentColor: AppColors.success,
                     ),
                     const SizedBox(height: 10),

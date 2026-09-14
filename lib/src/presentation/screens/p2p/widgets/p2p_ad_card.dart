@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/model/p2p_marketplace_response_model.dart'
     as marketplace;
 import 'package:ecardo_user/src/presentation/screens/p2p/widgets/p2p_buy_sell_ad_screen.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class P2pAdCard extends StatelessWidget {
   final marketplace.Ad item;
@@ -93,7 +94,7 @@ class P2pAdCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      '${item.completedOrders ?? 0} ${localization.p2pOrders.toLowerCase()}  |  ${completionRate.toStringAsFixed(2)}% ${localization.p2pCompletion.toLowerCase()}',
+                      '${item.completedOrders ?? 0} ${localization.p2pOrders.toLowerCase()}  |  ${CurrencyFormatter.format(completionRate, decimals: 2)}% ${localization.p2pCompletion.toLowerCase()}',
                       style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w500,

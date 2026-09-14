@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/data_bundle_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class DataBundleReviewStepSection extends StatelessWidget {
   const DataBundleReviewStepSection({super.key});
@@ -99,7 +100,7 @@ class DataBundleReviewStepSection extends StatelessWidget {
                         settings.getSetting("site_currency")?.toString() ?? "";
 
                     final String payableText =
-                        "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency";
+                        "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency";
 
                     return _buildReviewDynamicContent(
                       context,

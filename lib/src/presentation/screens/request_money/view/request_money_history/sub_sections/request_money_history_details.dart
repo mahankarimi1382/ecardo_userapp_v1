@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/model/request_money_history_model.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class RequestMoneyHistoryDetails extends StatelessWidget {
   final Requests request;
@@ -91,14 +92,14 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
                     _buildDetailRow(
                       label: localization.requestMoneyHistoryDetailsCharge,
                       content:
-                          "${chargeValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${CurrencyFormatter.format(chargeValue, decimals: calculateDecimals)} ${request.currency}",
                       contentColor: AppColors.error,
                     ),
 
                     _buildDetailRow(
                       label: localization.requestMoneyHistoryDetailsFinalAmount,
                       content:
-                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${CurrencyFormatter.format(finalAmountValue, decimals: calculateDecimals)} ${request.currency}",
                       contentColor: AppColors.success,
                     ),
 

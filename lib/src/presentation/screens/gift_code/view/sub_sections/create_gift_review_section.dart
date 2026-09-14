@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_code/controller/create_gift_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class CreateGiftReviewSection extends StatelessWidget {
   const CreateGiftReviewSection({super.key});
@@ -63,7 +64,7 @@ class CreateGiftReviewSection extends StatelessWidget {
                               context,
                               title: localizations.createGiftReviewAmount,
                               content:
-                                  "${(double.tryParse(controller.amountController.text) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code!}",
+                                  "${CurrencyFormatter.format((double.tryParse(controller.amountController.text) ?? 0.0), decimals: calculateDecimals)} ${controller.wallet.value!.code!}",
                               contentColor: AppColors.success,
                             ),
                           ),
@@ -91,7 +92,7 @@ class CreateGiftReviewSection extends StatelessWidget {
                             context,
                             title: localizations.createGiftReviewCharge,
                             content:
-                                "${double.tryParse(controller.charge.value.toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.charge.value.toString())!, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -104,7 +105,7 @@ class CreateGiftReviewSection extends StatelessWidget {
                             context,
                             title: localizations.createGiftReviewTotalAmount,
                             content:
-                                "${double.tryParse(controller.totalAmount.value.toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.totalAmount.value.toString())!, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.error,
                           ),
                         ],

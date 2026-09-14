@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class CashOutSuccessStepSection extends StatefulWidget {
   const CashOutSuccessStepSection({super.key});
@@ -86,7 +87,7 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                           _buildSuccessDynamicContent(
                             title: localizations.cashOutSuccessAmount,
                             content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${(double.tryParse(controller.amountController.text) != null ? CurrencyFormatter.format(double.tryParse(controller.amountController.text), decimals: calculateDecimals) : null)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                           const SizedBox(height: 20),
@@ -137,7 +138,7 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                             () => _buildSuccessDynamicContent(
                               title: localizations.cashOutSuccessCharge,
                               content:
-                                  "${double.tryParse(controller.successCashOutData.value!["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                  "${CurrencyFormatter.format(double.tryParse(controller.successCashOutData.value!["charge"].toString())!, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
 
                               contentColor: AppColors.error,
                             ),
@@ -164,7 +165,7 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                             () => _buildSuccessDynamicContent(
                               title: localizations.cashOutSuccessFinalAmount,
                               content:
-                                  "${controller.successCashOutData.value!["final_amount"].toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                  "${CurrencyFormatter.format(controller.successCashOutData.value!["final_amount"], decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                               contentColor: AppColors.success,
                             ),
                           ),

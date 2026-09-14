@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/bill_payment/view/sub_secti
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/electricity_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/electricity/sub_sections/electricity_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/electricity/sub_sections/electricity_review_step_section.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class Electricity extends StatefulWidget {
   const Electricity({super.key});
@@ -109,7 +110,7 @@ class _ElectricityState extends State<Electricity> {
       chargeValue: controller.chargeText.value,
       payableLabel: localization.electricityReviewPayableAmountLabel,
       payableValue:
-          "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency",
+          "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency",
       statusLabel: localization.billPaymentDetailsStatus,
       historyButtonLabel: localization.billPaymentHistoryTitle,
       closeButtonLabel: localization.commonClose,

@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class AddMoneyReviewStepSection extends StatelessWidget {
   const AddMoneyReviewStepSection({super.key});
@@ -46,7 +47,7 @@ class AddMoneyReviewStepSection extends StatelessWidget {
                       context,
                       title: localization.addMoneyReviewAmount,
                       content:
-                          "${controller.baseAmount.value.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals!)} ${controller.gatewayMethod.value!.currency}",
+                          "${CurrencyFormatter.format(controller.baseAmount.value, decimals: controller.gatewayMethod.value!.currencyDecimals!)} ${controller.gatewayMethod.value!.currency}",
                       contentColor: AppColors.success,
                     ),
                   ),
@@ -89,7 +90,7 @@ class AddMoneyReviewStepSection extends StatelessWidget {
                       context,
                       title: localization.addMoneyReviewCharge,
                       content:
-                          "${controller.calculatedCharge.value.toStringAsFixed(controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!)} ${controller.gatewayMethod.value!.currency}",
+                          "${CurrencyFormatter.format(controller.calculatedCharge.value, decimals: controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!)} ${controller.gatewayMethod.value!.currency}",
                       contentColor: AppColors.error,
                     ),
                   ),
@@ -104,7 +105,7 @@ class AddMoneyReviewStepSection extends StatelessWidget {
                       context,
                       title: localization.addMoneyReviewTotal,
                       content:
-                          "${controller.totalAmount.value.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals!)} ${controller.gatewayMethod.value!.currency}",
+                          "${CurrencyFormatter.format(controller.totalAmount.value, decimals: controller.gatewayMethod.value!.currencyDecimals!)} ${controller.gatewayMethod.value!.currency}",
                       contentColor: AppColors.black,
                     ),
                   ),

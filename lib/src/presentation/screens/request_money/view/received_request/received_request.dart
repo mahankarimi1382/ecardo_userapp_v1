@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/presentation/screens/request_money/view/received
 import 'package:ecardo_user/src/presentation/screens/request_money/view/received_request/sub_sections/received_request_details.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/sub_sections/request_money_header_section.dart';
 import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class ReceivedRequest extends StatefulWidget {
   const ReceivedRequest({super.key});
@@ -72,7 +73,7 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
     );
 
     final amount = double.tryParse(request.amount ?? '0') ?? 0;
-    return "${request.currencySymbol ?? ''}${amount.toStringAsFixed(calculateDecimals)}";
+    return "${request.currencySymbol ?? ''}${CurrencyFormatter.format(amount, decimals: calculateDecimals)}";
   }
 
   String _getStatus(Requests request) {

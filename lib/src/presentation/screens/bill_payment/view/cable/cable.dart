@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/bill_payment/view/sub_secti
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/cable_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/cable/sub_sections/cable_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/cable/sub_sections/cable_review_step_section.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class Cable extends StatefulWidget {
   const Cable({super.key});
@@ -109,7 +110,7 @@ class _CableState extends State<Cable> {
       chargeValue: controller.chargeText.value,
       payableLabel: localization.cableReviewPayableAmountLabel,
       payableValue:
-          "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency",
+          "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency",
       statusLabel: localization.billPaymentDetailsStatus,
       historyButtonLabel: localization.billPaymentHistoryTitle,
       closeButtonLabel: localization.commonClose,

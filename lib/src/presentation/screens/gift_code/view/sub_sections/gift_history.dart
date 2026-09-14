@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_code/controller/gift_history_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_code/model/gift_history_model.dart';
 import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class GiftHistory extends StatefulWidget {
   const GiftHistory({super.key});
@@ -223,7 +224,7 @@ class _GiftHistoryState extends State<GiftHistory> {
                               ),
                             ),
                             Text(
-                              "${double.tryParse(gift.amount!)!.toStringAsFixed(calculateDecimals)} ${gift.currency}",
+                              "${CurrencyFormatter.format(double.tryParse(gift.amount!)!, decimals: calculateDecimals)} ${gift.currency}",
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w900,

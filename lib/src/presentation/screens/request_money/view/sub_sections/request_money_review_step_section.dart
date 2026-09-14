@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class RequestMoneyReviewStepSection extends StatelessWidget {
   const RequestMoneyReviewStepSection({super.key});
@@ -58,7 +59,7 @@ class RequestMoneyReviewStepSection extends StatelessWidget {
                       context,
                       title: localization.requestMoneyReviewStepSectionAmount,
                       content:
-                          "${(double.tryParse(controller.requestAmountController.text) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code!}",
+                          "${CurrencyFormatter.format((double.tryParse(controller.requestAmountController.text) ?? 0.0), decimals: calculateDecimals)} ${controller.wallet.value!.code!}",
                       contentColor: AppColors.success,
                     ),
                   ),

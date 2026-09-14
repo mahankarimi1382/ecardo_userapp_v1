@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class AddMoneySuccessStepSection extends StatefulWidget {
   const AddMoneySuccessStepSection({super.key});
@@ -86,7 +87,7 @@ class _AddMoneySuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localization.addMoneySuccessAmount,
                             content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
+                                "${(double.tryParse(controller.amountController.text) != null ? CurrencyFormatter.format(double.tryParse(controller.amountController.text), decimals: calculateDecimals) : null)} ${controller.successPaymentData.value!["pay_currency"]}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                           const SizedBox(height: 20),
@@ -110,7 +111,7 @@ class _AddMoneySuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localization.addMoneySuccessCharge,
                             content:
-                                "${double.tryParse(controller.successPaymentData.value!["charge"])!.toStringAsFixed(calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.successPaymentData.value!["charge"])!, decimals: calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -134,7 +135,7 @@ class _AddMoneySuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localization.addMoneySuccessFinalAmount,
                             content:
-                                "${double.tryParse(controller.successPaymentData.value!["amount"])!.toStringAsFixed(calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.successPaymentData.value!["amount"])!, decimals: calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                         ],

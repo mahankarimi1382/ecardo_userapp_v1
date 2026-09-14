@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 
 import '../../../controller/toll_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class TollReviewStepSection extends StatelessWidget {
   const TollReviewStepSection({super.key});
@@ -100,7 +101,7 @@ class TollReviewStepSection extends StatelessWidget {
                         settings.getSetting("site_currency")?.toString() ?? "";
 
                     final String payableText =
-                        "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency";
+                        "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency";
 
                     return _buildReviewDynamicContent(
                       context,

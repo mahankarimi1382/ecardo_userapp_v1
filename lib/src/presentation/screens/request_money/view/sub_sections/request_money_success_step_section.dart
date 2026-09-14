@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class RequestMoneySuccessStepSection extends StatefulWidget {
   const RequestMoneySuccessStepSection({super.key});
@@ -98,7 +99,7 @@ class _RequestMoneySuccessStepSectionState
                             title: localization
                                 .requestMoneySuccessStepSectionAmount,
                             content:
-                                "${double.tryParse(controller.requestAmountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${(double.tryParse(controller.requestAmountController.text) != null ? CurrencyFormatter.format(double.tryParse(controller.requestAmountController.text), decimals: calculateDecimals) : null)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                           const SizedBox(height: 20),
@@ -139,7 +140,7 @@ class _RequestMoneySuccessStepSectionState
                             title: localization
                                 .requestMoneySuccessStepSectionCharge,
                             content:
-                                "${successChargeValue.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${CurrencyFormatter.format(successChargeValue, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -152,7 +153,7 @@ class _RequestMoneySuccessStepSectionState
                             title: localization
                                 .requestMoneySuccessStepSectionFinalAmount,
                             content:
-                                "${successFinalAmountValue.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${CurrencyFormatter.format(successFinalAmountValue, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.success,
                           ),
                           const SizedBox(height: 20),

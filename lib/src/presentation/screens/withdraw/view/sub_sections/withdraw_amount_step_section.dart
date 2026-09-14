@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_fil
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/model/withdraw_account_model.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class WithdrawAmountStepSection extends StatefulWidget {
   const WithdrawAmountStepSection({super.key});
@@ -178,15 +179,19 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                           );
 
                       final min =
-                          double.tryParse(
+                          (double.tryParse(
                             withdrawAccount.method?.minWithdraw ?? "0",
-                          )?.toStringAsFixed(calculateDecimals) ??
+                          ) != null ? CurrencyFormatter.format(double.tryParse(
+                            withdrawAccount.method?.minWithdraw ?? "0",
+                          ), decimals: calculateDecimals) : null) ??
                           "0.00";
 
                       final max =
-                          double.tryParse(
+                          (double.tryParse(
                             withdrawAccount.method?.maxWithdraw ?? "0",
-                          )?.toStringAsFixed(calculateDecimals) ??
+                          ) != null ? CurrencyFormatter.format(double.tryParse(
+                            withdrawAccount.method?.maxWithdraw ?? "0",
+                          ), decimals: calculateDecimals) : null) ??
                           "0.00";
 
                       return Padding(

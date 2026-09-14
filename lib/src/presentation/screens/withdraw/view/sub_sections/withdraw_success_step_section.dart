@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class WithdrawSuccessStepSection extends StatefulWidget {
   const WithdrawSuccessStepSection({super.key});
@@ -88,7 +89,7 @@ class _WithdrawSuccessStepSectionState
                             title:
                                 localization.withdrawSuccessStepSectionAmount,
                             content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.successWithdrawData.value!["transaction"]["pay_currency"]}",
+                                "${(double.tryParse(controller.amountController.text) != null ? CurrencyFormatter.format(double.tryParse(controller.amountController.text), decimals: calculateDecimals) : null)} ${controller.successWithdrawData.value!["transaction"]["pay_currency"]}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                           const SizedBox(height: 20),
@@ -114,7 +115,7 @@ class _WithdrawSuccessStepSectionState
                             title:
                                 localization.withdrawSuccessStepSectionCharge,
                             content:
-                                "${double.tryParse(controller.successWithdrawData.value!["transaction"]["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successWithdrawData.value!["transaction"]["pay_currency"]}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.successWithdrawData.value!["transaction"]["charge"].toString())!, decimals: calculateDecimals)} ${controller.successWithdrawData.value!["transaction"]["pay_currency"]}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -140,7 +141,7 @@ class _WithdrawSuccessStepSectionState
                             title: localization
                                 .withdrawSuccessStepSectionFinalAmount,
                             content:
-                                "${double.tryParse(controller.successWithdrawData.value!["transaction"]["final_amount"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successWithdrawData.value!["transaction"]["pay_currency"]}",
+                                "${CurrencyFormatter.format(double.tryParse(controller.successWithdrawData.value!["transaction"]["final_amount"].toString())!, decimals: calculateDecimals)} ${controller.successWithdrawData.value!["transaction"]["pay_currency"]}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                         ],

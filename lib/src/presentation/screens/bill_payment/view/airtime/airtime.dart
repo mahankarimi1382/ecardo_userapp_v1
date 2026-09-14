@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/bill_payment/view/sub_secti
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/airtime_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/airtime/sub_sections/airtime_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/airtime/sub_sections/airtime_review_step_section.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class Airtime extends StatefulWidget {
   const Airtime({super.key});
@@ -109,7 +110,7 @@ class _AirtimeState extends State<Airtime> {
       chargeValue: controller.chargeText.value,
       payableLabel: localization.airtimeReviewPayableAmountLabel,
       payableValue:
-          "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency",
+          "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency",
       statusLabel: localization.billPaymentDetailsStatus,
       historyButtonLabel: localization.billPaymentHistoryTitle,
       closeButtonLabel: localization.commonClose,

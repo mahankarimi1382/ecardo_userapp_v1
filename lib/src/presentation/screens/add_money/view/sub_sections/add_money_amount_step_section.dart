@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_drop
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/model/gateway_methods_model.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class AddMoneyAmountStepSection extends StatefulWidget {
   const AddMoneyAmountStepSection({super.key});
@@ -129,7 +130,7 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
-                      "${localization.addMoneyCharge} ${double.tryParse(controller.gatewayMethod.value!.charge ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyType != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.chargeType == "percentage" ? "%" : controller.wallet.value?.code ?? ''}",
+                      "${localization.addMoneyCharge} ${(double.tryParse(controller.gatewayMethod.value!.charge ?? '0') != null ? CurrencyFormatter.format(double.tryParse(controller.gatewayMethod.value!.charge ?? '0'), decimals: controller.gatewayMethod.value!.currencyType != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals ?? 2) : null) ?? '0.00'} ${controller.gatewayMethod.value!.chargeType == "percentage" ? "%" : controller.wallet.value?.code ?? ''}",
                       style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w500,
@@ -178,7 +179,7 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
-                      "${localization.addMoneyMin} ${double.tryParse(controller.gatewayMethod.value!.minimumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency} ${localization.addMoneyMax} ${double.tryParse(controller.gatewayMethod.value!.maximumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency}",
+                      "${localization.addMoneyMin} ${(double.tryParse(controller.gatewayMethod.value!.minimumDeposit ?? '0') != null ? CurrencyFormatter.format(double.tryParse(controller.gatewayMethod.value!.minimumDeposit ?? '0'), decimals: controller.gatewayMethod.value!.currencyDecimals ?? 2) : null) ?? '0.00'} ${controller.gatewayMethod.value!.currency} ${localization.addMoneyMax} ${(double.tryParse(controller.gatewayMethod.value!.maximumDeposit ?? '0') != null ? CurrencyFormatter.format(double.tryParse(controller.gatewayMethod.value!.maximumDeposit ?? '0'), decimals: controller.gatewayMethod.value!.currencyDecimals ?? 2) : null) ?? '0.00'} ${controller.gatewayMethod.value!.currency}",
                       style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w500,

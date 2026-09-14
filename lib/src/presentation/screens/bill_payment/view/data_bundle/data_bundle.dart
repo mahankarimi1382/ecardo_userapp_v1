@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/bill_payment/view/sub_secti
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/data_bundle_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/data_bundle/sub_sections/data_bundle_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/data_bundle/sub_sections/data_bundle_review_step_section.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class DataBundle extends StatefulWidget {
   const DataBundle({super.key});
@@ -109,7 +110,7 @@ class _DataBundleState extends State<DataBundle> {
       chargeValue: controller.chargeText.value,
       payableLabel: localization.dataBundleReviewPayableAmountLabel,
       payableValue:
-          "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency",
+          "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency",
       statusLabel: localization.billPaymentDetailsStatus,
       historyButtonLabel: localization.billPaymentHistoryTitle,
       closeButtonLabel: localization.commonClose,

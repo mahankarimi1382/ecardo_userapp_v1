@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class MakePaymentSuccessStepSection extends StatefulWidget {
   const MakePaymentSuccessStepSection({super.key});
@@ -107,7 +108,7 @@ class _MakePaymentSuccessStepSectionState
                             title: localization
                                 .makePaymentSuccessStepSectionAmount,
                             content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${(double.tryParse(controller.amountController.text) != null ? CurrencyFormatter.format(double.tryParse(controller.amountController.text), decimals: calculateDecimals) : null)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                           const SizedBox(height: 20),
@@ -163,7 +164,7 @@ class _MakePaymentSuccessStepSectionState
                               title: localization
                                   .makePaymentSuccessStepSectionCharge,
                               content:
-                                  "${double.tryParse(controller.successPaymentData.value!["transaction"]["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                  "${CurrencyFormatter.format(double.tryParse(controller.successPaymentData.value!["transaction"]["charge"].toString())!, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
 
                               contentColor: AppColors.error,
                             ),
@@ -193,7 +194,7 @@ class _MakePaymentSuccessStepSectionState
                               title: localization
                                   .makePaymentSuccessStepSectionFinalAmount,
                               content:
-                                  "${totalAmount.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                  "${CurrencyFormatter.format(totalAmount, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                               contentColor: AppColors.success,
                             ),
                           ),

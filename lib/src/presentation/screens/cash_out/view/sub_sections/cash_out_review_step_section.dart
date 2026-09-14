@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class CashOutReviewStepSection extends StatelessWidget {
   const CashOutReviewStepSection({super.key});
@@ -62,7 +63,7 @@ class CashOutReviewStepSection extends StatelessWidget {
                       context,
                       title: localizations.cashOutReviewAmount,
                       content:
-                          "${(double.tryParse(controller.amountController.text) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                          "${CurrencyFormatter.format((double.tryParse(controller.amountController.text) ?? 0.0), decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                       contentColor: AppColors.success,
                     ),
                     const SizedBox(height: 20),
@@ -102,7 +103,7 @@ class CashOutReviewStepSection extends StatelessWidget {
                         context,
                         title: localizations.cashOutReviewCharge,
                         content:
-                            "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                            "${CurrencyFormatter.format(controller.charge.value, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.error,
                       ),
                     ),
@@ -117,7 +118,7 @@ class CashOutReviewStepSection extends StatelessWidget {
                         context,
                         title: localizations.cashOutReviewTotalAmount,
                         content:
-                            "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                            "${CurrencyFormatter.format(controller.totalAmount.value, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.success,
                       ),
                     ),

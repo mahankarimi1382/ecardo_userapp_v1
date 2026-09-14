@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/presentation/screens/request_money/controller/re
 import 'package:ecardo_user/src/presentation/screens/request_money/model/request_money_history_model.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/request_money_history/sub_sections/request_money_history_details.dart';
 import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class RequestMoneyHistory extends StatefulWidget {
   const RequestMoneyHistory({super.key});
@@ -78,7 +79,7 @@ class _RequestMoneyHistoryState extends State<RequestMoneyHistory>
     );
 
     final amount = double.tryParse(request.amount ?? '0') ?? 0;
-    return "${request.currencySymbol ?? ''}${amount.toStringAsFixed(calculateDecimals)}";
+    return "${request.currencySymbol ?? ''}${CurrencyFormatter.format(amount, decimals: calculateDecimals)}";
   }
 
   String _getStatus(Requests request) {

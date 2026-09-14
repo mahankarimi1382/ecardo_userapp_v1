@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_c
 import 'package:ecardo_user/src/presentation/screens/gift_card/model/gift_card_product_details_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class GiftCardReviewDetailsSection extends StatelessWidget {
   final GiftCardProductDetailsData cardDetails;
@@ -117,7 +118,7 @@ class GiftCardReviewDetailsSection extends StatelessWidget {
                                 context,
                                 title: localization.giftCardUnitPriceLabel,
                                 content:
-                                    "${controller.unitPrice.toStringAsFixed(calculateDecimals)} ${cardDetails.senderCurrencyCode} ( ${cardDetails.denominationType == 'FIXED'
+                                    "${CurrencyFormatter.format(controller.unitPrice, decimals: calculateDecimals)} ${cardDetails.senderCurrencyCode} ( ${cardDetails.denominationType == 'FIXED'
                                         ? controller.selectedAmount.value
                                         : cardDetails.denominationType == 'RANGE'
                                         ? controller.amountController.text
@@ -149,7 +150,7 @@ class GiftCardReviewDetailsSection extends StatelessWidget {
                                 context,
                                 title: localization.giftCardSubTotalLabel,
                                 content:
-                                    "${controller.subTotal.toStringAsFixed(calculateDecimals)} ${cardDetails.senderCurrencyCode}",
+                                    "${CurrencyFormatter.format(controller.subTotal, decimals: calculateDecimals)} ${cardDetails.senderCurrencyCode}",
                                 contentColor: AppColors.lightTextPrimary,
                               ),
                             ),
@@ -163,7 +164,7 @@ class GiftCardReviewDetailsSection extends StatelessWidget {
                               context,
                               title: localization.giftCardTotalFeeLabel,
                               content:
-                                  "${controller.totalFee.toStringAsFixed(calculateDecimals)} ${cardDetails.senderCurrencyCode}",
+                                  "${CurrencyFormatter.format(controller.totalFee, decimals: calculateDecimals)} ${cardDetails.senderCurrencyCode}",
                               contentColor: AppColors.lightTextPrimary,
                             ),
                             const SizedBox(height: 20),
@@ -176,7 +177,7 @@ class GiftCardReviewDetailsSection extends StatelessWidget {
                               context,
                               title: localization.giftCardTotalLabel,
                               content:
-                                  "${controller.total.toStringAsFixed(calculateDecimals)} ${cardDetails.senderCurrencyCode}",
+                                  "${CurrencyFormatter.format(controller.total, decimals: calculateDecimals)} ${cardDetails.senderCurrencyCode}",
                               contentColor: AppColors.lightTextPrimary,
                             ),
                           ],

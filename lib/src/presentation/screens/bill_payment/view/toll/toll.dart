@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/presentation/screens/bill_payment/view/toll/sub_
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/toll/sub_sections/toll_review_step_section.dart';
 
 import '../../controller/toll_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class Toll extends StatefulWidget {
   const Toll({super.key});
@@ -110,7 +111,7 @@ class _TollState extends State<Toll> {
       chargeValue: controller.chargeText.value,
       payableLabel: localization.tollReviewPayableAmountLabel,
       payableValue:
-          "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency",
+          "${CurrencyFormatter.format(controller.payableAmount.value, decimals: decimals)} $currency",
       statusLabel: localization.billPaymentDetailsStatus,
       historyButtonLabel: localization.billPaymentHistoryTitle,
       closeButtonLabel: localization.commonClose,

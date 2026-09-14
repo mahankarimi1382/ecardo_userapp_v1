@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class AddMoneyPendingStepSection extends StatefulWidget {
   const AddMoneyPendingStepSection({super.key});
@@ -103,7 +104,7 @@ class _AddMoneyPendingStepSectionState
                     _buildSuccessDynamicContent(
                       title: localization.addMoneyPendingAmount,
                       content:
-                          "${double.tryParse(controller.amountController.text)?.toStringAsFixed(controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
+                          "${(double.tryParse(controller.amountController.text) != null ? CurrencyFormatter.format(double.tryParse(controller.amountController.text), decimals: controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!) : null)} $payCurrency",
                       contentColor: AppColors.lightTextPrimary,
                     ),
                     const SizedBox(height: 20),
@@ -148,7 +149,7 @@ class _AddMoneyPendingStepSectionState
                     _buildSuccessDynamicContent(
                       title: localization.addMoneyPendingCharge,
                       content:
-                          "${parseToDouble(transaction["charge"]).toStringAsFixed(controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
+                          "${CurrencyFormatter.format(parseToDouble(transaction["charge"]), decimals: controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
                       contentColor: AppColors.error,
                     ),
                     const SizedBox(height: 20),
@@ -171,7 +172,7 @@ class _AddMoneyPendingStepSectionState
                     _buildSuccessDynamicContent(
                       title: localization.addMoneyPendingFinalAmount,
                       content:
-                          "${totalAmount.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
+                          "${CurrencyFormatter.format(totalAmount, decimals: controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
                       contentColor: AppColors.success,
                     ),
                   ],

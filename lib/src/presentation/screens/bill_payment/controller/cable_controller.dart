@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/model/bill_countries_model.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/model/pay_bill_service_model.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class CableController extends GetxController {
   // Variables
@@ -266,7 +267,7 @@ class CableController extends GetxController {
     }
     final payable = serviceRate > 0 ? ((amount / serviceRate) + charge) : 0.0;
     payableAmount.value = payable;
-    chargeText.value = '${charge.toStringAsFixed(decimals)} $currency';
+    chargeText.value = '${CurrencyFormatter.format(charge, decimals: decimals)} $currency';
     // Integer rates keep the historical compact display; fractional rates
     // (S-011: server stores DECIMAL, e.g. 0.85) used to truncate to "0" —
     // format them with the DynamicDecimalsHelper convention instead.
@@ -279,7 +280,7 @@ class CableController extends GetxController {
     );
     rateText.value = serviceRate == serviceRate.roundToDouble()
         ? '1 $currency = ${serviceRate.toInt()} $serviceCurrency'
-        : '1 $currency = ${serviceRate.toStringAsFixed(rateDecimals)} $serviceCurrency';
+        : '1 $currency = ${CurrencyFormatter.format(serviceRate, decimals: rateDecimals)} $serviceCurrency';
   }
 
   void resetFields() {

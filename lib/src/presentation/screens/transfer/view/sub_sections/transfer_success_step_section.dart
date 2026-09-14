@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
+import 'package:ecardo_user/src/helper/currency_formatter.dart';
 
 class TransferSuccessStepSection extends StatefulWidget {
   const TransferSuccessStepSection({super.key});
@@ -93,7 +94,7 @@ class _TransferSuccessStepSectionState
                             title:
                                 localization.transferSuccessStepSectionAmount,
                             content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ''}",
+                                "${(double.tryParse(controller.amountController.text) != null ? CurrencyFormatter.format(double.tryParse(controller.amountController.text), decimals: calculateDecimals) : null)} ${controller.wallet.value?.code ?? ''}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                           const SizedBox(height: 20),
@@ -177,7 +178,7 @@ class _TransferSuccessStepSectionState
                               title:
                                   localization.transferSuccessStepSectionCharge,
                               content:
-                                  "${double.tryParse(controller.successTransferData.value!["sender_transaction"]["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                  "${CurrencyFormatter.format(double.tryParse(controller.successTransferData.value!["sender_transaction"]["charge"].toString())!, decimals: calculateDecimals)} ${controller.wallet.value!.code}",
                               contentColor: AppColors.error,
                             ),
                           ),
@@ -191,7 +192,7 @@ class _TransferSuccessStepSectionState
                             title: localization
                                 .transferSuccessStepSectionTotalAmount,
                             content:
-                                "${amount.toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ''}",
+                                "${CurrencyFormatter.format(amount, decimals: calculateDecimals)} ${controller.wallet.value?.code ?? ''}",
                             contentColor: AppColors.success,
                           ),
                         ],
