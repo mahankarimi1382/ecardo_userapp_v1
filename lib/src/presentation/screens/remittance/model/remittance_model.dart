@@ -168,10 +168,10 @@ enum RemittanceStatus {
 ///     Older clients expected `1`/`0` (int). We normalize to int here.
 ///   - `fields` is a JSON column → serialized as a JSON array/object (`[]`/`{}`),
 ///     `null`, or (legacy) a JSON string. We store the raw decoded value and
-///     expose helpers to access it safely.
-///   - `receive_currency` (nested object) may also be present when eager-loaded;
-///     it is ignored by this model but `receiveCurrencyId` is read from the
-///     flat `receive_currency_id` column.
+///     expose helpers to access it safely (see [payoutFields]).
+///   - `receive_currency` (nested object) is eager-loaded by the backend
+///     `methods()` endpoint; we surface its `code`/`symbol` for the
+///     per-method payout-currency badge (Task-12).
 class RemittanceMethod {
   final int? id;
   final String? countryCode;
@@ -180,6 +180,12 @@ class RemittanceMethod {
   final dynamic fields; // JSON array / object / null / legacy string
   final int? status;
 
+  // Task-12 — nested `receive_currency` (eager-loaded by the backend
+  // `methods()` endpoint). We surface only the display fields the UI needs
+  // (code + symbol) so each method card can show "→ CNY" transparently.
+  final String? receiveCurrencyCode;
+  final String? receiveCurrencySymbol;
+
   RemittanceMethod({
     this.id,
     this.countryCode,
@@ -187,9 +193,20 @@ class RemittanceMethod {
     this.receiveCurrencyId,
     this.fields,
     this.status,
+    this.receiveCurrencyCode,
+    this.receiveCurrencySymbol,
   });
 
   factory RemittanceMethod.fromJson(Map<String, dynamic> json) {
+    // Task-12 — parse the nested receive-currency object defensively: the
+    // backend may omit it (no eager load) or send a non-map value.
+    String? rcCode;
+    String? rcSymbol;
+    final rc = json['receive_currency'];
+    if (rc is Map<String, dynamic>) {
+      rcCode = rc['code'] as String?;
+      rcSymbol = rc['symbol'] as String?;
+    }
     return RemittanceMethod(
       id: json['id'] as int?,
       countryCode: json['country_code'] as String?,
@@ -201,6 +218,8 @@ class RemittanceMethod {
       // Backend casts `status` to boolean → arrives as `true`/`false`.
       // Some backends may still send `1`/`0`. Normalize to int?.
       status: _parseStatus(json['status']),
+      receiveCurrencyCode: rcCode,
+      receiveCurrencySymbol: rcSymbol,
     );
   }
 
@@ -224,6 +243,21 @@ class RemittanceMethod {
   Map<String, dynamic>? get fieldsAsMap =>
       fields is Map ? Map<String, dynamic>.from(fields as Map) : null;
 
+  /// Task-12 — `fields` decoded into typed payout-field descriptors.
+  ///
+  /// Each backend entry looks like
+  ///   {"name":"bank_name","label":"Bank Name","type":"text","required":true}
+  /// Malformed entries are skipped (never throw — the receiver form must
+  /// always render).
+  List<RemittanceMethodField> get payoutFields {
+    final list = fieldsAsList;
+    if (list == null) return const <RemittanceMethodField>[];
+    return list
+        .whereType<Map>()
+        .map((e) => RemittanceMethodField.fromMap(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
   static int? _parseStatus(dynamic v) {
     if (v == null) return null;
     if (v is bool) return v ? 1 : 0;
@@ -245,6 +279,32 @@ class RemittanceMethod {
   }
 }
 
+/// Typed descriptor for one dynamic payout field of a remittance method
+/// (Task-12). The backend `remittance_methods.fields` JSON column drives
+/// which fields the receiver form shows — no client-side hardcoding.
+class RemittanceMethodField {
+  final String name;
+  final String label;
+  final String type;
+  final bool required;
+
+  const RemittanceMethodField({
+    required this.name,
+    required this.label,
+    this.type = 'text',
+    this.required = false,
+  });
+
+  factory RemittanceMethodField.fromMap(Map<String, dynamic> map) {
+    return RemittanceMethodField(
+      name: (map['name'] ?? '').toString(),
+      label: (map['label'] ?? '').toString(),
+      type: (map['type'] ?? 'text').toString(),
+      required: map['required'] == true || map['required'] == 1,
+    );
+  }
+}
+
 /// Quote returned by /user/remittance/quote.
 /// Rate is locked for [rateExpiresInSeconds] seconds.
 class RemittanceQuote {
@@ -261,6 +321,18 @@ class RemittanceQuote {
   final DateTime? rateExpiresAt;
   final int rateExpiresInSeconds;
 
+  // Task-12 — additive fields from the backend quote payload (v3.9 SP+):
+  //   • rateSource: 'admin' (operator-configured remittance_rates row)
+  //     or 'auto' (market rate from currency conversion + markup).
+  //   • minAmount / maxAmount: the applicable send-amount window of the
+  //     admin rate pair; null when the backend used the auto rate (no
+  //     admin-configured window). Displayed as a limit hint + enforced by
+  //     the backend with an explicit 422 instead of the previous silent
+  //     worse-rate fallback (fee-transparency rule).
+  final String? rateSource;
+  final double? minAmount;
+  final double? maxAmount;
+
   RemittanceQuote({
     this.userId,
     required this.sendAmount,
@@ -274,6 +346,9 @@ class RemittanceQuote {
     this.rateLockedAt,
     this.rateExpiresAt,
     required this.rateExpiresInSeconds,
+    this.rateSource,
+    this.minAmount,
+    this.maxAmount,
   });
 
   factory RemittanceQuote.fromJson(Map<String, dynamic> json) {
@@ -294,6 +369,9 @@ class RemittanceQuote {
           ? DateTime.tryParse(json['rate_expires_at'].toString())
           : null,
       rateExpiresInSeconds: json['rate_expires_in_seconds'] as int? ?? 900,
+      rateSource: json['rate_source'] as String?,
+      minAmount: (json['min_amount'] as num?)?.toDouble(),
+      maxAmount: (json['max_amount'] as num?)?.toDouble(),
     );
   }
 
@@ -310,6 +388,9 @@ class RemittanceQuote {
         'rate_locked_at': rateLockedAt?.toIso8601String(),
         'rate_expires_at': rateExpiresAt?.toIso8601String(),
         'rate_expires_in_seconds': rateExpiresInSeconds,
+        if (rateSource != null) 'rate_source': rateSource,
+        if (minAmount != null) 'min_amount': minAmount,
+        if (maxAmount != null) 'max_amount': maxAmount,
       };
 
   bool get isExpired =>
@@ -342,6 +423,14 @@ class RemittanceSenderInfo {
 }
 
 /// Receiver info structure.
+///
+/// Task-12 — added `swift`, `shabaNumber`, `usdtAddress` and `cardNumber`.
+/// The backend `storeFlat()` validation ALREADY accepts these keys
+/// (receiver_swift / receiver_shaba_number / receiver_usdt_address /
+/// receiver_card_number) and the admin-configured method `fields` mark
+/// them required (CN-BANK → swift, SHABA-IRANIAN-ALLBANK → shaba_number,
+/// USDT-WALLET → usdt_address) — the previous model silently dropped
+/// them, so required payout details never reached the backend.
 class RemittanceReceiverInfo {
   final String name;
   final String country; // ISO 3166-1 alpha-2
@@ -352,6 +441,11 @@ class RemittanceReceiverInfo {
   // Optional fields for Chinese payout methods
   final String? alipayAccount;
   final String? wechatAccount;
+  // Task-12 — dynamic payout-method fields (driven by method.fields)
+  final String? swift;
+  final String? shabaNumber;
+  final String? usdtAddress;
+  final String? cardNumber;
 
   RemittanceReceiverInfo({
     required this.name,
@@ -362,6 +456,10 @@ class RemittanceReceiverInfo {
     this.iban,
     this.alipayAccount,
     this.wechatAccount,
+    this.swift,
+    this.shabaNumber,
+    this.usdtAddress,
+    this.cardNumber,
   });
 
   Map<String, dynamic> toJson() => {
@@ -373,6 +471,10 @@ class RemittanceReceiverInfo {
         if (iban != null) 'iban': iban,
         if (alipayAccount != null) 'alipay_account': alipayAccount,
         if (wechatAccount != null) 'wechat_account': wechatAccount,
+        if (swift != null) 'swift': swift,
+        if (shabaNumber != null) 'shaba_number': shabaNumber,
+        if (usdtAddress != null) 'usdt_address': usdtAddress,
+        if (cardNumber != null) 'card_number': cardNumber,
       };
 }
 

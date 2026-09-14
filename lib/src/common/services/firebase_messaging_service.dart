@@ -359,6 +359,15 @@ class FirebaseMessagingService {
       // shell when we are already there.
       if (target == BaseRoute.navigation && Get.currentRoute == target) return;
 
+      // Task-12 — remittance pushes carry `remittance_uuid`; the details
+      // screen reads its argument via Get.arguments, so route WITH the
+      // uuid. Unknown/missing uuid still navigates (screen handles null).
+      if (type == 'remittance_status_changed') {
+        final uuid = data['remittance_uuid']?.toString();
+        Get.toNamed(BaseRoute.remittanceDetails, arguments: (uuid == null || uuid.isEmpty) ? null : uuid);
+        return;
+      }
+
       Get.toNamed(target);
     } catch (e) {
       // Unknown payload shapes or a failing route must never crash the app.
@@ -396,6 +405,11 @@ class FirebaseMessagingService {
       // KYC decisions → KYC history.
       case 'kyc_action':
         return BaseRoute.kycHistory;
+
+      // Task-12 — remittance status changes → remittance details (the
+      // uuid is passed by the caller from data['remittance_uuid']).
+      case 'remittance_status_changed':
+        return BaseRoute.remittanceDetails;
 
       // Everything else (user_mail, email_verification, forgot_password,
       // unknown future types) → home.

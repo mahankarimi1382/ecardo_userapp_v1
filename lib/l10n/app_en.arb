@@ -2240,6 +2240,46 @@
   "remittanceStatusRefundRequested": "Refund Requested",
   "remittanceStatusRefundCompleted": "Refund Completed",
   "remittanceStatusUnknown": "Unknown",
+  "remittanceRetry": "Retry",
+  "remittanceYouSend": "You send",
+  "remittanceReceiverGets": "Receiver gets",
+  "remittanceDeliveryMethod": "Delivery Method",
+  "remittanceAmountLimitHint": "Limit: min {min} · max {max}",
+  "@remittanceAmountLimitHint": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "remittanceErrAmountLimits": "Amount must be between {min} and {max}",
+  "@remittanceErrAmountLimits": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "remittanceErrRequiredField": "Please enter {field}",
+  "@remittanceErrRequiredField": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "remittanceFieldSwift": "SWIFT Code",
+  "remittanceFieldShabaNumber": "SHABA Number",
+  "remittanceFieldUsdtAddress": "USDT Address (TRC20)",
+  "remittanceFieldCardNumber": "Card Number",
+  "remittanceRateSourceAdmin": "Operator rate",
+  "remittanceRateSourceAuto": "Market rate",
   "exchangeCalculating": "Calculating…",
   "biometricNotAvailable": "Biometric authentication is not available on this device",
   "biometricSetupFailed": "Failed to start biometric authentication",

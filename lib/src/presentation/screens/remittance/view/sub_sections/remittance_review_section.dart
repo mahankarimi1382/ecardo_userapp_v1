@@ -51,6 +51,18 @@ class RemittanceReviewSection extends StatelessWidget {
             if (c.receiverIbanController.text.isNotEmpty) _Row(l.remittanceIban, c.receiverIbanController.text),
             if (c.receiverAlipayController.text.isNotEmpty) _Row(l.remittanceAlipayAccount, c.receiverAlipayController.text),
             if (c.receiverWechatController.text.isNotEmpty) _Row(l.remittanceWechatAccount, c.receiverWechatController.text),
+            // Task-12 — dynamic payout-method fields (swift / shaba_number /
+            // usdt_address / card_number and any future mapped fields) are
+            // now shown on the review step so the user can verify the
+            // payout details before submitting.
+            for (final field in c.selectedMethodFields) ...[
+              Builder(builder: (_) {
+                final ctl = c.methodFieldController(field.name);
+                final value = ctl?.text.trim() ?? '';
+                if (value.isEmpty) return const SizedBox.shrink();
+                return _Row(c.localizedFieldLabel(field), value);
+              }),
+            ],
           ]),
           SizedBox(height: 20.h),
           Container(

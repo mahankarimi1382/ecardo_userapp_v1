@@ -16,6 +16,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/common/model/country_model.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance_model.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
 
@@ -60,6 +61,21 @@ class RemittanceController extends GetxController {
   final RxList<CurrenciesData> sendCurrencies = <CurrenciesData>[].obs;
   final RxBool isCurrenciesLoading = false.obs;
 
+  // Task-12 — country list from the global /get-countries endpoint.
+  // Replaces the hardcoded 8-country dropdowns in the sender/receiver
+  // sections (no-hardcode rule). Falls back to an offline static list in
+  // the UI only when the API returns nothing.
+  final RxList<CountryData> countries = <CountryData>[].obs;
+  final RxBool isCountriesLoading = false.obs;
+
+  // Task-12 — send-amount limits of the active admin rate pair for the
+  // currently selected method, as returned additively by the quote
+  // endpoint (null when the backend used the auto rate). Surfaced as a
+  // hint under the amount field and enforced by the backend (explicit
+  // 422 instead of the silent worse-rate fallback).
+  final Rxn<double> minSendAmount = Rxn<double>();
+  final Rxn<double> maxSendAmount = Rxn<double>();
+
   // Form state — Step 1: Method & Amount
   final Rxn<RemittanceMethod> selectedMethod = Rxn<RemittanceMethod>();
   final amountController = TextEditingController();
@@ -82,6 +98,13 @@ class RemittanceController extends GetxController {
   final receiverIbanController = TextEditingController();
   final receiverAlipayController = TextEditingController();
   final receiverWechatController = TextEditingController();
+  // Task-12 — dynamic payout-method fields (driven by method.fields).
+  // Backend storeFlat() already validates receiver_swift / shaba_number /
+  // usdt_address / card_number; previously the app never collected them.
+  final receiverSwiftController = TextEditingController();
+  final receiverShabaController = TextEditingController();
+  final receiverUsdtAddressController = TextEditingController();
+  final receiverCardNumberController = TextEditingController();
   final RxString selectedReceiverCountry = ''.obs;
 
   // Form state — Documents
@@ -115,6 +138,9 @@ class RemittanceController extends GetxController {
     // v1.0.23+23 (R-1) — load send-currency list in parallel so the
     // picker is populated by the time the user finishes choosing a method.
     fetchSendCurrencies();
+    // Task-12 — load the country list for the sender/receiver dropdowns
+    // from the global endpoint (parallel, non-blocking).
+    fetchCountries();
     super.onInit();
   }
 
@@ -132,6 +158,10 @@ class RemittanceController extends GetxController {
     receiverIbanController.dispose();
     receiverAlipayController.dispose();
     receiverWechatController.dispose();
+    receiverSwiftController.dispose();
+    receiverShabaController.dispose();
+    receiverUsdtAddressController.dispose();
+    receiverCardNumberController.dispose();
     _stopRateTimer();
     super.onClose();
   }
@@ -162,6 +192,77 @@ class RemittanceController extends GetxController {
     if (method.receiveCurrencyId != null) {
       // Set receiver country based on method's country_code
       selectedReceiverCountry.value = method.countryCode ?? '';
+    }
+    // Task-12 — limits belong to a currency PAIR; switching the payout
+    // method switches the receive currency, so a previously fetched
+    // window is no longer authoritative. Reset until the next quote.
+    minSendAmount.value = null;
+    maxSendAmount.value = null;
+  }
+
+  // ------------------------------ DYNAMIC PAYOUT FIELDS (Task-12) ------------------------------ //
+
+  /// Typed payout-field descriptors of the selected method (from the
+  /// backend `remittance_methods.fields` JSON). Empty when no method is
+  /// selected or the method defines no fields — the UI then shows the
+  /// generic bank set.
+  List<RemittanceMethodField> get selectedMethodFields =>
+      selectedMethod.value?.payoutFields ?? const <RemittanceMethodField>[];
+
+  /// Maps a backend field name to its form controller. Returns null for
+  /// unknown names (defensive — new backend fields must not crash the app;
+  /// they simply don't render until the mapping is extended).
+  TextEditingController? methodFieldController(String name) {
+    switch (name) {
+      case 'bank_name':
+        return receiverBankNameController;
+      case 'account_number':
+        return receiverAccountNumberController;
+      case 'iban':
+        return receiverIbanController;
+      case 'alipay_account':
+        return receiverAlipayController;
+      case 'wechat_account':
+        return receiverWechatController;
+      case 'swift':
+        return receiverSwiftController;
+      case 'shaba_number':
+        return receiverShabaController;
+      case 'usdt_address':
+        return receiverUsdtAddressController;
+      case 'card_number':
+        return receiverCardNumberController;
+      default:
+        return null;
+    }
+  }
+
+  /// Localized label for a dynamic field: prefers the app translation for
+  /// known names, falls back to the label sent by the backend, then to the
+  /// raw field name.
+  String localizedFieldLabel(RemittanceMethodField field) {
+    final l = _l;
+    switch (field.name) {
+      case 'bank_name':
+        return l?.remittanceBankName ?? field.label;
+      case 'account_number':
+        return l?.remittanceAccountNumber ?? field.label;
+      case 'iban':
+        return l?.remittanceIban ?? field.label;
+      case 'alipay_account':
+        return l?.remittanceAlipayAccount ?? field.label;
+      case 'wechat_account':
+        return l?.remittanceWechatAccount ?? field.label;
+      case 'swift':
+        return l?.remittanceFieldSwift ?? field.label;
+      case 'shaba_number':
+        return l?.remittanceFieldShabaNumber ?? field.label;
+      case 'usdt_address':
+        return l?.remittanceFieldUsdtAddress ?? field.label;
+      case 'card_number':
+        return l?.remittanceFieldCardNumber ?? field.label;
+      default:
+        return field.label.isNotEmpty ? field.label : field.name;
     }
   }
 
@@ -216,6 +317,28 @@ class RemittanceController extends GetxController {
     }
   }
 
+  // ------------------------------ COUNTRIES (Task-12) ------------------------------ //
+
+  /// Loads the country list from the global /get-countries endpoint for
+  /// the sender/receiver dropdowns. Non-fatal: on failure the UI falls
+  /// back to its offline static list.
+  Future<void> fetchCountries() async {
+    isCountriesLoading.value = true;
+    try {
+      final response = await _networkService.globalGet(
+        endpoint: ApiPath.countriesEndpoint,
+      );
+      if (response.status == Status.completed) {
+        final model = CountryModel.fromJson(response.data!);
+        countries.assignAll(model.data ?? <CountryData>[]);
+      }
+    } catch (e) {
+      debugPrint('⚠️ fetchCountries() failed: $e');
+    } finally {
+      isCountriesLoading.value = false;
+    }
+  }
+
   // ------------------------------ STEP 2: QUOTE ------------------------------ //
 
   Future<bool> requestQuote() async {
@@ -227,6 +350,33 @@ class RemittanceController extends GetxController {
     final amount = double.tryParse(amountController.text.trim());
     if (amount == null || amount <= 0) {
       ToastHelper().showErrorToast(_l?.remittanceErrInvalidAmount ?? 'Please enter a valid amount');
+      return false;
+    }
+
+    // Task-12 — local limits pre-check when the applicable window is
+    // already known (from a previous quote for this method+currency pair).
+    // The backend enforces the authoritative window with an explicit 422
+    // (QUOTE_LIMITS) — this pre-check only avoids a doomed round-trip.
+    final min = minSendAmount.value;
+    final max = maxSendAmount.value;
+    if (min != null && amount < min) {
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrAmountLimits(
+              formatAmount(min),
+              formatAmount(max ?? 0),
+            ) ??
+            'Amount must be between ${formatAmount(min)} and ${formatAmount(max ?? 0)}',
+      );
+      return false;
+    }
+    if (max != null && max > 0 && amount > max) {
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrAmountLimits(
+              formatAmount(min ?? 0),
+              formatAmount(max),
+            ) ??
+            'Amount must be between ${formatAmount(min ?? 0)} and ${formatAmount(max)}',
+      );
       return false;
     }
 
@@ -250,6 +400,11 @@ class RemittanceController extends GetxController {
       final data = response.data?['data'] as Map<String, dynamic>?;
       if (data != null) {
         currentQuote.value = RemittanceQuote.fromJson(data);
+        // Task-12 — capture the additive limits from the quote payload
+        // (null when the backend used the auto rate). Shown as a hint
+        // under the amount field and re-checked locally before submit.
+        minSendAmount.value = currentQuote.value!.minAmount;
+        maxSendAmount.value = currentQuote.value!.maxAmount;
         _startRateTimer(currentQuote.value!.rateExpiresInSeconds);
         return true;
       }
@@ -316,6 +471,22 @@ class RemittanceController extends GetxController {
       return false;
     }
 
+    // Task-12 — enforce REQUIRED dynamic payout fields of the selected
+    // method (e.g. swift for CN-BANK, shaba_number for SHABA, usdt_address
+    // for USDT-WALLET). Previously these required details were never
+    // collected, so the operator had to request them manually.
+    for (final field in selectedMethodFields) {
+      if (!field.required) continue;
+      final controller = methodFieldController(field.name);
+      if (controller == null || controller.text.trim().isEmpty) {
+        ToastHelper().showErrorToast(
+          _l?.remittanceErrRequiredField(localizedFieldLabel(field)) ??
+              'Please enter ${field.label}',
+        );
+        return false;
+      }
+    }
+
     final sender = RemittanceSenderInfo(
       name: senderNameController.text.trim(),
       country: selectedSenderCountry.value,
@@ -343,6 +514,20 @@ class RemittanceController extends GetxController {
       wechatAccount: receiverWechatController.text.trim().isEmpty
           ? null
           : receiverWechatController.text.trim(),
+      // Task-12 — dynamic payout-method fields. The backend storeFlat()
+      // validation accepts these keys; required ones are enforced above.
+      swift: receiverSwiftController.text.trim().isEmpty
+          ? null
+          : receiverSwiftController.text.trim(),
+      shabaNumber: receiverShabaController.text.trim().isEmpty
+          ? null
+          : receiverShabaController.text.trim(),
+      usdtAddress: receiverUsdtAddressController.text.trim().isEmpty
+          ? null
+          : receiverUsdtAddressController.text.trim(),
+      cardNumber: receiverCardNumberController.text.trim().isEmpty
+          ? null
+          : receiverCardNumberController.text.trim(),
     );
 
     isSubmitLoading.value = true;
@@ -675,6 +860,8 @@ class RemittanceController extends GetxController {
     selectedMethod.value = null;
     amountController.clear();
     selectedSendCurrencyId.value = 0;
+    minSendAmount.value = null;
+    maxSendAmount.value = null;
     senderNameController.clear();
     senderPhoneController.clear();
     senderIdNumberController.clear();
@@ -687,6 +874,10 @@ class RemittanceController extends GetxController {
     receiverIbanController.clear();
     receiverAlipayController.clear();
     receiverWechatController.clear();
+    receiverSwiftController.clear();
+    receiverShabaController.clear();
+    receiverUsdtAddressController.clear();
+    receiverCardNumberController.clear();
     selectedReceiverCountry.value = '';
     pendingAttachments.clear();
     rateExpiresInSeconds.value = 0;

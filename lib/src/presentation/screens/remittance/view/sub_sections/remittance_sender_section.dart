@@ -6,8 +6,17 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
 /// Step 2: Sender information form.
+///
+/// Task-12 — the hard-coded 8-country dropdown is replaced by the global
+/// /get-countries payload loaded by [RemittanceController.fetchCountries];
+/// the static list is kept only as an offline fallback.
 class RemittanceSenderSection extends StatelessWidget {
   const RemittanceSenderSection({super.key});
+
+  static const _fallbackCountries = [
+    ('IR', 'Iran'), ('CN', 'China'), ('TR', 'Turkey'), ('AE', 'UAE'),
+    ('RU', 'Russia'), ('PK', 'Pakistan'), ('AF', 'Afghanistan'), ('IQ', 'Iraq'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +31,14 @@ class RemittanceSenderSection extends StatelessWidget {
         _Field(c.senderNameController, l.remittanceSenderName),
         SizedBox(height: 16.h),
         _Label(l.remittanceSelectCountry),
-        _CountryDropdown(value: c.selectedSenderCountry.value, onChanged: (v) => c.selectedSenderCountry.value = v ?? '', hint: l.remittanceSelectCountry),
+        Obx(() => _CountryDropdown(
+              value: c.selectedSenderCountry.value,
+              countries: c.countries.isNotEmpty
+                  ? c.countries.map((x) => (x.code ?? '', x.name ?? '')).toList()
+                  : _fallbackCountries,
+              onChanged: (v) => c.selectedSenderCountry.value = v ?? '',
+              hint: l.remittanceSelectCountry,
+            )),
         SizedBox(height: 16.h),
         _Label(l.remittanceSenderPhone),
         _Field(c.senderPhoneController, '+98 912 345 6789', keyboardType: TextInputType.phone),
@@ -75,14 +91,15 @@ class _Field extends StatelessWidget {
 
 class _CountryDropdown extends StatelessWidget {
   final String value;
+  final List<(String, String)> countries;
   final ValueChanged<String?> onChanged;
   final String hint;
-  const _CountryDropdown({required this.value, required this.onChanged, required this.hint});
-
-  static const countries = [
-    ('IR', 'Iran'), ('CN', 'China'), ('TR', 'Turkey'), ('AE', 'UAE'),
-    ('RU', 'Russia'), ('PK', 'Pakistan'), ('AF', 'Afghanistan'), ('IQ', 'Iraq'),
-  ];
+  const _CountryDropdown({
+    required this.value,
+    required this.countries,
+    required this.onChanged,
+    required this.hint,
+  });
 
   @override
   Widget build(BuildContext context) => Container(
@@ -93,10 +110,14 @@ class _CountryDropdown extends StatelessWidget {
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            value: value.isEmpty ? null : value,
+            value: countries.any((c) => c.$1 == value) && value.isNotEmpty
+                ? value
+                : null,
             hint: Text(hint, style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextHint)),
             isExpanded: true,
-            items: countries.map((c) => DropdownMenuItem(value: c.$1, child: Text('${c.$1} — ${c.$2}', style: TextStyle(fontSize: 14.sp)))).toList(),
+            items: countries
+                .map((c) => DropdownMenuItem(value: c.$1, child: Text('${c.$1} — ${c.$2}', style: TextStyle(fontSize: 14.sp))))
+                .toList(),
             onChanged: onChanged,
           ),
         ),
