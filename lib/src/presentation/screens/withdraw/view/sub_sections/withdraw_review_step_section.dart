@@ -96,7 +96,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title: localization
                                   .withdrawReviewStepSectionTotalAmount,
                               content:
-                                  "${CurrencyFormatter.format((controller.totalAmount), decimals: calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  "${CurrencyFormatter.format(controller.totalAmount.value, decimals: calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
                               contentColor: AppColors.success,
                             ),
                           ),
