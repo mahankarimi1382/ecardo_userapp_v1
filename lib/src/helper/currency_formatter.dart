@@ -52,7 +52,7 @@ class CurrencyFormatter {
   ///   2. DynamicDecimalsHelper — per-currency derivation from API settings
   ///      (site_currency / site_currency_decimals), 8 for crypto.
   ///   3. Fallback: 2.
-  int resolveDecimals({
+  static int resolveDecimals({
     int? decimals,
     String? currencyCode,
     String? siteCurrencyCode,
@@ -85,7 +85,7 @@ class CurrencyFormatter {
   /// [symbol]       — optional trailing currency label, e.g. "USD". When
   ///                  provided the result is "<amount> <symbol>".
   /// [locale]       — optional BCP-47 tag; defaults to Intl.defaultLocale.
-  String format(
+  static String format(
     num? value, {
     int? decimals,
     String? currencyCode,
