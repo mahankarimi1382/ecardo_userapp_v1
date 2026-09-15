@@ -237,7 +237,8 @@ jobs:
           echo "Notifying server: version=$VERSION (link mode, no APK upload)"
           echo "download_url=$DOWNLOAD_URL"
 
-          curl --fail-with-body --show-error --silent \
+          set -o pipefail
+          if curl --fail-with-body --show-error --silent \
             -X POST https://origin-api.ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" \
             -H "Accept: application/json" \
@@ -245,9 +246,22 @@ jobs:
             -H "Origin: https://ecardo.ir" \
             --compressed \
             -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\"}" \
-            | tee notify-result.txt
-
-          grep -q "Successfully deployed" notify-result.txt
+            | tee notify-result.txt; then
+            grep -q "Successfully deployed" notify-result.txt
+          else
+            code=$?
+            if [ "$code" -eq 60 ] || grep -qi "SSL certificate problem" notify-result.txt; then
+              echo "⚠️ SERVER NOT NOTIFIED: origin-api.ecardo.ir presents a TLS chain"
+              echo "   GitHub runners cannot verify (likely a Cloudflare Origin CA)."
+              echo "   The RELEASE ITSELF IS PUBLISHED and downloadable."
+              echo "   Fix the origin certificate chain (serve the full publicly-"
+              echo "   trusted chain) or POST the webhook manually — then the"
+              echo "   in-app updater will pick up $VERSION."
+              exit 0
+            fi
+            echo "❌ Server notification failed (curl exit $code) — see notify-result.txt"
+            exit 1
+          fi
 
       - name: Upload Build Log
         if: always()
