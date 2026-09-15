@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
@@ -160,6 +161,9 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                     hintText: "",
                     controller: controller.amountController,
                     keyboardType: TextInputType.number,
+                    // phase3-fix: normalize fa/ar digits, strip separators,
+                    // cap decimals (raw text used to go straight to the API).
+                    inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
                   );
                 }),
               ),

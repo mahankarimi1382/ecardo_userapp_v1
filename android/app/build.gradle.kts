@@ -98,6 +98,11 @@ android {
     // -----------------------------------------------------------------------
     signingConfigs {
         create("release") {
+            // phase3-fix: deterministic schemes instead of trusting AGP
+            // defaults (audit A10-P2-13).
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
             // IMPORTANT: resolve the keystore path relative to the rootProject
             // (android/) directory, NOT the :app module directory (android/app/).
             // The CI workflow writes the keystore to android/ecardo-release.keystore,
@@ -127,20 +132,6 @@ android {
                 "proguard-rules.pro"
             )
 
-            // Explicitly enable v1 + v2 + v3 signing schemes so the APK is
-            // installable on every Android version from minSdk (24) onwards.
-            // v1 = Android 5+ (JAR signing, needed for some legacy installers)
-            // v2 = Android 7+ (APK Signature Scheme v2)
-            // v3 = Android 9+ (APK Signature Scheme v3 with key rotation)
-            // Without these flags, AGP picks defaults that may exclude v1
-            // on newer compileSdk values, breaking installs on older devices.
-            @Suppress("UnstableApiUsage")
-            signingConfig?.let { sc ->
-                // AGP 8.x exposes v1SignerEnabled / v2SignerEnabled on SigningConfig
-                // via the kotlin extension; the most portable way is the Groovy DSL.
-                // Here we just trust AGP defaults which enable v1+v2+v3 by default
-                // when a keystore is configured.
-            }
         }
         debug {
             isMinifyEnabled = false

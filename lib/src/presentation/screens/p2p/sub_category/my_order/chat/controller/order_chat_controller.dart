@@ -2,6 +2,8 @@
 /// کاربر می‌تواند پیام متنی و فایل ضمیمه ارسال کند
 /// از XFile به جای dart:io File استفاده شده برای سازگاری وب
 
+import 'dart:async';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,6 +42,9 @@ class OrderChatController extends GetxController {
   /// کنترلر اسکرول برای رفتن به آخرین پیام
   final ScrollController scrollController = ScrollController();
 
+  /// phase3-fix: polling timer — cancelled in onClose.
+  Timer? _pollTimer;
+
   /// انتخاب‌گر تصویر
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -47,20 +52,26 @@ class OrderChatController extends GetxController {
   void onInit() {
     super.onInit();
     fetchMessages();
+    // phase3-fix: light 12s polling while the chat is open — counterpart
+    // replies appear without manual pull-to-refresh (audit A7-P2-4).
+    _pollTimer = Timer.periodic(const Duration(seconds: 12), (_) {
+      fetchMessages(showLoading: false);
+    });
   }
 
   @override
   void onClose() {
+    _pollTimer?.cancel();
     messageController.dispose();
     scrollController.dispose();
     super.onClose();
   }
 
   /// بارگذاری پیام‌های سفارش از سرور
-  Future<void> fetchMessages() async {
+  Future<void> fetchMessages({bool showLoading = true}) async {
     if (orderId.isEmpty) return;
 
-    isLoading.value = true;
+    if (showLoading) isLoading.value = true;
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.orderMessageEndpoint(orderId: orderId),
@@ -81,7 +92,7 @@ class OrderChatController extends GetxController {
         AppLocalizations.of(Get.context!)!.allControllerLoadError,
       );
     } finally {
-      isLoading.value = false;
+      if (showLoading) isLoading.value = false;
     }
   }
 

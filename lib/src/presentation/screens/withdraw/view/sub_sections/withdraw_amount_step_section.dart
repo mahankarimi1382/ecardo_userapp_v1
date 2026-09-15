@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_three.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/model/withdraw_account_model.dart';
@@ -148,6 +149,9 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                           hintText: "",
                           controller: controller.amountController,
                           keyboardType: TextInputType.number,
+                          // phase3-fix: normalize fa/ar digits, strip
+                          // separators, cap decimals.
+                          inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
                         ),
                       ),
                     ),

@@ -25,7 +25,8 @@ class AppColors {
   static const Color lightTextPrimary = Color(0xFF2D2D2D);
   static Color lightTextTertiary = Color(0xFF2D2D2D).withValues(alpha: 0.60);
   static const Color lightTextSecondary = Color(0xFF6B6B6B);
-  static const Color lightTextHint = Color(0xFF9E9E9E);
+  // phase3-fix: 0xFF9E9E9E failed WCAG AA on white (≈2.7:1)
+  static const Color lightTextHint = Color(0xFF757575);
   static const Color lightTextOnPrimary = Color(0xFFFFFFFF);
 
   // Border / Divider

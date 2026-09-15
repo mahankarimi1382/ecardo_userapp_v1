@@ -107,10 +107,11 @@ class PaymentLinksController extends GetxController {
 
   // Apply filter
   void applyFilter() {
+    // phase3-fix: keep the filter — clearing it right after fetch made
+    // page-2+ load without the search term (mixed results, audit A7-P2-11).
     currentFilter.value = paymentLinkNumberController.text.trim();
     fetchPaymentLinksHistory(isRefresh: true);
     paymentLinkNumberController.clear();
-    currentFilter.value = '';
   }
 
   // Clear filter
