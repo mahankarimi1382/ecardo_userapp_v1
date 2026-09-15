@@ -208,7 +208,7 @@ class TransactionsPopUp extends StatelessWidget {
             letterSpacing: 0,
             fontWeight: FontWeight.w500,
             color: AppColors.lightTextPrimary,
-            fontSize: 2,
+            fontSize: 12,
           ),
         ),
         Text(

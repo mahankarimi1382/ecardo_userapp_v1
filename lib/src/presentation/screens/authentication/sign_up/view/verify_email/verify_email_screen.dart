@@ -256,8 +256,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                 Obx(
                                   () => GestureDetector(
                                     onTap: () {
-                                      if (controller.isPinEnabled.value ==
-                                          false) {
+                                      // phase2-fix: gate on the countdown
+                                      // (isPinEnabled no longer flips).
+                                      if (controller.countdown.value == 0) {
                                         controller.sendVerifyEmail(
                                           email: email!,
                                         );

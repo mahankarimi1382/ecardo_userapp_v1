@@ -51,13 +51,14 @@ class HomeController extends GetxController {
   // v1.0.24: the language picker keys off the locale CODE ('en','fa','zh',
   // 'ar','ru','tr') while the drawer displays the NATIVE name. The old code
   // compared English display names, which broke for non-English users.
+  // phase2-fix: ru/tr hidden until translations are real (they shipped 89%
+  // untranslated English — audit A9-P0-1). ARB files stay; re-add after the
+  // translation pass.
   static const Map<String, String> languageNativeNames = {
     'en': 'English',
     'fa': 'فارسی',
     'zh': '中文',
     'ar': 'العربية',
-    'ru': 'Русский',
-    'tr': 'Türkçe',
   };
 
   void setScaffoldKey(GlobalKey<ScaffoldState> key) {
@@ -84,10 +85,14 @@ class HomeController extends GetxController {
     if (Get.find<SettingsService>().getSetting("language_switcher") == "1") {
       _setInitialLanguage();
     }
-    await fetchDashboard();
-    await fetchWallets();
-    await fetchTransactions();
-    await fetchUser();
+    // phase2-fix: the four dashboard fetches are independent — run them in
+    // parallel instead of four serial round-trips.
+    await Future.wait([
+      fetchDashboard(),
+      fetchWallets(),
+      fetchTransactions(),
+      fetchUser(),
+    ]);
     isLoading.value = false;
   }
 

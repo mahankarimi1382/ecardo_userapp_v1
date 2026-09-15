@@ -66,13 +66,13 @@ class _EcardoUserState extends State<EcardoUser> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
+          // phase2-fix: ru/tr removed until translations are real (they
+          // shipped 89% untranslated English). ARB files stay in lib/l10n.
           supportedLocales: const [
             Locale('en'),
             Locale("ar"),
             Locale('fa'),
             Locale('zh'),
-            Locale('ru'),
-            Locale('tr'),
           ],
           builder: (context, widget) {
             return widget ?? const SizedBox.shrink();

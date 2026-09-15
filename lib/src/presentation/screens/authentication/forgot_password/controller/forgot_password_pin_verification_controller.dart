@@ -26,18 +26,18 @@ class ForgotPasswordPinVerificationController extends GetxController {
   }
 
   // Start Timer
+  // phase2-fix: the countdown now only gates the Resend action — the OTP
+  // field used to be wiped AND locked after 30 seconds, making the emailed
+  // code impossible to type on slow delivery.
   void startTimer() {
     countdown.value = 30;
     isPinEnabled.value = true;
-    pinCodeController.clear();
 
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown.value > 0) {
         countdown.value--;
       } else {
-        pinCodeController.clear();
-        isPinEnabled.value = false;
         _timer?.cancel();
       }
     });

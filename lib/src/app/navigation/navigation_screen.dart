@@ -41,6 +41,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
     PngAssets.bottomNavigationSettingsSolidIcon,
   ];
 
+  // phase2-fix: highest tab index visited so far — pages above it stay
+  // unbuilt (lazy) until first visit, then remain keep-alive.
+  int _maxVisitedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -75,7 +79,20 @@ class _NavigationScreenState extends State<NavigationScreen> {
         resizeToAvoidBottomInset: false,
         drawer: DrawerSection(),
         endDrawer: EndDrawerSection(),
-        body: pages[homeController.selectedIndex.value],
+        // phase2-fix: keep-alive tabs — switching tabs no longer destroys
+        // scroll/form state or refetches everything (IndexedStack + lazy
+        // build on first visit).
+        body: IndexedStack(
+          index: homeController.selectedIndex.value,
+          children: [
+            for (var i = 0; i < pages.length; i++)
+              if (i <= _maxVisitedIndex ||
+                  i == homeController.selectedIndex.value)
+                pages[i]
+              else
+                const SizedBox.shrink(),
+          ],
+        ),
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
             ? FloatingActionButton(
                 heroTag: null,
@@ -183,18 +200,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
           },
 
           onTap: (index) {
+            // phase2-fix: controllers are no longer destroyed on tab switch
+            // (keep-alive tabs); feature flags are still enforced.
             if (index == 1 && !isUserTransferEnabled) {
               ToastHelper().showErrorToast(localization.userTransferNotEnabled);
               return;
-            }
-
-            if (index != 1) {
-              if (Get.isRegistered<TransferController>()) {
-                Get.delete<TransferController>();
-              }
-              if (Get.isRegistered<CreateBeneficiaryController>()) {
-                Get.delete<CreateBeneficiaryController>();
-              }
             }
 
             if (index == 2 && !isUserGiftEnabled) {
@@ -202,21 +212,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               return;
             }
 
-            if (index != 2) {
-              if (Get.isRegistered<GiftCodeController>()) {
-                Get.delete<GiftCodeController>();
-              }
-              if (Get.isRegistered<GiftRedeemController>()) {
-                Get.delete<GiftRedeemController>();
-              }
-              if (Get.isRegistered<GiftHistoryController>()) {
-                Get.delete<GiftHistoryController>();
-              }
-              if (Get.isRegistered<CreateGiftController>()) {
-                Get.delete<CreateGiftController>();
-              }
-            }
-
+            if (index > _maxVisitedIndex) _maxVisitedIndex = index;
             homeController.selectedIndex.value = index;
           },
 

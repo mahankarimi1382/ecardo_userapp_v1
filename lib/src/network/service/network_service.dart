@@ -727,6 +727,15 @@ class NetworkService extends getx.GetxService {
     }
   }
 
+  // phase2-fix: 401 dialogs used to stack when several parallel requests
+  // failed at once (the 426 path had a guard; 401 did not). Time-based so no
+  // manual reset wiring is needed.
+  DateTime? _lastUnauthorizedDialogAt;
+  bool get _unauthorizedDialogActive =>
+      _lastUnauthorizedDialogAt != null &&
+      DateTime.now().difference(_lastUnauthorizedDialogAt!) <
+          const Duration(seconds: 3);
+
   ApiResponse<Map<String, dynamic>> _handleDioErrorResponse(
     Response response,
     String requestType,
@@ -753,6 +762,10 @@ class NetworkService extends getx.GetxService {
             : <String, dynamic>{};
         _log('$requestType Response: ${jsonResponse401.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse401);
+        if (_unauthorizedDialogActive) {
+          return ApiResponse.error(errorMessages);
+        }
+        _lastUnauthorizedDialogAt = DateTime.now();
         getx.Get.dialog(
           PopScope(
             canPop: false,

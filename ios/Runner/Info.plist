@@ -11,10 +11,6 @@
     <true/>
     <key>NSFaceIDUsageDescription</key>
     <string>We need to use Face ID for authentication</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app needs camera access to scan QR codes</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs photos access to get QR code from photo library</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Allow access to photo library to select photos</string>
     <key>NSCameraUsageDescription</key>
