@@ -19,6 +19,16 @@ class VirtualCardDetailsController extends GetxController {
   final RxBool isCardBalanceTopUpLoading = false.obs;
   final RxBool isUpdateCardStatusLoading = false.obs;
   final RxBool showAccountNumber = false.obs;
+
+  // phase1-fix (P0-10): CVV is masked by default and auto re-masks after
+  // 10 seconds so the secret never stays on screen.
+  final RxBool showCvv = false.obs;
+  void revealCvvTemporarily() {
+    showCvv.value = true;
+    Future.delayed(const Duration(seconds: 10), () {
+      showCvv.value = false;
+    });
+  }
   final localization = AppLocalizations.of(Get.context!);
 
   // Virtual Card Details Model

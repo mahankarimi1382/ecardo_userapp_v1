@@ -35,7 +35,7 @@ migrate_working_dir/
 
 # Unused Flutter platform projects
 
-/ios/
+ios/build/
 /linux/
 /macos/
 /web/

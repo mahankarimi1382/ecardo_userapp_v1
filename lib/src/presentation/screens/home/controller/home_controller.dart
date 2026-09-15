@@ -247,27 +247,35 @@ Future<void> changeLanguage(String languageCode) async {
   }
 
   // Logout Function
+  // phase1-fix (P0-9): the local session wipe runs regardless of the API
+  // result (offline logout works), and the toast no longer receives a
+  // nullable message.
   Future<void> submitLogout() async {
     isSignOutLoading.value = true;
+    String toastMsg = 'Logged out';
     try {
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.logoutEndpoint,
       );
-      isSignOutLoading.value = false;
-      if (response.status == Status.completed) {
-        await Get.find<TokenService>().clearToken();
-        Get.offAllNamed(BaseRoute.signIn);
-        Fluttertoast.showToast(
-          msg: response.data?["message"],
-          backgroundColor: AppColors.success,
-        );
+      if (response.data?["message"] is String) {
+        toastMsg = response.data!["message"] as String;
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitLogout() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
     } finally {
+      try {
+        await Get.find<SettingsService>().wipeSession();
+      } catch (e) {
+        debugPrint('⚠️ wipeSession error: $e');
+      }
+      await Get.find<TokenService>().clearToken();
       isSignOutLoading.value = false;
+      Get.offAllNamed(BaseRoute.signIn);
+      Fluttertoast.showToast(
+        msg: toastMsg,
+        backgroundColor: AppColors.success,
+      );
     }
   }
 

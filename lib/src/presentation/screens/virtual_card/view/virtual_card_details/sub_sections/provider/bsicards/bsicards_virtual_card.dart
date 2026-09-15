@@ -72,7 +72,7 @@ class BsicardsVirtualCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  card!.data!.nameOnCard!,
+                  card?.data?.nameOnCard ?? '—',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18.sp,
@@ -85,9 +85,13 @@ class BsicardsVirtualCard extends StatelessWidget {
                   children: [
                     Obx(() {
                       return Text(
-                        controller.showAccountNumber.value
-                            ? formatAccountNumber(card.data!.cardNumber!).trim()
-                            : "**** **** **** ${card.data!.cardNumber!.substring(card.data!.cardNumber!.length - 4)}",
+                        () {
+                          // phase1-fix (P0-10): no force-unwrap on short/absent PAN
+                          final pan = card?.data?.cardNumber ?? '';
+                          return controller.showAccountNumber.value
+                              ? formatAccountNumber(pan).trim()
+                              : '**** **** **** ${pan.length >= 4 ? pan.substring(pan.length - 4) : '----'}';
+                        }(),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20.sp,
@@ -161,13 +165,22 @@ class BsicardsVirtualCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              card.data!.cvv!,
-                              style: TextStyle(
-                                letterSpacing: 0,
-                                fontSize: 14.sp,
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w600,
+                            GestureDetector(
+                              // phase1-fix (P0-10): CVV masked by default,
+                              // tap to reveal for 10s only.
+                              onTap: controller.revealCvvTemporarily,
+                              child: Obx(
+                                () => Text(
+                                  controller.showCvv.value
+                                      ? (card?.data?.cvv ?? '---')
+                                      : '•••',
+                                  style: TextStyle(
+                                    letterSpacing: 0,
+                                    fontSize: 14.sp,
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
                           ],

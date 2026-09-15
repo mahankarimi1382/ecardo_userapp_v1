@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/received_request_controller.dart';
@@ -170,7 +171,22 @@ class AcceptRequestDropdown extends StatelessWidget {
 
                       text: localization.acceptRequestDropdownAcceptButton,
                       onPressed: () async {
+                        // phase1-fix (P0-8): ACCEPT moves money out of the
+                        // user's wallet — gate it with the passcode sheet
+                        // when the server flag is enabled (same pattern as
+                        // request_money_review_step_section.dart).
+                        final bool isPasscodeEnabled =
+                            settingsService.getSetting(
+                              "request_money_accept_passcode_status",
+                            ) ==
+                            "1";
                         Get.back();
+                        if (isPasscodeEnabled) {
+                          final bool? isVerified = await Get.bottomSheet<bool>(
+                            VerifyPasscodeBottomSheet(),
+                          );
+                          if (isVerified != true) return;
+                        }
                         controller.submitRequestAction(
                           requestId: request.id.toString(),
                           action: "accept",

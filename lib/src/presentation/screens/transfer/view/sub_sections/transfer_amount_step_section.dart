@@ -289,23 +289,25 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
             Obx(
               () => Expanded(
                 child:
-                    controller
-                        .beneficiaryModel
-                        .value
-                        .data!
-                        .beneficiaries!
-                        .isEmpty
+                    (controller
+                            .beneficiaryModel
+                            .value
+                            .data
+                            ?.beneficiaries
+                            ?.isEmpty ??
+                        true)
                     ? NoDataFound()
                     : controller.isBeneficiaryLoading.value
                     ? CommonLoading()
                     : ListView.separated(
                         separatorBuilder: (_, _) => const SizedBox(height: 12),
                         itemCount: controller
-                            .beneficiaryModel
-                            .value
-                            .data!
-                            .beneficiaries!
-                            .length,
+                                .beneficiaryModel
+                                .value
+                                .data
+                                ?.beneficiaries
+                                ?.length ??
+                            0,
                         itemBuilder: (context, index) {
                           final Beneficiaries item = controller
                               .beneficiaryModel

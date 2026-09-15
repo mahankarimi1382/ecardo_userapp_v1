@@ -68,7 +68,7 @@ class StripeVirtualCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  card!.cardHolder!.name!,
+                  card?.cardHolder?.name ?? '—',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18.sp,
@@ -81,9 +81,13 @@ class StripeVirtualCard extends StatelessWidget {
                   children: [
                     Obx(() {
                       return Text(
-                        controller.showAccountNumber.value
-                            ? formatAccountNumber(card.cardNumber!).trim()
-                            : "**** **** **** ${card.cardNumber!.substring(card.cardNumber!.length - 4)}",
+                        () {
+                          // phase1-fix (P0-10): no force-unwrap on short/absent PAN
+                          final pan = card?.cardNumber ?? '';
+                          return controller.showAccountNumber.value
+                              ? formatAccountNumber(pan).trim()
+                              : '**** **** **** ${pan.length >= 4 ? pan.substring(pan.length - 4) : '----'}';
+                        }(),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20.sp,

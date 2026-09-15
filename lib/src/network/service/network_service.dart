@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -141,7 +142,12 @@ class NetworkService extends getx.GetxService {
               (suffix) => path.endsWith(suffix),
             );
             if (isMoney) {
-              final mapKey = 'POST:$path';
+              // phase1-fix (P0-3): identity of the LOGICAL operation is
+              // path + query + payload fingerprint. Two different concurrent
+              // money ops on one endpoint no longer share a key; a genuine
+              // double-tap of the same op still reuses it.
+              final mapKey =
+                  'POST:$path?${options.uri.query}:${_payloadFingerprint(options.data)}';
               options.headers['Idempotency-Key'] =
                   _inflightIdempotency.putIfAbsent(mapKey, () {
                     final minted = options.headers['X-Request-ID'] as String?;
@@ -298,17 +304,29 @@ class NetworkService extends getx.GetxService {
   void _releaseIdempotencyKey(RequestOptions options) {
     final headerKey = options.headers['Idempotency-Key'];
     if (headerKey is! String || headerKey.isEmpty) return;
-    final mapKey = '${options.method.toUpperCase()}:${options.uri.path}';
+    final mapKey =
+        '${options.method.toUpperCase()}:${options.uri.path}?${options.uri.query}:${_payloadFingerprint(options.data)}';
     if (_inflightIdempotency[mapKey] == headerKey) {
       _inflightIdempotency.remove(mapKey);
     }
   }
 
-  /// Generate a ULID-like request ID for traceability.
+  /// phase1-fix (P0-3): payload fingerprint for idempotency scoping.
+  String _payloadFingerprint(Object? data) {
+    if (data == null) return 'empty';
+    if (data is FormData) return 'fd:${data.boundary}';
+    try {
+      return 'j:${jsonEncode(data).hashCode.toRadixString(36)}';
+    } catch (_) {
+      return 'raw:${data.hashCode}';
+    }
+  }
+
+  /// Cryptographically random, unguessable request ID.
   String _generateRequestId() {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final random = DateTime.now().microsecondsSinceEpoch % 0xFFFFFF;
-    return 'req-${now.toRadixString(36)}-${random.toRadixString(36).padLeft(6, '0')}';
+    final rnd = Random.secure();
+    final bytes = List<int>.generate(12, (_) => rnd.nextInt(256));
+    return 'req-${base64UrlEncode(bytes).replaceAll('=', '').toLowerCase()}';
   }
 
   // ------------------------------ AUTH CALLS ------------------------------ //

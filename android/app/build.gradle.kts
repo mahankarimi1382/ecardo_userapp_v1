@@ -41,38 +41,21 @@ val keystoreProperties = Properties().apply {
     }
 }
 
-// ---------------------------------------------------------------------------
-// Generate the fallback debug keystore at CONFIGURATION TIME if no release
-// keystore is configured. This guarantees the keystore file exists BEFORE
-// the signing config is created, avoiding both:
-//   1. AGP task-input validation failures (no task dependency needed)
-//   2. Keystore-not-found at signing time
-// The keystore file is git-ignored (see .gitignore).
-// ---------------------------------------------------------------------------
-if (!keystoreProperties.containsKey("storeFile")) {
-    val debugKeystore = rootProject.file("debug.keystore")
-    if (!debugKeystore.exists()) {
-        logger.lifecycle("🔑 Generating debug fallback keystore at ${debugKeystore.absolutePath}")
-        debugKeystore.parentFile.mkdirs()
-        project.exec {
-            commandLine(
-                "keytool",
-                "-genkeypair",
-                "-alias", "ecardo-debug",
-                "-keyalg", "RSA",
-                "-keysize", "2048",
-                "-validity", "10000",
-                "-keystore", debugKeystore.absolutePath,
-                "-storepass", "ecardo_debug_keystore",
-                "-keypass", "ecardo_debug_keystore",
-                "-dname", "CN=eCardo Debug, OU=Mobile, O=eCardo, L=Tehran, ST=Tehran, C=IR",
-                "-storetype", "PKCS12"
-            )
-        }
-        logger.lifecycle("✅ Debug fallback keystore created (${debugKeystore.length()} bytes)")
-    } else {
-        logger.lifecycle("ℹ️  Using existing debug fallback keystore at ${debugKeystore.absolutePath}")
+// phase1-fix (P0-2): fail-closed — a RELEASE build without real signing
+// material must fail at configuration time instead of silently using a
+// fallback keystore (the old debug fallback had its password committed in
+// the public repo). Debug builds use AGP's standard auto-generated debug
+// keystore, so no custom fallback is needed at all.
+if (!keystoreProperties.containsKey("storeFile") &&
+    gradle.startParameter.taskNames.any {
+        val t = it.lowercase()
+        t.contains("release") || t.contains("bundle")
     }
+) {
+    throw GradleException(
+        "Release signing material missing (android/key.properties / SIGNING_* secrets). " +
+            "Refusing to build a RELEASE APK without a real signing key."
+    )
 }
 
 android {
@@ -109,10 +92,9 @@ android {
     // -----------------------------------------------------------------------
     // Signing configs
     // -----------------------------------------------------------------------
-    // 1. `release` — used when key.properties is present (CI with secrets).
-    // 2. `debugFallback` — used when no release keystore is configured. The
-    //    keystore was already generated at configuration time above, so this
-    //    config always has a valid keystore to reference.
+    // `release` — the only signing config (phase1-fix P0-2). Used when
+    // key.properties is present (CI with secrets); release builds without
+    // signing material fail at configuration time (see the check above).
     // -----------------------------------------------------------------------
     signingConfigs {
         create("release") {
@@ -128,24 +110,14 @@ android {
             keyAlias = keystoreProperties["keyAlias"] as String?
             keyPassword = keystoreProperties["keyPassword"] as String?
         }
-        create("debugFallback") {
-            storeFile = rootProject.file("debug.keystore")
-            storePassword = "ecardo_debug_keystore"
-            keyAlias = "ecardo-debug"
-            keyPassword = "ecardo_debug_keystore"
-        }
     }
 
     buildTypes {
         release {
-            // Pick the right signing config: real release keystore when
-            // key.properties exists, otherwise the deterministic debug fallback.
-            // This GUARANTEES the APK is always signed.
-            signingConfig = if (keystoreProperties.containsKey("storeFile")) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debugFallback")
-            }
+            // phase1-fix (P0-2): release is always signed with the real
+            // keystore — the configuration-time check above throws before
+            // reaching here when key.properties is missing.
+            signingConfig = signingConfigs.getByName("release")
 
             // v1.0.4+5: Enable R8 obfuscation + shrinking
             isMinifyEnabled = true

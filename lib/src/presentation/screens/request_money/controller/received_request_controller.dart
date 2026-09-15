@@ -94,6 +94,8 @@ class ReceivedRequestController extends GetxController {
     required String requestId,
     required String action,
   }) async {
+    // phase1-fix (P0-8): double-submit guard on a money-moving action
+    if (isSubmittingAction.value) return;
     try {
       isSubmittingAction.value = true;
 

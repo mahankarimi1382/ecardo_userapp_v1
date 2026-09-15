@@ -21,6 +21,8 @@ class MakePaymentController extends GetxController {
   final RxBool isBeneficiaryLoading = false.obs;
   final RxDouble charge = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
+  // phase1-fix (P0-7): fee calculation failed → Review must never show/confirm 0.00
+  final RxBool chargeLoadFailed = false.obs;
   final Rx<PaymentSettingsModel> paymentSettings = PaymentSettingsModel().obs;
   final Rx<ConverterModel> converterModel = ConverterModel().obs;
   final Rx<BeneficiaryModel> beneficiaryModel = BeneficiaryModel().obs;
@@ -152,6 +154,7 @@ class MakePaymentController extends GetxController {
 
   // Get Charge Converter
   Future<void> getChargeConverter() async {
+    chargeLoadFailed.value = false;
     try {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getConverterEndpoint(
@@ -168,8 +171,11 @@ class MakePaymentController extends GetxController {
             0.0;
         totalAmount.value =
             ((double.tryParse(amountController.text) ?? 0.0) + charge.value);
+      } else {
+        chargeLoadFailed.value = true;
       }
     } catch (e, stackTrace) {
+      chargeLoadFailed.value = true;
       debugPrint('❌ getChargeConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -212,8 +218,13 @@ class MakePaymentController extends GetxController {
 
   // Validate Amount Step
   bool validateAmountStep() {
+    if (chargeLoadFailed.value) {
+      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      return false;
+    }
     // Validate Wallet
-    if (wallet.value!.name!.isEmpty) {
+    final walletData = wallet.value;
+    if (walletData == null || (walletData.name ?? '').isEmpty) {
       ToastHelper().showErrorToast(
         localization.makePaymentValidationSelectWallet,
       );

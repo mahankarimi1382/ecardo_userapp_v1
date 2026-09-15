@@ -102,7 +102,7 @@ class TransferReviewStepSection extends StatelessWidget {
                         context,
                         title: localization.transferReviewStepSectionCharge,
                         content:
-                            "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                            controller.chargeLoadFailed.value ? '—' : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.error,
                       ),
                     ),
@@ -118,7 +118,7 @@ class TransferReviewStepSection extends StatelessWidget {
                         title:
                             localization.transferReviewStepSectionTotalAmount,
                         content:
-                            "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                            controller.chargeLoadFailed.value ? '—' : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.black,
                       ),
                     ),

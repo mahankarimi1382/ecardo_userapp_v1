@@ -102,7 +102,7 @@ class CashOutReviewStepSection extends StatelessWidget {
                         context,
                         title: localizations.cashOutReviewCharge,
                         content:
-                            "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                            controller.chargeLoadFailed.value ? '—' : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.error,
                       ),
                     ),
@@ -117,7 +117,7 @@ class CashOutReviewStepSection extends StatelessWidget {
                         context,
                         title: localizations.cashOutReviewTotalAmount,
                         content:
-                            "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                            controller.chargeLoadFailed.value ? '—' : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.success,
                       ),
                     ),
