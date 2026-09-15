@@ -79,7 +79,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title:
                                   localization.withdrawReviewStepSectionCharge,
                               content:
-                                  "${controller.calculatedCharge.value.toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  controller.chargeLoadFailed.value ? '—' : "${controller.calculatedCharge.value.toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
                               contentColor: AppColors.error,
                             ),
                           ),
@@ -95,7 +95,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title: localization
                                   .withdrawReviewStepSectionTotalAmount,
                               content:
-                                  "${(controller.totalAmount).toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  controller.chargeLoadFailed.value ? '—' : "${(controller.totalAmount).toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
                               contentColor: AppColors.success,
                             ),
                           ),

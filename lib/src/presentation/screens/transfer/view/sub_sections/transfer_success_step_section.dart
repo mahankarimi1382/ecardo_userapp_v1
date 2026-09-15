@@ -28,7 +28,9 @@ class _TransferSuccessStepSectionState
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.wallet.value!.name!,
+      // phase2-fix: decimals derive from the currency CODE, not the wallet
+      // display name (they diverge for non-2-decimal base currencies).
+      currencyCode: controller.wallet.value!.code!,
       siteCurrencyCode: settingsService.getSetting("site_currency")!,
       siteCurrencyDecimals: settingsService.getSetting(
         "site_currency_decimals",

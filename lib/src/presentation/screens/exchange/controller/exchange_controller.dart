@@ -634,7 +634,9 @@ class ExchangeController extends GetxController {
     if (fromRate == null || toRate == null) return;
     if (fromRate == 0) return;
 
-    final newRate = toRate / fromRate;
+    // phase1-fix (P0-4): the parser stores rates[code] = price of ONE unit
+    // in IRR, so "1 FROM = X TO" is fromRate / toRate (was inverted).
+    final newRate = fromRate / toRate;
     if (!newRate.isFinite || newRate <= 0) return;
 
     _bumpLiveRate(newRate);

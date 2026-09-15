@@ -785,8 +785,10 @@ class RemittanceController extends GetxController {
     }
     isHistoryLoading.value = true;
 
+    // phase3-fix: pass the page — load-more used to re-append page 1
+    // (audit A7-P2-7).
     final response = await _networkService.get(
-      endpoint: ApiPath.remittanceHistoryEndpoint,
+      endpoint: '${ApiPath.remittanceHistoryEndpoint}?page=${historyCurrentPage.value}',
     );
     isHistoryLoading.value = false;
 

@@ -17,10 +17,24 @@ class _WebViewDynamicState extends State<WebViewDynamic> {
   final WebViewController _controller = WebViewController();
   bool _isLoading = true;
 
+  // phase3-fix: only https ecardo.ir links may render in-app (audit A3-P2-8).
+  bool _blocked = false;
+
   @override
   void initState() {
     super.initState();
     String finalUrl = widget.dynamicUrl.replaceFirst('/api', '');
+
+    // phase3-fix: refuse to render arbitrary or foreign links in-app.
+    final uri = Uri.tryParse(finalUrl);
+    final allowed = uri != null &&
+        uri.scheme == 'https' &&
+        (uri.host == 'ecardo.ir' || uri.host.endsWith('.ecardo.ir'));
+    if (!allowed) {
+      _blocked = true;
+      _isLoading = false;
+      return;
+    }
 
     _controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -54,7 +68,15 @@ class _WebViewDynamicState extends State<WebViewDynamic> {
         appBar: const CommonDefaultAppBar(),
         body: Stack(
           children: [
-            WebViewWidget(controller: _controller),
+            if (_blocked)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Text('This link cannot be opened in the app.'),
+                ),
+              )
+            else
+              WebViewWidget(controller: _controller),
             if (_isLoading) const CommonLoading(),
           ],
         ),

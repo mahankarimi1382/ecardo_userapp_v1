@@ -161,7 +161,8 @@ class _ForgotPasswordPinVerificationState
                       Obx(
                         () => PinCodeTextField(
                           keyboardType: TextInputType.number,
-                          enabled: controller.isPinEnabled.value,
+                          // phase2-fix: the OTP field never locks anymore.
+                          enabled: true,
                           cursorColor: AppColors.lightPrimary,
                           textStyle: TextStyle(
                             fontWeight: FontWeight.w700,
@@ -228,8 +229,12 @@ class _ForgotPasswordPinVerificationState
                             ),
                           ),
                           GestureDetector(
-                            onTap: () =>
-                                controller.submitForgotPassword(email: email),
+                            onTap: () {
+                              // phase2-fix: gate on the countdown.
+                              if (controller.countdown.value == 0) {
+                                controller.submitForgotPassword(email: email);
+                              }
+                            },
                             child: Text(
                               localizations.forgotPasswordPinResend,
                               style: TextStyle(

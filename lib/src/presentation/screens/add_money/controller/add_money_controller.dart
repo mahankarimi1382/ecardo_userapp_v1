@@ -331,7 +331,9 @@ class AddMoneyController extends GetxController {
   // Validate Amount Step
   bool validateAmountStep() {
     // Validate Wallet
-    if (wallet.value!.name!.isEmpty) {
+    // phase1-fix (P0-16): no force-unwrap on a failed wallet fetch
+    final walletData = wallet.value;
+    if (walletData == null || (walletData.name ?? '').isEmpty) {
       ToastHelper().showErrorToast(
         localization!.addMoneyValidationSelectWallet,
       );

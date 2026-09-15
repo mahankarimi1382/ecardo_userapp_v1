@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 class WithdrawSuccessStepSection extends StatefulWidget {
   const WithdrawSuccessStepSection({super.key});
@@ -161,6 +162,9 @@ class _WithdrawSuccessStepSectionState
                     CommonButton(
                       onPressed: () async {
                         Get.delete<WithdrawController>();
+                        // phase2-fix: refresh home balance after withdrawal
+                        // (every other money flow already did this).
+                        await Get.find<HomeController>().loadData();
                         Get.toNamed(BaseRoute.navigation);
                       },
                       width: double.infinity,

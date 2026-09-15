@@ -66,9 +66,10 @@ class SignInController extends GetxController {
   }
 
   Future<void> clearSignUpStatus() async {
+    // phase2-fix: visiting the sign-in screen must NOT wipe a valid session
+    // token (it used to — any navigation here logged the user out).
     await Get.find<SettingsService>().saveEmailVerified(false);
     await Get.find<SettingsService>().saveSetUpPassword(false);
-    await Get.find<TokenService>().clearToken();
   }
 
   Future<void> setLogInState() async {

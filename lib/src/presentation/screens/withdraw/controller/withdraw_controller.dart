@@ -20,6 +20,8 @@ class WithdrawController extends GetxController {
   final RxInt currentStep = 0.obs;
   final RxDouble calculatedCharge = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
+  // phase1-fix (P0-7): fee calculation failed → Review must never show/confirm 0.00
+  final RxBool chargeLoadFailed = false.obs;
   final List<String> steps = ['Amount', 'Review', 'Success'];
   final Rx<ConverterModel> converterModel = ConverterModel().obs;
   final Rxn<Map<String, dynamic>> successWithdrawData =
@@ -98,6 +100,7 @@ class WithdrawController extends GetxController {
   // Get Charge Converter
   Future<void> getChargeConverter() async {
     isChargeConverterLoading.value = true;
+    chargeLoadFailed.value = false;
     try {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getConverterEndpoint(
@@ -115,8 +118,11 @@ class WithdrawController extends GetxController {
         totalAmount.value =
             ((double.tryParse(amountController.text) ?? 0.0) +
                 calculatedCharge.value);
+      } else {
+        chargeLoadFailed.value = true;
       }
     } catch (e, stackTrace) {
+      chargeLoadFailed.value = true;
       debugPrint('❌ getChargeConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -127,6 +133,10 @@ class WithdrawController extends GetxController {
 
   // Validate Amount Step
   bool validateAmountStep() {
+    if (chargeLoadFailed.value) {
+      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      return false;
+    }
     // Validate Withdraw Account
     if (withdrawAccountController.text.isEmpty) {
       ToastHelper().showErrorToast(

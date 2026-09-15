@@ -231,7 +231,7 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
                                         ),
                                       ],
                                     ),
-                                    if (request.status == "pending") ...[
+                                    if (request.status?.toLowerCase() == "pending") ...[
                                       SizedBox(height: 12),
                                       Container(
                                         width: double.infinity,

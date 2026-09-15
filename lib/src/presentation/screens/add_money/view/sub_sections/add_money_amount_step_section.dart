@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/model/gateway_methods_model.dart';
 
@@ -167,6 +168,9 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                     hintText: "",
                     controller: controller.amountController,
                     keyboardType: TextInputType.number,
+                    // phase3-fix: normalize fa/ar digits, strip separators,
+                    // cap decimals (raw text used to go straight to the API).
+                    inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
                   ),
                 ),
               ),

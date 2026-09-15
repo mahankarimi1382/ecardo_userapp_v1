@@ -51,13 +51,14 @@ class HomeController extends GetxController {
   // v1.0.24: the language picker keys off the locale CODE ('en','fa','zh',
   // 'ar','ru','tr') while the drawer displays the NATIVE name. The old code
   // compared English display names, which broke for non-English users.
+  // phase2-fix: ru/tr hidden until translations are real (they shipped 89%
+  // untranslated English — audit A9-P0-1). ARB files stay; re-add after the
+  // translation pass.
   static const Map<String, String> languageNativeNames = {
     'en': 'English',
     'fa': 'فارسی',
     'zh': '中文',
     'ar': 'العربية',
-    'ru': 'Русский',
-    'tr': 'Türkçe',
   };
 
   void setScaffoldKey(GlobalKey<ScaffoldState> key) {
@@ -84,10 +85,14 @@ class HomeController extends GetxController {
     if (Get.find<SettingsService>().getSetting("language_switcher") == "1") {
       _setInitialLanguage();
     }
-    await fetchDashboard();
-    await fetchWallets();
-    await fetchTransactions();
-    await fetchUser();
+    // phase2-fix: the four dashboard fetches are independent — run them in
+    // parallel instead of four serial round-trips.
+    await Future.wait([
+      fetchDashboard(),
+      fetchWallets(),
+      fetchTransactions(),
+      fetchUser(),
+    ]);
     isLoading.value = false;
   }
 
@@ -247,27 +252,35 @@ Future<void> changeLanguage(String languageCode) async {
   }
 
   // Logout Function
+  // phase1-fix (P0-9): the local session wipe runs regardless of the API
+  // result (offline logout works), and the toast no longer receives a
+  // nullable message.
   Future<void> submitLogout() async {
     isSignOutLoading.value = true;
+    String toastMsg = 'Logged out';
     try {
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.logoutEndpoint,
       );
-      isSignOutLoading.value = false;
-      if (response.status == Status.completed) {
-        await Get.find<TokenService>().clearToken();
-        Get.offAllNamed(BaseRoute.signIn);
-        Fluttertoast.showToast(
-          msg: response.data?["message"],
-          backgroundColor: AppColors.success,
-        );
+      if (response.data?["message"] is String) {
+        toastMsg = response.data!["message"] as String;
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitLogout() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
     } finally {
+      try {
+        await Get.find<SettingsService>().wipeSession();
+      } catch (e) {
+        debugPrint('⚠️ wipeSession error: $e');
+      }
+      await Get.find<TokenService>().clearToken();
       isSignOutLoading.value = false;
+      Get.offAllNamed(BaseRoute.signIn);
+      Fluttertoast.showToast(
+        msg: toastMsg,
+        backgroundColor: AppColors.success,
+      );
     }
   }
 

@@ -22,6 +22,8 @@ class CashOutController extends GetxController {
   final RxInt currentStep = 0.obs;
   final RxDouble charge = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
+  // phase1-fix (P0-7): fee calculation failed → Review must never show/confirm 0.00
+  final RxBool chargeLoadFailed = false.obs;
   final List<String> steps = ['Amount', 'Review', 'Success'];
   final Rx<CashOutConfigModel> cashOutConfig = CashOutConfigModel().obs;
   final Rx<ConverterModel> converterModel = ConverterModel().obs;
@@ -149,6 +151,7 @@ class CashOutController extends GetxController {
 
   // Get Charge Converter
   Future<void> getChargeConverter() async {
+    chargeLoadFailed.value = false;
     try {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getConverterEndpoint(
@@ -165,8 +168,11 @@ class CashOutController extends GetxController {
             0.0;
         totalAmount.value =
             ((double.tryParse(amountController.text) ?? 0.0) + charge.value);
+      } else {
+        chargeLoadFailed.value = true;
       }
     } catch (e, stackTrace) {
+      chargeLoadFailed.value = true;
       debugPrint('❌ getChargeConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -175,7 +181,12 @@ class CashOutController extends GetxController {
 
   // Validate Amount Step
   bool validateAmountStep() {
-    if (wallet.value!.name!.isEmpty) {
+    if (chargeLoadFailed.value) {
+      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      return false;
+    }
+    final walletData = wallet.value;
+    if (walletData == null || (walletData.name ?? '').isEmpty) {
       ToastHelper().showErrorToast(localization.cashOutValidationSelectWallet);
       return false;
     }

@@ -135,6 +135,32 @@ class SettingsService extends GetxService {
     }
   }
 
+  /// phase1-fix (P0-9): wipe ALL local session state (flags + stored
+  /// credentials + FCM token). Called by logout regardless of the API result
+  /// so a logged-out user can never be silently re-logged-in by the splash
+  /// biometric gate.
+  Future<void> wipeSession() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(logInCurrentStateKey);
+      await prefs.remove(currentEmailKey);
+      await prefs.remove(currentBiometricKey);
+      await prefs.remove(currentEmailVerifiedKey);
+      await prefs.remove(currentSetUpPasswordKey);
+      await prefs.remove(currentFcmTokenKey);
+      await _secureStorage.delete(key: currentPasswordKey);
+      currentEmail.value = null;
+      currentPassword.value = null;
+      logInCurrentState.value = null;
+      currentBiometric.value = null;
+      currentEmailVerified.value = null;
+      currentSetUpPassword.value = null;
+      currentFcmToken.value = null;
+    } catch (e) {
+      debugPrint('wipeSession failed: $e');
+    }
+  }
+
   // Saved Biometric Enable Or Disable
   Future<bool> saveBiometricEnableOrDisable(bool biometric) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

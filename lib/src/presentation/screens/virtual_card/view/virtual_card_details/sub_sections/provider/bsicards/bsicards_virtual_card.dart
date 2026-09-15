@@ -72,7 +72,7 @@ class BsicardsVirtualCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  card!.data!.nameOnCard!,
+                  card?.data?.nameOnCard ?? '—',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18.sp,
@@ -85,9 +85,13 @@ class BsicardsVirtualCard extends StatelessWidget {
                   children: [
                     Obx(() {
                       return Text(
-                        controller.showAccountNumber.value
-                            ? formatAccountNumber(card.data!.cardNumber!).trim()
-                            : "**** **** **** ${card.data!.cardNumber!.substring(card.data!.cardNumber!.length - 4)}",
+                        () {
+                          // phase1-fix (P0-10): no force-unwrap on short/absent PAN
+                          final pan = card?.data?.cardNumber ?? '';
+                          return controller.showAccountNumber.value
+                              ? formatAccountNumber(pan).trim()
+                              : '**** **** **** ${pan.length >= 4 ? pan.substring(pan.length - 4) : '----'}';
+                        }(),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20.sp,
@@ -136,7 +140,7 @@ class BsicardsVirtualCard extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "${card.data?.expiryMonth}/${card.data?.expiryYear.toString().substring(2)}",
+                          "${card?.data?.expiryMonth ?? '--'}/${(card?.data?.expiryYear?.toString() ?? '').padLeft(4, '0').substring(2)}",
                           style: TextStyle(
                             letterSpacing: 0,
                             fontSize: 14.sp,
@@ -161,13 +165,22 @@ class BsicardsVirtualCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              card.data!.cvv!,
-                              style: TextStyle(
-                                letterSpacing: 0,
-                                fontSize: 14.sp,
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w600,
+                            GestureDetector(
+                              // phase1-fix (P0-10): CVV masked by default,
+                              // tap to reveal for 10s only.
+                              onTap: controller.revealCvvTemporarily,
+                              child: Obx(
+                                () => Text(
+                                  controller.showCvv.value
+                                      ? (card?.data?.cvv ?? '---')
+                                      : '•••',
+                                  style: TextStyle(
+                                    letterSpacing: 0,
+                                    fontSize: 14.sp,
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -177,7 +190,7 @@ class BsicardsVirtualCard extends StatelessWidget {
                           width: 70.w,
                           height: 24.h,
                           decoration: BoxDecoration(
-                            color: card.data?.status == "active"
+                            color: card?.data?.status == "active"
                                 ? Color(0xFFDBFFDA)
                                 : const Color(0xFFF8D8D8),
                             borderRadius: BorderRadius.circular(8.r),
@@ -189,7 +202,7 @@ class BsicardsVirtualCard extends StatelessWidget {
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12.sp,
-                                color: card.data?.status == "active"
+                                color: card?.data?.status == "active"
                                     ? AppColors.success
                                     : AppColors.error,
                               ),

@@ -26,7 +26,10 @@ class BiometricAuthService {
   static const int maxAttempts = 3;
 
   /// تعداد تلاش‌های فعلی
-  int _currentAttempts = 0;
+  /// phase2-fix: shared across instances — splash and settings each used to
+  /// construct a fresh instance, resetting the counter and silently
+  /// disabling the 3-attempt limit.
+  static int _currentAttempts = 0;
 
   /// احراز هویت با بیومتریک
   /// برمی‌گرداند:
