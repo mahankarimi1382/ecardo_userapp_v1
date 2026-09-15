@@ -136,7 +136,7 @@ class StripeVirtualCard extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "${card.expirationMonth}/${card.expirationYear.toString().substring(2)}",
+                          "${card?.expirationMonth ?? '--'}/${(card?.expirationYear?.toString() ?? '').padLeft(4, '0').substring(2)}",
                           style: TextStyle(
                             letterSpacing: 0,
                             fontSize: 14.sp,
@@ -161,13 +161,22 @@ class StripeVirtualCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              card.cvc!,
-                              style: TextStyle(
-                                letterSpacing: 0,
-                                fontSize: 14.sp,
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w600,
+                            GestureDetector(
+                              // phase1-fix (P0-10): CVV masked by default,
+                              // tap to reveal for 10s only.
+                              onTap: controller.revealCvvTemporarily,
+                              child: Obx(
+                                () => Text(
+                                  controller.showCvv.value
+                                      ? (card?.cvc ?? '---')
+                                      : '•••',
+                                  style: TextStyle(
+                                    letterSpacing: 0,
+                                    fontSize: 14.sp,
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -177,22 +186,22 @@ class StripeVirtualCard extends StatelessWidget {
                           width: 70.w,
                           height: 24.h,
                           decoration: BoxDecoration(
-                            color: card.status == "active"
+                            color: card?.status == "active"
                                 ? Color(0xFFDBFFDA)
                                 : const Color(0xFFF8D8D8),
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                           child: Center(
                             child: Text(
-                              card.status!.isNotEmpty
-                                  ? card.status![0].toUpperCase() +
-                                        card.status!.substring(1)
+                              (card?.status ?? '').isNotEmpty
+                                  ? (card?.status ?? '')[0].toUpperCase() +
+                                        (card?.status ?? '').substring(1)
                                   : "",
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12.sp,
-                                color: card.status == "active"
+                                color: card?.status == "active"
                                     ? AppColors.success
                                     : AppColors.error,
                               ),

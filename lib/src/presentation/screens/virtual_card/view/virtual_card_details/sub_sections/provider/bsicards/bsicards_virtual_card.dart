@@ -140,7 +140,7 @@ class BsicardsVirtualCard extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "${card.data?.expiryMonth}/${card.data?.expiryYear.toString().substring(2)}",
+                          "${card?.data?.expiryMonth ?? '--'}/${(card?.data?.expiryYear?.toString() ?? '').padLeft(4, '0').substring(2)}",
                           style: TextStyle(
                             letterSpacing: 0,
                             fontSize: 14.sp,
@@ -190,7 +190,7 @@ class BsicardsVirtualCard extends StatelessWidget {
                           width: 70.w,
                           height: 24.h,
                           decoration: BoxDecoration(
-                            color: card.data?.status == "active"
+                            color: card?.data?.status == "active"
                                 ? Color(0xFFDBFFDA)
                                 : const Color(0xFFF8D8D8),
                             borderRadius: BorderRadius.circular(8.r),
@@ -202,7 +202,7 @@ class BsicardsVirtualCard extends StatelessWidget {
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12.sp,
-                                color: card.data?.status == "active"
+                                color: card?.data?.status == "active"
                                     ? AppColors.success
                                     : AppColors.error,
                               ),
