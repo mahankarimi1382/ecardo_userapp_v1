@@ -267,12 +267,22 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                final String isCreateAccount =
+                                // T15-fix (auth-hardening): a MISSING key used
+                                // to be treated as "0", so any user whose
+                                // settings fetch failed or was still in flight
+                                // (flaky network / slow edge) got a false
+                                // "Registration is disabled" toast and was
+                                // blocked from sign-up. An absent key now
+                                // falls through to the sign-up screen — the
+                                // backend remains the single source of truth
+                                // and still answers 403 "Registration is
+                                // disabled" when account_creation is off.
+                                final String? isCreateAccount =
                                     Get.find<SettingsService>().getSetting(
                                       "account_creation",
-                                    ) ??
-                                    "0";
-                                if (isCreateAccount == "1") {
+                                    );
+                                if (isCreateAccount == null ||
+                                    isCreateAccount == "1") {
                                   Get.toNamed(BaseRoute.email);
                                 } else {
                                   ToastHelper().showErrorToast(
