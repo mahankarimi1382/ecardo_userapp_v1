@@ -28,8 +28,10 @@ class RemittanceReviewSection extends StatelessWidget {
             // M-7 — decimals now come from DynamicDecimalsHelper via the
             // controller (API-driven); falls back to 2 like before.
             _Row(l.remittanceSendAmount, q == null ? '-' : c.formatAmount(q.sendAmount, currencyId: q.sendCurrencyId)),
-            _Row(l.remittanceExchangeRate, q != null ? '1 = ${q.exchangeRate.toStringAsFixed(4)}' : '-'), // TODO(lead): exchange-rate precision is not exposed by the quote API — 4 kept as-is.
-            _Row(l.remittanceReceiveAmount, q == null ? '-' : c.formatAmount(q.receiveAmount, currencyId: q.receiveCurrencyId)),
+            // T14 FIX — tiny rates (IRT→CNY) no longer collapse to 0.0000:
+            // dynamic precision with trailing-zero trim.
+            _Row(l.remittanceExchangeRate, q == null ? '-' : '1 = ${c.formatRate(q.exchangeRate)}'),
+            _Row(l.remittanceReceiveAmount, q == null ? '-' : c.formatReceiveAmount(q.receiveAmount, q.receiveCurrencyId)),
             _Row(l.remittanceSystemFee, q == null ? '-' : c.formatAmount(q.systemFee, currencyId: q.sendCurrencyId)),
             _Row(l.remittanceTotalPayable, q == null ? '-' : c.formatAmount(q.totalPayable, currencyId: q.sendCurrencyId), bold: true),
           ]),

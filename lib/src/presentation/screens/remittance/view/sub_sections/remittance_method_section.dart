@@ -172,14 +172,31 @@ class _YouSendCard extends StatelessWidget {
               SizedBox(width: 10.w),
               // Send-currency picker — fixed-width so the amount keeps most
               // of the row; vertically centered with the input.
+              //
+              // T14 FIX (USER-REPORTED gray box): the previous closure
+              // `Obx(() => _SendCurrencyPicker(...))` read NO observable inside
+              // the closure itself — the reads lived inside the child's own
+              // build(), which runs OUTSIDE GetX's tracking window
+              // (RxInterface.notifyChildren). GetX then threw "improper use of
+              // Obx" on every build and Flutter rendered the gray ErrorWidget
+              // exactly where this picker belongs. All observables are now read
+              // HERE and passed down as plain values.
               Expanded(
                 flex: 4,
-                child: Obx(() => _SendCurrencyPicker(
-                      controller: controller,
-                      label: l.remittanceSelectSendCurrency,
-                      loadingLabel: l.remittanceLoadingCurrencies,
-                      emptyLabel: l.remittanceNoCurrencies,
-                    )),
+                child: Obx(() {
+                  final loading = controller.isCurrenciesLoading.value;
+                  final selectedId = controller.selectedSendCurrencyId.value;
+                  final currencies = controller.sendCurrencies.toList();
+                  return _SendCurrencyPicker(
+                    controller: controller,
+                    label: l.remittanceSelectSendCurrency,
+                    loadingLabel: l.remittanceLoadingCurrencies,
+                    emptyLabel: l.remittanceNoCurrencies,
+                    loading: loading,
+                    selectedId: selectedId,
+                    currencies: currencies,
+                  );
+                }),
               ),
             ],
           ),
@@ -316,16 +333,25 @@ class _SendCurrencyPicker extends StatelessWidget {
     required this.label,
     required this.loadingLabel,
     required this.emptyLabel,
+    // T14 FIX — plain snapshots of the Rx state, read by the parent Obx
+    // closure (see the call site). This widget must NOT read .value itself:
+    // its build runs outside GetX's tracking window.
+    required this.loading,
+    required this.selectedId,
+    required this.currencies,
   });
 
   final RemittanceController controller;
   final String label;
   final String loadingLabel;
   final String emptyLabel;
+  final bool loading;
+  final int selectedId;
+  final List<CurrenciesData> currencies;
 
   @override
   Widget build(BuildContext context) {
-    if (controller.isCurrenciesLoading.value) {
+    if (loading) {
       return _pickerContainer(
         child: Row(children: [
           SizedBox(width: 14.w, height: 14.w, child: const CircularProgressIndicator(strokeWidth: 2)),
@@ -338,18 +364,17 @@ class _SendCurrencyPicker extends StatelessWidget {
       );
     }
 
-    if (controller.sendCurrencies.isEmpty) {
+    if (currencies.isEmpty) {
       return _pickerContainer(
         child: Text(emptyLabel, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
       );
     }
 
     // Find the currently selected currency object (or null if none).
-    final selectedId = controller.selectedSendCurrencyId.value;
     CurrenciesData? selected;
     if (selectedId != 0) {
       try {
-        selected = controller.sendCurrencies.firstWhere((c) => c.id == selectedId);
+        selected = currencies.firstWhere((c) => c.id == selectedId);
       } catch (_) {
         selected = null;
       }
@@ -361,7 +386,7 @@ class _SendCurrencyPicker extends StatelessWidget {
           value: selected,
           isExpanded: true,
           hint: Text(label, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
-          items: controller.sendCurrencies.map((c) {
+          items: currencies.map((c) {
             final code = (c.code ?? '').toUpperCase();
             final name = c.name ?? '';
             final display = name.isEmpty ? code : '$code — $name';
@@ -439,9 +464,10 @@ class _QuotePreview extends StatelessWidget {
               ),
           ]),
           SizedBox(height: 12.h),
-          _Row(l.remittanceReceiverGets, controller.formatAmount(quote.receiveAmount, currencyId: quote.receiveCurrencyId), bold: true),
+          _Row(l.remittanceReceiverGets, controller.formatReceiveAmount(quote.receiveAmount, quote.receiveCurrencyId), bold: true),
           SizedBox(height: 6.h),
-          _Row(l.remittanceExchangeRate, '1 = ${quote.exchangeRate.toStringAsFixed(4)}'), // TODO(lead): exchange-rate precision is not exposed by the quote API — 4 kept as-is.
+          // T14 FIX — dynamic precision for tiny rates (was toStringAsFixed(4)).
+          _Row(l.remittanceExchangeRate, '1 = ${controller.formatRate(quote.exchangeRate)}'),
           SizedBox(height: 6.h),
           // M-7 — decimals now come from DynamicDecimalsHelper via the
           // controller (API-driven); falls back to 2 like before.

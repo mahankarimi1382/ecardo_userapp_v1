@@ -937,6 +937,28 @@ class RemittanceController extends GetxController {
         decimalsForCurrencyId(currencyId ?? selectedSendCurrencyId.value),
       );
 
+  /// T14 FIX — tiny cross-rates (e.g. IRT→CNY = 0.00002911) rendered as
+  /// "0.0000" in the review/quote screens because of a hard 4-decimal
+  /// format. Format with generous precision, then trim trailing zeros so
+  /// every pair — including sub-unit rates — shows its real value.
+  String formatRate(double rate) {
+    var s = rate.toStringAsFixed(10);
+    s = s.replaceAll(RegExp(r'0+$'), '');
+    if (s.endsWith('.')) s = s.substring(0, s.length - 1);
+    return s;
+  }
+
+  /// T14 FIX — receive amount normally uses the payout currency decimals;
+  /// if that rounds to zero while the raw amount is positive, fall back to
+  /// 6 decimals so the user never sees a misleading 0.00 payout.
+  String formatReceiveAmount(double amount, int receiveCurrencyId) {
+    final s = formatAmount(amount, currencyId: receiveCurrencyId);
+    if ((double.tryParse(s) ?? 0) == 0 && amount > 0) {
+      return amount.toStringAsFixed(6);
+    }
+    return s;
+  }
+
   String get statusLabel {
     final remittance = createdRemittance.value ?? selectedRemittance.value;
     return remittance?.status.label ?? '';
