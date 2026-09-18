@@ -31,6 +31,7 @@
 // to get the canonical values.
 // ============================================================================
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -46,6 +47,7 @@ import 'package:ecardo_user/src/common/services/local_notifications_service.dart
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 
 /// The FCM topic this app instance subscribes to for app-update broadcasts.
 /// Override via the constructor when reusing this service in the merchant
@@ -256,6 +258,14 @@ class FirebaseMessagingService {
       return;
     }
 
+    // v1.1 (KYC-ACTION): a KYC decision (approve / reject / manual level
+    // promotion — every path) must refresh the badge + levels so the
+    // drawer badge, roadmap and feature gates reflect the new state
+    // immediately, without waiting for the next screen visit.
+    if (type == 'kyc_action') {
+      _refreshKycState();
+    }
+
     // Default: show as local notification. AUTH-BIO (A-2): the payload is
     // now structured JSON (was `data.toString()`, which could not be parsed
     // back on tap) so the tap router can deep-link to the right screen.
@@ -288,6 +298,20 @@ class FirebaseMessagingService {
 
     // AUTH-BIO (A-2): route every other payload through the shared router.
     _routeFromNotificationData(message.data);
+  }
+
+  /// v1.1 (KYC-ACTION): refresh badge + levels + status after a kyc_action
+  /// push (foreground) or tap. Best-effort: when the controller is not
+  /// registered (logged-out, cold start before navigation) it silently
+  /// does nothing — the KYC screens refetch on their own onInit anyway.
+  void _refreshKycState() {
+    try {
+      if (Get.isRegistered<KycLevelController>()) {
+        unawaited(Get.find<KycLevelController>().fetchStatus());
+      }
+    } catch (e) {
+      if (kDebugMode) print('kyc_action refresh failed: $e');
+    }
   }
 
   // ===========================================================================
@@ -327,6 +351,12 @@ class FirebaseMessagingService {
       if (type == 'app_update') {
         _openUpdateScreen();
         return;
+      }
+
+      // v1.1 (KYC-ACTION): tapping the KYC decision notification refreshes
+      // badge/status first, then lands on the KYC history screen.
+      if (type == 'kyc_action') {
+        _refreshKycState();
       }
 
       final target = _routeForNotificationType(type);
