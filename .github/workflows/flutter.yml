@@ -100,7 +100,7 @@ jobs:
       - name: Build APK
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            flutter build apk --release --obfuscate --split-debug-info=build/symbols 2>&1 | tee build_log.txt
+            flutter build apk --release --obfuscate --split-debug-info=build/symbols --target-platform android-arm,android-arm64 2>&1 | tee build_log.txt
             test -f build/app/outputs/flutter-apk/app-release.apk
           else
             flutter build apk --debug 2>&1 | tee build_log.txt

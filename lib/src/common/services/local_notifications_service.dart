@@ -28,8 +28,12 @@ class LocalNotificationsService {
 
     _plugin = FlutterLocalNotificationsPlugin();
 
+    // v1.0.38: the status-bar small icon MUST be a white-on-transparent
+    // monochrome asset — the previous setup pointed at the full-color
+    // launcher icon, which Android renders as an anonymous grey square on
+    // most devices.
     const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+      '@drawable/ic_notification',
     );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -50,10 +54,13 @@ class LocalNotificationsService {
     );
 
     const channel = AndroidNotificationChannel(
-      'channel_id',
-      'Default Channel',
-      description: 'Push notifications',
+      'ecardo_default',
+      'eCardo',
+      description: 'eCardo account & transaction notifications',
       importance: Importance.max,
+      enableLights: true,
+      enableVibration: true,
+      ledColor: Color(0xFF7445FF),
     );
 
     await _plugin
@@ -87,10 +94,12 @@ class LocalNotificationsService {
     String? payload,
   ) async {
     const androidDetails = AndroidNotificationDetails(
-      'channel_id',
-      'Default Channel',
+      'ecardo_default',
+      'eCardo',
+      channelDescription: 'eCardo account & transaction notifications',
       importance: Importance.max,
       priority: Priority.high,
+      icon: '@drawable/ic_notification',
     );
 
     const iosDetails = DarwinNotificationDetails(

@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/home
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/other_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/recent_transactions_section.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/referral_stats_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/sign_up_bonus_pop_up.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/top_header_section.dart';
 
@@ -80,7 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               TopHeaderSection(),
                               SizedBox(height: 30),
                               MyWalletSection(),
-                              SizedBox(height: 30),
+                              SizedBox(height: 20),
+                              // v1.0.38 (DASHBOARD): referral bonus/count
+                              // came from the dashboard API but was never
+                              // rendered — slim stat strip, hides itself
+                              // when the server sends no referral data.
+                              ReferralStatsSection(),
+                              SizedBox(height: 20),
                               OtherServicesSection(),
                               SizedBox(height: 30),
                               RecentTransactionsSection(),

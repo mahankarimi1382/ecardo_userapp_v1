@@ -79,13 +79,20 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
 
-        // Guarantee all native ABIs are bundled so the APK installs on every
-        // device architecture (arm64, arm32, x86_64). Without this, `flutter
-        // build apk` may produce ABI-split APKs that fail to install on
-        // devices whose ABI doesn't match the split.
-        ndk {
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
+    // -----------------------------------------------------------------------
+    // ABI policy (v1.0.38 — APK size):
+    //   debug keeps every ABI so x86_64 emulators keep working.
+    //   release ships ONLY real-device ABIs (armeabi-v7a + arm64-v8a):
+    //   x86_64 exists solely for emulators/Chromebooks and costs ~20MB of
+    //   engine + AOT payload per release APK.
+    // -----------------------------------------------------------------------
+    buildTypes {
+        getByName("debug") {
+            ndk {
+                abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
+            }
         }
     }
 
@@ -132,6 +139,12 @@ android {
                 "proguard-rules.pro"
             )
 
+            // v1.0.38 (APK size): release ships real-device ABIs only —
+            // x86_64 is an emulator/Chromebook architecture and adds
+            // ~20MB of engine + AOT payload to every published APK.
+            ndk {
+                abiFilters += listOf("armeabi-v7a", "arm64-v8a")
+            }
         }
         debug {
             isMinifyEnabled = false

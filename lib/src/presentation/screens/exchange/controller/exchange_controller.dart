@@ -67,7 +67,18 @@ class ExchangeController extends GetxController {
   final Rxn<Map<String, dynamic>> successExchangeData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  final localization = AppLocalizations.of(Get.context!)!;
+
+  /// P-4 pattern (v1.0.38 — structural fix): the previous
+  /// `final localization = AppLocalizations.of(Get.context!)!` field froze
+  /// the locale at controller construction — every exchange toast stayed in
+  /// the language the user had when the screen was first opened, even after
+  /// switching languages — and it crashed when constructed without a
+  /// localization context. Resolve per call instead.
+  AppLocalizations? get localizationOrNull {
+    final ctx = Get.context;
+    if (ctx == null) return null;
+    return AppLocalizations.of(ctx);
+  }
 
   // ------------------ rate direction tracking ------------------
   /// Previously displayed live rate (used to compute direction arrow).
@@ -319,7 +330,10 @@ class ExchangeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -344,7 +358,10 @@ class ExchangeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchExchangeConfig() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -352,10 +369,17 @@ class ExchangeController extends GetxController {
 
   Future<void> _calculateCharge() async {
     final amount = double.tryParse(amountController.text) ?? 0.0;
-    final userChargeStr =
-        exchangeConfigModel.value.data!.settings!.charge ?? "0";
-    final userChargeType =
-        exchangeConfigModel.value.data!.settings!.chargeType ?? "fixed";
+    // v1.0.38 (structural fix): data!/settings! force-unwraps crashed when
+    // the config payload arrived without a settings block.
+    final settings = exchangeConfigModel.value.data?.settings;
+    if (settings == null) {
+      charge.value = 0.0;
+      totalAmount.value = amount;
+      isExchangeConfigLoading.value = false;
+      return;
+    }
+    final userChargeStr = settings.charge ?? "0";
+    final userChargeType = settings.chargeType ?? "fixed";
 
     double calculatedCharge = 0.0;
 
@@ -373,11 +397,16 @@ class ExchangeController extends GetxController {
   }
 
   Future<void> getChargeConverter() async {
+    // v1.0.38 (structural fix): force-unwraps crashed when the config had no
+    // charge or no from-wallet was selected yet.
+    final chargeStr = exchangeConfigModel.value.data?.settings?.charge;
+    final fromCode = fromWallet.value?.code;
+    if (chargeStr == null || chargeStr.isEmpty || fromCode == null) return;
     try {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getConverterEndpoint(
-          amount: exchangeConfigModel.value.data!.settings!.charge!,
-          currencyCode: fromWallet.value!.code!,
+          amount: chargeStr,
+          currencyCode: fromCode,
         ),
       );
       if (response.status == Status.completed) {
@@ -389,7 +418,10 @@ class ExchangeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ getChargeConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -415,7 +447,10 @@ class ExchangeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ getExchangeRateConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
     } finally {
       isExchangeConfigLoading.value = false;
     }
@@ -426,23 +461,46 @@ class ExchangeController extends GetxController {
   bool validateAmountStep() {
     if (fromWallet.value == null || fromWallet.value!.name?.isEmpty == true) {
       ToastHelper().showErrorToast(
-        localization.exchangeValidationSelectFromWallet,
+        localizationOrNull?.exchangeValidationSelectFromWallet ??
+            'Please select a wallet to exchange from.',
       );
       return false;
     }
 
     if (toWallet.value == null || toWallet.value!.name?.isEmpty == true) {
       ToastHelper().showErrorToast(
-        localization.exchangeValidationSelectToWallet,
+        localizationOrNull?.exchangeValidationSelectToWallet ??
+            'Please select a wallet to exchange to.',
+      );
+      return false;
+    }
+
+    // v1.0.38 (structural fix): same-currency exchanges were previously
+    // accepted by the client — the wallet dropdowns don't exclude the
+    // opposite selection and swapWallets can produce identical codes when
+    // only one wallet holds a balance. The server rejects these with a raw
+    // 422 after the fact.
+    final fromCode = fromWallet.value?.code?.toUpperCase();
+    final toCode = toWallet.value?.code?.toUpperCase();
+    if (fromCode != null && fromCode == toCode) {
+      ToastHelper().showErrorToast(
+        localizationOrNull?.exchangeValidationSameWallet ??
+            'From and to currencies must be different.',
       );
       return false;
     }
 
     if (amountController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization.exchangeValidationEnterAmount);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.exchangeValidationEnterAmount ??
+            'Please enter an amount.',
+      );
       return false;
     }
 
+    // v1.0.38 (structural fix): exchangeLimit/isCrypto were force-unwrapped —
+    // a wallet served without an exchangeLimit block crashed the app on
+    // Continue. Fall back to permissive bounds instead of crashing.
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: fromWallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting("site_currency") ??
@@ -450,33 +508,36 @@ class ExchangeController extends GetxController {
       siteCurrencyDecimals:
           Get.find<SettingsService>().getSetting("site_currency_decimals") ??
           '2',
-      isCrypto: fromWallet.value!.isCrypto!,
+      isCrypto: fromWallet.value!.isCrypto ?? false,
     );
 
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
     final double min =
-        double.tryParse(fromWallet.value!.exchangeLimit!.min!) ?? 0.0;
-    final double max =
-        double.tryParse(fromWallet.value!.exchangeLimit!.max!) ??
+        double.tryParse(fromWallet.value?.exchangeLimit?.min ?? '') ?? 0.0;
+    final double max = double.tryParse(
+          fromWallet.value?.exchangeLimit?.max ?? '',
+        ) ??
         double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
-        localization.exchangeValidationAmountMinimum(
-          min.toStringAsFixed(calculateDecimals),
-          fromWallet.value!.code!,
-        ),
+        localizationOrNull?.exchangeValidationAmountMinimum(
+              min.toStringAsFixed(calculateDecimals),
+              fromWallet.value!.code!,
+            ) ??
+            'Minimum amount is $min ${fromWallet.value!.code!}.',
       );
       return false;
     }
 
     if (enteredAmount > max) {
       ToastHelper().showErrorToast(
-        localization.exchangeValidationAmountMaximum(
-          max.toStringAsFixed(calculateDecimals),
-          fromWallet.value!.code!,
-        ),
+        localizationOrNull?.exchangeValidationAmountMaximum(
+              max.toStringAsFixed(calculateDecimals),
+              fromWallet.value!.code!,
+            ) ??
+            'Maximum amount is $max ${fromWallet.value!.code!}.',
       );
       return false;
     }
@@ -487,10 +548,11 @@ class ExchangeController extends GetxController {
         double.tryParse(fromWallet.value!.balance ?? '') ?? 0.0;
     if (enteredAmount > availableBalance) {
       ToastHelper().showErrorToast(
-        localization.exchangeValidationInsufficientBalance(
-          availableBalance.toStringAsFixed(calculateDecimals),
-          fromWallet.value!.code!,
-        ),
+        localizationOrNull?.exchangeValidationInsufficientBalance(
+              availableBalance.toStringAsFixed(calculateDecimals),
+              fromWallet.value!.code!,
+            ) ??
+            'Insufficient balance in ${fromWallet.value!.code!}.',
       );
       return false;
     }
@@ -549,7 +611,10 @@ class ExchangeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -565,7 +630,10 @@ class ExchangeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCurrencies() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
     }
   }
 
@@ -830,7 +898,10 @@ class ExchangeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ exchangeWallet() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
     } finally {
       isExchangeWalletLoading.value = false;
     }
