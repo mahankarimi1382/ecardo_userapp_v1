@@ -244,6 +244,7 @@ jobs:
             -H "Accept: application/json" \
             -H "Content-Type: application/json" \
             -H "Origin: https://ecardo.ir" \
+            -H "X-ECardo-Deploy-Source: github-actions" \
             --compressed \
             -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\"}" \
             | tee notify-result.txt; then
@@ -251,12 +252,13 @@ jobs:
           else
             code=$?
             if [ "$code" -eq 60 ] || grep -qi "SSL certificate problem" notify-result.txt; then
-              echo "⚠️ SERVER NOT NOTIFIED: origin-api.ecardo.ir presents a TLS chain"
-              echo "   GitHub runners cannot verify (likely a Cloudflare Origin CA)."
+              echo "⚠️ SERVER NOT NOTIFIED: the TLS handshake failed — the request"
+              echo "   NEVER reached origin-api.ecardo.ir (curl exit 60)."
+              echo "   Root cause: the server presents a chain GitHub runners"
+              echo "   cannot verify (likely a Cloudflare Origin CA). Backend"
+              echo "   task T1 in the coordination gist must fix this."
+              echo "   https://gist.github.com/mahankarimi1382/c35951c08598e86c5f3d0692cae12ed5"
               echo "   The RELEASE ITSELF IS PUBLISHED and downloadable."
-              echo "   Fix the origin certificate chain (serve the full publicly-"
-              echo "   trusted chain) or POST the webhook manually — then the"
-              echo "   in-app updater will pick up $VERSION."
               exit 0
             fi
             echo "❌ Server notification failed (curl exit $code) — see notify-result.txt"

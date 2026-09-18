@@ -1,0 +1,35 @@
+name: Server TLS Check
+
+# Probe for backend task T1 (coordination gist): verifies that
+# origin-api.ecardo.ir presents a TLS chain GitHub runners can verify.
+# Harmless by design — a public GET of the app-version endpoint, no
+# secrets, no side effects. Expected RED until the backend fixes the
+# origin certificate chain; green means the deploy-webhook notify step
+# can finally reach the server on the next tagged release.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tls-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe origin-api.ecardo.ir TLS chain (no -k)
+        run: |
+          set -o pipefail
+          if curl --fail-with-body --show-error --silent \
+            https://origin-api.ecardo.ir/api/app-version \
+            | tee tls-result.txt; then
+            grep -q '"version"' tls-result.txt \
+              && echo "✅ TLS chain is publicly verifiable AND the API answered."
+            || { echo "❌ TLS OK but unexpected response body — see tls-result.txt"; exit 1; }
+          else
+            code=$?
+            if [ "$code" -eq 60 ] || grep -qi "SSL certificate problem" tls-result.txt; then
+              echo "❌ TLS CHAIN STILL UNVERIFIABLE (curl exit 60) — backend task T1 not done."
+              echo "   Backend must serve the full publicly-trusted certificate chain."
+              exit 1
+            fi
+            echo "❌ Probe failed (curl exit $code) — see tls-result.txt"
+            exit 1
+          fi
