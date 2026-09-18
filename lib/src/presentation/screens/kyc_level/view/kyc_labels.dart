@@ -107,6 +107,8 @@ class KycLimitLabels {
   /// Limit keys the server may send per level (v1.1 contract). A missing key
   /// means the server has no per-level override — the global value applies.
   /// Unknown keys are skipped (they must NOT crash the roadmap).
+  /// Daily/monthly caps also arrive under the server's `*_daily_limit` /
+  /// `*_monthly_limit` spelling — resolved via [_dailyMonthlyAliases].
   static const Set<String> knownKeys = {
     'cashin_minimum', 'cashin_maximum', 'cashin_daily', 'cashin_monthly',
     'cashout_minimum', 'cashout_maximum', 'cashout_daily', 'cashout_monthly',
@@ -114,6 +116,32 @@ class KycLimitLabels {
     'transfer_maximum', 'transfer_daily_limit',
     'payment_maximum', 'gift_maximum', 'paycardo_topup_limit',
   };
+
+  /// Server sends daily/monthly caps as `<group>_daily_limit` /
+  /// `<group>_monthly_limit`; the v1.1 checklist originally spelled them
+  /// `<group>_daily` / `<group>_monthly`. Both spellings must render — the
+  /// alias only fills the canonical key when the canonical key is absent,
+  /// so either spelling (or both) yields exactly one row per measure.
+  static const Map<String, String> _dailyMonthlyAliases = {
+    'cashin_daily_limit': 'cashin_daily',
+    'cashin_monthly_limit': 'cashin_monthly',
+    'cashout_daily_limit': 'cashout_daily',
+    'cashout_monthly_limit': 'cashout_monthly',
+    'exchange_daily_limit': 'exchange_daily',
+    'exchange_monthly_limit': 'exchange_monthly',
+  };
+
+  static Map<String, dynamic> _resolveLimitAliases(
+    Map<String, dynamic> limits,
+  ) {
+    final resolved = Map<String, dynamic>.of(limits);
+    _dailyMonthlyAliases.forEach((alias, canonical) {
+      final aliasValue = resolved[alias];
+      if (aliasValue == null) return;
+      resolved[canonical] ??= aliasValue;
+    });
+    return resolved;
+  }
 
   /// Builds the localized limit rows for a level's `limits` map, in the
   /// canonical key order above. Unknown keys are ignored.
@@ -123,9 +151,10 @@ class KycLimitLabels {
   ) {
     if (limits == null || limits.isEmpty) return const <KycLimitRow>[];
 
+    final resolved = _resolveLimitAliases(limits);
     final result = <KycLimitRow>[];
     for (final key in knownKeys) {
-      final raw = limits[key];
+      final raw = resolved[key];
       if (raw == null) continue;
       final value = _formatValue(raw);
       if (value == null) continue;
