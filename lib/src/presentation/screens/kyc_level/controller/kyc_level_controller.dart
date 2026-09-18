@@ -2,7 +2,6 @@ import 'dart:io' show File;
 
 import 'package:dio/dio.dart' as dio show FormData, MultipartFile;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';

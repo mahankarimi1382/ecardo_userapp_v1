@@ -2,6 +2,8 @@
 /// کاربر می‌تواند پیام متنی و فایل ضمیمه ارسال کند
 /// از XFile به جای dart:io File استفاده شده برای سازگاری وب
 
+library;
+
 import 'dart:async';
 
 import 'package:dio/dio.dart' as dio;

@@ -10,7 +10,6 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 
 import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
-import '../hotels/hotel_search_components.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'travel_confirmation_screen.dart';

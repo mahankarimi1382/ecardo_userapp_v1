@@ -9,7 +9,6 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/network/service/token_service.dart';
 
 class SignInController extends GetxController {
   final RxBool isLoading = false.obs;

@@ -361,8 +361,8 @@ class _HistorySkeleton extends StatelessWidget {
           vertical: 12,
         ),
         itemCount: 8,
-        separatorBuilder: (_, __) => const SizedBox(height: 14),
-        itemBuilder: (_, __) => Container(
+        separatorBuilder: (_, _) => const SizedBox(height: 14),
+        itemBuilder: (_, _) => Container(
           padding: const EdgeInsetsDirectional.symmetric(
             horizontal: 16,
             vertical: 12,

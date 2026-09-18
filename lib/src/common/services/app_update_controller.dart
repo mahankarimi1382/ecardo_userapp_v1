@@ -19,10 +19,8 @@
 // ============================================================================
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
@@ -142,7 +140,6 @@ class AppUpdateController extends GetxController {
 
   // ----- Internal -----
   CancelToken? _cancelToken;
-  String? _downloadedApkPath;
 
   @override
   void onInit() {
@@ -270,7 +267,6 @@ class AppUpdateController extends GetxController {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final filePath = '${dir.path}/${config.apkFileName}';
-      _downloadedApkPath = filePath;
 
       _cancelToken = CancelToken();
       final dio = Dio();

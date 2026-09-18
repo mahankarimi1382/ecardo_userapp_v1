@@ -296,7 +296,9 @@ class _ExchangeSuccessStepSectionState
       ..writeln(
           'Final:        ${t["final_amount"]} ${t["pay_currency"]}')
       ..writeln('========================');
-    Share.share(text.toString(), subject: 'eCardo Exchange Receipt');
+    SharePlus.instance.share(
+      ShareParams(text: text.toString(), subject: 'eCardo Exchange Receipt'),
+    );
   }
 }
 

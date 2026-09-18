@@ -61,6 +61,7 @@ class AppUpdateHelper {
         await controller.checkForUpdate(
           showSnackbarWhenUpToDate: showMessageIfNoUpdate,
         );
+        if (!context.mounted) return;
         if (controller.phase.value == AppUpdatePhase.updateAvailable) {
           _showMobileUpdateDialog(
             context,
@@ -121,6 +122,7 @@ class AppUpdateHelper {
         if (!shouldPrompt) return;
       }
 
+      if (!context.mounted) return;
       _showMobileUpdateDialog(context, server, link, force);
       await controller.markVersionAsPrompted(server);
     } catch (e) {

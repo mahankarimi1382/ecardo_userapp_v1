@@ -59,7 +59,6 @@ class _KycLevelBadgeState extends State<KycLevelBadge> {
       return const SizedBox.shrink();
     }
 
-    final level = _badge!['level'] ?? 1;
     final name = _badge!['name'] ?? '';
     final kycStatus = _badge!['kyc_status'] ?? 'not_submitted';
     final color = _getStatusColor(kycStatus);

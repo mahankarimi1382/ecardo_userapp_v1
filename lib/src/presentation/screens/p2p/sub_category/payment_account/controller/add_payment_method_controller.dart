@@ -1,6 +1,8 @@
 /// کنترلر افزودن حساب پرداخت P2P
 /// از XFile به جای dart:io File استفاده شده برای سازگاری با وب
 
+library;
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

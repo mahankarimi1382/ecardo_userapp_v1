@@ -1,6 +1,8 @@
 /// مدل‌های مربوط به فرم درخواست تأیید معامله‌گر تأیید شده P2P
 /// استفاده از XFile به جای dart:io File برای سازگاری با وب و موبایل
 
+library;
+
 import 'package:image_picker/image_picker.dart' show XFile;
 
 /// مدل ساده فیلد فرم (نام، نوع، اعتبارسنجی، دستورالعمل‌ها)

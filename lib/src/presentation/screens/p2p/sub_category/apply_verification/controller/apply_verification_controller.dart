@@ -1,6 +1,7 @@
 /// کنترلر صفحه درخواست تأیید معامله‌گر P2P
 /// درخواست فایل‌ها با image_picker (XFile) و file_picker انجام می‌شود
 /// از XFile به جای dart:io File استفاده شده برای سازگاری با وب
+library;
 
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
@@ -229,7 +230,7 @@ class ApplyVerificationController extends GetxController {
         /// فیلدهای فایلی: بررسی انتخاب فایل
         if (!selectedFiles.containsKey(fieldName)) {
           ToastHelper().showErrorToast(
-            '${localization?.p2pFieldRequired ?? "$fieldName is required"}',
+            localization?.p2pFieldRequired ?? '$fieldName is required',
           );
           return false;
         }
@@ -237,7 +238,7 @@ class ApplyVerificationController extends GetxController {
         /// فیلدهای متنی: بررسی خالی نبودن
         if ((controller?.text ?? '').trim().isEmpty) {
           ToastHelper().showErrorToast(
-            '${localization?.p2pFieldRequired ?? "$fieldName is required"}',
+            localization?.p2pFieldRequired ?? '$fieldName is required',
           );
           return false;
         }
@@ -269,7 +270,6 @@ class ApplyVerificationController extends GetxController {
           /// ارسال فایل: از XFile برای سازگاری با وب و موبایل
           if (selectedFile != null) {
             final xFile = selectedFile.file;
-            final fileLength = await xFile.length();
             final fileBytes = await xFile.readAsBytes();
 
             formData.files.add(

@@ -373,7 +373,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         true;
                                     return Switch.adaptive(
                                       value: enabled,
-                                      activeColor: AppColors.lightPrimary,
+                                      activeThumbColor: AppColors.lightPrimary,
                                       onChanged: controller == null
                                           ? null
                                           : (v) => controller

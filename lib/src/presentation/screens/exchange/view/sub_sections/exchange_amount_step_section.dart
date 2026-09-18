@@ -124,7 +124,7 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: controller.recentPairs.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 8),
+                      separatorBuilder: (_, _) => const SizedBox(width: 8),
                       itemBuilder: (_, index) {
                         final pair = controller.recentPairs[index];
                         return _RecentPairChip(
@@ -195,7 +195,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
             padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
             child: Obx(() {
               final isValid = controller.isAmountValid;
-              final isInvalid = controller.isContinueInvalid.value;
               return CommonButton(
                 borderRadius: 16,
                 width: double.infinity,

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
-import 'hotel_search_components.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 
 class HotelFilterState {

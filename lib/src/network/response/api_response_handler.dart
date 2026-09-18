@@ -1,24 +1,22 @@
-import 'package:dio/dio.dart';
-
 /// ApiResponseHandler — parses eCardo v3.8 API responses.
 ///
 /// v3.8 response format (uniform across all endpoints):
 /// {
 ///   "status": "success" | "error",
 ///   "message": "string",
-///   "data": {...} | [...] | null,
+///   "data": `{...}` | `[...]` | null,
 ///   "errors": {...} | null,
 ///   "meta": {
 ///     "timestamp": "ISO-8601",
 ///     "request_id": "ULID",
 ///     "version": "3.8",
-///     "error_code": "VALIDATION_ERROR" | "NOT_FOUND" | ...  // error only
+///     `error_code`: "VALIDATION_ERROR" | "NOT_FOUND" | ...  // error only
 ///     "pagination": { "current_page": 1, "last_page": 5, ... }  // paginated only
 ///   }
 /// }
 ///
 /// This class extracts the relevant fields and exposes typed accessors.
-/// NetworkService still returns ApiResponse<Map<String, dynamic>> (the full body),
+/// NetworkService still returns `ApiResponse<Map<String, dynamic>>` (the full body),
 /// but controllers can use these helpers to extract `data`, `pagination`, etc.
 class ApiResponseHandler {
   final Map<String, dynamic>? body;
@@ -50,7 +48,7 @@ class ApiResponseHandler {
   /// The data payload (could be a Map, List, or null).
   dynamic get data => body?['data'];
 
-  /// The errors payload (typically a Map<String, List<String>> for validation).
+  /// The errors payload (typically a `Map<String, List<String>>` for validation).
   dynamic get errors => body?['errors'];
 
   /// The metadata object.
@@ -80,8 +78,8 @@ class ApiResponseHandler {
   /// Extracts the first error message from a 422-style `errors` field.
   ///
   /// The backend sends validation errors in one of these shapes:
-  ///   1. {"email": ["Email is required", "..."], "password": ["..."]}
-  ///   2. ["Error 1", "Error 2"]
+  ///   1. `{"email": ["Email is required", "..."], "password": ["..."]}`
+  ///   2. `["Error 1", "Error 2"]`
   ///   3. "Single error string"
   String? get firstError {
     final errs = errors;

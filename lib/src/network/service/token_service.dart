@@ -53,9 +53,7 @@ class TokenService extends GetxService {
       String? token = await _secureStorage.read(key: accessTokenKey);
 
       // If not in secure storage, try migrating from SharedPreferences
-      if (token == null) {
-        token = await _migrateFromLegacyStorage();
-      }
+      token ??= await _migrateFromLegacyStorage();
 
       accessToken.value = token;
       if (kDebugMode) {

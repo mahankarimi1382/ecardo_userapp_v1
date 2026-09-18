@@ -54,7 +54,7 @@ class SplashController extends GetxController {
     // auto-update toggle and the already-prompted gate inside the helper.
     Future.delayed(const Duration(milliseconds: 600), () {
       final ctx = Get.context;
-      if (ctx != null) {
+      if (ctx != null && ctx.mounted) {
         AppUpdateHelper.maybeAutoPromptForUpdate(ctx);
       }
     });

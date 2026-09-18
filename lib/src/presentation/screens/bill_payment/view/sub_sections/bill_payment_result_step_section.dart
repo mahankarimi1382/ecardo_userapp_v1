@@ -14,9 +14,9 @@
 //
 // TODO(lead): the exact success payload of `POST /user/pay-bill` is not
 // contractual in the client (no response model exists). Message/status are
-/// therefore rendered as null-safe pass-throughs; once the backend confirms
-/// the payload shape (e.g. `data.status` / `data.tnx`), consider a typed
-/// model and a dedicated pending/success visual per status.
+// therefore rendered as null-safe pass-throughs; once the backend confirms
+// the payload shape (e.g. `data.status` / `data.tnx`), consider a typed
+// model and a dedicated pending/success visual per status.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
