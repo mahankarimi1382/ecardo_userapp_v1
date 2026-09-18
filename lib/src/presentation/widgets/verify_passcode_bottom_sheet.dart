@@ -119,10 +119,16 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                   onPressed: controller.isPasscodeVerifyLoading.value
                       ? null
                       : () async {
+                          // EX-04: capture the entered passcode BEFORE the
+                          // controller clears it, and return the VALUE (not
+                          // just a bool) so money flows can forward it in
+                          // the submission body for server-side validation.
+                          final passcode =
+                              controller.passcodeController.text.trim();
                           final success = await controller
                               .submitPasscodeVerify();
                           if (success) {
-                            Get.back(result: true);
+                            Get.back(result: passcode);
                           }
                         },
                   borderRadius: 10,

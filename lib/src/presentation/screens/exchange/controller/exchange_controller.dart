@@ -833,7 +833,7 @@ class ExchangeController extends GetxController {
 
   // ------------------ exchange wallet submission ------------------
 
-  Future<void> exchangeWallet() async {
+  Future<void> exchangeWallet({String? passcode}) async {
     // v1.0.24: guard against double submission while a request is in flight.
     if (isExchangeWalletLoading.isTrue) return;
     isExchangeWalletLoading.value = true;
@@ -871,6 +871,9 @@ class ExchangeController extends GetxController {
       // backend can compare this to its own rate-locked-at window.
       if (_reviewEnteredAt != null)
         'rate_locked_at': _reviewEnteredAt!.toUtc().toIso8601String(),
+      // EX-04: پس‌کد تراکنش باید سمت سرور هم تأیید شود (بک‌اند Hash::check می‌کند).
+      // کاربران بدون پس‌کد فیلد را اصلاً نمی‌فرستند — بدنه تمیز می‌ماند.
+      if (passcode != null && passcode.isNotEmpty) 'passcode': passcode,
     };
 
     try {

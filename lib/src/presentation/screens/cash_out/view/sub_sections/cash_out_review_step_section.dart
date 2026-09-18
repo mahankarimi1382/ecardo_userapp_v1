@@ -169,10 +169,16 @@ class CashOutReviewStepSection extends StatelessWidget {
                               "1";
 
                           if (isPasscodeEnabled) {
-                            final bool? isVerified = await Get.bottomSheet<bool>(
-                              VerifyPasscodeBottomSheet(),
+                            // EX-04: the sheet now returns the verified
+                            // passcode value (String?) instead of a bool.
+                            final verifiedPasscode =
+                                await Get.bottomSheet<String>(
+                              const VerifyPasscodeBottomSheet(),
                             );
-                            if (isVerified != true) return;
+                            if (verifiedPasscode == null ||
+                                verifiedPasscode.isEmpty) {
+                              return;
+                            }
                             controller.cashOut();
                           } else {
                             controller.cashOut();

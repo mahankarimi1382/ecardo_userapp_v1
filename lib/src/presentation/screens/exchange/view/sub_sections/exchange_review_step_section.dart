@@ -220,8 +220,20 @@ class ExchangeReviewStepSection extends StatelessWidget {
                             ? null
                             : () async {
                                 HapticFeedback.mediumImpact();
-                                if (controller.userModel.value.data?.passcode ==
-                                    "0") {
+
+                                // EX-04: backend semantics — a user has a
+                                // transaction passcode only when
+                                // users.passcode is non-null/non-empty and
+                                // not "0"; null/''/"0" users never see the
+                                // modal and never send the field.
+                                final savedPasscode =
+                                    controller.userModel.value.data?.passcode;
+                                final bool hasPasscode =
+                                    savedPasscode != null &&
+                                        savedPasscode.isNotEmpty &&
+                                        savedPasscode != "0";
+
+                                if (!hasPasscode) {
                                   controller.exchangeWallet();
                                   return;
                                 }
@@ -233,12 +245,17 @@ class ExchangeReviewStepSection extends StatelessWidget {
                                         "1";
 
                                 if (isPasscodeEnabled) {
-                                  final bool? isVerified =
-                                      await Get.bottomSheet<bool>(
+                                  final String? verifiedPasscode =
+                                      await Get.bottomSheet<String>(
                                     const VerifyPasscodeBottomSheet(),
                                   );
-                                  if (isVerified != true) return;
-                                  controller.exchangeWallet();
+                                  if (verifiedPasscode == null ||
+                                      verifiedPasscode.isEmpty) {
+                                    return;
+                                  }
+                                  controller.exchangeWallet(
+                                    passcode: verifiedPasscode,
+                                  );
                                 } else {
                                   controller.exchangeWallet();
                                 }
