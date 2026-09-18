@@ -2410,5 +2410,77 @@
   "kycFeaturePaymentLinks": "روابط الدفع",
   "kycFeatureTravel": "حجز السفر",
   "kycFeatureRemittance": "الحوالات المالية",
-  "kycFeatureEpay": "الدفع الإلكتروني (ePay)"
+  "kycFeatureEpay": "الدفع الإلكتروني (ePay)",
+  "kycRoadmapTitle": "خارطة التحقق من الهوية",
+  "kycRoadmapContinueForLevel": "متابعة التحقق — المستوى {level}",
+  "@kycRoadmapContinueForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycRoadmapPending": "مستنداتك قيد المراجعة. يستغرق ذلك عادةً من 1 إلى 2 يوم عمل.",
+  "kycRoadmapRejectedTitle": "تم رفض التحقق من هويتك.",
+  "kycRoadmapRejectedAction": "يرجى إعادة إرسال مستنداتك.",
+  "kycRoadmapStatusCompleted": "مكتمل",
+  "kycRoadmapStatusCurrent": "الحالي",
+  "kycRoadmapStatusAvailable": "جاهز للترقية",
+  "kycRoadmapStatusLocked": "مقفل",
+  "kycLimitsSectionTitle": "حدود المعاملات",
+  "kycLimitGroupCashin": "الإيداع",
+  "kycLimitGroupCashout": "الصرف النقدي",
+  "kycLimitGroupExchange": "الصرافة",
+  "kycLimitGroupTransfer": "التحويل",
+  "kycLimitGroupPayment": "الدفع",
+  "kycLimitGroupGift": "الهدايا",
+  "kycLimitPaycardoTopup": "شحن PayCardo",
+  "kycLimitMeasureMin": "حد أدنى",
+  "kycLimitMeasureMax": "حد أقصى",
+  "kycLimitMeasureDaily": "يومياً",
+  "kycLimitMeasureMonthly": "شهرياً",
+  "kycDocSelfie": "صورة سيلفي",
+  "kycDocGovtId": "وثيقة هوية",
+  "kycDocPersonalInfo": "المعلومات الشخصية",
+  "kycDocTradeLicense": "رخصة تجارية",
+  "kycDocBusinessInfo": "معلومات العمل التجاري",
+  "kycDocCompanyDocs": "مستندات الشركة",
+  "kycDocNationalCard": "بطاقة الهوية الوطنية",
+  "kycDocSourceOfFunds": "إثبات مصدر الأموال",
+  "kycDocVideoVerification": "التحقق بالفيديو",
+  "kycDocSelfieHint": "التقط صورة سيلفي واضحة بإضاءة جيدة ووجه مرئي بالكامل.",
+  "kycDocGovtIdHint": "صورة واضحة للوجه والخلف لوثيقة الهوية. يجب أن تكون جميع التفاصيل مقروءة.",
+  "kycDocPersonalInfoHint": "المعلومات الشخصية بما في ذلك العنوان والرمز البريدي ورقم الهاتف.",
+  "kycDocTradeLicenseHint": "نسخة ممسوحة ضوئياً من رخصة تجارية سارية.",
+  "kycDocBusinessInfoHint": "معلومات كاملة عن العمل التجاري بما في ذلك الاسم ونوع النشاط والعنوان.",
+  "kycDocCompanyDocsHint": "مستندات تسجيل الشركة والنظام الأساسي وإشعار التأسيس.",
+  "kycDocNationalCardHint": "صورة واضحة للوجهين من بطاقة الهوية الوطنية. يجب أن تكون جميع التفاصيل مقروءة.",
+  "kycDocSourceOfFundsHint": "مستند يثبت مصدر أموالك (قسيمة راتب، كشف حساب بنكي، دخل تجاري…).",
+  "kycDocVideoVerificationHint": "سجّل مقطع فيديو قصيراً لوجهك وفق التعليمات الظاهرة على الشاشة.",
+  "kycDocGenericHint": "يرجى رفع المستند المطلوب.",
+  "kycSubmitWizardTitleForLevel": "التحقق من الهوية — المستوى {level}",
+  "@kycSubmitWizardTitleForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycSubmitWizardInvalidLevel": "مستوى غير صالح",
+  "kycSubmitWizardRequiredDoc": "المستند المطلوب",
+  "kycSubmitWizardTapToUpload": "اضغط للرفع",
+  "kycSubmitWizardFileFormat": "الصيغة: JPG، PNG، PDF — بحد أقصى 5 ميغابايت",
+  "kycSubmitWizardReviewTitle": "المراجعة والإرسال",
+  "kycSubmitWizardNotUploaded": "لم يُرفع",
+  "kycSubmitWizardReviewNote": "بعد الإرسال تتم مراجعة مستنداتك من قبل المشرف. يستغرق ذلك عادةً من 1 إلى 2 يوم عمل.",
+  "kycSubmitWizardSubmit": "إرسال المستندات",
+  "kycSubmitWizardContinue": "متابعة",
+  "kycSubmitWizardUploaded": "تم الرفع: {fileName}",
+  "@kycSubmitWizardUploaded": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  }
 }

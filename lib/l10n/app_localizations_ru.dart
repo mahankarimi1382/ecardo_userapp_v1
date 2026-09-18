@@ -7595,4 +7595,176 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get kycFeatureEpay => 'Электронная оплата (ePay)';
+
+  @override
+  String get kycRoadmapTitle => 'Маршрут верификации';
+
+  @override
+  String kycRoadmapContinueForLevel(int level) {
+    return 'Продолжить верификацию — уровень $level';
+  }
+
+  @override
+  String get kycRoadmapPending =>
+      'Ваши документы на рассмотрении. Обычно это занимает 1–2 рабочих дня.';
+
+  @override
+  String get kycRoadmapRejectedTitle => 'Ваша верификация отклонена.';
+
+  @override
+  String get kycRoadmapRejectedAction =>
+      'Пожалуйста, отправьте документы снова.';
+
+  @override
+  String get kycRoadmapStatusCompleted => 'Завершён';
+
+  @override
+  String get kycRoadmapStatusCurrent => 'Текущий';
+
+  @override
+  String get kycRoadmapStatusAvailable => 'Доступен для повышения';
+
+  @override
+  String get kycRoadmapStatusLocked => 'Заблокирован';
+
+  @override
+  String get kycLimitsSectionTitle => 'Лимиты транзакций';
+
+  @override
+  String get kycLimitGroupCashin => 'Пополнение';
+
+  @override
+  String get kycLimitGroupCashout => 'Обналичивание';
+
+  @override
+  String get kycLimitGroupExchange => 'Обмен';
+
+  @override
+  String get kycLimitGroupTransfer => 'Перевод';
+
+  @override
+  String get kycLimitGroupPayment => 'Оплата';
+
+  @override
+  String get kycLimitGroupGift => 'Подарки';
+
+  @override
+  String get kycLimitPaycardoTopup => 'Пополнение PayCardo';
+
+  @override
+  String get kycLimitMeasureMin => 'мин';
+
+  @override
+  String get kycLimitMeasureMax => 'макс';
+
+  @override
+  String get kycLimitMeasureDaily => 'в день';
+
+  @override
+  String get kycLimitMeasureMonthly => 'в месяц';
+
+  @override
+  String get kycDocSelfie => 'Селфи';
+
+  @override
+  String get kycDocGovtId => 'Удостоверение личности';
+
+  @override
+  String get kycDocPersonalInfo => 'Личная информация';
+
+  @override
+  String get kycDocTradeLicense => 'Торговая лицензия';
+
+  @override
+  String get kycDocBusinessInfo => 'Информация о бизнесе';
+
+  @override
+  String get kycDocCompanyDocs => 'Документы компании';
+
+  @override
+  String get kycDocNationalCard => 'Национальное удостоверение личности';
+
+  @override
+  String get kycDocSourceOfFunds => 'Подтверждение источника средств';
+
+  @override
+  String get kycDocVideoVerification => 'Видеоверификация';
+
+  @override
+  String get kycDocSelfieHint =>
+      'Сделайте чёткое селфи при хорошем освещении, лицо полностью видно.';
+
+  @override
+  String get kycDocGovtIdHint =>
+      'Чёткое фото удостоверения личности с обеих сторон. Все данные должны быть читаемы.';
+
+  @override
+  String get kycDocPersonalInfoHint =>
+      'Личная информация, включая адрес, почтовый индекс и номер телефона.';
+
+  @override
+  String get kycDocTradeLicenseHint =>
+      'Отсканированная копия действующей торговой лицензии.';
+
+  @override
+  String get kycDocBusinessInfoHint =>
+      'Полная информация о бизнесе, включая название, вид деятельности и адрес.';
+
+  @override
+  String get kycDocCompanyDocsHint =>
+      'Регистрационные документы компании, устав и уведомление о создании.';
+
+  @override
+  String get kycDocNationalCardHint =>
+      'Чёткое фото национального удостоверения с обеих сторон. Все данные должны быть читаемы.';
+
+  @override
+  String get kycDocSourceOfFundsHint =>
+      'Документ, подтверждающий источник средств (расчётный лист, банковская выписка, доход от бизнеса…).';
+
+  @override
+  String get kycDocVideoVerificationHint =>
+      'Запишите короткое видео своего лица, следуя инструкциям на экране.';
+
+  @override
+  String get kycDocGenericHint => 'Пожалуйста, загрузите необходимый документ.';
+
+  @override
+  String kycSubmitWizardTitleForLevel(int level) {
+    return 'Верификация — уровень $level';
+  }
+
+  @override
+  String get kycSubmitWizardInvalidLevel => 'Недопустимый уровень';
+
+  @override
+  String get kycSubmitWizardRequiredDoc => 'Необходимый документ';
+
+  @override
+  String get kycSubmitWizardTapToUpload => 'Нажмите для загрузки';
+
+  @override
+  String get kycSubmitWizardFileFormat =>
+      'Формат: JPG, PNG, PDF — не более 5 МБ';
+
+  @override
+  String get kycSubmitWizardReviewTitle => 'Проверка и отправка';
+
+  @override
+  String get kycSubmitWizardNotUploaded => 'Не загружено';
+
+  @override
+  String get kycSubmitWizardReviewNote =>
+      'После отправки ваши документы проверяет администратор. Обычно это занимает 1–2 рабочих дня.';
+
+  @override
+  String get kycSubmitWizardSubmit => 'Отправить документы';
+
+  @override
+  String get kycSubmitWizardContinue => 'Продолжить';
+
+  @override
+  String kycSubmitWizardUploaded(String fileName) {
+    return 'Загружено: $fileName';
+  }
 }

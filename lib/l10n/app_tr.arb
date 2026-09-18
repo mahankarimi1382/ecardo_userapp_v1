@@ -2409,5 +2409,77 @@
   "kycFeaturePaymentLinks": "Ödeme bağlantıları",
   "kycFeatureTravel": "Seyahat rezervasyonu",
   "kycFeatureRemittance": "Uluslararası havale",
-  "kycFeatureEpay": "ePay ödemesi"
+  "kycFeatureEpay": "ePay ödemesi",
+  "kycRoadmapTitle": "Kimlik doğrulama yol haritası",
+  "kycRoadmapContinueForLevel": "Doğrulamaya devam et — seviye {level}",
+  "@kycRoadmapContinueForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycRoadmapPending": "Belgeleriniz inceleniyor. Bu genellikle 1–2 iş günü sürer.",
+  "kycRoadmapRejectedTitle": "Kimlik doğrulamanız reddedildi.",
+  "kycRoadmapRejectedAction": "Lütfen belgelerinizi yeniden gönderin.",
+  "kycRoadmapStatusCompleted": "Tamamlandı",
+  "kycRoadmapStatusCurrent": "Mevcut",
+  "kycRoadmapStatusAvailable": "Yükseltmeye hazır",
+  "kycRoadmapStatusLocked": "Kilitli",
+  "kycLimitsSectionTitle": "İşlem limitleri",
+  "kycLimitGroupCashin": "Para yatırma",
+  "kycLimitGroupCashout": "Nakde çevirme",
+  "kycLimitGroupExchange": "Döviz çevirme",
+  "kycLimitGroupTransfer": "Transfer",
+  "kycLimitGroupPayment": "Ödeme",
+  "kycLimitGroupGift": "Hediye",
+  "kycLimitPaycardoTopup": "PayCardo yükleme",
+  "kycLimitMeasureMin": "min",
+  "kycLimitMeasureMax": "maks",
+  "kycLimitMeasureDaily": "günlük",
+  "kycLimitMeasureMonthly": "aylık",
+  "kycDocSelfie": "Özçekim",
+  "kycDocGovtId": "Kimlik belgesi",
+  "kycDocPersonalInfo": "Kişisel bilgi",
+  "kycDocTradeLicense": "Ticari lisans",
+  "kycDocBusinessInfo": "İşletme bilgileri",
+  "kycDocCompanyDocs": "Şirket belgeleri",
+  "kycDocNationalCard": "Ulusal kimlik kartı",
+  "kycDocSourceOfFunds": "Kaynak kanıtı",
+  "kycDocVideoVerification": "Video doğrulama",
+  "kycDocSelfieHint": "İyi ışıkta, yüzü tamamen görünen net bir özçekim alın.",
+  "kycDocGovtIdHint": "Kimlik belgenizin ön ve arka yüzünün net fotoğrafı. Tüm bilgiler okunabilir olmalıdır.",
+  "kycDocPersonalInfoHint": "Adres, posta kodu ve telefon numarası dahil kişisel bilgiler.",
+  "kycDocTradeLicenseHint": "Geçerli bir ticari lisansın taranmış kopyası.",
+  "kycDocBusinessInfoHint": "İşletme adı, faaliyet türü ve adres dahil eksiksiz işletme bilgileri.",
+  "kycDocCompanyDocsHint": "Şirket tescil belgeleri, ana sözleşme ve kuruluş duyurusu.",
+  "kycDocNationalCardHint": "Ulusal kimlik kartınızın ön ve arka yüzünün net fotoğrafı. Tüm bilgiler okunabilir olmalıdır.",
+  "kycDocSourceOfFundsHint": "Kaynağınızı kanıtlayan bir belge (maaş bordrosu, banka ekstresi, işletme geliri…).",
+  "kycDocVideoVerificationHint": "Ekrandaki talimatları takip ederek yüzünüzün kısa bir videosunu kaydedin.",
+  "kycDocGenericHint": "Lütfen gerekli belgeyi yükleyin.",
+  "kycSubmitWizardTitleForLevel": "Kimlik doğrulama — seviye {level}",
+  "@kycSubmitWizardTitleForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycSubmitWizardInvalidLevel": "Geçersiz seviye",
+  "kycSubmitWizardRequiredDoc": "Gerekli belge",
+  "kycSubmitWizardTapToUpload": "Yüklemek için dokunun",
+  "kycSubmitWizardFileFormat": "Format: JPG, PNG, PDF — en fazla 5MB",
+  "kycSubmitWizardReviewTitle": "Gözden geçir ve gönder",
+  "kycSubmitWizardNotUploaded": "Yüklenmedi",
+  "kycSubmitWizardReviewNote": "Gönderimden sonra belgeleriniz bir yönetici tarafından incelenir. Bu genellikle 1–2 iş günü sürer.",
+  "kycSubmitWizardSubmit": "Belgeleri gönder",
+  "kycSubmitWizardContinue": "Devam",
+  "kycSubmitWizardUploaded": "Yüklendi: {fileName}",
+  "@kycSubmitWizardUploaded": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  }
 }

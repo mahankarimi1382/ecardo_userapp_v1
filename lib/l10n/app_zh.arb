@@ -2409,5 +2409,77 @@
   "kycFeaturePaymentLinks": "付款链接",
   "kycFeatureTravel": "旅行预订",
   "kycFeatureRemittance": "国际汇款",
-  "kycFeatureEpay": "电子支付 (ePay)"
+  "kycFeatureEpay": "电子支付 (ePay)",
+  "kycRoadmapTitle": "认证路线图",
+  "kycRoadmapContinueForLevel": "继续认证 — {level} 级",
+  "@kycRoadmapContinueForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycRoadmapPending": "您的文件正在审核中，通常需要 1–2 个工作日。",
+  "kycRoadmapRejectedTitle": "您的认证被拒绝了。",
+  "kycRoadmapRejectedAction": "请重新提交您的文件。",
+  "kycRoadmapStatusCompleted": "已完成",
+  "kycRoadmapStatusCurrent": "当前",
+  "kycRoadmapStatusAvailable": "可升级",
+  "kycRoadmapStatusLocked": "已锁定",
+  "kycLimitsSectionTitle": "交易限额",
+  "kycLimitGroupCashin": "入金",
+  "kycLimitGroupCashout": "变现",
+  "kycLimitGroupExchange": "兑换",
+  "kycLimitGroupTransfer": "转账",
+  "kycLimitGroupPayment": "支付",
+  "kycLimitGroupGift": "礼物",
+  "kycLimitPaycardoTopup": "PayCardo 充值",
+  "kycLimitMeasureMin": "最低",
+  "kycLimitMeasureMax": "最高",
+  "kycLimitMeasureDaily": "每天",
+  "kycLimitMeasureMonthly": "每月",
+  "kycDocSelfie": "自拍照",
+  "kycDocGovtId": "身份证件",
+  "kycDocPersonalInfo": "个人信息",
+  "kycDocTradeLicense": "营业执照",
+  "kycDocBusinessInfo": "企业信息",
+  "kycDocCompanyDocs": "公司文件",
+  "kycDocNationalCard": "国民身份证",
+  "kycDocSourceOfFunds": "资金来源证明",
+  "kycDocVideoVerification": "视频认证",
+  "kycDocSelfieHint": "拍摄一张光线良好、面部完全清晰可见的自拍照。",
+  "kycDocGovtIdHint": "身份证件正反面的清晰照片，所有信息必须清晰可读。",
+  "kycDocPersonalInfoHint": "个人信息，包括地址、邮政编码和电话号码。",
+  "kycDocTradeLicenseHint": "有效营业执照的扫描件。",
+  "kycDocBusinessInfoHint": "完整的企业信息，包括名称、业务类型和地址。",
+  "kycDocCompanyDocsHint": "公司注册文件、公司章程和设立公告。",
+  "kycDocNationalCardHint": "国民身份证正反面的清晰照片，所有信息必须清晰可读。",
+  "kycDocSourceOfFundsHint": "证明资金来源的文件（工资单、银行对账单、营业收入等）。",
+  "kycDocVideoVerificationHint": "按照屏幕提示录制一段面部短视频。",
+  "kycDocGenericHint": "请上传所需文件。",
+  "kycSubmitWizardTitleForLevel": "身份认证 — {level} 级",
+  "@kycSubmitWizardTitleForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycSubmitWizardInvalidLevel": "无效等级",
+  "kycSubmitWizardRequiredDoc": "所需文件",
+  "kycSubmitWizardTapToUpload": "点击上传",
+  "kycSubmitWizardFileFormat": "格式：JPG、PNG、PDF — 最大 5MB",
+  "kycSubmitWizardReviewTitle": "检查并提交",
+  "kycSubmitWizardNotUploaded": "未上传",
+  "kycSubmitWizardReviewNote": "提交后，管理员将审核您的文件。通常需要 1–2 个工作日。",
+  "kycSubmitWizardSubmit": "提交文件",
+  "kycSubmitWizardContinue": "继续",
+  "kycSubmitWizardUploaded": "已上传：{fileName}",
+  "@kycSubmitWizardUploaded": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  }
 }

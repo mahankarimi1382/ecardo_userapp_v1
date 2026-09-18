@@ -2409,5 +2409,77 @@
   "kycFeaturePaymentLinks": "Платёжные ссылки",
   "kycFeatureTravel": "Бронирование поездок",
   "kycFeatureRemittance": "Денежные переводы",
-  "kycFeatureEpay": "Электронная оплата (ePay)"
+  "kycFeatureEpay": "Электронная оплата (ePay)",
+  "kycRoadmapTitle": "Маршрут верификации",
+  "kycRoadmapContinueForLevel": "Продолжить верификацию — уровень {level}",
+  "@kycRoadmapContinueForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycRoadmapPending": "Ваши документы на рассмотрении. Обычно это занимает 1–2 рабочих дня.",
+  "kycRoadmapRejectedTitle": "Ваша верификация отклонена.",
+  "kycRoadmapRejectedAction": "Пожалуйста, отправьте документы снова.",
+  "kycRoadmapStatusCompleted": "Завершён",
+  "kycRoadmapStatusCurrent": "Текущий",
+  "kycRoadmapStatusAvailable": "Доступен для повышения",
+  "kycRoadmapStatusLocked": "Заблокирован",
+  "kycLimitsSectionTitle": "Лимиты транзакций",
+  "kycLimitGroupCashin": "Пополнение",
+  "kycLimitGroupCashout": "Обналичивание",
+  "kycLimitGroupExchange": "Обмен",
+  "kycLimitGroupTransfer": "Перевод",
+  "kycLimitGroupPayment": "Оплата",
+  "kycLimitGroupGift": "Подарки",
+  "kycLimitPaycardoTopup": "Пополнение PayCardo",
+  "kycLimitMeasureMin": "мин",
+  "kycLimitMeasureMax": "макс",
+  "kycLimitMeasureDaily": "в день",
+  "kycLimitMeasureMonthly": "в месяц",
+  "kycDocSelfie": "Селфи",
+  "kycDocGovtId": "Удостоверение личности",
+  "kycDocPersonalInfo": "Личная информация",
+  "kycDocTradeLicense": "Торговая лицензия",
+  "kycDocBusinessInfo": "Информация о бизнесе",
+  "kycDocCompanyDocs": "Документы компании",
+  "kycDocNationalCard": "Национальное удостоверение личности",
+  "kycDocSourceOfFunds": "Подтверждение источника средств",
+  "kycDocVideoVerification": "Видеоверификация",
+  "kycDocSelfieHint": "Сделайте чёткое селфи при хорошем освещении, лицо полностью видно.",
+  "kycDocGovtIdHint": "Чёткое фото удостоверения личности с обеих сторон. Все данные должны быть читаемы.",
+  "kycDocPersonalInfoHint": "Личная информация, включая адрес, почтовый индекс и номер телефона.",
+  "kycDocTradeLicenseHint": "Отсканированная копия действующей торговой лицензии.",
+  "kycDocBusinessInfoHint": "Полная информация о бизнесе, включая название, вид деятельности и адрес.",
+  "kycDocCompanyDocsHint": "Регистрационные документы компании, устав и уведомление о создании.",
+  "kycDocNationalCardHint": "Чёткое фото национального удостоверения с обеих сторон. Все данные должны быть читаемы.",
+  "kycDocSourceOfFundsHint": "Документ, подтверждающий источник средств (расчётный лист, банковская выписка, доход от бизнеса…).",
+  "kycDocVideoVerificationHint": "Запишите короткое видео своего лица, следуя инструкциям на экране.",
+  "kycDocGenericHint": "Пожалуйста, загрузите необходимый документ.",
+  "kycSubmitWizardTitleForLevel": "Верификация — уровень {level}",
+  "@kycSubmitWizardTitleForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycSubmitWizardInvalidLevel": "Недопустимый уровень",
+  "kycSubmitWizardRequiredDoc": "Необходимый документ",
+  "kycSubmitWizardTapToUpload": "Нажмите для загрузки",
+  "kycSubmitWizardFileFormat": "Формат: JPG, PNG, PDF — не более 5 МБ",
+  "kycSubmitWizardReviewTitle": "Проверка и отправка",
+  "kycSubmitWizardNotUploaded": "Не загружено",
+  "kycSubmitWizardReviewNote": "После отправки ваши документы проверяет администратор. Обычно это занимает 1–2 рабочих дня.",
+  "kycSubmitWizardSubmit": "Отправить документы",
+  "kycSubmitWizardContinue": "Продолжить",
+  "kycSubmitWizardUploaded": "Загружено: {fileName}",
+  "@kycSubmitWizardUploaded": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  }
 }

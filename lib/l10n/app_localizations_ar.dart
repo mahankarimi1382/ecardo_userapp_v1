@@ -7546,4 +7546,175 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get kycFeatureEpay => 'الدفع الإلكتروني (ePay)';
+
+  @override
+  String get kycRoadmapTitle => 'خارطة التحقق من الهوية';
+
+  @override
+  String kycRoadmapContinueForLevel(int level) {
+    return 'متابعة التحقق — المستوى $level';
+  }
+
+  @override
+  String get kycRoadmapPending =>
+      'مستنداتك قيد المراجعة. يستغرق ذلك عادةً من 1 إلى 2 يوم عمل.';
+
+  @override
+  String get kycRoadmapRejectedTitle => 'تم رفض التحقق من هويتك.';
+
+  @override
+  String get kycRoadmapRejectedAction => 'يرجى إعادة إرسال مستنداتك.';
+
+  @override
+  String get kycRoadmapStatusCompleted => 'مكتمل';
+
+  @override
+  String get kycRoadmapStatusCurrent => 'الحالي';
+
+  @override
+  String get kycRoadmapStatusAvailable => 'جاهز للترقية';
+
+  @override
+  String get kycRoadmapStatusLocked => 'مقفل';
+
+  @override
+  String get kycLimitsSectionTitle => 'حدود المعاملات';
+
+  @override
+  String get kycLimitGroupCashin => 'الإيداع';
+
+  @override
+  String get kycLimitGroupCashout => 'الصرف النقدي';
+
+  @override
+  String get kycLimitGroupExchange => 'الصرافة';
+
+  @override
+  String get kycLimitGroupTransfer => 'التحويل';
+
+  @override
+  String get kycLimitGroupPayment => 'الدفع';
+
+  @override
+  String get kycLimitGroupGift => 'الهدايا';
+
+  @override
+  String get kycLimitPaycardoTopup => 'شحن PayCardo';
+
+  @override
+  String get kycLimitMeasureMin => 'حد أدنى';
+
+  @override
+  String get kycLimitMeasureMax => 'حد أقصى';
+
+  @override
+  String get kycLimitMeasureDaily => 'يومياً';
+
+  @override
+  String get kycLimitMeasureMonthly => 'شهرياً';
+
+  @override
+  String get kycDocSelfie => 'صورة سيلفي';
+
+  @override
+  String get kycDocGovtId => 'وثيقة هوية';
+
+  @override
+  String get kycDocPersonalInfo => 'المعلومات الشخصية';
+
+  @override
+  String get kycDocTradeLicense => 'رخصة تجارية';
+
+  @override
+  String get kycDocBusinessInfo => 'معلومات العمل التجاري';
+
+  @override
+  String get kycDocCompanyDocs => 'مستندات الشركة';
+
+  @override
+  String get kycDocNationalCard => 'بطاقة الهوية الوطنية';
+
+  @override
+  String get kycDocSourceOfFunds => 'إثبات مصدر الأموال';
+
+  @override
+  String get kycDocVideoVerification => 'التحقق بالفيديو';
+
+  @override
+  String get kycDocSelfieHint =>
+      'التقط صورة سيلفي واضحة بإضاءة جيدة ووجه مرئي بالكامل.';
+
+  @override
+  String get kycDocGovtIdHint =>
+      'صورة واضحة للوجه والخلف لوثيقة الهوية. يجب أن تكون جميع التفاصيل مقروءة.';
+
+  @override
+  String get kycDocPersonalInfoHint =>
+      'المعلومات الشخصية بما في ذلك العنوان والرمز البريدي ورقم الهاتف.';
+
+  @override
+  String get kycDocTradeLicenseHint =>
+      'نسخة ممسوحة ضوئياً من رخصة تجارية سارية.';
+
+  @override
+  String get kycDocBusinessInfoHint =>
+      'معلومات كاملة عن العمل التجاري بما في ذلك الاسم ونوع النشاط والعنوان.';
+
+  @override
+  String get kycDocCompanyDocsHint =>
+      'مستندات تسجيل الشركة والنظام الأساسي وإشعار التأسيس.';
+
+  @override
+  String get kycDocNationalCardHint =>
+      'صورة واضحة للوجهين من بطاقة الهوية الوطنية. يجب أن تكون جميع التفاصيل مقروءة.';
+
+  @override
+  String get kycDocSourceOfFundsHint =>
+      'مستند يثبت مصدر أموالك (قسيمة راتب، كشف حساب بنكي، دخل تجاري…).';
+
+  @override
+  String get kycDocVideoVerificationHint =>
+      'سجّل مقطع فيديو قصيراً لوجهك وفق التعليمات الظاهرة على الشاشة.';
+
+  @override
+  String get kycDocGenericHint => 'يرجى رفع المستند المطلوب.';
+
+  @override
+  String kycSubmitWizardTitleForLevel(int level) {
+    return 'التحقق من الهوية — المستوى $level';
+  }
+
+  @override
+  String get kycSubmitWizardInvalidLevel => 'مستوى غير صالح';
+
+  @override
+  String get kycSubmitWizardRequiredDoc => 'المستند المطلوب';
+
+  @override
+  String get kycSubmitWizardTapToUpload => 'اضغط للرفع';
+
+  @override
+  String get kycSubmitWizardFileFormat =>
+      'الصيغة: JPG، PNG، PDF — بحد أقصى 5 ميغابايت';
+
+  @override
+  String get kycSubmitWizardReviewTitle => 'المراجعة والإرسال';
+
+  @override
+  String get kycSubmitWizardNotUploaded => 'لم يُرفع';
+
+  @override
+  String get kycSubmitWizardReviewNote =>
+      'بعد الإرسال تتم مراجعة مستنداتك من قبل المشرف. يستغرق ذلك عادةً من 1 إلى 2 يوم عمل.';
+
+  @override
+  String get kycSubmitWizardSubmit => 'إرسال المستندات';
+
+  @override
+  String get kycSubmitWizardContinue => 'متابعة';
+
+  @override
+  String kycSubmitWizardUploaded(String fileName) {
+    return 'تم الرفع: $fileName';
+  }
 }

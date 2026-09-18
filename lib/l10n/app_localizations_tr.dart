@@ -7591,4 +7591,176 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get kycFeatureEpay => 'ePay ödemesi';
+
+  @override
+  String get kycRoadmapTitle => 'Kimlik doğrulama yol haritası';
+
+  @override
+  String kycRoadmapContinueForLevel(int level) {
+    return 'Doğrulamaya devam et — seviye $level';
+  }
+
+  @override
+  String get kycRoadmapPending =>
+      'Belgeleriniz inceleniyor. Bu genellikle 1–2 iş günü sürer.';
+
+  @override
+  String get kycRoadmapRejectedTitle => 'Kimlik doğrulamanız reddedildi.';
+
+  @override
+  String get kycRoadmapRejectedAction =>
+      'Lütfen belgelerinizi yeniden gönderin.';
+
+  @override
+  String get kycRoadmapStatusCompleted => 'Tamamlandı';
+
+  @override
+  String get kycRoadmapStatusCurrent => 'Mevcut';
+
+  @override
+  String get kycRoadmapStatusAvailable => 'Yükseltmeye hazır';
+
+  @override
+  String get kycRoadmapStatusLocked => 'Kilitli';
+
+  @override
+  String get kycLimitsSectionTitle => 'İşlem limitleri';
+
+  @override
+  String get kycLimitGroupCashin => 'Para yatırma';
+
+  @override
+  String get kycLimitGroupCashout => 'Nakde çevirme';
+
+  @override
+  String get kycLimitGroupExchange => 'Döviz çevirme';
+
+  @override
+  String get kycLimitGroupTransfer => 'Transfer';
+
+  @override
+  String get kycLimitGroupPayment => 'Ödeme';
+
+  @override
+  String get kycLimitGroupGift => 'Hediye';
+
+  @override
+  String get kycLimitPaycardoTopup => 'PayCardo yükleme';
+
+  @override
+  String get kycLimitMeasureMin => 'min';
+
+  @override
+  String get kycLimitMeasureMax => 'maks';
+
+  @override
+  String get kycLimitMeasureDaily => 'günlük';
+
+  @override
+  String get kycLimitMeasureMonthly => 'aylık';
+
+  @override
+  String get kycDocSelfie => 'Özçekim';
+
+  @override
+  String get kycDocGovtId => 'Kimlik belgesi';
+
+  @override
+  String get kycDocPersonalInfo => 'Kişisel bilgi';
+
+  @override
+  String get kycDocTradeLicense => 'Ticari lisans';
+
+  @override
+  String get kycDocBusinessInfo => 'İşletme bilgileri';
+
+  @override
+  String get kycDocCompanyDocs => 'Şirket belgeleri';
+
+  @override
+  String get kycDocNationalCard => 'Ulusal kimlik kartı';
+
+  @override
+  String get kycDocSourceOfFunds => 'Kaynak kanıtı';
+
+  @override
+  String get kycDocVideoVerification => 'Video doğrulama';
+
+  @override
+  String get kycDocSelfieHint =>
+      'İyi ışıkta, yüzü tamamen görünen net bir özçekim alın.';
+
+  @override
+  String get kycDocGovtIdHint =>
+      'Kimlik belgenizin ön ve arka yüzünün net fotoğrafı. Tüm bilgiler okunabilir olmalıdır.';
+
+  @override
+  String get kycDocPersonalInfoHint =>
+      'Adres, posta kodu ve telefon numarası dahil kişisel bilgiler.';
+
+  @override
+  String get kycDocTradeLicenseHint =>
+      'Geçerli bir ticari lisansın taranmış kopyası.';
+
+  @override
+  String get kycDocBusinessInfoHint =>
+      'İşletme adı, faaliyet türü ve adres dahil eksiksiz işletme bilgileri.';
+
+  @override
+  String get kycDocCompanyDocsHint =>
+      'Şirket tescil belgeleri, ana sözleşme ve kuruluş duyurusu.';
+
+  @override
+  String get kycDocNationalCardHint =>
+      'Ulusal kimlik kartınızın ön ve arka yüzünün net fotoğrafı. Tüm bilgiler okunabilir olmalıdır.';
+
+  @override
+  String get kycDocSourceOfFundsHint =>
+      'Kaynağınızı kanıtlayan bir belge (maaş bordrosu, banka ekstresi, işletme geliri…).';
+
+  @override
+  String get kycDocVideoVerificationHint =>
+      'Ekrandaki talimatları takip ederek yüzünüzün kısa bir videosunu kaydedin.';
+
+  @override
+  String get kycDocGenericHint => 'Lütfen gerekli belgeyi yükleyin.';
+
+  @override
+  String kycSubmitWizardTitleForLevel(int level) {
+    return 'Kimlik doğrulama — seviye $level';
+  }
+
+  @override
+  String get kycSubmitWizardInvalidLevel => 'Geçersiz seviye';
+
+  @override
+  String get kycSubmitWizardRequiredDoc => 'Gerekli belge';
+
+  @override
+  String get kycSubmitWizardTapToUpload => 'Yüklemek için dokunun';
+
+  @override
+  String get kycSubmitWizardFileFormat =>
+      'Format: JPG, PNG, PDF — en fazla 5MB';
+
+  @override
+  String get kycSubmitWizardReviewTitle => 'Gözden geçir ve gönder';
+
+  @override
+  String get kycSubmitWizardNotUploaded => 'Yüklenmedi';
+
+  @override
+  String get kycSubmitWizardReviewNote =>
+      'Gönderimden sonra belgeleriniz bir yönetici tarafından incelenir. Bu genellikle 1–2 iş günü sürer.';
+
+  @override
+  String get kycSubmitWizardSubmit => 'Belgeleri gönder';
+
+  @override
+  String get kycSubmitWizardContinue => 'Devam';
+
+  @override
+  String kycSubmitWizardUploaded(String fileName) {
+    return 'Yüklendi: $fileName';
+  }
 }

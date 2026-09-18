@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_labels.dart';
 
 /// KycLevelRoadmap — نمایش بصری سطوح KYC به‌صورت کارت‌های افقی
 ///
@@ -23,6 +25,7 @@ class KycLevelRoadmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<KycLevelController>();
+    final localization = AppLocalizations.of(context);
 
     return Obx(() {
       if (controller.isLoading.value && controller.levels.isEmpty) {
@@ -40,7 +43,7 @@ class KycLevelRoadmap extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: Text(
-              'مسیر احراز هویت',
+              localization?.kycRoadmapTitle ?? 'Verification roadmap',
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w800,
@@ -75,7 +78,10 @@ class KycLevelRoadmap extends StatelessWidget {
                     elevation: 0,
                   ),
                   child: Text(
-                    'ادامه احراز هویت — سطح ${controller.nextLevel!.level}',
+                    localization?.kycRoadmapContinueForLevel(
+                          controller.nextLevel!.level,
+                        ) ??
+                        'Continue verification — level ${controller.nextLevel!.level}',
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w700,
@@ -102,7 +108,8 @@ class KycLevelRoadmap extends StatelessWidget {
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
-                      'مدارک شما در حال بررسی است. این فرآیند معمولاً ۱-۲ روز کاری طول می‌کشد.',
+                      localization?.kycRoadmapPending ??
+                          'Your documents are under review. This usually takes 1–2 business days.',
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: AppColors.lightTextPrimary,
@@ -130,7 +137,7 @@ class KycLevelRoadmap extends StatelessWidget {
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
-                      'احراز هویت شما رد شده است. ${controller.status.value?.rejectionReason ?? "لطفاً مدارک را مجدداً ارسال کنید."}',
+                      _rejectedText(localization, controller),
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: AppColors.lightTextPrimary,
@@ -145,6 +152,17 @@ class KycLevelRoadmap extends StatelessWidget {
       );
     });
   }
+
+  /// Rejection message: server reason when present, localized guidance
+  /// otherwise — both halves localized.
+  String _rejectedText(AppLocalizations? localization,
+      KycLevelController controller) {
+    final title = localization?.kycRoadmapRejectedTitle ??
+        'Your verification was rejected.';
+    final reason = controller.status.value?.rejectionReason;
+    if (reason != null && reason.isNotEmpty) return '$title $reason';
+    return '$title ${localization?.kycRoadmapRejectedAction ?? "Please resubmit your documents."}';
+  }
 }
 
 /// کارت یک سطح KYC
@@ -156,6 +174,7 @@ class _LevelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     final color = Color(level.colorValue);
     final statusColor = _statusColor(level, color);
     final statusIcon = _statusIcon(level);
@@ -216,7 +235,7 @@ class _LevelCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          _statusLabel(level),
+                          _statusLabel(level, localization),
                           style: TextStyle(
                             fontSize: 9.sp,
                             fontWeight: FontWeight.w700,
@@ -266,7 +285,10 @@ class _LevelCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            _docLabel(doc),
+                            // v1.1 (KYC-DOC): shared localized helper —
+                            // unknown per-country keys render readably,
+                            // never crash.
+                            KycDocLabels.label(localization, doc),
                             style: TextStyle(
                               fontSize: 9.sp,
                               color: AppColors.lightTextSecondary,
@@ -275,6 +297,15 @@ class _LevelCard extends StatelessWidget {
                         );
                       }).toList(),
                     ),
+                  ],
+                  // v1.1 (KYC-LIM): per-level transaction limits — rendered
+                  // from the server's limits map for the next actionable
+                  // level. No local capping logic: enforcement stays
+                  // server-side and its errors flow through the unified
+                  // KYC error contract.
+                  if (level.isAvailable && level.limits.isNotEmpty) ...[
+                    SizedBox(height: 8.h),
+                    _LimitsSection(localization: localization, level: level),
                   ],
                 ],
               ),
@@ -305,29 +336,81 @@ class _LevelCard extends StatelessWidget {
     return Icons.lock;
   }
 
-  String _statusLabel(KycLevel level) {
-    if (level.isCompleted) return 'تکمیل شده';
-    if (level.isCurrent) return 'فعلی';
-    if (level.isAvailable) return 'آماده ارتقا';
-    return 'قفل';
-  }
-
-  String _docLabel(String doc) {
-    switch (doc) {
-      case 'selfie':
-        return 'سلفی';
-      case 'govt_id':
-        return 'مدرک شناسایی';
-      case 'personal_info':
-        return 'اطلاعات شخصی';
-      case 'trade_license':
-        return 'جواز تجارت';
-      case 'business_info':
-        return 'اطلاعات کسب‌وکار';
-      case 'company_docs':
-        return 'مدارک شرکت';
-      default:
-        return doc;
+  String _statusLabel(KycLevel level, AppLocalizations? localization) {
+    if (level.isCompleted) {
+      return localization?.kycRoadmapStatusCompleted ?? 'Completed';
     }
+    if (level.isCurrent) {
+      return localization?.kycRoadmapStatusCurrent ?? 'Current';
+    }
+    if (level.isAvailable) {
+      return localization?.kycRoadmapStatusAvailable ?? 'Ready to upgrade';
+    }
+    return localization?.kycRoadmapStatusLocked ?? 'Locked';
+  }
+}
+
+/// v1.1 (KYC-LIM): per-level limits section — generalizes the classic
+/// min/max display pattern to every limit key the server defines.
+class _LimitsSection extends StatelessWidget {
+  final AppLocalizations? localization;
+  final KycLevel level;
+
+  const _LimitsSection({required this.localization, required this.level});
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = KycLimitLabels.rows(localization, level.limits);
+    if (rows.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(8.w),
+      decoration: BoxDecoration(
+        color: AppColors.lightBackground,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localization?.kycLimitsSectionTitle ?? 'Transaction limits',
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.lightTextSecondary,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Wrap(
+            spacing: 4.w,
+            runSpacing: 4.h,
+            children: rows
+                .map(
+                  (row) => Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColors.lightBorder),
+                    ),
+                    child: Text(
+                      row.measureLabel == null
+                          ? '${row.groupLabel}: ${row.value}'
+                          : '${row.groupLabel} — ${row.measureLabel}: ${row.value}',
+                      style: TextStyle(
+                        fontSize: 9.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.lightTextPrimary,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -2410,5 +2410,77 @@
   "kycFeaturePaymentLinks": "لینک‌های پرداخت",
   "kycFeatureTravel": "رزرو سفر",
   "kycFeatureRemittance": "حواله بین‌المللی",
-  "kycFeatureEpay": "پرداخت الکترونیک (ePay)"
+  "kycFeatureEpay": "پرداخت الکترونیک (ePay)",
+  "kycRoadmapTitle": "مسیر احراز هویت",
+  "kycRoadmapContinueForLevel": "ادامه احراز هویت — سطح {level}",
+  "@kycRoadmapContinueForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycRoadmapPending": "مدارک شما در حال بررسی است. این فرآیند معمولاً ۱-۲ روز کاری طول می‌کشد.",
+  "kycRoadmapRejectedTitle": "احراز هویت شما رد شده است.",
+  "kycRoadmapRejectedAction": "لطفاً مدارک را مجدداً ارسال کنید.",
+  "kycRoadmapStatusCompleted": "تکمیل شده",
+  "kycRoadmapStatusCurrent": "فعلی",
+  "kycRoadmapStatusAvailable": "آماده ارتقا",
+  "kycRoadmapStatusLocked": "قفل",
+  "kycLimitsSectionTitle": "سقف‌های تراکنش",
+  "kycLimitGroupCashin": "واریز وجه",
+  "kycLimitGroupCashout": "دریافت نقدی",
+  "kycLimitGroupExchange": "تبدیل ارز",
+  "kycLimitGroupTransfer": "انتقال وجه",
+  "kycLimitGroupPayment": "پرداخت",
+  "kycLimitGroupGift": "هدیه",
+  "kycLimitPaycardoTopup": "شارژ PayCardo",
+  "kycLimitMeasureMin": "حداقل",
+  "kycLimitMeasureMax": "حداکثر",
+  "kycLimitMeasureDaily": "در روز",
+  "kycLimitMeasureMonthly": "در ماه",
+  "kycDocSelfie": "سلفی چهره",
+  "kycDocGovtId": "مدرک شناسایی",
+  "kycDocPersonalInfo": "اطلاعات شخصی",
+  "kycDocTradeLicense": "جواز تجارت",
+  "kycDocBusinessInfo": "اطلاعات کسب‌وکار",
+  "kycDocCompanyDocs": "مدارک شرکت",
+  "kycDocNationalCard": "کارت ملی",
+  "kycDocSourceOfFunds": "اثبات منبع وجوه",
+  "kycDocVideoVerification": "احراز هویت ویدیویی",
+  "kycDocSelfieHint": "یک سلفی واضح از چهره خود بگیرید. نور کافی و صورت کاملاً مشخص باشد.",
+  "kycDocGovtIdHint": "عکس واضح از روی و پشت مدرک شناسایی. تمام اطلاعات خوانا باشد.",
+  "kycDocPersonalInfoHint": "اطلاعات شخصی شامل آدرس، کد پستی و شماره تماس.",
+  "kycDocTradeLicenseHint": "نسخه اسکن شده جواز تجارت معتبر.",
+  "kycDocBusinessInfoHint": "اطلاعات کامل کسب‌وکار شامل نام، نوع فعالیت و آدرس.",
+  "kycDocCompanyDocsHint": "مدارک ثبت شرکت، اساسنامه و آگهی تأسیس.",
+  "kycDocNationalCardHint": "عکس واضح از روی و پشت کارت ملی. تمام اطلاعات باید خوانا باشد.",
+  "kycDocSourceOfFundsHint": "سندی که منبع وجوه شما را اثبات کند (فیش حقوقی، گردش حساب بانکی، درآمد کسب‌وکار و…).",
+  "kycDocVideoVerificationHint": "یک ویدیوی کوتاه از چهره خود طبق راهنمای صفحه ضبط کنید.",
+  "kycDocGenericHint": "لطفاً مدرک مورد نیاز را آپلود کنید.",
+  "kycSubmitWizardTitleForLevel": "احراز هویت — سطح {level}",
+  "@kycSubmitWizardTitleForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycSubmitWizardInvalidLevel": "سطح نامعتبر",
+  "kycSubmitWizardRequiredDoc": "مدرک مورد نیاز",
+  "kycSubmitWizardTapToUpload": "برای آپلود لمس کنید",
+  "kycSubmitWizardFileFormat": "فرمت: JPG، PNG، PDF — حداکثر ۵ مگابایت",
+  "kycSubmitWizardReviewTitle": "بررسی و ارسال",
+  "kycSubmitWizardNotUploaded": "آپلود نشده",
+  "kycSubmitWizardReviewNote": "پس از ارسال، مدارک توسط ادمین بررسی می‌شود. این فرآیند معمولاً ۱-۲ روز کاری طول می‌کشد.",
+  "kycSubmitWizardSubmit": "ارسال مدارک",
+  "kycSubmitWizardContinue": "ادامه",
+  "kycSubmitWizardUploaded": "آپلود شد: {fileName}",
+  "@kycSubmitWizardUploaded": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -2533,5 +2533,77 @@
   "kycFeaturePaymentLinks": "Payment links",
   "kycFeatureTravel": "Travel booking",
   "kycFeatureRemittance": "Remittance",
-  "kycFeatureEpay": "ePay"
+  "kycFeatureEpay": "ePay",
+  "kycRoadmapTitle": "Verification roadmap",
+  "kycRoadmapContinueForLevel": "Continue verification — level {level}",
+  "@kycRoadmapContinueForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycRoadmapPending": "Your documents are under review. This usually takes 1–2 business days.",
+  "kycRoadmapRejectedTitle": "Your verification was rejected.",
+  "kycRoadmapRejectedAction": "Please resubmit your documents.",
+  "kycRoadmapStatusCompleted": "Completed",
+  "kycRoadmapStatusCurrent": "Current",
+  "kycRoadmapStatusAvailable": "Ready to upgrade",
+  "kycRoadmapStatusLocked": "Locked",
+  "kycLimitsSectionTitle": "Transaction limits",
+  "kycLimitGroupCashin": "Cash-in",
+  "kycLimitGroupCashout": "Cash-out",
+  "kycLimitGroupExchange": "Exchange",
+  "kycLimitGroupTransfer": "Transfer",
+  "kycLimitGroupPayment": "Payment",
+  "kycLimitGroupGift": "Gift",
+  "kycLimitPaycardoTopup": "PayCardo top-up",
+  "kycLimitMeasureMin": "min",
+  "kycLimitMeasureMax": "max",
+  "kycLimitMeasureDaily": "per day",
+  "kycLimitMeasureMonthly": "per month",
+  "kycDocSelfie": "Selfie",
+  "kycDocGovtId": "ID document",
+  "kycDocPersonalInfo": "Personal information",
+  "kycDocTradeLicense": "Trade license",
+  "kycDocBusinessInfo": "Business information",
+  "kycDocCompanyDocs": "Company documents",
+  "kycDocNationalCard": "National ID card",
+  "kycDocSourceOfFunds": "Proof of source of funds",
+  "kycDocVideoVerification": "Video verification",
+  "kycDocSelfieHint": "Take a clear selfie with good lighting and a fully visible face.",
+  "kycDocGovtIdHint": "A clear photo of the front and back of your ID document. All details must be readable.",
+  "kycDocPersonalInfoHint": "Personal information including address, postal code and phone number.",
+  "kycDocTradeLicenseHint": "A scanned copy of a valid trade license.",
+  "kycDocBusinessInfoHint": "Complete business information including name, activity type and address.",
+  "kycDocCompanyDocsHint": "Company registration documents, articles of association and incorporation notice.",
+  "kycDocNationalCardHint": "A clear photo of both sides of your national ID card. All details must be readable.",
+  "kycDocSourceOfFundsHint": "A document proving the source of your funds (payslip, bank statement, business income…).",
+  "kycDocVideoVerificationHint": "Record a short video of your face following the on-screen instructions.",
+  "kycDocGenericHint": "Please upload the required document.",
+  "kycSubmitWizardTitleForLevel": "Verification — level {level}",
+  "@kycSubmitWizardTitleForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycSubmitWizardInvalidLevel": "Invalid level",
+  "kycSubmitWizardRequiredDoc": "Required document",
+  "kycSubmitWizardTapToUpload": "Tap to upload",
+  "kycSubmitWizardFileFormat": "Format: JPG, PNG, PDF — max 5MB",
+  "kycSubmitWizardReviewTitle": "Review & submit",
+  "kycSubmitWizardNotUploaded": "Not uploaded",
+  "kycSubmitWizardReviewNote": "After submission your documents are reviewed by an admin. This usually takes 1–2 business days.",
+  "kycSubmitWizardSubmit": "Submit documents",
+  "kycSubmitWizardContinue": "Continue",
+  "kycSubmitWizardUploaded": "Uploaded: {fileName}",
+  "@kycSubmitWizardUploaded": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  }
 }

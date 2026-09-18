@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_labels.dart';
 
 /// KycSubmitWizard — جادوگر مرحله‌به‌مرحله ارسال مدارک KYC
 ///
@@ -33,6 +34,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.lightSurface,
       appBar: AppBar(
@@ -44,7 +46,8 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'احراز هویت — سطح ${widget.targetLevel}',
+          localization?.kycSubmitWizardTitleForLevel(widget.targetLevel) ??
+              'Verification — level ${widget.targetLevel}',
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
         ),
       ),
@@ -59,7 +62,10 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             .firstOrNull;
 
         if (targetLevel == null) {
-          return Center(child: Text('سطح نامعتبر', style: TextStyle(color: AppColors.lightTextSecondary)));
+          return Center(child: Text(
+            localization?.kycSubmitWizardInvalidLevel ?? 'Invalid level',
+            style: TextStyle(color: AppColors.lightTextSecondary),
+          ));
         }
 
         final docs = targetLevel.requiredDocs;
@@ -99,13 +105,20 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   }
 
   Widget _buildDocUploadStep(String docKey) {
-    final docLabel = _docLabel(docKey);
+    final localization = AppLocalizations.of(Get.context!);
+    // v1.1 (KYC-DOC): shared localized labels — unknown per-country keys
+    // (e.g. national_card for IR users) render with a readable generic
+    // label and never crash.
+    final docLabel = KycDocLabels.label(localization, docKey);
     final isUploaded = _documents.containsKey(docKey);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('مدرک مورد نیاز', style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextSecondary)),
+        Text(
+          localization?.kycSubmitWizardRequiredDoc ?? 'Required document',
+          style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextSecondary),
+        ),
         SizedBox(height: 8.h),
         Text(docLabel, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
         SizedBox(height: 24.h),
@@ -124,10 +137,23 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
               children: [
                 Icon(isUploaded ? Icons.check_circle : Icons.upload_file, size: 48.sp, color: isUploaded ? AppColors.success : AppColors.lightPrimary),
                 SizedBox(height: 8.h),
-                Text(isUploaded ? 'آپلود شد: ${_documents[docKey]!.split('/').last}' : 'برای آپلود لمس کنید', style: TextStyle(fontSize: 14.sp, color: isUploaded ? AppColors.success : AppColors.lightTextSecondary)),
+                Text(
+                  isUploaded
+                      ? (localization?.kycSubmitWizardUploaded(
+                            _documents[docKey]!.split('/').last,
+                          ) ??
+                          'Uploaded: ${_documents[docKey]!.split('/').last}')
+                      : (localization?.kycSubmitWizardTapToUpload ??
+                          'Tap to upload'),
+                  style: TextStyle(fontSize: 14.sp, color: isUploaded ? AppColors.success : AppColors.lightTextSecondary),
+                ),
                 if (!isUploaded) ...[
                   SizedBox(height: 4.h),
-                  Text('فرمت: JPG, PNG, PDF — حداکثر ۵MB', style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextHint)),
+                  Text(
+                    localization?.kycSubmitWizardFileFormat ??
+                        'Format: JPG, PNG, PDF — max 5MB',
+                    style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextHint),
+                  ),
                 ],
               ],
             ),
@@ -142,7 +168,10 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             children: [
               Icon(Icons.info_outline, color: AppColors.info, size: 18.sp),
               SizedBox(width: 8.w),
-              Expanded(child: Text(_docInstructions(docKey), style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary))),
+              Expanded(child: Text(
+                KycDocLabels.instruction(localization, docKey),
+                style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary),
+              )),
             ],
           ),
         ),
@@ -151,12 +180,16 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   }
 
   Widget _buildReviewStep(KycLevel level, List<String> docs) {
+    final localization = AppLocalizations.of(Get.context!);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('بررسی و ارسال', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+        Text(
+          localization?.kycSubmitWizardReviewTitle ?? 'Review & submit',
+          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
+        ),
         SizedBox(height: 16.h),
-        ...docs.map((doc) => _ReviewItem(label: _docLabel(doc), fileName: _documents[doc]?.split('/').last ?? 'آپلود نشده', isUploaded: _documents.containsKey(doc))),
+        ...docs.map((doc) => _ReviewItem(label: KycDocLabels.label(localization, doc), fileName: _documents[doc]?.split('/').last ?? localization?.kycSubmitWizardNotUploaded ?? 'Not uploaded', isUploaded: _documents.containsKey(doc))),
         SizedBox(height: 24.h),
         Container(
           padding: EdgeInsets.all(12.w),
@@ -165,7 +198,11 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             children: [
               Icon(Icons.warning_amber, color: AppColors.warning, size: 18.sp),
               SizedBox(width: 8.w),
-              Expanded(child: Text('پس از ارسال، مدارک توسط ادمین بررسی می‌شود. این فرآیند معمولاً ۱-۲ روز کاری طول می‌کشد.', style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary))),
+              Expanded(child: Text(
+                localization?.kycSubmitWizardReviewNote ??
+                    'After submission your documents are reviewed by an admin. This usually takes 1–2 business days.',
+                style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary),
+              )),
             ],
           ),
         ),
@@ -174,6 +211,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   }
 
   Widget _buildBottomButton(int totalSteps) {
+    final localization = AppLocalizations.of(Get.context!);
     final isLastStep = _currentStep >= totalSteps;
     final currentDoc = isLastStep ? null : controller.levels.where((l) => l.level == widget.targetLevel).first.requiredDocs[_currentStep];
     final canProceed = isLastStep || (currentDoc != null && _documents.containsKey(currentDoc));
@@ -190,7 +228,12 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary, foregroundColor: AppColors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), elevation: 0),
             child: Obx(() => controller.isSubmitting.value
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                : Text(isLastStep ? 'ارسال مدارک' : 'ادامه', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700))),
+                : Text(
+                    isLastStep
+                        ? (localization?.kycSubmitWizardSubmit ?? 'Submit documents')
+                        : (localization?.kycSubmitWizardContinue ?? 'Continue'),
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
+                  )),
           ),
         ),
       ),
@@ -231,26 +274,6 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
       Get.offAllNamed(BaseRoute.navigation);
     }
   }
-
-  String _docLabel(String doc) => switch (doc) {
-    'selfie' => 'سلفی چهره',
-    'govt_id' => 'مدرک شناسایی (کارت ملی/شناسنامه/پاسپورت)',
-    'personal_info' => 'اطلاعات شخصی',
-    'trade_license' => 'جواز تجارت',
-    'business_info' => 'اطلاعات کسب‌وکار',
-    'company_docs' => 'مدارک شرکت',
-    _ => doc,
-  };
-
-  String _docInstructions(String doc) => switch (doc) {
-    'selfie' => 'یک سلفی واضح از چهره خود بگیرید. نور کافی و صورت کاملاً مشخص باشد.',
-    'govt_id' => 'عکس واضح از روی و پشت مدرک شناسایی. تمام اطلاعات خوانا باشد.',
-    'personal_info' => 'اطلاعات شخصی شامل آدرس، کد پستی و شماره تماس.',
-    'trade_license' => 'نسخه اسکن شده جواز تجارت معتبر.',
-    'business_info' => 'اطلاعات کامل کسب‌وکار شامل نام، نوع فعالیت و آدرس.',
-    'company_docs' => 'مدارک ثبت شرکت، اساسنامه و آگهی تأسیس.',
-    _ => 'مدرک مورد نیاز را آپلود کنید.',
-  };
 }
 
 class _StepCircle extends StatelessWidget {

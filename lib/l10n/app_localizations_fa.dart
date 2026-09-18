@@ -7604,4 +7604,173 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get kycFeatureEpay => 'پرداخت الکترونیک (ePay)';
+
+  @override
+  String get kycRoadmapTitle => 'مسیر احراز هویت';
+
+  @override
+  String kycRoadmapContinueForLevel(int level) {
+    return 'ادامه احراز هویت — سطح $level';
+  }
+
+  @override
+  String get kycRoadmapPending =>
+      'مدارک شما در حال بررسی است. این فرآیند معمولاً ۱-۲ روز کاری طول می‌کشد.';
+
+  @override
+  String get kycRoadmapRejectedTitle => 'احراز هویت شما رد شده است.';
+
+  @override
+  String get kycRoadmapRejectedAction => 'لطفاً مدارک را مجدداً ارسال کنید.';
+
+  @override
+  String get kycRoadmapStatusCompleted => 'تکمیل شده';
+
+  @override
+  String get kycRoadmapStatusCurrent => 'فعلی';
+
+  @override
+  String get kycRoadmapStatusAvailable => 'آماده ارتقا';
+
+  @override
+  String get kycRoadmapStatusLocked => 'قفل';
+
+  @override
+  String get kycLimitsSectionTitle => 'سقف‌های تراکنش';
+
+  @override
+  String get kycLimitGroupCashin => 'واریز وجه';
+
+  @override
+  String get kycLimitGroupCashout => 'دریافت نقدی';
+
+  @override
+  String get kycLimitGroupExchange => 'تبدیل ارز';
+
+  @override
+  String get kycLimitGroupTransfer => 'انتقال وجه';
+
+  @override
+  String get kycLimitGroupPayment => 'پرداخت';
+
+  @override
+  String get kycLimitGroupGift => 'هدیه';
+
+  @override
+  String get kycLimitPaycardoTopup => 'شارژ PayCardo';
+
+  @override
+  String get kycLimitMeasureMin => 'حداقل';
+
+  @override
+  String get kycLimitMeasureMax => 'حداکثر';
+
+  @override
+  String get kycLimitMeasureDaily => 'در روز';
+
+  @override
+  String get kycLimitMeasureMonthly => 'در ماه';
+
+  @override
+  String get kycDocSelfie => 'سلفی چهره';
+
+  @override
+  String get kycDocGovtId => 'مدرک شناسایی';
+
+  @override
+  String get kycDocPersonalInfo => 'اطلاعات شخصی';
+
+  @override
+  String get kycDocTradeLicense => 'جواز تجارت';
+
+  @override
+  String get kycDocBusinessInfo => 'اطلاعات کسب‌وکار';
+
+  @override
+  String get kycDocCompanyDocs => 'مدارک شرکت';
+
+  @override
+  String get kycDocNationalCard => 'کارت ملی';
+
+  @override
+  String get kycDocSourceOfFunds => 'اثبات منبع وجوه';
+
+  @override
+  String get kycDocVideoVerification => 'احراز هویت ویدیویی';
+
+  @override
+  String get kycDocSelfieHint =>
+      'یک سلفی واضح از چهره خود بگیرید. نور کافی و صورت کاملاً مشخص باشد.';
+
+  @override
+  String get kycDocGovtIdHint =>
+      'عکس واضح از روی و پشت مدرک شناسایی. تمام اطلاعات خوانا باشد.';
+
+  @override
+  String get kycDocPersonalInfoHint =>
+      'اطلاعات شخصی شامل آدرس، کد پستی و شماره تماس.';
+
+  @override
+  String get kycDocTradeLicenseHint => 'نسخه اسکن شده جواز تجارت معتبر.';
+
+  @override
+  String get kycDocBusinessInfoHint =>
+      'اطلاعات کامل کسب‌وکار شامل نام، نوع فعالیت و آدرس.';
+
+  @override
+  String get kycDocCompanyDocsHint => 'مدارک ثبت شرکت، اساسنامه و آگهی تأسیس.';
+
+  @override
+  String get kycDocNationalCardHint =>
+      'عکس واضح از روی و پشت کارت ملی. تمام اطلاعات باید خوانا باشد.';
+
+  @override
+  String get kycDocSourceOfFundsHint =>
+      'سندی که منبع وجوه شما را اثبات کند (فیش حقوقی، گردش حساب بانکی، درآمد کسب‌وکار و…).';
+
+  @override
+  String get kycDocVideoVerificationHint =>
+      'یک ویدیوی کوتاه از چهره خود طبق راهنمای صفحه ضبط کنید.';
+
+  @override
+  String get kycDocGenericHint => 'لطفاً مدرک مورد نیاز را آپلود کنید.';
+
+  @override
+  String kycSubmitWizardTitleForLevel(int level) {
+    return 'احراز هویت — سطح $level';
+  }
+
+  @override
+  String get kycSubmitWizardInvalidLevel => 'سطح نامعتبر';
+
+  @override
+  String get kycSubmitWizardRequiredDoc => 'مدرک مورد نیاز';
+
+  @override
+  String get kycSubmitWizardTapToUpload => 'برای آپلود لمس کنید';
+
+  @override
+  String get kycSubmitWizardFileFormat =>
+      'فرمت: JPG، PNG، PDF — حداکثر ۵ مگابایت';
+
+  @override
+  String get kycSubmitWizardReviewTitle => 'بررسی و ارسال';
+
+  @override
+  String get kycSubmitWizardNotUploaded => 'آپلود نشده';
+
+  @override
+  String get kycSubmitWizardReviewNote =>
+      'پس از ارسال، مدارک توسط ادمین بررسی می‌شود. این فرآیند معمولاً ۱-۲ روز کاری طول می‌کشد.';
+
+  @override
+  String get kycSubmitWizardSubmit => 'ارسال مدارک';
+
+  @override
+  String get kycSubmitWizardContinue => 'ادامه';
+
+  @override
+  String kycSubmitWizardUploaded(String fileName) {
+    return 'آپلود شد: $fileName';
+  }
 }

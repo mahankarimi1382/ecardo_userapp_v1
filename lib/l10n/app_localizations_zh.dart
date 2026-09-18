@@ -7401,4 +7401,163 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get kycFeatureEpay => '电子支付 (ePay)';
+
+  @override
+  String get kycRoadmapTitle => '认证路线图';
+
+  @override
+  String kycRoadmapContinueForLevel(int level) {
+    return '继续认证 — $level 级';
+  }
+
+  @override
+  String get kycRoadmapPending => '您的文件正在审核中，通常需要 1–2 个工作日。';
+
+  @override
+  String get kycRoadmapRejectedTitle => '您的认证被拒绝了。';
+
+  @override
+  String get kycRoadmapRejectedAction => '请重新提交您的文件。';
+
+  @override
+  String get kycRoadmapStatusCompleted => '已完成';
+
+  @override
+  String get kycRoadmapStatusCurrent => '当前';
+
+  @override
+  String get kycRoadmapStatusAvailable => '可升级';
+
+  @override
+  String get kycRoadmapStatusLocked => '已锁定';
+
+  @override
+  String get kycLimitsSectionTitle => '交易限额';
+
+  @override
+  String get kycLimitGroupCashin => '入金';
+
+  @override
+  String get kycLimitGroupCashout => '变现';
+
+  @override
+  String get kycLimitGroupExchange => '兑换';
+
+  @override
+  String get kycLimitGroupTransfer => '转账';
+
+  @override
+  String get kycLimitGroupPayment => '支付';
+
+  @override
+  String get kycLimitGroupGift => '礼物';
+
+  @override
+  String get kycLimitPaycardoTopup => 'PayCardo 充值';
+
+  @override
+  String get kycLimitMeasureMin => '最低';
+
+  @override
+  String get kycLimitMeasureMax => '最高';
+
+  @override
+  String get kycLimitMeasureDaily => '每天';
+
+  @override
+  String get kycLimitMeasureMonthly => '每月';
+
+  @override
+  String get kycDocSelfie => '自拍照';
+
+  @override
+  String get kycDocGovtId => '身份证件';
+
+  @override
+  String get kycDocPersonalInfo => '个人信息';
+
+  @override
+  String get kycDocTradeLicense => '营业执照';
+
+  @override
+  String get kycDocBusinessInfo => '企业信息';
+
+  @override
+  String get kycDocCompanyDocs => '公司文件';
+
+  @override
+  String get kycDocNationalCard => '国民身份证';
+
+  @override
+  String get kycDocSourceOfFunds => '资金来源证明';
+
+  @override
+  String get kycDocVideoVerification => '视频认证';
+
+  @override
+  String get kycDocSelfieHint => '拍摄一张光线良好、面部完全清晰可见的自拍照。';
+
+  @override
+  String get kycDocGovtIdHint => '身份证件正反面的清晰照片，所有信息必须清晰可读。';
+
+  @override
+  String get kycDocPersonalInfoHint => '个人信息，包括地址、邮政编码和电话号码。';
+
+  @override
+  String get kycDocTradeLicenseHint => '有效营业执照的扫描件。';
+
+  @override
+  String get kycDocBusinessInfoHint => '完整的企业信息，包括名称、业务类型和地址。';
+
+  @override
+  String get kycDocCompanyDocsHint => '公司注册文件、公司章程和设立公告。';
+
+  @override
+  String get kycDocNationalCardHint => '国民身份证正反面的清晰照片，所有信息必须清晰可读。';
+
+  @override
+  String get kycDocSourceOfFundsHint => '证明资金来源的文件（工资单、银行对账单、营业收入等）。';
+
+  @override
+  String get kycDocVideoVerificationHint => '按照屏幕提示录制一段面部短视频。';
+
+  @override
+  String get kycDocGenericHint => '请上传所需文件。';
+
+  @override
+  String kycSubmitWizardTitleForLevel(int level) {
+    return '身份认证 — $level 级';
+  }
+
+  @override
+  String get kycSubmitWizardInvalidLevel => '无效等级';
+
+  @override
+  String get kycSubmitWizardRequiredDoc => '所需文件';
+
+  @override
+  String get kycSubmitWizardTapToUpload => '点击上传';
+
+  @override
+  String get kycSubmitWizardFileFormat => '格式：JPG、PNG、PDF — 最大 5MB';
+
+  @override
+  String get kycSubmitWizardReviewTitle => '检查并提交';
+
+  @override
+  String get kycSubmitWizardNotUploaded => '未上传';
+
+  @override
+  String get kycSubmitWizardReviewNote => '提交后，管理员将审核您的文件。通常需要 1–2 个工作日。';
+
+  @override
+  String get kycSubmitWizardSubmit => '提交文件';
+
+  @override
+  String get kycSubmitWizardContinue => '继续';
+
+  @override
+  String kycSubmitWizardUploaded(String fileName) {
+    return '已上传：$fileName';
+  }
 }

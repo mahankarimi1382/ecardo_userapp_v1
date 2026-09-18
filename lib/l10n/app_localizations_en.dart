@@ -7590,4 +7590,174 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kycFeatureEpay => 'ePay';
+
+  @override
+  String get kycRoadmapTitle => 'Verification roadmap';
+
+  @override
+  String kycRoadmapContinueForLevel(int level) {
+    return 'Continue verification — level $level';
+  }
+
+  @override
+  String get kycRoadmapPending =>
+      'Your documents are under review. This usually takes 1–2 business days.';
+
+  @override
+  String get kycRoadmapRejectedTitle => 'Your verification was rejected.';
+
+  @override
+  String get kycRoadmapRejectedAction => 'Please resubmit your documents.';
+
+  @override
+  String get kycRoadmapStatusCompleted => 'Completed';
+
+  @override
+  String get kycRoadmapStatusCurrent => 'Current';
+
+  @override
+  String get kycRoadmapStatusAvailable => 'Ready to upgrade';
+
+  @override
+  String get kycRoadmapStatusLocked => 'Locked';
+
+  @override
+  String get kycLimitsSectionTitle => 'Transaction limits';
+
+  @override
+  String get kycLimitGroupCashin => 'Cash-in';
+
+  @override
+  String get kycLimitGroupCashout => 'Cash-out';
+
+  @override
+  String get kycLimitGroupExchange => 'Exchange';
+
+  @override
+  String get kycLimitGroupTransfer => 'Transfer';
+
+  @override
+  String get kycLimitGroupPayment => 'Payment';
+
+  @override
+  String get kycLimitGroupGift => 'Gift';
+
+  @override
+  String get kycLimitPaycardoTopup => 'PayCardo top-up';
+
+  @override
+  String get kycLimitMeasureMin => 'min';
+
+  @override
+  String get kycLimitMeasureMax => 'max';
+
+  @override
+  String get kycLimitMeasureDaily => 'per day';
+
+  @override
+  String get kycLimitMeasureMonthly => 'per month';
+
+  @override
+  String get kycDocSelfie => 'Selfie';
+
+  @override
+  String get kycDocGovtId => 'ID document';
+
+  @override
+  String get kycDocPersonalInfo => 'Personal information';
+
+  @override
+  String get kycDocTradeLicense => 'Trade license';
+
+  @override
+  String get kycDocBusinessInfo => 'Business information';
+
+  @override
+  String get kycDocCompanyDocs => 'Company documents';
+
+  @override
+  String get kycDocNationalCard => 'National ID card';
+
+  @override
+  String get kycDocSourceOfFunds => 'Proof of source of funds';
+
+  @override
+  String get kycDocVideoVerification => 'Video verification';
+
+  @override
+  String get kycDocSelfieHint =>
+      'Take a clear selfie with good lighting and a fully visible face.';
+
+  @override
+  String get kycDocGovtIdHint =>
+      'A clear photo of the front and back of your ID document. All details must be readable.';
+
+  @override
+  String get kycDocPersonalInfoHint =>
+      'Personal information including address, postal code and phone number.';
+
+  @override
+  String get kycDocTradeLicenseHint =>
+      'A scanned copy of a valid trade license.';
+
+  @override
+  String get kycDocBusinessInfoHint =>
+      'Complete business information including name, activity type and address.';
+
+  @override
+  String get kycDocCompanyDocsHint =>
+      'Company registration documents, articles of association and incorporation notice.';
+
+  @override
+  String get kycDocNationalCardHint =>
+      'A clear photo of both sides of your national ID card. All details must be readable.';
+
+  @override
+  String get kycDocSourceOfFundsHint =>
+      'A document proving the source of your funds (payslip, bank statement, business income…).';
+
+  @override
+  String get kycDocVideoVerificationHint =>
+      'Record a short video of your face following the on-screen instructions.';
+
+  @override
+  String get kycDocGenericHint => 'Please upload the required document.';
+
+  @override
+  String kycSubmitWizardTitleForLevel(int level) {
+    return 'Verification — level $level';
+  }
+
+  @override
+  String get kycSubmitWizardInvalidLevel => 'Invalid level';
+
+  @override
+  String get kycSubmitWizardRequiredDoc => 'Required document';
+
+  @override
+  String get kycSubmitWizardTapToUpload => 'Tap to upload';
+
+  @override
+  String get kycSubmitWizardFileFormat => 'Format: JPG, PNG, PDF — max 5MB';
+
+  @override
+  String get kycSubmitWizardReviewTitle => 'Review & submit';
+
+  @override
+  String get kycSubmitWizardNotUploaded => 'Not uploaded';
+
+  @override
+  String get kycSubmitWizardReviewNote =>
+      'After submission your documents are reviewed by an admin. This usually takes 1–2 business days.';
+
+  @override
+  String get kycSubmitWizardSubmit => 'Submit documents';
+
+  @override
+  String get kycSubmitWizardContinue => 'Continue';
+
+  @override
+  String kycSubmitWizardUploaded(String fileName) {
+    return 'Uploaded: $fileName';
+  }
 }
