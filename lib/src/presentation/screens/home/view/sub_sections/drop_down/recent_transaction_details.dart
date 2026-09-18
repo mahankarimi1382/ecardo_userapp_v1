@@ -165,7 +165,8 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                           label: localization.transactionDetailsStatus,
                           value: _buildStatusChip(transaction.status),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 18),
+                        _buildReceiptFooter(),
                       ],
                     ),
                   ),
@@ -444,78 +445,96 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     final date = dateParts.isNotEmpty ? dateParts.first : "";
     final time = dateParts.length > 1 ? dateParts.last : "";
 
+    // v1.0.36 (RECEIPT-SHARE): centered hero layout — the amount is the
+    // protagonist of the receipt image, exactly like premium wallet apps.
     return Column(
       children: [
+        Text(
+          transaction.type ?? "",
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0,
+            color: AppColors.lightTextTertiary,
+          ),
+        ),
+        const SizedBox(height: 10),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
           children: [
-            Expanded(
-              child: Text(
-                transaction.type ?? "",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 0,
-                  color: AppColors.lightTextPrimary,
-                ),
+            Text(
+              _getAmountPrefix(transaction.isPlus),
+              style: TextStyle(
+                letterSpacing: 0,
+                fontWeight: FontWeight.w900,
+                fontSize: 22,
+                color: _getAmountColor(transaction.isPlus),
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  _getAmountPrefix(transaction.isPlus),
-                  style: TextStyle(
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 16,
-                    color: _getAmountColor(transaction.isPlus),
-                  ),
+            const SizedBox(width: 3),
+            Flexible(
+              child: Text(
+                _formatAmount(
+                  transaction.amount ?? "",
+                  transaction.isCrypto,
+                  transaction.trxCurrencyCode,
+                  transaction.trxCurrencySymbol,
                 ),
-                const SizedBox(width: 2),
-                Flexible(
-                  child: Text(
-                    _formatAmount(
-                      transaction.amount ?? "",
-                      transaction.isCrypto,
-                      transaction.trxCurrencyCode,
-                      transaction.trxCurrencySymbol,
-                    ),
-                    textAlign: TextAlign.end,
-                    overflow: TextOverflow.visible,
-                    softWrap: true,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 16,
-                      color: _getAmountColor(transaction.isPlus),
-                    ),
-                  ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.visible,
+                softWrap: true,
+                style: TextStyle(
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 28,
+                  color: _getAmountColor(transaction.isPlus),
                 ),
-              ],
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
+        Text(
+          (date.isEmpty && time.isEmpty) ? "" : "$date · $time",
+          style: TextStyle(
+            letterSpacing: 0,
+            fontSize: 12,
+            color: AppColors.lightTextTertiary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Footer rendered inside the shared image — makes the PNG read as an
+  /// official document and gives it a designed bottom edge.
+  Widget _buildReceiptFooter() {
+    return Column(
+      children: [
+        Divider(
+          height: 0,
+          color: AppColors.black.withValues(alpha: 0.08),
+        ),
+        const SizedBox(height: 12),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(Icons.shield_rounded,
+                size: 12, color: AppColors.lightTextTertiary),
+            const SizedBox(width: 5),
             Text(
-              date,
+              'eCardo  ·  ecardo.ir',
               style: TextStyle(
-                letterSpacing: 0,
-                fontSize: 14,
-                color: AppColors.lightTextTertiary,
+                letterSpacing: 0.4,
+                fontSize: 10,
                 fontWeight: FontWeight.w700,
-              ),
-            ),
-            Text(
-              time,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontSize: 14,
                 color: AppColors.lightTextTertiary,
-                fontWeight: FontWeight.w700,
               ),
             ),
           ],

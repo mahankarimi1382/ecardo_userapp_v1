@@ -4,12 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/tool_bar_section.dart';
 
+/// v1.0.36 (HERO-CARD): the greeting header redesigned to fintech standard —
+/// compact greeting line, prominent name, glassy tiered-verification chip,
+/// a clean UID pill and a verification progress row. The decorative PNG
+/// shape was replaced with soft circles + a brand gradient, so the card
+/// reads like a modern wallet app instead of a stretched bitmap.
 class UserProfileSection extends StatelessWidget {
   const UserProfileSection({super.key});
 
@@ -17,269 +21,267 @@ class UserProfileSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final HomeController homeController = Get.find<HomeController>();
+    final user = homeController.dashboardModel.value.data?.user;
 
     return Column(
       children: [
         SizedBox(height: 60),
         ToolBarSection(),
-        SizedBox(height: 20),
-        Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(PngAssets.homeUserShape),
-              fit: BoxFit.fill,
+        SizedBox(height: 22),
+        Stack(
+          clipBehavior: Clip.hardEdge,
+          children: [
+            // Soft decorative circles — the fintech "hero" texture.
+            PositionedDirectional(
+              top: -46,
+              start: -34,
+              child: _decorCircle(150, AppColors.white.withValues(alpha: 0.07)),
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Greeting + wish
-              Column(
+            PositionedDirectional(
+              top: 30,
+              end: -50,
+              child: _decorCircle(120, AppColors.white.withValues(alpha: 0.05)),
+            ),
+            PositionedDirectional(
+              bottom: -70,
+              start: 60,
+              child: _decorCircle(170, AppColors.lightPrimaryDark.withValues(alpha: 0.35)),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Greeting — one compact line: "Hello · Good morning"
                   Text(
-                    localization.userProfileHello,
+                    _greetingLine(homeController, localization),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       letterSpacing: 0,
-                      fontSize: 15,
-                      color: AppColors.white,
+                      fontSize: 13.sp,
+                      color: AppColors.white.withValues(alpha: 0.75),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    homeController
-                            .dashboardModel
-                            .value
-                            .data
-                            ?.info
-                            ?.timeWiseWish ??
-                        "",
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontSize: 15,
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  // User name + KYC badge in same row
+                  SizedBox(height: 6.h),
+                  // Name + verification tier chip
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                          homeController.dashboardModel.value.data?.user?.userName ?? "",
-                          maxLines: 2,
+                          user?.userName ?? "",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             letterSpacing: 0,
-                            fontSize: 28.sp,
+                            fontSize: 24.sp,
                             color: AppColors.white,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
-                      SizedBox(width: 8.w),
+                      SizedBox(width: 10.w),
                       _KycStatusBadge(homeController: homeController),
                     ],
                   ),
+                  SizedBox(height: 16.h),
+                  // UID pill
+                  _UidPill(accountNumber: user?.accountNumber ?? ""),
+                  SizedBox(height: 10.h),
+                  // Verification progress row
+                  _KycProgressRow(homeController: homeController),
                 ],
               ),
-              SizedBox(height: 15),
-              // UID with copy button
-              Container(
-                padding: EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.white.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.only(start: 5),
-                        child: Text(
-                          "${localization.userProfileUid} ${homeController.dashboardModel.value.data!.user!.accountNumber}",
-                          style: TextStyle(
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 15,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Clipboard.setData(
-                          ClipboardData(
-                            text: homeController
-                                .dashboardModel
-                                .value
-                                .data!
-                                .user!
-                                .accountNumber!,
-                          ),
-                        );
-                        ToastHelper().showSuccessToast(
-                          localization.userProfileCopied,
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: AppColors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Image.asset(
-                          PngAssets.copyCommonIcon,
-                          width: 20,
-                          color: AppColors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // KYC tier row — level progress + tap to verification history.
-              // Uses the tiered kyc_level (0..3) when the server provides
-              // it; falls back to the legacy int status otherwise.
-              SizedBox(height: 10),
-              GestureDetector(
-                onTap: () => Get.toNamed(BaseRoute.kycHistory),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        _kycIcon(
-                          homeController.userModel.value.data?.kycLevel ??
-                              homeController.userModel.value.data?.kyc ??
-                              0,
-                          homeController.userModel.value.data?.kycLevel != null,
-                        ),
-                        color: _kycColor(
-                          homeController.userModel.value.data?.kycLevel ??
-                              homeController.userModel.value.data?.kyc ??
-                              0,
-                          homeController.userModel.value.data?.kycLevel != null,
-                        ),
-                        size: 16,
-                      ),
-                      SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _kycRowLabel(homeController, localization),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.white.withValues(alpha: 0.9),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      _LevelProgressBar(
-                        level: homeController.userModel.value.data?.kycLevel,
-                      ),
-                      SizedBox(width: 8),
-                      Icon(Icons.chevron_right, color: AppColors.white.withValues(alpha: 0.5), size: 18),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
         SizedBox(height: 65),
       ],
     );
   }
 
-  // ── KYC helpers ──
-  //
-  // `isTiered` — the server answered with the tiered kyc_level system
-  // (0..3). The legacy int field (0 none / 1 verified / 2 pending /
-  // 3 rejected) predates the level system and misreports tiered users
-  // (fresh signups carry kyc=4), so it is only consulted when the server
-  // has not sent kyc_level.
-
-  Color _kycColor(int value, bool isTiered) {
-    if (isTiered) return _levelColor(value);
-    switch (value) {
-      case 1:
-        return AppColors.success;
-      case 2:
-        return AppColors.warning;
-      case 3:
-        return AppColors.error;
-      default:
-        return AppColors.warning;
-    }
-  }
-
-  IconData _kycIcon(int value, bool isTiered) {
-    if (isTiered) return _levelIcon(value);
-    switch (value) {
-      case 1:
-        return Icons.verified_user;
-      case 2:
-        return Icons.hourglass_top;
-      case 3:
-        return Icons.error_outline;
-      default:
-        return Icons.shield_outlined;
-    }
-  }
-
-  String _kycLabel(int kyc, AppLocalizations l) {
-    switch (kyc) {
-      case 1:
-        return l.kycStatusVerified;
-      case 2:
-        return l.kycStatusPending;
-      case 3:
-        return l.kycStatusRejected;
-      default:
-        return l.kycStatusNotSubmitted;
-    }
-  }
-
-  String _kycRowLabel(
+  String _greetingLine(
     HomeController homeController,
     AppLocalizations localization,
   ) {
+    final wish =
+        homeController.dashboardModel.value.data?.info?.timeWiseWish ?? "";
+    final hello = localization.userProfileHello;
+    if (wish.isEmpty) return hello;
+    return "$hello  ·  $wish";
+  }
+
+  Widget _decorCircle(double size, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
+  }
+}
+
+/// UID (account number) pill — label, value and copy action in one clean
+/// glassy row. Material icons only, consistent with the rest of the app.
+class _UidPill extends StatelessWidget {
+  final String accountNumber;
+
+  const _UidPill({required this.accountNumber});
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+
+    return Container(
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 9),
+      decoration: BoxDecoration(
+        color: AppColors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.tag_rounded, color: AppColors.white.withValues(alpha: 0.7), size: 15),
+          SizedBox(width: 6.w),
+          Text(
+            localization.userProfileUid,
+            style: TextStyle(
+              letterSpacing: 0,
+              fontSize: 11.sp,
+              color: AppColors.white.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Text(
+              accountNumber,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                letterSpacing: 0.3,
+                fontWeight: FontWeight.w800,
+                fontSize: 14.sp,
+                color: AppColors.white,
+              ),
+            ),
+          ),
+          SizedBox(width: 8.w),
+          GestureDetector(
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: accountNumber));
+              ToastHelper().showSuccessToast(localization.userProfileCopied);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: AppColors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.copy_rounded,
+                size: 14,
+                color: AppColors.white.withValues(alpha: 0.9),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Verification tier row — icon, localized level label, 3-segment progress
+/// and a chevron. Taps through to the KYC history/verification hub.
+/// Renders the tiered kyc_level when the server provides it; falls back to
+/// the legacy int status otherwise.
+class _KycProgressRow extends StatelessWidget {
+  final HomeController homeController;
+
+  const _KycProgressRow({required this.homeController});
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     final data = homeController.userModel.value.data;
     final level = data?.kycLevel;
+
+    return GestureDetector(
+      onTap: () => Get.toNamed(BaseRoute.kycHistory),
+      child: Container(
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 9),
+        decoration: BoxDecoration(
+          color: AppColors.white.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _icon(level, data?.kyc ?? 0),
+              color: Colors.white,
+              size: 15,
+            ),
+            SizedBox(width: 7.w),
+            Expanded(
+              child: Text(
+                _label(level, data?.kyc ?? 0, localization),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.white.withValues(alpha: 0.92),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            _LevelProgressBar(level: level),
+            SizedBox(width: 8.w),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.white.withValues(alpha: 0.55),
+              size: 18,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  IconData _icon(int? level, int legacyKyc) {
     if (level != null) {
-      return localization.kycUpgradeLevelChip(level);
+      switch (level) {
+        case 3:
+          return Icons.verified_rounded;
+        case 2:
+          return Icons.verified_user_rounded;
+        case 1:
+          return Icons.verified_user_outlined;
+        default:
+          return Icons.shield_outlined;
+      }
     }
-    return _kycLabel(data?.kyc ?? 0, localization);
-  }
-
-  Color _levelColor(int level) {
-    switch (level) {
-      case 3:
-        return AppColors.success;
-      case 2:
-        return AppColors.success;
+    switch (legacyKyc) {
       case 1:
-        return AppColors.white;
-      default:
-        return AppColors.warning;
-    }
-  }
-
-  IconData _levelIcon(int level) {
-    switch (level) {
-      case 3:
-        return Icons.verified;
+        return Icons.verified_user_rounded;
       case 2:
-        return Icons.verified_user;
-      case 1:
-        return Icons.verified_user_outlined;
+        return Icons.hourglass_top_rounded;
+      case 3:
+        return Icons.error_outline_rounded;
       default:
         return Icons.shield_outlined;
+    }
+  }
+
+  String _label(int? level, int legacyKyc, AppLocalizations localization) {
+    if (level != null) return localization.kycUpgradeLevelChip(level);
+    switch (legacyKyc) {
+      case 1:
+        return localization.kycStatusVerified;
+      case 2:
+        return localization.kycStatusPending;
+      case 3:
+        return localization.kycStatusRejected;
+      default:
+        return localization.kycStatusNotSubmitted;
     }
   }
 }
@@ -301,13 +303,13 @@ class _LevelProgressBar extends StatelessWidget {
       children: List.generate(3, (i) {
         final filled = i < current;
         return Container(
-          width: 14,
+          width: 16,
           height: 4,
           margin: const EdgeInsetsDirectional.only(end: 3),
           decoration: BoxDecoration(
             color: filled
-                ? AppColors.success
-                : AppColors.white.withValues(alpha: 0.25),
+                ? Colors.white
+                : AppColors.white.withValues(alpha: 0.28),
             borderRadius: BorderRadius.circular(2),
           ),
         );
@@ -316,10 +318,8 @@ class _LevelProgressBar extends StatelessWidget {
   }
 }
 
-/// Small badge showing the verification tier next to the user name.
-/// Tiered (kyc_level) when available — a "Level n" chip with an escalating
-/// shield icon. Legacy payloads fall back to an icon-only status chip
-/// (the previous emoji glyphs were non-standard).
+/// Small badge showing the verification tier next to the user name — a
+/// glassy "Level n" pill. Legacy payloads fall back to an icon-only chip.
 class _KycStatusBadge extends StatelessWidget {
   final HomeController homeController;
 
@@ -332,32 +332,31 @@ class _KycStatusBadge extends StatelessWidget {
     final level = data?.kycLevel;
 
     if (level == null) {
-      // Legacy fallback: icon-only chip, no emoji text.
       final kyc = data?.kyc ?? 0;
-      final color = _legacyColor(kyc);
       return Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+        padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.25),
+          color: AppColors.white.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withValues(alpha: 0.5), width: 1),
         ),
         child: Icon(_legacyIcon(kyc), color: AppColors.white, size: 14.sp),
       );
     }
 
-    final color = _levelColor(level);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.14),
+        color: AppColors.white.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.7), width: 1),
+        border: Border.all(
+          color: AppColors.white.withValues(alpha: 0.35),
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(_levelIcon(level), color: color, size: 13.sp),
+          Icon(_levelIcon(level), color: Colors.white, size: 13.sp),
           SizedBox(width: 4.w),
           Text(
             localization?.kycUpgradeLevelChip(level) ?? 'Level $level',
@@ -372,51 +371,25 @@ class _KycStatusBadge extends StatelessWidget {
     );
   }
 
-  Color _legacyColor(int kyc) {
-    switch (kyc) {
-      case 1:
-        return AppColors.success;
-      case 2:
-        return AppColors.warning;
-      case 3:
-        return AppColors.error;
-      default:
-        return AppColors.warning;
-    }
-  }
-
   IconData _legacyIcon(int kyc) {
     switch (kyc) {
       case 1:
-        return Icons.verified;
+        return Icons.verified_rounded;
       case 2:
-        return Icons.hourglass_top;
+        return Icons.hourglass_top_rounded;
       case 3:
-        return Icons.error;
+        return Icons.error_outline_rounded;
       default:
-        return Icons.shield;
-    }
-  }
-
-  Color _levelColor(int level) {
-    switch (level) {
-      case 3:
-        return AppColors.success;
-      case 2:
-        return AppColors.success;
-      case 1:
-        return AppColors.white;
-      default:
-        return AppColors.warning;
+        return Icons.shield_outlined;
     }
   }
 
   IconData _levelIcon(int level) {
     switch (level) {
       case 3:
-        return Icons.verified;
+        return Icons.verified_rounded;
       case 2:
-        return Icons.verified_user;
+        return Icons.verified_user_rounded;
       case 1:
         return Icons.verified_user_outlined;
       default:
