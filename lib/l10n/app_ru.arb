@@ -2481,5 +2481,67 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateNotificationTitle": "Доступна новая версия",
+  "updateNotificationTitleForce": "Требуется обновление",
+  "updateNotificationBody": "Доступна eCardo v{version}. Нажмите для обновления.",
+  "@updateNotificationBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNotificationBodyGeneric": "Доступна новая версия eCardo. Нажмите для обновления.",
+  "updateDialogBody": "Доступна новая версия приложения. Пожалуйста, обновите, чтобы продолжить.",
+  "updateWhatsNewTitle": "Что нового в v{version}",
+  "@updateWhatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNewFallback": "Исправления ошибок и улучшения производительности.",
+  "updateDialogDownload": "Скачать и обновить",
+  "updateWebBody": "Доступна новая версия. Обновите страницу, чтобы получить последнюю версию.",
+  "updateWebRefresh": "Обновить страницу",
+  "updateSystemTitle": "Система",
+  "updateUpToDate": "У вас последняя версия.",
+  "updateUpToDateWithVersion": "Приложение обновлено ({version}).",
+  "@updateUpToDateWithVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCancelDownloadBody": "Загрузка обновления ещё идёт. Вы уверены, что хотите отменить?",
+  "updateCancel": "Отмена",
+  "updateCheckingTitle": "Проверка обновлений…",
+  "updateCheckingBody": "Связываемся с сервером eCardo для получения последней версии.",
+  "updateUpToDateScreenTitle": "У вас последняя версия!",
+  "updateUpToDateScreenBody": "eCardo v{version} — последняя доступная версия.",
+  "@updateUpToDateScreenBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDoneButton": "Готово",
+  "updateCheckAgain": "Проверить снова",
+  "updateAvailableScreenTitle": "Доступно обновление",
+  "updateCurrentLabel": "Текущая",
+  "updateNewLabel": "Новая",
+  "updateForceNote": "Это обновление обязательно. Приложением нельзя пользоваться, пока вы не обновитесь.",
+  "updateMaybeLater": "Может быть, позже",
+  "updateStartingDownload": "Начало загрузки…",
+  "updateInstallingTitle": "Установка обновления…",
+  "updateInstallingBody": "Android устанавливает новую версию. Следуйте системному запросу для завершения установки.",
+  "updateInstallFinished": "Установка завершена",
+  "updateFailedTitle": "Не удалось обновить",
+  "updateUnknownError": "Произошла неизвестная ошибка.",
+  "updateTryAgain": "Попробовать снова",
+  "updateGoBack": "Назад"
 }

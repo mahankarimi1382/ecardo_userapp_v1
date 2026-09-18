@@ -7560,4 +7560,114 @@ class AppLocalizationsZh extends AppLocalizations {
   String kycSubmitWizardUploaded(String fileName) {
     return '已上传：$fileName';
   }
+
+  @override
+  String get updateNotificationTitle => '新版本可用';
+
+  @override
+  String get updateNotificationTitleForce => '需要更新';
+
+  @override
+  String updateNotificationBody(String version) {
+    return 'eCardo v$version 已可用。点按即可更新。';
+  }
+
+  @override
+  String get updateNotificationBodyGeneric => 'eCardo 新版本可用。点按即可更新。';
+
+  @override
+  String get updateDialogBody => '应用有新版本可用，请更新以继续。';
+
+  @override
+  String updateWhatsNewTitle(String version) {
+    return 'v$version 有什么新变化';
+  }
+
+  @override
+  String get updateWhatsNewFallback => '修复问题并提升性能。';
+
+  @override
+  String get updateDialogDownload => '下载并更新';
+
+  @override
+  String get updateWebBody => '新版本可用。请刷新页面以获取最新版本。';
+
+  @override
+  String get updateWebRefresh => '刷新页面';
+
+  @override
+  String get updateSystemTitle => '系统';
+
+  @override
+  String get updateUpToDate => '您已使用最新版本。';
+
+  @override
+  String updateUpToDateWithVersion(String version) {
+    return '应用已是最新版本（$version）。';
+  }
+
+  @override
+  String get updateCancelDownloadBody => '更新下载仍在进行中，确定要取消吗？';
+
+  @override
+  String get updateCancel => '取消';
+
+  @override
+  String get updateCheckingTitle => '正在检查更新…';
+
+  @override
+  String get updateCheckingBody => '正在联系 eCardo 服务器获取最新版本。';
+
+  @override
+  String get updateUpToDateScreenTitle => '您已是最新版本！';
+
+  @override
+  String updateUpToDateScreenBody(String version) {
+    return 'eCardo v$version 是最新的可用版本。';
+  }
+
+  @override
+  String get updateDoneButton => '完成';
+
+  @override
+  String get updateCheckAgain => '再次检查';
+
+  @override
+  String get updateAvailableScreenTitle => '有可用更新';
+
+  @override
+  String get updateCurrentLabel => '当前';
+
+  @override
+  String get updateNewLabel => '新';
+
+  @override
+  String get updateForceNote => '此更新为强制更新。在更新完成前无法使用应用。';
+
+  @override
+  String get updateMaybeLater => '以后再说';
+
+  @override
+  String get updateStartingDownload => '开始下载…';
+
+  @override
+  String get updateInstallingTitle => '正在安装更新…';
+
+  @override
+  String get updateInstallingBody => 'Android 正在安装新版本。请按照系统提示完成安装。';
+
+  @override
+  String get updateInstallFinished => '安装完成';
+
+  @override
+  String get updateFailedTitle => '更新失败';
+
+  @override
+  String get updateUnknownError => '发生未知错误。';
+
+  @override
+  String get updateTryAgain => '重试';
+
+  @override
+  String get updateGoBack => '返回';
 }

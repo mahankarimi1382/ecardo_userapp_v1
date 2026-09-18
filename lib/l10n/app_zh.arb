@@ -2481,5 +2481,67 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateNotificationTitle": "新版本可用",
+  "updateNotificationTitleForce": "需要更新",
+  "updateNotificationBody": "eCardo v{version} 已可用。点按即可更新。",
+  "@updateNotificationBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNotificationBodyGeneric": "eCardo 新版本可用。点按即可更新。",
+  "updateDialogBody": "应用有新版本可用，请更新以继续。",
+  "updateWhatsNewTitle": "v{version} 有什么新变化",
+  "@updateWhatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNewFallback": "修复问题并提升性能。",
+  "updateDialogDownload": "下载并更新",
+  "updateWebBody": "新版本可用。请刷新页面以获取最新版本。",
+  "updateWebRefresh": "刷新页面",
+  "updateSystemTitle": "系统",
+  "updateUpToDate": "您已使用最新版本。",
+  "updateUpToDateWithVersion": "应用已是最新版本（{version}）。",
+  "@updateUpToDateWithVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCancelDownloadBody": "更新下载仍在进行中，确定要取消吗？",
+  "updateCancel": "取消",
+  "updateCheckingTitle": "正在检查更新…",
+  "updateCheckingBody": "正在联系 eCardo 服务器获取最新版本。",
+  "updateUpToDateScreenTitle": "您已是最新版本！",
+  "updateUpToDateScreenBody": "eCardo v{version} 是最新的可用版本。",
+  "@updateUpToDateScreenBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDoneButton": "完成",
+  "updateCheckAgain": "再次检查",
+  "updateAvailableScreenTitle": "有可用更新",
+  "updateCurrentLabel": "当前",
+  "updateNewLabel": "新",
+  "updateForceNote": "此更新为强制更新。在更新完成前无法使用应用。",
+  "updateMaybeLater": "以后再说",
+  "updateStartingDownload": "开始下载…",
+  "updateInstallingTitle": "正在安装更新…",
+  "updateInstallingBody": "Android 正在安装新版本。请按照系统提示完成安装。",
+  "updateInstallFinished": "安装完成",
+  "updateFailedTitle": "更新失败",
+  "updateUnknownError": "发生未知错误。",
+  "updateTryAgain": "重试",
+  "updateGoBack": "返回"
 }

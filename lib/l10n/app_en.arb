@@ -2605,5 +2605,67 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateNotificationTitle": "New version available",
+  "updateNotificationTitleForce": "Update required",
+  "updateNotificationBody": "eCardo v{version} is available. Tap to update.",
+  "@updateNotificationBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNotificationBodyGeneric": "A new version of eCardo is available. Tap to update.",
+  "updateDialogBody": "A new version of the application is available. Please update to continue.",
+  "updateWhatsNewTitle": "What's new in v{version}",
+  "@updateWhatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNewFallback": "Bug fixes and performance improvements.",
+  "updateDialogDownload": "Download & Update",
+  "updateWebBody": "A new version is available. Please refresh the page to get the latest version.",
+  "updateWebRefresh": "Refresh Page",
+  "updateSystemTitle": "System",
+  "updateUpToDate": "You are on the latest version.",
+  "updateUpToDateWithVersion": "App is up to date ({version}).",
+  "@updateUpToDateWithVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCancelDownloadBody": "The update download is still in progress. Are you sure you want to cancel?",
+  "updateCancel": "Cancel",
+  "updateCheckingTitle": "Checking for updates...",
+  "updateCheckingBody": "Contacting eCardo server for the latest version.",
+  "updateUpToDateScreenTitle": "You're up to date!",
+  "updateUpToDateScreenBody": "eCardo v{version} is the latest version available.",
+  "@updateUpToDateScreenBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDoneButton": "Done",
+  "updateCheckAgain": "Check again",
+  "updateAvailableScreenTitle": "Update available",
+  "updateCurrentLabel": "Current",
+  "updateNewLabel": "New",
+  "updateForceNote": "This update is required. The app cannot be used until you update.",
+  "updateMaybeLater": "Maybe later",
+  "updateStartingDownload": "Starting download...",
+  "updateInstallingTitle": "Installing update...",
+  "updateInstallingBody": "Android is installing the new version. Please follow the system prompt to complete the installation.",
+  "updateInstallFinished": "I've finished installing",
+  "updateFailedTitle": "Update failed",
+  "updateUnknownError": "An unknown error occurred.",
+  "updateTryAgain": "Try again",
+  "updateGoBack": "Go back"
 }

@@ -7760,4 +7760,122 @@ class AppLocalizationsEn extends AppLocalizations {
   String kycSubmitWizardUploaded(String fileName) {
     return 'Uploaded: $fileName';
   }
+
+  @override
+  String get updateNotificationTitle => 'New version available';
+
+  @override
+  String get updateNotificationTitleForce => 'Update required';
+
+  @override
+  String updateNotificationBody(String version) {
+    return 'eCardo v$version is available. Tap to update.';
+  }
+
+  @override
+  String get updateNotificationBodyGeneric =>
+      'A new version of eCardo is available. Tap to update.';
+
+  @override
+  String get updateDialogBody =>
+      'A new version of the application is available. Please update to continue.';
+
+  @override
+  String updateWhatsNewTitle(String version) {
+    return 'What\'s new in v$version';
+  }
+
+  @override
+  String get updateWhatsNewFallback =>
+      'Bug fixes and performance improvements.';
+
+  @override
+  String get updateDialogDownload => 'Download & Update';
+
+  @override
+  String get updateWebBody =>
+      'A new version is available. Please refresh the page to get the latest version.';
+
+  @override
+  String get updateWebRefresh => 'Refresh Page';
+
+  @override
+  String get updateSystemTitle => 'System';
+
+  @override
+  String get updateUpToDate => 'You are on the latest version.';
+
+  @override
+  String updateUpToDateWithVersion(String version) {
+    return 'App is up to date ($version).';
+  }
+
+  @override
+  String get updateCancelDownloadBody =>
+      'The update download is still in progress. Are you sure you want to cancel?';
+
+  @override
+  String get updateCancel => 'Cancel';
+
+  @override
+  String get updateCheckingTitle => 'Checking for updates...';
+
+  @override
+  String get updateCheckingBody =>
+      'Contacting eCardo server for the latest version.';
+
+  @override
+  String get updateUpToDateScreenTitle => 'You\'re up to date!';
+
+  @override
+  String updateUpToDateScreenBody(String version) {
+    return 'eCardo v$version is the latest version available.';
+  }
+
+  @override
+  String get updateDoneButton => 'Done';
+
+  @override
+  String get updateCheckAgain => 'Check again';
+
+  @override
+  String get updateAvailableScreenTitle => 'Update available';
+
+  @override
+  String get updateCurrentLabel => 'Current';
+
+  @override
+  String get updateNewLabel => 'New';
+
+  @override
+  String get updateForceNote =>
+      'This update is required. The app cannot be used until you update.';
+
+  @override
+  String get updateMaybeLater => 'Maybe later';
+
+  @override
+  String get updateStartingDownload => 'Starting download...';
+
+  @override
+  String get updateInstallingTitle => 'Installing update...';
+
+  @override
+  String get updateInstallingBody =>
+      'Android is installing the new version. Please follow the system prompt to complete the installation.';
+
+  @override
+  String get updateInstallFinished => 'I\'ve finished installing';
+
+  @override
+  String get updateFailedTitle => 'Update failed';
+
+  @override
+  String get updateUnknownError => 'An unknown error occurred.';
+
+  @override
+  String get updateTryAgain => 'Try again';
+
+  @override
+  String get updateGoBack => 'Go back';
 }

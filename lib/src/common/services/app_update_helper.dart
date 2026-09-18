@@ -44,7 +44,11 @@ class AppUpdateHelper {
 
       if (serverVersion.isEmpty || updateLink.isEmpty) {
         if (showMessageIfNoUpdate) {
-          Get.snackbar('System', 'You are on the latest version.');
+          final localization = AppLocalizations.of(context);
+          Get.snackbar(
+            localization?.updateSystemTitle ?? 'System',
+            localization?.updateUpToDate ?? 'You are on the latest version.',
+          );
         }
         return;
       }
@@ -178,6 +182,18 @@ class AppUpdateHelper {
       builder: (ctx) {
         // v1.0.24: localized title/buttons (were hardcoded English).
         final localization = AppLocalizations.of(ctx);
+        // v1.1 (UPD-NOTES): show WHAT changed in this version — pushed FCM
+        // notes first, then the app_update_notes settings key. When neither
+        // is available a localized generic line is shown instead.
+        String? notes;
+        try {
+          if (Get.isRegistered<AppUpdateController>()) {
+            notes = Get.find<AppUpdateController>().resolveNotes(version);
+          }
+        } catch (_) {
+          notes = null;
+        }
+        final hasNotes = notes != null && notes.isNotEmpty;
         return PopScope(
           canPop: !forceUpdate,
           child: AlertDialog(
@@ -185,9 +201,31 @@ class AppUpdateHelper {
               localization?.updateAvailableTitle(version) ??
                   'New Update Available ($version)',
             ),
-            content: const Text(
-              'A new version of the application is available. '
-              'Please update to continue.',
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  localization?.updateDialogBody ??
+                      'A new version of the application is available. '
+                          'Please update to continue.',
+                ),
+                if (hasNotes) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    localization?.updateWhatsNewTitle(version) ??
+                        "What's new in v$version",
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 6),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 160),
+                    child: SingleChildScrollView(
+                      child: Text(notes, textAlign: TextAlign.start),
+                    ),
+                  ),
+                ],
+              ],
             ),
             actions: [
               if (!forceUpdate)
@@ -203,9 +241,9 @@ class AppUpdateHelper {
                   Navigator.pop(ctx);
                   downloadAndInstallApk(url);
                 },
-                child: const Text(
-                  'Download & Update',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  localization?.updateDialogDownload ?? 'Download & Update',
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],
@@ -233,9 +271,10 @@ class AppUpdateHelper {
               localization?.updateAvailableTitle(version) ??
                   'New Update Available ($version)',
             ),
-            content: const Text(
-              'A new version is available. Please refresh the page to get '
-              'the latest version.',
+            content: Text(
+              localization?.updateWebBody ??
+                  'A new version is available. Please refresh the page to '
+                      'get the latest version.',
             ),
             actions: [
               if (!forceUpdate)
@@ -251,9 +290,9 @@ class AppUpdateHelper {
                   Get.back();
                   Get.offAllNamed('/');
                 },
-                child: const Text(
-                  'Refresh Page',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  localization?.updateWebRefresh ?? 'Refresh Page',
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],

@@ -132,9 +132,10 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
         title: Text(
           localization?.updateCancelDownloadTitle ?? 'Cancel download?',
         ),
-        content: const Text(
-          'The update download is still in progress. '
-          'Are you sure you want to cancel?',
+        content: Text(
+          localization?.updateCancelDownloadBody ??
+              'The update download is still in progress. '
+                  'Are you sure you want to cancel?',
         ),
         actions: [
           TextButton(
@@ -148,9 +149,9 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
               backgroundColor: AppColors.error,
             ),
             onPressed: () => Get.back(result: true),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              localization?.updateCancel ?? 'Cancel',
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -170,6 +171,7 @@ class _CheckingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -192,7 +194,7 @@ class _CheckingView extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           Text(
-            'Checking for updates...',
+            localization?.updateCheckingTitle ?? 'Checking for updates...',
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
@@ -201,7 +203,8 @@ class _CheckingView extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Contacting eCardo server for the latest version.',
+            localization?.updateCheckingBody ??
+                'Contacting eCardo server for the latest version.',
             style: TextStyle(
               fontSize: 13.sp,
               color: AppColors.lightTextSecondary,
@@ -220,6 +223,7 @@ class _UpToDateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -233,7 +237,7 @@ class _UpToDateView extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             Text(
-              'You\'re up to date!',
+              localization?.updateUpToDateScreenTitle ?? "You're up to date!",
               style: TextStyle(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.w800,
@@ -242,7 +246,10 @@ class _UpToDateView extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              'eCardo v${controller.currentVersion.value} is the latest version available.',
+              localization?.updateUpToDateScreenBody(
+                    controller.currentVersion.value,
+                  ) ??
+                  'eCardo v${controller.currentVersion.value} is the latest version available.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.sp,
@@ -262,7 +269,7 @@ class _UpToDateView extends StatelessWidget {
                 ),
                 onPressed: () => Get.back(),
                 child: Text(
-                  'Done',
+                  localization?.updateDoneButton ?? 'Done',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
@@ -277,7 +284,7 @@ class _UpToDateView extends StatelessWidget {
               child: TextButton(
                 onPressed: () => controller.checkForUpdate(),
                 child: Text(
-                  'Check again',
+                  localization?.updateCheckAgain ?? 'Check again',
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: AppColors.lightPrimary,
@@ -299,6 +306,7 @@ class _UpdateAvailableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 28.w),
@@ -322,7 +330,7 @@ class _UpdateAvailableView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             Text(
-              'Update available',
+              localization?.updateAvailableScreenTitle ?? 'Update available',
               style: TextStyle(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.w800,
@@ -344,7 +352,7 @@ class _UpdateAvailableView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Current',
+                        localization?.updateCurrentLabel ?? 'Current',
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.lightTextSecondary,
@@ -370,7 +378,7 @@ class _UpdateAvailableView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'New',
+                        localization?.updateNewLabel ?? 'New',
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.lightTextSecondary,
@@ -390,6 +398,56 @@ class _UpdateAvailableView extends StatelessWidget {
                 ],
               ),
             ),
+            // v1.1 (UPD-NOTES): show WHAT changed — pushed FCM notes
+            // first, then the app_update_notes settings key, then a
+            // localized generic improvements line.
+            Builder(builder: (context) {
+              final loc = AppLocalizations.of(context);
+              final notes = controller.resolveNotes(
+                controller.serverVersion.value,
+              );
+              final version = controller.serverVersion.value;
+              return Column(
+                children: [
+                  SizedBox(height: 16.h),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(14.w),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.lightBorder),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          loc?.updateWhatsNewTitle(version) ??
+                              "What's new in v$version",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.lightTextPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Text(
+                          notes.isNotEmpty
+                              ? notes
+                              : (loc?.updateWhatsNewFallback ??
+                                  'Bug fixes and performance improvements.'),
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: AppColors.lightTextSecondary,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
             if (controller.forceUpdate.value) ...[
               SizedBox(height: 16.h),
               Container(
@@ -408,7 +466,8 @@ class _UpdateAvailableView extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
-                        'This update is required. The app cannot be used until you update.',
+                        localization?.updateForceNote ??
+                            'This update is required. The app cannot be used until you update.',
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.error,
@@ -434,7 +493,7 @@ class _UpdateAvailableView extends StatelessWidget {
                 onPressed: () => controller.startDownloadAndInstall(),
                 icon: const Icon(Icons.download_rounded, color: Colors.white),
                 label: Text(
-                  'Download & Update',
+                  localization?.updateDialogDownload ?? 'Download & Update',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
@@ -450,7 +509,7 @@ class _UpdateAvailableView extends StatelessWidget {
                 child: TextButton(
                   onPressed: () => Get.back(),
                   child: Text(
-                    'Maybe later',
+                    localization?.updateMaybeLater ?? 'Maybe later',
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.lightTextSecondary,
@@ -473,6 +532,7 @@ class _DownloadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -524,7 +584,8 @@ class _DownloadingView extends StatelessWidget {
             Obx(
               () => Text(
                 controller.totalBytesLabel.value.isEmpty
-                    ? 'Starting download...'
+                    ? (localization?.updateStartingDownload ??
+                        'Starting download...')
                     : '${controller.downloadedBytesLabel.value} / '
                         '${controller.totalBytesLabel.value}',
                 style: TextStyle(
@@ -549,7 +610,7 @@ class _DownloadingView extends StatelessWidget {
                   if (context.mounted) Get.back();
                 },
                 child: Text(
-                  'Cancel',
+                  localization?.updateCancel ?? 'Cancel',
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: AppColors.error,
@@ -570,6 +631,7 @@ class _InstallingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -591,7 +653,7 @@ class _InstallingView extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             Text(
-              'Installing update...',
+              localization?.updateInstallingTitle ?? 'Installing update...',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w800,
@@ -600,8 +662,9 @@ class _InstallingView extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Android is installing the new version. Please follow the system '
-              'prompt to complete the installation.',
+              localization?.updateInstallingBody ??
+                  'Android is installing the new version. Please follow the '
+                      'system prompt to complete the installation.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13.sp,
@@ -621,7 +684,7 @@ class _InstallingView extends StatelessWidget {
                 ),
                 onPressed: () => Get.back(),
                 child: Text(
-                  'I\'ve finished installing',
+                  localization?.updateInstallFinished ?? "I've finished installing",
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w700,
@@ -644,6 +707,7 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -657,7 +721,7 @@ class _ErrorView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             Text(
-              'Update failed',
+              localization?.updateFailedTitle ?? 'Update failed',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w800,
@@ -677,7 +741,8 @@ class _ErrorView extends StatelessWidget {
                 ),
                 child: Text(
                   controller.errorMessage.value.isEmpty
-                      ? 'An unknown error occurred.'
+                      ? (localization?.updateUnknownError ??
+                          'An unknown error occurred.')
                       : controller.errorMessage.value,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -704,7 +769,7 @@ class _ErrorView extends StatelessWidget {
                 },
                 icon: const Icon(Icons.refresh_rounded, color: Colors.white),
                 label: Text(
-                  'Try again',
+                  localization?.updateTryAgain ?? 'Try again',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
@@ -719,7 +784,7 @@ class _ErrorView extends StatelessWidget {
               child: TextButton(
                 onPressed: () => Get.back(),
                 child: Text(
-                  'Go back',
+                  localization?.updateGoBack ?? 'Go back',
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: AppColors.lightTextSecondary,

@@ -14601,6 +14601,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Uploaded: {fileName}'**
   String kycSubmitWizardUploaded(String fileName);
+
+  /// No description provided for @updateNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New version available'**
+  String get updateNotificationTitle;
+
+  /// No description provided for @updateNotificationTitleForce.
+  ///
+  /// In en, this message translates to:
+  /// **'Update required'**
+  String get updateNotificationTitleForce;
+
+  /// No description provided for @updateNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'eCardo v{version} is available. Tap to update.'**
+  String updateNotificationBody(String version);
+
+  /// No description provided for @updateNotificationBodyGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of eCardo is available. Tap to update.'**
+  String get updateNotificationBodyGeneric;
+
+  /// No description provided for @updateDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the application is available. Please update to continue.'**
+  String get updateDialogBody;
+
+  /// No description provided for @updateWhatsNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new in v{version}'**
+  String updateWhatsNewTitle(String version);
+
+  /// No description provided for @updateWhatsNewFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Bug fixes and performance improvements.'**
+  String get updateWhatsNewFallback;
+
+  /// No description provided for @updateDialogDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download & Update'**
+  String get updateDialogDownload;
+
+  /// No description provided for @updateWebBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version is available. Please refresh the page to get the latest version.'**
+  String get updateWebBody;
+
+  /// No description provided for @updateWebRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Page'**
+  String get updateWebRefresh;
+
+  /// No description provided for @updateSystemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get updateSystemTitle;
+
+  /// No description provided for @updateUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'You are on the latest version.'**
+  String get updateUpToDate;
+
+  /// No description provided for @updateUpToDateWithVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App is up to date ({version}).'**
+  String updateUpToDateWithVersion(String version);
+
+  /// No description provided for @updateCancelDownloadBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The update download is still in progress. Are you sure you want to cancel?'**
+  String get updateCancelDownloadBody;
+
+  /// No description provided for @updateCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get updateCancel;
+
+  /// No description provided for @updateCheckingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates...'**
+  String get updateCheckingTitle;
+
+  /// No description provided for @updateCheckingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacting eCardo server for the latest version.'**
+  String get updateCheckingBody;
+
+  /// No description provided for @updateUpToDateScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re up to date!'**
+  String get updateUpToDateScreenTitle;
+
+  /// No description provided for @updateUpToDateScreenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'eCardo v{version} is the latest version available.'**
+  String updateUpToDateScreenBody(String version);
+
+  /// No description provided for @updateDoneButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get updateDoneButton;
+
+  /// No description provided for @updateCheckAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Check again'**
+  String get updateCheckAgain;
+
+  /// No description provided for @updateAvailableScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get updateAvailableScreenTitle;
+
+  /// No description provided for @updateCurrentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get updateCurrentLabel;
+
+  /// No description provided for @updateNewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get updateNewLabel;
+
+  /// No description provided for @updateForceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This update is required. The app cannot be used until you update.'**
+  String get updateForceNote;
+
+  /// No description provided for @updateMaybeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe later'**
+  String get updateMaybeLater;
+
+  /// No description provided for @updateStartingDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting download...'**
+  String get updateStartingDownload;
+
+  /// No description provided for @updateInstallingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Installing update...'**
+  String get updateInstallingTitle;
+
+  /// No description provided for @updateInstallingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Android is installing the new version. Please follow the system prompt to complete the installation.'**
+  String get updateInstallingBody;
+
+  /// No description provided for @updateInstallFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve finished installing'**
+  String get updateInstallFinished;
+
+  /// No description provided for @updateFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed'**
+  String get updateFailedTitle;
+
+  /// No description provided for @updateUnknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error occurred.'**
+  String get updateUnknownError;
+
+  /// No description provided for @updateTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get updateTryAgain;
+
+  /// No description provided for @updateGoBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get updateGoBack;
 }
 
 class _AppLocalizationsDelegate

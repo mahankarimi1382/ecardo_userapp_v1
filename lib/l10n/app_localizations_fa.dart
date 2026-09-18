@@ -7773,4 +7773,120 @@ class AppLocalizationsFa extends AppLocalizations {
   String kycSubmitWizardUploaded(String fileName) {
     return 'آپلود شد: $fileName';
   }
+
+  @override
+  String get updateNotificationTitle => 'نسخه جدید در دسترس است';
+
+  @override
+  String get updateNotificationTitleForce => 'به‌روزرسانی لازم است';
+
+  @override
+  String updateNotificationBody(String version) {
+    return 'eCardo نسخه $version در دسترس است. برای به‌روزرسانی لمس کنید.';
+  }
+
+  @override
+  String get updateNotificationBodyGeneric =>
+      'نسخه جدید eCardo در دسترس است. برای به‌روزرسانی لمس کنید.';
+
+  @override
+  String get updateDialogBody =>
+      'نسخه جدیدی از اپلیکیشن در دسترس است. لطفاً برای ادامه به‌روزرسانی کنید.';
+
+  @override
+  String updateWhatsNewTitle(String version) {
+    return 'تغییرات نسخه $version';
+  }
+
+  @override
+  String get updateWhatsNewFallback => 'رفع اشکال و بهبود عملکرد.';
+
+  @override
+  String get updateDialogDownload => 'دانلود و به‌روزرسانی';
+
+  @override
+  String get updateWebBody =>
+      'نسخه جدیدی در دسترس است. لطفاً برای دریافت آخرین نسخه صفحه را بازخوانی کنید.';
+
+  @override
+  String get updateWebRefresh => 'بازخوانی صفحه';
+
+  @override
+  String get updateSystemTitle => 'سیستم';
+
+  @override
+  String get updateUpToDate => 'شما روی آخرین نسخه هستید.';
+
+  @override
+  String updateUpToDateWithVersion(String version) {
+    return 'اپلیکیشن به‌روز است ($version).';
+  }
+
+  @override
+  String get updateCancelDownloadBody =>
+      'دانلود به‌روزرسانی هنوز در جریان است. مطمئنید که می‌خواهید لغو کنید؟';
+
+  @override
+  String get updateCancel => 'لغو';
+
+  @override
+  String get updateCheckingTitle => 'بررسی به‌روزرسانی…';
+
+  @override
+  String get updateCheckingBody => 'در حال دریافت آخرین نسخه از سرور eCardo.';
+
+  @override
+  String get updateUpToDateScreenTitle => 'شما به‌روز هستید!';
+
+  @override
+  String updateUpToDateScreenBody(String version) {
+    return 'eCardo نسخه $version آخرین نسخه موجود است.';
+  }
+
+  @override
+  String get updateDoneButton => 'تمام';
+
+  @override
+  String get updateCheckAgain => 'بررسی مجدد';
+
+  @override
+  String get updateAvailableScreenTitle => 'به‌روزرسانی در دسترس است';
+
+  @override
+  String get updateCurrentLabel => 'فعلی';
+
+  @override
+  String get updateNewLabel => 'جدید';
+
+  @override
+  String get updateForceNote =>
+      'این به‌روزرسانی اجباری است. تا زمان به‌روزرسانی نمی‌توانید از اپلیکیشن استفاده کنید.';
+
+  @override
+  String get updateMaybeLater => 'شاید بعداً';
+
+  @override
+  String get updateStartingDownload => 'شروع دانلود…';
+
+  @override
+  String get updateInstallingTitle => 'در حال نصب به‌روزرسانی…';
+
+  @override
+  String get updateInstallingBody =>
+      'اندروید در حال نصب نسخه جدید است. لطفاً برای تکمیل نصب دستور سیستم را دنبال کنید.';
+
+  @override
+  String get updateInstallFinished => 'نصب را تمام کردم';
+
+  @override
+  String get updateFailedTitle => 'به‌روزرسانی ناموفق بود';
+
+  @override
+  String get updateUnknownError => 'خطای ناشناخته‌ای رخ داد.';
+
+  @override
+  String get updateTryAgain => 'تلاش مجدد';
+
+  @override
+  String get updateGoBack => 'بازگشت';
 }

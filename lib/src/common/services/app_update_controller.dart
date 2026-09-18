@@ -29,6 +29,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
@@ -138,6 +139,15 @@ class AppUpdateController extends GetxController {
   final RxString errorMessage = ''.obs;
   final Rx<DateTime?> lastCheckedAt = Rx<DateTime?>(null);
 
+  /// v1.1 (UPD-NOTES): release notes / what's-new text for the pending
+  /// version. Populated from (in priority order):
+  ///   1. the `notes` (or `changelog`/`whats_new`) field of the FCM
+  ///      `app_update` data message,
+  ///   2. the `app_update_notes` settings key pushed by the backend,
+  ///   3. empty — the UI then shows a localized generic
+  ///      "bug fixes & improvements" line.
+  final RxString latestNotes = ''.obs;
+
   // ----- Internal -----
   CancelToken? _cancelToken;
 
@@ -180,6 +190,28 @@ class AppUpdateController extends GetxController {
     return _isVersionNewer(server, info.version);
   }
 
+  /// v1.1 (UPD-NOTES): called by FirebaseMessagingService when an
+  /// `app_update` data message arrives. Carries the pushed release notes
+  /// (when the backend includes them) into the controller so the update
+  /// notification AND the popup dialog show WHAT changed, not just that
+  /// something changed.
+  void setPushedUpdateNotes({required String version, String? notes}) {
+    if (version.isNotEmpty) serverVersion.value = version;
+    latestNotes.value = (notes ?? '').trim();
+  }
+
+  /// v1.1 (UPD-NOTES): resolves the best available release-notes text for
+  /// [version]: the pushed notes first, then the backend settings key.
+  String resolveNotes(String version) {
+    if (latestNotes.value.isNotEmpty) return latestNotes.value;
+    try {
+      final settings = Get.find<SettingsService>();
+      return (settings.getSetting('app_update_notes') ?? '').trim();
+    } catch (_) {
+      return '';
+    }
+  }
+
   /// Manual check triggered by the user from the settings screen.
   ///
   /// [showSnackbarWhenUpToDate] controls whether a snackbar is shown when
@@ -193,6 +225,7 @@ class AppUpdateController extends GetxController {
       return; // Already busy.
     }
 
+    final localization = localizationOrNull;
     phase.value = AppUpdatePhase.checking;
     errorMessage.value = '';
     lastCheckedAt.value = DateTime.now();
@@ -213,7 +246,9 @@ class AppUpdateController extends GetxController {
       if (server.isEmpty || link.isEmpty) {
         phase.value = AppUpdatePhase.upToDate;
         if (showSnackbarWhenUpToDate) {
-          _toast('You are on the latest version.');
+          _toast(
+            localization?.updateUpToDate ?? 'You are on the latest version.',
+          );
         }
         return;
       }
@@ -226,7 +261,10 @@ class AppUpdateController extends GetxController {
       } else {
         phase.value = AppUpdatePhase.upToDate;
         if (showSnackbarWhenUpToDate) {
-          _toast('App is up to date (${info.version})');
+          _toast(
+            localization?.updateUpToDateWithVersion(info.version) ??
+                'App is up to date (${info.version})',
+          );
         }
       }
     } catch (e) {
@@ -417,13 +455,22 @@ class AppUpdateController extends GetxController {
   }
 
   void _toast(String message) {
+    final localization = localizationOrNull;
     Get.snackbar(
-      'System',
+      localization?.updateSystemTitle ?? 'System',
       message,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.lightPrimary,
       colorText: Colors.white,
       margin: const EdgeInsets.all(12),
     );
+  }
+
+  /// Nullable localization getter — the controller outlives language
+  /// context changes, so every access must be null-safe (P-4 pattern).
+  AppLocalizations? get localizationOrNull {
+    final ctx = Get.context;
+    if (ctx == null) return null;
+    return AppLocalizations.of(ctx);
   }
 }

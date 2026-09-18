@@ -7763,4 +7763,122 @@ class AppLocalizationsTr extends AppLocalizations {
   String kycSubmitWizardUploaded(String fileName) {
     return 'Yüklendi: $fileName';
   }
+
+  @override
+  String get updateNotificationTitle => 'Yeni sürüm mevcut';
+
+  @override
+  String get updateNotificationTitleForce => 'Güncelleme gerekli';
+
+  @override
+  String updateNotificationBody(String version) {
+    return 'eCardo v$version mevcut. Güncellemek için dokunun.';
+  }
+
+  @override
+  String get updateNotificationBodyGeneric =>
+      'eCardo’nun yeni bir sürümü mevcut. Güncellemek için dokunun.';
+
+  @override
+  String get updateDialogBody =>
+      'Uygulamanın yeni bir sürümü mevcut. Devam etmek için lütfen güncelleyin.';
+
+  @override
+  String updateWhatsNewTitle(String version) {
+    return 'v$version sürümündeki yenilikler';
+  }
+
+  @override
+  String get updateWhatsNewFallback =>
+      'Hata düzeltmeleri ve performans iyileştirmeleri.';
+
+  @override
+  String get updateDialogDownload => 'İndir ve güncelle';
+
+  @override
+  String get updateWebBody =>
+      'Yeni bir sürüm mevcut. En son sürümü almak için lütfen sayfayı yenileyin.';
+
+  @override
+  String get updateWebRefresh => 'Sayfayı yenile';
+
+  @override
+  String get updateSystemTitle => 'Sistem';
+
+  @override
+  String get updateUpToDate => 'En son sürümü kullanıyorsunuz.';
+
+  @override
+  String updateUpToDateWithVersion(String version) {
+    return 'Uygulama güncel ($version).';
+  }
+
+  @override
+  String get updateCancelDownloadBody =>
+      'Güncelleme indirmesi hâlâ devam ediyor. İptal etmek istediğinizden emin misiniz?';
+
+  @override
+  String get updateCancel => 'İptal';
+
+  @override
+  String get updateCheckingTitle => 'Güncellemeler kontrol ediliyor…';
+
+  @override
+  String get updateCheckingBody =>
+      'En son sürüm için eCardo sunucusuna bağlanılıyor.';
+
+  @override
+  String get updateUpToDateScreenTitle => 'Güncelsiniz!';
+
+  @override
+  String updateUpToDateScreenBody(String version) {
+    return 'eCardo v$version mevcut en son sürümdür.';
+  }
+
+  @override
+  String get updateDoneButton => 'Tamam';
+
+  @override
+  String get updateCheckAgain => 'Tekrar kontrol et';
+
+  @override
+  String get updateAvailableScreenTitle => 'Güncelleme mevcut';
+
+  @override
+  String get updateCurrentLabel => 'Mevcut';
+
+  @override
+  String get updateNewLabel => 'Yeni';
+
+  @override
+  String get updateForceNote =>
+      'Bu güncelleme zorunludur. Güncelleyene kadar uygulama kullanılamaz.';
+
+  @override
+  String get updateMaybeLater => 'Belki sonra';
+
+  @override
+  String get updateStartingDownload => 'İndirme başlıyor…';
+
+  @override
+  String get updateInstallingTitle => 'Güncelleme yükleniyor…';
+
+  @override
+  String get updateInstallingBody =>
+      'Android yeni sürümü yüklüyor. Kurulumu tamamlamak için lütfen sistem istemini takip edin.';
+
+  @override
+  String get updateInstallFinished => 'Yüklemeyi tamamladım';
+
+  @override
+  String get updateFailedTitle => 'Güncelleme başarısız';
+
+  @override
+  String get updateUnknownError => 'Bilinmeyen bir hata oluştu.';
+
+  @override
+  String get updateTryAgain => 'Tekrar dene';
+
+  @override
+  String get updateGoBack => 'Geri dön';
 }

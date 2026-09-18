@@ -41,6 +41,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/local_notifications_service.dart';
@@ -69,6 +70,12 @@ class FirebaseMessagingService {
 
   LocalNotificationsService? _localNotificationsService;
   BuildContext? _lastContext;
+
+  AppLocalizations? get localizationOrNull {
+    final ctx = _lastContext ?? Get.context;
+    if (ctx == null) return null;
+    return AppLocalizations.of(ctx);
+  }
 
   Future<void> init({
     required LocalNotificationsService localNotificationsService,
@@ -458,17 +465,54 @@ class FirebaseMessagingService {
   ///   2. Trigger the update controller's check flow.
   ///   3. Show a high-priority local notification (so the user notices even
   ///      if they're not currently looking at the app).
+  ///
+  /// v1.1 (UPD-NOTES): the push may carry `notes` (or `changelog` /
+  /// `whats_new`) describing WHAT changed in this version. The text is
+  /// passed to the controller and rendered in BOTH the local notification
+  /// and the update dialog — previously the notification was a hardcoded
+  /// English one-liner with no change information at all.
   void _handleAppUpdateMessage(RemoteMessage message) async {
-    final version = message.data['version'] as String?;
-    final force = (message.data['force'] as String?) == '1';
+    final data = message.data;
+    final version = data['version'] as String?;
+    final force = (data['force'] as String?) == '1';
+    final notes = (data['notes'] ?? data['changelog'] ?? data['whats_new'])
+        ?.toString()
+        .trim();
+
+    // Feed the pushed metadata into the controller before any UI runs so
+    // the dialog/notification read the same source of truth.
+    if (Get.isRegistered<AppUpdateController>()) {
+      Get.find<AppUpdateController>().setPushedUpdateNotes(
+        version: version ?? '',
+        notes: (notes == null || notes.isEmpty) ? null : notes,
+      );
+    }
+
+    // Localized push copy. AUTH-BIO pattern: nullable localization with an
+    // English fallback (this runs with no BuildContext available).
+    final localization = localizationOrNull;
+    final title = force
+        ? (localization?.updateNotificationTitleForce ??
+            'Required update available')
+        : (localization?.updateNotificationTitle ?? 'New version available');
+    final body = StringBuffer(
+      version == null
+          ? (localization?.updateNotificationBodyGeneric ??
+              'A new version of eCardo is available. Tap to update.')
+          : (localization?.updateNotificationBody(version) ??
+              'eCardo v$version is available. Tap to update.'),
+    );
+    if (notes != null && notes.isNotEmpty) {
+      body
+        ..writeln()
+        ..write(notes);
+    }
 
     // Show a local notification so the user is alerted even if the app is
     // in the foreground but the screen is off / another app is on top.
     _localNotificationsService?.showNotification(
-      force ? 'Required update available' : 'New version available',
-      version == null
-          ? 'A new version of eCardo is available. Tap to update.'
-          : 'eCardo v$version is available. Tap to update.',
+      title,
+      body.toString(),
       'app_update',
     );
 

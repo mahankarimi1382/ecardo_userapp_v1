@@ -7767,4 +7767,122 @@ class AppLocalizationsRu extends AppLocalizations {
   String kycSubmitWizardUploaded(String fileName) {
     return 'Загружено: $fileName';
   }
+
+  @override
+  String get updateNotificationTitle => 'Доступна новая версия';
+
+  @override
+  String get updateNotificationTitleForce => 'Требуется обновление';
+
+  @override
+  String updateNotificationBody(String version) {
+    return 'Доступна eCardo v$version. Нажмите для обновления.';
+  }
+
+  @override
+  String get updateNotificationBodyGeneric =>
+      'Доступна новая версия eCardo. Нажмите для обновления.';
+
+  @override
+  String get updateDialogBody =>
+      'Доступна новая версия приложения. Пожалуйста, обновите, чтобы продолжить.';
+
+  @override
+  String updateWhatsNewTitle(String version) {
+    return 'Что нового в v$version';
+  }
+
+  @override
+  String get updateWhatsNewFallback =>
+      'Исправления ошибок и улучшения производительности.';
+
+  @override
+  String get updateDialogDownload => 'Скачать и обновить';
+
+  @override
+  String get updateWebBody =>
+      'Доступна новая версия. Обновите страницу, чтобы получить последнюю версию.';
+
+  @override
+  String get updateWebRefresh => 'Обновить страницу';
+
+  @override
+  String get updateSystemTitle => 'Система';
+
+  @override
+  String get updateUpToDate => 'У вас последняя версия.';
+
+  @override
+  String updateUpToDateWithVersion(String version) {
+    return 'Приложение обновлено ($version).';
+  }
+
+  @override
+  String get updateCancelDownloadBody =>
+      'Загрузка обновления ещё идёт. Вы уверены, что хотите отменить?';
+
+  @override
+  String get updateCancel => 'Отмена';
+
+  @override
+  String get updateCheckingTitle => 'Проверка обновлений…';
+
+  @override
+  String get updateCheckingBody =>
+      'Связываемся с сервером eCardo для получения последней версии.';
+
+  @override
+  String get updateUpToDateScreenTitle => 'У вас последняя версия!';
+
+  @override
+  String updateUpToDateScreenBody(String version) {
+    return 'eCardo v$version — последняя доступная версия.';
+  }
+
+  @override
+  String get updateDoneButton => 'Готово';
+
+  @override
+  String get updateCheckAgain => 'Проверить снова';
+
+  @override
+  String get updateAvailableScreenTitle => 'Доступно обновление';
+
+  @override
+  String get updateCurrentLabel => 'Текущая';
+
+  @override
+  String get updateNewLabel => 'Новая';
+
+  @override
+  String get updateForceNote =>
+      'Это обновление обязательно. Приложением нельзя пользоваться, пока вы не обновитесь.';
+
+  @override
+  String get updateMaybeLater => 'Может быть, позже';
+
+  @override
+  String get updateStartingDownload => 'Начало загрузки…';
+
+  @override
+  String get updateInstallingTitle => 'Установка обновления…';
+
+  @override
+  String get updateInstallingBody =>
+      'Android устанавливает новую версию. Следуйте системному запросу для завершения установки.';
+
+  @override
+  String get updateInstallFinished => 'Установка завершена';
+
+  @override
+  String get updateFailedTitle => 'Не удалось обновить';
+
+  @override
+  String get updateUnknownError => 'Произошла неизвестная ошибка.';
+
+  @override
+  String get updateTryAgain => 'Попробовать снова';
+
+  @override
+  String get updateGoBack => 'Назад';
 }

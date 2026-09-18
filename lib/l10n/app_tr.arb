@@ -2481,5 +2481,67 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateNotificationTitle": "Yeni sürüm mevcut",
+  "updateNotificationTitleForce": "Güncelleme gerekli",
+  "updateNotificationBody": "eCardo v{version} mevcut. Güncellemek için dokunun.",
+  "@updateNotificationBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNotificationBodyGeneric": "eCardo’nun yeni bir sürümü mevcut. Güncellemek için dokunun.",
+  "updateDialogBody": "Uygulamanın yeni bir sürümü mevcut. Devam etmek için lütfen güncelleyin.",
+  "updateWhatsNewTitle": "v{version} sürümündeki yenilikler",
+  "@updateWhatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNewFallback": "Hata düzeltmeleri ve performans iyileştirmeleri.",
+  "updateDialogDownload": "İndir ve güncelle",
+  "updateWebBody": "Yeni bir sürüm mevcut. En son sürümü almak için lütfen sayfayı yenileyin.",
+  "updateWebRefresh": "Sayfayı yenile",
+  "updateSystemTitle": "Sistem",
+  "updateUpToDate": "En son sürümü kullanıyorsunuz.",
+  "updateUpToDateWithVersion": "Uygulama güncel ({version}).",
+  "@updateUpToDateWithVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCancelDownloadBody": "Güncelleme indirmesi hâlâ devam ediyor. İptal etmek istediğinizden emin misiniz?",
+  "updateCancel": "İptal",
+  "updateCheckingTitle": "Güncellemeler kontrol ediliyor…",
+  "updateCheckingBody": "En son sürüm için eCardo sunucusuna bağlanılıyor.",
+  "updateUpToDateScreenTitle": "Güncelsiniz!",
+  "updateUpToDateScreenBody": "eCardo v{version} mevcut en son sürümdür.",
+  "@updateUpToDateScreenBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDoneButton": "Tamam",
+  "updateCheckAgain": "Tekrar kontrol et",
+  "updateAvailableScreenTitle": "Güncelleme mevcut",
+  "updateCurrentLabel": "Mevcut",
+  "updateNewLabel": "Yeni",
+  "updateForceNote": "Bu güncelleme zorunludur. Güncelleyene kadar uygulama kullanılamaz.",
+  "updateMaybeLater": "Belki sonra",
+  "updateStartingDownload": "İndirme başlıyor…",
+  "updateInstallingTitle": "Güncelleme yükleniyor…",
+  "updateInstallingBody": "Android yeni sürümü yüklüyor. Kurulumu tamamlamak için lütfen sistem istemini takip edin.",
+  "updateInstallFinished": "Yüklemeyi tamamladım",
+  "updateFailedTitle": "Güncelleme başarısız",
+  "updateUnknownError": "Bilinmeyen bir hata oluştu.",
+  "updateTryAgain": "Tekrar dene",
+  "updateGoBack": "Geri dön"
 }

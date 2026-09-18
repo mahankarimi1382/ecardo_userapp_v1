@@ -7717,4 +7717,121 @@ class AppLocalizationsAr extends AppLocalizations {
   String kycSubmitWizardUploaded(String fileName) {
     return 'تم الرفع: $fileName';
   }
+
+  @override
+  String get updateNotificationTitle => 'إصدار جديد متاح';
+
+  @override
+  String get updateNotificationTitleForce => 'التحديث مطلوب';
+
+  @override
+  String updateNotificationBody(String version) {
+    return 'eCardo الإصدار $version متاح. اضغط للتحديث.';
+  }
+
+  @override
+  String get updateNotificationBodyGeneric =>
+      'إصدار جديد من eCardo متاح. اضغط للتحديث.';
+
+  @override
+  String get updateDialogBody =>
+      'يتوفر إصدار جديد من التطبيق. يرجى التحديث للمتابعة.';
+
+  @override
+  String updateWhatsNewTitle(String version) {
+    return 'ما الجديد في الإصدار $version';
+  }
+
+  @override
+  String get updateWhatsNewFallback => 'إصلاحات الأخطاء وتحسينات الأداء.';
+
+  @override
+  String get updateDialogDownload => 'التحديث والتنزيل';
+
+  @override
+  String get updateWebBody =>
+      'يتوفر إصدار جديد. يرجى تحديث الصفحة للحصول على أحدث إصدار.';
+
+  @override
+  String get updateWebRefresh => 'تحديث الصفحة';
+
+  @override
+  String get updateSystemTitle => 'النظام';
+
+  @override
+  String get updateUpToDate => 'أنت تستخدم أحدث إصدار.';
+
+  @override
+  String updateUpToDateWithVersion(String version) {
+    return 'التطبيق محدَّث ($version).';
+  }
+
+  @override
+  String get updateCancelDownloadBody =>
+      'لا يزال تنزيل التحديث قيد التقدم. هل أنت متأكد أنك تريد الإلغاء؟';
+
+  @override
+  String get updateCancel => 'إلغاء';
+
+  @override
+  String get updateCheckingTitle => 'جارٍ التحقق من التحديثات…';
+
+  @override
+  String get updateCheckingBody =>
+      'جارٍ الاتصال بخادم eCardo للحصول على أحدث إصدار.';
+
+  @override
+  String get updateUpToDateScreenTitle => 'أنت محدَّث!';
+
+  @override
+  String updateUpToDateScreenBody(String version) {
+    return 'eCardo الإصدار $version هو أحدث إصدار متاح.';
+  }
+
+  @override
+  String get updateDoneButton => 'تم';
+
+  @override
+  String get updateCheckAgain => 'تحقق مرة أخرى';
+
+  @override
+  String get updateAvailableScreenTitle => 'يتوفر تحديث';
+
+  @override
+  String get updateCurrentLabel => 'الحالي';
+
+  @override
+  String get updateNewLabel => 'جديد';
+
+  @override
+  String get updateForceNote =>
+      'هذا التحديث إلزامي. لا يمكن استخدام التطبيق حتى تقوم بالتحديث.';
+
+  @override
+  String get updateMaybeLater => 'ربما لاحقاً';
+
+  @override
+  String get updateStartingDownload => 'بدء التنزيل…';
+
+  @override
+  String get updateInstallingTitle => 'جارٍ تثبيت التحديث…';
+
+  @override
+  String get updateInstallingBody =>
+      'يقوم أندرويد بتثبيت الإصدار الجديد. يرجى اتباع مطالبة النظام لإكمال التثبيت.';
+
+  @override
+  String get updateInstallFinished => 'لقد أكملت التثبيت';
+
+  @override
+  String get updateFailedTitle => 'فشل التحديث';
+
+  @override
+  String get updateUnknownError => 'حدث خطأ غير معروف.';
+
+  @override
+  String get updateTryAgain => 'حاول مرة أخرى';
+
+  @override
+  String get updateGoBack => 'رجوع';
 }

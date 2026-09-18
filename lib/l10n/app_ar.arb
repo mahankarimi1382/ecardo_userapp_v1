@@ -2482,5 +2482,67 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateNotificationTitle": "إصدار جديد متاح",
+  "updateNotificationTitleForce": "التحديث مطلوب",
+  "updateNotificationBody": "eCardo الإصدار {version} متاح. اضغط للتحديث.",
+  "@updateNotificationBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNotificationBodyGeneric": "إصدار جديد من eCardo متاح. اضغط للتحديث.",
+  "updateDialogBody": "يتوفر إصدار جديد من التطبيق. يرجى التحديث للمتابعة.",
+  "updateWhatsNewTitle": "ما الجديد في الإصدار {version}",
+  "@updateWhatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNewFallback": "إصلاحات الأخطاء وتحسينات الأداء.",
+  "updateDialogDownload": "التحديث والتنزيل",
+  "updateWebBody": "يتوفر إصدار جديد. يرجى تحديث الصفحة للحصول على أحدث إصدار.",
+  "updateWebRefresh": "تحديث الصفحة",
+  "updateSystemTitle": "النظام",
+  "updateUpToDate": "أنت تستخدم أحدث إصدار.",
+  "updateUpToDateWithVersion": "التطبيق محدَّث ({version}).",
+  "@updateUpToDateWithVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCancelDownloadBody": "لا يزال تنزيل التحديث قيد التقدم. هل أنت متأكد أنك تريد الإلغاء؟",
+  "updateCancel": "إلغاء",
+  "updateCheckingTitle": "جارٍ التحقق من التحديثات…",
+  "updateCheckingBody": "جارٍ الاتصال بخادم eCardo للحصول على أحدث إصدار.",
+  "updateUpToDateScreenTitle": "أنت محدَّث!",
+  "updateUpToDateScreenBody": "eCardo الإصدار {version} هو أحدث إصدار متاح.",
+  "@updateUpToDateScreenBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDoneButton": "تم",
+  "updateCheckAgain": "تحقق مرة أخرى",
+  "updateAvailableScreenTitle": "يتوفر تحديث",
+  "updateCurrentLabel": "الحالي",
+  "updateNewLabel": "جديد",
+  "updateForceNote": "هذا التحديث إلزامي. لا يمكن استخدام التطبيق حتى تقوم بالتحديث.",
+  "updateMaybeLater": "ربما لاحقاً",
+  "updateStartingDownload": "بدء التنزيل…",
+  "updateInstallingTitle": "جارٍ تثبيت التحديث…",
+  "updateInstallingBody": "يقوم أندرويد بتثبيت الإصدار الجديد. يرجى اتباع مطالبة النظام لإكمال التثبيت.",
+  "updateInstallFinished": "لقد أكملت التثبيت",
+  "updateFailedTitle": "فشل التحديث",
+  "updateUnknownError": "حدث خطأ غير معروف.",
+  "updateTryAgain": "حاول مرة أخرى",
+  "updateGoBack": "رجوع"
 }

@@ -2482,5 +2482,67 @@
         "type": "String"
       }
     }
-  }
+  },
+  "updateNotificationTitle": "نسخه جدید در دسترس است",
+  "updateNotificationTitleForce": "به‌روزرسانی لازم است",
+  "updateNotificationBody": "eCardo نسخه {version} در دسترس است. برای به‌روزرسانی لمس کنید.",
+  "@updateNotificationBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNotificationBodyGeneric": "نسخه جدید eCardo در دسترس است. برای به‌روزرسانی لمس کنید.",
+  "updateDialogBody": "نسخه جدیدی از اپلیکیشن در دسترس است. لطفاً برای ادامه به‌روزرسانی کنید.",
+  "updateWhatsNewTitle": "تغییرات نسخه {version}",
+  "@updateWhatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateWhatsNewFallback": "رفع اشکال و بهبود عملکرد.",
+  "updateDialogDownload": "دانلود و به‌روزرسانی",
+  "updateWebBody": "نسخه جدیدی در دسترس است. لطفاً برای دریافت آخرین نسخه صفحه را بازخوانی کنید.",
+  "updateWebRefresh": "بازخوانی صفحه",
+  "updateSystemTitle": "سیستم",
+  "updateUpToDate": "شما روی آخرین نسخه هستید.",
+  "updateUpToDateWithVersion": "اپلیکیشن به‌روز است ({version}).",
+  "@updateUpToDateWithVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCancelDownloadBody": "دانلود به‌روزرسانی هنوز در جریان است. مطمئنید که می‌خواهید لغو کنید؟",
+  "updateCancel": "لغو",
+  "updateCheckingTitle": "بررسی به‌روزرسانی…",
+  "updateCheckingBody": "در حال دریافت آخرین نسخه از سرور eCardo.",
+  "updateUpToDateScreenTitle": "شما به‌روز هستید!",
+  "updateUpToDateScreenBody": "eCardo نسخه {version} آخرین نسخه موجود است.",
+  "@updateUpToDateScreenBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDoneButton": "تمام",
+  "updateCheckAgain": "بررسی مجدد",
+  "updateAvailableScreenTitle": "به‌روزرسانی در دسترس است",
+  "updateCurrentLabel": "فعلی",
+  "updateNewLabel": "جدید",
+  "updateForceNote": "این به‌روزرسانی اجباری است. تا زمان به‌روزرسانی نمی‌توانید از اپلیکیشن استفاده کنید.",
+  "updateMaybeLater": "شاید بعداً",
+  "updateStartingDownload": "شروع دانلود…",
+  "updateInstallingTitle": "در حال نصب به‌روزرسانی…",
+  "updateInstallingBody": "اندروید در حال نصب نسخه جدید است. لطفاً برای تکمیل نصب دستور سیستم را دنبال کنید.",
+  "updateInstallFinished": "نصب را تمام کردم",
+  "updateFailedTitle": "به‌روزرسانی ناموفق بود",
+  "updateUnknownError": "خطای ناشناخته‌ای رخ داد.",
+  "updateTryAgain": "تلاش مجدد",
+  "updateGoBack": "بازگشت"
 }
