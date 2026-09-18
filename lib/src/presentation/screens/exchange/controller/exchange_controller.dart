@@ -362,6 +362,11 @@ class ExchangeController extends GetxController {
         localizationOrNull?.allControllerLoadError ??
         'Something went wrong. Please try again.',
       );
+    } finally {
+      // v1.0.40 (stuck-loading fix): the flag was only cleared on the
+      // success path — a failed config fetch left the exchange page on an
+      // eternal loading spinner ("the page never comes").
+      isExchangeConfigLoading.value = false;
     }
   }
 
@@ -428,11 +433,16 @@ class ExchangeController extends GetxController {
   Future<void> getExchangeRateConverter() async {
     isExchangeConfigLoading.value = true;
     try {
+      // v1.0.40 (crash fix): force-unwrapped wallet codes crashed the
+      // config chain when no exchange wallet was resolvable yet.
+      final fromCode = fromWallet.value?.code;
+      final toCode = toWallet.value?.code;
+      if (fromCode == null || toCode == null) return;
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getCurrencyToCurrencyConverterEndpoint(
           amount: amountController.text,
-          toCurrencyCode: toWallet.value!.code!,
-          fromCurrencyCode: fromWallet.value!.code!,
+          toCurrencyCode: toCode,
+          fromCurrencyCode: fromCode,
         ),
       );
       if (response.status == Status.completed) {

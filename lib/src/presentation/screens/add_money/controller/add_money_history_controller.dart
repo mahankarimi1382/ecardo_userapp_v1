@@ -20,7 +20,11 @@ class AddMoneyHistoryController extends GetxController {
   ].obs;
   final RxInt selectedStatusIndex = (-1).obs;
   final Rx<TransactionsModel> transactionsModel = TransactionsModel().obs;
-  final localization = AppLocalizations.of(Get.context!)!;
+  /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
+  /// froze the locale at controller creation (language switches left stale
+  /// strings) and crashed when no localization context existed yet.
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
 
   // Transactions ID
   final RxBool isTransactionIdFocused = false.obs;
@@ -92,7 +96,7 @@ class AddMoneyHistoryController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {
       isLoading.value = false;
     }
@@ -130,7 +134,7 @@ class AddMoneyHistoryController extends GetxController {
       currentPage.value--;
       debugPrint('❌ loadMoreTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {
       isPageLoading.value = false;
     }
@@ -165,7 +169,7 @@ class AddMoneyHistoryController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchDynamicTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {
       isTransactionsLoading.value = false;
       isFilter.value = false;

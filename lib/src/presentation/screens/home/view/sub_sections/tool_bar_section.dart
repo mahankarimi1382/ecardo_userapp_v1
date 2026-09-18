@@ -10,11 +10,21 @@ class ToolBarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // v1.0.40 (crash fix): the toolbar force-unwrapped dashboard data!
+    .info! / .user!.avatarPath! — a failed dashboard fetch or a user
+    // without an avatar crashed the ENTIRE home screen. Resolve
+    // defensively with safe fallbacks instead.
+    final homeController = Get.find<HomeController>();
+    final info = homeController.dashboardModel.value.data?.info;
+    final user = homeController.dashboardModel.value.data?.user;
+    final unread = info?.unreadNotificationsCount ?? 0;
+    final avatarPath = user?.avatarPath;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         InkWell(
-          onTap: () => Get.find<HomeController>().openDrawer(),
+          onTap: () => homeController.openDrawer(),
           child: Image.asset(PngAssets.menuCommonIcon, width: 35),
         ),
         Row(
@@ -25,45 +35,39 @@ class ToolBarSection extends StatelessWidget {
               },
               child: Badge(
                 backgroundColor: AppColors.success,
-                smallSize:
-                    Get.find<HomeController>()
-                            .dashboardModel
-                            .value
-                            .data!
-                            .info!
-                            .unreadNotificationsCount !=
-                        0
-                    ? 8
-                    : 0,
+                smallSize: unread != 0 ? 8 : 0,
                 child: Image.asset(PngAssets.commonNotificationIcon, width: 30),
               ),
             ),
             SizedBox(width: 10),
-            Obx(
-              () => GestureDetector(
-                onTap: () => Get.find<HomeController>().openEndDrawer(),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.network(
-                    Get.find<HomeController>()
-                        .dashboardModel
-                        .value
-                        .data!
-                        .user!
-                        .avatarPath!,
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
+            // v1.0.40: the Obx wrapper was dropped — nothing observable was
+            // read inside after the defensive refactor, and GetX throws on
+            // an Rx-less Obx. The avatar refreshes with the parent rebuild.
+            GestureDetector(
+              onTap: () => homeController.openEndDrawer(),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: (avatarPath ?? '').isNotEmpty
+                    ? Image.network(
+                        avatarPath!,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            PngAssets.profileImage,
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.contain,
+                          );
+                        },
+                      )
+                    : Image.asset(
                         PngAssets.profileImage,
                         width: 40,
                         height: 40,
                         fit: BoxFit.contain,
-                      );
-                    },
-                  ),
-                ),
+                      ),
               ),
             ),
           ],

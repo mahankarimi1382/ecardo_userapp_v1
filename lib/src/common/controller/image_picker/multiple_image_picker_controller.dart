@@ -9,7 +9,11 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class MultipleImagePickerController extends GetxController {
   final ImagePicker _imagePicker = ImagePicker();
-  final localization = AppLocalizations.of(Get.context!)!;
+  /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
+  /// froze the locale at controller creation (language switches left stale
+  /// strings) and crashed when no localization context existed yet.
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
   final RxMap<int, File> attachedImages = <int, File>{}.obs;
   final RxInt currentEditingId = RxInt(-1);
 
@@ -29,7 +33,7 @@ class MultipleImagePickerController extends GetxController {
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: localization.multipleImagePickerGalleryError,
+        msg: localization!.multipleImagePickerGalleryError,
         backgroundColor: AppColors.error,
       );
     }
@@ -47,7 +51,7 @@ class MultipleImagePickerController extends GetxController {
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: localization.multipleImagePickerCameraError,
+        msg: localization!.multipleImagePickerCameraError,
         backgroundColor: AppColors.error,
       );
     }

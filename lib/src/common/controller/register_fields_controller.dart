@@ -8,7 +8,11 @@ import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 
 class RegisterFieldsController extends GetxController {
-  final localization = AppLocalizations.of(Get.context!);
+  /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
+  /// froze the locale at controller creation (language switches left stale
+  /// strings) and crashed when no localization context existed yet.
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
   final RxBool isLoading = false.obs;
   final RxMap<String, String> registerFields = <String, String>{}.obs;
 

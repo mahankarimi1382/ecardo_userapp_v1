@@ -151,7 +151,7 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                       // while the request is in flight must not fire.
                       isLoading: controller.isMakePaymentLoading.value,
                       onPressed: () async {
-                        if (controller.userModel.value.data!.passcode == "0") {
+                        if (controller.userModel.value.data?.passcode ?? "0" == "0") {
                           controller.currentStep.value == 1
                               ? controller.makePayment()
                               : controller.nextStepWithValidation();

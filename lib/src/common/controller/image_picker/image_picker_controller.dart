@@ -8,7 +8,11 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class ImagePickerController extends GetxController {
-  final localization = AppLocalizations.of(Get.context!)!;
+  /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
+  /// froze the locale at controller creation (language switches left stale
+  /// strings) and crashed when no localization context existed yet.
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
   final ImagePicker _picker = ImagePicker();
   Rx<File?> selectedImage = Rx<File?>(null);
 
@@ -26,7 +30,7 @@ class ImagePickerController extends GetxController {
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: localization.imagePickerGalleryError,
+        msg: localization!.imagePickerGalleryError,
         backgroundColor: AppColors.error,
       );
     }
@@ -43,7 +47,7 @@ class ImagePickerController extends GetxController {
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: localization.imagePickerCameraError,
+        msg: localization!.imagePickerCameraError,
         backgroundColor: AppColors.error,
       );
     }

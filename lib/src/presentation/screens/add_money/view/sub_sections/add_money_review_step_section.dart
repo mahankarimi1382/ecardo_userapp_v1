@@ -151,7 +151,7 @@ class AddMoneyReviewStepSection extends StatelessWidget {
                       // while the request is in flight must not fire.
                       isLoading: controller.isPaymentLoading.value,
                       onPressed: () async {
-                        if (controller.userModel.value.data!.passcode == "0") {
+                        if (controller.userModel.value.data?.passcode ?? "0" == "0") {
                           _continueAddMoneyFlow(controller);
                           return;
                         }

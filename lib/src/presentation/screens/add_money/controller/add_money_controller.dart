@@ -25,7 +25,11 @@ class AddMoneyController extends GetxController {
   final Rxn<Map<String, dynamic>> pendingPaymentData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  final localization = AppLocalizations.of(Get.context!);
+  /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
+  /// froze the locale at controller creation (language switches left stale
+  /// strings) and crashed when no localization context existed yet.
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
 
   // Wallet
   final Rxn<Wallets> wallet = Rxn<Wallets>();
