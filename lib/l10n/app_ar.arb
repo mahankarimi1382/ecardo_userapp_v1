@@ -499,6 +499,8 @@
   "otherServicesWithdraw": "سحب",
   "otherServicesExchange": "تبديل",
   "otherServicesTransfer": "تحويل",
+  "otherServicesDynamicPassword": "الرمز الديناميكي",
+  "commonComingSoon": "قريباً",
   "otherServicesInvite": "دعوة",
   "otherServicesBillPayment": "دفع الفواتير",
   "otherServicesVirtualCard": "بطاقات افتراضية",

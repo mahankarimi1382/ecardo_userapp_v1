@@ -498,6 +498,8 @@
   "otherServicesWithdraw": "Withdraw",
   "otherServicesExchange": "Exchange",
   "otherServicesTransfer": "Transfer",
+  "otherServicesDynamicPassword": "Dynamic PIN",
+  "commonComingSoon": "Coming soon",
   "otherServicesInvite": "Invite",
   "otherServicesBillPayment": "Bill Payment",
   "otherServicesVirtualCard": "Virtual Cards",

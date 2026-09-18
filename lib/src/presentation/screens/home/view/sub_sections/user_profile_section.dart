@@ -9,17 +9,16 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/tool_bar_section.dart';
 
-/// v1.0.36 (HERO-CARD): the greeting header redesigned to fintech standard —
-/// compact greeting line, prominent name, glassy tiered-verification chip,
-/// a clean UID pill and a verification progress row. The decorative PNG
-/// shape was replaced with soft circles + a brand gradient, so the card
-/// reads like a modern wallet app instead of a stretched bitmap.
+/// v1.0.37 (HERO-CARD v2): minimal fintech header —
+///   Row 1: user name (hero) + tappable verification tick/level chip
+///   Row 2: UID pill (whole pill copies, ripple feedback)
+/// The greeting line ("Hello · Good morning") was removed by product
+/// decision, and the separate KYC row merged into the name-level chip.
 class UserProfileSection extends StatelessWidget {
   const UserProfileSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
     final HomeController homeController = Get.find<HomeController>();
     final user = homeController.dashboardModel.value.data?.user;
 
@@ -27,7 +26,7 @@ class UserProfileSection extends StatelessWidget {
       children: [
         SizedBox(height: 60),
         ToolBarSection(),
-        SizedBox(height: 22),
+        SizedBox(height: 24),
         Stack(
           clipBehavior: Clip.hardEdge,
           children: [
@@ -52,21 +51,10 @@ class UserProfileSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Greeting — one compact line: "Hello · Good morning"
-                  Text(
-                    _greetingLine(homeController, localization),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontSize: 13.sp,
-                      color: AppColors.white.withValues(alpha: 0.75),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 6.h),
-                  // Name + verification tier chip
+                  // Name + verification tick/level chip — the KYC indicator
+                  // lives exactly here, opposite the name.
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Text(
@@ -75,7 +63,8 @@ class UserProfileSection extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             letterSpacing: 0,
-                            fontSize: 24.sp,
+                            fontSize: 26.sp,
+                            height: 1.15,
                             color: AppColors.white,
                             fontWeight: FontWeight.w900,
                           ),
@@ -85,12 +74,10 @@ class UserProfileSection extends StatelessWidget {
                       _KycStatusBadge(homeController: homeController),
                     ],
                   ),
-                  SizedBox(height: 16.h),
-                  // UID pill
+                  SizedBox(height: 18.h),
+                  // UID pill — the whole pill is tappable (copies), with an
+                  // explicit copy affordance on the trailing edge.
                   _UidPill(accountNumber: user?.accountNumber ?? ""),
-                  SizedBox(height: 10.h),
-                  // Verification progress row
-                  _KycProgressRow(homeController: homeController),
                 ],
               ),
             ),
@@ -99,17 +86,6 @@ class UserProfileSection extends StatelessWidget {
         SizedBox(height: 65),
       ],
     );
-  }
-
-  String _greetingLine(
-    HomeController homeController,
-    AppLocalizations localization,
-  ) {
-    final wish =
-        homeController.dashboardModel.value.data?.info?.timeWiseWish ?? "";
-    final hello = localization.userProfileHello;
-    if (wish.isEmpty) return hello;
-    return "$hello  ·  $wish";
   }
 
   Widget _decorCircle(double size, Color color) {
@@ -121,8 +97,9 @@ class UserProfileSection extends StatelessWidget {
   }
 }
 
-/// UID (account number) pill — label, value and copy action in one clean
-/// glassy row. Material icons only, consistent with the rest of the app.
+/// UID (account number) pill — full-width, generous touch target: tapping
+/// anywhere on the pill copies the number (InkWell ripple), with an
+/// explicit copy affordance on the trailing edge.
 class _UidPill extends StatelessWidget {
   final String accountNumber;
 
@@ -132,113 +109,123 @@ class _UidPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
 
-    return Container(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 9),
-      decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.tag_rounded, color: AppColors.white.withValues(alpha: 0.7), size: 15),
-          SizedBox(width: 6.w),
-          Text(
-            localization.userProfileUid,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontSize: 11.sp,
-              color: AppColors.white.withValues(alpha: 0.7),
-              fontWeight: FontWeight.w700,
+    return Material(
+      color: AppColors.white.withValues(alpha: 0.13),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {
+          Clipboard.setData(ClipboardData(text: accountNumber));
+          ToastHelper().showSuccessToast(localization.userProfileCopied);
+        },
+        child: Container(
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: AppColors.white.withValues(alpha: 0.18),
+              width: 1,
             ),
           ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              accountNumber,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w800,
-                fontSize: 14.sp,
-                color: AppColors.white,
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: AppColors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.tag_rounded,
+                  color: AppColors.white.withValues(alpha: 0.85),
+                  size: 14,
+                ),
               ),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          GestureDetector(
-            onTap: () {
-              Clipboard.setData(ClipboardData(text: accountNumber));
-              ToastHelper().showSuccessToast(localization.userProfileCopied);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: AppColors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
+              SizedBox(width: 10.w),
+              Text(
+                localization.userProfileUid,
+                style: TextStyle(
+                  letterSpacing: 0,
+                  fontSize: 11.sp,
+                  color: AppColors.white.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              child: Icon(
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Text(
+                  accountNumber,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    letterSpacing: 0.4,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15.sp,
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Icon(
                 Icons.copy_rounded,
-                size: 14,
-                color: AppColors.white.withValues(alpha: 0.9),
+                size: 16,
+                color: AppColors.white.withValues(alpha: 0.85),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-/// Verification tier row — icon, localized level label, 3-segment progress
-/// and a chevron. Taps through to the KYC history/verification hub.
-/// Renders the tiered kyc_level when the server provides it; falls back to
-/// the legacy int status otherwise.
-class _KycProgressRow extends StatelessWidget {
+/// The verification indicator opposite the user name: tick/level chip.
+/// Tiered (kyc_level) when available — "Level n" with an escalating shield
+/// icon; legacy payloads fall back to an icon-only chip. Tapping it opens
+/// the verification hub (KYC history).
+class _KycStatusBadge extends StatelessWidget {
   final HomeController homeController;
 
-  const _KycProgressRow({required this.homeController});
+  const _KycStatusBadge({required this.homeController});
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    final localization = AppLocalizations.of(context);
     final data = homeController.userModel.value.data;
     final level = data?.kycLevel;
 
     return GestureDetector(
       onTap: () => Get.toNamed(BaseRoute.kycHistory),
       child: Container(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 9),
+        padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 7.h),
         decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.white.withValues(alpha: 0.16),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: AppColors.white.withValues(alpha: 0.38),
+            width: 1,
+          ),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              _icon(level, data?.kyc ?? 0),
-              color: Colors.white,
-              size: 15,
-            ),
-            SizedBox(width: 7.w),
-            Expanded(
-              child: Text(
-                _label(level, data?.kyc ?? 0, localization),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            Icon(_icon(level, data?.kyc ?? 0), color: Colors.white, size: 14.sp),
+            if (level != null) ...[
+              SizedBox(width: 5.w),
+              Text(
+                localization?.kycUpgradeLevelChip(level) ?? 'Level $level',
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: AppColors.white.withValues(alpha: 0.92),
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.white,
                 ),
               ),
-            ),
-            _LevelProgressBar(level: level),
-            SizedBox(width: 8.w),
+            ],
+            SizedBox(width: 4.w),
             Icon(
               Icons.chevron_right_rounded,
-              color: AppColors.white.withValues(alpha: 0.55),
-              size: 18,
+              color: AppColors.white.withValues(alpha: 0.6),
+              size: 16.sp,
             ),
           ],
         ),
@@ -261,137 +248,11 @@ class _KycProgressRow extends StatelessWidget {
     }
     switch (legacyKyc) {
       case 1:
-        return Icons.verified_user_rounded;
-      case 2:
-        return Icons.hourglass_top_rounded;
-      case 3:
-        return Icons.error_outline_rounded;
-      default:
-        return Icons.shield_outlined;
-    }
-  }
-
-  String _label(int? level, int legacyKyc, AppLocalizations localization) {
-    if (level != null) return localization.kycUpgradeLevelChip(level);
-    switch (legacyKyc) {
-      case 1:
-        return localization.kycStatusVerified;
-      case 2:
-        return localization.kycStatusPending;
-      case 3:
-        return localization.kycStatusRejected;
-      default:
-        return localization.kycStatusNotSubmitted;
-    }
-  }
-}
-
-/// Three-segment progress for the tiered verification level (0..3).
-/// Hidden entirely for legacy payloads without kyc_level.
-class _LevelProgressBar extends StatelessWidget {
-  final int? level;
-
-  const _LevelProgressBar({required this.level});
-
-  @override
-  Widget build(BuildContext context) {
-    final current = level;
-    if (current == null) return const SizedBox.shrink();
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(3, (i) {
-        final filled = i < current;
-        return Container(
-          width: 16,
-          height: 4,
-          margin: const EdgeInsetsDirectional.only(end: 3),
-          decoration: BoxDecoration(
-            color: filled
-                ? Colors.white
-                : AppColors.white.withValues(alpha: 0.28),
-            borderRadius: BorderRadius.circular(2),
-          ),
-        );
-      }),
-    );
-  }
-}
-
-/// Small badge showing the verification tier next to the user name — a
-/// glassy "Level n" pill. Legacy payloads fall back to an icon-only chip.
-class _KycStatusBadge extends StatelessWidget {
-  final HomeController homeController;
-
-  const _KycStatusBadge({required this.homeController});
-
-  @override
-  Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
-    final data = homeController.userModel.value.data;
-    final level = data?.kycLevel;
-
-    if (level == null) {
-      final kyc = data?.kyc ?? 0;
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 6.h),
-        decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Icon(_legacyIcon(kyc), color: AppColors.white, size: 14.sp),
-      );
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-      decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.16),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.white.withValues(alpha: 0.35),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(_levelIcon(level), color: Colors.white, size: 13.sp),
-          SizedBox(width: 4.w),
-          Text(
-            localization?.kycUpgradeLevelChip(level) ?? 'Level $level',
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w800,
-              color: AppColors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  IconData _legacyIcon(int kyc) {
-    switch (kyc) {
-      case 1:
         return Icons.verified_rounded;
       case 2:
         return Icons.hourglass_top_rounded;
       case 3:
         return Icons.error_outline_rounded;
-      default:
-        return Icons.shield_outlined;
-    }
-  }
-
-  IconData _levelIcon(int level) {
-    switch (level) {
-      case 3:
-        return Icons.verified_rounded;
-      case 2:
-        return Icons.verified_user_rounded;
-      case 1:
-        return Icons.verified_user_outlined;
       default:
         return Icons.shield_outlined;
     }

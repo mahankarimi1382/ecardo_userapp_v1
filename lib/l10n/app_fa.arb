@@ -498,6 +498,8 @@
   "otherServicesWithdraw": "برداشت",
   "otherServicesExchange": "تبدیل",
   "otherServicesTransfer": "انتقال",
+  "otherServicesDynamicPassword": "رمز پویا",
+  "commonComingSoon": "به‌زودی",
   "otherServicesInvite": "دعوت",
   "otherServicesBillPayment": "پرداخت قبض",
   "otherServicesVirtualCard": "کارت‌های مجازی",

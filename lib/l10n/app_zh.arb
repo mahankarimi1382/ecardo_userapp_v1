@@ -466,6 +466,8 @@
   "otherServicesWithdraw": "提现",
   "otherServicesExchange": "兑换",
   "otherServicesTransfer": "转账",
+  "otherServicesDynamicPassword": "动态密码",
+  "commonComingSoon": "即将推出",
   "otherServicesInvite": "邀请",
   "otherServicesBillPayment": "账单缴费",
   "otherServicesVirtualCard": "虚拟卡",

@@ -466,6 +466,8 @@
   "otherServicesWithdraw": "Withdraw",
   "otherServicesExchange": "Exchange",
   "otherServicesTransfer": "Transfer",
+  "otherServicesDynamicPassword": "Dinamik PIN",
+  "commonComingSoon": "Yakında",
   "otherServicesInvite": "Invite",
   "otherServicesBillPayment": "Bill Payment",
   "otherServicesVirtualCard": "Virtual Cards",

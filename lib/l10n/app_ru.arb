@@ -466,6 +466,8 @@
   "otherServicesWithdraw": "Withdraw",
   "otherServicesExchange": "Exchange",
   "otherServicesTransfer": "Transfer",
+  "otherServicesDynamicPassword": "Динамичный PIN",
+  "commonComingSoon": "Скоро",
   "otherServicesInvite": "Invite",
   "otherServicesBillPayment": "Bill Payment",
   "otherServicesVirtualCard": "Virtual Cards",
