@@ -7328,4 +7328,77 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get hotel_admin_configured_special_offers_will_appear =>
       '管理员设置的特殊优惠将显示在此处。';
+
+  @override
+  String get kycUpgradeRequiredTitle => '需要升级身份认证等级';
+
+  @override
+  String kycUpgradeBodyForLevel(int level) {
+    return '要使用此功能，您的身份认证需要达到 $level 级。';
+  }
+
+  @override
+  String get kycUpgradeBodyGeneric => '您当前的身份认证等级不允许此操作。请完成或升级您的身份认证。';
+
+  @override
+  String get kycUpgradeCurrentLevel => '您的等级';
+
+  @override
+  String get kycUpgradeRequiredLevel => '所需等级';
+
+  @override
+  String kycUpgradeLevelChip(int level) {
+    return '$level 级';
+  }
+
+  @override
+  String get kycUpgradeStartVerification => '开始身份认证';
+
+  @override
+  String get kycUpgradeLater => '稍后再说';
+
+  @override
+  String get kycVerificationUnavailable => '认证服务暂时不可用，请稍后重试。';
+
+  @override
+  String get kycFeatureTransfer => '转账';
+
+  @override
+  String get kycFeatureExchange => '兑换';
+
+  @override
+  String get kycFeatureWithdraw => '提现';
+
+  @override
+  String get kycFeatureCashout => '变现';
+
+  @override
+  String get kycFeatureGiftSend => '赠送礼物';
+
+  @override
+  String get kycFeatureGiftRedeem => '兑换礼物';
+
+  @override
+  String get kycFeaturePayBill => '账单支付';
+
+  @override
+  String get kycFeatureRequestMoney => '收款请求';
+
+  @override
+  String get kycFeaturePayment => '商户付款';
+
+  @override
+  String get kycFeatureInvoices => '发票支付';
+
+  @override
+  String get kycFeaturePaymentLinks => '付款链接';
+
+  @override
+  String get kycFeatureTravel => '旅行预订';
+
+  @override
+  String get kycFeatureRemittance => '国际汇款';
+
+  @override
+  String get kycFeatureEpay => '电子支付 (ePay)';
 }

@@ -2373,5 +2373,42 @@
   "p2pLoadPaymentMethodsFailed": "فشل تحميل طرق الدفع",
   "p2pLoadAdsFailed": "فشل تحميل الإعلانات",
   "pickDocumentFailed": "فشل اختيار المستند. حاول مرة أخرى.",
-  "hotel_admin_configured_special_offers_will_appear": "ستظهر العروض الخاصة المُعدّة من قِبل المسؤول هنا."
+  "hotel_admin_configured_special_offers_will_appear": "ستظهر العروض الخاصة المُعدّة من قِبل المسؤول هنا.",
+  "kycUpgradeRequiredTitle": "مطلوب ترقية التحقق من الهوية",
+  "kycUpgradeBodyForLevel": "لاستخدام هذه الميزة، يجب أن يصل التحقق من هويتك إلى المستوى {level}.",
+  "@kycUpgradeBodyForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeBodyGeneric": "مستوى التحقق الحالي الخاص بك لا يسمح بهذا الإجراء. يرجى إكمال أو ترقية التحقق من هويتك.",
+  "kycUpgradeCurrentLevel": "مستواك الحالي",
+  "kycUpgradeRequiredLevel": "المستوى المطلوب",
+  "kycUpgradeLevelChip": "المستوى {level}",
+  "@kycUpgradeLevelChip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeStartVerification": "بدء التحقق من الهوية",
+  "kycUpgradeLater": "سأقوم بذلك لاحقاً",
+  "kycVerificationUnavailable": "خدمة التحقق غير متاحة مؤقتاً. يرجى المحاولة مرة أخرى بعد قليل.",
+  "kycFeatureTransfer": "التحويل",
+  "kycFeatureExchange": "الصرافة",
+  "kycFeatureWithdraw": "السحب",
+  "kycFeatureCashout": "الصرف النقدي",
+  "kycFeatureGiftSend": "إرسال الهدايا",
+  "kycFeatureGiftRedeem": "استبدال الهدايا",
+  "kycFeaturePayBill": "دفع الفواتير",
+  "kycFeatureRequestMoney": "طلبات المال",
+  "kycFeaturePayment": "الدفع للتاجر",
+  "kycFeatureInvoices": "دفع فواتير الشراء",
+  "kycFeaturePaymentLinks": "روابط الدفع",
+  "kycFeatureTravel": "حجز السفر",
+  "kycFeatureRemittance": "الحوالات المالية",
+  "kycFeatureEpay": "الدفع الإلكتروني (ePay)"
 }

@@ -2372,5 +2372,42 @@
   "vcMaxTopup": "最高充值金额为 {amount} {currency}。",
   "vcTopupNotCompleted": "卡片充值未能完成。",
   "vcTopupSubmitted": "卡片充值申请已提交。",
-  "hotel_admin_configured_special_offers_will_appear": "管理员设置的特殊优惠将显示在此处。"
+  "hotel_admin_configured_special_offers_will_appear": "管理员设置的特殊优惠将显示在此处。",
+  "kycUpgradeRequiredTitle": "需要升级身份认证等级",
+  "kycUpgradeBodyForLevel": "要使用此功能，您的身份认证需要达到 {level} 级。",
+  "@kycUpgradeBodyForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeBodyGeneric": "您当前的身份认证等级不允许此操作。请完成或升级您的身份认证。",
+  "kycUpgradeCurrentLevel": "您的等级",
+  "kycUpgradeRequiredLevel": "所需等级",
+  "kycUpgradeLevelChip": "{level} 级",
+  "@kycUpgradeLevelChip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeStartVerification": "开始身份认证",
+  "kycUpgradeLater": "稍后再说",
+  "kycVerificationUnavailable": "认证服务暂时不可用，请稍后重试。",
+  "kycFeatureTransfer": "转账",
+  "kycFeatureExchange": "兑换",
+  "kycFeatureWithdraw": "提现",
+  "kycFeatureCashout": "变现",
+  "kycFeatureGiftSend": "赠送礼物",
+  "kycFeatureGiftRedeem": "兑换礼物",
+  "kycFeaturePayBill": "账单支付",
+  "kycFeatureRequestMoney": "收款请求",
+  "kycFeaturePayment": "商户付款",
+  "kycFeatureInvoices": "发票支付",
+  "kycFeaturePaymentLinks": "付款链接",
+  "kycFeatureTravel": "旅行预订",
+  "kycFeatureRemittance": "国际汇款",
+  "kycFeatureEpay": "电子支付 (ePay)"
 }

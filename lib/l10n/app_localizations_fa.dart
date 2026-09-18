@@ -7529,4 +7529,79 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get hotel_admin_configured_special_offers_will_appear =>
       'پیشنهادهای ویژه پس از تعریف در پنل مدیریت اینجا نمایش داده می‌شوند.';
+
+  @override
+  String get kycUpgradeRequiredTitle => 'ارتقای احراز هویت لازم است';
+
+  @override
+  String kycUpgradeBodyForLevel(int level) {
+    return 'برای استفاده از این قابلیت، احراز هویت شما باید به سطح $level برسد.';
+  }
+
+  @override
+  String get kycUpgradeBodyGeneric =>
+      'سطح احراز هویت فعلی شما این اقدام را اجازه نمی‌دهد. لطفاً احراز هویت را کامل یا ارتقا دهید.';
+
+  @override
+  String get kycUpgradeCurrentLevel => 'سطح فعلی شما';
+
+  @override
+  String get kycUpgradeRequiredLevel => 'سطح لازم';
+
+  @override
+  String kycUpgradeLevelChip(int level) {
+    return 'سطح $level';
+  }
+
+  @override
+  String get kycUpgradeStartVerification => 'شروع احراز هویت';
+
+  @override
+  String get kycUpgradeLater => 'بعداً انجام می‌دهم';
+
+  @override
+  String get kycVerificationUnavailable =>
+      'سرویس احراز هویت موقتاً در دسترس نیست. لطفاً چند لحظه بعد دوباره تلاش کنید.';
+
+  @override
+  String get kycFeatureTransfer => 'انتقال وجه';
+
+  @override
+  String get kycFeatureExchange => 'تبدیل ارز';
+
+  @override
+  String get kycFeatureWithdraw => 'برداشت وجه';
+
+  @override
+  String get kycFeatureCashout => 'دریافت نقدی';
+
+  @override
+  String get kycFeatureGiftSend => 'ارسال هدیه';
+
+  @override
+  String get kycFeatureGiftRedeem => 'استفاده از هدیه';
+
+  @override
+  String get kycFeaturePayBill => 'پرداخت قبض';
+
+  @override
+  String get kycFeatureRequestMoney => 'درخواست وجه';
+
+  @override
+  String get kycFeaturePayment => 'پرداخت به پذیرنده';
+
+  @override
+  String get kycFeatureInvoices => 'پرداخت فاکتور';
+
+  @override
+  String get kycFeaturePaymentLinks => 'لینک‌های پرداخت';
+
+  @override
+  String get kycFeatureTravel => 'رزرو سفر';
+
+  @override
+  String get kycFeatureRemittance => 'حواله بین‌المللی';
+
+  @override
+  String get kycFeatureEpay => 'پرداخت الکترونیک (ePay)';
 }

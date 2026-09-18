@@ -14157,6 +14157,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin-configured special offers will appear here.'**
   String get hotel_admin_configured_special_offers_will_appear;
+
+  /// No description provided for @kycUpgradeRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification upgrade required'**
+  String get kycUpgradeRequiredTitle;
+
+  /// No description provided for @kycUpgradeBodyForLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'To use this feature, your identity verification must reach level {level}.'**
+  String kycUpgradeBodyForLevel(int level);
+
+  /// No description provided for @kycUpgradeBodyGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current verification level does not allow this action. Please complete or upgrade your identity verification.'**
+  String get kycUpgradeBodyGeneric;
+
+  /// No description provided for @kycUpgradeCurrentLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your level'**
+  String get kycUpgradeCurrentLevel;
+
+  /// No description provided for @kycUpgradeRequiredLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Required level'**
+  String get kycUpgradeRequiredLevel;
+
+  /// No description provided for @kycUpgradeLevelChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String kycUpgradeLevelChip(int level);
+
+  /// No description provided for @kycUpgradeStartVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Start verification'**
+  String get kycUpgradeStartVerification;
+
+  /// No description provided for @kycUpgradeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll do it later'**
+  String get kycUpgradeLater;
+
+  /// No description provided for @kycVerificationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification service is temporarily unavailable. Please try again in a few moments.'**
+  String get kycVerificationUnavailable;
+
+  /// No description provided for @kycFeatureTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get kycFeatureTransfer;
+
+  /// No description provided for @kycFeatureExchange.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange'**
+  String get kycFeatureExchange;
+
+  /// No description provided for @kycFeatureWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal'**
+  String get kycFeatureWithdraw;
+
+  /// No description provided for @kycFeatureCashout.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash-out'**
+  String get kycFeatureCashout;
+
+  /// No description provided for @kycFeatureGiftSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift sending'**
+  String get kycFeatureGiftSend;
+
+  /// No description provided for @kycFeatureGiftRedeem.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift redeeming'**
+  String get kycFeatureGiftRedeem;
+
+  /// No description provided for @kycFeaturePayBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill payment'**
+  String get kycFeaturePayBill;
+
+  /// No description provided for @kycFeatureRequestMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Money requests'**
+  String get kycFeatureRequestMoney;
+
+  /// No description provided for @kycFeaturePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant payment'**
+  String get kycFeaturePayment;
+
+  /// No description provided for @kycFeatureInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice payment'**
+  String get kycFeatureInvoices;
+
+  /// No description provided for @kycFeaturePaymentLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment links'**
+  String get kycFeaturePaymentLinks;
+
+  /// No description provided for @kycFeatureTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel booking'**
+  String get kycFeatureTravel;
+
+  /// No description provided for @kycFeatureRemittance.
+  ///
+  /// In en, this message translates to:
+  /// **'Remittance'**
+  String get kycFeatureRemittance;
+
+  /// No description provided for @kycFeatureEpay.
+  ///
+  /// In en, this message translates to:
+  /// **'ePay'**
+  String get kycFeatureEpay;
 }
 
 class _AppLocalizationsDelegate

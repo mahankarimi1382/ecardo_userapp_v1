@@ -2372,5 +2372,42 @@
   "p2pLoadPaymentMethodsFailed": "Не удалось загрузить способы оплаты",
   "p2pLoadAdsFailed": "Не удалось загрузить объявления",
   "pickDocumentFailed": "Не удалось выбрать документ. Попробуйте снова.",
-  "hotel_admin_configured_special_offers_will_appear": "Специальные предложения, добавленные администратором, появятся здесь."
+  "hotel_admin_configured_special_offers_will_appear": "Специальные предложения, добавленные администратором, появятся здесь.",
+  "kycUpgradeRequiredTitle": "Требуется повышение уровня верификации",
+  "kycUpgradeBodyForLevel": "Чтобы использовать эту функцию, ваша верификация должна достичь уровня {level}.",
+  "@kycUpgradeBodyForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeBodyGeneric": "Ваш текущий уровень верификации не позволяет это действие. Завершите или повысьте уровень верификации.",
+  "kycUpgradeCurrentLevel": "Ваш уровень",
+  "kycUpgradeRequiredLevel": "Необходимый уровень",
+  "kycUpgradeLevelChip": "Уровень {level}",
+  "@kycUpgradeLevelChip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeStartVerification": "Начать верификацию",
+  "kycUpgradeLater": "Сделаю позже",
+  "kycVerificationUnavailable": "Сервис верификации временно недоступен. Пожалуйста, попробуйте ещё раз через несколько минут.",
+  "kycFeatureTransfer": "Перевод",
+  "kycFeatureExchange": "Обмен",
+  "kycFeatureWithdraw": "Вывод средств",
+  "kycFeatureCashout": "Обналичивание",
+  "kycFeatureGiftSend": "Отправка подарков",
+  "kycFeatureGiftRedeem": "Активация подарков",
+  "kycFeaturePayBill": "Оплата счетов",
+  "kycFeatureRequestMoney": "Запросы денег",
+  "kycFeaturePayment": "Оплата продавцу",
+  "kycFeatureInvoices": "Оплата инвойсов",
+  "kycFeaturePaymentLinks": "Платёжные ссылки",
+  "kycFeatureTravel": "Бронирование поездок",
+  "kycFeatureRemittance": "Денежные переводы",
+  "kycFeatureEpay": "Электронная оплата (ePay)"
 }

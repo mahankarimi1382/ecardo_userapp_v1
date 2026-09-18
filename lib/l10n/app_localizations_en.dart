@@ -7515,4 +7515,79 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get hotel_admin_configured_special_offers_will_appear =>
       'Admin-configured special offers will appear here.';
+
+  @override
+  String get kycUpgradeRequiredTitle => 'Verification upgrade required';
+
+  @override
+  String kycUpgradeBodyForLevel(int level) {
+    return 'To use this feature, your identity verification must reach level $level.';
+  }
+
+  @override
+  String get kycUpgradeBodyGeneric =>
+      'Your current verification level does not allow this action. Please complete or upgrade your identity verification.';
+
+  @override
+  String get kycUpgradeCurrentLevel => 'Your level';
+
+  @override
+  String get kycUpgradeRequiredLevel => 'Required level';
+
+  @override
+  String kycUpgradeLevelChip(int level) {
+    return 'Level $level';
+  }
+
+  @override
+  String get kycUpgradeStartVerification => 'Start verification';
+
+  @override
+  String get kycUpgradeLater => 'I\'ll do it later';
+
+  @override
+  String get kycVerificationUnavailable =>
+      'Verification service is temporarily unavailable. Please try again in a few moments.';
+
+  @override
+  String get kycFeatureTransfer => 'Transfer';
+
+  @override
+  String get kycFeatureExchange => 'Exchange';
+
+  @override
+  String get kycFeatureWithdraw => 'Withdrawal';
+
+  @override
+  String get kycFeatureCashout => 'Cash-out';
+
+  @override
+  String get kycFeatureGiftSend => 'Gift sending';
+
+  @override
+  String get kycFeatureGiftRedeem => 'Gift redeeming';
+
+  @override
+  String get kycFeaturePayBill => 'Bill payment';
+
+  @override
+  String get kycFeatureRequestMoney => 'Money requests';
+
+  @override
+  String get kycFeaturePayment => 'Merchant payment';
+
+  @override
+  String get kycFeatureInvoices => 'Invoice payment';
+
+  @override
+  String get kycFeaturePaymentLinks => 'Payment links';
+
+  @override
+  String get kycFeatureTravel => 'Travel booking';
+
+  @override
+  String get kycFeatureRemittance => 'Remittance';
+
+  @override
+  String get kycFeatureEpay => 'ePay';
 }

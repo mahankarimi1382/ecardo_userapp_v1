@@ -7516,4 +7516,79 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get hotel_admin_configured_special_offers_will_appear =>
       'Yönetici tarafından eklenen özel fırsatlar burada görünecek.';
+
+  @override
+  String get kycUpgradeRequiredTitle => 'Kimlik doğrulama yükseltmesi gerekli';
+
+  @override
+  String kycUpgradeBodyForLevel(int level) {
+    return 'Bu özelliği kullanmak için kimlik doğrulamanız $level. seviyeye ulaşmalıdır.';
+  }
+
+  @override
+  String get kycUpgradeBodyGeneric =>
+      'Mevcut kimlik doğrulama seviyeniz bu işleme izin vermiyor. Lütfen kimlik doğrulamanızı tamamlayın veya yükseltin.';
+
+  @override
+  String get kycUpgradeCurrentLevel => 'Sizin seviyeniz';
+
+  @override
+  String get kycUpgradeRequiredLevel => 'Gerekli seviye';
+
+  @override
+  String kycUpgradeLevelChip(int level) {
+    return 'Seviye $level';
+  }
+
+  @override
+  String get kycUpgradeStartVerification => 'Doğrulamayı başlat';
+
+  @override
+  String get kycUpgradeLater => 'Daha sonra yaparım';
+
+  @override
+  String get kycVerificationUnavailable =>
+      'Doğrulama servisi geçici olarak kullanılamıyor. Lütfen birkaç dakika sonra tekrar deneyin.';
+
+  @override
+  String get kycFeatureTransfer => 'Transfer';
+
+  @override
+  String get kycFeatureExchange => 'Döviz çevirme';
+
+  @override
+  String get kycFeatureWithdraw => 'Para çekme';
+
+  @override
+  String get kycFeatureCashout => 'Nakde çevirme';
+
+  @override
+  String get kycFeatureGiftSend => 'Hediye gönderme';
+
+  @override
+  String get kycFeatureGiftRedeem => 'Hediye kullanma';
+
+  @override
+  String get kycFeaturePayBill => 'Fatura ödeme';
+
+  @override
+  String get kycFeatureRequestMoney => 'Para talebi';
+
+  @override
+  String get kycFeaturePayment => 'Satıcı ödemesi';
+
+  @override
+  String get kycFeatureInvoices => 'Ödeme talebi ödeme';
+
+  @override
+  String get kycFeaturePaymentLinks => 'Ödeme bağlantıları';
+
+  @override
+  String get kycFeatureTravel => 'Seyahat rezervasyonu';
+
+  @override
+  String get kycFeatureRemittance => 'Uluslararası havale';
+
+  @override
+  String get kycFeatureEpay => 'ePay ödemesi';
 }

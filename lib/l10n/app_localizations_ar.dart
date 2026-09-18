@@ -7471,4 +7471,79 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get hotel_admin_configured_special_offers_will_appear =>
       'ستظهر العروض الخاصة المُعدّة من قِبل المسؤول هنا.';
+
+  @override
+  String get kycUpgradeRequiredTitle => 'مطلوب ترقية التحقق من الهوية';
+
+  @override
+  String kycUpgradeBodyForLevel(int level) {
+    return 'لاستخدام هذه الميزة، يجب أن يصل التحقق من هويتك إلى المستوى $level.';
+  }
+
+  @override
+  String get kycUpgradeBodyGeneric =>
+      'مستوى التحقق الحالي الخاص بك لا يسمح بهذا الإجراء. يرجى إكمال أو ترقية التحقق من هويتك.';
+
+  @override
+  String get kycUpgradeCurrentLevel => 'مستواك الحالي';
+
+  @override
+  String get kycUpgradeRequiredLevel => 'المستوى المطلوب';
+
+  @override
+  String kycUpgradeLevelChip(int level) {
+    return 'المستوى $level';
+  }
+
+  @override
+  String get kycUpgradeStartVerification => 'بدء التحقق من الهوية';
+
+  @override
+  String get kycUpgradeLater => 'سأقوم بذلك لاحقاً';
+
+  @override
+  String get kycVerificationUnavailable =>
+      'خدمة التحقق غير متاحة مؤقتاً. يرجى المحاولة مرة أخرى بعد قليل.';
+
+  @override
+  String get kycFeatureTransfer => 'التحويل';
+
+  @override
+  String get kycFeatureExchange => 'الصرافة';
+
+  @override
+  String get kycFeatureWithdraw => 'السحب';
+
+  @override
+  String get kycFeatureCashout => 'الصرف النقدي';
+
+  @override
+  String get kycFeatureGiftSend => 'إرسال الهدايا';
+
+  @override
+  String get kycFeatureGiftRedeem => 'استبدال الهدايا';
+
+  @override
+  String get kycFeaturePayBill => 'دفع الفواتير';
+
+  @override
+  String get kycFeatureRequestMoney => 'طلبات المال';
+
+  @override
+  String get kycFeaturePayment => 'الدفع للتاجر';
+
+  @override
+  String get kycFeatureInvoices => 'دفع فواتير الشراء';
+
+  @override
+  String get kycFeaturePaymentLinks => 'روابط الدفع';
+
+  @override
+  String get kycFeatureTravel => 'حجز السفر';
+
+  @override
+  String get kycFeatureRemittance => 'الحوالات المالية';
+
+  @override
+  String get kycFeatureEpay => 'الدفع الإلكتروني (ePay)';
 }

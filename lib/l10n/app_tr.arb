@@ -2372,5 +2372,42 @@
   "p2pLoadPaymentMethodsFailed": "Ödeme yöntemleri yüklenemedi",
   "p2pLoadAdsFailed": "İlanlar yüklenemedi",
   "pickDocumentFailed": "Belge seçilemedi. Lütfen tekrar deneyin.",
-  "hotel_admin_configured_special_offers_will_appear": "Yönetici tarafından eklenen özel fırsatlar burada görünecek."
+  "hotel_admin_configured_special_offers_will_appear": "Yönetici tarafından eklenen özel fırsatlar burada görünecek.",
+  "kycUpgradeRequiredTitle": "Kimlik doğrulama yükseltmesi gerekli",
+  "kycUpgradeBodyForLevel": "Bu özelliği kullanmak için kimlik doğrulamanız {level}. seviyeye ulaşmalıdır.",
+  "@kycUpgradeBodyForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeBodyGeneric": "Mevcut kimlik doğrulama seviyeniz bu işleme izin vermiyor. Lütfen kimlik doğrulamanızı tamamlayın veya yükseltin.",
+  "kycUpgradeCurrentLevel": "Sizin seviyeniz",
+  "kycUpgradeRequiredLevel": "Gerekli seviye",
+  "kycUpgradeLevelChip": "Seviye {level}",
+  "@kycUpgradeLevelChip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeStartVerification": "Doğrulamayı başlat",
+  "kycUpgradeLater": "Daha sonra yaparım",
+  "kycVerificationUnavailable": "Doğrulama servisi geçici olarak kullanılamıyor. Lütfen birkaç dakika sonra tekrar deneyin.",
+  "kycFeatureTransfer": "Transfer",
+  "kycFeatureExchange": "Döviz çevirme",
+  "kycFeatureWithdraw": "Para çekme",
+  "kycFeatureCashout": "Nakde çevirme",
+  "kycFeatureGiftSend": "Hediye gönderme",
+  "kycFeatureGiftRedeem": "Hediye kullanma",
+  "kycFeaturePayBill": "Fatura ödeme",
+  "kycFeatureRequestMoney": "Para talebi",
+  "kycFeaturePayment": "Satıcı ödemesi",
+  "kycFeatureInvoices": "Ödeme talebi ödeme",
+  "kycFeaturePaymentLinks": "Ödeme bağlantıları",
+  "kycFeatureTravel": "Seyahat rezervasyonu",
+  "kycFeatureRemittance": "Uluslararası havale",
+  "kycFeatureEpay": "ePay ödemesi"
 }

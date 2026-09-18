@@ -2373,5 +2373,42 @@
   "vcMaxTopup": "حداکثر شارژ {amount} {currency} است.",
   "vcTopupNotCompleted": "شارژ کارت تکمیل نشد.",
   "vcTopupSubmitted": "درخواست شارژ کارت ثبت شد.",
-  "hotel_admin_configured_special_offers_will_appear": "پیشنهادهای ویژه پس از تعریف در پنل مدیریت اینجا نمایش داده می‌شوند."
+  "hotel_admin_configured_special_offers_will_appear": "پیشنهادهای ویژه پس از تعریف در پنل مدیریت اینجا نمایش داده می‌شوند.",
+  "kycUpgradeRequiredTitle": "ارتقای احراز هویت لازم است",
+  "kycUpgradeBodyForLevel": "برای استفاده از این قابلیت، احراز هویت شما باید به سطح {level} برسد.",
+  "@kycUpgradeBodyForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeBodyGeneric": "سطح احراز هویت فعلی شما این اقدام را اجازه نمی‌دهد. لطفاً احراز هویت را کامل یا ارتقا دهید.",
+  "kycUpgradeCurrentLevel": "سطح فعلی شما",
+  "kycUpgradeRequiredLevel": "سطح لازم",
+  "kycUpgradeLevelChip": "سطح {level}",
+  "@kycUpgradeLevelChip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeStartVerification": "شروع احراز هویت",
+  "kycUpgradeLater": "بعداً انجام می‌دهم",
+  "kycVerificationUnavailable": "سرویس احراز هویت موقتاً در دسترس نیست. لطفاً چند لحظه بعد دوباره تلاش کنید.",
+  "kycFeatureTransfer": "انتقال وجه",
+  "kycFeatureExchange": "تبدیل ارز",
+  "kycFeatureWithdraw": "برداشت وجه",
+  "kycFeatureCashout": "دریافت نقدی",
+  "kycFeatureGiftSend": "ارسال هدیه",
+  "kycFeatureGiftRedeem": "استفاده از هدیه",
+  "kycFeaturePayBill": "پرداخت قبض",
+  "kycFeatureRequestMoney": "درخواست وجه",
+  "kycFeaturePayment": "پرداخت به پذیرنده",
+  "kycFeatureInvoices": "پرداخت فاکتور",
+  "kycFeaturePaymentLinks": "لینک‌های پرداخت",
+  "kycFeatureTravel": "رزرو سفر",
+  "kycFeatureRemittance": "حواله بین‌المللی",
+  "kycFeatureEpay": "پرداخت الکترونیک (ePay)"
 }

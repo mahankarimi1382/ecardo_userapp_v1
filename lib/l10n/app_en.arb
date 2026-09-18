@@ -2496,5 +2496,42 @@
   },
   "vcTopupNotCompleted": "The card top-up could not be completed.",
   "vcTopupSubmitted": "Card top-up submitted.",
-  "hotel_admin_configured_special_offers_will_appear": "Admin-configured special offers will appear here."
+  "hotel_admin_configured_special_offers_will_appear": "Admin-configured special offers will appear here.",
+  "kycUpgradeRequiredTitle": "Verification upgrade required",
+  "kycUpgradeBodyForLevel": "To use this feature, your identity verification must reach level {level}.",
+  "@kycUpgradeBodyForLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeBodyGeneric": "Your current verification level does not allow this action. Please complete or upgrade your identity verification.",
+  "kycUpgradeCurrentLevel": "Your level",
+  "kycUpgradeRequiredLevel": "Required level",
+  "kycUpgradeLevelChip": "Level {level}",
+  "@kycUpgradeLevelChip": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "kycUpgradeStartVerification": "Start verification",
+  "kycUpgradeLater": "I'll do it later",
+  "kycVerificationUnavailable": "Verification service is temporarily unavailable. Please try again in a few moments.",
+  "kycFeatureTransfer": "Transfer",
+  "kycFeatureExchange": "Exchange",
+  "kycFeatureWithdraw": "Withdrawal",
+  "kycFeatureCashout": "Cash-out",
+  "kycFeatureGiftSend": "Gift sending",
+  "kycFeatureGiftRedeem": "Gift redeeming",
+  "kycFeaturePayBill": "Bill payment",
+  "kycFeatureRequestMoney": "Money requests",
+  "kycFeaturePayment": "Merchant payment",
+  "kycFeatureInvoices": "Invoice payment",
+  "kycFeaturePaymentLinks": "Payment links",
+  "kycFeatureTravel": "Travel booking",
+  "kycFeatureRemittance": "Remittance",
+  "kycFeatureEpay": "ePay"
 }

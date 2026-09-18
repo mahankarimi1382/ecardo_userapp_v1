@@ -7519,4 +7519,80 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get hotel_admin_configured_special_offers_will_appear =>
       'Специальные предложения, добавленные администратором, появятся здесь.';
+
+  @override
+  String get kycUpgradeRequiredTitle =>
+      'Требуется повышение уровня верификации';
+
+  @override
+  String kycUpgradeBodyForLevel(int level) {
+    return 'Чтобы использовать эту функцию, ваша верификация должна достичь уровня $level.';
+  }
+
+  @override
+  String get kycUpgradeBodyGeneric =>
+      'Ваш текущий уровень верификации не позволяет это действие. Завершите или повысьте уровень верификации.';
+
+  @override
+  String get kycUpgradeCurrentLevel => 'Ваш уровень';
+
+  @override
+  String get kycUpgradeRequiredLevel => 'Необходимый уровень';
+
+  @override
+  String kycUpgradeLevelChip(int level) {
+    return 'Уровень $level';
+  }
+
+  @override
+  String get kycUpgradeStartVerification => 'Начать верификацию';
+
+  @override
+  String get kycUpgradeLater => 'Сделаю позже';
+
+  @override
+  String get kycVerificationUnavailable =>
+      'Сервис верификации временно недоступен. Пожалуйста, попробуйте ещё раз через несколько минут.';
+
+  @override
+  String get kycFeatureTransfer => 'Перевод';
+
+  @override
+  String get kycFeatureExchange => 'Обмен';
+
+  @override
+  String get kycFeatureWithdraw => 'Вывод средств';
+
+  @override
+  String get kycFeatureCashout => 'Обналичивание';
+
+  @override
+  String get kycFeatureGiftSend => 'Отправка подарков';
+
+  @override
+  String get kycFeatureGiftRedeem => 'Активация подарков';
+
+  @override
+  String get kycFeaturePayBill => 'Оплата счетов';
+
+  @override
+  String get kycFeatureRequestMoney => 'Запросы денег';
+
+  @override
+  String get kycFeaturePayment => 'Оплата продавцу';
+
+  @override
+  String get kycFeatureInvoices => 'Оплата инвойсов';
+
+  @override
+  String get kycFeaturePaymentLinks => 'Платёжные ссылки';
+
+  @override
+  String get kycFeatureTravel => 'Бронирование поездок';
+
+  @override
+  String get kycFeatureRemittance => 'Денежные переводы';
+
+  @override
+  String get kycFeatureEpay => 'Электронная оплата (ePay)';
 }

@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
+import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -246,6 +247,22 @@ class NetworkService extends getx.GetxService {
           if (error.response?.statusCode == 426) {
             _handleServerForcedUpdate(error.response?.data);
           }
+
+          // v1.1 (KYC-ERR): unified KYC block contract — 403
+          // KYC_LEVEL_REQUIRED / KYC_FEATURE_REQUIRED route the user to the
+          // UpgradeRequiredScreen (instead of a raw 403 toast) and 503
+          // KYC_CHECK_UNAVAILABLE surfaces a retry message without ever
+          // logging out or clearing the token. Flagged on requestOptions so
+          // the shared 403/503 branches below stay in sync.
+          final kycBlock = KycErrorHandler.parse(
+            error.response?.data,
+            statusCode: error.response?.statusCode,
+          );
+          if (kycBlock != null) {
+            error.requestOptions.extra[KycErrorHandler.handledExtraKey] = true;
+            await KycErrorHandler.handle(kycBlock);
+          }
+
           return handler.next(error);
         },
       ),
@@ -849,6 +866,18 @@ class NetworkService extends getx.GetxService {
             : <String, dynamic>{};
         _log('$requestType Response: ${jsonResponse4xx.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse4xx);
+        // v1.1 (KYC-ERR): a KYC block (KYC_LEVEL_REQUIRED /
+        // KYC_FEATURE_REQUIRED) was already routed to the
+        // UpgradeRequiredScreen by the interceptor — the raw server message
+        // must NOT double up as an error toast here.
+        final isKycBlock =
+            response.requestOptions.extra[KycErrorHandler.handledExtraKey] ==
+                true;
+        if (isKycBlock) {
+          final friendly = localization?.kycUpgradeRequiredTitle ??
+              'Verification upgrade required';
+          return ApiResponse.error(friendly);
+        }
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
 
@@ -866,14 +895,26 @@ class NetworkService extends getx.GetxService {
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
         _log('$requestType Response: ${jsonResponse503.toString()}', icon: '❌');
-        final errorMessages = _errorMessage(jsonResponse503);
-        ToastHelper().showErrorToast(errorMessages);
+        final errorMessages503 = _errorMessage(jsonResponse503);
+        // v1.1 (KYC-ERR): KYC_CHECK_UNAVAILABLE is a transient verification
+        // infrastructure outage — show a retry message, never logout, never
+        // clear the token and never take over with the maintenance screen.
+        final isKycUnavailable =
+            response.requestOptions.extra[KycErrorHandler.handledExtraKey] ==
+                true;
+        if (isKycUnavailable) {
+          final retryMessage = localization?.kycVerificationUnavailable ??
+              'Verification service is temporarily unavailable. Please try again in a few moments.';
+          ToastHelper().showErrorToast(retryMessage);
+          return ApiResponse.error(retryMessage);
+        }
+        ToastHelper().showErrorToast(errorMessages503);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (getx.Get.currentRoute != BaseRoute.maintenanceMode) {
             getx.Get.offAllNamed(BaseRoute.maintenanceMode);
           }
         });
-        return ApiResponse.error(errorMessages);
+        return ApiResponse.error(errorMessages503);
 
       default:
         _log('Unknown Error: ${response.statusCode}', icon: '❓');
