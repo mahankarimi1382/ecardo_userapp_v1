@@ -35,15 +35,55 @@ class AppUpdateScreen extends StatefulWidget {
 class _AppUpdateScreenState extends State<AppUpdateScreen>
     with TickerProviderStateMixin {
   late final AnimationController _lottieController;
+  Worker? _phaseWorker;
 
   @override
   void initState() {
     super.initState();
     _lottieController = AnimationController(vsync: this);
+    final controller = Get.find<AppUpdateController>();
+
+    // Entry self-healing: the screen is reachable from many paths
+    // (notification tap, auto-prompt, 426 force route, settings). When the
+    // controller phase is still idle, run the check so the user sees a real
+    // state instead of a perpetual spinner.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      switch (controller.phase.value) {
+        case AppUpdatePhase.idle:
+          controller.checkForUpdate(showSnackbarWhenUpToDate: false);
+        case AppUpdatePhase.updateAvailable:
+          _maybeAutoStart(controller);
+        default:
+          break;
+      }
+    });
+
+    // Auto-update: once an update is available and auto-update is on (or the
+    // update is forced), start the download without a second tap. The short
+    // delay lets the version comparison + "what's new" card render first.
+    _phaseWorker = ever<AppUpdatePhase>(controller.phase, (phase) {
+      if (phase == AppUpdatePhase.updateAvailable) {
+        _maybeAutoStart(controller);
+      }
+    });
+  }
+
+  void _maybeAutoStart(AppUpdateController controller) {
+    if (!(controller.forceUpdate.value || controller.autoUpdateEnabled.value)) {
+      return;
+    }
+    Future.delayed(const Duration(milliseconds: 1400), () {
+      if (!mounted) return;
+      if (controller.phase.value == AppUpdatePhase.updateAvailable) {
+        controller.startDownloadAndInstall();
+      }
+    });
   }
 
   @override
   void dispose() {
+    _phaseWorker?.dispose();
     _lottieController.dispose();
     super.dispose();
   }

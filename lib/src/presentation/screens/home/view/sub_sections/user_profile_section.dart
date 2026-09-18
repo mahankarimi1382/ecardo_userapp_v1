@@ -139,7 +139,9 @@ class UserProfileSection extends StatelessWidget {
                   ],
                 ),
               ),
-              // KYC detail row — shows current step + tap to go to verification
+              // KYC tier row — level progress + tap to verification history.
+              // Uses the tiered kyc_level (0..3) when the server provides
+              // it; falls back to the legacy int status otherwise.
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () => Get.toNamed(BaseRoute.kycHistory),
@@ -152,14 +154,24 @@ class UserProfileSection extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        _kycIcon(homeController.userModel.value.data?.kyc ?? 0),
-                        color: _kycColor(homeController.userModel.value.data?.kyc ?? 0),
+                        _kycIcon(
+                          homeController.userModel.value.data?.kycLevel ??
+                              homeController.userModel.value.data?.kyc ??
+                              0,
+                          homeController.userModel.value.data?.kycLevel != null,
+                        ),
+                        color: _kycColor(
+                          homeController.userModel.value.data?.kycLevel ??
+                              homeController.userModel.value.data?.kyc ??
+                              0,
+                          homeController.userModel.value.data?.kycLevel != null,
+                        ),
                         size: 16,
                       ),
                       SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          _kycLabel(homeController.userModel.value.data?.kyc ?? 0, localization),
+                          _kycRowLabel(homeController, localization),
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.white.withValues(alpha: 0.9),
@@ -167,6 +179,10 @@ class UserProfileSection extends StatelessWidget {
                           ),
                         ),
                       ),
+                      _LevelProgressBar(
+                        level: homeController.userModel.value.data?.kycLevel,
+                      ),
+                      SizedBox(width: 8),
                       Icon(Icons.chevron_right, color: AppColors.white.withValues(alpha: 0.5), size: 18),
                     ],
                   ),
@@ -181,9 +197,16 @@ class UserProfileSection extends StatelessWidget {
   }
 
   // ── KYC helpers ──
+  //
+  // `isTiered` — the server answered with the tiered kyc_level system
+  // (0..3). The legacy int field (0 none / 1 verified / 2 pending /
+  // 3 rejected) predates the level system and misreports tiered users
+  // (fresh signups carry kyc=4), so it is only consulted when the server
+  // has not sent kyc_level.
 
-  Color _kycColor(int kyc) {
-    switch (kyc) {
+  Color _kycColor(int value, bool isTiered) {
+    if (isTiered) return _levelColor(value);
+    switch (value) {
       case 1:
         return AppColors.success;
       case 2:
@@ -195,8 +218,9 @@ class UserProfileSection extends StatelessWidget {
     }
   }
 
-  IconData _kycIcon(int kyc) {
-    switch (kyc) {
+  IconData _kycIcon(int value, bool isTiered) {
+    if (isTiered) return _levelIcon(value);
+    switch (value) {
       case 1:
         return Icons.verified_user;
       case 2:
@@ -220,9 +244,82 @@ class UserProfileSection extends StatelessWidget {
         return l.kycStatusNotSubmitted;
     }
   }
+
+  String _kycRowLabel(
+    HomeController homeController,
+    AppLocalizations localization,
+  ) {
+    final data = homeController.userModel.value.data;
+    final level = data?.kycLevel;
+    if (level != null) {
+      return localization.kycUpgradeLevelChip(level);
+    }
+    return _kycLabel(data?.kyc ?? 0, localization);
+  }
+
+  Color _levelColor(int level) {
+    switch (level) {
+      case 3:
+        return AppColors.success;
+      case 2:
+        return AppColors.success;
+      case 1:
+        return AppColors.white;
+      default:
+        return AppColors.warning;
+    }
+  }
+
+  IconData _levelIcon(int level) {
+    switch (level) {
+      case 3:
+        return Icons.verified;
+      case 2:
+        return Icons.verified_user;
+      case 1:
+        return Icons.verified_user_outlined;
+      default:
+        return Icons.shield_outlined;
+    }
+  }
 }
 
-/// Small badge showing KYC status next to the user name.
+/// Three-segment progress for the tiered verification level (0..3).
+/// Hidden entirely for legacy payloads without kyc_level.
+class _LevelProgressBar extends StatelessWidget {
+  final int? level;
+
+  const _LevelProgressBar({required this.level});
+
+  @override
+  Widget build(BuildContext context) {
+    final current = level;
+    if (current == null) return const SizedBox.shrink();
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(3, (i) {
+        final filled = i < current;
+        return Container(
+          width: 14,
+          height: 4,
+          margin: const EdgeInsetsDirectional.only(end: 3),
+          decoration: BoxDecoration(
+            color: filled
+                ? AppColors.success
+                : AppColors.white.withValues(alpha: 0.25),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+/// Small badge showing the verification tier next to the user name.
+/// Tiered (kyc_level) when available — a "Level n" chip with an escalating
+/// shield icon. Legacy payloads fall back to an icon-only status chip
+/// (the previous emoji glyphs were non-standard).
 class _KycStatusBadge extends StatelessWidget {
   final HomeController homeController;
 
@@ -230,27 +327,43 @@ class _KycStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final kyc = homeController.userModel.value.data?.kyc ?? 0;
-    final color = _color(kyc);
-    final icon = _icon(kyc);
+    final localization = AppLocalizations.of(context);
+    final data = homeController.userModel.value.data;
+    final level = data?.kycLevel;
 
+    if (level == null) {
+      // Legacy fallback: icon-only chip, no emoji text.
+      final kyc = data?.kyc ?? 0;
+      final color = _legacyColor(kyc);
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.25),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withValues(alpha: 0.5), width: 1),
+        ),
+        child: Icon(_legacyIcon(kyc), color: AppColors.white, size: 14.sp),
+      );
+    }
+
+    final color = _levelColor(level);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.25),
+        color: AppColors.white.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.5), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.7), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColors.white, size: 14.sp),
-          SizedBox(width: 3.w),
+          Icon(_levelIcon(level), color: color, size: 13.sp),
+          SizedBox(width: 4.w),
           Text(
-            _shortLabel(kyc),
+            localization?.kycUpgradeLevelChip(level) ?? 'Level $level',
             style: TextStyle(
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w700,
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w800,
               color: AppColors.white,
             ),
           ),
@@ -259,7 +372,7 @@ class _KycStatusBadge extends StatelessWidget {
     );
   }
 
-  Color _color(int kyc) {
+  Color _legacyColor(int kyc) {
     switch (kyc) {
       case 1:
         return AppColors.success;
@@ -272,7 +385,7 @@ class _KycStatusBadge extends StatelessWidget {
     }
   }
 
-  IconData _icon(int kyc) {
+  IconData _legacyIcon(int kyc) {
     switch (kyc) {
       case 1:
         return Icons.verified;
@@ -285,16 +398,29 @@ class _KycStatusBadge extends StatelessWidget {
     }
   }
 
-  String _shortLabel(int kyc) {
-    switch (kyc) {
-      case 1:
-        return '✓';
-      case 2:
-        return '⏳';
+  Color _levelColor(int level) {
+    switch (level) {
       case 3:
-        return '✗';
+        return AppColors.success;
+      case 2:
+        return AppColors.success;
+      case 1:
+        return AppColors.white;
       default:
-        return '!';
+        return AppColors.warning;
+    }
+  }
+
+  IconData _levelIcon(int level) {
+    switch (level) {
+      case 3:
+        return Icons.verified;
+      case 2:
+        return Icons.verified_user;
+      case 1:
+        return Icons.verified_user_outlined;
+      default:
+        return Icons.shield_outlined;
     }
   }
 }

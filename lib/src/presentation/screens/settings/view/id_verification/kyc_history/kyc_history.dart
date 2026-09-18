@@ -53,89 +53,116 @@ class _KycHistoryState extends State<KycHistory> {
 
                     return Container(
                       padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
+                        horizontal: 14,
+                        vertical: 14,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        border: Border.all(
-                          color: AppColors.black.withValues(alpha: 0.1),
-                        ),
                         borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: AppColors.black.withValues(alpha: 0.06),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.black.withValues(alpha: 0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
+                          // Status icon bubble — scannable at a glance.
+                          Container(
+                            width: 42,
+                            height: 42,
+                            decoration: BoxDecoration(
+                              color: _statusColor(history.status)
+                                  .withValues(alpha: 0.12),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              _statusIcon(history.status),
+                              color: _statusColor(history.status),
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  history.type ?? "",
+                                  _typeLabel(history, localization),
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 15,
                                     color: AppColors.lightTextPrimary,
                                     letterSpacing: 0,
                                   ),
-                                  overflow: TextOverflow.visible,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Text(
-                                  "${localization.kycHistoryDate} ${DateFormat("dd MMM yyyy hh:mm a").format(DateTime.parse(history.createdAt!))}",
+                                  DateFormat("dd MMM yyyy · hh:mm a").format(
+                                    DateTime.parse(history.createdAt!),
+                                  ),
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
                                     color: AppColors.lightTextTertiary,
                                     letterSpacing: 0,
                                   ),
                                 ),
-                                SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Text(
-                                      localization.kycHistoryStatus,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13,
-                                        color: AppColors.lightTextTertiary,
-                                        letterSpacing: 0,
+                                const SizedBox(height: 7),
+                                // Status pill — colored dot + label.
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _statusColor(history.status)
+                                        .withValues(alpha: 0.10),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: _statusColor(history.status),
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      history.status == "pending"
-                                          ? localization.kycHistoryStatusPending
-                                          : history.status == "approved"
-                                          ? localization
-                                                .kycHistoryStatusApproved
-                                          : localization
-                                                .kycHistoryStatusRejected,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13,
-                                        letterSpacing: 0,
-                                        color: history.status == "pending"
-                                            ? AppColors.warning
-                                            : history.status == "approved"
-                                            ? AppColors.success
-                                            : history.status == "rejected"
-                                            ? AppColors.error
-                                            : null,
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        _statusLabel(history.status, localization),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 11,
+                                          letterSpacing: 0,
+                                          color: _statusColor(history.status),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
+                          const SizedBox(width: 8),
                           CommonButton(
                             onPressed: () {
                               Get.bottomSheet(
                                 KycDetailsBottomSheet(historyData: history),
                               );
                             },
-                            borderRadius: 8,
-                            width: 50,
-                            height: 30,
+                            borderRadius: 10,
+                            width: 54,
+                            height: 32,
                             text: localization.kycHistoryViewButton,
                             fontSize: 12,
                           ),
@@ -151,8 +178,69 @@ class _KycHistoryState extends State<KycHistory> {
               }),
             ),
           ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+  }
+
+  // ── Presentational helpers ──
+  //
+  // Status casing is not guaranteed across backend responses — compare on a
+  // normalized (trimmed, lower-cased) form (same pattern as the transaction
+  // popup) and fall back to a neutral color for unknown values.
+
+  Color _statusColor(String? status) {
+    switch ((status ?? '').trim().toLowerCase()) {
+      case 'approved':
+        return AppColors.success;
+      case 'pending':
+        return AppColors.warning;
+      case 'rejected':
+        return AppColors.error;
+      default:
+        return AppColors.lightTextTertiary;
+    }
+  }
+
+  IconData _statusIcon(String? status) {
+    switch ((status ?? '').trim().toLowerCase()) {
+      case 'approved':
+        return Icons.check_circle_rounded;
+      case 'pending':
+        return Icons.hourglass_top_rounded;
+      case 'rejected':
+        return Icons.cancel_rounded;
+      default:
+        return Icons.history_rounded;
+    }
+  }
+
+  String _statusLabel(String? status, AppLocalizations localization) {
+    switch ((status ?? '').trim().toLowerCase()) {
+      case 'approved':
+        return localization.kycHistoryStatusApproved;
+      case 'pending':
+        return localization.kycHistoryStatusPending;
+      case 'rejected':
+        return localization.kycHistoryStatusRejected;
+      default:
+        return status ?? '';
+    }
+  }
+
+  /// Server `type` values look like `level_2` — render them as the
+  /// localized "Level n" chip; unknown shapes degrade to a readable key
+  /// instead of raw snake_case.
+  String _typeLabel(KycHistoryData history, AppLocalizations localization) {
+    final raw = (history.type ?? '').trim();
+    final match =
+        RegExp(r'level[_\s-]*(\d+)').firstMatch(raw.toLowerCase());
+    if (match != null) {
+      final level = int.tryParse(match.group(1)!);
+      if (level != null) return localization.kycUpgradeLevelChip(level);
+    }
+    if (raw.isEmpty) return '';
+    final spaced = raw.replaceAll('_', ' ').replaceAll('-', ' ');
+    return spaced[0].toUpperCase() + spaced.substring(1);
   }
 }

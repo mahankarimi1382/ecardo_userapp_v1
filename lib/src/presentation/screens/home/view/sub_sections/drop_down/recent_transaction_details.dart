@@ -1,6 +1,15 @@
+import 'dart:io' show File;
+import 'dart:ui' as ui show ImageByteFormat;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+import 'package:cross_file/cross_file.dart' show XFile;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
 
 class RecentTransactionDetails extends StatefulWidget {
@@ -14,11 +23,20 @@ class RecentTransactionDetails extends StatefulWidget {
 }
 
 class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
+  /// v1.0.35 (RECEIPT-SHARE): rasterizes the receipt card below into a
+  /// branded PNG and opens the system share sheet.
+  final GlobalKey _receiptKey = GlobalKey();
+  bool _sharing = false;
+
   Color _getStatusColor(String? status) {
-    switch (status) {
-      case "Success":
+    // M-4 pattern: backend status casing is not guaranteed — compare on a
+    // normalized form. "approved" is accepted alongside "success" because
+    // KYC-style responses use it.
+    switch ((status ?? '').trim().toLowerCase()) {
+      case 'success':
+      case 'approved':
         return AppColors.success;
-      case "Pending":
+      case 'pending':
         return AppColors.warning;
       default:
         return AppColors.error;
@@ -77,72 +95,118 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
             _buildHeader(),
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildTransactionInfo(),
-                    const SizedBox(height: 30),
-                    _buildDescription(),
-                    const SizedBox(height: 30),
-                    _buildDetailRow(
-                      label: localization.transactionDetailsWallet,
-                      value: Text(
-                        "${transaction.walletType} (${transaction.trxCurrencyCode})",
-                        style: TextStyle(
-                          letterSpacing: 0,
-                          fontSize: 16,
-                          color: AppColors.lightTextPrimary,
-                          fontWeight: FontWeight.w900,
+                child: RepaintBoundary(
+                  key: _receiptKey,
+                  child: Container(
+                    color: AppColors.white,
+                    child: Column(
+                      children: [
+                        _buildBrandedShareHeader(),
+                        const SizedBox(height: 16),
+                        _buildTransactionInfo(),
+                        const SizedBox(height: 30),
+                        _buildDescription(),
+                        const SizedBox(height: 30),
+                        _buildDetailRow(
+                          label: localization.transactionDetailsWallet,
+                          value: Text(
+                            "${transaction.walletType} (${transaction.trxCurrencyCode})",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontSize: 16,
+                              color: AppColors.lightTextPrimary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
+                        _buildAmountRow(
+                          localization.transactionDetailsCharge,
+                          transaction.charge ?? "",
+                          transaction.charge,
+                          transaction.isPlus,
+                          transaction.isCrypto,
+                          transaction.trxCurrencyCode,
+                          transaction.trxCurrencySymbol,
+                        ),
+                        _buildDetailRow(
+                          label: localization.transactionDetailsTransactionId,
+                          value: Text(
+                            transaction.tnx ?? "",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontSize: 16,
+                              color: AppColors.lightTextPrimary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        _buildDetailRow(
+                          label: localization.transactionDetailsMethod,
+                          value: Text(
+                            transaction.method ?? "",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontSize: 16,
+                              color: AppColors.lightTextPrimary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        _buildAmountRow(
+                          localization.transactionDetailsTotalAmount,
+                          transaction.finalAmount ?? "",
+                          transaction.finalAmount,
+                          transaction.isPlus,
+                          transaction.isCrypto,
+                          transaction.trxCurrencyCode,
+                          transaction.trxCurrencySymbol,
+                        ),
+                        _buildDetailRow(
+                          label: localization.transactionDetailsStatus,
+                          value: _buildStatusChip(transaction.status),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // v1.0.35 (RECEIPT-SHARE): fixed share action below the receipt.
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.lightPrimary,
+                      foregroundColor: AppColors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    _buildAmountRow(
-                      localization.transactionDetailsCharge,
-                      transaction.charge ?? "",
-                      transaction.charge,
-                      transaction.isPlus,
-                      transaction.isCrypto,
-                      transaction.trxCurrencyCode,
-                      transaction.trxCurrencySymbol,
-                    ),
-                    _buildDetailRow(
-                      label: localization.transactionDetailsTransactionId,
-                      value: Text(
-                        transaction.tnx ?? "",
-                        style: TextStyle(
-                          letterSpacing: 0,
-                          fontSize: 16,
-                          color: AppColors.lightTextPrimary,
-                          fontWeight: FontWeight.w900,
-                        ),
+                    onPressed: _sharing ? null : () => _shareReceipt(),
+                    icon: _sharing
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.white,
+                            ),
+                          )
+                        : const Icon(Icons.ios_share_rounded, size: 18),
+                    label: Text(
+                      localization.shareReceipt,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
                       ),
                     ),
-                    _buildDetailRow(
-                      label: localization.transactionDetailsMethod,
-                      value: Text(
-                        transaction.method ?? "",
-                        style: TextStyle(
-                          letterSpacing: 0,
-                          fontSize: 16,
-                          color: AppColors.lightTextPrimary,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    _buildAmountRow(
-                      localization.transactionDetailsTotalAmount,
-                      transaction.finalAmount ?? "",
-                      transaction.finalAmount,
-                      transaction.isPlus,
-                      transaction.isCrypto,
-                      transaction.trxCurrencyCode,
-                      transaction.trxCurrencySymbol,
-                    ),
-                    _buildDetailRow(
-                      label: localization.transactionDetailsStatus,
-                      value: _buildStatusChip(transaction.status),
-                    ),
-                    const SizedBox(height: 50),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -287,6 +351,91 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  /// Branded band rendered at the top of the captured receipt image — makes
+  /// the shared PNG read as an official eCardo document, not a screenshot.
+  Widget _buildBrandedShareHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.lightPrimary,
+            AppColors.lightPrimary.withValues(alpha: 0.78),
+          ],
+          begin: AlignmentDirectional.topStart,
+          end: AlignmentDirectional.bottomEnd,
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.receipt_long_rounded, color: Colors.white, size: 20),
+          const SizedBox(width: 8),
+          const Text(
+            'eCardo',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            AppLocalizations.of(context)!.transactionsPopupReceiptTitle,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.9),
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Rasterizes the receipt boundary to a PNG and opens the system share
+  /// sheet. Failures never crash the sheet — a localized toast is shown.
+  Future<void> _shareReceipt() async {
+    if (_sharing) return;
+    setState(() => _sharing = true);
+    try {
+      final boundary = _receiptKey.currentContext?.findRenderObject();
+      if (boundary is! RenderRepaintBoundary) return;
+
+      final image = await boundary.toImage(pixelRatio: 3);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
+      if (byteData == null) return;
+
+      final dir = await getTemporaryDirectory();
+      final file = File(
+        '${dir.path}/ecardo_receipt_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
+      await file.writeAsBytes(byteData.buffer.asUint8List());
+
+      final localization = AppLocalizations.of(context);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: localization?.shareReceiptBody ?? 'My eCardo transaction receipt',
+          subject: 'eCardo',
+        ),
+      );
+    } catch (e) {
+      debugPrint('Receipt share failed: $e');
+      if (mounted) {
+        final localization = AppLocalizations.of(context);
+        ToastHelper().showErrorToast(
+          localization?.shareReceiptFailed ?? 'Could not share the receipt.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
   }
 
   Widget _buildTransactionInfo() {

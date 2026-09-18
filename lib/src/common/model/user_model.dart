@@ -25,6 +25,7 @@ class UserData {
   String? avatar;
   int? status;
   int? kyc;
+  int? kycLevel;
   bool? phoneVerified;
   String? otp;
   String? provider;
@@ -73,6 +74,7 @@ class UserData {
     this.avatar,
     this.status,
     this.kyc,
+    this.kycLevel,
     this.phoneVerified,
     this.otp,
     this.provider,
@@ -122,6 +124,7 @@ class UserData {
     avatar = json['avatar'];
     status = json['status'];
     kyc = json['kyc'];
+    kycLevel = json['kyc_level'];
     phoneVerified = json['phone_verified'];
     otp = json['otp'];
     provider = json['provider'];

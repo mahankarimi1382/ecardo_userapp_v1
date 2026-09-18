@@ -71,6 +71,12 @@ class FirebaseMessagingService {
   LocalNotificationsService? _localNotificationsService;
   BuildContext? _lastContext;
 
+  /// Cold-start buffer: getInitialMessage / early notification taps can fire
+  /// before the first Navigator frame exists. Their payloads park here and
+  /// are routed by [attachContext] once the root widget attaches a context.
+  Map<String, dynamic>? _pendingNotificationData;
+  bool _pendingUpdateOpen = false;
+
   AppLocalizations? get localizationOrNull {
     final ctx = _lastContext ?? Get.context;
     if (ctx == null) return null;
@@ -103,8 +109,23 @@ class FirebaseMessagingService {
 
   /// Optional: called by the root widget whenever the Navigator is rebuilt
   /// so that we always have a usable context to show dialogs against.
+  /// Also drains whatever notification routing was parked during cold start.
   void attachContext(BuildContext context) {
     _lastContext = context;
+    _processPendingRoutes();
+  }
+
+  void _processPendingRoutes() {
+    if (_pendingUpdateOpen) {
+      _pendingUpdateOpen = false;
+      _openUpdateScreen();
+      return;
+    }
+    final pending = _pendingNotificationData;
+    if (pending != null) {
+      _pendingNotificationData = null;
+      _routeFromNotificationData(pending);
+    }
   }
 
   // ===========================================================================
@@ -382,12 +403,11 @@ class FirebaseMessagingService {
       final ctx = _lastContext ?? Get.context;
       if (ctx == null) {
         // Cold start straight from a notification tap: init() processes
-        // getInitialMessage before runApp() has built a navigator.
-        // TODO(lead): defer initial-message routing until the first frame
-        // (needs a hook in the app bootstrap) — same limitation as the
-        // pre-existing app_update cold-start path.
+        // getInitialMessage before runApp() has built a navigator. Park the
+        // payload — attachContext() routes it on the first frame.
+        _pendingNotificationData = data;
         if (kDebugMode) {
-          print('Notification tap ignored (navigator not ready): type=$type');
+          print('Notification routing deferred until navigator is ready: type=$type');
         }
         return;
       }
@@ -532,17 +552,21 @@ class FirebaseMessagingService {
     }
   }
 
-  /// Deep-links the user to the update screen when they tap the
-  /// notification (used for both foreground-tap and cold-start-from-tap).
+  /// Deep-links the user to the full-screen update flow when they tap the
+  /// notification (foreground-tap, cold-start-from-tap, update dialog and
+  /// the auto-prompt all land here). The screen runs its own check when the
+  /// controller phase is still idle, so registration order never matters.
   void _openUpdateScreen() {
     final ctx = _lastContext ?? Get.context;
     if (ctx == null) {
+      // Cold start: park it; attachContext() opens it on the first frame.
+      _pendingUpdateOpen = true;
       if (kDebugMode) {
-        print('Cannot open update screen — no context attached');
+        print('Update screen deferred until navigator is ready');
       }
       return;
     }
-    if (!Get.isRegistered<AppUpdateController>()) return;
-    Get.toNamed('/app_update_route');
+    _pendingUpdateOpen = false;
+    Get.toNamed(BaseRoute.appUpdate);
   }
 }

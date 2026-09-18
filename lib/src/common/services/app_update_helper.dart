@@ -18,19 +18,17 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
-
-/// Conditional import — only mobile platforms can actually download APKs.
-import 'mobile_update_helper.dart' if (dart.library.html) 'mobile_update_helper_web.dart';
 
 class AppUpdateHelper {
   /// Imperative check triggered by the user (settings "Check for Updates").
   ///
-  /// On web, only a refresh dialog is shown. On mobile, this either shows
-  /// an "update available" dialog (with Download & Update button) or a
-  /// snackbar telling the user they're already on the latest version.
+  /// On web, only a refresh dialog is shown. On mobile, when an update is
+  /// available the user is taken to the FULL-SCREEN update flow — the same
+  /// screen with the animated download progress they reach from the update
+  /// notification — so there is exactly one update UX everywhere.
   static Future<void> checkForUpdate(
     BuildContext context, {
     bool showMessageIfNoUpdate = false,
@@ -58,40 +56,34 @@ class AppUpdateHelper {
         return;
       }
 
-      // Mobile path — prefer the new controller when it is registered so the
-      // settings screen can transition to the full-screen update flow.
+      // Mobile path — the controller performs the check (so the screen lands
+      // directly on the right phase) and the user is routed to the
+      // full-screen update flow. With auto-update enabled the screen starts
+      // the download by itself.
       if (Get.isRegistered<AppUpdateController>()) {
         final controller = Get.find<AppUpdateController>();
         await controller.checkForUpdate(
           showSnackbarWhenUpToDate: showMessageIfNoUpdate,
         );
-        if (!context.mounted) return;
-        if (controller.phase.value == AppUpdatePhase.updateAvailable) {
-          _showMobileUpdateDialog(
-            context,
-            controller.serverVersion.value,
-            updateLink,
-            forceUpdate,
-          );
+        if (controller.phase.value == AppUpdatePhase.updateAvailable &&
+            context.mounted) {
+          Get.toNamed(BaseRoute.appUpdate);
         }
         return;
       }
 
-      // Fallback: legacy dialog that calls downloadAndInstallApk directly.
-      _showMobileUpdateDialog(
-        context,
-        serverVersion,
-        updateLink,
-        forceUpdate,
-      );
+      // Fallback (controller not registered — should not happen since it is
+      // registered permanently in main.dart): route to the screen anyway; it
+      // reports the missing service instead of silently doing nothing.
+      Get.toNamed(BaseRoute.appUpdate);
     } catch (e) {
       debugPrint('Update Check Error: $e');
     }
   }
 
   /// Called on app launch (e.g. from the splash or home screen) to
-  /// optionally show the update dialog without nagging the user twice for
-  /// the same version.
+  /// optionally route the user to the full-screen update flow without
+  /// nagging them twice for the same version.
   ///
   /// Skipped entirely when:
   ///   - the platform is web
@@ -102,6 +94,7 @@ class AppUpdateHelper {
   /// v1.0.26 (UPD-5): FORCED updates bypass the auto-update toggle and the
   /// already-prompted gate — the admin explicitly required every old client
   /// to be prompted, and the server 426-gate blocks their API calls anyway.
+  /// v1.0.35: opens the full-screen update flow instead of a dialog.
   static Future<void> maybeAutoPromptForUpdate(BuildContext context) async {
     if (kIsWeb) return;
     if (!Get.isRegistered<AppUpdateController>()) return;
@@ -127,7 +120,7 @@ class AppUpdateHelper {
       }
 
       if (!context.mounted) return;
-      _showMobileUpdateDialog(context, server, link, force);
+      Get.toNamed(BaseRoute.appUpdate);
       await controller.markVersionAsPrompted(server);
     } catch (e) {
       debugPrint('Auto-prompt update check error: $e');
@@ -135,10 +128,10 @@ class AppUpdateHelper {
   }
 
   /// v1.0.26 (UPD-5): server-driven force update — the API answered 426
-  /// (CheckAppVersion middleware). Shows the non-dismissible update dialog
-  /// with the settings download link. A static guard keeps parallel 426
-  /// responses from stacking dialogs; it stays set for the whole session
-  /// because the user cannot use the app until they update anyway.
+  /// (CheckAppVersion middleware). Routes to the non-dismissible full-screen
+  /// update flow. A static guard keeps parallel 426 responses from stacking
+  /// navigations; it stays set for the whole session because the user cannot
+  /// use the app until they update anyway.
   static bool _serverForcedDialogShown = false;
 
   static void handleServerForcedUpdate(Map<String, dynamic>? body) {
@@ -160,98 +153,15 @@ class AppUpdateHelper {
       controller.forceUpdate.value = true;
 
       _serverForcedDialogShown = true;
-      _showMobileUpdateDialog(Get.context!, latest, link, true);
+      Get.toNamed(BaseRoute.appUpdate);
     } catch (e) {
       debugPrint('Server forced-update handling failed: $e');
     }
   }
 
   // ===========================================================================
-  // Dialog UI
+  // Dialog UI (web only — mobile goes to the full-screen update flow)
   // ===========================================================================
-
-  static void _showMobileUpdateDialog(
-    BuildContext context,
-    String version,
-    String url,
-    bool forceUpdate,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: !forceUpdate,
-      builder: (ctx) {
-        // v1.0.24: localized title/buttons (were hardcoded English).
-        final localization = AppLocalizations.of(ctx);
-        // v1.1 (UPD-NOTES): show WHAT changed in this version — pushed FCM
-        // notes first, then the app_update_notes settings key. When neither
-        // is available a localized generic line is shown instead.
-        String? notes;
-        try {
-          if (Get.isRegistered<AppUpdateController>()) {
-            notes = Get.find<AppUpdateController>().resolveNotes(version);
-          }
-        } catch (_) {
-          notes = null;
-        }
-        final hasNotes = notes != null && notes.isNotEmpty;
-        return PopScope(
-          canPop: !forceUpdate,
-          child: AlertDialog(
-            title: Text(
-              localization?.updateAvailableTitle(version) ??
-                  'New Update Available ($version)',
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  localization?.updateDialogBody ??
-                      'A new version of the application is available. '
-                          'Please update to continue.',
-                ),
-                if (hasNotes) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    localization?.updateWhatsNewTitle(version) ??
-                        "What's new in v$version",
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 6),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 160),
-                    child: SingleChildScrollView(
-                      child: Text(notes, textAlign: TextAlign.start),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            actions: [
-              if (!forceUpdate)
-                TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: Text(localization?.updateLater ?? 'Later'),
-                ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.lightPrimary,
-                ),
-                onPressed: () {
-                  Navigator.pop(ctx);
-                  downloadAndInstallApk(url);
-                },
-                child: Text(
-                  localization?.updateDialogDownload ?? 'Download & Update',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   static void _showWebUpdateDialog(
     BuildContext context,
