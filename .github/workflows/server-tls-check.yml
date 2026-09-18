@@ -20,9 +20,12 @@ jobs:
           if curl --fail-with-body --show-error --silent \
             https://ecardo.ir/api/app-version \
             | tee tls-result.txt; then
-            grep -q '"version"' tls-result.txt \
-              && echo "✅ TLS chain is publicly verifiable AND the API answered."
-            || { echo "❌ TLS OK but unexpected response body — see tls-result.txt"; exit 1; }
+            if grep -q '"version"' tls-result.txt; then
+              echo "✅ TLS chain is publicly verifiable AND the API answered."
+            else
+              echo "❌ TLS OK but unexpected response body — see tls-result.txt"
+              exit 1
+            fi
           else
             code=$?
             if [ "$code" -eq 60 ] || grep -qi "SSL certificate problem" tls-result.txt; then
