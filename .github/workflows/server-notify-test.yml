@@ -1,0 +1,55 @@
+name: Server Notify Test
+
+# Proves the CI<->server deploy-secret match on demand, without tagging a
+# release: POSTs the exact same payload the release notify step sends (same
+# endpoint, same headers, real ECARDO_DEPLOY_SECRET) for a given version.
+#
+# Safe by construction: re-notifying the CURRENTLY deployed version is a
+# server-side no-op on settings (already at that version) at worst; it never
+# depends on an unpublished build. Fails loudly on any non-2xx / missing
+# success body so a secret mismatch can never hide.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to notify (defaults to 1.0.33)"
+        required: false
+        default: "1.0.33"
+
+jobs:
+  notify-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST github-deploy-webhook with the real secret
+        env:
+          ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
+          VERSION: ${{ github.event.inputs.version || '1.0.33' }}
+        run: |
+          DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?ECARDO_DEPLOY_SECRET is not configured}"
+          DOWNLOAD_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/ecardo_user_v${VERSION}.apk"
+          echo "Notify test: version=$VERSION (no build, no release — webhook proof only)"
+          set -o pipefail
+          if curl --fail-with-body --show-error --silent \
+            -X POST https://ecardo.ir/api/user/github-deploy-webhook \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -H "Origin: https://ecardo.ir" \
+            -H "X-ECardo-Deploy-Source: github-actions" \
+            -H "X-ECardo-Notify-Test: true" \
+            --compressed \
+            -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\"}" \
+            | tee notify-test-result.txt; then
+            if grep -q "Successfully deployed" notify-test-result.txt; then
+              echo "✅ SECRET MATCH PROVEN: server accepted the CI deploy notification."
+            else
+              echo "❌ 2xx but no success body — inspect notify-test-result.txt"
+              exit 1
+            fi
+          else
+            code=$?
+            echo "❌ Secret mismatch or delivery failure (curl exit $code) — see notify-test-result.txt"
+            echo "   Backend task T2 applies: rotate GITHUB_DEPLOY_SECRET / ECARDO_DEPLOY_SECRET."
+            exit 1
+          fi

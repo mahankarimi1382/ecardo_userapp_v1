@@ -1,7 +1,7 @@
 import 'dart:io' show File;
 
 import 'package:dio/dio.dart' as dio show FormData, MultipartFile;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -100,7 +100,15 @@ class KycLevelController extends GetxController {
           response.message ?? localization?.kycUploadFailed ?? 'Upload failed. Please try again.',
         );
       }
-    } catch (e) { isSubmitting.value = false; ToastHelper().showErrorToast('Failed: $e'); }
+    } catch (e) {
+      isSubmitting.value = false;
+      debugPrint('KYC submit failed: $e');
+      final localization =
+          Get.context == null ? null : AppLocalizations.of(Get.context!);
+      ToastHelper().showErrorToast(
+        localization?.kycUploadFailed ?? 'Upload failed. Please try again.',
+      );
+    }
     return false;
   }
 
