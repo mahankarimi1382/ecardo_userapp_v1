@@ -219,7 +219,9 @@ class _LevelCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'سطح ${level.level}',
+                        // QC-M1: آخرین متن هاردکد این کارت هم l10n شد.
+                        localization?.kycUpgradeLevelChip(level.level) ??
+                            'Level ${level.level}',
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,

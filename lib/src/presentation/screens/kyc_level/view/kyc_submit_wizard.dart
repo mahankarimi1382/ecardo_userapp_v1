@@ -69,43 +69,46 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
         }
 
         final docs = targetLevel.requiredDocs;
+        // QC-M4: a level with zero docs must not produce a negative
+        // List.generate range — render the review step directly instead.
+        final hasDocs = docs.isNotEmpty;
 
         return Column(
           children: [
             // Progress indicator
-            Container(
-              padding: EdgeInsets.all(16.w),
-              child: Row(
-                children: List.generate(docs.length * 2 - 1, (index) {
-                  if (index.isOdd) {
-                    return Expanded(child: Container(height: 2, margin: EdgeInsets.symmetric(horizontal: 4), color: _currentStep > index ~/ 2 ? AppColors.lightPrimary : AppColors.lightBorder));
-                  }
-                  final stepIdx = index ~/ 2;
-                  return _StepCircle(step: stepIdx + 1, isActive: _currentStep >= stepIdx, isCurrent: _currentStep == stepIdx);
-                }),
+            if (hasDocs)
+              Container(
+                padding: EdgeInsets.all(16.w),
+                child: Row(
+                  children: List.generate(docs.length * 2 - 1, (index) {
+                    if (index.isOdd) {
+                      return Expanded(child: Container(height: 2, margin: EdgeInsets.symmetric(horizontal: 4), color: _currentStep > index ~/ 2 ? AppColors.lightPrimary : AppColors.lightBorder));
+                    }
+                    final stepIdx = index ~/ 2;
+                    return _StepCircle(step: stepIdx + 1, isActive: _currentStep >= stepIdx, isCurrent: _currentStep == stepIdx);
+                  }),
+                ),
               ),
-            ),
 
             // Content
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(16.w),
-                child: _currentStep < docs.length
-                    ? _buildDocUploadStep(docs[_currentStep])
-                    : _buildReviewStep(targetLevel, docs),
+                child: hasDocs && _currentStep < docs.length
+                    ? _buildDocUploadStep(localization, docs[_currentStep])
+                    : _buildReviewStep(localization, targetLevel, docs),
               ),
             ),
 
             // Bottom button
-            _buildBottomButton(docs.length),
+            _buildBottomButton(localization, docs),
           ],
         );
       }),
     );
   }
 
-  Widget _buildDocUploadStep(String docKey) {
-    final localization = AppLocalizations.of(Get.context!);
+  Widget _buildDocUploadStep(AppLocalizations? localization, String docKey) {
     // v1.1 (KYC-DOC): shared localized labels — unknown per-country keys
     // (e.g. national_card for IR users) render with a readable generic
     // label and never crash.
@@ -179,8 +182,11 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     );
   }
 
-  Widget _buildReviewStep(KycLevel level, List<String> docs) {
-    final localization = AppLocalizations.of(Get.context!);
+  Widget _buildReviewStep(
+    AppLocalizations? localization,
+    KycLevel level,
+    List<String> docs,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -210,10 +216,13 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     );
   }
 
-  Widget _buildBottomButton(int totalSteps) {
-    final localization = AppLocalizations.of(Get.context!);
-    final isLastStep = _currentStep >= totalSteps;
-    final currentDoc = isLastStep ? null : controller.levels.where((l) => l.level == widget.targetLevel).first.requiredDocs[_currentStep];
+  Widget _buildBottomButton(
+    AppLocalizations? localization,
+    List<String> docs,
+  ) {
+    final isLastStep = _currentStep >= docs.length;
+    final currentDoc =
+        (!isLastStep && _currentStep < docs.length) ? docs[_currentStep] : null;
     final canProceed = isLastStep || (currentDoc != null && _documents.containsKey(currentDoc));
 
     return Container(

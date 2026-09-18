@@ -1,6 +1,15 @@
 // KYC Level Models — v1.0.5
 // مدل‌های سیستم سطوح KYC (سازگار با API v3.9)
 
+/// QC-M5: defensive int coercion — some servers/proxies serialize numeric
+/// fields as strings; a raw `as int?` cast would throw and crash screens.
+int? _kycAsInt(dynamic value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
+}
+
 /// یک سطح KYC با ویژگی‌ها و مدارک لازم.
 class KycLevel {
   final int level;
@@ -27,7 +36,7 @@ class KycLevel {
 
   factory KycLevel.fromJson(Map<String, dynamic> json) {
     return KycLevel(
-      level: json['level'] as int? ?? 1,
+      level: _kycAsInt(json['level']) ?? 1,
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
       color: json['color'] as String? ?? 'gray',
@@ -105,7 +114,7 @@ class KycBadge {
 
   factory KycBadge.fromJson(Map<String, dynamic> json) {
     return KycBadge(
-      level: json['level'] as int? ?? 1,
+      level: _kycAsInt(json['level']) ?? 1,
       name: json['name'] as String? ?? '',
       color: json['color'] as String? ?? 'gray',
       icon: json['icon'] as String? ?? 'user',
@@ -165,7 +174,7 @@ class KycNextLevel {
 
   factory KycNextLevel.fromJson(Map<String, dynamic> json) {
     return KycNextLevel(
-      level: json['level'] as int? ?? 1,
+      level: _kycAsInt(json['level']) ?? 1,
       name: json['name'] as String? ?? '',
       requiredDocs: (json['required_docs'] as List<dynamic>?)
           ?.map((e) => e.toString())

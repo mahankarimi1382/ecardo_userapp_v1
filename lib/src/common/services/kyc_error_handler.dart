@@ -74,6 +74,13 @@ class KycErrorHandler {
   /// they must not stack navigation to the upgrade screen.
   static DateTime? _lastRoutedAt;
 
+  /// QC-M3: called when the UpgradeRequiredScreen closes, so a user who
+  /// backs out and immediately hits another KYC block gets a fresh
+  /// navigation instead of being swallowed by the 2s dedupe window.
+  static void resetRoutingGuard() {
+    _lastRoutedAt = null;
+  }
+
   /// Parses a server response body against the KYC block contract.
   ///
   /// Returns null for anything that is not a KYC block (plain 403s, 401s,

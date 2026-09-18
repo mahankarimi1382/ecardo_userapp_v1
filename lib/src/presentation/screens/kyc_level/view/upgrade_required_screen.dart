@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -50,6 +51,14 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
     if (_requiredLevel == null) {
       _resolveRequiredLevel();
     }
+  }
+
+  @override
+  void dispose() {
+    // QC-M3: re-arm the upgrade-screen navigation guard so a subsequent
+    // KYC block navigates immediately even within the dedupe window.
+    KycErrorHandler.resetRoutingGuard();
+    super.dispose();
   }
 
   /// خواندن defensive آرگومان‌ها — سِروِر ممکن است اعداد را int، num یا
