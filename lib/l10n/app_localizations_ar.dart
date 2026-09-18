@@ -7025,6 +7025,51 @@ class AppLocalizationsAr extends AppLocalizations {
   String get remittanceStatusUnknown => 'Unknown';
 
   @override
+  String get remittanceRetry => 'إعادة المحاولة';
+
+  @override
+  String get remittanceYouSend => 'ترسل';
+
+  @override
+  String get remittanceReceiverGets => 'يستلم المستلم';
+
+  @override
+  String get remittanceDeliveryMethod => 'طريقة التسليم';
+
+  @override
+  String remittanceAmountLimitHint(String min, String max) {
+    return 'الحد: الأدنى $min · الأقصى $max';
+  }
+
+  @override
+  String remittanceErrAmountLimits(String min, String max) {
+    return 'يجب أن يكون المبلغ بين $min و $max';
+  }
+
+  @override
+  String remittanceErrRequiredField(String field) {
+    return 'يرجى إدخال $field';
+  }
+
+  @override
+  String get remittanceFieldSwift => 'رمز SWIFT';
+
+  @override
+  String get remittanceFieldShabaNumber => 'رقم الشبا';
+
+  @override
+  String get remittanceFieldUsdtAddress => 'عنوان USDT (TRC20)';
+
+  @override
+  String get remittanceFieldCardNumber => 'رقم البطاقة';
+
+  @override
+  String get remittanceRateSourceAdmin => 'سعر المشغل';
+
+  @override
+  String get remittanceRateSourceAuto => 'سعر السوق';
+
+  @override
   String get exchangeCalculating => 'جارٍ الحساب…';
 
   @override

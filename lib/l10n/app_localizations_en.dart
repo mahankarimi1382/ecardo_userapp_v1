@@ -7065,6 +7065,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remittanceStatusUnknown => 'Unknown';
 
   @override
+  String get remittanceRetry => 'Retry';
+
+  @override
+  String get remittanceYouSend => 'You send';
+
+  @override
+  String get remittanceReceiverGets => 'Receiver gets';
+
+  @override
+  String get remittanceDeliveryMethod => 'Delivery Method';
+
+  @override
+  String remittanceAmountLimitHint(String min, String max) {
+    return 'Limit: min $min · max $max';
+  }
+
+  @override
+  String remittanceErrAmountLimits(String min, String max) {
+    return 'Amount must be between $min and $max';
+  }
+
+  @override
+  String remittanceErrRequiredField(String field) {
+    return 'Please enter $field';
+  }
+
+  @override
+  String get remittanceFieldSwift => 'SWIFT Code';
+
+  @override
+  String get remittanceFieldShabaNumber => 'SHABA Number';
+
+  @override
+  String get remittanceFieldUsdtAddress => 'USDT Address (TRC20)';
+
+  @override
+  String get remittanceFieldCardNumber => 'Card Number';
+
+  @override
+  String get remittanceRateSourceAdmin => 'Operator rate';
+
+  @override
+  String get remittanceRateSourceAuto => 'Market rate';
+
+  @override
   String get exchangeCalculating => 'Calculating…';
 
   @override

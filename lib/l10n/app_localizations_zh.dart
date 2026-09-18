@@ -6892,6 +6892,51 @@ class AppLocalizationsZh extends AppLocalizations {
   String get remittanceStatusUnknown => '未知';
 
   @override
+  String get remittanceRetry => '重试';
+
+  @override
+  String get remittanceYouSend => '您汇出';
+
+  @override
+  String get remittanceReceiverGets => '收款人收到';
+
+  @override
+  String get remittanceDeliveryMethod => '交付方式';
+
+  @override
+  String remittanceAmountLimitHint(String min, String max) {
+    return '限额：最低 $min · 最高 $max';
+  }
+
+  @override
+  String remittanceErrAmountLimits(String min, String max) {
+    return '金额必须在 $min 和 $max 之间';
+  }
+
+  @override
+  String remittanceErrRequiredField(String field) {
+    return '请输入$field';
+  }
+
+  @override
+  String get remittanceFieldSwift => 'SWIFT 代码';
+
+  @override
+  String get remittanceFieldShabaNumber => 'SHABA 号码';
+
+  @override
+  String get remittanceFieldUsdtAddress => 'USDT 地址 (TRC20)';
+
+  @override
+  String get remittanceFieldCardNumber => '卡号';
+
+  @override
+  String get remittanceRateSourceAdmin => '运营商汇率';
+
+  @override
+  String get remittanceRateSourceAuto => '市场汇率';
+
+  @override
   String get exchangeCalculating => '计算中…';
 
   @override

@@ -7061,6 +7061,51 @@ class AppLocalizationsTr extends AppLocalizations {
   String get remittanceStatusUnknown => 'Unknown';
 
   @override
+  String get remittanceRetry => 'Tekrar dene';
+
+  @override
+  String get remittanceYouSend => 'Gönderdiğiniz';
+
+  @override
+  String get remittanceReceiverGets => 'Alıcının alacağı';
+
+  @override
+  String get remittanceDeliveryMethod => 'Teslim yöntemi';
+
+  @override
+  String remittanceAmountLimitHint(String min, String max) {
+    return 'Limit: min $min · maks $max';
+  }
+
+  @override
+  String remittanceErrAmountLimits(String min, String max) {
+    return 'Tutar $min ile $max arasında olmalı';
+  }
+
+  @override
+  String remittanceErrRequiredField(String field) {
+    return 'Lütfen $field girin';
+  }
+
+  @override
+  String get remittanceFieldSwift => 'SWIFT Kodu';
+
+  @override
+  String get remittanceFieldShabaNumber => 'SHABA Numarası';
+
+  @override
+  String get remittanceFieldUsdtAddress => 'USDT Adresi (TRC20)';
+
+  @override
+  String get remittanceFieldCardNumber => 'Kart Numarası';
+
+  @override
+  String get remittanceRateSourceAdmin => 'Operatör kuru';
+
+  @override
+  String get remittanceRateSourceAuto => 'Piyasa kuru';
+
+  @override
   String get exchangeCalculating => 'Hesaplanıyor…';
 
   @override

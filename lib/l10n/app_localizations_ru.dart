@@ -7063,6 +7063,51 @@ class AppLocalizationsRu extends AppLocalizations {
   String get remittanceStatusUnknown => 'Unknown';
 
   @override
+  String get remittanceRetry => 'Повторить';
+
+  @override
+  String get remittanceYouSend => 'Вы отправляете';
+
+  @override
+  String get remittanceReceiverGets => 'Получатель получит';
+
+  @override
+  String get remittanceDeliveryMethod => 'Способ доставки';
+
+  @override
+  String remittanceAmountLimitHint(String min, String max) {
+    return 'Лимит: мин $min · макс $max';
+  }
+
+  @override
+  String remittanceErrAmountLimits(String min, String max) {
+    return 'Сумма должна быть от $min до $max';
+  }
+
+  @override
+  String remittanceErrRequiredField(String field) {
+    return 'Введите $field';
+  }
+
+  @override
+  String get remittanceFieldSwift => 'Код SWIFT';
+
+  @override
+  String get remittanceFieldShabaNumber => 'Номер SHABA';
+
+  @override
+  String get remittanceFieldUsdtAddress => 'Адрес USDT (TRC20)';
+
+  @override
+  String get remittanceFieldCardNumber => 'Номер карты';
+
+  @override
+  String get remittanceRateSourceAdmin => 'Курс оператора';
+
+  @override
+  String get remittanceRateSourceAuto => 'Рыночный курс';
+
+  @override
   String get exchangeCalculating => 'Расчёт…';
 
   @override

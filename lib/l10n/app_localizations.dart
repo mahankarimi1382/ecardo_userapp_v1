@@ -13354,6 +13354,84 @@ abstract class AppLocalizations {
   /// **'Unknown'**
   String get remittanceStatusUnknown;
 
+  /// No description provided for @remittanceRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get remittanceRetry;
+
+  /// No description provided for @remittanceYouSend.
+  ///
+  /// In en, this message translates to:
+  /// **'You send'**
+  String get remittanceYouSend;
+
+  /// No description provided for @remittanceReceiverGets.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver gets'**
+  String get remittanceReceiverGets;
+
+  /// No description provided for @remittanceDeliveryMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Method'**
+  String get remittanceDeliveryMethod;
+
+  /// No description provided for @remittanceAmountLimitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit: min {min} · max {max}'**
+  String remittanceAmountLimitHint(String min, String max);
+
+  /// No description provided for @remittanceErrAmountLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount must be between {min} and {max}'**
+  String remittanceErrAmountLimits(String min, String max);
+
+  /// No description provided for @remittanceErrRequiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter {field}'**
+  String remittanceErrRequiredField(String field);
+
+  /// No description provided for @remittanceFieldSwift.
+  ///
+  /// In en, this message translates to:
+  /// **'SWIFT Code'**
+  String get remittanceFieldSwift;
+
+  /// No description provided for @remittanceFieldShabaNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'SHABA Number'**
+  String get remittanceFieldShabaNumber;
+
+  /// No description provided for @remittanceFieldUsdtAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'USDT Address (TRC20)'**
+  String get remittanceFieldUsdtAddress;
+
+  /// No description provided for @remittanceFieldCardNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Card Number'**
+  String get remittanceFieldCardNumber;
+
+  /// No description provided for @remittanceRateSourceAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator rate'**
+  String get remittanceRateSourceAdmin;
+
+  /// No description provided for @remittanceRateSourceAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Market rate'**
+  String get remittanceRateSourceAuto;
+
   /// No description provided for @exchangeCalculating.
   ///
   /// In en, this message translates to:

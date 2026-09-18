@@ -7081,6 +7081,51 @@ class AppLocalizationsFa extends AppLocalizations {
   String get remittanceStatusUnknown => 'نامشخص';
 
   @override
+  String get remittanceRetry => 'تلاش مجدد';
+
+  @override
+  String get remittanceYouSend => 'ارسال می‌کنید';
+
+  @override
+  String get remittanceReceiverGets => 'گیرنده دریافت می‌کند';
+
+  @override
+  String get remittanceDeliveryMethod => 'روش تحویل';
+
+  @override
+  String remittanceAmountLimitHint(String min, String max) {
+    return 'محدودیت: حداقل $min · حداکثر $max';
+  }
+
+  @override
+  String remittanceErrAmountLimits(String min, String max) {
+    return 'مبلغ باید بین $min و $max باشد';
+  }
+
+  @override
+  String remittanceErrRequiredField(String field) {
+    return 'لطفاً $field را وارد کنید';
+  }
+
+  @override
+  String get remittanceFieldSwift => 'کد سوئیفت';
+
+  @override
+  String get remittanceFieldShabaNumber => 'شماره شبا';
+
+  @override
+  String get remittanceFieldUsdtAddress => 'آدرس تتر (TRC20)';
+
+  @override
+  String get remittanceFieldCardNumber => 'شماره کارت';
+
+  @override
+  String get remittanceRateSourceAdmin => 'نرخ اپراتور';
+
+  @override
+  String get remittanceRateSourceAuto => 'نرخ بازار';
+
+  @override
   String get exchangeCalculating => 'در حال محاسبه…';
 
   @override
