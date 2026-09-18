@@ -239,7 +239,7 @@ jobs:
 
           set -o pipefail
           if curl --fail-with-body --show-error --silent \
-            -X POST https://origin-api.ecardo.ir/api/user/github-deploy-webhook \
+            -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" \
             -H "Accept: application/json" \
             -H "Content-Type: application/json" \
@@ -252,12 +252,10 @@ jobs:
           else
             code=$?
             if [ "$code" -eq 60 ] || grep -qi "SSL certificate problem" notify-result.txt; then
-              echo "⚠️ SERVER NOT NOTIFIED: the TLS handshake failed — the request"
-              echo "   NEVER reached origin-api.ecardo.ir (curl exit 60)."
-              echo "   Root cause: the server presents a chain GitHub runners"
-              echo "   cannot verify (likely a Cloudflare Origin CA). Backend"
-              echo "   task T1 in the coordination gist must fix this."
-              echo "   https://gist.github.com/mahankarimi1382/c35951c08598e86c5f3d0692cae12ed5"
+              echo "⚠️ SERVER NOT NOTIFIED: TLS handshake failed on ecardo.ir (curl exit 60)."
+              echo "   This should not happen — ecardo.ir is the same fronted domain the"
+              echo "   app itself uses (verified publicly-trusted chain). If you see this,"
+              echo "   check the certificate chain on ecardo.ir immediately."
               echo "   The RELEASE ITSELF IS PUBLISHED and downloadable."
               exit 0
             fi
