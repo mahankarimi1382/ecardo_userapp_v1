@@ -125,8 +125,7 @@ class RequestMoneyReviewStepSection extends StatelessWidget {
                       isLoading: controller.isRequestMoneyLoading.value,
                       onPressed: () async {
                         if (controller.currentStep.value == 1) {
-                          if (controller.userModel.value.data?.passcode ?? "0" ==
-                              "0") {
+                          if ((controller.userModel.value.data?.passcode ?? "0") == "0") {
                             controller.requestMoney();
                             return;
                           }

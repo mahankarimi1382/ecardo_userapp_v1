@@ -157,7 +157,7 @@ class CashOutReviewStepSection extends StatelessWidget {
                         // while the request is in flight must not fire.
                         isLoading: controller.isCashOutLoading.value,
                         onPressed: () async {
-                          if (controller.userModel.value.data?.passcode ?? "0" == "0") {
+                          if ((controller.userModel.value.data?.passcode ?? "0") == "0") {
                             controller.cashOut();
                             return;
                           }

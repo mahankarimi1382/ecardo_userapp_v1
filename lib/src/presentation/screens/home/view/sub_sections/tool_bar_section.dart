@@ -10,8 +10,8 @@ class ToolBarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // v1.0.40 (crash fix): the toolbar force-unwrapped dashboard data!
-    .info! / .user!.avatarPath! — a failed dashboard fetch or a user
+    // v1.0.40 (crash fix): the toolbar force-unwrapped
+    // dashboardModel data!.info! / user!.avatarPath! — a failed dashboard
     // without an avatar crashed the ENTIRE home screen. Resolve
     // defensively with safe fallbacks instead.
     final homeController = Get.find<HomeController>();

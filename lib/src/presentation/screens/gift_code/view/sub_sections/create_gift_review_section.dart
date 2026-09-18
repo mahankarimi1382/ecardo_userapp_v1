@@ -147,8 +147,7 @@ class CreateGiftReviewSection extends StatelessWidget {
                               // fire.
                               isLoading: controller.isCreateGiftLoading.value,
                               onPressed: () async {
-                                if (controller.userModel.value.data?.passcode ?? "0" ==
-                                    "0") {
+                                if ((controller.userModel.value.data?.passcode ?? "0") == "0") {
                                   controller.createGift();
                                   return;
                                 }
