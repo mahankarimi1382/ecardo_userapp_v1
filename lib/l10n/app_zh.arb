@@ -2393,8 +2393,8 @@
     }
   },
   "kycUpgradeBodyGeneric": "您当前的身份认证等级不允许此操作。请完成或升级您的身份认证。",
-  "kycUpgradeCurrentLevel": "您的等级",
-  "kycUpgradeRequiredLevel": "所需等级",
+  "kycUpgradeCurrentLevel": "当前等级：",
+  "kycUpgradeRequiredLevel": "所需等级：",
   "kycUpgradeLevelChip": "{level} 级",
   "@kycUpgradeLevelChip": {
     "placeholders": {
@@ -2553,5 +2553,17 @@
   "updateFailedTitle": "更新失败",
   "updateUnknownError": "发生未知错误。",
   "updateTryAgain": "重试",
-  "updateGoBack": "返回"
+  "updateGoBack": "返回",
+  "kycBadgeUpgradeTo": "升级到 {level}",
+  "kycBadgeStatusVerified": "已认证",
+  "kycBadgeStatusPending": "审核中",
+  "kycBadgeStatusRejected": "已拒绝",
+  "kycBadgeStatusNotSubmitted": "未提交",
+  "kycUpgradeDialogTitle": "提升认证等级",
+  "kycUpgradeDialogBody": "访问「{feature}」需要达到认证等级 {level}。",
+  "kycUpgradeLevelValue": "等级 {level}",
+  "kycUpgradeStartAction": "开始认证",
+  "walletListEmptyTitle": "还没有钱包",
+  "walletListEmptySubtitle": "创建您的第一个钱包即可开始。",
+  "walletListEmptyCreate": "创建钱包"
 }

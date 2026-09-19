@@ -2394,8 +2394,8 @@
     }
   },
   "kycUpgradeBodyGeneric": "مستوى التحقق الحالي الخاص بك لا يسمح بهذا الإجراء. يرجى إكمال أو ترقية التحقق من هويتك.",
-  "kycUpgradeCurrentLevel": "مستواك الحالي",
-  "kycUpgradeRequiredLevel": "المستوى المطلوب",
+  "kycUpgradeCurrentLevel": "المستوى الحالي:",
+  "kycUpgradeRequiredLevel": "المستوى المطلوب:",
   "kycUpgradeLevelChip": "المستوى {level}",
   "@kycUpgradeLevelChip": {
     "placeholders": {
@@ -2554,5 +2554,17 @@
   "updateFailedTitle": "فشل التحديث",
   "updateUnknownError": "حدث خطأ غير معروف.",
   "updateTryAgain": "حاول مرة أخرى",
-  "updateGoBack": "رجوع"
+  "updateGoBack": "رجوع",
+  "kycBadgeUpgradeTo": "الترقية إلى {level}",
+  "kycBadgeStatusVerified": "تم التحقق",
+  "kycBadgeStatusPending": "قيد المراجعة",
+  "kycBadgeStatusRejected": "مرفوض",
+  "kycBadgeStatusNotSubmitted": "لم يُرسل بعد",
+  "kycUpgradeDialogTitle": "ترقية مستوى التحقق من الهوية",
+  "kycUpgradeDialogBody": "للوصول إلى «{feature}» يجب أن تصل إلى مستوى التحقق {level}.",
+  "kycUpgradeLevelValue": "المستوى {level}",
+  "kycUpgradeStartAction": "بدء التحقق من الهوية",
+  "walletListEmptyTitle": "لا توجد محافظ بعد",
+  "walletListEmptySubtitle": "أنشئ محفظتك الأولى للبدء.",
+  "walletListEmptyCreate": "إنشاء محفظة"
 }

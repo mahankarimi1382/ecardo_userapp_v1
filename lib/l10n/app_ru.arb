@@ -2393,8 +2393,8 @@
     }
   },
   "kycUpgradeBodyGeneric": "Ваш текущий уровень верификации не позволяет это действие. Завершите или повысьте уровень верификации.",
-  "kycUpgradeCurrentLevel": "Ваш уровень",
-  "kycUpgradeRequiredLevel": "Необходимый уровень",
+  "kycUpgradeCurrentLevel": "Текущий уровень:",
+  "kycUpgradeRequiredLevel": "Требуемый уровень:",
   "kycUpgradeLevelChip": "Уровень {level}",
   "@kycUpgradeLevelChip": {
     "placeholders": {
@@ -2553,5 +2553,17 @@
   "updateFailedTitle": "Не удалось обновить",
   "updateUnknownError": "Произошла неизвестная ошибка.",
   "updateTryAgain": "Попробовать снова",
-  "updateGoBack": "Назад"
+  "updateGoBack": "Назад",
+  "kycBadgeUpgradeTo": "Обновить до {level}",
+  "kycBadgeStatusVerified": "Подтверждено",
+  "kycBadgeStatusPending": "На рассмотрении",
+  "kycBadgeStatusRejected": "Отклонено",
+  "kycBadgeStatusNotSubmitted": "Не отправлено",
+  "kycUpgradeDialogTitle": "Повышение уровня верификации",
+  "kycUpgradeDialogBody": "Для доступа к «{feature}» необходим уровень верификации {level}.",
+  "kycUpgradeLevelValue": "Уровень {level}",
+  "kycUpgradeStartAction": "Начать верификацию",
+  "walletListEmptyTitle": "Кошельков пока нет",
+  "walletListEmptySubtitle": "Создайте первый кошелёк, чтобы начать.",
+  "walletListEmptyCreate": "Создать кошелёк"
 }

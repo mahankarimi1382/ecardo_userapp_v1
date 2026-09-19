@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/controller/wallets_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/view/sub_sections/delete_wallet_bottom_sheet.dart';
@@ -17,6 +18,43 @@ class WalletListSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final WalletsController walletsController = Get.find<WalletsController>();
+
+    if (walletsController.walletsList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const NoDataFound(),
+            const SizedBox(height: 12),
+            Text(
+              localization.walletListEmptyTitle,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              localization.walletListEmptySubtitle,
+              style: TextStyle(
+                fontSize: 13,
+                color: AppColors.lightTextSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => Get.toNamed(BaseRoute.createNewWallet),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.lightPrimary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(localization.walletListEmptyCreate),
+            ),
+          ],
+        ),
+      );
+    }
 
     return ListView.separated(
       padding: EdgeInsetsDirectional.fromSTEB(18, 30, 18, 30),

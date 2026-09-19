@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -52,6 +53,7 @@ class _KycLevelBadgeState extends State<KycLevelBadge> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -63,7 +65,7 @@ class _KycLevelBadgeState extends State<KycLevelBadge> {
     final kycStatus = _badge!['kyc_status'] ?? 'not_submitted';
     final color = _getStatusColor(kycStatus);
     final icon = _getStatusIcon(kycStatus);
-    final statusText = _getStatusText(kycStatus);
+    final statusText = _getStatusText(kycStatus, loc);
     final nextLevel = _badge!['next_level'] as Map<String, dynamic>?;
 
     return Container(
@@ -118,7 +120,7 @@ class _KycLevelBadgeState extends State<KycLevelBadge> {
                 ),
               ),
               child: Text(
-                'ارتقا به ${nextLevel['name']}',
+                loc.kycBadgeUpgradeTo(nextLevel['name']?.toString() ?? ''),
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
             ),
@@ -154,16 +156,16 @@ class _KycLevelBadgeState extends State<KycLevelBadge> {
     }
   }
 
-  String _getStatusText(String status) {
+  String _getStatusText(String status, AppLocalizations loc) {
     switch (status) {
       case 'verified':
-        return 'تأیید شده';
+        return loc.kycBadgeStatusVerified;
       case 'pending':
-        return 'در حال بررسی';
+        return loc.kycBadgeStatusPending;
       case 'failed':
-        return 'رد شده';
+        return loc.kycBadgeStatusRejected;
       default:
-        return 'ارسال نشده';
+        return loc.kycBadgeStatusNotSubmitted;
     }
   }
 }

@@ -2394,8 +2394,8 @@
     }
   },
   "kycUpgradeBodyGeneric": "سطح احراز هویت فعلی شما این اقدام را اجازه نمی‌دهد. لطفاً احراز هویت را کامل یا ارتقا دهید.",
-  "kycUpgradeCurrentLevel": "سطح فعلی شما",
-  "kycUpgradeRequiredLevel": "سطح لازم",
+  "kycUpgradeCurrentLevel": "سطح فعلی:",
+  "kycUpgradeRequiredLevel": "سطح لازم:",
   "kycUpgradeLevelChip": "سطح {level}",
   "@kycUpgradeLevelChip": {
     "placeholders": {
@@ -2554,5 +2554,17 @@
   "updateFailedTitle": "به‌روزرسانی ناموفق بود",
   "updateUnknownError": "خطای ناشناخته‌ای رخ داد.",
   "updateTryAgain": "تلاش مجدد",
-  "updateGoBack": "بازگشت"
+  "updateGoBack": "بازگشت",
+  "kycBadgeUpgradeTo": "ارتقا به {level}",
+  "kycBadgeStatusVerified": "تأیید شده",
+  "kycBadgeStatusPending": "در حال بررسی",
+  "kycBadgeStatusRejected": "رد شده",
+  "kycBadgeStatusNotSubmitted": "ارسال نشده",
+  "kycUpgradeDialogTitle": "ارتقای سطح احراز هویت",
+  "kycUpgradeDialogBody": "برای دسترسی به «{feature}» باید به سطح {level} احراز هویت برسید.",
+  "kycUpgradeLevelValue": "سطح {level}",
+  "kycUpgradeStartAction": "شروع احراز هویت",
+  "walletListEmptyTitle": "هنوز کیف پولی ندارید",
+  "walletListEmptySubtitle": "برای شروع، اولین کیف پول خود را بسازید.",
+  "walletListEmptyCreate": "ساخت کیف پول"
 }

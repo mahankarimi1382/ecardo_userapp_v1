@@ -450,27 +450,28 @@ class _KycLevelRequiredDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
           Icon(Icons.shield_outlined, color: AppColors.warning, size: 28),
           SizedBox(width: 8),
-          Expanded(child: Text('ارتقای سطح احراز هویت', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))),
+          Expanded(child: Text(loc.kycUpgradeDialogTitle, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))),
         ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('برای دسترسی به «$featureName» باید به سطح $requiredLevel احراز هویت برسید.', style: TextStyle(fontSize: 14, color: AppColors.lightTextPrimary)),
+          Text(loc.kycUpgradeDialogBody(featureName, '$requiredLevel'), style: TextStyle(fontSize: 14, color: AppColors.lightTextPrimary)),
           SizedBox(height: 8),
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(color: AppColors.lightBackground, borderRadius: BorderRadius.circular(8)),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text('سطح فعلی:', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
-              Text('سطح $currentLevel', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.warning)),
+              Text(loc.kycUpgradeCurrentLevel, style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+              Text(loc.kycUpgradeLevelValue('$currentLevel'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.warning)),
             ]),
           ),
           SizedBox(height: 4),
@@ -478,18 +479,18 @@ class _KycLevelRequiredDialog extends StatelessWidget {
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(color: AppColors.lightPrimaryContainer, borderRadius: BorderRadius.circular(8)),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text('سطح لازم:', style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
-              Text('سطح $requiredLevel', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.lightPrimary)),
+              Text(loc.kycUpgradeRequiredLevel, style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+              Text(loc.kycUpgradeLevelValue('$requiredLevel'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.lightPrimary)),
             ]),
           ),
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Get.back(), child: Text('بستن')),
+        TextButton(onPressed: () => Get.back(), child: Text(loc.commonClose)),
         ElevatedButton(
           onPressed: () { Get.back(); Get.toNamed(BaseRoute.idVerification); },
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary, foregroundColor: AppColors.white),
-          child: Text('شروع احراز هویت'),
+          child: Text(loc.kycUpgradeStartAction),
         ),
       ],
     );

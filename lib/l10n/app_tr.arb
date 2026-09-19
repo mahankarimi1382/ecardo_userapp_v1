@@ -2393,8 +2393,8 @@
     }
   },
   "kycUpgradeBodyGeneric": "Mevcut kimlik doğrulama seviyeniz bu işleme izin vermiyor. Lütfen kimlik doğrulamanızı tamamlayın veya yükseltin.",
-  "kycUpgradeCurrentLevel": "Sizin seviyeniz",
-  "kycUpgradeRequiredLevel": "Gerekli seviye",
+  "kycUpgradeCurrentLevel": "Mevcut seviye:",
+  "kycUpgradeRequiredLevel": "Gerekli seviye:",
   "kycUpgradeLevelChip": "Seviye {level}",
   "@kycUpgradeLevelChip": {
     "placeholders": {
@@ -2553,5 +2553,17 @@
   "updateFailedTitle": "Güncelleme başarısız",
   "updateUnknownError": "Bilinmeyen bir hata oluştu.",
   "updateTryAgain": "Tekrar dene",
-  "updateGoBack": "Geri dön"
+  "updateGoBack": "Geri dön",
+  "kycBadgeUpgradeTo": "{level} seviyesine yükselt",
+  "kycBadgeStatusVerified": "Doğrulandı",
+  "kycBadgeStatusPending": "İnceleniyor",
+  "kycBadgeStatusRejected": "Reddedildi",
+  "kycBadgeStatusNotSubmitted": "Gönderilmedi",
+  "kycUpgradeDialogTitle": "Doğrulama seviyesini yükselt",
+  "kycUpgradeDialogBody": "«{feature}» özelliğine erişmek için {level}. doğrulama seviyesine ulaşmanız gerekiyor.",
+  "kycUpgradeLevelValue": "Seviye {level}",
+  "kycUpgradeStartAction": "Doğrulamayı başlat",
+  "walletListEmptyTitle": "Henüz cüzdan yok",
+  "walletListEmptySubtitle": "Başlamak için ilk cüzdanınızı oluşturun.",
+  "walletListEmptyCreate": "Cüzdan Oluştur"
 }

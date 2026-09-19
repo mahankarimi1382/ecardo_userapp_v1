@@ -2517,8 +2517,8 @@
     }
   },
   "kycUpgradeBodyGeneric": "Your current verification level does not allow this action. Please complete or upgrade your identity verification.",
-  "kycUpgradeCurrentLevel": "Your level",
-  "kycUpgradeRequiredLevel": "Required level",
+  "kycUpgradeCurrentLevel": "Current level:",
+  "kycUpgradeRequiredLevel": "Required level:",
   "kycUpgradeLevelChip": "Level {level}",
   "@kycUpgradeLevelChip": {
     "placeholders": {
@@ -2677,5 +2677,33 @@
   "updateFailedTitle": "Update failed",
   "updateUnknownError": "An unknown error occurred.",
   "updateTryAgain": "Try again",
-  "updateGoBack": "Go back"
+  "updateGoBack": "Go back",
+  "kycBadgeUpgradeTo": "Upgrade to {level}",
+  "@kycBadgeUpgradeTo": {
+    "placeholders": {
+      "level": {}
+    }
+  },
+  "kycBadgeStatusVerified": "Verified",
+  "kycBadgeStatusPending": "Under review",
+  "kycBadgeStatusRejected": "Rejected",
+  "kycBadgeStatusNotSubmitted": "Not submitted",
+  "kycUpgradeDialogTitle": "Upgrade verification level",
+  "kycUpgradeDialogBody": "To access \"{feature}\" you need to reach verification level {level}.",
+  "@kycUpgradeDialogBody": {
+    "placeholders": {
+      "feature": {},
+      "level": {}
+    }
+  },
+  "kycUpgradeLevelValue": "Level {level}",
+  "@kycUpgradeLevelValue": {
+    "placeholders": {
+      "level": {}
+    }
+  },
+  "kycUpgradeStartAction": "Start verification",
+  "walletListEmptyTitle": "No wallets yet",
+  "walletListEmptySubtitle": "Create your first wallet to get started.",
+  "walletListEmptyCreate": "Create Wallet"
 }
