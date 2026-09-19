@@ -51,6 +51,50 @@ class _ReferralScreenState extends State<ReferralScreen> {
               if (controller.isLoading.value) {
                 return CommonLoading();
               }
+
+              // v1.0.41: on fetch failure show a retry state instead of a
+              // page full of zeros and an empty code box (which read as a
+              // broken feature).
+              if (controller.isError.value) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.wifi_off_rounded,
+                        size: 48,
+                        color: AppColors.lightTextTertiary,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        localization.allControllerLoadError,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          letterSpacing: 0,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.lightTextTertiary,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.lightPrimary,
+                          foregroundColor: AppColors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                        ),
+                        onPressed: controller.fetchReferral,
+                        icon: const Icon(Icons.refresh_rounded, size: 18),
+                        label: Text(localization.noInternetConnectionRetryButton),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               final referral = controller.referralModel.value.data;
 
               return SingleChildScrollView(

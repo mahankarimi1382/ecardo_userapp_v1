@@ -20,6 +20,12 @@ class ReferralStatsSection extends StatelessWidget {
     final referral = homeController.dashboardModel.value.data?.referral;
     if (referral == null) return const SizedBox.shrink();
 
+    // v1.0.41: hide the strip when the server sent no meaningful numbers —
+    // a "0 / 0" box reads as a broken feature.
+    final bool hasCount = (referral.count ?? 0) > 0;
+    final bool hasBonus = _hasValue(referral.bonus);
+    if (!hasCount && !hasBonus) return const SizedBox.shrink();
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 18),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -65,7 +71,7 @@ class ReferralStatsSection extends StatelessWidget {
             ),
             _Stat(
               label: localization.dashboardReferralBonus,
-              value: referral.bonus ?? '0',
+              value: _formatValue(referral.bonus),
             ),
             const Spacer(),
             Icon(
@@ -77,6 +83,22 @@ class ReferralStatsSection extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool _hasValue(String? raw) {
+    return double.tryParse((raw ?? '').trim()) != null &&
+        (double.tryParse((raw ?? '').trim()) ?? 0) > 0;
+  }
+
+  /// Server bonus values often arrive as raw decimals ("0.00000000") —
+  /// display integral values without the decimal tail.
+  String _formatValue(String? raw) {
+    final parsed = double.tryParse((raw ?? '').trim());
+    if (parsed == null) return (raw ?? '').trim().isEmpty ? '0' : raw!;
+    if (parsed == parsed.roundToDouble()) {
+      return parsed.toInt().toString();
+    }
+    return parsed.toString();
   }
 }
 
