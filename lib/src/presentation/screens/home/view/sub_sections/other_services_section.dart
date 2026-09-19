@@ -341,7 +341,14 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                   _buildDestinationChips(),
                   const SizedBox(height: 14),
                 ],
-                PagedServiceTilesGrid(tiles: tiles),
+                // ValueKey per tab: without it the grid State (and its
+                // PageController page index) survives tab switches — a
+                // financial page-3 position flowing into the 2-page travel
+                // grid made PageView build an out-of-range page.
+                PagedServiceTilesGrid(
+                  key: ValueKey<String>('services-grid-$_selectedTab'),
+                  tiles: tiles,
+                ),
               ],
             ),
           ),

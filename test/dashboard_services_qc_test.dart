@@ -183,6 +183,37 @@ void main() {
     },
   );
 
+  testWidgets(
+    'paging the financial grid deep then switching tabs does not build an '
+    'out-of-range travel page (grid state is per-tab)',
+    (tester) async {
+      final home = Get.find<HomeController>();
+      seedData(home);
+      phoneSurface(tester);
+
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      // Financial grid: 17 tiles = 3 pages — drag to the last page so the
+      // shared grid state sits on page index 2.
+      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
+      await tester.pumpAndSettle();
+      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
+      await tester.pumpAndSettle();
+      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
+      await tester.pumpAndSettle();
+
+      // Switch to travel (15 tiles = 2 pages). Without the per-tab key the
+      // retained PageController position makes PageView build page 3 of a
+      // 2-page list.
+      await tester.tap(find.text('Travel Services'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Flights'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('services hub settles in Persian (RTL) without exceptions', (
     tester,
   ) async {
