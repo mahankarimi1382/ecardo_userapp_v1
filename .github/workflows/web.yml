@@ -75,12 +75,17 @@ jobs:
             cp "$SRC" build/web/favicon.png
           fi
 
+      # Diagnostics copy of the web build — the real deployment is the
+      # web-deploy branch push below, which must proceed even when the
+      # artifact service rejects uploads (account storage quota).
       - name: Upload artifacts
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: build/web/
           if-no-files-found: error
+          retention-days: 3
 
       # Deploy: push build to 'web-deploy' orphan branch
       - name: Deploy to web-deploy branch

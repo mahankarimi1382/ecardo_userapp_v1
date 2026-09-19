@@ -197,12 +197,12 @@ jobs:
               print("🔴 FATAL: APK IS COMPLETELY UNSIGNED!")
               sys.exit(2)
 
-      - name: Upload APK Artifact
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+      # v1.0.46: the duplicate APK artifact upload was removed — the APK is
+      # published to Releases and mirrored to the public repo below, and the
+      # artifact service consumed the account's storage quota (uploads then
+      # fail repo-wide with "Artifact storage quota has been hit").
+
+      - name: Publish APK to GitHub Release
 
       # ==========================================================================
       # Auto-publish to GitHub Releases — TAG BUILDS ONLY (phase1-fix, P0-1)
@@ -312,12 +312,17 @@ jobs:
             exit 1
           fi
 
+      # Diagnostics only — must never mask a finished release (the artifact
+      # quota failure must not flip a green run red), so it can't fail the
+      # job, and retention is short to protect the account storage quota.
       - name: Upload Build Log
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: build-log
           if-no-files-found: warn
+          retention-days: 3
           path: |
             build_log.txt
             analysis_report.txt
