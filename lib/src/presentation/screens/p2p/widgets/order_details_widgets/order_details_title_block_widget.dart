@@ -61,7 +61,7 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: ' min',
+                      text: ' ${localization.p2pMinutes.toLowerCase()}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18.sp,
@@ -188,7 +188,7 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: ' min',
+                      text: ' ${localization.p2pMinutes.toLowerCase()}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18.sp,
