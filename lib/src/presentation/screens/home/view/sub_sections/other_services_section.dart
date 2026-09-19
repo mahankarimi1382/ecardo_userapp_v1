@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 
 /// v1.0.37 (SUPER-APP GRID): every tile is in one of three states —
@@ -20,6 +21,13 @@ import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/sect
 ///                 deployment)
 /// Gating truth stays server-side (the 403 KYC contract enforces it); the
 /// grid is the user-facing mirror of it.
+///
+/// v1.0.43 (CRITICAL Obx fix): ALL Rx reads (userModel addons, KYC badge)
+/// happen synchronously INSIDE the Obx builder scope. The previous
+/// structure read them from GridView's deferred itemBuilder — outside GetX's
+/// registration window — so the Obx registered ZERO observables and GetX
+/// threw "improper use of a GetX" on every build, grey-screening the
+/// dashboard right after the wallet section (the reported regression).
 enum _TileState { available, kycLocked, comingSoon }
 
 class _ServiceTile {
@@ -40,6 +48,13 @@ class _ServiceTile {
   });
 }
 
+class _ResolvedTile {
+  final _ServiceTile tile;
+  final _TileState state;
+
+  const _ResolvedTile(this.tile, this.state);
+}
+
 class OtherServicesSection extends StatefulWidget {
   const OtherServicesSection({super.key});
 
@@ -53,33 +68,35 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  /// Tiered feature check — fail-open when the KYC controller/badge is not
-  /// ready yet (fresh navigation frame); the server 403 contract is the
-  /// enforcement anyway.
-  bool _hasFeature(String? feature) {
+  /// Tiered feature check — fail-open when the KYC badge is not ready yet
+  /// (fresh navigation frame); the server 403 contract is the enforcement
+  /// anyway.
+  bool _hasFeature(String? feature, KycBadge? badge) {
     if (feature == null) return true;
-    if (!Get.isRegistered<KycLevelController>()) return true;
-    final badge = Get.find<KycLevelController>().badge.value;
     if (badge == null) return true;
     return badge.hasFeature(feature);
   }
 
-  _TileState _stateOf(_ServiceTile tile) {
-    if (!tile.available) return _TileState.comingSoon;
-    if (!_hasFeature(tile.feature)) return _TileState.kycLocked;
-    return _TileState.available;
+  _ResolvedTile _resolve(_ServiceTile tile, KycBadge? badge) {
+    if (!tile.available) return _ResolvedTile(tile, _TileState.comingSoon);
+    if (!_hasFeature(tile.feature, badge)) {
+      return _ResolvedTile(tile, _TileState.kycLocked);
+    }
+    return _ResolvedTile(tile, _TileState.available);
   }
 
-  void _onTileTap(_ServiceTile tile, _TileState state) {
+  void _onTileTap(_ResolvedTile resolved) {
     final localization = AppLocalizations.of(context)!;
-    switch (state) {
+    switch (resolved.state) {
       case _TileState.available:
-        if (tile.route.isNotEmpty) Get.toNamed(tile.route);
+        if (resolved.tile.route.isNotEmpty) {
+          Get.toNamed(resolved.tile.route);
+        }
         return;
       case _TileState.kycLocked:
         Get.toNamed(
           BaseRoute.upgradeRequired,
-          arguments: <String, dynamic>{'feature': tile.feature},
+          arguments: <String, dynamic>{'feature': resolved.tile.feature},
         );
         return;
       case _TileState.comingSoon:
@@ -88,11 +105,11 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  List<_ServiceTile> _rawServiceList() {
     final localization = AppLocalizations.of(context)!;
+    final addons = homeController.userModel.value.data?.addons;
 
-    final List<_ServiceTile> serviceList = [
+    return [
       _ServiceTile(
         title: localization.otherServicesDynamicPassword,
         iconData: Icons.pin_rounded,
@@ -191,49 +208,61 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         icon: PngAssets.virtualCardService,
         route: BaseRoute.virtualCard,
         feature: 'paycardo',
-        available:
-            homeController.userModel.value.data?.addons?.virtualCards == true,
+        available: addons?.virtualCards == true,
       ),
       _ServiceTile(
         title: localization.otherServicesGiftCards,
         icon: PngAssets.giftCardsService,
         route: BaseRoute.giftCard,
         feature: 'gift_redeem',
-        available:
-            homeController.userModel.value.data?.addons?.giftCards == true,
+        available: addons?.giftCards == true,
       ),
       _ServiceTile(
         title: localization.otherServicesP2pTrading,
         icon: PngAssets.p2pTradingService,
         route: BaseRoute.p2pTrading,
-        available:
-            homeController.userModel.value.data?.addons?.p2pTrading == true,
+        available: addons?.p2pTrading == true,
       ),
       _ServiceTile(
         title: localization.travelTitle,
         iconData: Icons.flight_takeoff_rounded,
         route: BaseRoute.travel,
         feature: 'travel',
-        available: homeController.userModel.value.data?.addons?.travel == true,
+        available: addons?.travel == true,
       ),
     ];
+  }
 
-    final int itemsPerPage = 8;
-    final int pageCount = (serviceList.length / itemsPerPage).ceil();
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      // ── ALL Rx reads happen HERE, synchronously inside the Obx scope. ──
+      final addons = homeController.userModel.value.data?.addons;
+      final KycBadge? badge = Get.isRegistered<KycLevelController>()
+          ? Get.find<KycLevelController>().badge.value
+          : null;
 
-    final pages = List.generate(pageCount, (index) {
-      final start = index * itemsPerPage;
-      final end = (start + itemsPerPage < serviceList.length)
-          ? start + itemsPerPage
-          : serviceList.length;
-      return serviceList.sublist(start, end);
-    });
+      final localization = AppLocalizations.of(context)!;
+      final tiles = _rawServiceList()
+          .map((t) => _resolve(t, badge))
+          .toList(growable: false);
+      final serviceCount = tiles.length;
 
-    final rows = ((pages.first.length) / 4).ceil();
-    final double dynamicHeight = rows * 90.0;
+      final int itemsPerPage = 8;
+      final int pageCount = (serviceCount / itemsPerPage).ceil();
 
-    return Obx(
-      () => Column(
+      final pages = List.generate(pageCount, (index) {
+        final start = index * itemsPerPage;
+        final end = (start + itemsPerPage < serviceCount)
+            ? start + itemsPerPage
+            : serviceCount;
+        return tiles.sublist(start, end);
+      });
+
+      final rows = ((pages.first.length) / 4).ceil();
+      final double dynamicHeight = rows * 90.0;
+
+      return Column(
         children: [
           SectionHeader(
             sectionName: localization.otherServicesTitle,
@@ -269,13 +298,14 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                               childAspectRatio: 1,
                             ),
                         itemBuilder: (context, index) {
-                          final item = pageItems[index];
-                          final state = _stateOf(item);
-                          final disabled = state != _TileState.available;
+                          final resolved = pageItems[index];
+                          final tile = resolved.tile;
+                          final disabled =
+                              resolved.state != _TileState.available;
 
                           return InkWell(
                             borderRadius: BorderRadius.circular(8),
-                            onTap: () => _onTileTap(item, state),
+                            onTap: () => _onTileTap(resolved),
                             child: Opacity(
                               opacity: disabled ? 0.55 : 1,
                               child: Column(
@@ -284,7 +314,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                                   Stack(
                                     clipBehavior: Clip.none,
                                     children: [
-                                      if (item.iconData is IconData)
+                                      if (tile.iconData is IconData)
                                         Container(
                                           width: 38,
                                           height: 38,
@@ -295,14 +325,14 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Icon(
-                                            item.iconData as IconData,
+                                            tile.iconData as IconData,
                                             color: AppColors.lightPrimary,
                                             size: 22,
                                           ),
                                         )
                                       else
                                         Image.asset(
-                                          item.icon as String,
+                                          tile.icon as String,
                                           width: 35,
                                           color: disabled
                                               ? AppColors.black.withValues(
@@ -310,7 +340,8 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                                                 )
                                               : null,
                                         ),
-                                      if (state == _TileState.kycLocked)
+                                      if (resolved.state ==
+                                          _TileState.kycLocked)
                                         PositionedDirectional(
                                           top: -4,
                                           end: -4,
@@ -335,7 +366,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    item.title,
+                                    tile.title,
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -359,7 +390,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
               ],
             ),
           ),
-          if (serviceList.length > 8) ...[
+          if (serviceCount > 8) ...[
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -381,7 +412,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
             ),
           ],
         ],
-      ),
-    );
+      );
+    });
   }
 }

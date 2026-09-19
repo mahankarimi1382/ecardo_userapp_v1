@@ -68,9 +68,14 @@ class MyWalletSection extends StatelessWidget {
     required bool useFullWidth,
   }) {
     final isDefaultWallet = wallet.isDefault == true;
-    final currencyCode = wallet.code;
+    // v1.0.43 (crash fix): name/code/formattedBalance were force-unwrapped —
+    // a wallet served with any of them null threw mid-build and grey-screened
+    // the whole home page. Degrade gracefully instead.
+    final currencyCode = wallet.code ?? '';
     final currencyIcon = wallet.icon.toString();
     final currencySymbol = wallet.symbol.toString();
+    final title = wallet.name ?? currencyCode;
+    final formatedBalance = wallet.formattedBalance ?? '0';
 
     return GestureDetector(
       onTap: () {
@@ -101,13 +106,13 @@ class MyWalletSection extends StatelessWidget {
             _buildWalletHeader(
               context,
               isDefaultWallet: isDefaultWallet,
-              title: wallet.name!,
-              currencyCode: currencyCode!,
+              title: title,
+              currencyCode: currencyCode,
               currencyIcon: currencyIcon,
             ),
             _buildBalance(
               context,
-              formatedBalance: wallet.formattedBalance!,
+              formatedBalance: formatedBalance,
               code: currencyCode,
               isDefaultWallet: isDefaultWallet,
               symbol: currencySymbol,

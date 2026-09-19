@@ -32,6 +32,7 @@ Future<void> main() async {
   // network calls move to post-first-frame so cold start can never hang.
   await _initializeServices();
   _configureUI();
+  _installGlobalErrorHandlers();
   runApp(const EcardoUser());
 
   if (!kIsWeb) {
@@ -39,6 +40,65 @@ Future<void> main() async {
       _initializePushServices();
     });
   }
+}
+
+/// v1.0.43 (NO-MORE-GRAY): an uncaught build exception used to render the
+/// framework's blank GREY screen — the "frozen grey page" reported on the
+/// home screen. From now on every widget-build error renders a graceful
+/// card instead, and the real error still goes to the console for triage.
+void _installGlobalErrorHandlers() {
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    debugPrint('❌ FlutterError: ${details.exception}');
+  };
+  ErrorWidget.builder = (details) {
+    debugPrint('❌ Widget build error: ${details.exception}');
+    return Material(
+      color: const Color(0xFFF8F8F8),
+      child: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.error_outline_rounded,
+                  color: Color(0xFF7445FF),
+                  size: 44,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'eCardo',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF2D2D2D),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Something went wrong rendering this section.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF757575),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  kDebugMode ? '${details.exception}' : ' ',
+                  maxLines: kDebugMode ? 6 : 0,
+                  overflow: TextOverflow.fade,
+                  style: const TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  };
 }
 
 Future<void> _initializeServices() async {

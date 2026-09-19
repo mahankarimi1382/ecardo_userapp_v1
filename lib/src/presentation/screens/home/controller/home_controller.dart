@@ -34,7 +34,12 @@ class HomeController extends GetxController {
   final Rx<TransactionsModel> transactionsModel = TransactionsModel().obs;
   final RxInt selectedIndex = 0.obs;
   final RxBool isSettingsInitialized = false.obs;
-  final localization = AppLocalizations.of(Get.context!)!;
+  /// v1.0.43 (P-4 pattern — CRITICAL crash fix): the constructor-time
+  /// `AppLocalizations.of(Get.context!)!` threw when the controller was
+  /// built without a localization context (cold-start timing) — taking the
+  /// whole dashboard down with it. Resolve per call instead.
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
 
   // End Drawer Variable
   final RxBool isSwitchMode = false.obs;
@@ -135,7 +140,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ changeLanguage() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.homeLanguageChangeFailed);
+      ToastHelper().showErrorToast(localization!.homeLanguageChangeFailed);
     }
 }
 
@@ -148,7 +153,7 @@ Future<void> changeLanguage(String languageCode) async {
 
     if (!isSupported) {
       ToastHelper().showErrorToast(
-        localization.homeBiometricDeviceNotSupported,
+        localization!.homeBiometricDeviceNotSupported,
       );
       return;
     }
@@ -167,12 +172,12 @@ Future<void> changeLanguage(String languageCode) async {
       );
       ToastHelper().showSuccessToast(
         isBiometricEnable.value
-            ? localization.homeBiometricEnabledSuccess
-            : localization.homeBiometricDisabledSuccess,
+            ? localization!.homeBiometricEnabledSuccess
+            : localization!.homeBiometricDisabledSuccess,
       );
     } else {
       ToastHelper().showErrorToast(
-        localization.homeBiometricAuthenticationFailed,
+        localization!.homeBiometricAuthenticationFailed,
       );
     }
   }
@@ -189,7 +194,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchDashboard() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {}
   }
 
@@ -211,7 +216,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {}
   }
 
@@ -230,7 +235,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {}
   }
 
@@ -247,7 +252,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {}
   }
 
@@ -315,7 +320,7 @@ Future<void> changeLanguage(String languageCode) async {
             const SizedBox(height: 12),
 
             Text(
-              localization.homeBiometricNotFoundTitle,
+              localization!.homeBiometricNotFoundTitle,
               style: TextStyle(
                 letterSpacing: 0,
                 fontSize: 24.0,
@@ -326,7 +331,7 @@ Future<void> changeLanguage(String languageCode) async {
             const SizedBox(height: 10.0),
 
             Text(
-              localization.homeBiometricNotFoundDescription,
+              localization!.homeBiometricNotFoundDescription,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
@@ -340,7 +345,7 @@ Future<void> changeLanguage(String languageCode) async {
             CommonButton(
               width: double.infinity,
 
-              text: localization.homeBiometricOpenSettings,
+              text: localization!.homeBiometricOpenSettings,
               onPressed: () => _openSecuritySettings(),
             ),
             const SizedBox(height: 10.0),
@@ -359,7 +364,7 @@ Future<void> changeLanguage(String languageCode) async {
       );
       intent.launch();
     } else if (Platform.isIOS) {
-      ToastHelper().showWarningToast(localization.homeIosBiometricSetup);
+      ToastHelper().showWarningToast(localization!.homeIosBiometricSetup);
     }
   }
 }
