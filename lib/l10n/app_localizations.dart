@@ -15105,6 +15105,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inactive'**
   String get p2pStatusInactive;
+
+  /// No description provided for @bottomNavMyCards.
+  ///
+  /// In en, this message translates to:
+  /// **'My Cards'**
+  String get bottomNavMyCards;
+
+  /// No description provided for @myCardsNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'My Cards is not enabled on your account yet.'**
+  String get myCardsNotEnabled;
+
+  /// No description provided for @financialServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial Services'**
+  String get financialServicesTitle;
+
+  /// No description provided for @travelServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel Services'**
+  String get travelServicesTitle;
+
+  /// No description provided for @travelServicesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your destination to see available services'**
+  String get travelServicesHint;
+
+  /// No description provided for @businessServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Business & Commercial Services'**
+  String get businessServicesTitle;
+
+  /// No description provided for @serviceNotAvailableYet.
+  ///
+  /// In en, this message translates to:
+  /// **'This service is not available in your region yet. Raise your KYC level to unlock it.'**
+  String get serviceNotAvailableYet;
+
+  /// No description provided for @countryChina.
+  ///
+  /// In en, this message translates to:
+  /// **'China'**
+  String get countryChina;
+
+  /// No description provided for @countryRussia.
+  ///
+  /// In en, this message translates to:
+  /// **'Russia'**
+  String get countryRussia;
+
+  /// No description provided for @countryTurkey.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkey'**
+  String get countryTurkey;
+
+  /// No description provided for @countryUAE.
+  ///
+  /// In en, this message translates to:
+  /// **'UAE'**
+  String get countryUAE;
+
+  /// No description provided for @countryIraq.
+  ///
+  /// In en, this message translates to:
+  /// **'Iraq'**
+  String get countryIraq;
+
+  /// No description provided for @countryOman.
+  ///
+  /// In en, this message translates to:
+  /// **'Oman'**
+  String get countryOman;
+
+  /// No description provided for @countryGeorgia.
+  ///
+  /// In en, this message translates to:
+  /// **'Georgia'**
+  String get countryGeorgia;
+
+  /// No description provided for @travelServiceVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa'**
+  String get travelServiceVisa;
+
+  /// No description provided for @travelServiceTaxi.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxi'**
+  String get travelServiceTaxi;
+
+  /// No description provided for @travelServiceTour.
+  ///
+  /// In en, this message translates to:
+  /// **'Tours'**
+  String get travelServiceTour;
+
+  /// No description provided for @travelServiceBoat.
+  ///
+  /// In en, this message translates to:
+  /// **'Boat & Ferry'**
+  String get travelServiceBoat;
+
+  /// No description provided for @travelServiceRestaurant.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Restaurant'**
+  String get travelServiceRestaurant;
+
+  /// No description provided for @travelServiceStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Store'**
+  String get travelServiceStore;
+
+  /// No description provided for @travelServiceTranslator.
+  ///
+  /// In en, this message translates to:
+  /// **'Translator'**
+  String get travelServiceTranslator;
+
+  /// No description provided for @travelServiceEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Tourist Assistance'**
+  String get travelServiceEmergency;
+
+  /// No description provided for @travelServiceAliPay.
+  ///
+  /// In en, this message translates to:
+  /// **'AliPay'**
+  String get travelServiceAliPay;
+
+  /// No description provided for @travelServiceMirPay.
+  ///
+  /// In en, this message translates to:
+  /// **'MirPay'**
+  String get travelServiceMirPay;
+
+  /// No description provided for @travelServiceSimTopUp.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM Top-up'**
+  String get travelServiceSimTopUp;
+
+  /// No description provided for @travelServiceInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance'**
+  String get travelServiceInsurance;
+
+  /// No description provided for @businessServiceP2pEscrow.
+  ///
+  /// In en, this message translates to:
+  /// **'P2P Escrow'**
+  String get businessServiceP2pEscrow;
+
+  /// No description provided for @businessServiceGuarantee.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Guarantee'**
+  String get businessServiceGuarantee;
+
+  /// No description provided for @businessServiceBankLoan.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Loan'**
+  String get businessServiceBankLoan;
+
+  /// No description provided for @businessServiceLicense.
+  ///
+  /// In en, this message translates to:
+  /// **'License'**
+  String get businessServiceLicense;
+
+  /// No description provided for @businessServiceStocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Stocks & Exchange'**
+  String get businessServiceStocks;
 }
 
 class _AppLocalizationsDelegate

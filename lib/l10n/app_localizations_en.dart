@@ -8044,4 +8044,100 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get p2pStatusInactive => 'Inactive';
+
+  @override
+  String get bottomNavMyCards => 'My Cards';
+
+  @override
+  String get myCardsNotEnabled =>
+      'My Cards is not enabled on your account yet.';
+
+  @override
+  String get financialServicesTitle => 'Financial Services';
+
+  @override
+  String get travelServicesTitle => 'Travel Services';
+
+  @override
+  String get travelServicesHint =>
+      'Choose your destination to see available services';
+
+  @override
+  String get businessServicesTitle => 'Business & Commercial Services';
+
+  @override
+  String get serviceNotAvailableYet =>
+      'This service is not available in your region yet. Raise your KYC level to unlock it.';
+
+  @override
+  String get countryChina => 'China';
+
+  @override
+  String get countryRussia => 'Russia';
+
+  @override
+  String get countryTurkey => 'Turkey';
+
+  @override
+  String get countryUAE => 'UAE';
+
+  @override
+  String get countryIraq => 'Iraq';
+
+  @override
+  String get countryOman => 'Oman';
+
+  @override
+  String get countryGeorgia => 'Georgia';
+
+  @override
+  String get travelServiceVisa => 'Visa';
+
+  @override
+  String get travelServiceTaxi => 'Taxi';
+
+  @override
+  String get travelServiceTour => 'Tours';
+
+  @override
+  String get travelServiceBoat => 'Boat & Ferry';
+
+  @override
+  String get travelServiceRestaurant => 'Online Restaurant';
+
+  @override
+  String get travelServiceStore => 'Online Store';
+
+  @override
+  String get travelServiceTranslator => 'Translator';
+
+  @override
+  String get travelServiceEmergency => 'Tourist Assistance';
+
+  @override
+  String get travelServiceAliPay => 'AliPay';
+
+  @override
+  String get travelServiceMirPay => 'MirPay';
+
+  @override
+  String get travelServiceSimTopUp => 'SIM Top-up';
+
+  @override
+  String get travelServiceInsurance => 'Insurance';
+
+  @override
+  String get businessServiceP2pEscrow => 'P2P Escrow';
+
+  @override
+  String get businessServiceGuarantee => 'Service Guarantee';
+
+  @override
+  String get businessServiceBankLoan => 'Bank Loan';
+
+  @override
+  String get businessServiceLicense => 'License';
+
+  @override
+  String get businessServiceStocks => 'Stocks & Exchange';
 }

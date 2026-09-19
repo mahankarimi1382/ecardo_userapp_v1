@@ -7832,4 +7832,97 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get p2pStatusInactive => '无效';
+
+  @override
+  String get bottomNavMyCards => '我的卡片';
+
+  @override
+  String get myCardsNotEnabled => '您的账户尚未开通“我的卡片”。';
+
+  @override
+  String get financialServicesTitle => '金融服务';
+
+  @override
+  String get travelServicesTitle => '旅行服务';
+
+  @override
+  String get travelServicesHint => '选择目的地国家以查看可用服务';
+
+  @override
+  String get businessServicesTitle => '商贸与企业服务';
+
+  @override
+  String get serviceNotAvailableYet => '该服务在您所在地区尚未开放。请提升 KYC 等级以解锁。';
+
+  @override
+  String get countryChina => '中国';
+
+  @override
+  String get countryRussia => '俄罗斯';
+
+  @override
+  String get countryTurkey => '土耳其';
+
+  @override
+  String get countryUAE => '阿联酋';
+
+  @override
+  String get countryIraq => '伊拉克';
+
+  @override
+  String get countryOman => '阿曼';
+
+  @override
+  String get countryGeorgia => '格鲁吉亚';
+
+  @override
+  String get travelServiceVisa => '签证';
+
+  @override
+  String get travelServiceTaxi => '出租车';
+
+  @override
+  String get travelServiceTour => '旅行团';
+
+  @override
+  String get travelServiceBoat => '船运与轮渡';
+
+  @override
+  String get travelServiceRestaurant => '在线餐厅';
+
+  @override
+  String get travelServiceStore => '在线商店';
+
+  @override
+  String get travelServiceTranslator => '翻译';
+
+  @override
+  String get travelServiceEmergency => '游客救援';
+
+  @override
+  String get travelServiceAliPay => '支付宝';
+
+  @override
+  String get travelServiceMirPay => 'MirPay';
+
+  @override
+  String get travelServiceSimTopUp => 'SIM 充值';
+
+  @override
+  String get travelServiceInsurance => '保险';
+
+  @override
+  String get businessServiceP2pEscrow => 'P2P 担保';
+
+  @override
+  String get businessServiceGuarantee => '服务保障';
+
+  @override
+  String get businessServiceBankLoan => '银行贷款';
+
+  @override
+  String get businessServiceLicense => '许可证';
+
+  @override
+  String get businessServiceStocks => '股票与证券';
 }

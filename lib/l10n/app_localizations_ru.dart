@@ -8053,4 +8053,100 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get p2pStatusInactive => 'Неактивно';
+
+  @override
+  String get bottomNavMyCards => 'Мои карты';
+
+  @override
+  String get myCardsNotEnabled =>
+      'Мои карты пока не включены для вашего аккаунта.';
+
+  @override
+  String get financialServicesTitle => 'Финансовые услуги';
+
+  @override
+  String get travelServicesTitle => 'Туристические услуги';
+
+  @override
+  String get travelServicesHint =>
+      'Выберите страну назначения, чтобы увидеть доступные услуги';
+
+  @override
+  String get businessServicesTitle => 'Деловые и коммерческие услуги';
+
+  @override
+  String get serviceNotAvailableYet =>
+      'Эта услуга пока недоступна в вашем регионе. Повысьте уровень KYC, чтобы открыть её.';
+
+  @override
+  String get countryChina => 'Китай';
+
+  @override
+  String get countryRussia => 'Россия';
+
+  @override
+  String get countryTurkey => 'Турция';
+
+  @override
+  String get countryUAE => 'ОАЭ';
+
+  @override
+  String get countryIraq => 'Ирак';
+
+  @override
+  String get countryOman => 'Оман';
+
+  @override
+  String get countryGeorgia => 'Грузия';
+
+  @override
+  String get travelServiceVisa => 'Виза';
+
+  @override
+  String get travelServiceTaxi => 'Такси';
+
+  @override
+  String get travelServiceTour => 'Туры';
+
+  @override
+  String get travelServiceBoat => 'Лодка и паром';
+
+  @override
+  String get travelServiceRestaurant => 'Онлайн-ресторан';
+
+  @override
+  String get travelServiceStore => 'Онлайн-магазин';
+
+  @override
+  String get travelServiceTranslator => 'Переводчик';
+
+  @override
+  String get travelServiceEmergency => 'Помощь туристам';
+
+  @override
+  String get travelServiceAliPay => 'AliPay';
+
+  @override
+  String get travelServiceMirPay => 'MirPay';
+
+  @override
+  String get travelServiceSimTopUp => 'Пополнение SIM';
+
+  @override
+  String get travelServiceInsurance => 'Страхование';
+
+  @override
+  String get businessServiceP2pEscrow => 'P2P-эскроу';
+
+  @override
+  String get businessServiceGuarantee => 'Гарантия услуг';
+
+  @override
+  String get businessServiceBankLoan => 'Банковский кредит';
+
+  @override
+  String get businessServiceLicense => 'Лицензия';
+
+  @override
+  String get businessServiceStocks => 'Акции и биржа';
 }

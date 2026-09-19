@@ -8054,4 +8054,99 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get p2pStatusInactive => 'غیرفعال';
+
+  @override
+  String get bottomNavMyCards => 'کارت‌های من';
+
+  @override
+  String get myCardsNotEnabled => 'کارت‌های من هنوز روی حساب شما فعال نیست.';
+
+  @override
+  String get financialServicesTitle => 'خدمات مالی';
+
+  @override
+  String get travelServicesTitle => 'خدمات سفر';
+
+  @override
+  String get travelServicesHint =>
+      'کشور مقصد خود را انتخاب کنید تا خدمات موجود را ببینید';
+
+  @override
+  String get businessServicesTitle => 'خدمات بازرگانی و کسب‌وکار';
+
+  @override
+  String get serviceNotAvailableYet =>
+      'این خدمت هنوز برای شما در دسترس نیست؛ برای فعال‌سازی سطح تأیید (KYC) خود را بالا ببرید.';
+
+  @override
+  String get countryChina => 'چین';
+
+  @override
+  String get countryRussia => 'روسیه';
+
+  @override
+  String get countryTurkey => 'ترکیه';
+
+  @override
+  String get countryUAE => 'امارات';
+
+  @override
+  String get countryIraq => 'عراق';
+
+  @override
+  String get countryOman => 'عمان';
+
+  @override
+  String get countryGeorgia => 'گرجستان';
+
+  @override
+  String get travelServiceVisa => 'ویزا';
+
+  @override
+  String get travelServiceTaxi => 'تاکسی';
+
+  @override
+  String get travelServiceTour => 'تور';
+
+  @override
+  String get travelServiceBoat => 'قایق';
+
+  @override
+  String get travelServiceRestaurant => 'رستوران آنلاین';
+
+  @override
+  String get travelServiceStore => 'فروشگاه آنلاین';
+
+  @override
+  String get travelServiceTranslator => 'مترجم';
+
+  @override
+  String get travelServiceEmergency => 'کمک امدادی توریست';
+
+  @override
+  String get travelServiceAliPay => 'علی‌پی';
+
+  @override
+  String get travelServiceMirPay => 'میرپی';
+
+  @override
+  String get travelServiceSimTopUp => 'شارژ سیم‌کارت';
+
+  @override
+  String get travelServiceInsurance => 'بیمه';
+
+  @override
+  String get businessServiceP2pEscrow => 'اسکرو P2P';
+
+  @override
+  String get businessServiceGuarantee => 'ضمانت خدمات';
+
+  @override
+  String get businessServiceBankLoan => 'وام بانکی';
+
+  @override
+  String get businessServiceLicense => 'لایسنس';
+
+  @override
+  String get businessServiceStocks => 'سهام و بورس';
 }

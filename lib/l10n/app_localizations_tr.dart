@@ -8046,4 +8046,99 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get p2pStatusInactive => 'Devre Dışı';
+
+  @override
+  String get bottomNavMyCards => 'Kartlarım';
+
+  @override
+  String get myCardsNotEnabled => 'Kartlarım hesabınızda henüz etkin değil.';
+
+  @override
+  String get financialServicesTitle => 'Finansal Hizmetler';
+
+  @override
+  String get travelServicesTitle => 'Seyahat Hizmetleri';
+
+  @override
+  String get travelServicesHint =>
+      'Mevcut hizmetleri görmek için varış ülkenizi seçin';
+
+  @override
+  String get businessServicesTitle => 'Ticari ve İş Hizmetleri';
+
+  @override
+  String get serviceNotAvailableYet =>
+      'Bu hizmet bölgenizde henüz mevcut değil. Açmak için KYC seviyenizi yükseltin.';
+
+  @override
+  String get countryChina => 'Çin';
+
+  @override
+  String get countryRussia => 'Rusya';
+
+  @override
+  String get countryTurkey => 'Türkiye';
+
+  @override
+  String get countryUAE => 'BAE';
+
+  @override
+  String get countryIraq => 'Irak';
+
+  @override
+  String get countryOman => 'Umman';
+
+  @override
+  String get countryGeorgia => 'Gürcistan';
+
+  @override
+  String get travelServiceVisa => 'Vize';
+
+  @override
+  String get travelServiceTaxi => 'Taksi';
+
+  @override
+  String get travelServiceTour => 'Turlar';
+
+  @override
+  String get travelServiceBoat => 'Tekne ve Feribot';
+
+  @override
+  String get travelServiceRestaurant => 'Online Restoran';
+
+  @override
+  String get travelServiceStore => 'Online Mağaza';
+
+  @override
+  String get travelServiceTranslator => 'Tercüman';
+
+  @override
+  String get travelServiceEmergency => 'Turist Yardımı';
+
+  @override
+  String get travelServiceAliPay => 'AliPay';
+
+  @override
+  String get travelServiceMirPay => 'MirPay';
+
+  @override
+  String get travelServiceSimTopUp => 'SIM Yükleme';
+
+  @override
+  String get travelServiceInsurance => 'Sigorta';
+
+  @override
+  String get businessServiceP2pEscrow => 'P2P Escrow';
+
+  @override
+  String get businessServiceGuarantee => 'Hizmet Garantisi';
+
+  @override
+  String get businessServiceBankLoan => 'Banka Kredisi';
+
+  @override
+  String get businessServiceLicense => 'Lisans';
+
+  @override
+  String get businessServiceStocks => 'Hisse ve Borsa';
 }

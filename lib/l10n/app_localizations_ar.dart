@@ -7998,4 +7998,98 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get p2pStatusInactive => 'غير نشط';
+
+  @override
+  String get bottomNavMyCards => 'بطاقاتي';
+
+  @override
+  String get myCardsNotEnabled => 'بطاقاتي غير مفعّلة على حسابك بعد.';
+
+  @override
+  String get financialServicesTitle => 'الخدمات المالية';
+
+  @override
+  String get travelServicesTitle => 'خدمات السفر';
+
+  @override
+  String get travelServicesHint => 'اختر وجهتك لعرض الخدمات المتاحة';
+
+  @override
+  String get businessServicesTitle => 'الخدمات التجارية والأعمال';
+
+  @override
+  String get serviceNotAvailableYet =>
+      'هذه الخدمة غير متاحة لمنطقتك بعد. يرجى رفع مستوى التحقق (KYC) لتفعيلها.';
+
+  @override
+  String get countryChina => 'الصين';
+
+  @override
+  String get countryRussia => 'روسيا';
+
+  @override
+  String get countryTurkey => 'تركيا';
+
+  @override
+  String get countryUAE => 'الإمارات';
+
+  @override
+  String get countryIraq => 'العراق';
+
+  @override
+  String get countryOman => 'عُمان';
+
+  @override
+  String get countryGeorgia => 'جورجيا';
+
+  @override
+  String get travelServiceVisa => 'تأشيرة';
+
+  @override
+  String get travelServiceTaxi => 'تاكسي';
+
+  @override
+  String get travelServiceTour => 'جولات';
+
+  @override
+  String get travelServiceBoat => 'قارب وعبارات';
+
+  @override
+  String get travelServiceRestaurant => 'مطعم أونلاين';
+
+  @override
+  String get travelServiceStore => 'متجر أونلاين';
+
+  @override
+  String get travelServiceTranslator => 'مترجم';
+
+  @override
+  String get travelServiceEmergency => 'مساعدة سياحية';
+
+  @override
+  String get travelServiceAliPay => 'علي باي';
+
+  @override
+  String get travelServiceMirPay => 'مير باي';
+
+  @override
+  String get travelServiceSimTopUp => 'شحن شرائح الاتصال';
+
+  @override
+  String get travelServiceInsurance => 'التأمين';
+
+  @override
+  String get businessServiceP2pEscrow => 'ضمان P2P';
+
+  @override
+  String get businessServiceGuarantee => 'ضمان الخدمات';
+
+  @override
+  String get businessServiceBankLoan => 'قرض بنكي';
+
+  @override
+  String get businessServiceLicense => 'رخصة';
+
+  @override
+  String get businessServiceStocks => 'أسهم وبورصة';
 }
