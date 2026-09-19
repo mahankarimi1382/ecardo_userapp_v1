@@ -221,6 +221,36 @@ jobs:
           gh release view "$TAG" --json assets,url -q '"URL: \(.url)\nAssets: \(.assets | map(.name) | join(", "))"'
 
       # ==========================================================================
+      # Mirror APK to the public release channel (ecardo-apps-releases).
+      # The app repo is PRIVATE — end users download from the public repo.
+      # This step must succeed before the server notification fires.
+      # ==========================================================================
+      - name: Mirror APK to public releases repo
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.ECRDO_RELEASE_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
+          case "$GITHUB_REPOSITORY" in
+            *userapp*)     PREFIX="userapp";     APK_NAME="ecardo_user_v${VERSION}.apk";;
+            *merchantapp*) PREFIX="merchantapp"; APK_NAME="ecardo_merchant_v${VERSION}.apk";;
+            *agentapp*)    PREFIX="agentapp";    APK_NAME="ecardo_agent_v${VERSION}.apk";;
+            *) echo "Unknown repo"; exit 1;;
+          esac
+          PUB="mahankarimi1382/ecardo-apps-releases"
+          PUB_TAG="${PREFIX}-v${VERSION}"
+          cp "$APK_PATH" "$APK_NAME"
+          gh release view "$PUB_TAG" -R "$PUB" >/dev/null 2>&1 || \
+            gh release create "$PUB_TAG" -R "$PUB" \
+              --title "eCardo ${PREFIX} v${VERSION}" \
+              --notes "Public mirror of ${GITHUB_REPOSITORY} release v${VERSION} — built and signed by GitHub Actions."
+          gh release upload "$PUB_TAG" -R "$PUB" "$APK_NAME" --clobber
+          PUBLIC_URL="https://github.com/${PUB}/releases/download/${PUB_TAG}/${APK_NAME}"
+          echo "PUBLIC_URL=$PUBLIC_URL" >> "$GITHUB_ENV"
+          echo "✅ Mirrored: $PUBLIC_URL"
+
+      # ==========================================================================
       # Notify eCardo Server of the new release — TAG BUILDS ONLY
       # phase1-fix (P1): no more `curl -k`, no `|| true`, no
       # continue-on-error — a failed deploy notification fails the run.
@@ -232,7 +262,7 @@ jobs:
         run: |
           DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?ECARDO_DEPLOY_SECRET is not configured}"
           VERSION="${GITHUB_REF_NAME#v}"
-          DOWNLOAD_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/ecardo_user_v${VERSION}.apk"
+          DOWNLOAD_URL="${PUBLIC_URL:?Mirror step must run first — public APK missing}"
 
           echo "Notifying server: version=$VERSION (link mode, no APK upload)"
           echo "download_url=$DOWNLOAD_URL"
