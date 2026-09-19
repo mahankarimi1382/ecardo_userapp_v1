@@ -23,12 +23,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 /// (the reported symptom was a frozen grey page).
 class _TestHomeController extends HomeController {
   @override
-  void onInit() {} // no network in tests
+  // The real onInit fires live network calls + plugin channels; the widgets
+  // under QC only need the Rx state this test seeds directly.
+  // ignore: must_call_super
+  void onInit() {}
 }
 
 class _TestKycController extends KycLevelController {
   @override
-  void onInit() {} // no network in tests
+  // The real onInit fires live network calls + plugin channels.
+  // ignore: must_call_super
+  void onInit() {}
 }
 
 void main() {

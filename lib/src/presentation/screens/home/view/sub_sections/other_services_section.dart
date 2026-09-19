@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -105,9 +106,8 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
     }
   }
 
-  List<_ServiceTile> _rawServiceList() {
+  List<_ServiceTile> _rawServiceList(Addons? addons) {
     final localization = AppLocalizations.of(context)!;
-    final addons = homeController.userModel.value.data?.addons;
 
     return [
       _ServiceTile(
@@ -243,7 +243,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
           : null;
 
       final localization = AppLocalizations.of(context)!;
-      final tiles = _rawServiceList()
+      final tiles = _rawServiceList(addons)
           .map((t) => _resolve(t, badge))
           .toList(growable: false);
       final serviceCount = tiles.length;
