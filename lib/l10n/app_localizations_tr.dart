@@ -7561,10 +7561,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Mevcut kimlik doğrulama seviyeniz bu işleme izin vermiyor. Lütfen kimlik doğrulamanızı tamamlayın veya yükseltin.';
 
   @override
-  String get kycUpgradeCurrentLevel => 'Sizin seviyeniz';
+  String get kycUpgradeCurrentLevel => 'Mevcut seviye:';
 
   @override
-  String get kycUpgradeRequiredLevel => 'Gerekli seviye';
+  String get kycUpgradeRequiredLevel => 'Gerekli seviye:';
 
   @override
   String kycUpgradeLevelChip(int level) {
@@ -7912,4 +7912,47 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get updateGoBack => 'Geri dön';
+
+  @override
+  String kycBadgeUpgradeTo(Object level) {
+    return '$level seviyesine yükselt';
+  }
+
+  @override
+  String get kycBadgeStatusVerified => 'Doğrulandı';
+
+  @override
+  String get kycBadgeStatusPending => 'İnceleniyor';
+
+  @override
+  String get kycBadgeStatusRejected => 'Reddedildi';
+
+  @override
+  String get kycBadgeStatusNotSubmitted => 'Gönderilmedi';
+
+  @override
+  String get kycUpgradeDialogTitle => 'Doğrulama seviyesini yükselt';
+
+  @override
+  String kycUpgradeDialogBody(Object feature, Object level) {
+    return '«$feature» özelliğine erişmek için $level. doğrulama seviyesine ulaşmanız gerekiyor.';
+  }
+
+  @override
+  String kycUpgradeLevelValue(Object level) {
+    return 'Seviye $level';
+  }
+
+  @override
+  String get kycUpgradeStartAction => 'Doğrulamayı başlat';
+
+  @override
+  String get walletListEmptyTitle => 'Henüz cüzdan yok';
+
+  @override
+  String get walletListEmptySubtitle =>
+      'Başlamak için ilk cüzdanınızı oluşturun.';
+
+  @override
+  String get walletListEmptyCreate => 'Cüzdan Oluştur';
 }

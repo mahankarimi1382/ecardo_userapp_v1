@@ -14239,13 +14239,13 @@ abstract class AppLocalizations {
   /// No description provided for @kycUpgradeCurrentLevel.
   ///
   /// In en, this message translates to:
-  /// **'Your level'**
+  /// **'Current level:'**
   String get kycUpgradeCurrentLevel;
 
   /// No description provided for @kycUpgradeRequiredLevel.
   ///
   /// In en, this message translates to:
-  /// **'Required level'**
+  /// **'Required level:'**
   String get kycUpgradeRequiredLevel;
 
   /// No description provided for @kycUpgradeLevelChip.
@@ -14865,6 +14865,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go back'**
   String get updateGoBack;
+
+  /// No description provided for @kycBadgeUpgradeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to {level}'**
+  String kycBadgeUpgradeTo(Object level);
+
+  /// No description provided for @kycBadgeStatusVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get kycBadgeStatusVerified;
+
+  /// No description provided for @kycBadgeStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get kycBadgeStatusPending;
+
+  /// No description provided for @kycBadgeStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get kycBadgeStatusRejected;
+
+  /// No description provided for @kycBadgeStatusNotSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not submitted'**
+  String get kycBadgeStatusNotSubmitted;
+
+  /// No description provided for @kycUpgradeDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade verification level'**
+  String get kycUpgradeDialogTitle;
+
+  /// No description provided for @kycUpgradeDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'To access \"{feature}\" you need to reach verification level {level}.'**
+  String kycUpgradeDialogBody(Object feature, Object level);
+
+  /// No description provided for @kycUpgradeLevelValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String kycUpgradeLevelValue(Object level);
+
+  /// No description provided for @kycUpgradeStartAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start verification'**
+  String get kycUpgradeStartAction;
+
+  /// No description provided for @walletListEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No wallets yet'**
+  String get walletListEmptyTitle;
+
+  /// No description provided for @walletListEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first wallet to get started.'**
+  String get walletListEmptySubtitle;
+
+  /// No description provided for @walletListEmptyCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Wallet'**
+  String get walletListEmptyCreate;
 }
 
 class _AppLocalizationsDelegate

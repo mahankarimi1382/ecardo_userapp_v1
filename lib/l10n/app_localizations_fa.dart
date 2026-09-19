@@ -7574,10 +7574,10 @@ class AppLocalizationsFa extends AppLocalizations {
       'سطح احراز هویت فعلی شما این اقدام را اجازه نمی‌دهد. لطفاً احراز هویت را کامل یا ارتقا دهید.';
 
   @override
-  String get kycUpgradeCurrentLevel => 'سطح فعلی شما';
+  String get kycUpgradeCurrentLevel => 'سطح فعلی:';
 
   @override
-  String get kycUpgradeRequiredLevel => 'سطح لازم';
+  String get kycUpgradeRequiredLevel => 'سطح لازم:';
 
   @override
   String kycUpgradeLevelChip(int level) {
@@ -7920,4 +7920,47 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get updateGoBack => 'بازگشت';
+
+  @override
+  String kycBadgeUpgradeTo(Object level) {
+    return 'ارتقا به $level';
+  }
+
+  @override
+  String get kycBadgeStatusVerified => 'تأیید شده';
+
+  @override
+  String get kycBadgeStatusPending => 'در حال بررسی';
+
+  @override
+  String get kycBadgeStatusRejected => 'رد شده';
+
+  @override
+  String get kycBadgeStatusNotSubmitted => 'ارسال نشده';
+
+  @override
+  String get kycUpgradeDialogTitle => 'ارتقای سطح احراز هویت';
+
+  @override
+  String kycUpgradeDialogBody(Object feature, Object level) {
+    return 'برای دسترسی به «$feature» باید به سطح $level احراز هویت برسید.';
+  }
+
+  @override
+  String kycUpgradeLevelValue(Object level) {
+    return 'سطح $level';
+  }
+
+  @override
+  String get kycUpgradeStartAction => 'شروع احراز هویت';
+
+  @override
+  String get walletListEmptyTitle => 'هنوز کیف پولی ندارید';
+
+  @override
+  String get walletListEmptySubtitle =>
+      'برای شروع، اولین کیف پول خود را بسازید.';
+
+  @override
+  String get walletListEmptyCreate => 'ساخت کیف پول';
 }

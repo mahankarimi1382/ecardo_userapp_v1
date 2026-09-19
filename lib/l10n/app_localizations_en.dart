@@ -7560,10 +7560,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your current verification level does not allow this action. Please complete or upgrade your identity verification.';
 
   @override
-  String get kycUpgradeCurrentLevel => 'Your level';
+  String get kycUpgradeCurrentLevel => 'Current level:';
 
   @override
-  String get kycUpgradeRequiredLevel => 'Required level';
+  String get kycUpgradeRequiredLevel => 'Required level:';
 
   @override
   String kycUpgradeLevelChip(int level) {
@@ -7909,4 +7909,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateGoBack => 'Go back';
+
+  @override
+  String kycBadgeUpgradeTo(Object level) {
+    return 'Upgrade to $level';
+  }
+
+  @override
+  String get kycBadgeStatusVerified => 'Verified';
+
+  @override
+  String get kycBadgeStatusPending => 'Under review';
+
+  @override
+  String get kycBadgeStatusRejected => 'Rejected';
+
+  @override
+  String get kycBadgeStatusNotSubmitted => 'Not submitted';
+
+  @override
+  String get kycUpgradeDialogTitle => 'Upgrade verification level';
+
+  @override
+  String kycUpgradeDialogBody(Object feature, Object level) {
+    return 'To access \"$feature\" you need to reach verification level $level.';
+  }
+
+  @override
+  String kycUpgradeLevelValue(Object level) {
+    return 'Level $level';
+  }
+
+  @override
+  String get kycUpgradeStartAction => 'Start verification';
+
+  @override
+  String get walletListEmptyTitle => 'No wallets yet';
+
+  @override
+  String get walletListEmptySubtitle =>
+      'Create your first wallet to get started.';
+
+  @override
+  String get walletListEmptyCreate => 'Create Wallet';
 }

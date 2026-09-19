@@ -7516,10 +7516,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'مستوى التحقق الحالي الخاص بك لا يسمح بهذا الإجراء. يرجى إكمال أو ترقية التحقق من هويتك.';
 
   @override
-  String get kycUpgradeCurrentLevel => 'مستواك الحالي';
+  String get kycUpgradeCurrentLevel => 'المستوى الحالي:';
 
   @override
-  String get kycUpgradeRequiredLevel => 'المستوى المطلوب';
+  String get kycUpgradeRequiredLevel => 'المستوى المطلوب:';
 
   @override
   String kycUpgradeLevelChip(int level) {
@@ -7865,4 +7865,46 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get updateGoBack => 'رجوع';
+
+  @override
+  String kycBadgeUpgradeTo(Object level) {
+    return 'الترقية إلى $level';
+  }
+
+  @override
+  String get kycBadgeStatusVerified => 'تم التحقق';
+
+  @override
+  String get kycBadgeStatusPending => 'قيد المراجعة';
+
+  @override
+  String get kycBadgeStatusRejected => 'مرفوض';
+
+  @override
+  String get kycBadgeStatusNotSubmitted => 'لم يُرسل بعد';
+
+  @override
+  String get kycUpgradeDialogTitle => 'ترقية مستوى التحقق من الهوية';
+
+  @override
+  String kycUpgradeDialogBody(Object feature, Object level) {
+    return 'للوصول إلى «$feature» يجب أن تصل إلى مستوى التحقق $level.';
+  }
+
+  @override
+  String kycUpgradeLevelValue(Object level) {
+    return 'المستوى $level';
+  }
+
+  @override
+  String get kycUpgradeStartAction => 'بدء التحقق من الهوية';
+
+  @override
+  String get walletListEmptyTitle => 'لا توجد محافظ بعد';
+
+  @override
+  String get walletListEmptySubtitle => 'أنشئ محفظتك الأولى للبدء.';
+
+  @override
+  String get walletListEmptyCreate => 'إنشاء محفظة';
 }

@@ -7371,10 +7371,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get kycUpgradeBodyGeneric => '您当前的身份认证等级不允许此操作。请完成或升级您的身份认证。';
 
   @override
-  String get kycUpgradeCurrentLevel => '您的等级';
+  String get kycUpgradeCurrentLevel => '当前等级：';
 
   @override
-  String get kycUpgradeRequiredLevel => '所需等级';
+  String get kycUpgradeRequiredLevel => '所需等级：';
 
   @override
   String kycUpgradeLevelChip(int level) {
@@ -7700,4 +7700,46 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get updateGoBack => '返回';
+
+  @override
+  String kycBadgeUpgradeTo(Object level) {
+    return '升级到 $level';
+  }
+
+  @override
+  String get kycBadgeStatusVerified => '已认证';
+
+  @override
+  String get kycBadgeStatusPending => '审核中';
+
+  @override
+  String get kycBadgeStatusRejected => '已拒绝';
+
+  @override
+  String get kycBadgeStatusNotSubmitted => '未提交';
+
+  @override
+  String get kycUpgradeDialogTitle => '提升认证等级';
+
+  @override
+  String kycUpgradeDialogBody(Object feature, Object level) {
+    return '访问「$feature」需要达到认证等级 $level。';
+  }
+
+  @override
+  String kycUpgradeLevelValue(Object level) {
+    return '等级 $level';
+  }
+
+  @override
+  String get kycUpgradeStartAction => '开始认证';
+
+  @override
+  String get walletListEmptyTitle => '还没有钱包';
+
+  @override
+  String get walletListEmptySubtitle => '创建您的第一个钱包即可开始。';
+
+  @override
+  String get walletListEmptyCreate => '创建钱包';
 }

@@ -7565,10 +7565,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ваш текущий уровень верификации не позволяет это действие. Завершите или повысьте уровень верификации.';
 
   @override
-  String get kycUpgradeCurrentLevel => 'Ваш уровень';
+  String get kycUpgradeCurrentLevel => 'Текущий уровень:';
 
   @override
-  String get kycUpgradeRequiredLevel => 'Необходимый уровень';
+  String get kycUpgradeRequiredLevel => 'Требуемый уровень:';
 
   @override
   String kycUpgradeLevelChip(int level) {
@@ -7916,4 +7916,47 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get updateGoBack => 'Назад';
+
+  @override
+  String kycBadgeUpgradeTo(Object level) {
+    return 'Обновить до $level';
+  }
+
+  @override
+  String get kycBadgeStatusVerified => 'Подтверждено';
+
+  @override
+  String get kycBadgeStatusPending => 'На рассмотрении';
+
+  @override
+  String get kycBadgeStatusRejected => 'Отклонено';
+
+  @override
+  String get kycBadgeStatusNotSubmitted => 'Не отправлено';
+
+  @override
+  String get kycUpgradeDialogTitle => 'Повышение уровня верификации';
+
+  @override
+  String kycUpgradeDialogBody(Object feature, Object level) {
+    return 'Для доступа к «$feature» необходим уровень верификации $level.';
+  }
+
+  @override
+  String kycUpgradeLevelValue(Object level) {
+    return 'Уровень $level';
+  }
+
+  @override
+  String get kycUpgradeStartAction => 'Начать верификацию';
+
+  @override
+  String get walletListEmptyTitle => 'Кошельков пока нет';
+
+  @override
+  String get walletListEmptySubtitle =>
+      'Создайте первый кошелёк, чтобы начать.';
+
+  @override
+  String get walletListEmptyCreate => 'Создать кошелёк';
 }
