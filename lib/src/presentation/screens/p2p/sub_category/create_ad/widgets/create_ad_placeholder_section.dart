@@ -987,9 +987,9 @@ class CreateAdPlaceholderSection extends StatelessWidget {
   AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
 
   List<String> get _stepTitles => <String>[
-    'Set Type &\nPrice',
-    'Set Amount &\nMethod',
-    'Set\nConditions',
+    localization.p2pStepTypeAndPrice,
+    localization.p2pStepAmountAndMethod,
+    localization.p2pStepConditions,
   ];
 
   TextStyle get _labelStyle => TextStyle(

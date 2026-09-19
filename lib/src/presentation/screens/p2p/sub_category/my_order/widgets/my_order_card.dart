@@ -279,13 +279,33 @@ class MyOrderCard extends StatelessWidget {
     if (value == null || value.trim().isEmpty) return '-';
     final source = value.trim().toLowerCase();
     final localization = AppLocalizations.of(Get.context!)!;
-    if (source == 'pending_payment') return localization.p2pPendingRelease.replaceFirst(' Release', '');
-    if (source == 'paid') return 'Paid';
-    if (source == 'disputed') return localization.p2pOrderDisputed.replaceFirst('Order ', '');
-    if (source == 'completed') return localization.p2pOrderCompleted.replaceFirst('Order ', '');
-    if (source == 'cancelled') return localization.p2pOrderCancelled.replaceFirst('Order ', '');
-    if (source == 'expired') return localization.p2pOrderExpired.replaceFirst('Order ', '');
-    return source[0].toUpperCase() + source.substring(1);
+    switch (source) {
+      case 'pending_payment':
+        return localization.p2pStatusPendingPayment;
+      case 'paid':
+        return localization.p2pStatusPaid;
+      case 'disputed':
+        return localization.p2pStatusDisputed;
+      case 'completed':
+        return localization.p2pStatusCompleted;
+      case 'cancelled':
+      case 'canceled':
+        return localization.p2pStatusCancelled;
+      case 'expired':
+        return localization.p2pStatusExpired;
+      case 'failed':
+        return localization.p2pStatusFailed;
+      case 'rejected':
+        return localization.p2pStatusRejected;
+      case 'active':
+        return localization.p2pStatusActive;
+      case 'inactive':
+        return localization.p2pStatusInactive;
+      case 'pending':
+        return localization.p2pStatusPending;
+      default:
+        return source[0].toUpperCase() + source.substring(1);
+    }
   }
 
   String _formatDateTime(DateTime? value) {

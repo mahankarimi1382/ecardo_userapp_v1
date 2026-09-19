@@ -131,6 +131,7 @@ class P2pViewScreen extends GetView<P2pController> {
                 _openCommonDropdown(
                   context: context,
                   title: localization.p2pSelectAsset,
+                  notFoundText: localization.p2pNoAssetsFound,
                   items: controller.assetOptions,
                   textController: controller.assetController,
                   onValueSelected: controller.onAssetSelected,
@@ -293,6 +294,7 @@ class P2pViewScreen extends GetView<P2pController> {
               _openCommonDropdown(
                 context: context,
                 title: localization.p2pSelectFiat,
+                notFoundText: localization.p2pNoFiatCurrenciesFound,
                 items: controller.fiatOptions,
                 textController: controller.fiatController,
                 onValueSelected: controller.onFiatSelected,
@@ -451,6 +453,7 @@ class P2pViewScreen extends GetView<P2pController> {
   void _openCommonDropdown({
     required BuildContext context,
     required String title,
+    required String notFoundText,
     required List<String> items,
     required TextEditingController textController,
     required Function(String value) onValueSelected,
@@ -465,7 +468,7 @@ class P2pViewScreen extends GetView<P2pController> {
         textController: textController,
         bottomSheetHeight: 410.h,
         currentlySelectedValue: textController.text,
-        notFoundText: 'No options found',
+        notFoundText: notFoundText,
         onValueSelected: (value) {
           onValueSelected(value.toString());
         },

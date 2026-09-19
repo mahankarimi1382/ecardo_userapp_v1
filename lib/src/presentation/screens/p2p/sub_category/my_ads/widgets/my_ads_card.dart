@@ -20,9 +20,14 @@ class MyAdsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final adType = _formatLabel(ad.adType);
+    final rawAdType = (ad.adType ?? '').trim().toLowerCase();
+    final isBuy = rawAdType == 'buy';
+    final adType = rawAdType == 'buy'
+        ? localization.p2pBuy
+        : rawAdType == 'sell'
+        ? localization.p2pSell
+        : _formatLabel(ad.adType);
     final normalizedStatus = ad.status?.trim().toLowerCase() ?? '';
-    final isBuy = adType.toLowerCase() == 'buy';
     final canToggleStatus =
         normalizedStatus == 'active' || normalizedStatus == 'inactive';
     final isActiveStatus = normalizedStatus == 'active';
@@ -31,7 +36,7 @@ class MyAdsCard extends StatelessWidget {
         : '${ad.assetCurrency?.code ?? '-'} / ${ad.fiatCurrency?.code ?? '-'}';
     final totalAmountText = (ad.totalAmount ?? '0').trim();
     final completedTradeText = '${ad.completedOrders ?? 0} ${localization.p2pOrders}';
-    final statusText = _formatLabel(ad.status);
+    final statusText = _localizedStatus(ad.status);
     final statusColor = _statusColor(ad.status);
 
     return Container(
@@ -233,6 +238,35 @@ class MyAdsCard extends StatelessWidget {
     if (value == null || value.trim().isEmpty) return '-';
     final source = value.trim().toLowerCase();
     return source[0].toUpperCase() + source.substring(1);
+  }
+
+  String _localizedStatus(String? value) {
+    if (value == null || value.trim().isEmpty) return '-';
+    final source = value.trim().toLowerCase();
+    final localization = AppLocalizations.of(Get.context!)!;
+    switch (source) {
+      case 'active':
+        return localization.p2pStatusActive;
+      case 'inactive':
+        return localization.p2pStatusInactive;
+      case 'pending':
+        return localization.p2pStatusPending;
+      case 'cancelled':
+      case 'canceled':
+        return localization.p2pStatusCancelled;
+      case 'expired':
+        return localization.p2pStatusExpired;
+      case 'failed':
+        return localization.p2pStatusFailed;
+      case 'rejected':
+        return localization.p2pStatusRejected;
+      case 'disputed':
+        return localization.p2pStatusDisputed;
+      case 'completed':
+        return localization.p2pStatusCompleted;
+      default:
+        return _formatLabel(value);
+    }
   }
 
   Color _statusColor(String? status) {

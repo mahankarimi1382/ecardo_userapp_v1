@@ -15,7 +15,12 @@ class MyAdsDetailsBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final adType = _formatLabel(ad.adType);
+    final rawAdType = (ad.adType ?? '').trim().toLowerCase();
+    final adType = rawAdType == 'buy'
+        ? localization.p2pBuy
+        : rawAdType == 'sell'
+        ? localization.p2pSell
+        : _formatLabel(ad.adType);
     final pairText = ad.assetFiatPair?.trim().isNotEmpty == true
         ? ad.assetFiatPair!
         : '${ad.assetCurrency?.code ?? '-'} / ${ad.fiatCurrency?.code ?? '-'}';
@@ -111,7 +116,7 @@ class MyAdsDetailsBottomSheet extends StatelessWidget {
                   _buildDetailsRow(
                     localization.p2pType,
                     adType,
-                    valueColor: adType.toLowerCase() == 'buy'
+                    valueColor: rawAdType == 'buy'
                         ? AppColors.success
                         : AppColors.error,
                   ),

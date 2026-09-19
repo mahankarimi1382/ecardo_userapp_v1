@@ -420,7 +420,8 @@ class CreateAdController extends GetxController {
   void togglePaymentMethodSelection(PaymentAccount account) {
     final accountId = account.id;
     if (accountId == null) return;
-    final label = account.paymentMethod?.name ?? 'Method';
+    final label = account.paymentMethod?.name ??
+        (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
 
     if (selectedPaymentMethodIds.contains(accountId)) {
       selectedPaymentMethodIds.remove(accountId);
@@ -539,7 +540,9 @@ class CreateAdController extends GetxController {
         createAdResponse.value = model;
         isCreateAdSuccess.value = true;
         ToastHelper().showSuccessToast(
-          model.message ?? 'Ad created successfully',
+          model.message ??
+              (AppLocalizations.of(Get.context!)?.p2pAdCreatedSuccess ??
+                  'Ad created successfully'),
         );
         Get.off(() => CreateAdSuccessScreen(adData: model.data));
       }

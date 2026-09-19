@@ -72,7 +72,7 @@ class P2pBuySellAdScreen extends StatelessWidget {
             SizedBox(height: 16.h),
             CommonAppBar(
               title:
-                  '${isSellMode ? localization.p2pSell : localization.p2pBuy} ${titleCode.isEmpty ? 'Ad' : titleCode}',
+                  '${isSellMode ? localization.p2pSell : localization.p2pBuy}${titleCode.isEmpty ? '' : ' $titleCode'}',
               isBackLogicApply: true,
               backLogicFunction: Get.back,
             ),
@@ -513,7 +513,10 @@ class P2pBuySellAdScreen extends StatelessWidget {
         .where((item) => item.isNotEmpty)
         .toList();
     if (items.isNotEmpty) return items;
-    return ['No terms provided'];
+    return [
+      AppLocalizations.of(Get.context!)?.p2pNoTermsProvided ??
+          'No terms provided',
+    ];
   }
 
   void _openPaymentMethodDropdown(P2pBuyAdController controller) {

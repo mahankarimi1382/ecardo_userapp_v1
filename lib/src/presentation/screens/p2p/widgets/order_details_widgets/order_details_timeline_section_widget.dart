@@ -456,7 +456,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                       height: 120.h,
                       alignment: Alignment.center,
                       child: Text(
-                        'Unable to load image',
+                        AppLocalizations.of(Get.context!)
+                                ?.p2pUnableToLoadImage ??
+                            'Unable to load image',
                         style: TextStyle(
                           letterSpacing: 0,
                           fontWeight: FontWeight.w600,

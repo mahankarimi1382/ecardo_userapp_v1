@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -75,7 +76,10 @@ class P2pOrderDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('fetchOrderDetails() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to load order details');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToLoadOrderDetails ??
+            'Failed to load order details',
+      );
     } finally {
       isLoading.value = false;
     }
@@ -105,7 +109,8 @@ class P2pOrderDetailsController extends GetxController {
       final options = methods
           .map((method) {
             final id = method.paymentMethod?.id ?? method.id ?? 0;
-            final name = method.paymentMethod?.name ?? 'Method';
+            final name = method.paymentMethod?.name ??
+                (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
             final fields = method.fields ?? <ad_payment_method.Field>[];
             final accountInfo = fields.isNotEmpty
                 ? (fields.first.value ?? '')
@@ -172,7 +177,10 @@ class P2pOrderDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('updateOrderPaymentMethod() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to change payment method');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToChangePaymentMethod ??
+            'Failed to change payment method',
+      );
     } finally {
       isUpdatingPaymentMethod.value = false;
     }
@@ -195,7 +203,10 @@ class P2pOrderDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('cancelOrder() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to cancel order');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToCancelOrder ??
+            'Failed to cancel order',
+      );
     } finally {
       isCancellingOrder.value = false;
     }
@@ -218,7 +229,10 @@ class P2pOrderDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('markOrderPaid() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to notify seller');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToNotifySeller ??
+            'Failed to notify seller',
+      );
     } finally {
       isMarkingPaid.value = false;
     }
@@ -227,7 +241,10 @@ class P2pOrderDetailsController extends GetxController {
   Future<bool> disputeOrder({required String reason}) async {
     final safeReason = reason.trim();
     if (safeReason.isEmpty) {
-      ToastHelper().showErrorToast('Reason is required');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pReasonIsRequired ??
+            'Reason is required',
+      );
       return false;
     }
 
@@ -249,7 +266,10 @@ class P2pOrderDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('disputeOrder() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to submit dispute');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToSubmitDispute ??
+            'Failed to submit dispute',
+      );
     } finally {
       isDisputingOrder.value = false;
     }
@@ -273,7 +293,10 @@ class P2pOrderDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('releaseOrder() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to release order');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToReleaseOrder ??
+            'Failed to release order',
+      );
     } finally {
       isReleasingOrder.value = false;
     }

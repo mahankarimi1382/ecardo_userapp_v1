@@ -353,7 +353,8 @@ class _EditMyAdBottomSheetState extends State<EditMyAdBottomSheet> {
         final accountId = account.id;
         if (accountId == null) return const SizedBox.shrink();
         final isSelected = _selectedPaymentMethodIds.contains(accountId);
-        final methodName = account.paymentMethod?.name ?? 'Method';
+        final methodName = account.paymentMethod?.name ??
+            (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
         final label = methodName;
 
         return GestureDetector(

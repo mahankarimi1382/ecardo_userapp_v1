@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -53,15 +54,15 @@ class P2pBuyAdController extends GetxController {
   String get fiatSymbol => adData.value?.fiatCurrency?.symbol ?? '';
   String get assetCode => adData.value?.assetCurrency?.code ?? '-';
   String get assetSymbol => adData.value?.assetCurrency?.symbol ?? '';
-  String get adType => adData.value?.adType ?? 'Buy';
   String get primaryCode => isSellMode ? assetCode : fiatCode;
   String get primarySymbol => isSellMode ? assetSymbol : fiatSymbol;
   String get secondaryCode => isSellMode ? fiatCode : assetCode;
   String get secondarySymbol => isSellMode ? fiatSymbol : assetSymbol;
-  String get screenActionText => isSellMode ? 'Sell' : 'Buy';
+  String get screenActionText => isSellMode
+      ? (AppLocalizations.of(Get.context!)?.p2pSell ?? 'Sell')
+      : (AppLocalizations.of(Get.context!)?.p2pBuy ?? 'Buy');
   String get buttonText =>
       '$screenActionText ${assetCode == '-' ? '' : assetCode}'.trim();
-  String get firstAmountFieldLabel => isSellMode ? 'You Sell' : 'You Pay';
   bool get isFiatFieldOnPayInput => !isSellMode;
   double? get minOrderLimit =>
       _parseNumericValue(adData.value?.rawOrderLimit?.min);
@@ -99,7 +100,10 @@ class P2pBuyAdController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('fetchAdDetails() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to load ad details');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToLoadAdDetails ??
+            'Failed to load ad details',
+      );
     } finally {
       isPageLoading.value = false;
     }
@@ -127,7 +131,8 @@ class P2pBuyAdController extends GetxController {
       final options = methods
           .map((method) {
             final id = method.paymentMethod?.id ?? method.id ?? 0;
-            final name = method.paymentMethod?.name ?? 'Method';
+            final name = method.paymentMethod?.name ??
+                (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
             final fields = method.fields ?? <ad_payment_method.Field>[];
             final accountInfo = fields.isNotEmpty
                 ? (fields.first.value ?? '')
@@ -171,7 +176,8 @@ class P2pBuyAdController extends GetxController {
     final fallbackOptions = detailsMethods
         .map((method) {
           final id = method.paymentMethodId ?? method.id ?? 0;
-          final name = method.paymentMethod?.name ?? 'Method';
+          final name = method.paymentMethod?.name ??
+              (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
           final fields = method.fields ?? <ad_details.Field>[];
           final accountInfo = fields.isNotEmpty
               ? (fields.first.value ?? '')
@@ -284,7 +290,10 @@ class P2pBuyAdController extends GetxController {
         0;
 
     if (fiatAmount <= 0) {
-      ToastHelper().showErrorToast('Please enter amount');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.addMoneyValidationEnterAmount ??
+            'Please enter amount',
+      );
       return false;
     }
     if (!_isPayAmountWithinOrderLimit(fiatAmount)) {
@@ -297,17 +306,26 @@ class P2pBuyAdController extends GetxController {
   void _restoreLastValidAmountsWithError({required bool showMinMessage}) {
     final min = minOrderLimit;
     final max = maxOrderLimit;
+    final localization = AppLocalizations.of(Get.context!);
+    final currency = fiatCode == '-' ? '' : fiatCode;
     if (showMinMessage && min != null && max != null) {
       ToastHelper().showErrorToast(
-        'Amount must be between ${_formatAmount(min)} and ${_formatAmount(max)} ${fiatCode == '-' ? '' : fiatCode}',
+        localization?.p2pAmountBetweenLimit(
+              _formatAmount(min),
+              _formatAmount(max),
+              currency,
+            ) ??
+            'Amount must be between ${_formatAmount(min)} and ${_formatAmount(max)} $currency',
       );
     } else if (showMinMessage && min != null) {
       ToastHelper().showErrorToast(
-        'Amount must be at least ${_formatAmount(min)} ${fiatCode == '-' ? '' : fiatCode}',
+        localization?.p2pAmountMinLimit(_formatAmount(min), currency) ??
+            'Amount must be at least ${_formatAmount(min)} $currency',
       );
     } else if (max != null) {
       ToastHelper().showErrorToast(
-        'Amount must be at most ${_formatAmount(max)} ${fiatCode == '-' ? '' : fiatCode}',
+        localization?.p2pAmountMaxLimit(_formatAmount(max), currency) ??
+            'Amount must be at most ${_formatAmount(max)} $currency',
       );
     }
 
@@ -338,13 +356,19 @@ class P2pBuyAdController extends GetxController {
     if (!validatePayAmountRangeForSubmit()) return;
     final selectedMethodId = selectedPaymentOptionId.value;
     if (selectedMethodId == null) {
-      ToastHelper().showErrorToast('Please select payment method');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.error_select_payment ??
+            'Please select payment method',
+      );
       return;
     }
 
     final assetAmount = double.tryParse(assetAmountTextForOrder) ?? 0;
     if (assetAmount <= 0) {
-      ToastHelper().showErrorToast('Please enter valid asset amount');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pEnterValidAssetAmount ??
+            'Please enter valid asset amount',
+      );
       return;
     }
 
@@ -369,7 +393,10 @@ class P2pBuyAdController extends GetxController {
       );
       final orderId = model.data?.id;
       if (orderId == null) {
-        ToastHelper().showErrorToast('Order created but details id missing');
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(Get.context!)?.p2pOrderCreatedMissingDetails ??
+              'Order created but details id missing',
+        );
         return;
       }
 
@@ -377,7 +404,10 @@ class P2pBuyAdController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('submitOrderAndOpenDetails() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast('Failed to create order');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)?.p2pFailedToCreateOrder ??
+            'Failed to create order',
+      );
     } finally {
       isSubmittingOrder.value = false;
     }
