@@ -7742,4 +7742,94 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get walletListEmptyCreate => '创建钱包';
+
+  @override
+  String get p2pStepTypeAndPrice => '设置类型与价格';
+
+  @override
+  String get p2pStepAmountAndMethod => '设置数量与方式';
+
+  @override
+  String get p2pStepConditions => '设置条件';
+
+  @override
+  String get p2pFailedToLoadAdDetails => '加载广告详情失败';
+
+  @override
+  String get p2pFailedToLoadOrderDetails => '加载订单详情失败';
+
+  @override
+  String get p2pFailedToCreateOrder => '创建订单失败';
+
+  @override
+  String get p2pFailedToChangePaymentMethod => '更改付款方式失败';
+
+  @override
+  String get p2pFailedToCancelOrder => '取消订单失败';
+
+  @override
+  String get p2pFailedToNotifySeller => '通知卖家失败';
+
+  @override
+  String get p2pFailedToSubmitDispute => '提交争议失败';
+
+  @override
+  String get p2pFailedToReleaseOrder => '放行订单失败';
+
+  @override
+  String get p2pOrderCreatedMissingDetails => '订单已创建，但无法打开其详情';
+
+  @override
+  String get p2pEnterValidAssetAmount => '请输入有效的资产数量';
+
+  @override
+  String get p2pAdCreatedSuccess => '广告创建成功';
+
+  @override
+  String p2pAmountBetweenLimit(String min, String max, String currency) {
+    return '金额必须在 $min 到 $max $currency 之间';
+  }
+
+  @override
+  String p2pAmountMinLimit(String min, String currency) {
+    return '金额必须至少为 $min $currency';
+  }
+
+  @override
+  String p2pAmountMaxLimit(String max, String currency) {
+    return '金额不得超过 $max $currency';
+  }
+
+  @override
+  String get p2pStatusPending => '待处理';
+
+  @override
+  String get p2pStatusPendingPayment => '待付款';
+
+  @override
+  String get p2pStatusPaid => '已付款';
+
+  @override
+  String get p2pStatusCompleted => '已完成';
+
+  @override
+  String get p2pStatusCancelled => '已取消';
+
+  @override
+  String get p2pStatusExpired => '已过期';
+
+  @override
+  String get p2pStatusFailed => '失败';
+
+  @override
+  String get p2pStatusRejected => '已拒绝';
+
+  @override
+  String get p2pStatusDisputed => '争议中';
+
+  @override
+  String get p2pStatusActive => '有效';
+
+  @override
+  String get p2pStatusInactive => '无效';
 }

@@ -7955,4 +7955,95 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get walletListEmptyCreate => 'Cüzdan Oluştur';
+
+  @override
+  String get p2pStepTypeAndPrice => 'Tür ve Fiyat Belirle';
+
+  @override
+  String get p2pStepAmountAndMethod => 'Miktar ve Yöntem Belirle';
+
+  @override
+  String get p2pStepConditions => 'Koşulları Belirle';
+
+  @override
+  String get p2pFailedToLoadAdDetails => 'İlan detayları yüklenemedi';
+
+  @override
+  String get p2pFailedToLoadOrderDetails => 'Sipariş detayları yüklenemedi';
+
+  @override
+  String get p2pFailedToCreateOrder => 'Sipariş oluşturulamadı';
+
+  @override
+  String get p2pFailedToChangePaymentMethod => 'Ödeme yöntemi değiştirilemedi';
+
+  @override
+  String get p2pFailedToCancelOrder => 'Sipariş iptal edilemedi';
+
+  @override
+  String get p2pFailedToNotifySeller => 'Satıcıya bildirim gönderilemedi';
+
+  @override
+  String get p2pFailedToSubmitDispute => 'İtiraz gönderilemedi';
+
+  @override
+  String get p2pFailedToReleaseOrder => 'Sipariş serbest bırakılamadı';
+
+  @override
+  String get p2pOrderCreatedMissingDetails =>
+      'Sipariş oluşturuldu ancak detayları açılamadı';
+
+  @override
+  String get p2pEnterValidAssetAmount => 'Geçerli bir varlık miktarı girin';
+
+  @override
+  String get p2pAdCreatedSuccess => 'İlan başarıyla oluşturuldu';
+
+  @override
+  String p2pAmountBetweenLimit(String min, String max, String currency) {
+    return 'Miktar $min ile $max $currency arasında olmalıdır';
+  }
+
+  @override
+  String p2pAmountMinLimit(String min, String currency) {
+    return 'Miktar en az $min $currency olmalıdır';
+  }
+
+  @override
+  String p2pAmountMaxLimit(String max, String currency) {
+    return 'Miktar en fazla $max $currency olmalıdır';
+  }
+
+  @override
+  String get p2pStatusPending => 'Beklemede';
+
+  @override
+  String get p2pStatusPendingPayment => 'Ödeme Bekleniyor';
+
+  @override
+  String get p2pStatusPaid => 'Ödendi';
+
+  @override
+  String get p2pStatusCompleted => 'Tamamlandı';
+
+  @override
+  String get p2pStatusCancelled => 'İptal Edildi';
+
+  @override
+  String get p2pStatusExpired => 'Süresi Doldu';
+
+  @override
+  String get p2pStatusFailed => 'Başarısız';
+
+  @override
+  String get p2pStatusRejected => 'Reddedildi';
+
+  @override
+  String get p2pStatusDisputed => 'İtirazlı';
+
+  @override
+  String get p2pStatusActive => 'Aktif';
+
+  @override
+  String get p2pStatusInactive => 'Devre Dışı';
 }

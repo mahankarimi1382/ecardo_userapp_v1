@@ -2565,5 +2565,66 @@
   "kycUpgradeStartAction": "Doğrulamayı başlat",
   "walletListEmptyTitle": "Henüz cüzdan yok",
   "walletListEmptySubtitle": "Başlamak için ilk cüzdanınızı oluşturun.",
-  "walletListEmptyCreate": "Cüzdan Oluştur"
+  "walletListEmptyCreate": "Cüzdan Oluştur",
+  "p2pStepTypeAndPrice": "Tür ve Fiyat Belirle",
+  "p2pStepAmountAndMethod": "Miktar ve Yöntem Belirle",
+  "p2pStepConditions": "Koşulları Belirle",
+  "p2pFailedToLoadAdDetails": "İlan detayları yüklenemedi",
+  "p2pFailedToLoadOrderDetails": "Sipariş detayları yüklenemedi",
+  "p2pFailedToCreateOrder": "Sipariş oluşturulamadı",
+  "p2pFailedToChangePaymentMethod": "Ödeme yöntemi değiştirilemedi",
+  "p2pFailedToCancelOrder": "Sipariş iptal edilemedi",
+  "p2pFailedToNotifySeller": "Satıcıya bildirim gönderilemedi",
+  "p2pFailedToSubmitDispute": "İtiraz gönderilemedi",
+  "p2pFailedToReleaseOrder": "Sipariş serbest bırakılamadı",
+  "p2pOrderCreatedMissingDetails": "Sipariş oluşturuldu ancak detayları açılamadı",
+  "p2pEnterValidAssetAmount": "Geçerli bir varlık miktarı girin",
+  "p2pAdCreatedSuccess": "İlan başarıyla oluşturuldu",
+  "p2pAmountBetweenLimit": "Miktar {min} ile {max} {currency} arasında olmalıdır",
+  "@p2pAmountBetweenLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMinLimit": "Miktar en az {min} {currency} olmalıdır",
+  "@p2pAmountMinLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMaxLimit": "Miktar en fazla {max} {currency} olmalıdır",
+  "@p2pAmountMaxLimit": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pStatusPending": "Beklemede",
+  "p2pStatusPendingPayment": "Ödeme Bekleniyor",
+  "p2pStatusPaid": "Ödendi",
+  "p2pStatusCompleted": "Tamamlandı",
+  "p2pStatusCancelled": "İptal Edildi",
+  "p2pStatusExpired": "Süresi Doldu",
+  "p2pStatusFailed": "Başarısız",
+  "p2pStatusRejected": "Reddedildi",
+  "p2pStatusDisputed": "İtirazlı",
+  "p2pStatusActive": "Aktif",
+  "p2pStatusInactive": "Devre Dışı"
 }

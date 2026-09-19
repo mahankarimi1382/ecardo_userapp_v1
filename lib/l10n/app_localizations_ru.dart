@@ -7959,4 +7959,98 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get walletListEmptyCreate => 'Создать кошелёк';
+
+  @override
+  String get p2pStepTypeAndPrice => 'Тип и цена';
+
+  @override
+  String get p2pStepAmountAndMethod => 'Сумма и способ оплаты';
+
+  @override
+  String get p2pStepConditions => 'Условия';
+
+  @override
+  String get p2pFailedToLoadAdDetails =>
+      'Не удалось загрузить детали объявления';
+
+  @override
+  String get p2pFailedToLoadOrderDetails =>
+      'Не удалось загрузить детали заказа';
+
+  @override
+  String get p2pFailedToCreateOrder => 'Не удалось создать заказ';
+
+  @override
+  String get p2pFailedToChangePaymentMethod =>
+      'Не удалось изменить способ оплаты';
+
+  @override
+  String get p2pFailedToCancelOrder => 'Не удалось отменить заказ';
+
+  @override
+  String get p2pFailedToNotifySeller => 'Не удалось уведомить продавца';
+
+  @override
+  String get p2pFailedToSubmitDispute => 'Не удалось отправить спор';
+
+  @override
+  String get p2pFailedToReleaseOrder => 'Не удалось освободить заказ';
+
+  @override
+  String get p2pOrderCreatedMissingDetails =>
+      'Заказ создан, но его детали не открылись';
+
+  @override
+  String get p2pEnterValidAssetAmount => 'Введите корректную сумму актива';
+
+  @override
+  String get p2pAdCreatedSuccess => 'Объявление успешно создано';
+
+  @override
+  String p2pAmountBetweenLimit(String min, String max, String currency) {
+    return 'Сумма должна быть от $min до $max $currency';
+  }
+
+  @override
+  String p2pAmountMinLimit(String min, String currency) {
+    return 'Сумма должна быть не менее $min $currency';
+  }
+
+  @override
+  String p2pAmountMaxLimit(String max, String currency) {
+    return 'Сумма должна быть не более $max $currency';
+  }
+
+  @override
+  String get p2pStatusPending => 'В ожидании';
+
+  @override
+  String get p2pStatusPendingPayment => 'Ожидание оплаты';
+
+  @override
+  String get p2pStatusPaid => 'Оплачено';
+
+  @override
+  String get p2pStatusCompleted => 'Завершено';
+
+  @override
+  String get p2pStatusCancelled => 'Отменено';
+
+  @override
+  String get p2pStatusExpired => 'Истёк';
+
+  @override
+  String get p2pStatusFailed => 'Не удалось';
+
+  @override
+  String get p2pStatusRejected => 'Отклонено';
+
+  @override
+  String get p2pStatusDisputed => 'Спор';
+
+  @override
+  String get p2pStatusActive => 'Активно';
+
+  @override
+  String get p2pStatusInactive => 'Неактивно';
 }

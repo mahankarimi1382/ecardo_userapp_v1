@@ -2565,5 +2565,66 @@
   "kycUpgradeStartAction": "开始认证",
   "walletListEmptyTitle": "还没有钱包",
   "walletListEmptySubtitle": "创建您的第一个钱包即可开始。",
-  "walletListEmptyCreate": "创建钱包"
+  "walletListEmptyCreate": "创建钱包",
+  "p2pStepTypeAndPrice": "设置类型与价格",
+  "p2pStepAmountAndMethod": "设置数量与方式",
+  "p2pStepConditions": "设置条件",
+  "p2pFailedToLoadAdDetails": "加载广告详情失败",
+  "p2pFailedToLoadOrderDetails": "加载订单详情失败",
+  "p2pFailedToCreateOrder": "创建订单失败",
+  "p2pFailedToChangePaymentMethod": "更改付款方式失败",
+  "p2pFailedToCancelOrder": "取消订单失败",
+  "p2pFailedToNotifySeller": "通知卖家失败",
+  "p2pFailedToSubmitDispute": "提交争议失败",
+  "p2pFailedToReleaseOrder": "放行订单失败",
+  "p2pOrderCreatedMissingDetails": "订单已创建，但无法打开其详情",
+  "p2pEnterValidAssetAmount": "请输入有效的资产数量",
+  "p2pAdCreatedSuccess": "广告创建成功",
+  "p2pAmountBetweenLimit": "金额必须在 {min} 到 {max} {currency} 之间",
+  "@p2pAmountBetweenLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMinLimit": "金额必须至少为 {min} {currency}",
+  "@p2pAmountMinLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMaxLimit": "金额不得超过 {max} {currency}",
+  "@p2pAmountMaxLimit": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pStatusPending": "待处理",
+  "p2pStatusPendingPayment": "待付款",
+  "p2pStatusPaid": "已付款",
+  "p2pStatusCompleted": "已完成",
+  "p2pStatusCancelled": "已取消",
+  "p2pStatusExpired": "已过期",
+  "p2pStatusFailed": "失败",
+  "p2pStatusRejected": "已拒绝",
+  "p2pStatusDisputed": "争议中",
+  "p2pStatusActive": "有效",
+  "p2pStatusInactive": "无效"
 }

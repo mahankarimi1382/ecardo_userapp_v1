@@ -2566,5 +2566,66 @@
   "kycUpgradeStartAction": "شروع احراز هویت",
   "walletListEmptyTitle": "هنوز کیف پولی ندارید",
   "walletListEmptySubtitle": "برای شروع، اولین کیف پول خود را بسازید.",
-  "walletListEmptyCreate": "ساخت کیف پول"
+  "walletListEmptyCreate": "ساخت کیف پول",
+  "p2pStepTypeAndPrice": "تعیین نوع و قیمت",
+  "p2pStepAmountAndMethod": "تعیین مقدار و روش پرداخت",
+  "p2pStepConditions": "تعیین شرایط",
+  "p2pFailedToLoadAdDetails": "بارگذاری جزئیات آگهی ناموفق بود",
+  "p2pFailedToLoadOrderDetails": "بارگذاری جزئیات سفارش ناموفق بود",
+  "p2pFailedToCreateOrder": "ثبت سفارش ناموفق بود",
+  "p2pFailedToChangePaymentMethod": "تغییر روش پرداخت ناموفق بود",
+  "p2pFailedToCancelOrder": "لغو سفارش ناموفق بود",
+  "p2pFailedToNotifySeller": "اطلاع‌رسانی به فروشنده ناموفق بود",
+  "p2pFailedToSubmitDispute": "ثبت اختلاف ناموفق بود",
+  "p2pFailedToReleaseOrder": "آزادسازی سفارش ناموفق بود",
+  "p2pOrderCreatedMissingDetails": "سفارش ثبت شد، اما جزئیات آن باز نشد",
+  "p2pEnterValidAssetAmount": "لطفاً مقدار دارایی معتبر وارد کنید",
+  "p2pAdCreatedSuccess": "آگهی با موفقیت ثبت شد",
+  "p2pAmountBetweenLimit": "مبلغ باید بین {min} و {max} {currency} باشد",
+  "@p2pAmountBetweenLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMinLimit": "مبلغ باید حداقل {min} {currency} باشد",
+  "@p2pAmountMinLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMaxLimit": "مبلغ باید حداکثر {max} {currency} باشد",
+  "@p2pAmountMaxLimit": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pStatusPending": "در انتظار",
+  "p2pStatusPendingPayment": "در انتظار پرداخت",
+  "p2pStatusPaid": "پرداخت‌شده",
+  "p2pStatusCompleted": "تکمیل‌شده",
+  "p2pStatusCancelled": "لغو شده",
+  "p2pStatusExpired": "منقضی‌شده",
+  "p2pStatusFailed": "ناموفق",
+  "p2pStatusRejected": "ردشده",
+  "p2pStatusDisputed": "مورد اختلاف",
+  "p2pStatusActive": "فعال",
+  "p2pStatusInactive": "غیرفعال"
 }

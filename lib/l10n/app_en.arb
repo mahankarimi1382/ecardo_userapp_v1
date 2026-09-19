@@ -2705,5 +2705,66 @@
   "kycUpgradeStartAction": "Start verification",
   "walletListEmptyTitle": "No wallets yet",
   "walletListEmptySubtitle": "Create your first wallet to get started.",
-  "walletListEmptyCreate": "Create Wallet"
+  "walletListEmptyCreate": "Create Wallet",
+  "p2pStepTypeAndPrice": "Set Type & Price",
+  "p2pStepAmountAndMethod": "Set Amount & Method",
+  "p2pStepConditions": "Set Conditions",
+  "p2pFailedToLoadAdDetails": "Failed to load ad details",
+  "p2pFailedToLoadOrderDetails": "Failed to load order details",
+  "p2pFailedToCreateOrder": "Failed to create order",
+  "p2pFailedToChangePaymentMethod": "Failed to change payment method",
+  "p2pFailedToCancelOrder": "Failed to cancel order",
+  "p2pFailedToNotifySeller": "Failed to notify seller",
+  "p2pFailedToSubmitDispute": "Failed to submit dispute",
+  "p2pFailedToReleaseOrder": "Failed to release order",
+  "p2pOrderCreatedMissingDetails": "Order created, but its details could not be opened",
+  "p2pEnterValidAssetAmount": "Please enter a valid asset amount",
+  "p2pAdCreatedSuccess": "Ad created successfully",
+  "p2pAmountBetweenLimit": "Amount must be between {min} and {max} {currency}",
+  "@p2pAmountBetweenLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMinLimit": "Amount must be at least {min} {currency}",
+  "@p2pAmountMinLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMaxLimit": "Amount must be at most {max} {currency}",
+  "@p2pAmountMaxLimit": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pStatusPending": "Pending",
+  "p2pStatusPendingPayment": "Pending Payment",
+  "p2pStatusPaid": "Paid",
+  "p2pStatusCompleted": "Completed",
+  "p2pStatusCancelled": "Cancelled",
+  "p2pStatusExpired": "Expired",
+  "p2pStatusFailed": "Failed",
+  "p2pStatusRejected": "Rejected",
+  "p2pStatusDisputed": "Disputed",
+  "p2pStatusActive": "Active",
+  "p2pStatusInactive": "Inactive"
 }

@@ -7952,4 +7952,96 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get walletListEmptyCreate => 'Create Wallet';
+
+  @override
+  String get p2pStepTypeAndPrice => 'Set Type & Price';
+
+  @override
+  String get p2pStepAmountAndMethod => 'Set Amount & Method';
+
+  @override
+  String get p2pStepConditions => 'Set Conditions';
+
+  @override
+  String get p2pFailedToLoadAdDetails => 'Failed to load ad details';
+
+  @override
+  String get p2pFailedToLoadOrderDetails => 'Failed to load order details';
+
+  @override
+  String get p2pFailedToCreateOrder => 'Failed to create order';
+
+  @override
+  String get p2pFailedToChangePaymentMethod =>
+      'Failed to change payment method';
+
+  @override
+  String get p2pFailedToCancelOrder => 'Failed to cancel order';
+
+  @override
+  String get p2pFailedToNotifySeller => 'Failed to notify seller';
+
+  @override
+  String get p2pFailedToSubmitDispute => 'Failed to submit dispute';
+
+  @override
+  String get p2pFailedToReleaseOrder => 'Failed to release order';
+
+  @override
+  String get p2pOrderCreatedMissingDetails =>
+      'Order created, but its details could not be opened';
+
+  @override
+  String get p2pEnterValidAssetAmount => 'Please enter a valid asset amount';
+
+  @override
+  String get p2pAdCreatedSuccess => 'Ad created successfully';
+
+  @override
+  String p2pAmountBetweenLimit(String min, String max, String currency) {
+    return 'Amount must be between $min and $max $currency';
+  }
+
+  @override
+  String p2pAmountMinLimit(String min, String currency) {
+    return 'Amount must be at least $min $currency';
+  }
+
+  @override
+  String p2pAmountMaxLimit(String max, String currency) {
+    return 'Amount must be at most $max $currency';
+  }
+
+  @override
+  String get p2pStatusPending => 'Pending';
+
+  @override
+  String get p2pStatusPendingPayment => 'Pending Payment';
+
+  @override
+  String get p2pStatusPaid => 'Paid';
+
+  @override
+  String get p2pStatusCompleted => 'Completed';
+
+  @override
+  String get p2pStatusCancelled => 'Cancelled';
+
+  @override
+  String get p2pStatusExpired => 'Expired';
+
+  @override
+  String get p2pStatusFailed => 'Failed';
+
+  @override
+  String get p2pStatusRejected => 'Rejected';
+
+  @override
+  String get p2pStatusDisputed => 'Disputed';
+
+  @override
+  String get p2pStatusActive => 'Active';
+
+  @override
+  String get p2pStatusInactive => 'Inactive';
 }

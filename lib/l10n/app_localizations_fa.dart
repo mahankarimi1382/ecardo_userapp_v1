@@ -7963,4 +7963,95 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get walletListEmptyCreate => 'ساخت کیف پول';
+
+  @override
+  String get p2pStepTypeAndPrice => 'تعیین نوع و قیمت';
+
+  @override
+  String get p2pStepAmountAndMethod => 'تعیین مقدار و روش پرداخت';
+
+  @override
+  String get p2pStepConditions => 'تعیین شرایط';
+
+  @override
+  String get p2pFailedToLoadAdDetails => 'بارگذاری جزئیات آگهی ناموفق بود';
+
+  @override
+  String get p2pFailedToLoadOrderDetails => 'بارگذاری جزئیات سفارش ناموفق بود';
+
+  @override
+  String get p2pFailedToCreateOrder => 'ثبت سفارش ناموفق بود';
+
+  @override
+  String get p2pFailedToChangePaymentMethod => 'تغییر روش پرداخت ناموفق بود';
+
+  @override
+  String get p2pFailedToCancelOrder => 'لغو سفارش ناموفق بود';
+
+  @override
+  String get p2pFailedToNotifySeller => 'اطلاع‌رسانی به فروشنده ناموفق بود';
+
+  @override
+  String get p2pFailedToSubmitDispute => 'ثبت اختلاف ناموفق بود';
+
+  @override
+  String get p2pFailedToReleaseOrder => 'آزادسازی سفارش ناموفق بود';
+
+  @override
+  String get p2pOrderCreatedMissingDetails =>
+      'سفارش ثبت شد، اما جزئیات آن باز نشد';
+
+  @override
+  String get p2pEnterValidAssetAmount => 'لطفاً مقدار دارایی معتبر وارد کنید';
+
+  @override
+  String get p2pAdCreatedSuccess => 'آگهی با موفقیت ثبت شد';
+
+  @override
+  String p2pAmountBetweenLimit(String min, String max, String currency) {
+    return 'مبلغ باید بین $min و $max $currency باشد';
+  }
+
+  @override
+  String p2pAmountMinLimit(String min, String currency) {
+    return 'مبلغ باید حداقل $min $currency باشد';
+  }
+
+  @override
+  String p2pAmountMaxLimit(String max, String currency) {
+    return 'مبلغ باید حداکثر $max $currency باشد';
+  }
+
+  @override
+  String get p2pStatusPending => 'در انتظار';
+
+  @override
+  String get p2pStatusPendingPayment => 'در انتظار پرداخت';
+
+  @override
+  String get p2pStatusPaid => 'پرداخت‌شده';
+
+  @override
+  String get p2pStatusCompleted => 'تکمیل‌شده';
+
+  @override
+  String get p2pStatusCancelled => 'لغو شده';
+
+  @override
+  String get p2pStatusExpired => 'منقضی‌شده';
+
+  @override
+  String get p2pStatusFailed => 'ناموفق';
+
+  @override
+  String get p2pStatusRejected => 'ردشده';
+
+  @override
+  String get p2pStatusDisputed => 'مورد اختلاف';
+
+  @override
+  String get p2pStatusActive => 'فعال';
+
+  @override
+  String get p2pStatusInactive => 'غیرفعال';
 }

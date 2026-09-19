@@ -14937,6 +14937,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Wallet'**
   String get walletListEmptyCreate;
+
+  /// No description provided for @p2pStepTypeAndPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Type & Price'**
+  String get p2pStepTypeAndPrice;
+
+  /// No description provided for @p2pStepAmountAndMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Amount & Method'**
+  String get p2pStepAmountAndMethod;
+
+  /// No description provided for @p2pStepConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Conditions'**
+  String get p2pStepConditions;
+
+  /// No description provided for @p2pFailedToLoadAdDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load ad details'**
+  String get p2pFailedToLoadAdDetails;
+
+  /// No description provided for @p2pFailedToLoadOrderDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load order details'**
+  String get p2pFailedToLoadOrderDetails;
+
+  /// No description provided for @p2pFailedToCreateOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create order'**
+  String get p2pFailedToCreateOrder;
+
+  /// No description provided for @p2pFailedToChangePaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to change payment method'**
+  String get p2pFailedToChangePaymentMethod;
+
+  /// No description provided for @p2pFailedToCancelOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to cancel order'**
+  String get p2pFailedToCancelOrder;
+
+  /// No description provided for @p2pFailedToNotifySeller.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to notify seller'**
+  String get p2pFailedToNotifySeller;
+
+  /// No description provided for @p2pFailedToSubmitDispute.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit dispute'**
+  String get p2pFailedToSubmitDispute;
+
+  /// No description provided for @p2pFailedToReleaseOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to release order'**
+  String get p2pFailedToReleaseOrder;
+
+  /// No description provided for @p2pOrderCreatedMissingDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Order created, but its details could not be opened'**
+  String get p2pOrderCreatedMissingDetails;
+
+  /// No description provided for @p2pEnterValidAssetAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid asset amount'**
+  String get p2pEnterValidAssetAmount;
+
+  /// No description provided for @p2pAdCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad created successfully'**
+  String get p2pAdCreatedSuccess;
+
+  /// No description provided for @p2pAmountBetweenLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount must be between {min} and {max} {currency}'**
+  String p2pAmountBetweenLimit(String min, String max, String currency);
+
+  /// No description provided for @p2pAmountMinLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount must be at least {min} {currency}'**
+  String p2pAmountMinLimit(String min, String currency);
+
+  /// No description provided for @p2pAmountMaxLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount must be at most {max} {currency}'**
+  String p2pAmountMaxLimit(String max, String currency);
+
+  /// No description provided for @p2pStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get p2pStatusPending;
+
+  /// No description provided for @p2pStatusPendingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Payment'**
+  String get p2pStatusPendingPayment;
+
+  /// No description provided for @p2pStatusPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get p2pStatusPaid;
+
+  /// No description provided for @p2pStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get p2pStatusCompleted;
+
+  /// No description provided for @p2pStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get p2pStatusCancelled;
+
+  /// No description provided for @p2pStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get p2pStatusExpired;
+
+  /// No description provided for @p2pStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get p2pStatusFailed;
+
+  /// No description provided for @p2pStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get p2pStatusRejected;
+
+  /// No description provided for @p2pStatusDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputed'**
+  String get p2pStatusDisputed;
+
+  /// No description provided for @p2pStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get p2pStatusActive;
+
+  /// No description provided for @p2pStatusInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get p2pStatusInactive;
 }
 
 class _AppLocalizationsDelegate

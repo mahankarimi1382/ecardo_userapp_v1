@@ -2565,5 +2565,66 @@
   "kycUpgradeStartAction": "Начать верификацию",
   "walletListEmptyTitle": "Кошельков пока нет",
   "walletListEmptySubtitle": "Создайте первый кошелёк, чтобы начать.",
-  "walletListEmptyCreate": "Создать кошелёк"
+  "walletListEmptyCreate": "Создать кошелёк",
+  "p2pStepTypeAndPrice": "Тип и цена",
+  "p2pStepAmountAndMethod": "Сумма и способ оплаты",
+  "p2pStepConditions": "Условия",
+  "p2pFailedToLoadAdDetails": "Не удалось загрузить детали объявления",
+  "p2pFailedToLoadOrderDetails": "Не удалось загрузить детали заказа",
+  "p2pFailedToCreateOrder": "Не удалось создать заказ",
+  "p2pFailedToChangePaymentMethod": "Не удалось изменить способ оплаты",
+  "p2pFailedToCancelOrder": "Не удалось отменить заказ",
+  "p2pFailedToNotifySeller": "Не удалось уведомить продавца",
+  "p2pFailedToSubmitDispute": "Не удалось отправить спор",
+  "p2pFailedToReleaseOrder": "Не удалось освободить заказ",
+  "p2pOrderCreatedMissingDetails": "Заказ создан, но его детали не открылись",
+  "p2pEnterValidAssetAmount": "Введите корректную сумму актива",
+  "p2pAdCreatedSuccess": "Объявление успешно создано",
+  "p2pAmountBetweenLimit": "Сумма должна быть от {min} до {max} {currency}",
+  "@p2pAmountBetweenLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMinLimit": "Сумма должна быть не менее {min} {currency}",
+  "@p2pAmountMinLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMaxLimit": "Сумма должна быть не более {max} {currency}",
+  "@p2pAmountMaxLimit": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pStatusPending": "В ожидании",
+  "p2pStatusPendingPayment": "Ожидание оплаты",
+  "p2pStatusPaid": "Оплачено",
+  "p2pStatusCompleted": "Завершено",
+  "p2pStatusCancelled": "Отменено",
+  "p2pStatusExpired": "Истёк",
+  "p2pStatusFailed": "Не удалось",
+  "p2pStatusRejected": "Отклонено",
+  "p2pStatusDisputed": "Спор",
+  "p2pStatusActive": "Активно",
+  "p2pStatusInactive": "Неактивно"
 }

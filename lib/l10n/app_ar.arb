@@ -2566,5 +2566,66 @@
   "kycUpgradeStartAction": "بدء التحقق من الهوية",
   "walletListEmptyTitle": "لا توجد محافظ بعد",
   "walletListEmptySubtitle": "أنشئ محفظتك الأولى للبدء.",
-  "walletListEmptyCreate": "إنشاء محفظة"
+  "walletListEmptyCreate": "إنشاء محفظة",
+  "p2pStepTypeAndPrice": "تحديد النوع والسعر",
+  "p2pStepAmountAndMethod": "تحديد المبلغ وطريقة الدفع",
+  "p2pStepConditions": "تحديد الشروط",
+  "p2pFailedToLoadAdDetails": "فشل تحميل تفاصيل الإعلان",
+  "p2pFailedToLoadOrderDetails": "فشل تحميل تفاصيل الطلب",
+  "p2pFailedToCreateOrder": "فشل إنشاء الطلب",
+  "p2pFailedToChangePaymentMethod": "فشل تغيير طريقة الدفع",
+  "p2pFailedToCancelOrder": "فشل إلغاء الطلب",
+  "p2pFailedToNotifySeller": "فشل إبلاغ البائع",
+  "p2pFailedToSubmitDispute": "فشل إرسال النزاع",
+  "p2pFailedToReleaseOrder": "فشل تحرير الطلب",
+  "p2pOrderCreatedMissingDetails": "تم إنشاء الطلب، ولكن تعذر فتح تفاصيله",
+  "p2pEnterValidAssetAmount": "يرجى إدخال مبلغ أصل صالح",
+  "p2pAdCreatedSuccess": "تم إنشاء الإعلان بنجاح",
+  "p2pAmountBetweenLimit": "يجب أن يكون المبلغ بين {min} و {max} {currency}",
+  "@p2pAmountBetweenLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMinLimit": "يجب أن يكون المبلغ {min} {currency} على الأقل",
+  "@p2pAmountMinLimit": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pAmountMaxLimit": "يجب ألا يتجاوز المبلغ {max} {currency}",
+  "@p2pAmountMaxLimit": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "p2pStatusPending": "قيد الانتظار",
+  "p2pStatusPendingPayment": "بانتظار الدفع",
+  "p2pStatusPaid": "مدفوع",
+  "p2pStatusCompleted": "مكتمل",
+  "p2pStatusCancelled": "ملغى",
+  "p2pStatusExpired": "منتهي",
+  "p2pStatusFailed": "فاشل",
+  "p2pStatusRejected": "مرفوض",
+  "p2pStatusDisputed": "متنازع عليه",
+  "p2pStatusActive": "نشط",
+  "p2pStatusInactive": "غير نشط"
 }
