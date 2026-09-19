@@ -69,7 +69,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                       Text(
                         localization.allControllerLoadError,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           letterSpacing: 0,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
