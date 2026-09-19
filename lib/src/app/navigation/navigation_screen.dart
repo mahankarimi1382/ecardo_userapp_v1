@@ -7,14 +7,16 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
-import 'package:ecardo_user/src/presentation/screens/gift_code/view/gift_code_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/home_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drawer/end_drawer_section.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/settings_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/transfer_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/virtual_card_screen.dart';
 import 'package:ecardo_user/src/presentation/widgets/qr_scanner_screen.dart';
+import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -31,7 +33,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   final iconList = [
     PngAssets.bottomNavigationHomeSolidIcon,
     PngAssets.bottomNavigationTransferSolidIcon,
-    PngAssets.bottomNavigationGiftSolidIcon,
+    PngAssets.virtualCardService,
     PngAssets.bottomNavigationSettingsSolidIcon,
   ];
 
@@ -52,19 +54,24 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
       final settings = Get.find<SettingsService>();
       bool isUserTransferEnabled = settings.getSetting("user_transfer") == "1";
-      bool isUserGiftEnabled = settings.getSetting("user_gift") == "1";
+
+      // v1.0.45 (DASHBOARD): the Gift tab is replaced by "My Cards"
+      // (virtual cards). Gift codes stay reachable from the financial
+      // services grid; the tab is gated by the virtual-cards addon.
+      final myCardsEnabled =
+          homeController.userModel.value.data?.addons?.virtualCards == true;
 
       final labelList = [
         localization.bottomNavHome,
         localization.bottomNavTransfer,
-        localization.bottomNavGift,
+        localization.bottomNavMyCards,
         localization.bottomNavSettings,
       ];
 
       final pages = [
         HomeScreen(signUpBonus: signUpBonus),
         TransferScreen(),
-        GiftCodeScreen(),
+        const VirtualCardScreen(),
         SettingsScreen(),
       ];
 
@@ -201,9 +208,16 @@ class _NavigationScreenState extends State<NavigationScreen> {
               return;
             }
 
-            if (index == 2 && !isUserGiftEnabled) {
-              ToastHelper().showErrorToast(localization.userGiftNotEnabled);
-              return;
+            if (index == 2) {
+              if (!myCardsEnabled) {
+                ToastHelper().showErrorToast(localization.myCardsNotEnabled);
+                return;
+              }
+              // The virtual-cards route binding normally provides the
+              // controller; as an embedded tab we register it on first visit.
+              if (!Get.isRegistered<VirtualCardController>()) {
+                VirtualCardBinding().dependencies();
+              }
             }
 
             if (index > _maxVisitedIndex) _maxVisitedIndex = index;

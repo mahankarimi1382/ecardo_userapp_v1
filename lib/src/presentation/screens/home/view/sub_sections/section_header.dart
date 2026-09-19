@@ -23,13 +23,20 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            sectionName,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontSize: 16,
-              color: AppColors.lightTextPrimary,
-              fontWeight: FontWeight.w900,
+          // v1.0.45: long localized section titles (e.g. the business
+          // services title in RU/TR) must never push the row past its
+          // bounds — flex the title and ellipsize instead.
+          Expanded(
+            child: Text(
+              sectionName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                letterSpacing: 0,
+                fontSize: 16,
+                color: AppColors.lightTextPrimary,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ),
           if (isShowNavigateAction == true)

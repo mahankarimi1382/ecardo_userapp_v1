@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/bottom_sheet/common_alert_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/business_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/home_skeleton_loader.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/other_services_section.dart';
@@ -89,6 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ReferralStatsSection(),
                               SizedBox(height: 20),
                               OtherServicesSection(),
+                              SizedBox(height: 20),
+                              // v1.0.45 (BUSINESS SERVICES): remittance,
+                              // P2P escrow + upcoming commercial modules.
+                              BusinessServicesSection(),
                               SizedBox(height: 30),
                               RecentTransactionsSection(),
                               SizedBox(height: 50),
