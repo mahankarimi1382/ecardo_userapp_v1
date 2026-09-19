@@ -70,6 +70,7 @@ class EditWithdrawAccountController extends GetxController {
 
   // Update Withdraw Account
   Future<void> updateWithdrawAccount({required String accountId}) async {
+    if (isLoading.isTrue) return;
     isLoading.value = true;
 
     try {

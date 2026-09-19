@@ -123,6 +123,7 @@ class CreateWithdrawAccountController extends GetxController {
 
   // Create Withdraw Account Function
   Future<void> createWithdrawAccount() async {
+    if (isCreateWithdrawAccountLoading.isTrue) return;
     if (!validateFields()) return;
 
     isCreateWithdrawAccountLoading.value = true;
