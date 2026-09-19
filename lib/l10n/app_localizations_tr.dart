@@ -1550,6 +1550,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get otherServicesTransfer => 'Transfer';
 
   @override
+  String get otherServicesDynamicPassword => 'Dinamik PIN';
+
+  @override
+  String get commonComingSoon => 'Yakında';
+
+  @override
   String get otherServicesInvite => 'Invite';
 
   @override
@@ -2799,6 +2805,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get transactionsPopupStatus => 'Status';
 
   @override
+  String get transactionsPopupClose => 'Kapat';
+
+  @override
+  String get transactionsPopupReceiptTitle => 'İşlem makbuzu';
+
+  @override
+  String get shareReceipt => 'Makbuzu paylaş';
+
+  @override
+  String get shareReceiptBody => 'eCardo işlem makbuzum';
+
+  @override
+  String get shareReceiptFailed => 'Makbuz paylaşılamadı.';
+
+  @override
   String get comment_transaction_filter_bottom_sheet =>
       '==== Transaction Filter Bottom Sheet ====';
 
@@ -3571,6 +3592,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
     return 'Insufficient balance — available: $amount $currency';
   }
+
+  @override
+  String get exchangeValidationSameWallet =>
+      'From and to currencies must be different.';
+
+  @override
+  String get dashboardReferralInvited => 'Invited';
+
+  @override
+  String get dashboardReferralBonus => 'Referral bonus';
 
   @override
   String get comment_create_gift_controller =>

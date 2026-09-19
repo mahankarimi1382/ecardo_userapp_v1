@@ -3088,6 +3088,18 @@ abstract class AppLocalizations {
   /// **'Transfer'**
   String get otherServicesTransfer;
 
+  /// No description provided for @otherServicesDynamicPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic PIN'**
+  String get otherServicesDynamicPassword;
+
+  /// No description provided for @commonComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get commonComingSoon;
+
   /// No description provided for @otherServicesInvite.
   ///
   /// In en, this message translates to:
@@ -5482,6 +5494,36 @@ abstract class AppLocalizations {
   /// **'Status'**
   String get transactionsPopupStatus;
 
+  /// No description provided for @transactionsPopupClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get transactionsPopupClose;
+
+  /// No description provided for @transactionsPopupReceiptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction receipt'**
+  String get transactionsPopupReceiptTitle;
+
+  /// No description provided for @shareReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Share receipt'**
+  String get shareReceipt;
+
+  /// No description provided for @shareReceiptBody.
+  ///
+  /// In en, this message translates to:
+  /// **'My eCardo transaction receipt'**
+  String get shareReceiptBody;
+
+  /// No description provided for @shareReceiptFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not share the receipt.'**
+  String get shareReceiptFailed;
+
   /// No description provided for @comment_transaction_filter_bottom_sheet.
   ///
   /// In en, this message translates to:
@@ -6879,6 +6921,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Insufficient balance — available: {amount} {currency}'**
   String exchangeValidationInsufficientBalance(Object amount, Object currency);
+
+  /// No description provided for @exchangeValidationSameWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'From and to currencies must be different.'**
+  String get exchangeValidationSameWallet;
+
+  /// No description provided for @dashboardReferralInvited.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited'**
+  String get dashboardReferralInvited;
+
+  /// No description provided for @dashboardReferralBonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Referral bonus'**
+  String get dashboardReferralBonus;
 
   /// No description provided for @comment_create_gift_controller.
   ///

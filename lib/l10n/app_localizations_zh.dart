@@ -1526,6 +1526,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get otherServicesTransfer => '转账';
 
   @override
+  String get otherServicesDynamicPassword => '动态密码';
+
+  @override
+  String get commonComingSoon => '即将推出';
+
+  @override
   String get otherServicesInvite => '邀请';
 
   @override
@@ -2757,6 +2763,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get transactionsPopupStatus => '状态';
 
   @override
+  String get transactionsPopupClose => '关闭';
+
+  @override
+  String get transactionsPopupReceiptTitle => '交易回执';
+
+  @override
+  String get shareReceipt => '分享回执';
+
+  @override
+  String get shareReceiptBody => '我的 eCardo 交易回执';
+
+  @override
+  String get shareReceiptFailed => '无法分享回执。';
+
+  @override
   String get comment_transaction_filter_bottom_sheet =>
       '==== Transaction Filter Bottom Sheet ====';
 
@@ -3508,6 +3529,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
     return '余额不足，可用余额：$amount $currency';
   }
+
+  @override
+  String get exchangeValidationSameWallet => '源货币和目标货币必须不同。';
+
+  @override
+  String get dashboardReferralInvited => '已邀请';
+
+  @override
+  String get dashboardReferralBonus => '推荐奖励';
 
   @override
   String get comment_create_gift_controller =>

@@ -1551,6 +1551,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get otherServicesTransfer => 'Transfer';
 
   @override
+  String get otherServicesDynamicPassword => 'Динамичный PIN';
+
+  @override
+  String get commonComingSoon => 'Скоро';
+
+  @override
   String get otherServicesInvite => 'Invite';
 
   @override
@@ -2800,6 +2806,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get transactionsPopupStatus => 'Status';
 
   @override
+  String get transactionsPopupClose => 'Закрыть';
+
+  @override
+  String get transactionsPopupReceiptTitle => 'Квитанция о транзакции';
+
+  @override
+  String get shareReceipt => 'Поделиться квитанцией';
+
+  @override
+  String get shareReceiptBody => 'Моя квитанция о транзакции eCardo';
+
+  @override
+  String get shareReceiptFailed => 'Не удалось поделиться квитанцией.';
+
+  @override
   String get comment_transaction_filter_bottom_sheet =>
       '==== Transaction Filter Bottom Sheet ====';
 
@@ -3572,6 +3593,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
     return 'Insufficient balance — available: $amount $currency';
   }
+
+  @override
+  String get exchangeValidationSameWallet =>
+      'From and to currencies must be different.';
+
+  @override
+  String get dashboardReferralInvited => 'Invited';
+
+  @override
+  String get dashboardReferralBonus => 'Referral bonus';
 
   @override
   String get comment_create_gift_controller =>

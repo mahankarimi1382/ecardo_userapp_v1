@@ -34,8 +34,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-  late Animation<Offset> _slideAnimation;
-
   late Animation<Offset> _textSlideAnimation;
   late Animation<double> _textFadeAnimation;
 
@@ -65,29 +63,6 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _logoController, curve: Curves.easeOutBack),
     );
 
-    _slideAnimation = TweenSequence([
-      TweenSequenceItem(
-        tween: Tween(
-          begin: Offset.zero,
-          end: const Offset(0, -1.2),
-        ).chain(CurveTween(curve: Curves.fastOutSlowIn)),
-        weight: 60,
-      ),
-      TweenSequenceItem(
-        tween: Tween(
-          begin: const Offset(0, -1.2),
-          end: const Offset(0, 0.1),
-        ).chain(CurveTween(curve: Curves.easeIn)),
-        weight: 25,
-      ),
-      TweenSequenceItem(
-        tween: Tween(
-          begin: const Offset(0, 0.1),
-          end: Offset.zero,
-        ).chain(CurveTween(curve: Curves.easeOutBack)),
-        weight: 15,
-      ),
-    ]).animate(_logoController);
 
     _logoController.forward();
 

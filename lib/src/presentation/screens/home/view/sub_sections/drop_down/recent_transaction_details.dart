@@ -3,7 +3,6 @@ import 'dart:ui' as ui show ImageByteFormat;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
-import 'package:cross_file/cross_file.dart' show XFile;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -402,6 +401,8 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
   /// sheet. Failures never crash the sheet — a localized toast is shown.
   Future<void> _shareReceipt() async {
     if (_sharing) return;
+    // Capture before any await — BuildContext must not cross async gaps.
+    final localization = AppLocalizations.of(context);
     setState(() => _sharing = true);
     try {
       final boundary = _receiptKey.currentContext?.findRenderObject();
@@ -418,7 +419,6 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
       );
       await file.writeAsBytes(byteData.buffer.asUint8List());
 
-      final localization = AppLocalizations.of(context);
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path)],

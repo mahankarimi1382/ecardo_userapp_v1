@@ -1542,6 +1542,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get otherServicesTransfer => 'تحويل';
 
   @override
+  String get otherServicesDynamicPassword => 'الرمز الديناميكي';
+
+  @override
+  String get commonComingSoon => 'قريباً';
+
+  @override
   String get otherServicesInvite => 'دعوة';
 
   @override
@@ -2786,6 +2792,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get transactionsPopupStatus => 'الحالة';
 
   @override
+  String get transactionsPopupClose => 'إغلاق';
+
+  @override
+  String get transactionsPopupReceiptTitle => 'إيصال المعاملة';
+
+  @override
+  String get shareReceipt => 'مشاركة الإيصال';
+
+  @override
+  String get shareReceiptBody => 'إيصال معاملتي على eCardo';
+
+  @override
+  String get shareReceiptFailed => 'تعذر مشاركة الإيصال.';
+
+  @override
   String get comment_transaction_filter_bottom_sheet =>
       '==== Transaction Filter Bottom Sheet ====';
 
@@ -3550,6 +3571,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
     return 'الرصيد غير كافٍ — المتاح: $amount $currency';
   }
+
+  @override
+  String get exchangeValidationSameWallet =>
+      'يجب أن تختلف عملة المصدر عن عملة الوجهة.';
+
+  @override
+  String get dashboardReferralInvited => 'المُدعوون';
+
+  @override
+  String get dashboardReferralBonus => 'مكافأة الإحالة';
 
   @override
   String get comment_create_gift_controller =>

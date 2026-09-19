@@ -1550,6 +1550,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otherServicesTransfer => 'Transfer';
 
   @override
+  String get otherServicesDynamicPassword => 'Dynamic PIN';
+
+  @override
+  String get commonComingSoon => 'Coming soon';
+
+  @override
   String get otherServicesInvite => 'Invite';
 
   @override
@@ -2800,6 +2806,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transactionsPopupStatus => 'Status';
 
   @override
+  String get transactionsPopupClose => 'Close';
+
+  @override
+  String get transactionsPopupReceiptTitle => 'Transaction receipt';
+
+  @override
+  String get shareReceipt => 'Share receipt';
+
+  @override
+  String get shareReceiptBody => 'My eCardo transaction receipt';
+
+  @override
+  String get shareReceiptFailed => 'Could not share the receipt.';
+
+  @override
   String get comment_transaction_filter_bottom_sheet =>
       '==== Transaction Filter Bottom Sheet ====';
 
@@ -3574,6 +3595,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
     return 'Insufficient balance — available: $amount $currency';
   }
+
+  @override
+  String get exchangeValidationSameWallet =>
+      'From and to currencies must be different.';
+
+  @override
+  String get dashboardReferralInvited => 'Invited';
+
+  @override
+  String get dashboardReferralBonus => 'Referral bonus';
 
   @override
   String get comment_create_gift_controller =>

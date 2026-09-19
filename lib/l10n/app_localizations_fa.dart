@@ -1556,6 +1556,12 @@ class AppLocalizationsFa extends AppLocalizations {
   String get otherServicesTransfer => 'انتقال';
 
   @override
+  String get otherServicesDynamicPassword => 'رمز پویا';
+
+  @override
+  String get commonComingSoon => 'به‌زودی';
+
+  @override
   String get otherServicesInvite => 'دعوت';
 
   @override
@@ -2809,6 +2815,21 @@ class AppLocalizationsFa extends AppLocalizations {
   String get transactionsPopupStatus => 'وضعیت';
 
   @override
+  String get transactionsPopupClose => 'بستن';
+
+  @override
+  String get transactionsPopupReceiptTitle => 'رسید تراکنش';
+
+  @override
+  String get shareReceipt => 'اشتراک‌گذاری رسید';
+
+  @override
+  String get shareReceiptBody => 'رسید تراکنش eCardo من';
+
+  @override
+  String get shareReceiptFailed => 'ارسال رسید ممکن نشد.';
+
+  @override
   String get comment_transaction_filter_bottom_sheet =>
       '==== Transaction Filter Bottom Sheet ====';
 
@@ -3585,6 +3606,16 @@ class AppLocalizationsFa extends AppLocalizations {
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
     return 'موجودی کافی نیست — موجودی در دسترس: $amount $currency';
   }
+
+  @override
+  String get exchangeValidationSameWallet =>
+      'ارز مبدأ و مقصد باید متفاوت باشند.';
+
+  @override
+  String get dashboardReferralInvited => 'دعوت‌شدگان';
+
+  @override
+  String get dashboardReferralBonus => 'پاداش معرفی';
 
   @override
   String get comment_create_gift_controller =>
