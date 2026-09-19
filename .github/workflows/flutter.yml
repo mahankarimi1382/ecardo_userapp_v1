@@ -197,19 +197,16 @@ jobs:
               print("🔴 FATAL: APK IS COMPLETELY UNSIGNED!")
               sys.exit(2)
 
-      # v1.0.46: the duplicate APK artifact upload was removed — the APK is
-      # published to Releases and mirrored to the public repo below, and the
-      # artifact service consumed the account's storage quota (uploads then
-      # fail repo-wide with "Artifact storage quota has been hit").
-
-      - name: Publish APK to GitHub Release
-
       # ==========================================================================
       # Auto-publish to GitHub Releases — TAG BUILDS ONLY (phase1-fix, P0-1)
       # --------------------------------------------------------------------------
       # Publishing is no longer automatic on every push to main. It happens
       # only when a v* tag is pushed, an existing tag is never overwritten,
       # and main is still the target.
+      # v1.0.46: the duplicate APK artifact upload step was removed — the APK
+      # is published to Releases and mirrored to the public repo below, and
+      # the artifact service consumed the account's storage quota (uploads
+      # then failed repo-wide with "Artifact storage quota has been hit").
       # ==========================================================================
       - name: Publish APK to GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
