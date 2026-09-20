@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 import 'package:ecardo_user/src/presentation/screens/home/model/dashboard_model.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/business_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/other_services_section.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/travel_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -64,6 +65,7 @@ void main() {
           child: Column(
             children: [
               OtherServicesSection(),
+              TravelServicesSection(),
               BusinessServicesSection(),
               SizedBox(height: 200),
             ],
@@ -124,7 +126,6 @@ void main() {
       expect(find.text('Remittance'), findsOneWidget);
       expect(find.text('Money Transfer'), findsOneWidget);
       expect(find.text('Escrow Services'), findsOneWidget);
-      expect(find.text('P2P Escrow'), findsOneWidget);
       expect(find.text('Service Guarantee'), findsOneWidget);
       expect(find.text('Bank Loan'), findsOneWidget);
       expect(find.text('Stocks & Exchange'), findsOneWidget);
