@@ -122,6 +122,8 @@ void main() {
       expect(find.text('Dynamic PIN'), findsOneWidget);
       expect(find.text('Business & Commercial Services'), findsOneWidget);
       expect(find.text('Remittance'), findsOneWidget);
+      expect(find.text('Money Transfer'), findsOneWidget);
+      expect(find.text('Escrow Services'), findsOneWidget);
       expect(find.text('P2P Escrow'), findsOneWidget);
       expect(find.text('Service Guarantee'), findsOneWidget);
       expect(find.text('Bank Loan'), findsOneWidget);
@@ -142,12 +144,8 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      // Switch to the travel tab (unique before the switch — the header
-      // only shows the financial title while tab 1 is active).
-      await tester.tap(find.text('Travel Services'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Travel Services'), findsWidgets);
+      // v1.0.46: travel is its own card — no tab switch needed.
+      expect(find.text('Travel Services'), findsOneWidget);
       expect(find.text('Choose your destination to see available services'),
           findsOneWidget);
       // Page 1 of the travel grid: built modules + first locked services.
@@ -155,61 +153,21 @@ void main() {
       expect(find.text('Hotels'), findsOneWidget);
       expect(find.text('eSIM'), findsOneWidget);
       expect(find.text('Visa'), findsOneWidget);
+      expect(find.text('Train'), findsOneWidget);
+      expect(find.text('Car Rental'), findsOneWidget);
+      expect(find.text('Local Services'), findsOneWidget);
       expect(find.text('Taxi'), findsOneWidget);
 
-      // Destination countries render as chips (the chip row is a lazy
-      // horizontal ListView — the tail is asserted after scrolling it).
-      expect(find.text('China'), findsOneWidget);
-      expect(find.text('Russia'), findsOneWidget);
-      expect(find.text('Turkey'), findsOneWidget);
-
-      await tester.drag(find.byType(ListView).first, const Offset(-300, 0));
-      await tester.pumpAndSettle();
-      expect(find.text('UAE'), findsOneWidget);
-      expect(find.text('Iraq'), findsOneWidget);
-      expect(find.text('Oman'), findsOneWidget);
-      expect(find.text('Georgia'), findsOneWidget);
+      // Destination chips: Wrap layout — every chip is built (Iran added).
+      for (final country in ['Iran', 'China', 'Russia', 'Turkey', 'UAE',
+        'Iraq', 'Oman', 'Georgia']) {
+        expect(find.text(country), findsOneWidget);
+      }
 
       // Selecting a destination rebuilds the hub without exceptions.
-      await tester.tap(find.text('Georgia'));
+      await tester.tap(find.text('Iran'));
       await tester.pumpAndSettle();
 
-      // Page the travel grid to the second page (locked services tail).
-      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      expect(find.text('Insurance'), findsOneWidget);
-
-      expect(tester.takeException(), isNull);
-    },
-  );
-
-  testWidgets(
-    'paging the financial grid deep then switching tabs does not build an '
-    'out-of-range travel page (grid state is per-tab)',
-    (tester) async {
-      final home = Get.find<HomeController>();
-      seedData(home);
-      phoneSurface(tester);
-
-      await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
-
-      // Financial grid: 17 tiles = 3 pages — drag to the last page so the
-      // shared grid state sits on page index 2.
-      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-
-      // Switch to travel (15 tiles = 2 pages). Without the per-tab key the
-      // retained PageController position makes PageView build page 3 of a
-      // 2-page list.
-      await tester.tap(find.text('Travel Services'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Flights'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
   );
