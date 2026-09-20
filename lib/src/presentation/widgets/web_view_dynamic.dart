@@ -70,9 +70,9 @@ class _WebViewDynamicState extends State<WebViewDynamic> {
         body: Stack(
           children: [
             if (_blocked)
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(24),
                   child: Text(AppLocalizations.of(context)!.webViewLinkCannotOpen),
                 ),
               )
