@@ -2665,5 +2665,13 @@
   "travelServiceFood": "سفارش آنلاین غذا",
   "travelServiceSupermarket": "سوپرمارکت آنلاین",
   "travelServiceTrain": "قطار",
-  "businessServiceMoneyTransfer": "انتقال پول"
+  "businessServiceMoneyTransfer": "انتقال پول",
+  "twoFactorValidationEnterPassword": "لطفاً رمز عبور را وارد کنید",
+  "twoFactorValidationEnterOldPasscode": "لطفاً رمز عبور قبلی را وارد کنید",
+  "twoFactorValidationEnterNewPasscode": "لطفاً رمز عبور جدید را وارد کنید",
+  "twoFactorValidationEnterConfirmPasscode": "لطفاً تکرار رمز عبور را وارد کنید",
+  "twoFactorValidationEnterPasscode": "لطفاً رمز عبور را وارد کنید",
+  "twoFactorValidationPasscodesDoNotMatch": "رمز عبور و تکرار آن یکسان نیستند",
+  "twoFactorValidationNewPasscodesDoNotMatch": "رمز جدید و تکرار آن یکسان نیستند",
+  "webViewLinkCannotOpen": "این پیوند در اپ باز نمی‌شود."
 }

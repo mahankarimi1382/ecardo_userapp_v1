@@ -2804,5 +2804,13 @@
   "travelServiceFood": "Online Food Order",
   "travelServiceSupermarket": "Online Supermarket",
   "travelServiceTrain": "Train",
-  "businessServiceMoneyTransfer": "Money Transfer"
+  "businessServiceMoneyTransfer": "Money Transfer",
+  "twoFactorValidationEnterPassword": "Please enter your password",
+  "twoFactorValidationEnterOldPasscode": "Please enter your old passcode",
+  "twoFactorValidationEnterNewPasscode": "Please enter a new passcode",
+  "twoFactorValidationEnterConfirmPasscode": "Please confirm your passcode",
+  "twoFactorValidationEnterPasscode": "Please enter a passcode",
+  "twoFactorValidationPasscodesDoNotMatch": "Passcode and confirm passcode do not match",
+  "twoFactorValidationNewPasscodesDoNotMatch": "New passcode and confirm passcode do not match",
+  "webViewLinkCannotOpen": "This link cannot be opened in the app."
 }

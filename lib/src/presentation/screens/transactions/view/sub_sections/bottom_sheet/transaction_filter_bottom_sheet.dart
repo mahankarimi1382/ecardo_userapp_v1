@@ -145,7 +145,18 @@ class _TransactionFilterBottomSheetState
                                         ),
                                       ),
                                       child: Text(
-                                        status,
+                                        () {
+                                          switch (status.toLowerCase()) {
+                                            case 'success':
+                                              return localization.transactionStatusSuccess;
+                                            case 'pending':
+                                              return localization.transactionStatusPending;
+                                            case 'failed':
+                                              return localization.transactionStatusFailed;
+                                            default:
+                                              return status;
+                                          }
+                                        }(),
                                         style: TextStyle(
                                           letterSpacing: 0,
                                           fontSize: 14,

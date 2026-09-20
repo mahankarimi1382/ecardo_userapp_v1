@@ -273,7 +273,7 @@ class TwoFactorAuthenticationController extends GetxController {
   bool validateDisablePasscodeStep() {
     // Validate Password
     if (passwordController.text.isEmpty) {
-      ToastHelper().showErrorToast("Please enter a password");
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterPassword);
       return false;
     }
 
@@ -284,26 +284,26 @@ class TwoFactorAuthenticationController extends GetxController {
   bool validateChangePasscodeStep() {
     // Validate Old Passcode
     if (oldPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast("Please enter a old passcode");
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterOldPasscode);
       return false;
     }
 
     // Validate New Passcode
     if (newPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast("Please enter a new passcode");
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterNewPasscode);
       return false;
     }
 
     // Validate Confirm Passcode
     if (changedConfirmPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast("Please enter a confirm passcode");
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterConfirmPasscode);
       return false;
     }
 
     // Validate New Passcode and Confirm Passcode
     if (newPasscodeController.text != changedConfirmPasscodeController.text) {
       ToastHelper().showErrorToast(
-        "New Passcode and confirm passcode do not match",
+        AppLocalizations.of(Get.context!)!.twoFactorValidationNewPasscodesDoNotMatch,
       );
       return false;
     }
@@ -315,20 +315,20 @@ class TwoFactorAuthenticationController extends GetxController {
   bool validateAddPasscodeStep() {
     // Validate Passcode
     if (passcodeController.text.isEmpty) {
-      ToastHelper().showErrorToast("Please enter a passcode");
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterPasscode);
       return false;
     }
 
     // Validate Confirm Passcode
     if (confirmPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast("Please enter a confirm passcode");
+      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterConfirmPasscode);
       return false;
     }
 
     // Validate Passcode and Confirm Passcode
     if (passcodeController.text != confirmPasscodeController.text) {
       ToastHelper().showErrorToast(
-        "Passcode and confirm passcode do not match",
+        AppLocalizations.of(Get.context!)!.twoFactorValidationPasscodesDoNotMatch,
       );
       return false;
     }

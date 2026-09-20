@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -72,7 +73,7 @@ class _WebViewDynamicState extends State<WebViewDynamic> {
               const Center(
                 child: Padding(
                   padding: EdgeInsets.all(24),
-                  child: Text('This link cannot be opened in the app.'),
+                  child: Text(AppLocalizations.of(context)!.webViewLinkCannotOpen),
                 ),
               )
             else
