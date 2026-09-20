@@ -8048,7 +8048,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get p2pStatusInactive => 'Devre Dışı';
 
   @override
-  String get bottomNavMyCards => 'Kartlarım';
+  String get bottomNavMyCards => 'Kartlar';
 
   @override
   String get myCardsNotEnabled => 'Kartlarım hesabınızda henüz etkin değil.';
@@ -8128,7 +8128,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get travelServiceInsurance => 'Sigorta';
 
   @override
-  String get businessServiceP2pEscrow => 'P2P Escrow';
+  String get businessServiceP2pEscrow => 'Escrow Hizmetleri';
 
   @override
   String get businessServiceGuarantee => 'Hizmet Garantisi';
@@ -8141,4 +8141,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get businessServiceStocks => 'Hisse ve Borsa';
+
+  @override
+  String get countryIran => 'İran';
+
+  @override
+  String get travelServiceLocal => 'Yerel Hizmetler';
+
+  @override
+  String get travelServiceCarRental => 'Araç Kiralama';
+
+  @override
+  String get travelServiceFood => 'Online Yemek Siparişi';
+
+  @override
+  String get travelServiceSupermarket => 'Online Süpermarket';
+
+  @override
+  String get travelServiceTrain => 'Tren';
+
+  @override
+  String get businessServiceMoneyTransfer => 'Para Transferi';
 }

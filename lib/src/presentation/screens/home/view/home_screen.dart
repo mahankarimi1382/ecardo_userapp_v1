@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/business_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/home_skeleton_loader.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/travel_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/other_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/recent_transactions_section.dart';
@@ -91,8 +92,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(height: 20),
                               OtherServicesSection(),
                               SizedBox(height: 20),
+                              // v1.0.46 (TRAVEL SERVICES): destination
+                              // chips + the traveler services; built
+                              // modules open their real screens.
+                              TravelServicesSection(),
+                              SizedBox(height: 20),
                               // v1.0.45 (BUSINESS SERVICES): remittance,
-                              // P2P escrow + upcoming commercial modules.
+                              // money transfer, escrow + upcoming
+                              // commercial modules.
                               BusinessServicesSection(),
                               SizedBox(height: 30),
                               RecentTransactionsSection(),

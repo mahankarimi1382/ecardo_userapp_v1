@@ -2627,7 +2627,7 @@
   "p2pStatusDisputed": "争议中",
   "p2pStatusActive": "有效",
   "p2pStatusInactive": "无效",
-  "bottomNavMyCards": "我的卡片",
+  "bottomNavMyCards": "卡片",
   "myCardsNotEnabled": "您的账户尚未开通“我的卡片”。",
   "financialServicesTitle": "金融服务",
   "travelServicesTitle": "旅行服务",
@@ -2653,9 +2653,16 @@
   "travelServiceMirPay": "MirPay",
   "travelServiceSimTopUp": "SIM 充值",
   "travelServiceInsurance": "保险",
-  "businessServiceP2pEscrow": "P2P 担保",
+  "businessServiceP2pEscrow": "担保服务",
   "businessServiceGuarantee": "服务保障",
   "businessServiceBankLoan": "银行贷款",
   "businessServiceLicense": "许可证",
-  "businessServiceStocks": "股票与证券"
+  "businessServiceStocks": "股票与证券",
+  "countryIran": "伊朗",
+  "travelServiceLocal": "本地服务",
+  "travelServiceCarRental": "租车",
+  "travelServiceFood": "在线订餐",
+  "travelServiceSupermarket": "在线超市",
+  "travelServiceTrain": "火车",
+  "businessServiceMoneyTransfer": "转账"
 }

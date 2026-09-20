@@ -39,6 +39,12 @@ class ServiceTile {
   final bool available;
   final Map<String, dynamic> Function()? argumentsBuilder;
 
+  /// v1.0.46: direct widget navigation for modules whose entry screens are
+  /// not routed (travel search screens open via Get.to inside the module).
+  /// When set, the tap pushes this widget instead of [route].
+  final Widget Function()? pageBuilder;
+  final VoidCallback? beforeNavigate;
+
   const ServiceTile({
     required this.title,
     this.icon,
@@ -47,6 +53,8 @@ class ServiceTile {
     this.feature,
     this.available = true,
     this.argumentsBuilder,
+    this.pageBuilder,
+    this.beforeNavigate,
   });
 }
 
@@ -85,10 +93,17 @@ void onTileTap(BuildContext context, ResolvedTile resolved) {
   final localization = AppLocalizations.of(context)!;
   switch (resolved.state) {
     case TileState.available:
-      if (resolved.tile.route.isNotEmpty) {
+      final tile = resolved.tile;
+      if (tile.pageBuilder != null) {
+        tile.beforeNavigate?.call();
+        Get.to(
+          tile.pageBuilder!(),
+          arguments: tile.argumentsBuilder?.call(),
+        );
+      } else if (tile.route.isNotEmpty) {
         Get.toNamed(
-          resolved.tile.route,
-          arguments: resolved.tile.argumentsBuilder?.call(),
+          tile.route,
+          arguments: tile.argumentsBuilder?.call(),
         );
       }
       return;

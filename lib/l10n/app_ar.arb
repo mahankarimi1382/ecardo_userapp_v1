@@ -2628,7 +2628,7 @@
   "p2pStatusDisputed": "متنازع عليه",
   "p2pStatusActive": "نشط",
   "p2pStatusInactive": "غير نشط",
-  "bottomNavMyCards": "بطاقاتي",
+  "bottomNavMyCards": "البطاقات",
   "myCardsNotEnabled": "بطاقاتي غير مفعّلة على حسابك بعد.",
   "financialServicesTitle": "الخدمات المالية",
   "travelServicesTitle": "خدمات السفر",
@@ -2654,9 +2654,16 @@
   "travelServiceMirPay": "مير باي",
   "travelServiceSimTopUp": "شحن شرائح الاتصال",
   "travelServiceInsurance": "التأمين",
-  "businessServiceP2pEscrow": "ضمان P2P",
+  "businessServiceP2pEscrow": "خدمات الضمان",
   "businessServiceGuarantee": "ضمان الخدمات",
   "businessServiceBankLoan": "قرض بنكي",
   "businessServiceLicense": "رخصة",
-  "businessServiceStocks": "أسهم وبورصة"
+  "businessServiceStocks": "أسهم وبورصة",
+  "countryIran": "إيران",
+  "travelServiceLocal": "خدمات محلية",
+  "travelServiceCarRental": "تأجير سيارات",
+  "travelServiceFood": "طلب طعام أونلاين",
+  "travelServiceSupermarket": "سوبرماركت أونلاين",
+  "travelServiceTrain": "قطار",
+  "businessServiceMoneyTransfer": "تحويل أموال"
 }

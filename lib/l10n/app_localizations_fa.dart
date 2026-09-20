@@ -8056,7 +8056,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get p2pStatusInactive => 'غیرفعال';
 
   @override
-  String get bottomNavMyCards => 'کارت‌های من';
+  String get bottomNavMyCards => 'کارت‌ها';
 
   @override
   String get myCardsNotEnabled => 'کارت‌های من هنوز روی حساب شما فعال نیست.';
@@ -8136,7 +8136,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get travelServiceInsurance => 'بیمه';
 
   @override
-  String get businessServiceP2pEscrow => 'اسکرو P2P';
+  String get businessServiceP2pEscrow => 'خدمات اسکرو';
 
   @override
   String get businessServiceGuarantee => 'ضمانت خدمات';
@@ -8149,4 +8149,25 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get businessServiceStocks => 'سهام و بورس';
+
+  @override
+  String get countryIran => 'ایران';
+
+  @override
+  String get travelServiceLocal => 'خدمات لوکال';
+
+  @override
+  String get travelServiceCarRental => 'رنت ماشین';
+
+  @override
+  String get travelServiceFood => 'سفارش آنلاین غذا';
+
+  @override
+  String get travelServiceSupermarket => 'سوپرمارکت آنلاین';
+
+  @override
+  String get travelServiceTrain => 'قطار';
+
+  @override
+  String get businessServiceMoneyTransfer => 'انتقال پول';
 }

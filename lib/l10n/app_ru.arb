@@ -2627,7 +2627,7 @@
   "p2pStatusDisputed": "Спор",
   "p2pStatusActive": "Активно",
   "p2pStatusInactive": "Неактивно",
-  "bottomNavMyCards": "Мои карты",
+  "bottomNavMyCards": "Карты",
   "myCardsNotEnabled": "Мои карты пока не включены для вашего аккаунта.",
   "financialServicesTitle": "Финансовые услуги",
   "travelServicesTitle": "Туристические услуги",
@@ -2653,9 +2653,16 @@
   "travelServiceMirPay": "MirPay",
   "travelServiceSimTopUp": "Пополнение SIM",
   "travelServiceInsurance": "Страхование",
-  "businessServiceP2pEscrow": "P2P-эскроу",
+  "businessServiceP2pEscrow": "Эскроу-услуги",
   "businessServiceGuarantee": "Гарантия услуг",
   "businessServiceBankLoan": "Банковский кредит",
   "businessServiceLicense": "Лицензия",
-  "businessServiceStocks": "Акции и биржа"
+  "businessServiceStocks": "Акции и биржа",
+  "countryIran": "Иран",
+  "travelServiceLocal": "Местные услуги",
+  "travelServiceCarRental": "Аренда авто",
+  "travelServiceFood": "Заказ еды онлайн",
+  "travelServiceSupermarket": "Онлайн-супермаркет",
+  "travelServiceTrain": "Поезд",
+  "businessServiceMoneyTransfer": "Денежный перевод"
 }

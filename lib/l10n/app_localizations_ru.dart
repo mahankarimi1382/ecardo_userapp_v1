@@ -8055,7 +8055,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get p2pStatusInactive => 'Неактивно';
 
   @override
-  String get bottomNavMyCards => 'Мои карты';
+  String get bottomNavMyCards => 'Карты';
 
   @override
   String get myCardsNotEnabled =>
@@ -8136,7 +8136,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelServiceInsurance => 'Страхование';
 
   @override
-  String get businessServiceP2pEscrow => 'P2P-эскроу';
+  String get businessServiceP2pEscrow => 'Эскроу-услуги';
 
   @override
   String get businessServiceGuarantee => 'Гарантия услуг';
@@ -8149,4 +8149,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get businessServiceStocks => 'Акции и биржа';
+
+  @override
+  String get countryIran => 'Иран';
+
+  @override
+  String get travelServiceLocal => 'Местные услуги';
+
+  @override
+  String get travelServiceCarRental => 'Аренда авто';
+
+  @override
+  String get travelServiceFood => 'Заказ еды онлайн';
+
+  @override
+  String get travelServiceSupermarket => 'Онлайн-супермаркет';
+
+  @override
+  String get travelServiceTrain => 'Поезд';
+
+  @override
+  String get businessServiceMoneyTransfer => 'Денежный перевод';
 }

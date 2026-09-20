@@ -7834,7 +7834,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get p2pStatusInactive => '无效';
 
   @override
-  String get bottomNavMyCards => '我的卡片';
+  String get bottomNavMyCards => '卡片';
 
   @override
   String get myCardsNotEnabled => '您的账户尚未开通“我的卡片”。';
@@ -7912,7 +7912,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelServiceInsurance => '保险';
 
   @override
-  String get businessServiceP2pEscrow => 'P2P 担保';
+  String get businessServiceP2pEscrow => '担保服务';
 
   @override
   String get businessServiceGuarantee => '服务保障';
@@ -7925,4 +7925,25 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get businessServiceStocks => '股票与证券';
+
+  @override
+  String get countryIran => '伊朗';
+
+  @override
+  String get travelServiceLocal => '本地服务';
+
+  @override
+  String get travelServiceCarRental => '租车';
+
+  @override
+  String get travelServiceFood => '在线订餐';
+
+  @override
+  String get travelServiceSupermarket => '在线超市';
+
+  @override
+  String get travelServiceTrain => '火车';
+
+  @override
+  String get businessServiceMoneyTransfer => '转账';
 }

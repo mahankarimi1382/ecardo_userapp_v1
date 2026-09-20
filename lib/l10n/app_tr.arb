@@ -2627,7 +2627,7 @@
   "p2pStatusDisputed": "İtirazlı",
   "p2pStatusActive": "Aktif",
   "p2pStatusInactive": "Devre Dışı",
-  "bottomNavMyCards": "Kartlarım",
+  "bottomNavMyCards": "Kartlar",
   "myCardsNotEnabled": "Kartlarım hesabınızda henüz etkin değil.",
   "financialServicesTitle": "Finansal Hizmetler",
   "travelServicesTitle": "Seyahat Hizmetleri",
@@ -2653,9 +2653,16 @@
   "travelServiceMirPay": "MirPay",
   "travelServiceSimTopUp": "SIM Yükleme",
   "travelServiceInsurance": "Sigorta",
-  "businessServiceP2pEscrow": "P2P Escrow",
+  "businessServiceP2pEscrow": "Escrow Hizmetleri",
   "businessServiceGuarantee": "Hizmet Garantisi",
   "businessServiceBankLoan": "Banka Kredisi",
   "businessServiceLicense": "Lisans",
-  "businessServiceStocks": "Hisse ve Borsa"
+  "businessServiceStocks": "Hisse ve Borsa",
+  "countryIran": "İran",
+  "travelServiceLocal": "Yerel Hizmetler",
+  "travelServiceCarRental": "Araç Kiralama",
+  "travelServiceFood": "Online Yemek Siparişi",
+  "travelServiceSupermarket": "Online Süpermarket",
+  "travelServiceTrain": "Tren",
+  "businessServiceMoneyTransfer": "Para Transferi"
 }

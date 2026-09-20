@@ -14,7 +14,12 @@ import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart';
 
 class VirtualCardScreen extends StatefulWidget {
-  const VirtualCardScreen({super.key});
+  /// v1.0.46: when embedded as a bottom-nav tab there is no pushed route to
+  /// pop — the app-bar back arrow then jumps to the home tab instead of the
+  /// dead `Get.back()` (the reported broken back button).
+  final bool embeddedInTabs;
+
+  const VirtualCardScreen({super.key, this.embeddedInTabs = false});
 
   @override
   State<VirtualCardScreen> createState() => _VirtualCardScreenState();
@@ -40,7 +45,10 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
         () => Column(
           children: [
             SizedBox(height: 16.h),
-            CommonAppBar(title: localization.virtualCardScreenAppBarTitle),
+            CommonAppBar(
+              title: localization.virtualCardScreenAppBarTitle,
+              selectedIndex: widget.embeddedInTabs ? 0 : null,
+            ),
             Expanded(
               child: controller.isLoading.value
                   ? const CommonLoading()

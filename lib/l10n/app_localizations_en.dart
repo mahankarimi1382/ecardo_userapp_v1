@@ -8046,7 +8046,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get p2pStatusInactive => 'Inactive';
 
   @override
-  String get bottomNavMyCards => 'My Cards';
+  String get bottomNavMyCards => 'Cards';
 
   @override
   String get myCardsNotEnabled =>
@@ -8127,7 +8127,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get travelServiceInsurance => 'Insurance';
 
   @override
-  String get businessServiceP2pEscrow => 'P2P Escrow';
+  String get businessServiceP2pEscrow => 'Escrow Services';
 
   @override
   String get businessServiceGuarantee => 'Service Guarantee';
@@ -8140,4 +8140,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get businessServiceStocks => 'Stocks & Exchange';
+
+  @override
+  String get countryIran => 'Iran';
+
+  @override
+  String get travelServiceLocal => 'Local Services';
+
+  @override
+  String get travelServiceCarRental => 'Car Rental';
+
+  @override
+  String get travelServiceFood => 'Online Food Order';
+
+  @override
+  String get travelServiceSupermarket => 'Online Supermarket';
+
+  @override
+  String get travelServiceTrain => 'Train';
+
+  @override
+  String get businessServiceMoneyTransfer => 'Money Transfer';
 }

@@ -38,6 +38,12 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
         feature: 'remittance',
       ),
       ServiceTile(
+        title: localization.businessServiceMoneyTransfer,
+        icon: PngAssets.transferService,
+        route: BaseRoute.transfer,
+        feature: 'transfer',
+      ),
+      ServiceTile(
         title: localization.businessServiceP2pEscrow,
         icon: PngAssets.p2pTradingService,
         route: BaseRoute.p2pTrading,

@@ -2628,7 +2628,7 @@
   "p2pStatusDisputed": "مورد اختلاف",
   "p2pStatusActive": "فعال",
   "p2pStatusInactive": "غیرفعال",
-  "bottomNavMyCards": "کارت‌های من",
+  "bottomNavMyCards": "کارت‌ها",
   "myCardsNotEnabled": "کارت‌های من هنوز روی حساب شما فعال نیست.",
   "financialServicesTitle": "خدمات مالی",
   "travelServicesTitle": "خدمات سفر",
@@ -2654,9 +2654,16 @@
   "travelServiceMirPay": "میرپی",
   "travelServiceSimTopUp": "شارژ سیم‌کارت",
   "travelServiceInsurance": "بیمه",
-  "businessServiceP2pEscrow": "اسکرو P2P",
+  "businessServiceP2pEscrow": "خدمات اسکرو",
   "businessServiceGuarantee": "ضمانت خدمات",
   "businessServiceBankLoan": "وام بانکی",
   "businessServiceLicense": "لایسنس",
-  "businessServiceStocks": "سهام و بورس"
+  "businessServiceStocks": "سهام و بورس",
+  "countryIran": "ایران",
+  "travelServiceLocal": "خدمات لوکال",
+  "travelServiceCarRental": "رنت ماشین",
+  "travelServiceFood": "سفارش آنلاین غذا",
+  "travelServiceSupermarket": "سوپرمارکت آنلاین",
+  "travelServiceTrain": "قطار",
+  "businessServiceMoneyTransfer": "انتقال پول"
 }

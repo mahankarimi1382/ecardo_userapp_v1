@@ -71,7 +71,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       final pages = [
         HomeScreen(signUpBonus: signUpBonus),
         TransferScreen(),
-        const VirtualCardScreen(),
+        const VirtualCardScreen(embeddedInTabs: true),
         SettingsScreen(),
       ];
 

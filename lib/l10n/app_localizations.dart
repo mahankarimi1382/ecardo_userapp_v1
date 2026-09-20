@@ -15109,7 +15109,7 @@ abstract class AppLocalizations {
   /// No description provided for @bottomNavMyCards.
   ///
   /// In en, this message translates to:
-  /// **'My Cards'**
+  /// **'Cards'**
   String get bottomNavMyCards;
 
   /// No description provided for @myCardsNotEnabled.
@@ -15265,7 +15265,7 @@ abstract class AppLocalizations {
   /// No description provided for @businessServiceP2pEscrow.
   ///
   /// In en, this message translates to:
-  /// **'P2P Escrow'**
+  /// **'Escrow Services'**
   String get businessServiceP2pEscrow;
 
   /// No description provided for @businessServiceGuarantee.
@@ -15291,6 +15291,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stocks & Exchange'**
   String get businessServiceStocks;
+
+  /// No description provided for @countryIran.
+  ///
+  /// In en, this message translates to:
+  /// **'Iran'**
+  String get countryIran;
+
+  /// No description provided for @travelServiceLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Services'**
+  String get travelServiceLocal;
+
+  /// No description provided for @travelServiceCarRental.
+  ///
+  /// In en, this message translates to:
+  /// **'Car Rental'**
+  String get travelServiceCarRental;
+
+  /// No description provided for @travelServiceFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Food Order'**
+  String get travelServiceFood;
+
+  /// No description provided for @travelServiceSupermarket.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Supermarket'**
+  String get travelServiceSupermarket;
+
+  /// No description provided for @travelServiceTrain.
+  ///
+  /// In en, this message translates to:
+  /// **'Train'**
+  String get travelServiceTrain;
+
+  /// No description provided for @businessServiceMoneyTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Money Transfer'**
+  String get businessServiceMoneyTransfer;
 }
 
 class _AppLocalizationsDelegate

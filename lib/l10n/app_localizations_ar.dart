@@ -8000,7 +8000,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get p2pStatusInactive => 'غير نشط';
 
   @override
-  String get bottomNavMyCards => 'بطاقاتي';
+  String get bottomNavMyCards => 'البطاقات';
 
   @override
   String get myCardsNotEnabled => 'بطاقاتي غير مفعّلة على حسابك بعد.';
@@ -8079,7 +8079,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get travelServiceInsurance => 'التأمين';
 
   @override
-  String get businessServiceP2pEscrow => 'ضمان P2P';
+  String get businessServiceP2pEscrow => 'خدمات الضمان';
 
   @override
   String get businessServiceGuarantee => 'ضمان الخدمات';
@@ -8092,4 +8092,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get businessServiceStocks => 'أسهم وبورصة';
+
+  @override
+  String get countryIran => 'إيران';
+
+  @override
+  String get travelServiceLocal => 'خدمات محلية';
+
+  @override
+  String get travelServiceCarRental => 'تأجير سيارات';
+
+  @override
+  String get travelServiceFood => 'طلب طعام أونلاين';
+
+  @override
+  String get travelServiceSupermarket => 'سوبرماركت أونلاين';
+
+  @override
+  String get travelServiceTrain => 'قطار';
+
+  @override
+  String get businessServiceMoneyTransfer => 'تحويل أموال';
 }
