@@ -146,7 +146,7 @@ class _CashOutTransactionFilterBottomSheetState
                                         ),
                                       ),
                                       child: Text(
-                                        StatusLabelHelper.localize(localization, status),
+                                        StatusLabelHelper.localize(localizations, status),
                                         style: TextStyle(
                                           letterSpacing: 0,
                                           fontSize: 14,
