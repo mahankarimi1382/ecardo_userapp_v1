@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -83,9 +84,10 @@ class _RequestMoneyHistoryState extends State<RequestMoneyHistory>
 
   String _getStatus(Requests request) {
     final status = request.status ?? '';
-    return status.isNotEmpty
-        ? status[0].toUpperCase() + status.substring(1)
-        : "";
+    if (status.isEmpty) return '';
+    final loc = AppLocalizations.of(Get.context!);
+    if (loc == null) return status;
+    return StatusLabelHelper.localize(loc, status);
   }
 
   Color getStatusColor(String? status) {
