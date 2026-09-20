@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
@@ -145,7 +146,7 @@ class _TransferTransactionFilterBottomSheetState
                                         ),
                                       ),
                                       child: Text(
-                                        status,
+                                        StatusLabelHelper.localize(localization, status),
                                         style: TextStyle(
                                           letterSpacing: 0,
                                           fontSize: 14,

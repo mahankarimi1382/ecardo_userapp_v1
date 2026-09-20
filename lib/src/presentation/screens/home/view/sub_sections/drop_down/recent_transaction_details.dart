@@ -2,11 +2,13 @@ import 'dart:io' show File;
 import 'dart:ui' as ui show ImageByteFormat;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
@@ -295,7 +297,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
         color: statusColor.withValues(alpha: 0.05),
       ),
       child: Text(
-        status ?? "",
+        StatusLabelHelper.localize(AppLocalizations.of(Get.context!)!, status ?? ""),
         style: TextStyle(
           fontWeight: FontWeight.w900,
           letterSpacing: 0,

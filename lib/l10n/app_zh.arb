@@ -2664,5 +2664,13 @@
   "travelServiceFood": "在线订餐",
   "travelServiceSupermarket": "在线超市",
   "travelServiceTrain": "火车",
-  "businessServiceMoneyTransfer": "转账"
+  "businessServiceMoneyTransfer": "转账",
+  "twoFactorValidationEnterPassword": "请输入密码",
+  "twoFactorValidationEnterOldPasscode": "请输入旧通行码",
+  "twoFactorValidationEnterNewPasscode": "请输入新通行码",
+  "twoFactorValidationEnterConfirmPasscode": "请确认通行码",
+  "twoFactorValidationEnterPasscode": "请输入通行码",
+  "twoFactorValidationPasscodesDoNotMatch": "通行码与确认不一致",
+  "twoFactorValidationNewPasscodesDoNotMatch": "新通行码与确认不一致",
+  "webViewLinkCannotOpen": "无法在应用中打开此链接。"
 }

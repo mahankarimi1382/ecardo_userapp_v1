@@ -2664,5 +2664,13 @@
   "travelServiceFood": "Online Yemek Siparişi",
   "travelServiceSupermarket": "Online Süpermarket",
   "travelServiceTrain": "Tren",
-  "businessServiceMoneyTransfer": "Para Transferi"
+  "businessServiceMoneyTransfer": "Para Transferi",
+  "twoFactorValidationEnterPassword": "Lütfen şifrenizi girin",
+  "twoFactorValidationEnterOldPasscode": "Lütfen eski parolanızı girin",
+  "twoFactorValidationEnterNewPasscode": "Lütfen yeni bir parola girin",
+  "twoFactorValidationEnterConfirmPasscode": "Lütfen parolanızı onaylayın",
+  "twoFactorValidationEnterPasscode": "Lütfen bir parola girin",
+  "twoFactorValidationPasscodesDoNotMatch": "Parola ve onayı eşleşmiyor",
+  "twoFactorValidationNewPasscodesDoNotMatch": "Yeni parola ve onayı eşleşmiyor",
+  "webViewLinkCannotOpen": "Bu bağlantı uygulamada açılamıyor."
 }

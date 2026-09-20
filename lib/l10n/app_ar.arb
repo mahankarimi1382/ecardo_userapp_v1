@@ -2665,5 +2665,13 @@
   "travelServiceFood": "طلب طعام أونلاين",
   "travelServiceSupermarket": "سوبرماركت أونلاين",
   "travelServiceTrain": "قطار",
-  "businessServiceMoneyTransfer": "تحويل أموال"
+  "businessServiceMoneyTransfer": "تحويل أموال",
+  "twoFactorValidationEnterPassword": "يرجى إدخال كلمة المرور",
+  "twoFactorValidationEnterOldPasscode": "يرجى إدخال رمز المرور القديم",
+  "twoFactorValidationEnterNewPasscode": "يرجى إدخال رمز مرور جديد",
+  "twoFactorValidationEnterConfirmPasscode": "يرجى تأكيد رمز المرور",
+  "twoFactorValidationEnterPasscode": "يرجى إدخال رمز المرور",
+  "twoFactorValidationPasscodesDoNotMatch": "رمز المرور وتأكيده غير متطابقين",
+  "twoFactorValidationNewPasscodesDoNotMatch": "رمز المرور الجديد وتأكيده غير متطابقين",
+  "webViewLinkCannotOpen": "لا يمكن فتح هذا الرابط في التطبيق."
 }
