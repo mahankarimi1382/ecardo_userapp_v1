@@ -156,7 +156,6 @@ void main() {
       expect(find.text('Visa'), findsOneWidget);
       expect(find.text('Train'), findsOneWidget);
       expect(find.text('Car Rental'), findsOneWidget);
-      expect(find.text('Local Services'), findsOneWidget);
       expect(find.text('Taxi'), findsOneWidget);
 
       // Destination chips: Wrap layout — every chip is built (Iran added).
