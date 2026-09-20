@@ -12,7 +12,6 @@ import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pai
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_swap_card.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/live_rate_badge.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
-import 'package:ecardo_user/src/presentation/screens/exchange/widgets/rate_alert_placeholder.dart';
 
 /// Step 0 — Amount entry. Renders the unified swap card with the amount
 /// input baked into the FROM side, the live rate badge below it, the fee
@@ -139,22 +138,10 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
             );
           }),
           const SizedBox(height: 16),
-          // Rate alert placeholder (inert — TODO backend)
-          Obx(() {
-            final fromCode = controller.fromWallet.value?.code;
-            final toCode = controller.toWallet.value?.code;
-            if (fromCode == null || toCode == null) {
-              return const SizedBox();
-            }
-            return Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-              child: RateAlertPlaceholder(
-                fromCode: fromCode,
-                toCode: toCode,
-                currentRate: controller.currentRate.value,
-              ),
-            );
-          }),
+          // U-01 (1.0.47): Rate Alert UI gated until backend endpoint ships.
+          // Widget kept at exchange/widgets/rate_alert_placeholder.dart for later wire-up.
+          // Previous inert placeholder confused users (button with no effect).
+          const SizedBox.shrink(),
           const SizedBox(height: 16),
           // Quick percent chips
           Obx(() {
