@@ -229,78 +229,7 @@ class MyWalletSection extends StatelessWidget {
     BuildContext context, {
     required bool isDefaultWallet,
     required String walletId,
-  }
-
-  /// Equivalent in site currency when the API provides [Wallets.conversionRate].
-  String? _liveConversionLabel(Wallets wallet) {
-    final rateRaw = wallet.conversionRate;
-    final balRaw = wallet.balance;
-    if (rateRaw == null || rateRaw.isEmpty || balRaw == null || balRaw.isEmpty) {
-      return null;
-    }
-    final rate = double.tryParse(rateRaw.replaceAll(',', ''));
-    final bal = double.tryParse(balRaw.replaceAll(',', ''));
-    if (rate == null || bal == null || rate <= 0) return null;
-
-    final site = Get.find<SettingsService>().getSetting('site_currency') ?? '';
-    final code = (wallet.code ?? '').toUpperCase();
-    if (site.isEmpty || site.toUpperCase() == code) return null;
-
-    final eq = bal * rate;
-    final decimals = int.tryParse(
-          Get.find<SettingsService>().getSetting('site_currency_decimals') ??
-              '2',
-        ) ??
-        2;
-    final formatted = eq.toStringAsFixed(decimals.clamp(0, 8));
-    return '≈ $formatted $site';
-  }
-
-  Widget _buildLiveRateChip({
-    required String label,
-    required bool isDefaultWallet,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.black.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.white.withValues(alpha: 0.14),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(
-              color: const Color(0xFF5CFFB0),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF5CFFB0).withValues(alpha: 0.55),
-                  blurRadius: 6,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              letterSpacing: 0.2,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: AppColors.white.withValues(alpha: 0.88),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-) {
     final localization = AppLocalizations.of(context)!;
 
     return Row(
@@ -371,4 +300,74 @@ class MyWalletSection extends StatelessWidget {
       ],
     );
   }
+
+  String? _liveConversionLabel(Wallets wallet) {
+    final rateRaw = wallet.conversionRate;
+    final balRaw = wallet.balance;
+    if (rateRaw == null || rateRaw.isEmpty || balRaw == null || balRaw.isEmpty) {
+      return null;
+    }
+    final rate = double.tryParse(rateRaw.replaceAll(',', ''));
+    final bal = double.tryParse(balRaw.replaceAll(',', ''));
+    if (rate == null || bal == null || rate <= 0) return null;
+
+    final site = Get.find<SettingsService>().getSetting('site_currency') ?? '';
+    final code = (wallet.code ?? '').toUpperCase();
+    if (site.isEmpty || site.toUpperCase() == code) return null;
+
+    final eq = bal * rate;
+    final decimals = int.tryParse(
+          Get.find<SettingsService>().getSetting('site_currency_decimals') ??
+              '2',
+        ) ??
+        2;
+    final formatted = eq.toStringAsFixed(decimals.clamp(0, 8));
+    return '≈ $formatted $site';
+  }
+
+  Widget _buildLiveRateChip({
+    required String label,
+    required bool isDefaultWallet,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.black.withValues(alpha: 0.18),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.white.withValues(alpha: 0.14),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: const Color(0xFF5CFFB0),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF5CFFB0).withValues(alpha: 0.55),
+                  blurRadius: 6,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              letterSpacing: 0.2,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: AppColors.white.withValues(alpha: 0.88),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
