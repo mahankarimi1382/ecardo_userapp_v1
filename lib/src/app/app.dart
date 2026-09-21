@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/common/services/session_timeout_service.dart';
+import 'package:ecardo_user/src/common/services/connectivity_watch_service.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/not_found/view/not_found_screen.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
@@ -74,7 +77,59 @@ class _EcardoUserState extends State<EcardoUser> {
             Locale('zh'),
           ],
           builder: (context, widget) {
-            return widget ?? const SizedBox.shrink();
+            Widget body = widget ?? const SizedBox.shrink();
+            // Touch tracking for idle session timeout.
+            body = Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerDown: (_) {
+                if (Get.isRegistered<SessionTimeoutService>()) {
+                  Get.find<SessionTimeoutService>().touch();
+                }
+              },
+              child: body,
+            );
+            // VPN soft guidance banner (does not block navigation).
+            if (Get.isRegistered<ConnectivityWatchService>()) {
+              body = Obx(() {
+                final vpn = Get.find<ConnectivityWatchService>().isVpn.value;
+                if (!vpn) return body;
+                final loc = AppLocalizations.of(context);
+                return Column(
+                  children: [
+                    Material(
+                      color: const Color(0xFFFFF3CD),
+                      child: SafeArea(
+                        bottom: false,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.vpn_lock_rounded, size: 18),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  loc?.vpnHintBanner ??
+                                      'VPN detected — turn it off for a more stable experience',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(child: body),
+                  ],
+                );
+              });
+            }
+            return body;
           },
         );
       },

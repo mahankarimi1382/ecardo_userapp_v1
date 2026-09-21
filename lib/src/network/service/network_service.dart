@@ -14,6 +14,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -226,14 +227,20 @@ class NetworkService extends getx.GetxService {
             // refresh ناموفق — logout + fail every queued request explicitly
             _log("Token refresh failed — logging out.");
             await _tokenService.clearToken();
+            try {
+              await getx.Get.find<SettingsService>().wipeSession();
+            } catch (_) {}
             final queued = List<void Function(String?)>.of(_pendingRequests);
             _pendingRequests.clear();
             for (final callback in queued) {
               callback(null); // null => handler.next(error) for that request
             }
 
-            // هدایت به صفحه‌ی login
             WidgetsBinding.instance.addPostFrameCallback((_) {
+              ToastHelper().showErrorToast(
+                localization?.unauthorizedDialogTitle ??
+                    'Your session has expired. Please sign in again.',
+              );
               if (getx.Get.currentRoute != BaseRoute.signIn) {
                 getx.Get.offAllNamed(BaseRoute.signIn);
               }
@@ -932,7 +939,7 @@ class NetworkService extends getx.GetxService {
   String _errorMessage(Map<String, dynamic> response) {
     for (final key in ['message', 'error', 'detail']) {
       final value = response[key]?.toString().trim() ?? '';
-      if (value.isNotEmpty) return value;
+      if (value.isNotEmpty) return _friendlyServerMessage(value);
     }
 
     final errors = response['errors'];
@@ -940,10 +947,10 @@ class NetworkService extends getx.GetxService {
       for (final value in errors.values) {
         if (value is List && value.isNotEmpty) {
           final message = value.first?.toString().trim() ?? '';
-          if (message.isNotEmpty) return message;
+          if (message.isNotEmpty) return _friendlyServerMessage(message);
         }
         final message = value?.toString().trim() ?? '';
-        if (message.isNotEmpty) return message;
+        if (message.isNotEmpty) return _friendlyServerMessage(message);
       }
     } else if (errors is List && errors.isNotEmpty) {
       final message = errors.first?.toString().trim() ?? '';

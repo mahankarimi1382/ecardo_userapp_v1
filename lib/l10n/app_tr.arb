@@ -2674,5 +2674,10 @@
   "twoFactorValidationEnterPasscode": "Lütfen bir parola girin",
   "twoFactorValidationPasscodesDoNotMatch": "Parola ve onayı eşleşmiyor",
   "twoFactorValidationNewPasscodesDoNotMatch": "Yeni parola ve onayı eşleşmiyor",
-  "webViewLinkCannotOpen": "Bu bağlantı uygulamada açılamıyor."
+  "webViewLinkCannotOpen": "Bu bağlantı uygulamada açılamıyor.",
+  "networkReconnected": "You are back online",
+  "vpnHintBanner": "VPN detected — turn it off for a more stable experience",
+  "signInWithTelegram": "Continue with Telegram",
+  "signInTelegramUnavailable": "Telegram sign-in will be available once enabled on the server.",
+  "sessionExpiredMessage": "Your session has expired. Please sign in again."
 }

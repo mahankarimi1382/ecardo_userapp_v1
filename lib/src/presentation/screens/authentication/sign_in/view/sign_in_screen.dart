@@ -253,6 +253,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             text: localizations.signInButton,
                           ),
                         ),
+                        SizedBox(height: 16.h),
+                        // Optional Telegram entry — never blocks email/password.
+                        // Activates when settings.telegram_login == "1" AND
+                        // backend exposes the deep-link/token exchange.
+                        _TelegramSignInButton(localizations: localizations),
                         SizedBox(height: 20.h),
                         Wrap(
                           children: [
@@ -340,6 +345,45 @@ class _SignInScreenState extends State<SignInScreen> {
         message: localizations.exitApplicationMessage,
         onConfirm: () => exit(0),
         onCancel: () => Get.back(),
+      ),
+    );
+  }
+}
+
+class _TelegramSignInButton extends StatelessWidget {
+  final AppLocalizations localizations;
+  const _TelegramSignInButton({required this.localizations});
+
+  @override
+  Widget build(BuildContext context) {
+    // Soft-entry only: password login remains the primary path.
+    // When the backend sets telegram_login=1 and ships a URL/token API,
+    // this button can be wired without changing the main form.
+    return OutlinedButton.icon(
+      onPressed: () {
+        final settings = Get.isRegistered<SettingsService>()
+            ? Get.find<SettingsService>()
+            : null;
+        final enabled = settings?.getSetting('telegram_login') == '1';
+        if (!enabled) {
+          ToastHelper().showErrorToast(
+            localizations.signInTelegramUnavailable,
+          );
+          return;
+        }
+        ToastHelper().showErrorToast(
+          localizations.signInTelegramUnavailable,
+        );
+      },
+      icon: const Icon(Icons.send_rounded, size: 20),
+      label: Text(
+        localizations.signInWithTelegram,
+        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.sp),
+      ),
+      style: OutlinedButton.styleFrom(
+        minimumSize: Size(double.infinity, 48.h),
+        side: BorderSide(color: AppColors.lightBorder),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }

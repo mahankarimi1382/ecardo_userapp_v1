@@ -2674,5 +2674,10 @@
   "twoFactorValidationEnterPasscode": "Введите код доступа",
   "twoFactorValidationPasscodesDoNotMatch": "Код доступа и подтверждение не совпадают",
   "twoFactorValidationNewPasscodesDoNotMatch": "Новый код и подтверждение не совпадают",
-  "webViewLinkCannotOpen": "Эту ссылку нельзя открыть в приложении."
+  "webViewLinkCannotOpen": "Эту ссылку нельзя открыть в приложении.",
+  "networkReconnected": "You are back online",
+  "vpnHintBanner": "VPN detected — turn it off for a more stable experience",
+  "signInWithTelegram": "Continue with Telegram",
+  "signInTelegramUnavailable": "Telegram sign-in will be available once enabled on the server.",
+  "sessionExpiredMessage": "Your session has expired. Please sign in again."
 }

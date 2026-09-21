@@ -2675,5 +2675,10 @@
   "twoFactorValidationEnterPasscode": "يرجى إدخال رمز المرور",
   "twoFactorValidationPasscodesDoNotMatch": "رمز المرور وتأكيده غير متطابقين",
   "twoFactorValidationNewPasscodesDoNotMatch": "رمز المرور الجديد وتأكيده غير متطابقين",
-  "webViewLinkCannotOpen": "لا يمكن فتح هذا الرابط في التطبيق."
+  "webViewLinkCannotOpen": "لا يمكن فتح هذا الرابط في التطبيق.",
+  "networkReconnected": "You are back online",
+  "vpnHintBanner": "VPN detected — turn it off for a more stable experience",
+  "signInWithTelegram": "Continue with Telegram",
+  "signInTelegramUnavailable": "Telegram sign-in will be available once enabled on the server.",
+  "sessionExpiredMessage": "Your session has expired. Please sign in again."
 }
