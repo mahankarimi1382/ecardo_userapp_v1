@@ -307,11 +307,31 @@ class AppUpdateController extends GetxController {
       final filePath = '${dir.path}/${config.apkFileName}';
 
       _cancelToken = CancelToken();
-      final dio = Dio();
+      // Bare Dio() caused frequent "network error" on GitHub release URLs:
+      // no timeout, weak UA, and redirect/host quirks on mobile networks.
+      final dio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 45),
+          receiveTimeout: const Duration(minutes: 10),
+          sendTimeout: const Duration(seconds: 45),
+          followRedirects: true,
+          maxRedirects: 5,
+          // Some CDNs reject non-browser clients.
+          headers: const {
+            'Accept': '*/*',
+            'User-Agent':
+                'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 '
+                '(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36 '
+                'eCardoUserApp/1.0',
+          },
+          validateStatus: (s) => s != null && s >= 200 && s < 400,
+        ),
+      );
       await dio.download(
-        url,
+        url.trim(),
         filePath,
         cancelToken: _cancelToken,
+        deleteOnError: true,
         onReceiveProgress: (received, total) {
           if (total <= 0) return;
           final percent = (received / total * 100).clamp(0, 100).toInt();
@@ -338,7 +358,25 @@ class AppUpdateController extends GetxController {
       // come back and explicitly dismiss our screen.
     } on DioException catch (e) {
       phase.value = AppUpdatePhase.error;
-      errorMessage.value = 'Download failed: ${e.message ?? e.type.name}';
+      final code = e.response?.statusCode;
+      final type = e.type.name;
+      if (e.type == DioExceptionType.cancel) {
+        errorMessage.value = 'Download cancelled.';
+      } else if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
+        errorMessage.value =
+            'Download timed out. Check your connection and try again.';
+      } else if (code == 404) {
+        errorMessage.value =
+            'Update file not found (404). The release link may be wrong.';
+      } else if (code == 403 || code == 401) {
+        errorMessage.value =
+            'Download blocked (auth). Use the public release URL.';
+      } else {
+        errorMessage.value =
+            'Download failed (${code ?? type}). ${e.message ?? ''}'.trim();
+      }
     } catch (e) {
       phase.value = AppUpdatePhase.error;
       errorMessage.value = 'Download failed: $e';
