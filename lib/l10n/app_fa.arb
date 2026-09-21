@@ -2633,6 +2633,8 @@
   "financialServicesTitle": "خدمات مالی",
   "travelServicesTitle": "خدمات سفر",
   "travelServicesHint": "کشور مقصد خود را انتخاب کنید تا خدمات موجود را ببینید",
+  "travelAvailableNow": "در دسترس الان",
+  "travelComingSoonSection": "به‌زودی",
   "businessServicesTitle": "خدمات بازرگانی و کسب‌وکار",
   "serviceNotAvailableYet": "این خدمت هنوز برای شما در دسترس نیست؛ برای فعال‌سازی سطح تأیید (KYC) خود را بالا ببرید.",
   "countryChina": "چین",

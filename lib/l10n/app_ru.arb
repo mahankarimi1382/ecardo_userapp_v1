@@ -2632,6 +2632,8 @@
   "financialServicesTitle": "Финансовые услуги",
   "travelServicesTitle": "Туристические услуги",
   "travelServicesHint": "Выберите страну назначения, чтобы увидеть доступные услуги",
+  "travelAvailableNow": "Доступно сейчас",
+  "travelComingSoonSection": "Скоро",
   "businessServicesTitle": "Деловые и коммерческие услуги",
   "serviceNotAvailableYet": "Эта услуга пока недоступна в вашем регионе. Повысьте уровень KYC, чтобы открыть её.",
   "countryChina": "Китай",

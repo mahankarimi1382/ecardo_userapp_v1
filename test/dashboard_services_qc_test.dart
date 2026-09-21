@@ -146,20 +146,23 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      // v1.0.46: travel is its own card — no tab switch needed.
+      // v1.0.50: travel card split into Available now + Coming soon.
       expect(find.text('Travel Services'), findsOneWidget);
       expect(find.text('Choose your destination to see available services'),
           findsOneWidget);
-      // Page 1 of the travel grid: built modules + first locked services.
+      expect(find.text('Available now'), findsOneWidget);
+      expect(find.text('Coming soon'), findsOneWidget);
+      // Live modules (no KYC lock on the tile itself).
       expect(find.text('Flights'), findsOneWidget);
       expect(find.text('Hotels'), findsOneWidget);
       expect(find.text('eSIM'), findsOneWidget);
+      // Coming-soon chips still listed (compact wrap — all built in tree).
       expect(find.text('Visa'), findsOneWidget);
       expect(find.text('Train'), findsOneWidget);
       expect(find.text('Car Rental'), findsOneWidget);
       expect(find.text('Taxi'), findsOneWidget);
 
-      // Destination chips: Wrap layout — every chip is built (Iran added).
+      // Destination chips (horizontal scroll — every chip is built).
       for (final country in ['Iran', 'China', 'Russia', 'Turkey', 'UAE',
         'Iraq', 'Oman', 'Georgia']) {
         expect(find.text(country), findsOneWidget);

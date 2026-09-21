@@ -2633,6 +2633,8 @@
   "financialServicesTitle": "الخدمات المالية",
   "travelServicesTitle": "خدمات السفر",
   "travelServicesHint": "اختر وجهتك لعرض الخدمات المتاحة",
+  "travelAvailableNow": "متاح الآن",
+  "travelComingSoonSection": "قريباً",
   "businessServicesTitle": "الخدمات التجارية والأعمال",
   "serviceNotAvailableYet": "هذه الخدمة غير متاحة لمنطقتك بعد. يرجى رفع مستوى التحقق (KYC) لتفعيلها.",
   "countryChina": "الصين",

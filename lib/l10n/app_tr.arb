@@ -2632,6 +2632,8 @@
   "financialServicesTitle": "Finansal Hizmetler",
   "travelServicesTitle": "Seyahat Hizmetleri",
   "travelServicesHint": "Mevcut hizmetleri görmek için varış ülkenizi seçin",
+  "travelAvailableNow": "Şimdi kullanılabilir",
+  "travelComingSoonSection": "Yakında",
   "businessServicesTitle": "Ticari ve İş Hizmetleri",
   "serviceNotAvailableYet": "Bu hizmet bölgenizde henüz mevcut değil. Açmak için KYC seviyenizi yükseltin.",
   "countryChina": "Çin",
