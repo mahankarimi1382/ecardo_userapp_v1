@@ -1,3 +1,4 @@
+import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -97,9 +98,8 @@ class UserProfileSection extends StatelessWidget {
   }
 }
 
-/// UID (account number) pill — full-width, generous touch target: tapping
-/// anywhere on the pill copies the number (InkWell ripple), with an
-/// explicit copy affordance on the trailing edge.
+/// Account ID strip — premium, bank-app style: monospace number, subtle
+/// gradient glass, clear copy affordance (tap anywhere).
 class _UidPill extends StatelessWidget {
   final String accountNumber;
 
@@ -108,74 +108,121 @@ class _UidPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    // Group digits for readability when purely numeric (e.g. 12 345 678).
+    final display = _formatAccountId(accountNumber);
 
     return Material(
-      color: AppColors.white.withValues(alpha: 0.13),
-      borderRadius: BorderRadius.circular(14),
+      color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         onTap: () {
           Clipboard.setData(ClipboardData(text: accountNumber));
           ToastHelper().showSuccessToast(localization.userProfileCopied);
         },
-        child: Container(
-          padding: EdgeInsetsDirectional.symmetric(horizontal: 14, vertical: 12),
+        child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.white.withValues(alpha: 0.18),
+                AppColors.white.withValues(alpha: 0.08),
+              ],
+            ),
             border: Border.all(
-              color: AppColors.white.withValues(alpha: 0.18),
+              color: AppColors.white.withValues(alpha: 0.22),
               width: 1,
             ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: AppColors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.tag_rounded,
-                  color: AppColors.white.withValues(alpha: 0.85),
-                  size: 14,
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                localization.userProfileUid,
-                style: TextStyle(
-                  letterSpacing: 0,
-                  fontSize: 11.sp,
-                  color: AppColors.white.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Text(
-                  accountNumber,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    letterSpacing: 0.4,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15.sp,
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Icon(
-                Icons.copy_rounded,
-                size: 16,
-                color: AppColors.white.withValues(alpha: 0.85),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withValues(alpha: 0.12),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
             ],
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.symmetric(
+              horizontal: 14.w,
+              vertical: 12.h,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(11),
+                    color: AppColors.white.withValues(alpha: 0.16),
+                  ),
+                  child: Icon(
+                    Icons.fingerprint_rounded,
+                    size: 20,
+                    color: AppColors.white.withValues(alpha: 0.92),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        localization.userProfileUid.toUpperCase(),
+                        style: TextStyle(
+                          letterSpacing: 1.2,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.white.withValues(alpha: 0.55),
+                        ),
+                      ),
+                      SizedBox(height: 3.h),
+                      Text(
+                        display,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          letterSpacing: 1.6,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16.sp,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withValues(alpha: 0.14),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.copy_rounded,
+                    size: 16,
+                    color: AppColors.white.withValues(alpha: 0.92),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  static String _formatAccountId(String raw) {
+    final s = raw.trim();
+    if (s.isEmpty) return s;
+    if (!RegExp(r'^[0-9]+$').hasMatch(s) || s.length < 6) return s;
+    final buf = StringBuffer();
+    for (var i = 0; i < s.length; i++) {
+      if (i > 0 && (s.length - i) % 3 == 0) buf.write(' ');
+      buf.write(s[i]);
+    }
+    return buf.toString();
   }
 }
 
@@ -195,7 +242,7 @@ class _KycStatusBadge extends StatelessWidget {
     final level = data?.kycLevel;
 
     return GestureDetector(
-      onTap: () => Get.toNamed(BaseRoute.kycHistory),
+      onTap: () => Get.toNamed(BaseRoute.idVerification),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 7.h),
         decoration: BoxDecoration(
