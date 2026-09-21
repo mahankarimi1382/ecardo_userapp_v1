@@ -4,6 +4,7 @@ import '../bindings/app_bindings.dart';
 import 'routes.dart';
 import '../../presentation/screens/kyc_level/kyc_level_binding.dart';
 import '../../presentation/screens/remittance/binding/remittance_binding.dart';
+import '../../presentation/screens/p2p/binding/p2p_binding.dart';
 import '../../presentation/screens/kyc_level/view/kyc_submit_wizard.dart';
 import '../../presentation/screens/settings/view/support_tickets/replay_ticket/replay_ticket.dart';
 import 'routes_config.dart';

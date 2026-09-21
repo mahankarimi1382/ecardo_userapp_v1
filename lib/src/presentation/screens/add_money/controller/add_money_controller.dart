@@ -321,10 +321,10 @@ class AddMoneyController extends GetxController {
     if (gatewayMethod.value!.chargeType == 'percentage') {
       calculatedCharge.value =
           (baseAmount.value *
-          double.tryParse(gatewayMethod.value!.charge!)! /
+          (double.tryParse((gatewayMethod.value?.charge ?? '0')) ?? 0.0) /
           100);
     } else if (gatewayMethod.value!.chargeType == 'fixed') {
-      calculatedCharge.value = double.tryParse(gatewayMethod.value!.charge!)!;
+      calculatedCharge.value = (double.tryParse((gatewayMethod.value?.charge ?? '0')) ?? 0.0);
     } else {
       calculatedCharge.value = 0.0;
     }
@@ -366,25 +366,25 @@ class AddMoneyController extends GetxController {
       return false;
     }
 
-    if (double.tryParse(gatewayMethod.value!.minimumDeposit!)! > 0 &&
-        amount < double.tryParse(gatewayMethod.value!.minimumDeposit!)!) {
+    if ((double.tryParse((gatewayMethod.value?.minimumDeposit ?? '0')) ?? 0.0) > 0 &&
+        amount < (double.tryParse((gatewayMethod.value?.minimumDeposit ?? '0')) ?? 0.0)) {
       ToastHelper().showErrorToast(
         localization!.addMoneyValidationAmountMinimum(
-          double.tryParse(
-            gatewayMethod.value!.minimumDeposit!,
-          )!.toStringAsFixed(2),
+          (double.tryParse(
+            (gatewayMethod.value?.minimumDeposit ?? '0'),
+          ) ?? 0.0).toStringAsFixed(2),
         ),
       );
       return false;
     }
 
-    if (double.tryParse(gatewayMethod.value!.maximumDeposit!)! > 0 &&
-        amount > double.tryParse(gatewayMethod.value!.maximumDeposit!)!) {
+    if ((double.tryParse((gatewayMethod.value?.maximumDeposit ?? '0')) ?? 0.0) > 0 &&
+        amount > (double.tryParse((gatewayMethod.value?.maximumDeposit ?? '0')) ?? 0.0)) {
       ToastHelper().showErrorToast(
         localization!.addMoneyValidationAmountMaximum(
-          double.tryParse(
-            gatewayMethod.value!.maximumDeposit!,
-          )!.toStringAsFixed(2),
+          (double.tryParse(
+            (gatewayMethod.value?.maximumDeposit ?? '0'),
+          ) ?? 0.0).toStringAsFixed(2),
         ),
       );
       return false;

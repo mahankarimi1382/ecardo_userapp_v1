@@ -19,7 +19,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
     final WithdrawController controller = Get.find();
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.withdrawAccount.value!.currency!,
+      currencyCode: (controller.withdrawAccount.value?.currency ?? "")!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
         "site_currency",
       )!,
@@ -63,7 +63,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title:
                                   localization.withdrawReviewStepSectionAmount,
                               content:
-                                  "${double.tryParse(controller.amountController.text)!.toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  "${(double.tryParse(controller.amountController.text) ?? 0.0).toStringAsFixed(calculateDecimals)} ${(controller.withdrawAccount.value?.currency ?? "")}",
                               contentColor: AppColors.success,
                             ),
                           ),
@@ -79,7 +79,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title:
                                   localization.withdrawReviewStepSectionCharge,
                               content:
-                                  controller.chargeLoadFailed.value ? '—' : "${controller.calculatedCharge.value.toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  controller.chargeLoadFailed.value ? '—' : "${controller.calculatedCharge.value.toStringAsFixed(calculateDecimals)} ${(controller.withdrawAccount.value?.currency ?? "")}",
                               contentColor: AppColors.error,
                             ),
                           ),
@@ -95,7 +95,7 @@ class WithdrawReviewStepSection extends StatelessWidget {
                               title: localization
                                   .withdrawReviewStepSectionTotalAmount,
                               content:
-                                  controller.chargeLoadFailed.value ? '—' : "${(controller.totalAmount).toStringAsFixed(calculateDecimals)} ${controller.withdrawAccount.value!.currency}",
+                                  controller.chargeLoadFailed.value ? '—' : "${(controller.totalAmount).toStringAsFixed(calculateDecimals)} ${(controller.withdrawAccount.value?.currency ?? "")}",
                               contentColor: AppColors.success,
                             ),
                           ),

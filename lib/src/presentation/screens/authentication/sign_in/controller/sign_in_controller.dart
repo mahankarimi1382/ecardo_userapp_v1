@@ -166,9 +166,8 @@ class SignInController extends GetxController {
           await Get.find<SettingsService>().saveLoggedInUserEmail(
             useBiometric ? biometricEmail.value : emailController.text,
           );
-          await Get.find<SettingsService>().saveLoggedInUserPassword(
-            useBiometric ? biometricPassword.value : passwordController.text,
-          );
+          // 1.0.51: never persist password for biometric re-entry — token only.
+          await Get.find<SettingsService>().clearLoggedInUserPassword();
 
           // AUTH-BIO (A-4): persist `logged_in` only after the full auth
           // chain (login → FCM registration → fetchUser) has succeeded.

@@ -1,3 +1,18 @@
+
+## به‌روزرسانی 1.0.51 — بستن تسک‌های باز چت
+
+| تسک | وضعیت |
+|-----|--------|
+| بیومتریک بدون ذخیرهٔ پسورد (token-first) | ✅ |
+| پاک‌سازی پسورد legacy بعد از unlock موفق | ✅ |
+| tryParse! باقی‌مانده add_money / withdraw | ✅ |
+| روت‌های مرده invoice* | ✅ حذف ثابت‌ها |
+| P2pBinding برای shell اصلی | ✅ |
+| NotFound / RemittanceBinding / StatusLabel / P2P vs Escrow / Travel redesign | ✅ در ۱.۰.۴۸–۵۰ |
+| Sentry/pinning | عمداً خارج (نیاز DSN/cert پروداکشن) |
+| Admin app version-by-version | خارج از این ریپو (userapp) |
+
+
 <!-- ============================================================
 هدف فایل: نقشه کامل فلوهای اپ (Route Map + وضعیت) — eCardo user app
 آخرین بازبینی: 2026-09-21 | نسخه کد: 1.0.49 (پس از UI-QC 1.0.48 + sprint A/B/C)
