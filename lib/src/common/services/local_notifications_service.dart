@@ -3,6 +3,21 @@ import 'dart:ui' show Color;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+/// Single source of truth for Android notification channel IDs.
+/// Must match `com.google.firebase.messaging.default_notification_channel_id`
+/// in AndroidManifest.xml — a mismatch silently drops / deprioritizes pushes.
+class NotificationChannels {
+  static const String primaryId = 'ecardo_default';
+  static const String primaryName = 'eCardo';
+  static const String primaryDescription =
+      'eCardo account, transaction and update notifications';
+
+  /// Legacy id that older builds / the previous manifest used. We still
+  /// create it so any in-flight FCM messages addressed to it still render
+  /// at high importance.
+  static const String legacyId = 'channel_id';
+}
+
 class LocalNotificationsService {
   LocalNotificationsService._internal();
   static final LocalNotificationsService _instance =
@@ -13,14 +28,8 @@ class LocalNotificationsService {
   bool _initialized = false;
   int _id = 0;
 
-  /// AUTH-BIO (A-2): single notification-tap router. FirebaseMessagingService
-  /// registers itself here during its init() so every local-notification tap
-  /// is routed through the same payload→route mapping as FCM push taps.
   void Function(String? payload)? _tapHandler;
 
-  /// Registers (or clears with null) the tap handler invoked whenever the
-  /// user taps a notification while the app is alive (foreground or
-  /// background-but-running).
   void setNotificationTapHandler(void Function(String? payload)? handler) {
     _tapHandler = handler;
   }
@@ -30,10 +39,6 @@ class LocalNotificationsService {
 
     _plugin = FlutterLocalNotificationsPlugin();
 
-    // v1.0.38: the status-bar small icon MUST be a white-on-transparent
-    // monochrome asset — the previous setup pointed at the full-color
-    // launcher icon, which Android renders as an anonymous grey square on
-    // most devices.
     const androidSettings = AndroidInitializationSettings(
       '@drawable/ic_notification',
     );
@@ -48,38 +53,46 @@ class LocalNotificationsService {
       iOS: iosSettings,
     );
 
-    // AUTH-BIO (A-2): previously no response callback was registered, so
-    // tapping a local notification did nothing.
     await _plugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: _onNotificationResponse,
     );
 
-    const channel = AndroidNotificationChannel(
-      'ecardo_default',
-      'eCardo',
-      description: 'eCardo account & transaction notifications',
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    // Primary channel (also the FCM default in the manifest).
+    const primary = AndroidNotificationChannel(
+      NotificationChannels.primaryId,
+      NotificationChannels.primaryName,
+      description: NotificationChannels.primaryDescription,
       importance: Importance.max,
       enableLights: true,
       enableVibration: true,
       ledColor: Color(0xFF7445FF),
+      playSound: true,
     );
 
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.createNotificationChannel(channel);
+    // Legacy channel so messages already targeted at channel_id still show.
+    const legacy = AndroidNotificationChannel(
+      NotificationChannels.legacyId,
+      NotificationChannels.primaryName,
+      description: NotificationChannels.primaryDescription,
+      importance: Importance.max,
+      enableLights: true,
+      enableVibration: true,
+      ledColor: Color(0xFF7445FF),
+      playSound: true,
+    );
+
+    await androidPlugin?.createNotificationChannel(primary);
+    await androidPlugin?.createNotificationChannel(legacy);
 
     _initialized = true;
   }
 
-  /// AUTH-BIO (A-2): forwards taps on regular notifications (not action
-  /// buttons) to the registered router. Unknown payloads are handled
-  /// gracefully by the router — it never throws.
   void _onNotificationResponse(NotificationResponse response) {
-    // Only taps on the notification body route somewhere; action-button
-    // responses have no payload contract in this app.
     if (response.notificationResponseType !=
         NotificationResponseType.selectedNotification) {
       return;
@@ -95,13 +108,19 @@ class LocalNotificationsService {
     String? body,
     String? payload,
   ) async {
+    if (!_initialized) {
+      await init();
+    }
+
     const androidDetails = AndroidNotificationDetails(
-      'ecardo_default',
-      'eCardo',
-      channelDescription: 'eCardo account & transaction notifications',
+      NotificationChannels.primaryId,
+      NotificationChannels.primaryName,
+      channelDescription: NotificationChannels.primaryDescription,
       importance: Importance.max,
       priority: Priority.high,
       icon: '@drawable/ic_notification',
+      playSound: true,
+      enableVibration: true,
     );
 
     const iosDetails = DarwinNotificationDetails(

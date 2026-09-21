@@ -177,17 +177,34 @@ class _UidPill extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 3.h),
-                      Text(
-                        display,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          letterSpacing: 1.6,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16.sp,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                          color: AppColors.white,
-                        ),
+                      // FittedBox keeps the full UID visible when grouping
+                      // spaces + tabular figures would otherwise overflow /
+                      // ellipsize mid-number (reported layout break).
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final style = TextStyle(
+                            letterSpacing: display.length > 14 ? 0.4 : 1.0,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16.sp,
+                            fontFeatures: const [
+                              FontFeature.tabularFigures(),
+                            ],
+                            color: AppColors.white,
+                          );
+                          return SizedBox(
+                            width: constraints.maxWidth,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                display,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: style,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -216,10 +233,14 @@ class _UidPill extends StatelessWidget {
   static String _formatAccountId(String raw) {
     final s = raw.trim();
     if (s.isEmpty) return s;
-    if (!RegExp(r'^[0-9]+$').hasMatch(s) || s.length < 6) return s;
+    // Only group pure numeric IDs of moderate length. Very long IDs stay
+    // continuous so FittedBox can scale them without awkward mid-group cuts.
+    if (!RegExp(r'^[0-9]+$').hasMatch(s) || s.length < 6 || s.length > 16) {
+      return s;
+    }
     final buf = StringBuffer();
     for (var i = 0; i < s.length; i++) {
-      if (i > 0 && (s.length - i) % 3 == 0) buf.write(' ');
+      if (i > 0 && (s.length - i) % 3 == 0) buf.write('\u2009'); // thin space
       buf.write(s[i]);
     }
     return buf.toString();

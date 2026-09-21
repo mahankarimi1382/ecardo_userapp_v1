@@ -70,12 +70,14 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- AUTH-BIO (A-1): route FCM notification messages into the channel
-             created by LocalNotificationsService ('channel_id') instead of
-             FCM's fallback 'Miscellaneous' channel. -->
+        <!-- FCM default channel MUST match LocalNotificationsService.primaryId
+             (ecardo_default). Legacy channel_id is still created at runtime. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="channel_id" />
+            android:value="ecardo_default" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
     </application>
     <queries>
         <intent>

@@ -1,7 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -9,13 +10,8 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/splash/controller/splash_controller.dart';
 
-/// v1.0.38 (SPLASH): premium brand splash.
-///   - full brand gradient (primary → primary-dark) with soft circles that
-///     match the home hero card language
-///   - logo mark scales/fades in, then the "eCardo" wordmark slides in
-///     (the old splash still rendered the pre-rebrand "unzo" text!)
-///   - brand-colored loading dots while settings load
-///   - small app version pinned to the bottom (PackageInfo)
+/// v1.0.55 — redesigned splash: layered gradient, glass logo mark,
+/// animated progress ring, refined wordmark + tagline.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -28,14 +24,16 @@ class _SplashScreenState extends State<SplashScreen>
   final SplashController splashController = Get.find<SplashController>();
   final settingsService = Get.find<SettingsService>();
 
-  late AnimationController _logoController;
-  late AnimationController _textController;
-  Worker? _settingsWorker; // v1.0.24: disposed with the state
+  late AnimationController _introController;
+  late AnimationController _pulseController;
+  late AnimationController _progressController;
+  Worker? _settingsWorker;
 
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
-  late Animation<Offset> _textSlideAnimation;
-  late Animation<double> _textFadeAnimation;
+  late Animation<double> _logoFade;
+  late Animation<double> _logoScale;
+  late Animation<double> _wordFade;
+  late Animation<Offset> _wordSlide;
+  late Animation<double> _tagFade;
 
   String _version = '';
 
@@ -46,48 +44,53 @@ class _SplashScreenState extends State<SplashScreen>
     settingsService.fetchSettings();
     _loadVersion();
 
-    _logoController = AnimationController(
+    _introController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1400),
     );
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    )..repeat(reverse: true);
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    )..repeat();
 
-    _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _logoController, curve: Curves.ease));
-
-    _scaleAnimation = Tween<double>(
-      begin: 0.7,
-      end: 1.0,
+    _logoFade = CurvedAnimation(
+      parent: _introController,
+      curve: const Interval(0.0, 0.45, curve: Curves.easeOut),
+    );
+    _logoScale = Tween<double>(begin: 0.72, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _introController,
+        curve: const Interval(0.0, 0.55, curve: Curves.easeOutBack),
+      ),
+    );
+    _wordFade = CurvedAnimation(
+      parent: _introController,
+      curve: const Interval(0.35, 0.75, curve: Curves.easeOut),
+    );
+    _wordSlide = Tween<Offset>(
+      begin: const Offset(0, 0.35),
+      end: Offset.zero,
     ).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.easeOutBack),
+      CurvedAnimation(
+        parent: _introController,
+        curve: const Interval(0.35, 0.8, curve: Curves.easeOutCubic),
+      ),
+    );
+    _tagFade = CurvedAnimation(
+      parent: _introController,
+      curve: const Interval(0.55, 1.0, curve: Curves.easeOut),
     );
 
+    _introController.forward();
 
-    _logoController.forward();
-
-    _textController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-
-    _textFadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(_textController);
-
-    _logoController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _textController.forward();
-      }
-    });
-
-    // v1.0.24: store the worker and dispose it in dispose() — an orphaned
-    // ever() here survived screen disposal and could re-trigger navigation.
     _settingsWorker = ever(settingsService.isSettingsDataLoad, (isLoaded) {
       if (isLoaded == true) {
-        Future.delayed(const Duration(seconds: 2), () {
-          splashController.navigateBasedOnAuth();
+        Future.delayed(const Duration(milliseconds: 900), () {
+          if (mounted) splashController.navigateBasedOnAuth();
         });
       }
     });
@@ -97,26 +100,15 @@ class _SplashScreenState extends State<SplashScreen>
     try {
       final info = await PackageInfo.fromPlatform();
       if (mounted) setState(() => _version = 'v${info.version}');
-    } catch (_) {
-      // Non-fatal — the version label simply stays hidden.
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
-    _textSlideAnimation = Tween<Offset>(
-      begin: Offset(isRtl ? 1.5 : -1.5, 0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _textController, curve: Curves.easeOut));
+    } catch (_) {}
   }
 
   @override
   void dispose() {
     _settingsWorker?.dispose();
-    _logoController.dispose();
-    _textController.dispose();
+    _introController.dispose();
+    _pulseController.dispose();
+    _progressController.dispose();
     super.dispose();
   }
 
@@ -124,107 +116,171 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // Brand gradient — replaces the flat bitmap frame and blends into
-        // the purple native launch background (no cold-start flash).
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: AlignmentDirectional.topStart,
-            end: AlignmentDirectional.bottomEnd,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
+              Color(0xFF8B6BFF),
               AppColors.lightPrimary,
               AppColors.lightPrimaryDark,
+              Color(0xFF3D248F),
             ],
+            stops: [0.0, 0.35, 0.7, 1.0],
           ),
         ),
         child: Stack(
-          alignment: AlignmentGeometry.bottomCenter,
           children: [
-            // Soft decorative circles — same language as the home hero card.
-            PositionedDirectional(
-              top: -80,
-              end: -60,
-              child: _decorCircle(240, AppColors.white.withValues(alpha: 0.06)),
+            // Soft mesh orbs
+            Positioned(
+              top: -90,
+              right: -50,
+              child: _orb(220, AppColors.white.withValues(alpha: 0.08)),
             ),
-            PositionedDirectional(
-              top: 120,
-              start: -70,
-              child: _decorCircle(200, AppColors.white.withValues(alpha: 0.05)),
+            Positioned(
+              top: 160,
+              left: -80,
+              child: _orb(180, const Color(0xFF00BFA6).withValues(alpha: 0.10)),
             ),
-            PositionedDirectional(
-              bottom: -60,
-              end: 40,
-              child: _decorCircle(160, AppColors.white.withValues(alpha: 0.04)),
+            Positioned(
+              bottom: 80,
+              right: -40,
+              child: _orb(160, AppColors.white.withValues(alpha: 0.06)),
             ),
-            Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+            // Content
+            SafeArea(
+              child: Column(
                 children: [
+                  const Spacer(flex: 3),
+                  // Logo glass card with pulse ring
                   FadeTransition(
-                    opacity: _fadeAnimation,
+                    opacity: _logoFade,
                     child: ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Image.asset(PngAssets.appScreenIcon, height: 64.h),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  FadeTransition(
-                    opacity: _textFadeAnimation,
-                    child: SlideTransition(
-                      position: _textSlideAnimation,
-                      child: Text(
-                        "eCardo",
-                        style: TextStyle(
-                          fontSize: 58.sp,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.2,
-                          color: AppColors.white,
+                      scale: _logoScale,
+                      child: AnimatedBuilder(
+                        animation: _pulseController,
+                        builder: (context, child) {
+                          final pulse = 1.0 + (_pulseController.value * 0.04);
+                          return Transform.scale(scale: pulse, child: child);
+                        },
+                        child: Container(
+                          width: 112.w,
+                          height: 112.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppColors.white.withValues(alpha: 0.28),
+                                AppColors.white.withValues(alpha: 0.10),
+                              ],
+                            ),
+                            border: Border.all(
+                              color: AppColors.white.withValues(alpha: 0.35),
+                              width: 1.2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.black.withValues(alpha: 0.22),
+                                blurRadius: 28,
+                                offset: const Offset(0, 12),
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.all(18.w),
+                          child: Image.asset(
+                            PngAssets.appLogo,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => Icon(
+                              Icons.account_balance_wallet_rounded,
+                              size: 48.sp,
+                              color: AppColors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            // Loading dots (visible while settings are being fetched).
-            PositionedDirectional(
-              bottom: 170,
-              start: 0,
-              end: 0,
-              child: Obx(() {
-                return Visibility(
-                  visible: settingsService.isSettingsLoading.value,
-                  replacement: const SizedBox.shrink(),
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: AppColors.white,
-                    size: 44,
-                  ),
-                );
-              }),
-            ),
-            // Small version label pinned to the bottom.
-            PositionedDirectional(
-              bottom: 26,
-              start: 0,
-              end: 0,
-              child: Column(
-                children: [
-                  Text(
-                    'eCardo',
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2,
-                      color: AppColors.white.withValues(alpha: 0.55),
+                  SizedBox(height: 28.h),
+                  // Wordmark
+                  FadeTransition(
+                    opacity: _wordFade,
+                    child: SlideTransition(
+                      position: _wordSlide,
+                      child: Text(
+                        'eCardo',
+                        style: TextStyle(
+                          fontSize: 42.sp,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.8,
+                          color: AppColors.white,
+                          height: 1.05,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  if (_version.isNotEmpty)
-                    Text(
-                      _version,
+                  SizedBox(height: 10.h),
+                  FadeTransition(
+                    opacity: _tagFade,
+                    child: Text(
+                      'Financial Super App',
                       style: TextStyle(
-                        fontSize: 10.sp,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.white.withValues(alpha: 0.45),
+                        letterSpacing: 1.6,
+                        color: AppColors.white.withValues(alpha: 0.72),
+                      ),
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  // Progress ring
+                  FadeTransition(
+                    opacity: _tagFade,
+                    child: SizedBox(
+                      width: 42.w,
+                      height: 42.w,
+                      child: AnimatedBuilder(
+                        animation: _progressController,
+                        builder: (context, _) {
+                          return CustomPaint(
+                            painter: _SplashProgressPainter(
+                              progress: _progressController.value,
+                              color: AppColors.white.withValues(alpha: 0.9),
+                              track: AppColors.white.withValues(alpha: 0.18),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                  FadeTransition(
+                    opacity: _tagFade,
+                    child: Obx(() {
+                      final loading = settingsService.isSettingsLoading.value;
+                      return Text(
+                        loading ? 'Preparing your workspace…' : 'Almost ready',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.white.withValues(alpha: 0.55),
+                        ),
+                      );
+                    }),
+                  ),
+                  const Spacer(flex: 1),
+                  if (_version.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20.h),
+                      child: Text(
+                        _version,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.6,
+                          color: AppColors.white.withValues(alpha: 0.40),
+                        ),
                       ),
                     ),
                 ],
@@ -236,11 +292,53 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  Widget _decorCircle(double size, Color color) {
+  Widget _orb(double size, Color color) {
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
+}
+
+class _SplashProgressPainter extends CustomPainter {
+  final double progress;
+  final Color color;
+  final Color track;
+
+  _SplashProgressPainter({
+    required this.progress,
+    required this.color,
+    required this.track,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2 - 3;
+    final trackPaint = Paint()
+      ..color = track
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round;
+    final arcPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawCircle(center, radius, trackPaint);
+    final start = -math.pi / 2 + (progress * math.pi * 2);
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      start,
+      math.pi * 0.7,
+      false,
+      arcPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _SplashProgressPainter old) =>
+      old.progress != progress;
 }

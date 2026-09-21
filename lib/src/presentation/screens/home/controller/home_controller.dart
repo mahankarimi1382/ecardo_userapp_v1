@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -231,6 +232,11 @@ Future<void> changeLanguage(String languageCode) async {
         final walletsModel = WalletsModel.fromJson(response.data!);
         walletsList.clear();
         walletsList.value = walletsModel.data!.wallets ?? [];
+        // Refresh live FX for wallet ≈ chips (non-blocking).
+        if (Get.isRegistered<WalletLiveRateService>()) {
+          // ignore: unawaited_futures
+          Get.find<WalletLiveRateService>().refresh();
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');

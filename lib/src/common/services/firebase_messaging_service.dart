@@ -151,7 +151,15 @@ class FirebaseMessagingService {
       if (kDebugMode) {
         print('Notification permission (permission_handler): $status');
       }
-      if (status.isGranted || status.isLimited) return;
+      if (status.isGranted || status.isLimited) {
+        // Sync FCM AuthorizationStatus so topic messages are delivered.
+        await FirebaseMessaging.instance.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+        return;
+      }
 
       // Not granted: report the FCM-side status WITHOUT prompting again.
       final settings =

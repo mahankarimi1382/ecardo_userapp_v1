@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
@@ -17,22 +18,30 @@ class MyWalletSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final homeController = Get.find<HomeController>();
-    final showSingleWalletOnly = homeController.walletsList.length == 1;
 
-    return Column(
-      children: [
-        SectionHeader(
-          sectionName: localization.myWalletSectionTitle,
-          onTap: () {
-            Get.toNamed(BaseRoute.wallets);
-          },
-        ),
-        const SizedBox(height: 10),
-        showSingleWalletOnly
-            ? _buildSingleCardView(context, homeController.walletsList)
-            : _buildHorizontalScrollView(context, homeController.walletsList),
-      ],
-    );
+    // Obx so live-rate refresh redraws the ≈ chips without a full reload.
+    return Obx(() {
+      final wallets = homeController.walletsList.toList();
+      if (Get.isRegistered<WalletLiveRateService>()) {
+        // Touch ratesIrr so GetX tracks it.
+        Get.find<WalletLiveRateService>().ratesIrr.length;
+      }
+      final showSingleWalletOnly = wallets.length == 1;
+      return Column(
+        children: [
+          SectionHeader(
+            sectionName: localization.myWalletSectionTitle,
+            onTap: () {
+              Get.toNamed(BaseRoute.wallets);
+            },
+          ),
+          const SizedBox(height: 10),
+          showSingleWalletOnly
+              ? _buildSingleCardView(context, wallets)
+              : _buildHorizontalScrollView(context, wallets),
+        ],
+      );
+    });
   }
 
   Widget _buildHorizontalScrollView(
@@ -302,6 +311,12 @@ class MyWalletSection extends StatelessWidget {
   }
 
   String? _liveConversionLabel(Wallets wallet) {
+    // Prefer live fee.ecardo.ir rates (fixes wrong/stale conversion_rate).
+    if (Get.isRegistered<WalletLiveRateService>()) {
+      final live = Get.find<WalletLiveRateService>().equivalentLabel(wallet);
+      if (live != null) return live;
+    }
+    // Fallback: backend conversion_rate with inverse heuristic.
     final rateRaw = wallet.conversionRate;
     final balRaw = wallet.balance;
     if (rateRaw == null || rateRaw.isEmpty || balRaw == null || balRaw.isEmpty) {
@@ -315,12 +330,14 @@ class MyWalletSection extends StatelessWidget {
     final code = (wallet.code ?? '').toUpperCase();
     if (site.isEmpty || site.toUpperCase() == code) return null;
 
-    final eq = bal * rate;
+    final looksInverse = rate < 0.001 &&
+        (code == 'USD' || code == 'EUR' || code == 'GBP' || code == 'USDT');
+    final eq = looksInverse ? (bal / rate) : (bal * rate);
     final decimals = int.tryParse(
           Get.find<SettingsService>().getSetting('site_currency_decimals') ??
-              '2',
+              '0',
         ) ??
-        2;
+        0;
     final formatted = eq.toStringAsFixed(decimals.clamp(0, 8));
     return '≈ $formatted $site';
   }

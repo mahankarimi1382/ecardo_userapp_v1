@@ -240,8 +240,10 @@ class FeeEcardoRateSource implements ExchangeRateSource {
 
       // Prefer conversions map when available (it's the canonical IRR
       // value), otherwise derive Toman × 10.
-      final convKey = '${key.toUpperCase()}_TO_IRR';
-      final fromConv = _toDouble(conversions[convKey]);
+      // API publishes keys like USD_to_IRR (mixed case) — try both.
+      final upper = key.toUpperCase();
+      final fromConv = _toDouble(conversions['${upper}_to_IRR']) ??
+          _toDouble(conversions['${upper}_TO_IRR']);
       final priceIrr = (fromConv != null && fromConv > 0)
           ? fromConv
           : priceToman * 10;
