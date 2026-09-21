@@ -954,10 +954,27 @@ class NetworkService extends getx.GetxService {
       }
     } else if (errors is List && errors.isNotEmpty) {
       final message = errors.first?.toString().trim() ?? '';
-      if (message.isNotEmpty) return message;
+      if (message.isNotEmpty) return _friendlyServerMessage(message);
     }
 
     return localization?.networkErrorOccurred ?? 'An error occurred.';
+  }
+
+
+  String _friendlyServerMessage(String raw) {
+    final lower = raw.toLowerCase();
+    if (lower.contains('no query results for model') ||
+        lower.contains('model not found') ||
+        lower.contains(r'app\models\page') ||
+        lower.contains('app/models/page')) {
+      return localization?.allControllerLoadError ??
+          'This service is temporarily unavailable. Please try again later.';
+    }
+    if (lower.contains('unauthenticated') || lower.contains('token expired')) {
+      return localization?.unauthorizedDialogTitle ??
+          'Your session has expired. Please sign in again.';
+    }
+    return raw;
   }
 
   Map<String, String> get _baseHeaders {
