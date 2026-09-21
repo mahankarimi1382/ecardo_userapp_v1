@@ -129,6 +129,11 @@ class SignInController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+      // A-SEC: never keep plaintext password in Rx longer than the login call.
+      // Secure storage still holds credentials for biometric re-entry; RAM is cleared.
+      if (useBiometric) {
+        biometricPassword.value = '';
+      }
     }
   }
 

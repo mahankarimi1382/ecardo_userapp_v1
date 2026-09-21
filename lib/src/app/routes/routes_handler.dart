@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../bindings/app_bindings.dart';
 import 'routes.dart';
 import '../../presentation/screens/kyc_level/kyc_level_binding.dart';
+import '../../presentation/screens/remittance/binding/remittance_binding.dart';
 import '../../presentation/screens/kyc_level/view/kyc_submit_wizard.dart';
 import '../../presentation/screens/settings/view/support_tickets/replay_ticket/replay_ticket.dart';
 import 'routes_config.dart';
@@ -474,14 +475,17 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.remittance,
     page: () => RoutesConfig.remittance,
+    binding: RemittanceBinding(),
   ),
   GetPage(
     name: BaseRoute.remittanceHistory,
     page: () => RoutesConfig.remittanceHistory,
+    binding: RemittanceBinding(),
   ),
   GetPage(
     name: BaseRoute.remittanceDetails,
     page: () => RoutesConfig.remittanceDetails,
+    binding: RemittanceBinding(),
   ),
 
   // KYC Level Routes (v1.0.5)
@@ -496,6 +500,7 @@ List<GetPage> routesHandler = [
           : null;
       return KycSubmitWizard(targetLevel: parsed ?? 2);
     },
+    binding: KycLevelBinding(),
   ),
   GetPage(
     name: BaseRoute.upgradeRequired,

@@ -86,7 +86,7 @@ class _AddMoneySuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localization.addMoneySuccessAmount,
                             content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
+                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${(controller.successPaymentData.value?["pay_currency"] ?? "")}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                           const SizedBox(height: 20),
@@ -110,7 +110,7 @@ class _AddMoneySuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localization.addMoneySuccessCharge,
                             content:
-                                "${double.tryParse(controller.successPaymentData.value!["charge"])!.toStringAsFixed(calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
+                                "${(double.tryParse((controller.successPaymentData.value?["charge"]?.toString() ?? "")) ?? 0.0).toStringAsFixed(calculateDecimals)} ${(controller.successPaymentData.value?["pay_currency"] ?? "")}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -134,7 +134,7 @@ class _AddMoneySuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localization.addMoneySuccessFinalAmount,
                             content:
-                                "${double.tryParse(controller.successPaymentData.value!["amount"])!.toStringAsFixed(calculateDecimals)} ${controller.successPaymentData.value!["pay_currency"]}",
+                                "${(double.tryParse((controller.successPaymentData.value?["amount"]?.toString() ?? "")) ?? 0.0).toStringAsFixed(calculateDecimals)} ${(controller.successPaymentData.value?["pay_currency"] ?? "")}",
                             contentColor: AppColors.lightTextPrimary,
                           ),
                         ],

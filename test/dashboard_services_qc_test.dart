@@ -125,6 +125,7 @@ void main() {
       expect(find.text('Business & Commercial Services'), findsOneWidget);
       expect(find.text('Remittance'), findsOneWidget);
       expect(find.text('Money Transfer'), findsOneWidget);
+      expect(find.text('P2P Trading'), findsOneWidget);
       expect(find.text('Escrow Services'), findsOneWidget);
       expect(find.text('Service Guarantee'), findsOneWidget);
       expect(find.text('Bank Loan'), findsOneWidget);

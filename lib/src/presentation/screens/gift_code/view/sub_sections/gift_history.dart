@@ -223,7 +223,7 @@ class _GiftHistoryState extends State<GiftHistory> {
                               ),
                             ),
                             Text(
-                              "${double.tryParse(gift.amount!)!.toStringAsFixed(calculateDecimals)} ${gift.currency}",
+                              "${(double.tryParse((gift.amount ?? '0')) ?? 0.0).toStringAsFixed(calculateDecimals)} ${gift.currency}",
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w900,
