@@ -2772,6 +2772,8 @@
   "financialServicesTitle": "Financial Services",
   "travelServicesTitle": "Travel Services",
   "travelServicesHint": "Choose your destination to see available services",
+  "travelAvailableNow": "Available now",
+  "travelComingSoonSection": "Coming soon",
   "businessServicesTitle": "Business & Commercial Services",
   "serviceNotAvailableYet": "This service is not available in your region yet. Raise your KYC level to unlock it.",
   "countryChina": "China",

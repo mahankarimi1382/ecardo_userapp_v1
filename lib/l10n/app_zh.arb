@@ -2632,6 +2632,8 @@
   "financialServicesTitle": "金融服务",
   "travelServicesTitle": "旅行服务",
   "travelServicesHint": "选择目的地国家以查看可用服务",
+  "travelAvailableNow": "现已可用",
+  "travelComingSoonSection": "即将推出",
   "businessServicesTitle": "商贸与企业服务",
   "serviceNotAvailableYet": "该服务在您所在地区尚未开放。请提升 KYC 等级以解锁。",
   "countryChina": "中国",
