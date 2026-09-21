@@ -2674,5 +2674,10 @@
   "twoFactorValidationEnterPasscode": "请输入通行码",
   "twoFactorValidationPasscodesDoNotMatch": "通行码与确认不一致",
   "twoFactorValidationNewPasscodesDoNotMatch": "新通行码与确认不一致",
-  "webViewLinkCannotOpen": "无法在应用中打开此链接。"
+  "webViewLinkCannotOpen": "无法在应用中打开此链接。",
+  "networkReconnected": "You are back online",
+  "vpnHintBanner": "VPN detected — turn it off for a more stable experience",
+  "signInWithTelegram": "Continue with Telegram",
+  "signInTelegramUnavailable": "Telegram sign-in will be available once enabled on the server.",
+  "sessionExpiredMessage": "Your session has expired. Please sign in again."
 }

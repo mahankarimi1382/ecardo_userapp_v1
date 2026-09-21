@@ -2,7 +2,7 @@ name: ecardo_user
 description: "eCardo — International Financial Super App for users (multi-currency wallet, cards, transfers, remittance, travel, P2P, bill payments)."
 publish_to: 'none'
 
-version: 1.0.53+53
+version: 1.0.54+54
 
 environment:
   sdk: ^3.9.2
@@ -68,6 +68,9 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
+  adaptive_icon_background: "#0F172A"
+  adaptive_icon_foreground: "assets/logos/app_icon_adaptive_fg.png"
+  min_sdk_android: 21
 
 flutter:
   generate: true

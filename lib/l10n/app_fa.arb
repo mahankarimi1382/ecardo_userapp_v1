@@ -2675,5 +2675,10 @@
   "twoFactorValidationEnterPasscode": "لطفاً رمز عبور را وارد کنید",
   "twoFactorValidationPasscodesDoNotMatch": "رمز عبور و تکرار آن یکسان نیستند",
   "twoFactorValidationNewPasscodesDoNotMatch": "رمز جدید و تکرار آن یکسان نیستند",
-  "webViewLinkCannotOpen": "این پیوند در اپ باز نمی‌شود."
+  "webViewLinkCannotOpen": "این پیوند در اپ باز نمی‌شود.",
+  "networkReconnected": "اتصال اینترنت برقرار شد",
+  "vpnHintBanner": "VPN فعال است — برای تجربه پایدارتر خاموشش کنید",
+  "signInWithTelegram": "ورود با تلگرام",
+  "signInTelegramUnavailable": "ورود با تلگرام به‌محض فعال‌سازی سمت سرور در دسترس خواهد بود.",
+  "sessionExpiredMessage": "نشست شما منقضی شد. دوباره وارد شوید."
 }
