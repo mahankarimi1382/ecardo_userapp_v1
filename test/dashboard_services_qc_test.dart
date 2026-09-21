@@ -136,8 +136,7 @@ void main() {
   );
 
   testWidgets(
-    'travel tab shows destination chips, built modules and the locked '
-    'upcoming services',
+    'travel card shows uniform tiles for live and locked services',
     (tester) async {
       final home = Get.find<HomeController>();
       seedData(home);
@@ -146,31 +145,15 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      // v1.0.50: travel card split into Available now + Coming soon.
+      // v1.0.52: uniform tile grid (no destination chips on dashboard).
       expect(find.text('Travel Services'), findsOneWidget);
-      expect(find.text('Choose your destination to see available services'),
-          findsOneWidget);
-      expect(find.text('Available now'), findsOneWidget);
-      expect(find.text('Coming soon'), findsOneWidget);
-      // Live modules (no KYC lock on the tile itself).
       expect(find.text('Flights'), findsOneWidget);
       expect(find.text('Hotels'), findsOneWidget);
       expect(find.text('eSIM'), findsOneWidget);
-      // Coming-soon chips still listed (compact wrap — all built in tree).
       expect(find.text('Visa'), findsOneWidget);
       expect(find.text('Train'), findsOneWidget);
       expect(find.text('Car Rental'), findsOneWidget);
       expect(find.text('Taxi'), findsOneWidget);
-
-      // Destination chips (horizontal scroll — every chip is built).
-      for (final country in ['Iran', 'China', 'Russia', 'Turkey', 'UAE',
-        'Iraq', 'Oman', 'Georgia']) {
-        expect(find.text(country), findsOneWidget);
-      }
-
-      // Selecting a destination rebuilds the hub without exceptions.
-      await tester.tap(find.text('Iran'));
-      await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);
     },
