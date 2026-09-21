@@ -42,8 +42,8 @@ class TwoFactorAuthController extends GetxController {
             signIn.pendingTwoFaPassword.value.isNotEmpty) {
           await Get.find<SettingsService>()
               .saveLoggedInUserEmail(signIn.pendingTwoFaEmail.value);
-          await Get.find<SettingsService>()
-              .saveLoggedInUserPassword(signIn.pendingTwoFaPassword.value);
+          // 1.0.51: token-only biometric — drop any staged password.
+          await Get.find<SettingsService>().clearLoggedInUserPassword();
           signIn.pendingTwoFaEmail.value = "";
           signIn.pendingTwoFaPassword.value = "";
         }

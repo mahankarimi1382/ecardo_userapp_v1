@@ -5,6 +5,12 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
 
 class SplashController extends GetxController {
@@ -94,23 +100,20 @@ class SplashController extends GetxController {
       if (!biometricEnabled) return false;
 
       final savedEmail = await SettingsService.getLoggedInUserEmail();
-      final savedPassword = await SettingsService.getLoggedInUserPassword();
-      if (savedEmail == null ||
-          savedEmail.isEmpty ||
-          savedPassword == null ||
-          savedPassword.isEmpty) {
-        return false;
-      }
+      if (savedEmail == null || savedEmail.isEmpty) return false;
+
+      // 1.0.51: prefer bearer token — no password needed for unlock.
+      final tokenService = Get.find<TokenService>();
+      await tokenService.loadAccessToken();
+      final token = tokenService.accessToken.value;
+      final hasToken = token != null && token.isNotEmpty;
 
       final biometricAuth = BiometricAuthService();
-      // Hardware unavailable / nothing enrolled → no prompt, no toast, the
-      // user lands on sign-in exactly like before this feature.
       if (!await biometricAuth.isBiometricAvailable()) {
         debugPrint('AUTH-BIO: biometrics unavailable — falling back to sign-in');
         return false;
       }
 
-      // Bounded wait: on timeout treat as failure → sign-in fallback.
       final success = await biometricAuth
           .authenticateWithBiometrics()
           .timeout(_biometricPromptTimeout, onTimeout: () => false);
@@ -119,22 +122,53 @@ class SplashController extends GetxController {
         return false;
       }
 
-      // Replace splash with sign-in BEFORE starting the programmatic login
-      // so the navigation stack matches the manual flow (2FA and sign-up
-      // status are pushed on top of sign-in, never on top of splash).
-      Get.offNamed(BaseRoute.signIn);
+      if (hasToken) {
+        // Token path: refresh profile and enter the app (no password re-login).
+        try {
+          await FirebaseMessagingService.instance().registerTokenWithBackend();
+        } catch (_) {}
+        try {
+          final response = await Get.find<NetworkService>().get(
+            endpoint: ApiPath.userEndpoint,
+          );
+          if (response.status == Status.completed && response.data != null) {
+            // Drop any legacy stored password after successful token unlock.
+            await Get.find<SettingsService>().clearLoggedInUserPassword();
+            final user = UserModel.fromJson(response.data!);
+            final completed = user.data?.boardingSteps?.completed == true;
+            if (completed) {
+              Get.offAllNamed(BaseRoute.navigation);
+            } else {
+              Get.offNamed(
+                BaseRoute.signUpStatus,
+                arguments: {"is_login_state": true},
+              );
+            }
+            return true;
+          }
+        } catch (e) {
+          debugPrint('AUTH-BIO: token unlock failed: $e');
+        }
+        // Token rejected — force password sign-in.
+        return false;
+      }
 
+      // Legacy one-shot: password still on device from older builds.
+      final savedPassword = await SettingsService.getLoggedInUserPassword();
+      if (savedPassword == null || savedPassword.isEmpty) {
+        return false;
+      }
+
+      Get.offNamed(BaseRoute.signIn);
       final controller = Get.put(SignInController());
       controller.biometricEmail.value = savedEmail;
       controller.biometricPassword.value = savedPassword;
-      // Reuses: login API → postFcmNotification (FCM registration) →
-      // fetchUser → home / 2FA / sign-up status (storage logic untouched).
       await controller.submitSignIn(useBiometric: true);
+      // After this login, password is cleared by SignInController (1.0.51).
       return true;
     } catch (e, s) {
-      // Any unexpected problem must never trap the user on splash.
-      debugPrint('❌ _tryAutoBiometricLogin() error: $e');
-      debugPrint('📍 StackTrace: $s');
+      debugPrint('AUTH-BIO: unexpected error: $e');
+      debugPrint('$s');
       return false;
     }
   }

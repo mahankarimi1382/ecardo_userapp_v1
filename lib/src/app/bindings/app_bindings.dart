@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_ads/controller/my_ads_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/controller/my_order_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/bill_payment_history_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_history_controller.dart';
@@ -620,8 +622,22 @@ class GiftCardHistoryBinding implements Bindings {
 class P2pBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<P2pController>(() => P2pController());
-    Get.lazyPut<PaymentAccountController>(() => PaymentAccountController());
+    // 1.0.51: shell controllers for P2P tabs (fenix survives tab switches).
+    if (!Get.isRegistered<P2pController>()) {
+      Get.lazyPut<P2pController>(() => P2pController(), fenix: true);
+    }
+    if (!Get.isRegistered<PaymentAccountController>()) {
+      Get.lazyPut<PaymentAccountController>(
+        () => PaymentAccountController(),
+        fenix: true,
+      );
+    }
+    if (!Get.isRegistered<MyAdsController>()) {
+      Get.lazyPut<MyAdsController>(() => MyAdsController(), fenix: true);
+    }
+    if (!Get.isRegistered<MyOrderController>()) {
+      Get.lazyPut<MyOrderController>(() => MyOrderController(), fenix: true);
+    }
   }
 }
 

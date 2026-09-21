@@ -135,6 +135,20 @@ class SettingsService extends GetxService {
     }
   }
 
+
+  /// A-SEC (1.0.51): biometric gate uses the bearer token, not a stored
+  /// password. Call this after login so legacy installs drop the old secret.
+  Future<void> clearLoggedInUserPassword() async {
+    try {
+      await _secureStorage.delete(key: currentPasswordKey);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(currentPasswordKey);
+      currentPassword.value = null;
+    } catch (e) {
+      debugPrint('clearLoggedInUserPassword failed: $e');
+    }
+  }
+
   /// phase1-fix (P0-9): wipe ALL local session state (flags + stored
   /// credentials + FCM token). Called by logout regardless of the API result
   /// so a logged-out user can never be silently re-logged-in by the splash
