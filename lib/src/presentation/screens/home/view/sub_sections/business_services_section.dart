@@ -11,7 +11,7 @@ import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_m
 import 'package:ecardo_user/src/common/model/user_model.dart';
 
 /// v1.0.45 (BUSINESS SERVICES): commercial & business services card on the
-/// dashboard — remittance + P2P escrow (built modules, moved here from the
+/// dashboard — remittance + P2P (built) + escrow placeholder (not built), from the
 /// old flat services grid) plus the upcoming business services (service
 /// guarantee, bank loan, license, stocks & exchange) shown greyed with a
 /// lock until their modules ship; tapping explains availability and the
@@ -43,11 +43,19 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
         route: BaseRoute.transfer,
         feature: 'transfer',
       ),
+      // P2P trading (live module) — label must be P2P, not "Escrow".
       ServiceTile(
-        title: localization.businessServiceP2pEscrow,
+        title: localization.drawerP2pTrading,
         icon: PngAssets.p2pTradingService,
         route: BaseRoute.p2pTrading,
         available: addons?.p2pTrading == true,
+      ),
+      // Escrow services — separate, not built yet (grey + lock).
+      ServiceTile(
+        title: localization.businessServiceP2pEscrow,
+        iconData: Icons.gavel_rounded,
+        route: '',
+        available: false,
       ),
       // Upcoming business modules — greyed with a lock; tapping explains
       // availability + the KYC level requirement.

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/presentation/screens/not_found/view/not_found_screen.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
 import 'package:ecardo_user/src/app/constants/app_strings.dart';
 import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
-import 'package:ecardo_user/src/app/routes/routes_config.dart';
 import 'package:ecardo_user/src/app/routes/routes_handler.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
@@ -55,8 +55,7 @@ class _EcardoUserState extends State<EcardoUser> {
           initialRoute: BaseRoute.root,
           unknownRoute: GetPage(
             name: '/not-found',
-            page: () => RoutesConfig.splash,
-            binding: SplashBinding(),
+            page: () => const NotFoundScreen(),
           ),
           locale: _locale,
           fallbackLocale: const Locale('en'),

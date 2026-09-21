@@ -381,8 +381,8 @@ class GiftCardController extends GetxController {
     }
 
     if (denominationType == 'RANGE' &&
-        double.tryParse(minRecipientDenomination)! > 0 &&
-        amount < double.tryParse(minRecipientDenomination)!) {
+        (double.tryParse(minRecipientDenomination) ?? 0.0) > 0 &&
+        amount < (double.tryParse(minRecipientDenomination) ?? 0.0)) {
       ToastHelper().showErrorToast(
         localization!.giftCardAmountMinError(minRecipientDenomination),
       );
@@ -390,8 +390,8 @@ class GiftCardController extends GetxController {
     }
 
     if (denominationType == 'RANGE' &&
-        double.tryParse(maxRecipientDenomination)! > 0 &&
-        amount > double.tryParse(maxRecipientDenomination)!) {
+        (double.tryParse(maxRecipientDenomination) ?? 0.0) > 0 &&
+        amount > (double.tryParse(maxRecipientDenomination) ?? 0.0)) {
       ToastHelper().showErrorToast(
         localization!.giftCardAmountMaxError(maxRecipientDenomination),
       );

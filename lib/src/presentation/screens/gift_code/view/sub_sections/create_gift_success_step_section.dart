@@ -87,7 +87,7 @@ class _CreateGiftSuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localizations.createGiftSuccessAmount,
                             content:
-                                "${double.tryParse(controller.successCreateGiftData.value!["gift"]["amount"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
+                                "${(double.tryParse(controller.successCreateGiftData.value?["gift"]?["amount"]?.toString() ?? "") ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value?["gift"]?["currency"] ?? ""}",
                             contentColor: AppColors.success,
                           ),
                           const SizedBox(height: 20),
@@ -99,7 +99,7 @@ class _CreateGiftSuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localizations.createGiftSuccessCharge,
                             content:
-                                "${double.tryParse(controller.successCreateGiftData.value!["gift"]["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
+                                "${(double.tryParse(controller.successCreateGiftData.value?["gift"]?["charge"]?.toString() ?? "") ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value?["gift"]?["currency"] ?? ""}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -111,7 +111,7 @@ class _CreateGiftSuccessStepSectionState
                           _buildSuccessDynamicContent(
                             title: localizations.createGiftSuccessFinalAmount,
                             content:
-                                "${double.tryParse(controller.successCreateGiftData.value!["gift"]["final_amount"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value!["gift"]["currency"]}",
+                                "${(double.tryParse(controller.successCreateGiftData.value?["gift"]?["final_amount"]?.toString() ?? "") ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.successCreateGiftData.value?["gift"]?["currency"] ?? ""}",
                             contentColor: AppColors.success,
                           ),
                           const SizedBox(height: 20),

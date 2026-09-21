@@ -75,7 +75,14 @@ bool hasKycFeature(String? feature, KycBadge? badge) {
 }
 
 ResolvedTile resolveTile(ServiceTile tile, KycBadge? badge) {
-  if (!tile.available) return ResolvedTile(tile, TileState.comingSoon);
+  // Empty route + unavailable = module not shipped yet (lock badge).
+  // Addon-gated modules keep comingSoon (toast only, no lock).
+  if (!tile.available) {
+    return ResolvedTile(
+      tile,
+      tile.route.isEmpty ? TileState.notBuilt : TileState.comingSoon,
+    );
+  }
   if (!hasKycFeature(tile.feature, badge)) {
     return ResolvedTile(tile, TileState.kycLocked);
   }

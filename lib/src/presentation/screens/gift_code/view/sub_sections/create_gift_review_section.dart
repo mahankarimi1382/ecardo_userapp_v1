@@ -91,7 +91,7 @@ class CreateGiftReviewSection extends StatelessWidget {
                             context,
                             title: localizations.createGiftReviewCharge,
                             content:
-                                "${double.tryParse(controller.charge.value.toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${(double.tryParse(controller.charge.value.toString()) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ""}",
                             contentColor: AppColors.error,
                           ),
                           const SizedBox(height: 20),
@@ -104,7 +104,7 @@ class CreateGiftReviewSection extends StatelessWidget {
                             context,
                             title: localizations.createGiftReviewTotalAmount,
                             content:
-                                "${double.tryParse(controller.totalAmount.value.toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                                "${(double.tryParse(controller.totalAmount.value.toString()) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ""}",
                             contentColor: AppColors.error,
                           ),
                         ],
