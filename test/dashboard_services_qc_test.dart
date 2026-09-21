@@ -136,8 +136,7 @@ void main() {
   );
 
   testWidgets(
-    'travel tab shows destination chips, built modules and the locked '
-    'upcoming services',
+    'travel card shows uniform tiles for live and locked services',
     (tester) async {
       final home = Get.find<HomeController>();
       seedData(home);
@@ -155,11 +154,6 @@ void main() {
       expect(find.text('Train'), findsOneWidget);
       expect(find.text('Car Rental'), findsOneWidget);
       expect(find.text('Taxi'), findsOneWidget);
-      }
-
-      // Selecting a destination rebuilds the hub without exceptions.
-      await tester.tap(find.text('Iran'));
-      await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);
     },
