@@ -25,8 +25,33 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends State<SignInScreen>
+    with SingleTickerProviderStateMixin {
   final SignInController controller = Get.find();
+  late final AnimationController _enterCtrl;
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _enterCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 550),
+    );
+    _fade = CurvedAnimation(parent: _enterCtrl, curve: Curves.easeOut);
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.06),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _enterCtrl, curve: Curves.easeOutCubic));
+    _enterCtrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _enterCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +64,16 @@ class _SignInScreenState extends State<SignInScreen> {
       },
       child: Scaffold(
         appBar: const CommonDefaultAppBar(),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF121212)
+            : AppColors.lightBackground,
         body: Stack(
           children: [
-            SingleChildScrollView(
+            FadeTransition(
+              opacity: _fade,
+              child: SlideTransition(
+                position: _slide,
+                child: SingleChildScrollView(
               child: Column(
                 children: [
                   SizedBox(
@@ -161,7 +193,26 @@ class _SignInScreenState extends State<SignInScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 16.h),
+                              Obx(() {
+                                if (controller.emailError.value.isEmpty) {
+                                  return const SizedBox.shrink();
+                                }
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 6.h, bottom: 4.h),
+                                  child: Align(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Text(
+                                      controller.emailError.value,
+                                      style: TextStyle(
+                                        color: AppColors.error,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                              SizedBox(height: 12.h),
                               CommonRequiredLabelAndDynamicField(
                                 labelText: localizations.signInPassword,
                                 isLabelRequired: true,
@@ -223,40 +274,77 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 40.h),
+                        Obx(() {
+                          if (controller.passwordError.value.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 10.h),
+                            child: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                controller.passwordError.value,
+                                style: TextStyle(
+                                  color: AppColors.error,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                        SizedBox(height: 24.h),
                         Obx(
                           () => CommonButton(
+                            isLoading: controller.isLoading.value,
                             onPressed: controller.isLoading.value
                                 ? null
                                 : () async {
-                                    if (controller
-                                        .emailController
-                                        .text
-                                        .isEmpty) {
-                                      ToastHelper().showErrorToast(
-                                        localizations
-                                            .signInValidationEmailRequired,
-                                      );
-                                    } else if (controller
-                                        .passwordController
-                                        .text
-                                        .isEmpty) {
-                                      ToastHelper().showErrorToast(
-                                        localizations
-                                            .signInValidationPasswordRequired,
-                                      );
-                                    } else {
-                                      await controller.submitSignIn();
-                                    }
+                                    await controller.submitSignIn();
                                   },
                             width: double.infinity,
                             text: localizations.signInButton,
                           ),
                         ),
+                        // Biometric quick-login — hidden when unsupported / revoked.
+                        Obx(() {
+                          if (!controller.showBiometricButton.value) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(top: 14.h),
+                            child: OutlinedButton.icon(
+                              onPressed: controller.isLoading.value
+                                  ? null
+                                  : () => controller.signInWithBiometricTap(),
+                              icon: Icon(
+                                Icons.fingerprint_rounded,
+                                size: 26.sp,
+                                color: AppColors.lightPrimary,
+                              ),
+                              label: Text(
+                                'ورود با اثرانگشت / چهره',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14.sp,
+                                  color: AppColors.lightPrimary,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                minimumSize: Size(double.infinity, 48.h),
+                                side: BorderSide(
+                                  color: AppColors.lightPrimary.withValues(
+                                    alpha: 0.45,
+                                  ),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
                         SizedBox(height: 16.h),
-                        // Optional Telegram entry — never blocks email/password.
-                        // Activates when settings.telegram_login == "1" AND
-                        // backend exposes the deep-link/token exchange.
                         _TelegramSignInButton(localizations: localizations),
                         SizedBox(height: 20.h),
                         Wrap(
@@ -308,25 +396,19 @@ class _SignInScreenState extends State<SignInScreen> {
                           ],
                         ),
                         SizedBox(height: 50.h),
-                        // AUTH-BIO (primary directive): the biometric
-                        // fingerprint icon was REMOVED from this screen. The
-                        // biometric gate now runs automatically after splash
-                        // (SplashController._tryAutoBiometricLogin). All
-                        // underlying storage/flag logic is untouched: the
-                        // `current_biometric` flag is still written by the
-                        // end-drawer toggle (HomeController.toggleBiometric)
-                        // and read by the splash gate; the saved
-                        // credentials + submitSignIn(useBiometric:) chain in
-                        // SignInController are reused by that gate.
                       ],
                     ),
                   ),
                 ],
               ),
             ),
+              ),
+            ),
+            // Button already shows spinner — keep overlay only for biometric path depth.
             Obx(
               () => Visibility(
-                visible: controller.isLoading.value,
+                visible: controller.isLoading.value &&
+                    controller.showBiometricButton.value,
                 child: const CommonLoading(),
               ),
             ),

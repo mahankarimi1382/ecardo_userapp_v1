@@ -3,18 +3,17 @@ import 'dart:ui' show Color;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-/// Single source of truth for Android notification channel IDs.
-/// Must match `com.google.firebase.messaging.default_notification_channel_id`
-/// in AndroidManifest.xml — a mismatch silently drops / deprioritizes pushes.
 class NotificationChannels {
   static const String primaryId = 'ecardo_default';
   static const String primaryName = 'eCardo';
   static const String primaryDescription =
       'eCardo account, transaction and update notifications';
 
-  /// Legacy id that older builds / the previous manifest used. We still
-  /// create it so any in-flight FCM messages addressed to it still render
-  /// at high importance.
+  static const String financialId = 'ecardo_financial';
+  static const String financialName = 'تراکنش‌های مالی';
+  static const String financialDescription =
+      'واریز، برداشت، انتقال و هشدارهای مالی';
+
   static const String legacyId = 'channel_id';
 }
 
@@ -48,13 +47,11 @@ class LocalNotificationsService {
       requestSoundPermission: true,
     );
 
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
-
     await _plugin.initialize(
-      initSettings,
+      const InitializationSettings(
+        android: androidSettings,
+        iOS: iosSettings,
+      ),
       onDidReceiveNotificationResponse: _onNotificationResponse,
     );
 
@@ -62,32 +59,41 @@ class LocalNotificationsService {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
 
-    // Primary channel (also the FCM default in the manifest).
-    const primary = AndroidNotificationChannel(
-      NotificationChannels.primaryId,
-      NotificationChannels.primaryName,
-      description: NotificationChannels.primaryDescription,
-      importance: Importance.max,
-      enableLights: true,
-      enableVibration: true,
-      ledColor: Color(0xFF7445FF),
-      playSound: true,
+    await androidPlugin?.createNotificationChannel(
+      const AndroidNotificationChannel(
+        NotificationChannels.primaryId,
+        NotificationChannels.primaryName,
+        description: NotificationChannels.primaryDescription,
+        importance: Importance.high,
+        enableLights: true,
+        enableVibration: true,
+        ledColor: Color(0xFF7445FF),
+        playSound: true,
+      ),
     );
 
-    // Legacy channel so messages already targeted at channel_id still show.
-    const legacy = AndroidNotificationChannel(
-      NotificationChannels.legacyId,
-      NotificationChannels.primaryName,
-      description: NotificationChannels.primaryDescription,
-      importance: Importance.max,
-      enableLights: true,
-      enableVibration: true,
-      ledColor: Color(0xFF7445FF),
-      playSound: true,
+    await androidPlugin?.createNotificationChannel(
+      const AndroidNotificationChannel(
+        NotificationChannels.financialId,
+        NotificationChannels.financialName,
+        description: NotificationChannels.financialDescription,
+        importance: Importance.max,
+        enableLights: true,
+        enableVibration: true,
+        ledColor: Color(0xFF14AE6F),
+        playSound: true,
+      ),
     );
 
-    await androidPlugin?.createNotificationChannel(primary);
-    await androidPlugin?.createNotificationChannel(legacy);
+    await androidPlugin?.createNotificationChannel(
+      const AndroidNotificationChannel(
+        NotificationChannels.legacyId,
+        NotificationChannels.primaryName,
+        description: NotificationChannels.primaryDescription,
+        importance: Importance.high,
+        playSound: true,
+      ),
+    );
 
     _initialized = true;
   }
@@ -106,21 +112,31 @@ class LocalNotificationsService {
   Future<void> showNotification(
     String? title,
     String? body,
-    String? payload,
-  ) async {
-    if (!_initialized) {
-      await init();
-    }
+    String? payload, {
+    bool financial = false,
+  }) async {
+    if (!_initialized) await init();
 
-    const androidDetails = AndroidNotificationDetails(
-      NotificationChannels.primaryId,
-      NotificationChannels.primaryName,
-      channelDescription: NotificationChannels.primaryDescription,
-      importance: Importance.max,
-      priority: Priority.high,
+    final channelId = financial
+        ? NotificationChannels.financialId
+        : NotificationChannels.primaryId;
+    final channelName = financial
+        ? NotificationChannels.financialName
+        : NotificationChannels.primaryName;
+    final channelDesc = financial
+        ? NotificationChannels.financialDescription
+        : NotificationChannels.primaryDescription;
+
+    final androidDetails = AndroidNotificationDetails(
+      channelId,
+      channelName,
+      channelDescription: channelDesc,
+      importance: financial ? Importance.max : Importance.high,
+      priority: financial ? Priority.max : Priority.high,
       icon: '@drawable/ic_notification',
       playSound: true,
       enableVibration: true,
+      number: 1,
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -129,11 +145,12 @@ class LocalNotificationsService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
+    await _plugin.show(
+      _id++,
+      title,
+      body,
+      NotificationDetails(android: androidDetails, iOS: iosDetails),
+      payload: payload,
     );
-
-    await _plugin.show(_id++, title, body, details, payload: payload);
   }
 }

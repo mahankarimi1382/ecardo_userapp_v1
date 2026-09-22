@@ -45,6 +45,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/local_notifications_service.dart';
+import 'package:ecardo_user/src/common/services/notification_history_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -302,23 +303,8 @@ class FirebaseMessagingService {
       _refreshKycState();
     }
 
-    // Default: show as local notification. AUTH-BIO (A-2): the payload is
-    // now structured JSON (was `data.toString()`, which could not be parsed
-    // back on tap) so the tap router can deep-link to the right screen.
-    final notification = message.notification;
-    if (notification != null) {
-      String payload;
-      try {
-        payload = data.isEmpty ? '' : jsonEncode(data);
-      } catch (_) {
-        payload = data.toString();
-      }
-      _localNotificationsService?.showNotification(
-        notification.title,
-        notification.body,
-        payload,
-      );
-    }
+    // Persist history + tray notification + in-app banner.
+    _persistAndBanner(message);
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
@@ -577,4 +563,78 @@ class FirebaseMessagingService {
     _pendingUpdateOpen = false;
     Get.toNamed(BaseRoute.appUpdate);
   }
+
+  void _persistAndBanner(RemoteMessage message) {
+    final title = message.notification?.title ??
+        message.data['title']?.toString() ??
+        'eCardo';
+    final body = message.notification?.body ??
+        message.data['body']?.toString() ??
+        '';
+    final type = message.data['type']?.toString() ?? 'general';
+    final financial = type == 'transaction' ||
+        type == 'transfer' ||
+        type == 'deposit' ||
+        type == 'withdraw' ||
+        type == 'financial';
+    final payload = message.data.isNotEmpty
+        ? (message.data['route']?.toString() ??
+            message.data['type']?.toString() ??
+            '')
+        : type;
+
+    if (Get.isRegistered<NotificationHistoryService>()) {
+      // ignore: unawaited_futures
+      Get.find<NotificationHistoryService>().add(
+        title: title,
+        body: body,
+        type: financial
+            ? 'financial'
+            : (type == 'app_update' ? 'update' : 'system'),
+        payload: payload,
+      );
+    }
+
+    _localNotificationsService?.showNotification(
+      title,
+      body,
+      payload.isEmpty ? null : payload,
+      financial: financial,
+    );
+
+    // In-app banner while foreground
+    final ctx = _lastContext ?? Get.context;
+    if (ctx != null) {
+      final messenger = ScaffoldMessenger.maybeOf(ctx);
+      messenger?.clearSnackBars();
+      messenger?.showSnackBar(
+        SnackBar(
+          content: Text('$title\n$body', maxLines: 3),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: 'باز کردن',
+            onPressed: () => _routeFromPayload(payload),
+          ),
+        ),
+      );
+    }
+  }
+
+  void _routeFromPayload(String? payload) {
+    if (payload == null || payload.isEmpty) {
+      Get.toNamed(BaseRoute.notifications);
+      return;
+    }
+    if (payload == 'app_update') {
+      _openUpdateScreen();
+      return;
+    }
+    if (payload.contains('transaction') || payload.startsWith('/transaction')) {
+      Get.toNamed(BaseRoute.transactions);
+      return;
+    }
+    Get.toNamed(BaseRoute.notifications);
+  }
+
 }

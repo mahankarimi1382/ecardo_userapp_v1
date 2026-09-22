@@ -72,9 +72,40 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Stack(
             children: [
               Obx(
-                () => homeController.isLoading.value
-                    ? const HomeSkeletonLoader()
-                    : RefreshIndicator(
+                () {
+                  if (homeController.isLoading.value) {
+                    return const HomeSkeletonLoader();
+                  }
+                  if (homeController.loadError.value.isNotEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.cloud_off_rounded,
+                                size: 48, color: AppColors.lightPrimary),
+                            const SizedBox(height: 12),
+                            Text(
+                              homeController.loadError.value,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton.icon(
+                              onPressed: () => homeController.loadData(),
+                              icon: const Icon(Icons.refresh_rounded),
+                              label: const Text('تلاش مجدد'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return RefreshIndicator(
                         color: AppColors.lightPrimary,
                         onRefresh: () => homeController.loadData(),
                         child: SingleChildScrollView(
@@ -83,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               TopHeaderSection(),
-                              SizedBox(height: 30),
+                              const SizedBox(height: 20),
                               MyWalletSection(),
                               SizedBox(height: 20),
                               // v1.0.38 (DASHBOARD): referral bonus/count
@@ -103,13 +134,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               // money transfer, escrow + upcoming
                               // commercial modules.
                               BusinessServicesSection(),
-                              SizedBox(height: 30),
+                              const SizedBox(height: 20),
                               RecentTransactionsSection(),
-                              SizedBox(height: 50),
+                              const SizedBox(height: 24),
                             ],
                           ),
                         ),
-                      ),
+                      );
+                },
               ),
               Obx(
                 () => Visibility(

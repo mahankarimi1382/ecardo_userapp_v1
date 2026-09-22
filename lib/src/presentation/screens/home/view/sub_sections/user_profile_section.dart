@@ -23,11 +23,12 @@ class UserProfileSection extends StatelessWidget {
     final HomeController homeController = Get.find<HomeController>();
     final user = homeController.dashboardModel.value.data?.user;
 
+    final topInset = MediaQuery.paddingOf(context).top;
     return Column(
       children: [
-        SizedBox(height: 60),
+        SizedBox(height: topInset + 12),
         ToolBarSection(),
-        SizedBox(height: 24),
+        const SizedBox(height: 20),
         Stack(
           clipBehavior: Clip.hardEdge,
           children: [
@@ -122,6 +123,16 @@ class _UidPill extends StatelessWidget {
         onTap: () {
           Clipboard.setData(ClipboardData(text: accountNumber));
           ToastHelper().showSuccessToast(localization.userProfileCopied);
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          messenger?.clearSnackBars();
+          messenger?.showSnackBar(
+            SnackBar(
+              content: Text(localization.userProfileCopied),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(milliseconds: 1400),
+              backgroundColor: AppColors.lightPrimary,
+            ),
+          );
         },
         child: Ink(
           decoration: BoxDecoration(

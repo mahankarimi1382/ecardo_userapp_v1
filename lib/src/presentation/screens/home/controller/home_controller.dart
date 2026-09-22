@@ -25,6 +25,7 @@ import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model
 class HomeController extends GetxController {
   // Global Variable
   final RxBool isLoading = false.obs;
+  final RxString loadError = "".obs;
   final RxBool isUserLoading = false.obs;
   final RxBool isBiometricEnable = false.obs;
   GlobalKey<ScaffoldState>? _scaffoldKey;
@@ -88,18 +89,23 @@ class HomeController extends GetxController {
 
   Future<void> loadData() async {
     isLoading.value = true;
+    loadError.value = '';
     if (Get.find<SettingsService>().getSetting("language_switcher") == "1") {
       _setInitialLanguage();
     }
-    // phase2-fix: the four dashboard fetches are independent — run them in
-    // parallel instead of four serial round-trips.
-    await Future.wait([
-      fetchDashboard(),
-      fetchWallets(),
-      fetchTransactions(),
-      fetchUser(),
-    ]);
-    isLoading.value = false;
+    try {
+      await Future.wait([
+        fetchDashboard(),
+        fetchWallets(),
+        fetchTransactions(),
+        fetchUser(),
+      ]);
+    } catch (e) {
+      loadError.value = 'بارگذاری داشبورد ناموفق بود. دوباره تلاش کنید.';
+      debugPrint('loadData error: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   // Load Biometric Status

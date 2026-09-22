@@ -4,6 +4,11 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
+import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
+import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -14,6 +19,10 @@ class SignInController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isBiometricEnable = false.obs;
   final RxBool isPressed = false.obs;
+  final RxString emailError = "".obs;
+  final RxString passwordError = "".obs;
+  final RxBool showBiometricButton = false.obs;
+  final RxBool formVisible = false.obs;
   final Rx<UserModel> userModel = UserModel().obs;
   final SettingsService settingsService = Get.find<SettingsService>();
 
@@ -50,6 +59,11 @@ class SignInController extends GetxController {
     // 2FA verification for 2FA users — see TwoFactorAuthController).
     loadSavedEmail();
     loadBiometricStatus();
+    refreshBiometricButton();
+    // Stagger form entrance animation flag
+    Future.delayed(const Duration(milliseconds: 80), () {
+      formVisible.value = true;
+    });
 
     emailFocusNode.addListener(_handleEmailFocusChange);
     passwordFocusNode.addListener(_handlePasswordFocusChange);
@@ -97,7 +111,130 @@ class SignInController extends GetxController {
     isPasswordFocused.value = passwordFocusNode.hasFocus;
   }
 
+
+  Future<void> refreshBiometricButton() async {
+    try {
+      final bio = BiometricAuthService();
+      final available = await bio.isBiometricAvailable();
+      final enabledPref = await SettingsService.getBiometricEnableOrDisable();
+      final enabled = enabledPref == true ||
+          settingsService.currentBiometric.value == true;
+      final email = await SettingsService.getLoggedInUserEmail();
+      final token = Get.isRegistered<TokenService>()
+          ? Get.find<TokenService>().accessToken.value
+          : null;
+      final hasSession = (email != null && email.isNotEmpty) ||
+          (token != null && token.isNotEmpty);
+      // Hide (not disable) when unsupported or OS biometrics cancelled.
+      showBiometricButton.value = available && enabled && hasSession;
+    } catch (_) {
+      showBiometricButton.value = false;
+    }
+  }
+
+  bool validateForm() {
+    emailError.value = '';
+    passwordError.value = '';
+    final email = emailController.text.trim();
+    final pass = passwordController.text;
+    var ok = true;
+    if (email.isEmpty) {
+      emailError.value = 'ایمیل یا نام کاربری الزامی است';
+      ok = false;
+    } else if (!email.contains('@') && email.length < 3) {
+      emailError.value = 'مقدار وارد شده معتبر نیست';
+      ok = false;
+    } else if (email.contains('@') &&
+        !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
+      emailError.value = 'فرمت ایمیل صحیح نیست';
+      ok = false;
+    }
+    if (pass.isEmpty) {
+      passwordError.value = 'رمز عبور الزامی است';
+      ok = false;
+    } else if (pass.length < 4) {
+      passwordError.value = 'رمز عبور خیلی کوتاه است';
+      ok = false;
+    }
+    return ok;
+  }
+
+  String _friendlyNetworkError(Object e) {
+    if (e is DioException) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
+        return 'زمان اتصال تمام شد. اینترنت را بررسی کنید.';
+      }
+      if (e.type == DioExceptionType.connectionError) {
+        return 'اتصال به اینترنت برقرار نیست.';
+      }
+      final code = e.response?.statusCode;
+      if (code == 401 || code == 422) {
+        return 'ایمیل یا رمز عبور نادرست است.';
+      }
+      if (code != null && code >= 500) {
+        return 'خطای سرور. کمی بعد دوباره تلاش کنید.';
+      }
+    }
+    final s = e.toString().toLowerCase();
+    if (s.contains('socket') || s.contains('network') || s.contains('failed host')) {
+      return 'اتصال به اینترنت برقرار نیست.';
+    }
+    return AppLocalizations.of(Get.context!)?.allControllerLoadError ??
+        'خطایی رخ داد. دوباره تلاش کنید.';
+  }
+
+  Future<void> signInWithBiometricTap() async {
+    final bio = BiometricAuthService();
+    if (!await bio.isBiometricAvailable()) {
+      showBiometricButton.value = false;
+      return;
+    }
+    final ok = await bio.authenticateWithBiometrics();
+    if (!ok) return;
+
+    isLoading.value = true;
+    try {
+      final token = Get.find<TokenService>().accessToken.value;
+      if (token == null || token.isEmpty) {
+        ToastHelper().showErrorToast(
+          'نشست منقضی شده. با ایمیل و رمز وارد شوید.',
+        );
+        showBiometricButton.value = false;
+        return;
+      }
+      try {
+        await FirebaseMessagingService.instance().registerTokenWithBackend();
+      } catch (_) {}
+      final response = await Get.find<NetworkService>().get(
+        endpoint: ApiPath.userEndpoint,
+      );
+      if (response.status == Status.completed && response.data != null) {
+        userModel.value = UserModel.fromJson(response.data!);
+        await setLogInState();
+        final completed = userModel.value.data?.boardingSteps?.completed == true;
+        if (completed) {
+          Get.offAllNamed(BaseRoute.navigation);
+        } else {
+          Get.toNamed(
+            BaseRoute.signUpStatus,
+            arguments: {"is_login_state": true},
+          );
+        }
+      } else {
+        ToastHelper().showErrorToast('ورود با بیومتریک ناموفق بود.');
+      }
+    } catch (e) {
+      ToastHelper().showErrorToast(_friendlyNetworkError(e));
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> submitSignIn({bool useBiometric = false}) async {
+    if (!useBiometric && !validateForm()) return;
+
     isLoading.value = true;
 
     final String email = useBiometric
@@ -115,22 +252,32 @@ class SignInController extends GetxController {
       );
 
       if (response.status == Status.completed) {
+        // Enable biometric for next visits when device supports it.
+        try {
+          final bio = BiometricAuthService();
+          if (await bio.isBiometricAvailable()) {
+            await settingsService.saveBiometricEnableOrDisable(true);
+          }
+        } catch (_) {}
+        if (Get.isRegistered<PermissionFlowService>()) {
+          await Get.find<PermissionFlowService>().requestNotification(
+            context: Get.context,
+            explain: true,
+          );
+        }
         await postFcmNotification(
           email: email,
           password: password,
           useBiometric: useBiometric,
         );
+        await refreshBiometricButton();
       }
     } catch (e, s) {
       debugPrint('❌ submitSignIn() error: $e');
       debugPrint('📍 StackTrace: $s');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      ToastHelper().showErrorToast(_friendlyNetworkError(e));
     } finally {
       isLoading.value = false;
-      // A-SEC: never keep plaintext password in Rx longer than the login call.
-      // Secure storage still holds credentials for biometric re-entry; RAM is cleared.
       if (useBiometric) {
         biometricPassword.value = '';
       }

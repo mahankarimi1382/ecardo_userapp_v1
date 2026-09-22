@@ -15,7 +15,7 @@ class TopHeaderSection extends StatelessWidget {
         Column(
           children: [
             Container(
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 18),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 16),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.lightPrimary,
@@ -27,7 +27,7 @@ class TopHeaderSection extends StatelessWidget {
               child: UserProfileSection(),
             ),
             Container(
-              margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+              margin: EdgeInsetsDirectional.symmetric(horizontal: 16),
               height: 43,
               decoration: BoxDecoration(
                 color: AppColors.lightBackground,

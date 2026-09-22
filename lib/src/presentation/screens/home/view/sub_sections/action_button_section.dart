@@ -122,18 +122,21 @@ class ActionButtonSection extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image(image: AssetImage(icon), width: 25, height: 25),
+                Image(image: AssetImage(icon), width: 28, height: 28),
                 const SizedBox(height: 6),
-                Text(
-                  name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.80),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    name,
+                    maxLines: 1,
+                    softWrap: false,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                      color: AppColors.lightTextPrimary.withValues(alpha: 0.80),
+                    ),
                   ),
                 ),
               ],
