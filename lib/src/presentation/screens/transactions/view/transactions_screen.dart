@@ -246,9 +246,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          transaction.createdAt!
-                                              .split(",")
-                                              .first,
+                                          JalaliDateHelper.format(transaction.createdAt),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             letterSpacing: 0,
