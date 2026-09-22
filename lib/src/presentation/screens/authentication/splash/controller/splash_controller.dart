@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,16 +51,20 @@ class SplashController extends GetxController {
         final token = tokenService.accessToken.value;
         final hasToken = token != null && token.isNotEmpty;
         if (isLoggedIn && hasToken) {
-          // Probe session: if token expired, show explicit re-login UI.
+          // Fast probe (3s). On timeout/network: enter dashboard if session
+          // flag exists; final validity is re-checked in-app.
           try {
-            final res = await Get.find<NetworkService>().get(
-              endpoint: ApiPath.userEndpoint,
-            );
+            final res = await Get.find<NetworkService>()
+                .get(endpoint: ApiPath.userEndpoint)
+                .timeout(const Duration(seconds: 3));
             if (res.status == Status.completed) {
               Get.offAllNamed(BaseRoute.navigation);
             } else {
               await _showSessionExpiredAndGoSignIn();
             }
+          } on TimeoutException {
+            // Weak network: prefer dashboard over blocking splash.
+            Get.offAllNamed(BaseRoute.navigation);
           } catch (_) {
             await _showSessionExpiredAndGoSignIn();
           }
@@ -195,5 +200,27 @@ class SplashController extends GetxController {
       debugPrint('$s');
       return false;
     }
+  }
+
+  Future<void> _showSessionExpiredAndGoSignIn() async {
+    try {
+      final ctx = Get.context;
+      if (ctx != null && ctx.mounted) {
+        await Get.dialog(
+          AlertDialog(
+            title: const Text('نشست منقضی شد'),
+            content: const Text('برای ادامه، دوباره وارد حساب شوید.'),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text('ورود مجدد'),
+              ),
+            ],
+          ),
+          barrierDismissible: false,
+        );
+      }
+    } catch (_) {}
+    Get.offAllNamed(BaseRoute.signIn);
   }
 }

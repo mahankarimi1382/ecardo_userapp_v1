@@ -14,10 +14,10 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double topInset;
 
   @override
-  double get maxExtent => topInset + 120;
+  double get maxExtent => topInset + 140;
 
   @override
-  double get minExtent => topInset + 56;
+  double get minExtent => topInset + 60;
 
   @override
   bool shouldRebuild(covariant DashboardSliverHeaderDelegate oldDelegate) {

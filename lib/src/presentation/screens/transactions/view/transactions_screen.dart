@@ -325,17 +325,26 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
   Widget _dirChip(String label, int value) {
     final selected = _dirFilter == value;
+    Color? selectedColor = AppColors.lightPrimary.withValues(alpha: 0.18);
+    Color? labelColor = selected ? AppColors.lightPrimary : null;
+    if (value == 1) {
+      selectedColor = AppColors.success.withValues(alpha: 0.18);
+      if (selected) labelColor = AppColors.success;
+    } else if (value == 2) {
+      selectedColor = AppColors.error.withValues(alpha: 0.15);
+      if (selected) labelColor = AppColors.error;
+    }
     return Padding(
       padding: const EdgeInsetsDirectional.only(end: 8),
       child: ChoiceChip(
         label: Text(label),
         selected: selected,
         onSelected: (_) => setState(() => _dirFilter = value),
-        selectedColor: AppColors.lightPrimary.withValues(alpha: 0.18),
+        selectedColor: selectedColor,
         labelStyle: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 12,
-          color: selected ? AppColors.lightPrimary : null,
+          color: labelColor,
         ),
       ),
     );

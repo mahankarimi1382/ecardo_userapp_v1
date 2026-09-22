@@ -120,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   onRefresh: () => homeController.loadData(),
                   child: CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    floatHeaderSlivers: true,
                     slivers: [
                       // --- collapsible greeting ---
                       SliverPersistentHeader(

@@ -32,7 +32,13 @@ class RecentTransactionsSection extends StatelessWidget {
           const SizedBox(height: 10),
           (homeController.transactionsModel.value.data?.transactions?.isEmpty ??
                   true)
-              ? EmptyView.transactions(onCta: () => Get.toNamed(BaseRoute.transactions))
+              ? EmptyView(
+                  icon: Icons.receipt_long_outlined,
+                  title: 'هنوز تراکنشی نداری',
+                  subtitle: 'اولین واریز یا انتقال را انجام بده تا تاریخچه اینجا بیاید.',
+                  ctaLabel: 'اولین تراکنش',
+                  onCta: () => Get.toNamed(BaseRoute.transfer),
+                )
               : Container(
                   margin: EdgeInsetsDirectional.symmetric(horizontal: Responsive.pagePadding(context)),
                   decoration: BoxDecoration(

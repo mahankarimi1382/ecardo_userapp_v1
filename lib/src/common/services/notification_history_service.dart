@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Local notification history that survives logout (prefs, not session wipe).
@@ -88,6 +89,7 @@ class NotificationHistoryService extends GetxService {
       items.removeRange(_max, items.length);
     }
     await _persist();
+    await _syncBadge();
   }
 
   Future<void> markRead(String id) async {
@@ -96,6 +98,7 @@ class NotificationHistoryService extends GetxService {
     items[i] = items[i].copyWith(read: true);
     items.refresh();
     await _persist();
+    await _syncBadge();
   }
 
   Future<void> markAllRead() async {
@@ -104,6 +107,7 @@ class NotificationHistoryService extends GetxService {
     }
     items.refresh();
     await _persist();
+    await _syncBadge();
   }
 
   List<NotificationHistoryItem> filtered({
@@ -139,5 +143,10 @@ class NotificationHistoryService extends GetxService {
       _key,
       jsonEncode(items.map((e) => e.toJson()).toList()),
     );
+  }
+
+  Future<void> _syncBadge() async {
+    if (!Get.isRegistered<AppBadgeService>()) return;
+    await Get.find<AppBadgeService>().update(unreadCount);
   }
 }
