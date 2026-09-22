@@ -78,7 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AppColors.lightPrimary,
                         onRefresh: () => homeController.loadData(),
                         child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               TopHeaderSection(),
                               SizedBox(height: 30),

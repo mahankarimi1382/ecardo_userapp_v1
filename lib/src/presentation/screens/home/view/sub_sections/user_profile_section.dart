@@ -111,7 +111,11 @@ class _UidPill extends StatelessWidget {
     // Group digits for readability when purely numeric (e.g. 12 345 678).
     final display = _formatAccountId(accountNumber);
 
-    return Material(
+    // UID is inherently LTR (digits / account ids). Force LTR so RTL
+    // locales (fa/ar) do not reverse digit order or flip the row.
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -200,6 +204,8 @@ class _UidPill extends StatelessWidget {
                                 display,
                                 maxLines: 1,
                                 softWrap: false,
+                                textDirection: TextDirection.ltr,
+                                textAlign: TextAlign.left,
                                 style: style,
                               ),
                             ),
@@ -227,6 +233,7 @@ class _UidPill extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

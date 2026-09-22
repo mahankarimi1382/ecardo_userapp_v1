@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -10,8 +11,9 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/splash/controller/splash_controller.dart';
 
-/// v1.0.55 — redesigned splash: layered gradient, glass logo mark,
-/// animated progress ring, refined wordmark + tagline.
+/// v1.0.56 — fullscreen splash (no half-white gap).
+/// Scaffold + SizedBox.expand + StackFit.expand so gradient covers every
+/// pixel in portrait and landscape; SafeArea only pads content, not fill.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -37,9 +39,27 @@ class _SplashScreenState extends State<SplashScreen>
 
   String _version = '';
 
+  static const _gradientColors = [
+    Color(0xFF8B6BFF),
+    AppColors.lightPrimary,
+    AppColors.lightPrimaryDark,
+    Color(0xFF3D248F),
+  ];
+
   @override
   void initState() {
     super.initState();
+    // Match system bars to brand so no white strip above/below.
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: Color(0xFF3D248F),
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+
     settingsService.isSettingsDataLoad.value = false;
     settingsService.fetchSettings();
     _loadVersion();
@@ -114,189 +134,215 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Use MediaQuery size so landscape still paints full viewport.
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF8B6BFF),
-              AppColors.lightPrimary,
-              AppColors.lightPrimaryDark,
-              Color(0xFF3D248F),
-            ],
-            stops: [0.0, 0.35, 0.7, 1.0],
+      // Critical: default Scaffold is white — any gap would show as
+      // "half white page". Match the gradient bottom stop.
+      backgroundColor: const Color(0xFF3D248F),
+      body: SizedBox(
+        width: size.width,
+        height: size.height,
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: _gradientColors,
+              stops: [0.0, 0.35, 0.7, 1.0],
+            ),
           ),
-        ),
-        child: Stack(
-          children: [
-            // Soft mesh orbs
-            Positioned(
-              top: -90,
-              right: -50,
-              child: _orb(220, AppColors.white.withValues(alpha: 0.08)),
-            ),
-            Positioned(
-              top: 160,
-              left: -80,
-              child: _orb(180, const Color(0xFF00BFA6).withValues(alpha: 0.10)),
-            ),
-            Positioned(
-              bottom: 80,
-              right: -40,
-              child: _orb(160, AppColors.white.withValues(alpha: 0.06)),
-            ),
-            // Content
-            SafeArea(
-              child: Column(
-                children: [
-                  const Spacer(flex: 3),
-                  // Logo glass card with pulse ring
-                  FadeTransition(
-                    opacity: _logoFade,
-                    child: ScaleTransition(
-                      scale: _logoScale,
-                      child: AnimatedBuilder(
-                        animation: _pulseController,
-                        builder: (context, child) {
-                          final pulse = 1.0 + (_pulseController.value * 0.04);
-                          return Transform.scale(scale: pulse, child: child);
-                        },
-                        child: Container(
-                          width: 112.w,
-                          height: 112.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(28),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppColors.white.withValues(alpha: 0.28),
-                                AppColors.white.withValues(alpha: 0.10),
-                              ],
-                            ),
-                            border: Border.all(
-                              color: AppColors.white.withValues(alpha: 0.35),
-                              width: 1.2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.black.withValues(alpha: 0.22),
-                                blurRadius: 28,
-                                offset: const Offset(0, 12),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                top: -90,
+                right: -50,
+                child: _orb(220, AppColors.white.withValues(alpha: 0.08)),
+              ),
+              Positioned(
+                top: size.height * 0.18,
+                left: -80,
+                child: _orb(
+                  180,
+                  const Color(0xFF00BFA6).withValues(alpha: 0.10),
+                ),
+              ),
+              Positioned(
+                bottom: 80,
+                right: -40,
+                child: _orb(160, AppColors.white.withValues(alpha: 0.06)),
+              ),
+              // SafeArea only for content insets — background already full.
+              SafeArea(
+                minimum: EdgeInsets.zero,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    children: [
+                      const Spacer(flex: 3),
+                      FadeTransition(
+                        opacity: _logoFade,
+                        child: ScaleTransition(
+                          scale: _logoScale,
+                          child: AnimatedBuilder(
+                            animation: _pulseController,
+                            builder: (context, child) {
+                              final pulse =
+                                  1.0 + (_pulseController.value * 0.04);
+                              return Transform.scale(
+                                scale: pulse,
+                                child: child,
+                              );
+                            },
+                            child: Container(
+                              width: math.min(112.w, size.shortestSide * 0.28),
+                              height: math.min(112.w, size.shortestSide * 0.28),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.white.withValues(alpha: 0.28),
+                                    AppColors.white.withValues(alpha: 0.10),
+                                  ],
+                                ),
+                                border: Border.all(
+                                  color: AppColors.white.withValues(alpha: 0.35),
+                                  width: 1.2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.black.withValues(alpha: 0.22),
+                                    blurRadius: 28,
+                                    offset: const Offset(0, 12),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          padding: EdgeInsets.all(18.w),
-                          child: Image.asset(
-                            PngAssets.appLogo,
-                            fit: BoxFit.contain,
-                            errorBuilder: (_, __, ___) => Icon(
-                              Icons.account_balance_wallet_rounded,
-                              size: 48.sp,
-                              color: AppColors.white,
+                              padding: EdgeInsets.all(18.w),
+                              child: Image.asset(
+                                PngAssets.appLogo,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => Icon(
+                                  Icons.account_balance_wallet_rounded,
+                                  size: 48.sp,
+                                  color: AppColors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 28.h),
-                  // Wordmark
-                  FadeTransition(
-                    opacity: _wordFade,
-                    child: SlideTransition(
-                      position: _wordSlide,
-                      child: Text(
-                        'eCardo',
-                        style: TextStyle(
-                          fontSize: 42.sp,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 0.8,
-                          color: AppColors.white,
-                          height: 1.05,
+                      SizedBox(height: 24.h),
+                      FadeTransition(
+                        opacity: _wordFade,
+                        child: SlideTransition(
+                          position: _wordSlide,
+                          child: Text(
+                            'eCardo',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: (42.sp).clamp(28.0, 48.0).toDouble(),
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.8,
+                              color: AppColors.white,
+                              height: 1.05,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  FadeTransition(
-                    opacity: _tagFade,
-                    child: Text(
-                      'Financial Super App',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.6,
-                        color: AppColors.white.withValues(alpha: 0.72),
+                      SizedBox(height: 10.h),
+                      FadeTransition(
+                        opacity: _tagFade,
+                        child: Text(
+                          'Financial Super App',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: (13.sp).clamp(11.0, 15.0).toDouble(),
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.6,
+                            color: AppColors.white.withValues(alpha: 0.72),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const Spacer(flex: 2),
-                  // Progress ring
-                  FadeTransition(
-                    opacity: _tagFade,
-                    child: SizedBox(
-                      width: 42.w,
-                      height: 42.w,
-                      child: AnimatedBuilder(
-                        animation: _progressController,
-                        builder: (context, _) {
-                          return CustomPaint(
-                            painter: _SplashProgressPainter(
-                              progress: _progressController.value,
-                              color: AppColors.white.withValues(alpha: 0.9),
-                              track: AppColors.white.withValues(alpha: 0.18),
+                      const Spacer(flex: 2),
+                      FadeTransition(
+                        opacity: _tagFade,
+                        child: SizedBox(
+                          width: 42,
+                          height: 42,
+                          child: AnimatedBuilder(
+                            animation: _progressController,
+                            builder: (context, _) {
+                              return CustomPaint(
+                                painter: _SplashProgressPainter(
+                                  progress: _progressController.value,
+                                  color:
+                                      AppColors.white.withValues(alpha: 0.9),
+                                  track:
+                                      AppColors.white.withValues(alpha: 0.18),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 14.h),
+                      FadeTransition(
+                        opacity: _tagFade,
+                        child: Obx(() {
+                          final loading =
+                              settingsService.isSettingsLoading.value;
+                          return Text(
+                            loading
+                                ? 'Preparing your workspace…'
+                                : 'Almost ready',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: (12.sp).clamp(11.0, 14.0).toDouble(),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.white.withValues(alpha: 0.55),
                             ),
                           );
-                        },
+                        }),
                       ),
-                    ),
+                      const Spacer(flex: 1),
+                      if (_version.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Text(
+                            _version,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: (11.sp).clamp(10.0, 13.0).toDouble(),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.6,
+                              color: AppColors.white.withValues(alpha: 0.40),
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(height: 16),
+                    ],
                   ),
-                  SizedBox(height: 18.h),
-                  FadeTransition(
-                    opacity: _tagFade,
-                    child: Obx(() {
-                      final loading = settingsService.isSettingsLoading.value;
-                      return Text(
-                        loading ? 'Preparing your workspace…' : 'Almost ready',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.white.withValues(alpha: 0.55),
-                        ),
-                      );
-                    }),
-                  ),
-                  const Spacer(flex: 1),
-                  if (_version.isNotEmpty)
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 20.h),
-                      child: Text(
-                        _version,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.6,
-                          color: AppColors.white.withValues(alpha: 0.40),
-                        ),
-                      ),
-                    ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _orb(double size, Color color) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    return IgnorePointer(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      ),
     );
   }
 }

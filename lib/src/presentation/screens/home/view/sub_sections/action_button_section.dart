@@ -110,28 +110,34 @@ class ActionButtonSection extends StatelessWidget {
     required GestureTapCallback onPressed,
     required Color backgroundColor,
   }) {
-    return Material(
-      color: AppColors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        splashColor: AppColors.lightPrimary.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            children: [
-              Image(image: AssetImage(icon), width: 25),
-              SizedBox(height: 6),
-              Text(
-                name,
-                style: TextStyle(
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.80),
+    return Expanded(
+      child: Material(
+        color: AppColors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          splashColor: AppColors.lightPrimary.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image(image: AssetImage(icon), width: 25, height: 25),
+                const SizedBox(height: 6),
+                Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    letterSpacing: 0,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                    color: AppColors.lightTextPrimary.withValues(alpha: 0.80),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
