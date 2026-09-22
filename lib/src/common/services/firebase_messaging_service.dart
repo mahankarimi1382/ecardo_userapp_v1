@@ -46,6 +46,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/local_notifications_service.dart';
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
+import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -304,7 +305,7 @@ class FirebaseMessagingService {
     }
 
     // Persist history + tray notification + in-app banner.
-    _persistAndBanner(message);
+    _persistAndBanner(message, showSystemTray: false);
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
@@ -564,7 +565,7 @@ class FirebaseMessagingService {
     Get.toNamed(BaseRoute.appUpdate);
   }
 
-  void _persistAndBanner(RemoteMessage message) {
+  void _persistAndBanner(RemoteMessage message, {required bool showSystemTray}) {
     final title = message.notification?.title ??
         message.data['title']?.toString() ??
         'eCardo';
@@ -577,11 +578,14 @@ class FirebaseMessagingService {
         type == 'deposit' ||
         type == 'withdraw' ||
         type == 'financial';
-    final payload = message.data.isNotEmpty
-        ? (message.data['route']?.toString() ??
-            message.data['type']?.toString() ??
-            '')
-        : type;
+    // Prefer structured JSON payload for deep links.
+    String payload;
+    try {
+      final data = Map<String, dynamic>.from(message.data);
+      payload = data.isEmpty ? type : jsonEncode(data);
+    } catch (_) {
+      payload = message.data['transaction_id']?.toString() ?? type;
+    }
 
     if (Get.isRegistered<NotificationHistoryService>()) {
       // ignore: unawaited_futures
@@ -592,7 +596,33 @@ class FirebaseMessagingService {
             ? 'financial'
             : (type == 'app_update' ? 'update' : 'system'),
         payload: payload,
-      );
+      ).then((_) {
+        if (Get.isRegistered<AppBadgeService>()) {
+          final n = Get.find<NotificationHistoryService>().unreadCount;
+          Get.find<AppBadgeService>().update(n);
+        }
+      });
+    }
+
+    // Foreground: in-app banner only (no system tray noise).
+    if (!showSystemTray) {
+      final ctx = _lastContext ?? Get.context;
+      if (ctx != null) {
+        final messenger = ScaffoldMessenger.maybeOf(ctx);
+        messenger?.clearSnackBars();
+        messenger?.showSnackBar(
+          SnackBar(
+            content: Text('$title\n$body', maxLines: 3),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 4),
+            action: SnackBarAction(
+              label: 'باز کردن',
+              onPressed: () => _routeFromPayload(payload),
+            ),
+          ),
+        );
+      }
+      return;
     }
 
     _localNotificationsService?.showNotification(
@@ -601,24 +631,6 @@ class FirebaseMessagingService {
       payload.isEmpty ? null : payload,
       financial: financial,
     );
-
-    // In-app banner while foreground
-    final ctx = _lastContext ?? Get.context;
-    if (ctx != null) {
-      final messenger = ScaffoldMessenger.maybeOf(ctx);
-      messenger?.clearSnackBars();
-      messenger?.showSnackBar(
-        SnackBar(
-          content: Text('$title\n$body', maxLines: 3),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 4),
-          action: SnackBarAction(
-            label: 'باز کردن',
-            onPressed: () => _routeFromPayload(payload),
-          ),
-        ),
-      );
-    }
   }
 
   void _routeFromPayload(String? payload) {
@@ -626,11 +638,28 @@ class FirebaseMessagingService {
       Get.toNamed(BaseRoute.notifications);
       return;
     }
-    if (payload == 'app_update') {
+    Map<String, dynamic>? data;
+    try {
+      final decoded = jsonDecode(payload);
+      if (decoded is Map) data = Map<String, dynamic>.from(decoded);
+    } catch (_) {}
+
+    final type = data?['type']?.toString() ?? payload;
+    if (type == 'app_update') {
       _openUpdateScreen();
       return;
     }
-    if (payload.contains('transaction') || payload.startsWith('/transaction')) {
+
+    final txId = data?['transaction_id']?.toString() ??
+        data?['trx_id']?.toString();
+    if (txId != null && txId.isNotEmpty) {
+      Get.toNamed(
+        BaseRoute.transactions,
+        arguments: {'transaction_id': txId, 'open_details': true},
+      );
+      return;
+    }
+    if (type.contains('transaction') || payload.contains('transaction')) {
       Get.toNamed(BaseRoute.transactions);
       return;
     }

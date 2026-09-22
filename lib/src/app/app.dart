@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/not_found/view/not_found_screen.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
+import 'package:ecardo_user/src/app/config/theme/dark_theme.dart';
 import 'package:ecardo_user/src/app/constants/app_strings.dart';
 import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
@@ -52,8 +53,9 @@ class _EcardoUserState extends State<EcardoUser> {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: AppStrings.appName,
-          themeMode: ThemeMode.light,
+          themeMode: ThemeMode.system,
           theme: LightTheme().lightTheme(context),
+          darkTheme: DarkTheme().darkTheme(context),
           getPages: routesHandler,
           initialRoute: BaseRoute.root,
           unknownRoute: GetPage(

@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -160,29 +161,7 @@ class SignInController extends GetxController {
   }
 
   String _friendlyNetworkError(Object e) {
-    if (e is DioException) {
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.sendTimeout) {
-        return 'زمان اتصال تمام شد. اینترنت را بررسی کنید.';
-      }
-      if (e.type == DioExceptionType.connectionError) {
-        return 'اتصال به اینترنت برقرار نیست.';
-      }
-      final code = e.response?.statusCode;
-      if (code == 401 || code == 422) {
-        return 'ایمیل یا رمز عبور نادرست است.';
-      }
-      if (code != null && code >= 500) {
-        return 'خطای سرور. کمی بعد دوباره تلاش کنید.';
-      }
-    }
-    final s = e.toString().toLowerCase();
-    if (s.contains('socket') || s.contains('network') || s.contains('failed host')) {
-      return 'اتصال به اینترنت برقرار نیست.';
-    }
-    return AppLocalizations.of(Get.context!)?.allControllerLoadError ??
-        'خطایی رخ داد. دوباره تلاش کنید.';
+    return NetworkErrorHelper.from(e).messageFa;
   }
 
   Future<void> signInWithBiometricTap() async {

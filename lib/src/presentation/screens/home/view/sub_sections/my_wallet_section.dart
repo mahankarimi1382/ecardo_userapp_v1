@@ -10,6 +10,8 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
+import 'package:ecardo_user/src/helper/responsive.dart';
 
 class MyWalletSection extends StatelessWidget {
   const MyWalletSection({super.key});
@@ -35,10 +37,13 @@ class MyWalletSection extends StatelessWidget {
               Get.toNamed(BaseRoute.wallets);
             },
           ),
-          const SizedBox(height: 10),
-          showSingleWalletOnly
-              ? _buildSingleCardView(context, wallets)
-              : _buildHorizontalScrollView(context, wallets),
+          SizedBox(height: Responsive.sectionGap(context) / 2),
+          if (wallets.isEmpty)
+            EmptyView.wallets(onCta: () => Get.toNamed(BaseRoute.wallets))
+          else if (showSingleWalletOnly)
+            _buildSingleCardView(context, wallets)
+          else
+            _buildHorizontalScrollView(context, wallets),
         ],
       );
     });

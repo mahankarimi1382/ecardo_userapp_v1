@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
 import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
+import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 
@@ -117,7 +118,9 @@ Future<void> _initializeServices() async {
   Get.put(NetworkService());
   Get.put<PermissionFlowService>(PermissionFlowService(), permanent: true);
   Get.put<NotificationHistoryService>(NotificationHistoryService(), permanent: true);
+  Get.put<AppBadgeService>(AppBadgeService(), permanent: true);
   Future.microtask(() => Get.find<NotificationHistoryService>().init());
+  Future.microtask(() => Get.find<AppBadgeService>().init());
   Get.put<WalletLiveRateService>(WalletLiveRateService(), permanent: true);
   // Fire-and-forget live FX seed for wallet cards (non-blocking).
   Future.microtask(() => Get.find<WalletLiveRateService>().refresh());

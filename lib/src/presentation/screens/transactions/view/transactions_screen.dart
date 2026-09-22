@@ -49,6 +49,32 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     controller.isLoading.value = true;
     await controller.fetchTransactions();
     controller.isLoading.value = false;
+    _openDeepLinkedTransactionIfAny();
+  }
+
+  void _openDeepLinkedTransactionIfAny() {
+    final args = Get.arguments;
+    if (args is! Map) return;
+    if (args['open_details'] != true) return;
+    final id = args['transaction_id']?.toString();
+    if (id == null || id.isEmpty) return;
+    final list =
+        controller.transactionsModel.value.data?.transactions ?? const [];
+    Transactions? match;
+    for (final t in list) {
+      if (t.tnx?.toString() == id) {
+        match = t;
+        break;
+      }
+    }
+    if (match == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Get.bottomSheet(
+        RecentTransactionDetails(transaction: match!),
+        isScrollControlled: true,
+      );
+    });
   }
 
   Future<void> refreshData() async {

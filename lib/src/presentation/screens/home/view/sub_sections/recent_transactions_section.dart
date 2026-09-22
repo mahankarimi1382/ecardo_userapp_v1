@@ -7,7 +7,8 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
-import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
+import 'package:ecardo_user/src/helper/responsive.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_color.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_icon.dart';
 
@@ -29,12 +30,19 @@ class RecentTransactionsSection extends StatelessWidget {
           const SizedBox(height: 10),
           (homeController.transactionsModel.value.data?.transactions?.isEmpty ??
                   true)
-              ? NoDataFound()
+              ? EmptyView.transactions(onCta: () => Get.toNamed(BaseRoute.transactions))
               : Container(
-                  margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+                  margin: EdgeInsetsDirectional.symmetric(horizontal: Responsive.pagePadding(context)),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(Responsive.cardRadius(context)),
+                    color: Theme.of(context).cardColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
                   ),
                   child: ListView.separated(
                     padding: const EdgeInsetsDirectional.symmetric(vertical: 12),

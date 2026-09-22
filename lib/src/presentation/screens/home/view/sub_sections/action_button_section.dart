@@ -122,8 +122,21 @@ class ActionButtonSection extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image(image: AssetImage(icon), width: 28, height: 28),
-                const SizedBox(height: 6),
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: backgroundColor,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Image(
+                    image: AssetImage(icon),
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+                const SizedBox(height: 8),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
