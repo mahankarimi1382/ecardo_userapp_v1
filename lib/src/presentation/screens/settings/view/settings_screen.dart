@@ -474,7 +474,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: const Text('بررسی به‌روزرسانی'),
                     onTap: () {
                       if (Get.isRegistered<AppUpdateController>()) {
-                        Get.find<AppUpdateController>().checkForUpdate(manual: true);
+                        Get.find<AppUpdateController>().checkForUpdate();
                       }
                     },
                   ),
