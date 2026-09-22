@@ -115,15 +115,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Scroll INTO the reported zone (referral strip + services grid).
-    await tester.drag(
-      find.byType(SingleChildScrollView),
-      const Offset(0, -500),
-    );
+    final scrollable = find.byType(Scrollable);
+    await tester.drag(scrollable.first, const Offset(0, -500));
     await tester.pumpAndSettle();
-    await tester.drag(
-      find.byType(SingleChildScrollView),
-      const Offset(0, -500),
-    );
+    await tester.drag(scrollable.first, const Offset(0, -500));
     await tester.pumpAndSettle();
 
     // Page the services grid horizontally (onPageChanged → setState path).
