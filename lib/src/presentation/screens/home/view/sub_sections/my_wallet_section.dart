@@ -101,7 +101,7 @@ class MyWalletSection extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         width: useFullWidth ? double.infinity : 300,
-        height: 190,
+        height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
@@ -134,7 +134,7 @@ class MyWalletSection extends StatelessWidget {
                   isDefaultWallet: isDefaultWallet,
                   symbol: currencySymbol,
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 _buildLiveRateChip(
                   label: _liveConversionLabel(wallet) ?? 'نرخ در دسترس نیست',
                   isDefaultWallet: isDefaultWallet,
