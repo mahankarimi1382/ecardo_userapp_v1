@@ -207,8 +207,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _navTile(
                     Icons.delete_outline,
                     'حذف حساب',
-                    'نیاز به تأیید دو مرحله‌ای',
-                    () => Get.toNamed(BaseRoute.profileSettings),
+                    'از طریق پشتیبانی درخواست دهید',
+                    () async {
+                      // Option B: no public delete-account API in this app —
+                      // route user to support ticket instead of profile.
+                      if (settings.getSetting('user_ticket') == '1') {
+                        Get.toNamed(BaseRoute.supportTickets);
+                      } else {
+                        Get.dialog(
+                          AlertDialog(
+                            title: const Text('حذف حساب'),
+                            content: const Text(
+                              'برای حذف حساب با پشتیبانی eCardo تماس بگیرید.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Get.back(),
+                                child: const Text('باشه'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ]),
                 _group('امنیت', [
@@ -470,11 +491,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.policy_outlined),
+                    title: const Text('قوانین و حریم خصوصی'),
+                    subtitle: const Text('از پشتیبانی یا وب‌سایت eCardo'),
+                    onTap: () {
+                      if (settings.getSetting('user_ticket') == '1') {
+                        Get.toNamed(BaseRoute.supportTickets);
+                      }
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.system_update),
                     title: const Text('بررسی به‌روزرسانی'),
                     onTap: () {
                       if (Get.isRegistered<AppUpdateController>()) {
                         Get.find<AppUpdateController>().checkForUpdate();
+                      } else {
+                        Get.toNamed(BaseRoute.appUpdate);
                       }
                     },
                   ),

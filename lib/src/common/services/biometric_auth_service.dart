@@ -3,57 +3,45 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
-import 'package:ecardo_user/src/common/widgets/toast/toast_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 
-/// Biometric auth (local_auth — lightweight, no extra native deps beyond plugin).
-/// Preference flag is stored via [SettingsService] (SharedPreferences).
+/// Biometric auth via local_auth (project SDK uses `biometricOnly:` named arg).
 class BiometricAuthService {
-  final LocalAuthentication auth = LocalAuthentication();
-  final AppLocalizations? _localization =
-      Get.context != null ? AppLocalizations.of(Get.context!) : null;
-
-  static const int maxAttempts = 3;
-  int _currentAttempts = 0;
-
-  /// Device supports biometric hardware and has enrolled biometrics.
-  Future<bool> isSupported() async {
-    try {
-      if (kIsWeb) return false;
-      final canCheck = await auth.canCheckBiometrics;
-      final supported = await auth.isDeviceSupported();
-      final available = await auth.getAvailableBiometrics();
-      return (canCheck || supported) && available.isNotEmpty;
-    } catch (_) {
-      return false;
-    }
+  AppLocalizations? get _localization {
+    final ctx = Get.context;
+    if (ctx == null) return null;
+    return AppLocalizations.of(ctx);
   }
 
-  /// Alias used by older call-sites.
-  Future<bool> isBiometricAvailable() => isSupported();
+  final LocalAuthentication auth = LocalAuthentication();
 
-  /// User preference: biometric login enabled.
+  static const int maxAttempts = 3;
+  static int _currentAttempts = 0;
+
+  Future<bool> isSupported() => isBiometricAvailable();
+
   Future<bool> isEnabled() async {
     final v = await SettingsService.getBiometricEnableOrDisable();
     return v == true;
   }
 
-  /// Can prompt now (supported + enrolled). If user revoked biometrics in OS,
-  /// this becomes false — callers should hide login button and turn switch off.
   Future<bool> canAuthenticate() async {
     try {
-      if (!await isSupported()) return false;
-      return await auth.canCheckBiometrics;
+      if (kIsWeb) return false;
+      final canCheck = await auth.canCheckBiometrics;
+      final supported = await auth.isDeviceSupported();
+      final available = await auth.getAvailableBiometrics();
+      return supported && canCheck && available.isNotEmpty;
     } catch (_) {
       return false;
     }
   }
 
-  /// Enable after successful biometric confirmation.
   Future<bool> enable() async {
     if (!await canAuthenticate()) {
       ToastHelper().showErrorToast(
         _localization?.biometricNotAvailable ??
-            'این دستگاه از اثر انگشت/چهره پشتیبانی نمی‌کند',
+            'این دستگاه از بیومتریک پشتیبانی نمی‌کند',
       );
       return false;
     }
@@ -61,11 +49,12 @@ class BiometricAuthService {
       reason: 'برای فعال‌سازی ورود بیومتریک تأیید کنید',
     );
     if (!ok) return false;
-    await Get.find<SettingsService>().saveBiometricEnableOrDisable(true);
+    if (Get.isRegistered<SettingsService>()) {
+      await Get.find<SettingsService>().saveBiometricEnableOrDisable(true);
+    }
     return true;
   }
 
-  /// Disable after biometric or password confirmation (caller may pass skipAuth).
   Future<bool> disable({bool requireAuth = true}) async {
     if (requireAuth) {
       final ok = await authenticate(
@@ -73,31 +62,47 @@ class BiometricAuthService {
       );
       if (!ok) return false;
     }
-    await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
+    if (Get.isRegistered<SettingsService>()) {
+      await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
+    }
     return true;
   }
 
-  /// Prompt biometric. Returns true on success.
   Future<bool> authenticate({String? reason}) async {
-    try {
-      if (_currentAttempts >= maxAttempts) {
-        ToastHelper().showErrorToast(
-          _localization?.biometricMaxAttempts ??
-              'حداکثر تلاش بیومتریک تمام شد. با رمز وارد شوید',
-        );
-        _currentAttempts = 0;
-        return false;
-      }
+    return authenticateWithBiometrics(reason: reason);
+  }
 
-      if (!await canAuthenticate()) {
+  Future<bool> authenticateWithBiometrics({String? reason}) async {
+    try {
+      final canCheck = await auth.canCheckBiometrics;
+      final isSupported = await auth.isDeviceSupported();
+      final available = await auth.getAvailableBiometrics();
+
+      if (!isSupported) {
         ToastHelper().showErrorToast(
           _localization?.biometricNotAvailable ??
               'Biometric authentication is not available on this device',
         );
-        // Auto-disable preference if OS biometrics gone
-        if (await isEnabled()) {
+        return false;
+      }
+
+      if (canCheck && available.isEmpty) {
+        ToastHelper().showErrorToast(
+          _localization?.biometricNotEnrolled ??
+              'No biometric enrolled. Please set up fingerprint',
+        );
+        // OS biometrics removed — clear preference
+        if (await isEnabled() && Get.isRegistered<SettingsService>()) {
           await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
         }
+        return false;
+      }
+
+      if (!canCheck) {
+        ToastHelper().showErrorToast(
+          _localization?.biometricNotAvailable ??
+              'Biometric authentication is not available on this device',
+        );
         return false;
       }
 
@@ -105,7 +110,7 @@ class BiometricAuthService {
         localizedReason: reason ??
             _localization?.biometricReason ??
             'Authenticate to sign in to eCardo',
-        options: const AuthenticationOptions(biometricOnly: true),
+        biometricOnly: true,
       );
 
       if (success) {
@@ -120,17 +125,16 @@ class BiometricAuthService {
           _localization?.biometricFailedAttempts(remaining) ??
               'Biometric authentication failed. $remaining attempts remaining',
         );
-      } else {
-        ToastHelper().showErrorToast(
-          _localization?.biometricMaxAttempts ??
-              'Maximum biometric attempts reached. Please sign in with your password',
-        );
-        _currentAttempts = 0;
+        return false;
       }
+      ToastHelper().showErrorToast(
+        _localization?.biometricMaxAttempts ??
+            'Maximum biometric attempts reached. Please sign in with your password',
+      );
+      _currentAttempts = 0;
       return false;
     } catch (e) {
       _currentAttempts++;
-      debugPrint('BIO: $e');
       ToastHelper().showErrorToast(
         _localization?.biometricGenericError ??
             'Biometric authentication failed',
@@ -139,10 +143,19 @@ class BiometricAuthService {
     }
   }
 
-  /// Backward-compatible name.
-  Future<bool> authenticateWithBiometrics() => authenticate();
+  Future<bool> isBiometricAvailable() async {
+    try {
+      final canCheckBiometrics = await auth.canCheckBiometrics;
+      final availableBiometrics = await auth.getAvailableBiometrics();
+      return canCheckBiometrics && availableBiometrics.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
 
-  void resetAttempts() => _currentAttempts = 0;
+  void resetAttempts() {
+    _currentAttempts = 0;
+  }
 
   int get remainingAttempts => maxAttempts - _currentAttempts;
 }
