@@ -9,13 +9,11 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx hide Response;
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/services/session_manager.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
@@ -225,27 +223,26 @@ class NetworkService extends getx.GetxService {
               }
             }
 
-            // refresh ناموفق — logout + fail every queued request explicitly
+            // refresh ناموفق — fail queued requests + single-flight logout
             _log("Token refresh failed — logging out.");
-            await _tokenService.clearToken();
-            try {
-              await getx.Get.find<SettingsService>().wipeSession();
-            } catch (_) {}
             final queued = List<void Function(String?)>.of(_pendingRequests);
             _pendingRequests.clear();
             for (final callback in queued) {
               callback(null); // null => handler.next(error) for that request
             }
 
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ToastHelper().showErrorToast(
-                localization?.unauthorizedDialogTitle ??
-                    'Your session has expired. Please sign in again.',
+            final isForeground =
+                error.requestOptions.extra['isForeground'] as bool? ?? true;
+
+            if (getx.Get.isRegistered<SessionManager>()) {
+              unawaited(
+                getx.Get.find<SessionManager>().handleUnauthorized(
+                  isForeground: isForeground,
+                  message: localization?.unauthorizedDialogTitle ??
+                      'Your session has expired. Please sign in again.',
+                ),
               );
-              if (getx.Get.currentRoute != BaseRoute.signIn) {
-                getx.Get.offAllNamed(BaseRoute.signIn);
-              }
-            });
+            }
           }
 
           // v1.0.26 (UPD-5): server-side force update — CheckAppVersion
@@ -464,12 +461,16 @@ class NetworkService extends getx.GetxService {
 
   Future<ApiResponse<Map<String, dynamic>>> get({
     required String endpoint,
+    bool isForeground = true,
   }) async {
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📥 GET Request URL: $url');
 
     try {
-      final response = await _dio.get(endpoint);
+      final response = await _dio.get(
+        endpoint,
+        options: Options(extra: {'isForeground': isForeground}),
+      );
       return _handleResponse(response, "GET");
     } on DioException catch (e) {
       return _handleDioException(e, "GET");
@@ -488,6 +489,7 @@ class NetworkService extends getx.GetxService {
     required String endpoint,
     Map<String, dynamic>? data,
     String? idempotencyKey,
+    bool isForeground = true,
   }) async {
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 POST Request URL: $url');
@@ -507,7 +509,10 @@ class NetworkService extends getx.GetxService {
       final response = await _dio.post(
         endpoint,
         data: data != null ? jsonEncode(data) : null,
-        options: headers.isEmpty ? null : Options(headers: headers),
+        options: Options(
+          headers: headers.isEmpty ? null : headers,
+          extra: {'isForeground': isForeground},
+        ),
       );
 
       return _handleResponse(response, "POST");
@@ -560,6 +565,7 @@ class NetworkService extends getx.GetxService {
   Future<ApiResponse<Map<String, dynamic>>> postMultipart({
     required String endpoint,
     required FormData data,
+    bool isForeground = true,
   }) async {
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 POST (multipart) Request URL: $url');
@@ -568,7 +574,11 @@ class NetworkService extends getx.GetxService {
     try {
       // Pass the FormData directly — Dio auto-sets Content-Type to
       // multipart/form-data with the proper boundary.
-      final response = await _dio.post(endpoint, data: data);
+      final response = await _dio.post(
+        endpoint,
+        data: data,
+        options: Options(extra: {'isForeground': isForeground}),
+      );
       return _handleResponse(response, "POST (multipart)");
     } on DioException catch (e) {
       return _handleDioException(e, "POST (multipart)");
@@ -586,6 +596,7 @@ class NetworkService extends getx.GetxService {
   Future<ApiResponse<Map<String, dynamic>>> put({
     required String endpoint,
     Map<String, dynamic>? data,
+    bool isForeground = true,
   }) async {
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 PUT Request URL: $url');
@@ -600,6 +611,7 @@ class NetworkService extends getx.GetxService {
       final response = await _dio.put(
         endpoint,
         data: data != null ? jsonEncode(data) : null,
+        options: Options(extra: {'isForeground': isForeground}),
       );
 
       return _handleResponse(response, "PUT");
@@ -619,6 +631,7 @@ class NetworkService extends getx.GetxService {
   Future<ApiResponse<Map<String, dynamic>>> delete({
     required String endpoint,
     Map<String, dynamic>? data,
+    bool isForeground = true,
   }) async {
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('🗑️ DELETE Request URL: $url');
@@ -633,6 +646,7 @@ class NetworkService extends getx.GetxService {
       final response = await _dio.delete(
         endpoint,
         data: data != null ? jsonEncode(data) : null,
+        options: Options(extra: {'isForeground': isForeground}),
       );
 
       return _handleResponse(response, "DELETE");
@@ -654,6 +668,7 @@ class NetworkService extends getx.GetxService {
   Future<ApiResponse<Map<String, dynamic>>> globalPost({
     required String endpoint,
     Map<String, dynamic>? data,
+    bool isForeground = true,
   }) async {
     try {
       String url = '$baseUrl$endpoint';
@@ -668,7 +683,10 @@ class NetworkService extends getx.GetxService {
       final response = await _globalDio.post(
         url,
         data: data != null ? jsonEncode(data) : null,
-        options: Options(headers: _baseHeaders),
+        options: Options(
+          headers: _baseHeaders,
+          extra: {'isForeground': isForeground},
+        ),
       );
 
       return _handleResponse(response, "Global POST");
@@ -687,6 +705,7 @@ class NetworkService extends getx.GetxService {
 
   Future<ApiResponse<Map<String, dynamic>>> globalGet({
     required String endpoint,
+    bool isForeground = true,
   }) async {
     try {
       String url = '$baseUrl$endpoint';
@@ -694,7 +713,10 @@ class NetworkService extends getx.GetxService {
 
       final response = await _globalDio.get(
         url,
-        options: Options(headers: _baseHeaders),
+        options: Options(
+          headers: _baseHeaders,
+          extra: {'isForeground': isForeground},
+        ),
       );
 
       return _handleResponse(response, "Global GET");
@@ -773,15 +795,6 @@ class NetworkService extends getx.GetxService {
     }
   }
 
-  // phase2-fix: 401 dialogs used to stack when several parallel requests
-  // failed at once (the 426 path had a guard; 401 did not). Time-based so no
-  // manual reset wiring is needed.
-  DateTime? _lastUnauthorizedDialogAt;
-  bool get _unauthorizedDialogActive =>
-      _lastUnauthorizedDialogAt != null &&
-      DateTime.now().difference(_lastUnauthorizedDialogAt!) <
-          const Duration(seconds: 3);
-
   ApiResponse<Map<String, dynamic>> _handleDioErrorResponse(
     Response response,
     String requestType,
@@ -808,83 +821,21 @@ class NetworkService extends getx.GetxService {
             : <String, dynamic>{};
         _log('$requestType Response: ${jsonResponse401.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse401);
-        if (_unauthorizedDialogActive) {
-          return ApiResponse.error(errorMessages);
-        }
-        _lastUnauthorizedDialogAt = DateTime.now();
-        getx.Get.dialog(
-          PopScope(
-            canPop: false,
-            child: Dialog(
-              insetPadding: EdgeInsets.zero,
-              backgroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: SizedBox(
-                width: 324,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 30),
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(52),
-                          color: AppColors.error.withValues(alpha: 0.10),
-                        ),
-                        child: Image.asset(
-                          PngAssets.commonAlertIcon,
-                          width: 30,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Column(
-                        children: [
-                          Text(
-                            localization?.unauthorizedDialogTitle ?? 'Unauthorized',
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18,
-                              color: AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            textAlign: TextAlign.center,
-                            localization?.unauthorizedDialogDescription ??
-                                'You are not authorized to access this resource. Please log in again!',
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: AppColors.lightTextPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      CommonButton(
-                        borderRadius: 8,
-                        width: 60,
-                        height: 35,
-                        text: localization?.unauthorizedDialogButton ?? 'OK',
-                        onPressed: () => getx.Get.offAllNamed(BaseRoute.signIn),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
+        // Delegate all UI + logout to SessionManager (single-flight).
+        // isForeground comes from request options.extra (default true).
+        final isForeground =
+            response.requestOptions.extra['isForeground'] as bool? ?? true;
+
+        if (getx.Get.isRegistered<SessionManager>()) {
+          unawaited(
+            getx.Get.find<SessionManager>().handleUnauthorized(
+              isForeground: isForeground,
+              message: errorMessages,
             ),
-          ),
-        );
-        ToastHelper().showErrorToast(errorMessages);
+          );
+        }
+
         return ApiResponse.error(errorMessages);
 
       case 403:
