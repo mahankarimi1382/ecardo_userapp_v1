@@ -352,4 +352,64 @@ class SignInController extends GetxController {
     isEmailFocused.value = false;
     isPasswordFocused.value = false;
   }
+
+  /// Soft prompt: suggest PIN backup after a successful password login.
+  Future<void> _offerSecuritySetup() async {
+    try {
+      if (!Get.isRegistered<AppLockService>()) return;
+      final lock = Get.find<AppLockService>();
+      if (await lock.hasPinSet()) return;
+      await Future<void>.delayed(const Duration(milliseconds: 600));
+      if (Get.context == null) return;
+      final setPin = await Get.bottomSheet<bool>(
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'تنظیم PIN پشتیبان؟',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'اگر بیومتریک در دسترس نباشد، با PIN چهار رقمی وارد می‌شوید.',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Get.back(result: false),
+                        child: const Text('بعداً'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Get.back(result: true),
+                        child: const Text('تنظیم PIN'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+      );
+      if (setPin == true) {
+        Get.snackbar(
+          'PIN',
+          'از تنظیمات → امنیت → تغییر PIN تنظیم کنید',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      debugPrint('offerSecuritySetup: $e');
+    }
+  }
 }
