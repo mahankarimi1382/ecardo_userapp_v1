@@ -598,11 +598,11 @@ Future<void> downloadTravelVoucher(
   final isRtl = const {'fa', 'ar'}.contains(locale.languageCode);
   final voucherEntries = travelVoucherEntries(context, order);
   final voucherData = travelVoucherData(order);
+  // PDF embed: keep only fonts still shipped in the APK (no 11MB Lemi).
   final fontAsset = switch (locale.languageCode) {
     'fa' || 'ar' => 'assets/fonts/Vazirmatn-Regular.ttf',
-    'zh' => null, // platform CJK — Lemi removed from APK (~11MB)
-    'ru' => 'assets/fonts/NotoSans-Regular.ttf',
-    _ => 'assets/fonts/PlusJakartaSans-Medium.ttf',
+    'ru' || 'zh' => 'assets/fonts/NotoSans-Regular.ttf',
+    _ => 'assets/fonts/PlusJakartaSans-VariableFont_wght.ttf',
   };
   final fontData = await rootBundle.load(fontAsset);
   final font = pw.Font.ttf(fontData);
