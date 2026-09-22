@@ -19,9 +19,7 @@ import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/rece
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/referral_stats_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/sign_up_bonus_pop_up.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/top_header_section.dart';
-import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/tool_bar_section.dart';
-import 'package:ecardo_user/src/app/routes/routes.dart';
-import 'package:ecardo_user/src/common/services/notification_history_service.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/dashboard_sliver_header.dart';
 
 /// Dashboard structure (v1.0.60):
 /// CustomScrollView
@@ -64,27 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
       Future.delayed(const Duration(seconds: 5), () async {
         if (!mounted) return;
         showGiftDialog(signUpBonus: widget.signUpBonus!);
-        await SettingsService.saveBonusPopUpShow(email, true);
+        await Get.find<SettingsService>().saveBonusPopUpShow(email, true);
       });
     }
   }
 
-  String _firstName() {
-    final full =
-        homeController.dashboardModel.value.data?.user?.userName ?? '';
-    if (full.trim().isEmpty) return 'کاربر';
-    return full.trim().split(RegExp(r'\s+')).first;
-  }
 
-  int _unread() {
-    final server = homeController.dashboardModel.value.data?.info
-            ?.unreadNotificationsCount ??
-        0;
-    final local = Get.isRegistered<NotificationHistoryService>()
-        ? Get.find<NotificationHistoryService>().unreadCount
-        : 0;
-    return server + local;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,83 +120,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   onRefresh: () => homeController.loadData(),
                   child: CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
+                    floatHeaderSlivers: true,
                     slivers: [
                       // --- collapsible greeting ---
-                      SliverAppBar(
+                      SliverPersistentHeader(
                         pinned: false,
                         floating: true,
-                        snap: true,
-                        expandedHeight: 100,
-                        backgroundColor: AppColors.lightPrimary,
-                        elevation: 0,
-                        scrolledUnderElevation: 0,
-                        flexibleSpace: FlexibleSpaceBar(
-                          collapseMode: CollapseMode.pin,
-                          background: Container(
-                            color: AppColors.lightPrimary,
-                            padding: EdgeInsetsDirectional.only(
-                              top: MediaQuery.paddingOf(context).top + 4,
-                              start: AppSpacing.page,
-                              end: AppSpacing.page,
-                              bottom: 8,
-                            ),
-                            child: const ToolBarSection(),
-                          ),
+                        delegate: DashboardSliverHeaderDelegate(
+                          topInset: MediaQuery.paddingOf(context).top,
                         ),
-                        // collapsed strip
-                        title: Obx(() {
-                          final name = _firstName();
-                          final unread = _unread();
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  name,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                visualDensity: VisualDensity.compact,
-                                onPressed: () =>
-                                    Get.toNamed(BaseRoute.notifications),
-                                icon: Badge(
-                                  isLabelVisible: unread > 0,
-                                  label: Text(
-                                    unread > 99 ? '99+' : '$unread',
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  backgroundColor: AppColors.error,
-                                  child: const Icon(
-                                    Icons.notifications_none_rounded,
-                                    color: AppColors.white,
-                                    size: 22,
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                visualDensity: VisualDensity.compact,
-                                onPressed: () =>
-                                    Get.toNamed(BaseRoute.profileSettings),
-                                icon: const Icon(
-                                  Icons.settings_outlined,
-                                  color: AppColors.white,
-                                  size: 22,
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
-                        centerTitle: false,
-                        titleSpacing: AppSpacing.page,
                       ),
                       // --- purple UID + action buttons (unchanged section) ---
                       const SliverToBoxAdapter(child: TopHeaderSection()),

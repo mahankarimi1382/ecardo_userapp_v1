@@ -44,14 +44,25 @@ class SplashController extends GetxController {
     final biometricLoginStarted = await _tryAutoBiometricLogin();
 
     if (!biometricLoginStarted) {
-      // Valid bearer token + logged_in → dashboard without flashing sign-in.
       try {
         final tokenService = Get.find<TokenService>();
         await tokenService.loadAccessToken();
         final token = tokenService.accessToken.value;
         final hasToken = token != null && token.isNotEmpty;
         if (isLoggedIn && hasToken) {
-          Get.offAllNamed(BaseRoute.navigation);
+          // Probe session: if token expired, show explicit re-login UI.
+          try {
+            final res = await Get.find<NetworkService>().get(
+              endpoint: ApiPath.userEndpoint,
+            );
+            if (res.status == Status.completed) {
+              Get.offAllNamed(BaseRoute.navigation);
+            } else {
+              await _showSessionExpiredAndGoSignIn();
+            }
+          } catch (_) {
+            await _showSessionExpiredAndGoSignIn();
+          }
         } else if (isLoggedIn) {
           Get.offNamed(BaseRoute.signIn);
         } else {
