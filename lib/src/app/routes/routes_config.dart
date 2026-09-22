@@ -63,6 +63,7 @@ import '../../presentation/screens/settings/view/id_verification/id_verification
 import '../../presentation/screens/settings/view/id_verification/kyc_history/kyc_history.dart';
 import '../../presentation/screens/settings/view/notifications/notifications.dart';
 import '../../presentation/screens/settings/view/profile_settings/profile_settings.dart';
+import '../../presentation/screens/settings/view/permissions_settings_screen.dart';
 import '../../presentation/screens/settings/view/support_tickets/add_new_ticket/add_new_ticket.dart';
 import '../../presentation/screens/settings/view/support_tickets/support_tickets.dart';
 import '../../presentation/screens/settings/view/two_factor_authentication/two_factor_authentication.dart';
@@ -138,6 +139,7 @@ class RoutesConfig {
   static const referralTree = ReferralTree();
 
   static const profileSettings = ProfileSettings();
+  static const permissionsSettings = PermissionsSettingsScreen();
 
   static const walletDetails = WalletDetails();
 

@@ -180,6 +180,10 @@ List<GetPage> routesHandler = [
   ),
 
   GetPage(
+    name: BaseRoute.permissionsSettings,
+    page: () => RoutesConfig.permissionsSettings,
+  ),
+  GetPage(
     name: BaseRoute.profileSettings,
     page: () => RoutesConfig.profileSettings,
     binding: ProfileSettingsBinding(),

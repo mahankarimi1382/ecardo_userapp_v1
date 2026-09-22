@@ -1,102 +1,136 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/widgets/toast/toast_helper.dart';
 
-/// BiometricAuthService — احراز هویت بیومتریک با محدودیت تلاش
-///
-/// v1.0.5 بهبودها:
-///   - محدودیت ۳ تلاش → fallback به PIN/password
-///   - logging تلاش‌های ناموفق
-///   - پیام‌های فارسی بهتر
+/// Biometric auth (local_auth — lightweight, no extra native deps beyond plugin).
+/// Preference flag is stored via [SettingsService] (SharedPreferences).
 class BiometricAuthService {
-  /// v1.0.24: localizations are resolved lazily — the service may be
-  /// constructed before a Navigator context exists, and `Get.context!` used
-  /// to throw on construction. Fall back to English literals when l10n is
-  /// unreachable.
-  AppLocalizations? get _localization {
-    final ctx = Get.context;
-    if (ctx == null) return null;
-    return AppLocalizations.of(ctx);
+  final LocalAuthentication auth = LocalAuthentication();
+  final AppLocalizations? _localization =
+      Get.context != null ? AppLocalizations.of(Get.context!) : null;
+
+  static const int maxAttempts = 3;
+  int _currentAttempts = 0;
+
+  /// Device supports biometric hardware and has enrolled biometrics.
+  Future<bool> isSupported() async {
+    try {
+      if (kIsWeb) return false;
+      final canCheck = await auth.canCheckBiometrics;
+      final supported = await auth.isDeviceSupported();
+      final available = await auth.getAvailableBiometrics();
+      return (canCheck || supported) && available.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
 
-  final LocalAuthentication auth = LocalAuthentication();
+  /// Alias used by older call-sites.
+  Future<bool> isBiometricAvailable() => isSupported();
 
-  /// حداکثر تعداد تلاش بیومتریک قبل از fallback
-  static const int maxAttempts = 3;
+  /// User preference: biometric login enabled.
+  Future<bool> isEnabled() async {
+    final v = await SettingsService.getBiometricEnableOrDisable();
+    return v == true;
+  }
 
-  /// تعداد تلاش‌های فعلی
-  /// phase2-fix: shared across instances — splash and settings each used to
-  /// construct a fresh instance, resetting the counter and silently
-  /// disabling the 3-attempt limit.
-  static int _currentAttempts = 0;
-
-  /// احراز هویت با بیومتریک
-  /// برمی‌گرداند:
-  ///   true — موفق
-  ///   false — ناموفق (حداکثر تلاش reached یا خطا)
-  Future<bool> authenticateWithBiometrics() async {
+  /// Can prompt now (supported + enrolled). If user revoked biometrics in OS,
+  /// this becomes false — callers should hide login button and turn switch off.
+  Future<bool> canAuthenticate() async {
     try {
-      final canCheck = await auth.canCheckBiometrics;
-      final isSupported = await auth.isDeviceSupported();
-      final available = await auth.getAvailableBiometrics();
+      if (!await isSupported()) return false;
+      return await auth.canCheckBiometrics;
+    } catch (_) {
+      return false;
+    }
+  }
 
-      if (!isSupported) {
+  /// Enable after successful biometric confirmation.
+  Future<bool> enable() async {
+    if (!await canAuthenticate()) {
+      ToastHelper().showErrorToast(
+        _localization?.biometricNotAvailable ??
+            'این دستگاه از اثر انگشت/چهره پشتیبانی نمی‌کند',
+      );
+      return false;
+    }
+    final ok = await authenticate(
+      reason: 'برای فعال‌سازی ورود بیومتریک تأیید کنید',
+    );
+    if (!ok) return false;
+    await Get.find<SettingsService>().saveBiometricEnableOrDisable(true);
+    return true;
+  }
+
+  /// Disable after biometric or password confirmation (caller may pass skipAuth).
+  Future<bool> disable({bool requireAuth = true}) async {
+    if (requireAuth) {
+      final ok = await authenticate(
+        reason: 'برای غیرفعال‌سازی ورود بیومتریک تأیید کنید',
+      );
+      if (!ok) return false;
+    }
+    await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
+    return true;
+  }
+
+  /// Prompt biometric. Returns true on success.
+  Future<bool> authenticate({String? reason}) async {
+    try {
+      if (_currentAttempts >= maxAttempts) {
+        ToastHelper().showErrorToast(
+          _localization?.biometricMaxAttempts ??
+              'حداکثر تلاش بیومتریک تمام شد. با رمز وارد شوید',
+        );
+        _currentAttempts = 0;
+        return false;
+      }
+
+      if (!await canAuthenticate()) {
         ToastHelper().showErrorToast(
           _localization?.biometricNotAvailable ??
               'Biometric authentication is not available on this device',
         );
+        // Auto-disable preference if OS biometrics gone
+        if (await isEnabled()) {
+          await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
+        }
         return false;
       }
 
-      if (canCheck && available.isEmpty) {
-        ToastHelper().showErrorToast(
-          _localization?.biometricNotEnrolled ??
-              'No biometric enrolled. Please set up fingerprint',
-        );
-        return false;
-      }
-
-      if (!canCheck) {
-        ToastHelper().showErrorToast(
-          _localization?.biometricNotAvailable ??
-              'Biometric authentication is not available on this device',
-        );
-        return false;
-      }
-
-      // شروع احراز هویت
       final success = await auth.authenticate(
-        localizedReason: _localization?.biometricReason ??
+        localizedReason: reason ??
+            _localization?.biometricReason ??
             'Authenticate to sign in to eCardo',
-        biometricOnly: true,
+        options: const AuthenticationOptions(biometricOnly: true),
       );
 
       if (success) {
-        _currentAttempts = 0; // reset در موفقیت
+        _currentAttempts = 0;
         return true;
-      } else {
-        _currentAttempts++;
-        final remaining = maxAttempts - _currentAttempts;
-
-        if (remaining > 0) {
-          ToastHelper().showErrorToast(
-            _localization?.biometricFailedAttempts(remaining) ??
-                'Biometric authentication failed. $remaining attempts remaining',
-          );
-          return false;
-        } else {
-          // حداکثر تلاش رسید — fallback
-          ToastHelper().showErrorToast(
-            _localization?.biometricMaxAttempts ??
-                'Maximum biometric attempts reached. Please sign in with your password',
-          );
-          _currentAttempts = 0;
-          return false;
-        }
       }
+
+      _currentAttempts++;
+      final remaining = maxAttempts - _currentAttempts;
+      if (remaining > 0) {
+        ToastHelper().showErrorToast(
+          _localization?.biometricFailedAttempts(remaining) ??
+              'Biometric authentication failed. $remaining attempts remaining',
+        );
+      } else {
+        ToastHelper().showErrorToast(
+          _localization?.biometricMaxAttempts ??
+              'Maximum biometric attempts reached. Please sign in with your password',
+        );
+        _currentAttempts = 0;
+      }
+      return false;
     } catch (e) {
       _currentAttempts++;
+      debugPrint('BIO: $e');
       ToastHelper().showErrorToast(
         _localization?.biometricGenericError ??
             'Biometric authentication failed',
@@ -105,22 +139,10 @@ class BiometricAuthService {
     }
   }
 
-  /// بررسی دسترسی بیومتریک
-  Future<bool> isBiometricAvailable() async {
-    try {
-      final canCheckBiometrics = await auth.canCheckBiometrics;
-      final availableBiometrics = await auth.getAvailableBiometrics();
-      return canCheckBiometrics && availableBiometrics.isNotEmpty;
-    } catch (e) {
-      return false;
-    }
-  }
+  /// Backward-compatible name.
+  Future<bool> authenticateWithBiometrics() => authenticate();
 
-  /// reset تعداد تلاش‌ها (هنگام logout)
-  void resetAttempts() {
-    _currentAttempts = 0;
-  }
+  void resetAttempts() => _currentAttempts = 0;
 
-  /// تعداد تلاش‌های باقی‌مانده
   int get remainingAttempts => maxAttempts - _currentAttempts;
 }

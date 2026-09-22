@@ -71,6 +71,7 @@ class BaseRoute {
   static const String referralTree = "/referral_tree_route";
 
   static const String profileSettings = "/profile_settings_route";
+  static const String permissionsSettings = "/permissions_settings_route";
 
   static const String changePassword = "/change_password_route";
 

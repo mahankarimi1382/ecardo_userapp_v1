@@ -22,6 +22,17 @@ class SettingsService extends GetxService {
   static const String currentEmailKey = 'current_email';
   static const String logInCurrentStateKey = "login_current_state";
   static const String currentBiometricKey = 'current_biometric';
+  static const String appLockMinutesKey = 'app_lock_minutes';
+  static const String autoLoginKey = 'auto_login_enabled';
+  static const String notifFinancialKey = 'notif_financial';
+  static const String notifPromoKey = 'notif_promo';
+  static const String notifSecurityKey = 'notif_security';
+  static const String notifSoundKey = 'notif_sound';
+  static const String notifVibrateKey = 'notif_vibrate';
+  static const String themeModeKey = 'theme_mode_pref'; // system|light|dark
+  static const String rateUnitKey = 'rate_unit'; // irr|toman
+  static const String appPinKey = 'app_pin_4';
+
   static const String currentEmailVerifiedKey = 'current_email_verified';
   static const String currentSetUpPasswordKey = 'current_set_up_password';
   static const String currentBonusShowKey = 'current_bonus_pop_up_shown';
@@ -268,4 +279,64 @@ class SettingsService extends GetxService {
 
   // Get a specific setting by key
   String? getSetting(String key) => appSettings[key];
+
+  Future<int> getAppLockMinutes() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(appLockMinutesKey) ?? 0; // 0 = never
+  }
+
+  Future<void> setAppLockMinutes(int minutes) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(appLockMinutesKey, minutes);
+  }
+
+  Future<bool> getAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(autoLoginKey) ?? true;
+  }
+
+  Future<void> setAutoLogin(bool v) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(autoLoginKey, v);
+  }
+
+  Future<bool> getNotifPref(String key, {bool def = true}) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key) ?? def;
+  }
+
+  Future<void> setNotifPref(String key, bool v) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, v);
+  }
+
+  Future<String> getThemeModePref() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(themeModeKey) ?? 'system';
+  }
+
+  Future<void> setThemeModePref(String mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(themeModeKey, mode);
+  }
+
+  Future<String> getRateUnit() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(rateUnitKey) ?? 'irr';
+  }
+
+  Future<void> setRateUnit(String unit) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(rateUnitKey, unit);
+  }
+
+  Future<String?> getAppPin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(appPinKey);
+  }
+
+  Future<void> setAppPin(String pin) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(appPinKey, pin);
+  }
 }
