@@ -31,6 +31,7 @@ class SettingsService extends GetxService {
   static const String notifVibrateKey = 'notif_vibrate';
   static const String themeModeKey = 'theme_mode_pref'; // system|light|dark
   static const String rateUnitKey = 'rate_unit'; // irr|toman
+  final RxString rateUnitRx = 'irr'.obs;
   static const String appPinKey = 'app_pin_4';
 
   static const String currentEmailVerifiedKey = 'current_email_verified';
@@ -328,6 +329,11 @@ class SettingsService extends GetxService {
   Future<void> setRateUnit(String unit) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(rateUnitKey, unit);
+    rateUnitRx.value = unit;
+  }
+
+  Future<void> loadRateUnitIntoRx() async {
+    rateUnitRx.value = await getRateUnit();
   }
 
   Future<String?> getAppPin() async {

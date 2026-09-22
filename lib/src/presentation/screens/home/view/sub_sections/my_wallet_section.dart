@@ -318,7 +318,26 @@ class MyWalletSection extends StatelessWidget {
     // Prefer live fee.ecardo.ir rates (fixes wrong/stale conversion_rate).
     if (Get.isRegistered<WalletLiveRateService>()) {
       final live = Get.find<WalletLiveRateService>().equivalentLabel(wallet);
-      if (live != null) return live;
+      if (live != null) {
+        if (Get.isRegistered<SettingsService>() &&
+            Get.find<SettingsService>().rateUnitRx.value == 'toman' &&
+            live.contains(' IRR')) {
+          // Display preference: show Toman (IRR / 10) when unit is toman.
+          final m = RegExp(r'≈\s*([0-9.,]+)\s*IRR').firstMatch(live);
+          if (m != null) {
+            final raw = m.group(1)!.replaceAll(',', '');
+            final v = double.tryParse(raw);
+            if (v != null) {
+              final toman = v / 10.0;
+              final shown = toman >= 1000
+                  ? toman.toStringAsFixed(0)
+                  : toman.toStringAsFixed(0);
+              return '≈ $shown تومان';
+            }
+          }
+        }
+        return live;
+      }
     }
     // Fallback: backend conversion_rate with inverse heuristic.
     final rateRaw = wallet.conversionRate;

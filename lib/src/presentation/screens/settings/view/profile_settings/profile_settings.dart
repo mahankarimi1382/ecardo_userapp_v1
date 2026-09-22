@@ -56,9 +56,18 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     controller.zipCodeController.text = user?.zipCode ?? "";
     controller.addressController.text = user?.address ?? "";
     controller.addressController.text = user?.address ?? "";
-    controller.joiningDateController.text = DateFormat(
-      "yyyy-MM-dd HH:mm:ss",
-    ).format(DateTime.parse(user?.createdAt ?? ""));
+    try {
+      final raw = user?.createdAt;
+      if (raw != null && raw.isNotEmpty) {
+        controller.joiningDateController.text = DateFormat(
+          "yyyy-MM-dd HH:mm:ss",
+        ).format(DateTime.parse(raw));
+      } else {
+        controller.joiningDateController.text = '';
+      }
+    } catch (_) {
+      controller.joiningDateController.text = user?.createdAt ?? '';
+    }
     await controller.fetchCountries();
     controller.isLoading.value = false;
   }

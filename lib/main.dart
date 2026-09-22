@@ -16,6 +16,7 @@ import 'package:ecardo_user/src/common/services/notification_history_service.dar
 import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
+import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 
@@ -109,6 +110,7 @@ void _installGlobalErrorHandlers() {
 
 Future<void> _initializeServices() async {
   Get.put(SettingsService());
+  await Get.find<SettingsService>().loadRateUnitIntoRx();
   // Register the in-app self-update controller for the user app.
   // Pass [AppUpdateConfig.merchant] / [AppUpdateConfig.agent] in the
   // respective merchant / agent apps.
@@ -123,6 +125,7 @@ Future<void> _initializeServices() async {
   Get.put<AppBadgeService>(AppBadgeService(), permanent: true);
   Get.put<OfflineRequestQueue>(OfflineRequestQueue(), permanent: true);
   await Get.putAsync<AppLockService>(() async => AppLockService().init(), permanent: true);
+  await Get.putAsync<LocaleThemeService>(() async => LocaleThemeService().init(), permanent: true);
   Future.microtask(() => Get.find<OfflineRequestQueue>().init());
   Future.microtask(() => Get.find<NotificationHistoryService>().init());
   Future.microtask(() => Get.find<AppBadgeService>().init());

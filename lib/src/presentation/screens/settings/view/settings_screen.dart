@@ -8,6 +8,8 @@ import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
+import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -161,21 +163,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _applyTheme(String mode) {
-    settings.setThemeModePref(mode);
     setState(() => _themePref = mode);
-    final tm = switch (mode) {
-      'light' => ThemeMode.light,
-      'dark' => ThemeMode.dark,
-      _ => ThemeMode.system,
-    };
-    Get.changeThemeMode(tm);
+    if (Get.isRegistered<LocaleThemeService>()) {
+      Get.find<LocaleThemeService>().setThemeModePref(mode);
+    } else {
+      settings.setThemeModePref(mode);
+      Get.changeThemeMode(switch (mode) {
+        'light' => ThemeMode.light,
+        'dark' => ThemeMode.dark,
+        _ => ThemeMode.system,
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final isFa = Localizations.localeOf(context).languageCode == 'fa';
-
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
       appBar: AppBar(
@@ -194,7 +197,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 32,
               ),
               children: [
-                _group('حساب کاربری', [
+                _group(l10nPick(context, en: 'Account', fa: 'حساب کاربری', ar: 'الحساب', zh: '账户'), [
                   _navTile(
                     Icons.person_outline,
                     'پروفایل',
@@ -236,7 +239,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ]),
-                _group('امنیت', [
+                _group(l10nPick(context, en: 'Security', fa: 'امنیت', ar: 'الأمان', zh: '安全'), [
                   _navTile(
                     Icons.lock_outline,
                     loc.settingsChangePassword,
@@ -319,7 +322,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onTap: _changePin,
                   ),
                 ]),
-                _group('اعلان‌ها', [
+                _group(l10nPick(context, en: 'Notifications', fa: 'اعلان‌ها', ar: 'الإشعارات', zh: '通知'), [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
@@ -398,7 +401,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     () => Get.toNamed(BaseRoute.notifications),
                   ),
                 ]),
-                _group('دسترسی‌ها', [
+                _group(l10nPick(context, en: 'Permissions', fa: 'دسترسی‌ها', ar: 'الصلاحيات', zh: '权限'), [
                   _navTile(
                     Icons.admin_panel_settings_outlined,
                     'مدیریت دسترسی‌ها',
@@ -406,18 +409,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     () => Get.toNamed(BaseRoute.permissionsSettings),
                   ),
                 ]),
-                _group('شخصی‌سازی', [
+                _group(l10nPick(context, en: 'Personalization', fa: 'شخصی‌سازی', ar: 'التخصيص', zh: '个性化'), [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.language),
-                    title: const Text('زبان'),
-                    subtitle: Text(isFa ? 'فارسی' : 'English'),
+                    title: Text(l10nPick(context, en: 'Language', fa: 'زبان', ar: 'اللغة', zh: '语言')),
+                    subtitle: Text(LocaleThemeService.nativeName(
+                      Localizations.localeOf(context).languageCode,
+                    )),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () async {
-                      final next = isFa ? 'en' : 'fa';
-                      await settings.saveLanguageLocaleCurrentState(next);
-                      Get.updateLocale(Locale(next));
-                      setState(() {});
+                      final code = await showModalBottomSheet<String>(
+                        context: context,
+                        builder: (ctx) => SafeArea(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (final c in LocaleThemeService.supported)
+                                ListTile(
+                                  title: Text(LocaleThemeService.nativeName(c)),
+                                  trailing: Localizations.localeOf(context).languageCode == c
+                                      ? const Icon(Icons.check, color: AppColors.success)
+                                      : null,
+                                  onTap: () => Navigator.pop(ctx, c),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                      if (code != null && Get.isRegistered<LocaleThemeService>()) {
+                        await Get.find<LocaleThemeService>().setLanguage(code);
+                        if (mounted) setState(() {});
+                      }
                     },
                   ),
                   ListTile(
@@ -481,7 +504,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ]),
-                _group('عمومی', [
+                _group(l10nPick(context, en: 'General', fa: 'عمومی', ar: 'عام', zh: '通用'), [
                   if (settings.getSetting('user_ticket') == '1')
                     _navTile(
                       Icons.support_agent,

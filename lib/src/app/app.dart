@@ -16,6 +16,7 @@ import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/app/routes/routes_handler.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 
 class EcardoUser extends StatefulWidget {
   const EcardoUser({super.key});
@@ -52,10 +53,17 @@ class _EcardoUserState extends State<EcardoUser> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return GetMaterialApp(
+        // Reactive locale + theme (settings apply without restart).
+        return Obx(() {
+          final lts = Get.isRegistered<LocaleThemeService>()
+              ? Get.find<LocaleThemeService>()
+              : null;
+          final appLocale = lts?.locale.value ?? _locale;
+          final appTheme = lts?.themeMode.value ?? ThemeMode.system;
+          return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: AppStrings.appName,
-          themeMode: ThemeMode.system,
+          themeMode: appTheme,
           theme: LightTheme().lightTheme(context),
           darkTheme: DarkTheme().darkTheme(context),
           getPages: routesHandler,
@@ -64,7 +72,7 @@ class _EcardoUserState extends State<EcardoUser> {
             name: '/not-found',
             page: () => const NotFoundScreen(),
           ),
-          locale: _locale,
+          locale: appLocale,
           fallbackLocale: const Locale('en'),
           localizationsDelegates: const [
             AppLocalizations.delegate,
@@ -144,6 +152,7 @@ class _EcardoUserState extends State<EcardoUser> {
             );
           },
         );
+        });
       },
     );
   }
