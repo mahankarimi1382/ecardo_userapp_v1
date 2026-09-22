@@ -10,6 +10,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
 import 'package:ecardo_user/src/app/config/theme/dark_theme.dart';
 import 'package:ecardo_user/src/common/widgets/offline_queue_banner.dart';
+import 'package:ecardo_user/src/presentation/widgets/app_lock_wrapper.dart';
 import 'package:ecardo_user/src/app/constants/app_strings.dart';
 import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
@@ -81,6 +82,7 @@ class _EcardoUserState extends State<EcardoUser> {
           ],
           builder: (context, widget) {
             Widget body = widget ?? const SizedBox.shrink();
+            // App lock overlay (PIN / biometric gate)
             // Touch tracking for idle session timeout.
             body = Listener(
               behavior: HitTestBehavior.translucent,
@@ -132,11 +134,13 @@ class _EcardoUserState extends State<EcardoUser> {
                 );
               });
             }
-            return Column(
-              children: [
-                const OfflineQueueBanner(),
-                Expanded(child: body),
-              ],
+            return AppLockWrapper(
+              child: Column(
+                children: [
+                  const OfflineQueueBanner(),
+                  Expanded(child: body),
+                ],
+              ),
             );
           },
         );

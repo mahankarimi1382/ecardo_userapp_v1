@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 
 
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -149,7 +150,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
     if (ok == true && c1.text.length == 4 && c1.text == c2.text) {
-      await settings.setAppPin(c1.text);
+      if (Get.isRegistered<AppLockService>()) {
+        await Get.find<AppLockService>().setPin(c1.text);
+      }
+      await settings.setAppPin('set'); // flag only — hash lives in secure storage
       Get.snackbar('PIN', 'ذخیره شد', snackPosition: SnackPosition.BOTTOM);
     } else if (ok == true) {
       Get.snackbar('PIN', 'PIN باید ۴ رقم و یکسان باشد', snackPosition: SnackPosition.BOTTOM);
@@ -286,9 +290,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               for (final e in {
-                                0: 'هرگز',
+                                -1: 'فوری (با هر بار خروج از اپ)',
                                 1: '۱ دقیقه',
                                 5: '۵ دقیقه',
+                                15: '۱۵ دقیقه',
+                                0: 'هرگز',
                               }.entries)
                                 ListTile(
                                   title: Text(e.value),
@@ -493,12 +499,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.policy_outlined),
                     title: const Text('قوانین و حریم خصوصی'),
-                    subtitle: const Text('از پشتیبانی یا وب‌سایت eCardo'),
-                    onTap: () {
-                      if (settings.getSetting('user_ticket') == '1') {
-                        Get.toNamed(BaseRoute.supportTickets);
-                      }
-                    },
+                    trailing: const Icon(Icons.chevron_left),
+                    onTap: () => Get.toNamed(BaseRoute.privacyPolicy),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -532,7 +534,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String _lockLabel(int m) {
-    if (m <= 0) return 'هرگز';
+    if (m < 0) return 'فوری';
+    if (m == 0) return 'هرگز';
     if (m == 1) return '۱ دقیقه';
     return '$m دقیقه';
   }

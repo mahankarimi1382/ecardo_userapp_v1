@@ -184,6 +184,10 @@ List<GetPage> routesHandler = [
     page: () => RoutesConfig.permissionsSettings,
   ),
   GetPage(
+    name: BaseRoute.privacyPolicy,
+    page: () => RoutesConfig.privacyPolicy,
+  ),
+  GetPage(
     name: BaseRoute.profileSettings,
     page: () => RoutesConfig.profileSettings,
     binding: ProfileSettingsBinding(),

@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -244,6 +245,12 @@ class SignInController extends GetxController {
             explain: true,
           );
         }
+
+        // Soft offer: biometric already auto-enabled when available.
+        // Offer PIN as backup if none set.
+        try {
+          await _offerSecuritySetup();
+        } catch (_) {}
         await postFcmNotification(
           email: email,
           password: password,

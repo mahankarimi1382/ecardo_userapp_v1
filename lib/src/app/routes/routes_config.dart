@@ -64,6 +64,7 @@ import '../../presentation/screens/settings/view/id_verification/kyc_history/kyc
 import '../../presentation/screens/settings/view/notifications/notifications.dart';
 import '../../presentation/screens/settings/view/profile_settings/profile_settings.dart';
 import '../../presentation/screens/settings/view/permissions_settings_screen.dart';
+import '../../presentation/screens/settings/view/privacy_policy_screen.dart';
 import '../../presentation/screens/settings/view/support_tickets/add_new_ticket/add_new_ticket.dart';
 import '../../presentation/screens/settings/view/support_tickets/support_tickets.dart';
 import '../../presentation/screens/settings/view/two_factor_authentication/two_factor_authentication.dart';
@@ -140,6 +141,7 @@ class RoutesConfig {
 
   static const profileSettings = ProfileSettings();
   static const permissionsSettings = PermissionsSettingsScreen();
+  static const privacyPolicy = PrivacyPolicyScreen();
 
   static const walletDetails = WalletDetails();
 
