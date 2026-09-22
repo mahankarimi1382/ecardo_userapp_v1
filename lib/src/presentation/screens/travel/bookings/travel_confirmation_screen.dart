@@ -600,7 +600,7 @@ Future<void> downloadTravelVoucher(
   final voucherData = travelVoucherData(order);
   final fontAsset = switch (locale.languageCode) {
     'fa' || 'ar' => 'assets/fonts/Vazirmatn-Regular.ttf',
-    'zh' => 'assets/fonts/LemiZhiXiaQianFeng-Regular.ttf',
+    'zh' => null, // platform CJK — Lemi removed from APK (~11MB)
     'ru' => 'assets/fonts/NotoSans-Regular.ttf',
     _ => 'assets/fonts/PlusJakartaSans-Medium.ttf',
   };
