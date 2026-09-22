@@ -44,12 +44,25 @@ class SplashController extends GetxController {
     final biometricLoginStarted = await _tryAutoBiometricLogin();
 
     if (!biometricLoginStarted) {
-      // Failure / cancel / unavailable / disabled → the pre-existing
-      // behaviour, unchanged.
-      if (isLoggedIn) {
-        Get.offNamed(BaseRoute.signIn);
-      } else {
-        Get.offNamed(BaseRoute.welcome);
+      // Valid bearer token + logged_in → dashboard without flashing sign-in.
+      try {
+        final tokenService = Get.find<TokenService>();
+        await tokenService.loadAccessToken();
+        final token = tokenService.accessToken.value;
+        final hasToken = token != null && token.isNotEmpty;
+        if (isLoggedIn && hasToken) {
+          Get.offAllNamed(BaseRoute.navigation);
+        } else if (isLoggedIn) {
+          Get.offNamed(BaseRoute.signIn);
+        } else {
+          Get.offNamed(BaseRoute.welcome);
+        }
+      } catch (_) {
+        if (isLoggedIn) {
+          Get.offNamed(BaseRoute.signIn);
+        } else {
+          Get.offNamed(BaseRoute.welcome);
+        }
       }
     }
 

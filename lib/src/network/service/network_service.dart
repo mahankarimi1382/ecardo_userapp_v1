@@ -515,8 +515,8 @@ class NetworkService extends getx.GetxService {
       // Queue non-financial POSTs when offline.
       if ((e.type == DioExceptionType.connectionError ||
               e.type == DioExceptionType.connectionTimeout) &&
-          Get.isRegistered<OfflineRequestQueue>()) {
-        final q = Get.find<OfflineRequestQueue>();
+          getx.Get.isRegistered<OfflineRequestQueue>()) {
+        final q = getx.Get.find<OfflineRequestQueue>();
         if (q.isQueueable(endpoint)) {
           await q.enqueue(
             method: 'POST',

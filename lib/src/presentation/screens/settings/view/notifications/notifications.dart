@@ -179,7 +179,14 @@ class _NotificationsState extends State<Notifications>
                       return ListView(
                         physics: const AlwaysScrollableScrollPhysics(),
                         children: [
-                          EmptyView.notifications(onCta: refreshData),
+                          EmptyView(
+                            icon: Icons.notifications_none_rounded,
+                            title: 'هنوز اعلانی نداری',
+                            subtitle:
+                                'اعلان‌های مهم اینجا نشون داده میشن.',
+                            ctaLabel: 'بروزرسانی',
+                            onCta: refreshData,
+                          ),
                         ],
                       );
                     }

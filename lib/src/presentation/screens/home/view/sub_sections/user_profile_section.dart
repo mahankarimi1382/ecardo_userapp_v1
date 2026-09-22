@@ -8,7 +8,6 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/tool_bar_section.dart';
 
 /// v1.0.37 (HERO-CARD v2): minimal fintech header —
 ///   Row 1: user name (hero) + tappable verification tick/level chip
@@ -23,12 +22,9 @@ class UserProfileSection extends StatelessWidget {
     final HomeController homeController = Get.find<HomeController>();
     final user = homeController.dashboardModel.value.data?.user;
 
-    final topInset = MediaQuery.paddingOf(context).top;
     return Column(
       children: [
-        SizedBox(height: topInset + 8),
-        const ToolBarSection(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Stack(
           clipBehavior: Clip.hardEdge,
           children: [

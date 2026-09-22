@@ -27,6 +27,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     with WidgetsBindingObserver {
   final TransactionsController controller = Get.find();
   late ScrollController _scrollController;
+  int _dirFilter = 0; // 0 all, 1 in, 2 out
 
   @override
   void initState() {
@@ -163,43 +164,72 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   }
 
   Widget _buildTransactionsList() {
-    final transactions =
+    final all =
         controller.transactionsModel.value.data?.transactions ?? [];
+    final transactions = all.where((tx) {
+      if (_dirFilter == 1) return tx.isPlus == true;
+      if (_dirFilter == 2) return tx.isPlus != true;
+      return true;
+    }).toList();
 
     if (controller.isLoading.value) {
-      return Expanded(child: CommonLoading());
+      return const Expanded(child: CommonLoading());
     }
 
     if (transactions.isEmpty) {
-      return Expanded(child: NoDataFound());
+      return const Expanded(child: NoDataFound());
     }
 
     return Expanded(
-      child: RefreshIndicator(
-        color: AppColors.lightPrimary,
-        onRefresh: () => refreshData(),
-        child: controller.isLoading.value
-            ? CommonLoading()
-            : Container(
-                margin: const EdgeInsets.symmetric(horizontal: 18),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                _dirChip('همه', 0),
+                _dirChip('ورودی', 1),
+                _dirChip('خروجی', 2),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: RefreshIndicator(
+              color: AppColors.lightPrimary,
+              onRefresh: () => refreshData(),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(16),
                   color: AppColors.white,
                 ),
                 child: ListView.separated(
                   controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(vertical: 12),
+                  itemCount: transactions.length,
+                  separatorBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(
+                        color: AppColors.lightTextPrimary.withValues(alpha: 0.10),
+                        height: 0,
+                      ),
+                    );
+                  },
                   itemBuilder: (context, index) {
                     final Transactions transaction = transactions[index];
-
-                    return GestureDetector(
+                    return InkWell(
                       onTap: () {
                         Get.bottomSheet(
                           RecentTransactionDetails(transaction: transaction),
+                          isScrollControlled: true,
                         );
                       },
-                      child: Container(
-                        color: AppColors.transparent,
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8,
                           horizontal: 16,
@@ -213,18 +243,15 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                     width: 46,
                                     height: 46,
                                     decoration: BoxDecoration(
-                                      color:
-                                          TransactionDynamicColor.getTransactionColor(
-                                            transaction.type,
-                                          ),
+                                      color: TransactionDynamicColor
+                                          .getTransactionColor(transaction.type),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10),
                                       child: Image.asset(
-                                        TransactionDynamicIcon.getTransactionIcon(
-                                          transaction.type,
-                                        ),
+                                        TransactionDynamicIcon
+                                            .getTransactionIcon(transaction.type),
                                       ),
                                     ),
                                   ),
@@ -235,7 +262,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          transaction.type ?? "",
+                                          transaction.type ?? '',
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                             letterSpacing: 0,
@@ -246,7 +273,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          JalaliDateHelper.format(transaction.createdAt),
+                                          JalaliDateHelper.format(
+                                            transaction.createdAt,
+                                          ),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             letterSpacing: 0,
@@ -261,45 +290,13 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                 ],
                               ),
                             ),
-
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Row(
-                                  children: [
-                                    Transform.translate(
-                                      offset: const Offset(0, -2),
-                                      child: Text(
-                                        textAlign: TextAlign.center,
-                                        transaction.isPlus == true ? "+" : "-",
-                                        style: TextStyle(
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 15,
-                                          color: transaction.isPlus == true
-                                              ? AppColors.success
-                                              : AppColors.error,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      textAlign: TextAlign.center,
-                                      "${transaction.isCrypto == true ? "" : transaction.trxCurrencySymbol}",
-                                      style: TextStyle(
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 15,
-                                        color: transaction.isPlus == true
-                                            ? AppColors.success
-                                            : AppColors.error,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 Text(
                                   transaction.isCrypto == true
-                                      ? "${transaction.amount} ${transaction.trxCurrencyCode}"
-                                      : "${transaction.amount}",
+                                      ? '${transaction.amount} ${transaction.trxCurrencyCode}'
+                                      : '${transaction.trxCurrencySymbol ?? ''}${transaction.amount}',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                     letterSpacing: 0,
@@ -317,20 +314,29 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       ),
                     );
                   },
-                  separatorBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child: Divider(
-                        color: AppColors.lightTextPrimary.withValues(
-                          alpha: 0.10,
-                        ),
-                        height: 0,
-                      ),
-                    );
-                  },
-                  itemCount: transactions.length,
                 ),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dirChip(String label, int value) {
+    final selected = _dirFilter == value;
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(end: 8),
+      child: ChoiceChip(
+        label: Text(label),
+        selected: selected,
+        onSelected: (_) => setState(() => _dirFilter = value),
+        selectedColor: AppColors.lightPrimary.withValues(alpha: 0.18),
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+          color: selected ? AppColors.lightPrimary : null,
+        ),
       ),
     );
   }

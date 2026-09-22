@@ -134,13 +134,12 @@ class MyWalletSection extends StatelessWidget {
                   isDefaultWallet: isDefaultWallet,
                   symbol: currencySymbol,
                 ),
-                if (_liveConversionLabel(wallet) != null) ...[
-                  const SizedBox(height: 6),
-                  _buildLiveRateChip(
-                    label: _liveConversionLabel(wallet)!,
-                    isDefaultWallet: isDefaultWallet,
-                  ),
-                ],
+                const SizedBox(height: 6),
+                _buildLiveRateChip(
+                  label: _liveConversionLabel(wallet) ?? 'نرخ در دسترس نیست',
+                  isDefaultWallet: isDefaultWallet,
+                  unavailable: _liveConversionLabel(wallet) == null,
+                ),
               ],
             ),
             _buildActionButtons(
@@ -350,6 +349,7 @@ class MyWalletSection extends StatelessWidget {
   Widget _buildLiveRateChip({
     required String label,
     required bool isDefaultWallet,
+    bool unavailable = false,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -367,7 +367,7 @@ class MyWalletSection extends StatelessWidget {
             width: 6,
             height: 6,
             decoration: BoxDecoration(
-              color: const Color(0xFF5CFFB0),
+              color: unavailable ? Colors.white38 : const Color(0xFF5CFFB0),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(

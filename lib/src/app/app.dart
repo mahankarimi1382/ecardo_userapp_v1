@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/presentation/screens/not_found/view/not_found_sc
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
 import 'package:ecardo_user/src/app/config/theme/dark_theme.dart';
+import 'package:ecardo_user/src/common/widgets/offline_queue_banner.dart';
 import 'package:ecardo_user/src/app/constants/app_strings.dart';
 import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
@@ -131,7 +132,12 @@ class _EcardoUserState extends State<EcardoUser> {
                 );
               });
             }
-            return body;
+            return Column(
+              children: [
+                const OfflineQueueBanner(),
+                Expanded(child: body),
+              ],
+            );
           },
         );
       },
