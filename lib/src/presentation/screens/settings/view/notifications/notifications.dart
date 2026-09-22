@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.da
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/responsive.dart';
+import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/notification_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
 import 'package:ecardo_user/src/presentation/widgets/notification_dynamic_icon.dart';
@@ -277,7 +278,7 @@ class _NotificationsState extends State<Notifications>
                                               ),
                                             const SizedBox(height: 6),
                                             Text(
-                                              n.createdAt ?? '',
+                                              JalaliDateHelper.format(n.createdAt),
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: AppColors

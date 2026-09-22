@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/bottom_sheet/common_alert_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -114,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               TopHeaderSection(),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: AppSpacing.sectionGap),
                               MyWalletSection(),
                               SizedBox(height: 20),
                               // v1.0.38 (DASHBOARD): referral bonus/count
@@ -134,9 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               // money transfer, escrow + upcoming
                               // commercial modules.
                               BusinessServicesSection(),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: AppSpacing.sectionGap),
                               RecentTransactionsSection(),
-                              const SizedBox(height: 24),
+                              const SizedBox(height: AppSpacing.sectionGap),
                             ],
                           ),
                         ),

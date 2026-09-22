@@ -666,4 +666,25 @@ class FirebaseMessagingService {
     Get.toNamed(BaseRoute.notifications);
   }
 
+  /// Debug-only: synthesize a local notification of [type] for QA.
+  Future<void> debugSimulateNotification(String type) async {
+    if (!kDebugMode) return;
+    final financial = type == 'financial' || type == 'transaction';
+    final title = financial
+        ? 'واریز آزمایشی'
+        : (type == 'system' ? 'اعلان سیستمی' : 'اعلان عمومی');
+    final body = financial
+        ? 'مبلغ تستی به کیف پول واریز شد.'
+        : 'این یک اعلان آزمایشی است.';
+    final data = <String, dynamic>{
+      'type': type,
+      if (financial) 'transaction_id': 'DEBUG-TX-001',
+    };
+    final fake = RemoteMessage(
+      data: data.map((k, v) => MapEntry(k, v.toString())),
+      notification: RemoteNotification(title: title, body: body),
+    );
+    _persistAndBanner(fake, showSystemTray: false);
+  }
+
 }

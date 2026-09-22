@@ -26,9 +26,9 @@ class UserProfileSection extends StatelessWidget {
     final topInset = MediaQuery.paddingOf(context).top;
     return Column(
       children: [
-        SizedBox(height: topInset + 12),
-        ToolBarSection(),
-        const SizedBox(height: 20),
+        SizedBox(height: topInset + 8),
+        const ToolBarSection(),
+        const SizedBox(height: 16),
         Stack(
           clipBehavior: Clip.hardEdge,
           children: [

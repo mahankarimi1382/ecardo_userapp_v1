@@ -18,6 +18,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 
@@ -486,6 +487,7 @@ class NetworkService extends getx.GetxService {
   Future<ApiResponse<Map<String, dynamic>>> post({
     required String endpoint,
     Map<String, dynamic>? data,
+    String? idempotencyKey,
   }) async {
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 POST Request URL: $url');
@@ -497,18 +499,38 @@ class NetworkService extends getx.GetxService {
     }
 
     try {
+      final headers = <String, dynamic>{};
+      if (idempotencyKey != null && idempotencyKey.isNotEmpty) {
+        headers['Idempotency-Key'] = idempotencyKey;
+        headers['X-Idempotency-Key'] = idempotencyKey;
+      }
       final response = await _dio.post(
         endpoint,
         data: data != null ? jsonEncode(data) : null,
+        options: headers.isEmpty ? null : Options(headers: headers),
       );
 
       return _handleResponse(response, "POST");
     } on DioException catch (e) {
+      // Queue non-financial POSTs when offline.
+      if ((e.type == DioExceptionType.connectionError ||
+              e.type == DioExceptionType.connectionTimeout) &&
+          Get.isRegistered<OfflineRequestQueue>()) {
+        final q = Get.find<OfflineRequestQueue>();
+        if (q.isQueueable(endpoint)) {
+          await q.enqueue(
+            method: 'POST',
+            endpoint: endpoint,
+            data: data,
+            idempotencyKey: idempotencyKey,
+          );
+          return ApiResponse.error('queued_offline');
+        }
+      }
       return _handleDioException(e, "POST");
     } catch (e) {
       _log('POST Exception: ${e.toString()}', icon: '❌');
       ToastHelper().showErrorToast(
-        // P-4: null-safe localization + English fallback (was `localization!`).
         localization?.networkErrorGeneric ??
             'An unexpected error occurred. Please try again.',
       );

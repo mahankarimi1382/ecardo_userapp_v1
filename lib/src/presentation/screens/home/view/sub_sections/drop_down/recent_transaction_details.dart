@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
+import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 
 class RecentTransactionDetails extends StatefulWidget {
   final Transactions transaction;
@@ -443,9 +444,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
 
   Widget _buildTransactionInfo() {
     final transaction = widget.transaction;
-    final dateParts = transaction.createdAt?.split(",") ?? [];
-    final date = dateParts.isNotEmpty ? dateParts.first : "";
-    final time = dateParts.length > 1 ? dateParts.last : "";
+    final jalali = JalaliDateHelper.format(transaction.createdAt);
+    final date = jalali;
+    final time = '';
 
     // v1.0.36 (RECEIPT-SHARE): centered hero layout — the amount is the
     // protagonist of the receipt image, exactly like premium wallet apps.

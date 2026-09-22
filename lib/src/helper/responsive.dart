@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 
 class Responsive {
-  static double pagePadding(BuildContext context) {
-    final w = MediaQuery.sizeOf(context).width;
-    if (w < 360) return 12;
-    if (w < 390) return 14;
-    if (w < 414) return 16;
-    return 18;
-  }
+  /// Horizontal page padding — fixed brand standard (16).
+  static double pagePadding(BuildContext context) => AppSpacing.page;
 
-  static double cardRadius(BuildContext context) {
-    final w = MediaQuery.sizeOf(context).width;
-    return w < 360 ? 14 : 16;
-  }
+  static double cardRadius(BuildContext context) => AppSpacing.radius;
 
-  static double sectionGap(BuildContext context) => 20;
+  static double sectionGap(BuildContext context) => AppSpacing.sectionGap;
 }

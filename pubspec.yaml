@@ -2,7 +2,7 @@ name: ecardo_user
 description: "eCardo — International Financial Super App for users (multi-currency wallet, cards, transfers, remittance, travel, P2P, bill payments)."
 publish_to: 'none'
 
-version: 1.0.58+58
+version: 1.0.59+59
 
 environment:
   sdk: ^3.9.2
@@ -46,7 +46,6 @@ dependencies:
   flutter_local_notifications: ^19.5.0
   device_info_plus: ^12.2.0
   connectivity_plus: ^7.0.0
-  flutter_app_badger: ^1.5.0
   lottie: ^3.3.2
   path_provider: ^2.1.5
   barcode: ^2.2.9
