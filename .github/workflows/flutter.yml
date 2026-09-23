@@ -329,3 +329,51 @@ jobs:
             build_log.txt
             analysis_report.txt
             notify-result.txt
+
+
+  # -------------------------------------------------------------------------
+  # Ensure a v* release tag exists for the pubspec version after every main
+  # push. Without this, CI green on main does NOT publish APK / notify the
+  # server — users never see an in-app update. Tag builds already handle
+  # signed APK + mirror + webhook; this job only creates the missing tag.
+  # -------------------------------------------------------------------------
+  ensure-release-tag:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create v* tag when pubspec version is untagged
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          VERSION=$(python3 -c "
+          import re
+          text = open('pubspec.yaml').read()
+          m = re.search(r'^version:\s*([0-9]+\.[0-9]+\.[0-9]+)', text, re.M)
+          assert m, 'version: x.y.z not found in pubspec.yaml'
+          print(m.group(1))
+          ")
+          TAG="v${VERSION}"
+          echo "pubspec version=$VERSION tag=$TAG"
+
+          if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists locally — nothing to do."
+            exit 0
+          fi
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q .; then
+            echo "Tag ${TAG} already exists on origin — nothing to do."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "userapp ${TAG} (auto-tag from main ${GITHUB_SHA::7})"
+          git push origin "refs/tags/${TAG}"
+          echo "Created and pushed ${TAG} -> triggers signed release + server notify"
