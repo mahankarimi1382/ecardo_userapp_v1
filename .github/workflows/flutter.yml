@@ -346,11 +346,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Must NOT use GITHUB_TOKEN (silent tag push). ECRDO_RELEASE_TOKEN triggers workflows.
+          token: ${{ secrets.ECRDO_RELEASE_TOKEN }}
 
       - name: Create v* tag when pubspec version is untagged
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ECRDO_RELEASE_TOKEN }}
         run: |
           set -euo pipefail
           VERSION=$(python3 -c "
