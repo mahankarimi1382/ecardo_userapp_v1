@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/support_tickets/ticket_status_helper.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/multiple_image_picker_controller.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -97,13 +98,20 @@ class _ReplayTicketState extends State<ReplayTicket> {
                   title:
                       "#${controller.ticketMessageModel.value.data!.ticket!.uuid!}",
                   rightSideWidget:
-                      controller
-                              .ticketMessageModel
-                              .value
-                              .data
-                              ?.ticket
-                              ?.status ==
-                          "open"
+                      (!TicketStatusHelper.isClosed(
+                            isClosed: controller
+                                .ticketMessageModel
+                                .value
+                                .data
+                                ?.ticket
+                                ?.isClosed,
+                            status: controller
+                                .ticketMessageModel
+                                .value
+                                .data
+                                ?.ticket
+                                ?.status,
+                          ))
                       ? Padding(
                           padding: const EdgeInsetsDirectional.only(end: 18),
                           child: CommonButton(
@@ -180,23 +188,37 @@ class _ReplayTicketState extends State<ReplayTicket> {
                   ),
                 ),
                 SizedBox(height: 30),
-                Container(
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 18, vertical: 30),
-                  color: AppColors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildAttachmentPreview(context),
-                      Row(
-                        children: [
-                          Expanded(child: _buildReplyInput(context)),
-                          SizedBox(width: 10),
-                          _buildActionButtons(context),
-                        ],
-                      ),
-                    ],
+                if (TicketStatusHelper.canReply(
+                  canReply: controller
+                      .ticketMessageModel
+                      .value
+                      .data
+                      ?.ticket
+                      ?.canReply,
+                  status: controller
+                      .ticketMessageModel
+                      .value
+                      .data
+                      ?.ticket
+                      ?.status,
+                ))
+                  Container(
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: 18, vertical: 30),
+                    color: AppColors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildAttachmentPreview(context),
+                        Row(
+                          children: [
+                            Expanded(child: _buildReplyInput(context)),
+                            SizedBox(width: 10),
+                            _buildActionButtons(context),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             );
           }),

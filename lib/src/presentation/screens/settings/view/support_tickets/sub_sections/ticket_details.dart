@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/support_tickets/ticket_status_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/model/support_ticket_model.dart';
 
 class TicketDetails extends StatelessWidget {
@@ -61,6 +62,11 @@ class TicketDetails extends StatelessWidget {
                           ? localization.ticketDetailsPriorityMedium
                           : localization.ticketDetailsPriorityLow,
                       valueColor: AppColors.lightPrimary,
+                    ),
+                    _buildDetailRow(
+                      label: localization.supportTicketsStatus.replaceAll(':', '').trim(),
+                      value: TicketStatusHelper.label(localization, ticket.status),
+                      valueColor: TicketStatusHelper.color(ticket.status),
                     ),
                     _buildDetailRow(
                       label: localization.ticketDetailsCreatedOn,

@@ -2563,6 +2563,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get supportTicketsStatusClose => '关闭';
 
   @override
+  String get supportTicketsStatusInProgress => '处理中';
+
+  @override
+  String get supportTicketsStatusWaitingUser => '等待您回复';
+
+  @override
+  String get supportTicketsStatusResolved => '已解决';
+
+  @override
+  String get supportTicketsStatusClosed => '已关闭';
+
+  @override
+  String get supportTicketsStatusArchived => '已归档';
+
+  @override
   String get supportTicketsReplyButton => '回复';
 
   @override

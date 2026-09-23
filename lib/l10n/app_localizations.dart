@@ -5098,6 +5098,36 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get supportTicketsStatusClose;
 
+  /// No description provided for @supportTicketsStatusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get supportTicketsStatusInProgress;
+
+  /// No description provided for @supportTicketsStatusWaitingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for You'**
+  String get supportTicketsStatusWaitingUser;
+
+  /// No description provided for @supportTicketsStatusResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get supportTicketsStatusResolved;
+
+  /// No description provided for @supportTicketsStatusClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get supportTicketsStatusClosed;
+
+  /// No description provided for @supportTicketsStatusArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get supportTicketsStatusArchived;
+
   /// No description provided for @supportTicketsReplyButton.
   ///
   /// In en, this message translates to:

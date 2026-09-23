@@ -2611,6 +2611,21 @@ class AppLocalizationsFa extends AppLocalizations {
   String get supportTicketsStatusClose => 'بسته';
 
   @override
+  String get supportTicketsStatusInProgress => 'در حال بررسی';
+
+  @override
+  String get supportTicketsStatusWaitingUser => 'منتظر پاسخ شما';
+
+  @override
+  String get supportTicketsStatusResolved => 'حل‌شده';
+
+  @override
+  String get supportTicketsStatusClosed => 'بسته';
+
+  @override
+  String get supportTicketsStatusArchived => 'بایگانی';
+
+  @override
   String get supportTicketsReplyButton => 'پاسخ';
 
   @override

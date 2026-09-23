@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/support_tickets/ticket_status_helper.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -292,16 +293,16 @@ class _SupportTicketsState extends State<SupportTickets>
                                     ),
                                   ),
                                   Text(
-                                    ticket.status == "open"
-                                        ? localization.supportTicketsStatusOpen
-                                        : localization
-                                              .supportTicketsStatusClose,
+                                    TicketStatusHelper.label(
+                                      localization,
+                                      ticket.status,
+                                    ),
                                     style: TextStyle(
                                       letterSpacing: 0,
                                       fontSize: 14,
-                                      color: ticket.status == "open"
-                                          ? AppColors.success
-                                          : AppColors.error,
+                                      color: TicketStatusHelper.color(
+                                        ticket.status,
+                                      ),
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),

@@ -2602,6 +2602,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supportTicketsStatusClose => 'Close';
 
   @override
+  String get supportTicketsStatusInProgress => 'In Progress';
+
+  @override
+  String get supportTicketsStatusWaitingUser => 'Waiting for You';
+
+  @override
+  String get supportTicketsStatusResolved => 'Resolved';
+
+  @override
+  String get supportTicketsStatusClosed => 'Closed';
+
+  @override
+  String get supportTicketsStatusArchived => 'Archived';
+
+  @override
   String get supportTicketsReplyButton => 'Reply';
 
   @override

@@ -2590,6 +2590,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get supportTicketsStatusClose => 'مغلقة';
 
   @override
+  String get supportTicketsStatusInProgress => 'قيد المعالجة';
+
+  @override
+  String get supportTicketsStatusWaitingUser => 'بانتظار ردك';
+
+  @override
+  String get supportTicketsStatusResolved => 'تم الحل';
+
+  @override
+  String get supportTicketsStatusClosed => 'مغلقة';
+
+  @override
+  String get supportTicketsStatusArchived => 'مؤرشفة';
+
+  @override
   String get supportTicketsReplyButton => 'رد';
 
   @override
