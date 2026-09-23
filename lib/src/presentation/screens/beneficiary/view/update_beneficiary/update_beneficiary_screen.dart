@@ -24,9 +24,9 @@ class UpdateBeneficiaryScreen extends StatefulWidget {
 }
 
 class _UpdateBeneficiaryScreenState extends State<UpdateBeneficiaryScreen> {
-  final UpdateBeneficiaryController controller = Get.put(
-    UpdateBeneficiaryController(),
-  );
+  // Binding already registers the controller — avoid duplicate Get.put.
+  final UpdateBeneficiaryController controller =
+      Get.find<UpdateBeneficiaryController>();
   final String accountUser = Get.arguments?["account_user"] ?? "";
   final String beneficiaryId = Get.arguments?["beneficiary_id"] ?? "";
   final Beneficiaries beneficiaryData = Get.arguments["beneficiary_data"];

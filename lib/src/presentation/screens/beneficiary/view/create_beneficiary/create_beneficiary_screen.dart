@@ -21,9 +21,9 @@ class CreateBeneficiaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    final CreateBeneficiaryController controller = Get.put(
-      CreateBeneficiaryController(),
-    );
+    // Binding already registers the controller — avoid duplicate Get.put.
+    final CreateBeneficiaryController controller =
+        Get.find<CreateBeneficiaryController>();
     final String accountUser = Get.arguments?["account_user"] ?? "";
 
     return Scaffold(

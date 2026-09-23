@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
 
 class DynamicPasswordScreen extends StatefulWidget {
   const DynamicPasswordScreen({super.key});
@@ -111,6 +112,49 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+        final accountNumber =
+        _homeController?.userModel.value.data?.accountNumber ?? '';
+    if (_homeController == null || accountNumber.isEmpty) {
+      final code = Localizations.localeOf(context).languageCode;
+      String title;
+      String subtitle;
+      String back;
+      if (code == 'fa') {
+        title = 'حساب آماده نیست';
+        subtitle =
+            'ابتدا صفحهٔ اصلی را باز کنید تا شماره حساب بارگذاری شود، سپس دوباره تلاش کنید.';
+        back = 'بازگشت';
+      } else if (code == 'ar') {
+        title = 'الحساب غير جاهز';
+        subtitle =
+            'افتح الشاشة الرئيسية أولاً لتحميل رقم الحساب ثم حاول مرة أخرى.';
+        back = 'رجوع';
+      } else {
+        title = 'Account not ready';
+        subtitle =
+            'Open the home screen first so your account number is loaded, then try again.';
+        back = 'Go back';
+      }
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.dynamicPasswordHeading),
+          backgroundColor: Colors.white,
+          foregroundColor: AppColors.lightTextPrimary,
+          elevation: 0,
+        ),
+        body: Center(
+          child: EmptyView(
+            icon: Icons.lock_outline_rounded,
+            title: title,
+            subtitle: subtitle,
+            ctaLabel: back,
+            onCta: () => Get.back(),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(

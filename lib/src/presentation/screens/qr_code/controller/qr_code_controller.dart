@@ -9,10 +9,15 @@ import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/qr_code/model/qr_code_model.dart';
 
 class QrCodeController extends GetxController {
-  // Global variables
   final RxBool isLoading = false.obs;
+  final RxBool hasError = false.obs;
   final Rx<QrCodeModel> qrCodeModel = QrCodeModel().obs;
   final Rx<UserModel> userModel = UserModel().obs;
+
+  bool get hasQrData {
+    final data = qrCodeModel.value.data;
+    return data != null && data.trim().isNotEmpty;
+  }
 
   @override
   void onInit() {
@@ -20,15 +25,19 @@ class QrCodeController extends GetxController {
     loadData();
   }
 
-  // Load initial data
   Future<void> loadData() async {
     isLoading.value = true;
-    await fetchQrCode();
-    await fetchUser();
-    isLoading.value = false;
+    hasError.value = false;
+    try {
+      await Future.wait([fetchQrCode(), fetchUser()]);
+      if (!hasQrData) {
+        hasError.value = true;
+      }
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  // Fetch QR
   Future<void> fetchQrCode() async {
     try {
       final response = await Get.find<NetworkService>().get(
@@ -36,17 +45,22 @@ class QrCodeController extends GetxController {
       );
       if (response.status == Status.completed) {
         qrCodeModel.value = QrCodeModel.fromJson(response.data!);
+      } else {
+        hasError.value = true;
       }
     } catch (e, stackTrace) {
+      hasError.value = true;
       debugPrint('❌ fetchQrCode() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
-    } finally {}
+      final ctx = Get.context;
+      if (ctx != null) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(ctx)!.allControllerLoadError,
+        );
+      }
+    }
   }
 
-  // Fetch User
   Future<void> fetchUser() async {
     try {
       final response = await Get.find<NetworkService>().get(
@@ -58,9 +72,6 @@ class QrCodeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
-    } finally {}
+    }
   }
 }

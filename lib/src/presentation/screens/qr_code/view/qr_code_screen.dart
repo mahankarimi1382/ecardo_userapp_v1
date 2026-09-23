@@ -15,6 +15,19 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/qr_code/controller/qr_code_controller.dart';
+import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
+
+/// Locale-aware strings for keys not yet in checked-in AppLocalizations.
+String _qrL(BuildContext context, {required String en, required String fa, required String ar}) {
+  switch (Localizations.localeOf(context).languageCode) {
+    case 'fa':
+      return fa;
+    case 'ar':
+      return ar;
+    default:
+      return en;
+  }
+}
 
 class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({super.key});
@@ -38,49 +51,73 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
           const SizedBox(height: 16),
           CommonAppBar(title: localization.qrCodeScreenTitle),
           Expanded(
-            child: Obx(
-              () => controller.isLoading.value
-                  ? const CommonLoading()
-                  : Padding(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: 60,
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const CommonLoading();
+              }
+              if (controller.hasError.value || !controller.hasQrData) {
+                return Center(
+                  child: EmptyView(
+                    icon: Icons.qr_code_2_outlined,
+                    title: _qrL(
+                      context,
+                      en: 'QR code unavailable',
+                      fa: 'کد QR در دسترس نیست',
+                      ar: 'رمز QR غير متاح',
+                    ),
+                    subtitle: _qrL(
+                      context,
+                      en: 'We could not load your QR code. Check your connection and try again.',
+                      fa: 'بارگذاری کد QR ممکن نشد. اتصال را بررسی کنید و دوباره تلاش کنید.',
+                      ar: 'تعذر تحميل رمز QR. تحقق من الاتصال وحاول مرة أخرى.',
+                    ),
+                    ctaLabel: _qrL(
+                      context,
+                      en: 'Retry',
+                      fa: 'تلاش مجدد',
+                      ar: 'إعادة المحاولة',
+                    ),
+                    onCta: () => controller.loadData(),
+                  ),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsetsDirectional.symmetric(horizontal: 60),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: RepaintBoundary(
-                              key: qrKey,
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: SvgPicture.string(
-                                  controller.qrCodeModel.value.data ?? '',
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
+                      child: RepaintBoundary(
+                        key: qrKey,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: SvgPicture.string(
+                            controller.qrCodeModel.value.data ?? '',
+                            fit: BoxFit.contain,
                           ),
-                          const SizedBox(height: 50),
-                          CommonButton(
-                            onPressed: () => downloadQr(
-                              qrKey,
-                              "qr_code_${DateTime.now().millisecondsSinceEpoch}",
-                            ),
-                            width: double.infinity,
-
-                            text: localization.qrCodeScreenDownloadButton,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-            ),
+                    const SizedBox(height: 50),
+                    CommonButton(
+                      onPressed: () => downloadQr(
+                        qrKey,
+                        "qr_code_${DateTime.now().millisecondsSinceEpoch}",
+                      ),
+                      width: double.infinity,
+                      text: localization.qrCodeScreenDownloadButton,
+                    ),
+                  ],
+                ),
+              );
+            }),
           ),
         ],
       ),
@@ -100,13 +137,22 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         }
       }
 
+      final ctx = key.currentContext;
+      if (ctx == null) {
+        ToastHelper().showErrorToast(localization.allControllerLoadError);
+        return;
+      }
       RenderRepaintBoundary boundary =
-          key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          ctx.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData = await image.toByteData(
         format: ui.ImageByteFormat.png,
       );
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      if (byteData == null) {
+        ToastHelper().showErrorToast(localization.allControllerLoadError);
+        return;
+      }
+      Uint8List pngBytes = byteData.buffer.asUint8List();
 
       final String path = "/storage/emulated/0/Download/$fileName.png";
       final File file = File(path);
@@ -114,8 +160,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       await file.writeAsBytes(pngBytes);
       ToastHelper().showSuccessToast(localization.qrCodeScreenDownloadSuccess);
     } catch (e) {
-      // v1.0.24: was `finally {}` — permission races / null boundary / write
-      // errors were swallowed and the tap silently did nothing.
       debugPrint('❌ downloadQr() error: $e');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
     }
