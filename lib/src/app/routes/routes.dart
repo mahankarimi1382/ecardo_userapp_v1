@@ -28,6 +28,9 @@ class BaseRoute {
 
   static const String setUpPassword = "/set_up_password_route";
 
+  /// Mandatory 4-digit transaction passcode (first stage / missing passcode).
+  static const String setPasscode = "/set_passcode_route";
+
   static const String personalInfo = "/personal_info_route";
 
   static const String authIdVerification = "/auth_id_verification_route";
@@ -44,12 +47,6 @@ class BaseRoute {
 
   static const String makePayment = "/make_payment_route";
 
-  // TODO(lead): M-6 — dead route constants: no screen/controller for an
-  // invoice flow exists anywhere under lib/src/presentation/screens/ and no
-  // GetPage is registered in routes_handler.dart. Navigating to any of these
-  // falls through to unknownRoute (splash). Keep the constants (removing
-  // them is an API-surface change that needs a product decision) until the
-  // invoice feature is either built or dropped.
   static const String requestMoney = "/request_money_route";
 
   static const String giftCode = "/gift_code_route";
@@ -91,9 +88,6 @@ class BaseRoute {
 
   static const String giftHistory = "/gift_history_route";
 
-  // TODO(lead): M-6 — dead route constant (same situation as invoice*):
-  // no invoiceDetails screen exists under lib/src/presentation/screens/ and
-  // no GetPage is registered in routes_handler.dart.
   static const String idVerification = "/id_verification_route";
 
   static const String addMoneyHistory = "/add_money_history_route";
@@ -158,15 +152,12 @@ class BaseRoute {
   static const String travelAccount = "/travel_account_route";
   static const String dynamicPassword = "/dynamic_password_route";
 
-  // Remittance Routes (v1.0.4+5)
   static const String remittance = "/remittance_route";
   static const String remittanceHistory = "/remittance_history_route";
   static const String remittanceDetails = "/remittance_details_route";
 
-  // KYC Level Routes (v1.0.5)
   static const String kycSubmitWizard = "/kyc_submit_wizard_route";
   static const String upgradeRequired = "/upgrade_required_route";
 
-  // App self-update (v1.0.8+8)
   static const String appUpdate = "/app_update_route";
 }
