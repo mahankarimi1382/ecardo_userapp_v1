@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -22,6 +23,11 @@ class OfflineRequestQueue extends GetxService {
   final RxBool flushFailed = false.obs;
   StreamSubscription? _sub;
   bool _flushing = false;
+
+  static const _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+  );
 
   static const _allowedPrefixes = <String>[
     '/user/profile',
@@ -150,8 +156,16 @@ class OfflineRequestQueue extends GetxService {
   }
 
   Future<void> _load() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_storageKey);
+    var raw = await _secureStorage.read(key: _storageKey);
+    if (raw == null || raw.isEmpty) {
+      // One-time migration from the previous plaintext implementation.
+      final prefs = await SharedPreferences.getInstance();
+      raw = prefs.getString(_storageKey);
+      if (raw != null && raw.isNotEmpty) {
+        await _secureStorage.write(key: _storageKey, value: raw);
+        await prefs.remove(_storageKey);
+      }
+    }
     if (raw == null || raw.isEmpty) return;
     try {
       final list = jsonDecode(raw) as List<dynamic>;
@@ -162,8 +176,21 @@ class OfflineRequestQueue extends GetxService {
   }
 
   Future<void> _persist() async {
+    await _secureStorage.write(
+      key: _storageKey,
+      value: jsonEncode(pending.toList()),
+    );
+  }
+
+  /// Removes queued requests when the authenticated session ends. Requests
+  /// must never survive logout and be replayed under another user's token.
+  Future<void> clearForSessionEnd() async {
+    pending.clear();
+    flushFailed.value = false;
+    await _secureStorage.delete(key: _storageKey);
+    // Remove any stale pre-1.0.89 plaintext value as well.
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_storageKey, jsonEncode(pending.toList()));
+    await prefs.remove(_storageKey);
   }
 
   static String _uuidV4() {

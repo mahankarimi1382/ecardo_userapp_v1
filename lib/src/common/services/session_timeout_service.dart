@@ -17,6 +17,7 @@ class SessionTimeoutService extends GetxService with WidgetsBindingObserver {
   final Duration idleTimeout;
   Timer? _timer;
   DateTime _lastActivity = DateTime.now();
+  bool _isExpiring = false;
 
   Future<SessionTimeoutService> init() async {
     WidgetsBinding.instance.addObserver(this);
@@ -25,8 +26,15 @@ class SessionTimeoutService extends GetxService with WidgetsBindingObserver {
   }
 
   void touch() {
+    if (_isExpiring) return;
     _lastActivity = DateTime.now();
     _arm();
+  }
+
+  /// Starts a fresh idle window only after a complete authentication flow.
+  void beginAuthenticatedSession() {
+    _isExpiring = false;
+    touch();
   }
 
   void _arm() {
@@ -35,10 +43,14 @@ class SessionTimeoutService extends GetxService with WidgetsBindingObserver {
   }
 
   Future<void> _onIdle() async {
+    if (_isExpiring) return;
     final token = Get.isRegistered<TokenService>()
         ? Get.find<TokenService>().accessToken.value
         : null;
     if (token == null || token.isEmpty) return;
+
+    _isExpiring = true;
+    _timer?.cancel();
 
     try {
       await Get.find<TokenService>().clearToken();

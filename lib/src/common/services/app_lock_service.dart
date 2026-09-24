@@ -25,12 +25,12 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
 
   Future<AppLockService> init() async {
     WidgetsBinding.instance.addObserver(this);
-    final hasPin = await hasPinSet();
+    final hasLocalUnlock = await _hasLocalUnlockMethod();
     final autoLogin = Get.isRegistered<SettingsService>()
         ? await Get.find<SettingsService>().getAutoLogin()
         : true;
     // Cold start: if PIN set and auto-login off → start locked.
-    if (hasPin && !autoLogin) {
+    if (hasLocalUnlock && !autoLogin) {
       locked.value = true;
     }
     final prefsFail = await _secure.read(key: _failedKey);
@@ -55,7 +55,7 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   }
 
   Future<void> _onResumed() async {
-    if (!await hasPinSet()) return;
+    if (!await _hasLocalUnlockMethod()) return;
     final timeout = await getAutoLockTimeout();
     if (timeout == Duration.zero) {
       // "never" unless auto-login is off → lock every resume
@@ -78,8 +78,14 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   Future<bool> isLocked() async => locked.value;
 
   Future<void> lock() async {
-    if (!await hasPinSet()) return;
+    if (!await _hasLocalUnlockMethod()) return;
     locked.value = true;
+  }
+
+  Future<bool> _hasLocalUnlockMethod() async {
+    if (await hasPinSet()) return true;
+    // getBiometricEnableOrDisable is a static prefs reader (not instance method).
+    return await SettingsService.getBiometricEnableOrDisable() == true;
   }
 
   Future<bool> unlock(String pin) async {

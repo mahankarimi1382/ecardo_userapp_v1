@@ -14,7 +14,6 @@
 //  4) نتیجه {'success': bool, 'data': ...} مثل قبل برگردانده می‌شود تا
 //     قرارداد فراخوان‌ها (add_money / virtual_card) بدون تغییر بماند.
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,9 +41,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
   bool _isLoading = true;
   bool _redirectProcessed = false;
 
-  /// Transaction id extracted from the gateway URL (pro-pay/{tnx}).
-  String? get _tnx {
-    final match = RegExp(r'pro-pay/([^/?#]+)').firstMatch(widget.paymentUrl);
+  /// Transaction id extracted from a gateway URL (pro-pay/{tnx}).
+  String? _transactionIdFromUrl(String url) {
+    final match = RegExp(r'pro-pay/([^/?#]+)').firstMatch(url);
     return match?.group(1);
   }
 
@@ -52,10 +51,29 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void initState() {
     super.initState();
 
+    final paymentUri = Uri.tryParse(widget.paymentUrl);
+    if (paymentUri == null || paymentUri.scheme != 'https') {
+      // A payment redirect is security-sensitive. Never render an arbitrary
+      // scheme (or cleartext URL) supplied by a malformed backend response.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _finish(success: false, data: null);
+      });
+      return;
+    }
+
     _controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
+          onNavigationRequest: (request) {
+            final uri = Uri.tryParse(request.url);
+            // Gateways can use several hosts, but payment content must remain
+            // HTTPS. Block intent:, file:, javascript: and cleartext redirects.
+            if (uri == null || uri.scheme != 'https') {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
           onPageStarted: (String url) {
             setState(() {
               _isLoading = true;
@@ -77,8 +95,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..loadRequest(Uri.parse(widget.paymentUrl));
   }
 
-  /// Single decision point for the return URL. Authoritative source is the
-  /// server (payment-status API); the page body is only a fallback.
+  /// Single decision point for the return URL. The authenticated server
+  /// (payment-status API) is the only authoritative source.
   Future<void> _handleReturnUrl(
     String url, {
     required bool treatAsSuccessHint,
@@ -87,7 +105,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _redirectProcessed = true;
 
     // 1) Ask the server first when we can identify the transaction.
-    final tnx = _tnx;
+    final tnx = _transactionIdFromUrl(url) ??
+        _transactionIdFromUrl(widget.paymentUrl);
     if (tnx != null && tnx.isNotEmpty) {
       final serverState = await _queryServerStatus(tnx);
       if (serverState != null) {
@@ -96,30 +115,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
       }
     }
 
-    // 2) Legacy fallback: scrape the page body (kept for compatibility).
-    final decoded = await _scrapePageJson();
-    if (decoded != null) {
-      final status = decoded['status']?.toString().toLowerCase();
-      if (status == 'success') {
-        _finish(success: true, data: decoded);
-        return;
-      }
-      if (status == 'failed') {
-        _finish(
-          success: false,
-          data: decoded,
-          message: decoded['message']?.toString(),
-        );
-        return;
-      }
-    }
-
-    // 3) Nothing conclusive — use the URL hint without claiming success.
-    _finish(success: treatAsSuccessHint, data: null);
+    // A URL or page body is controlled by the gateway and is never proof of a
+    // financial outcome. Only the authenticated payment-status endpoint may
+    // produce a success result; an unknown status must fail closed.
+    _finish(
+      success: false,
+      data: null,
+      message: treatAsSuccessHint
+          ? 'Payment could not be verified. Please check your transaction history.'
+          : null,
+    );
   }
 
-  /// Returns true/false when the server gives a definitive verdict,
-  /// null when unreachable/unknown (caller falls back to scraping).
+  /// Returns true/false when the server gives a definitive verdict, or null
+  /// when the payment cannot be verified.
   Future<bool?> _queryServerStatus(String tnx) async {
     try {
       final network = Get.find<NetworkService>();
@@ -138,29 +147,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
       }
     } catch (e) {
       debugPrint('WebView payment-status verification failed: $e');
-    }
-    return null;
-  }
-
-  /// Best-effort scrape of the legacy JSON body — never throws.
-  Future<Map<String, dynamic>?> _scrapePageJson() async {
-    try {
-      String jsonResponse = await _controller.runJavaScriptReturningResult(
-            "document.body.innerText",
-          ) as String;
-
-      jsonResponse = jsonResponse.trim();
-      if (jsonResponse.startsWith('"') && jsonResponse.endsWith('"')) {
-        jsonResponse = jsonResponse.substring(
-          1,
-          jsonResponse.length - 1,
-        );
-      }
-      jsonResponse = jsonResponse.replaceAll(r'\"', '"');
-      final decoded = jsonDecode(jsonResponse);
-      if (decoded is Map<String, dynamic>) return decoded;
-    } catch (e) {
-      debugPrint('WebView page-body scrape failed (non-fatal): $e');
     }
     return null;
   }

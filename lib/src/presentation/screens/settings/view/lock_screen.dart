@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 
 /// Full-screen PIN gate. Shown by [AppLockWrapper] when locked.
 class LockScreen extends StatefulWidget {
@@ -78,6 +79,9 @@ class _LockScreenState extends State<LockScreen> {
     try {
       if (Get.isRegistered<SettingsService>()) {
         await Get.find<SettingsService>().wipeSession();
+      }
+      if (Get.isRegistered<TokenService>()) {
+        await Get.find<TokenService>().clearToken();
       }
     } catch (_) {}
     await _lock.clearPin();

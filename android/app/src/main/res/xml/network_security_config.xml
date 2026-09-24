@@ -5,7 +5,7 @@
 
   - Disables cleartext traffic for all domains (HTTPS only).
   - Pins the system trust store for general traffic.
-  - Allows debug-only cleartext for localhost (emulator dev only).
+  - Does not permit cleartext traffic in the production resource.
 -->
 <network-security-config>
     <!-- Default: HTTPS only, system trust store -->
@@ -16,16 +16,6 @@
                  user-installed root CAs from intercepting traffic. -->
         </trust-anchors>
     </base-config>
-
-    <!-- Debug-only: allow cleartext for local development (10.0.2.2 = emulator host) -->
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">localhost</domain>
-        <domain includeSubdomains="true">10.0.2.2</domain>
-        <trust-anchors>
-            <certificates src="system" />
-            <certificates src="user" />
-        </trust-anchors>
-    </domain-config>
 
     <!--
       ecardo.ir — production domain.

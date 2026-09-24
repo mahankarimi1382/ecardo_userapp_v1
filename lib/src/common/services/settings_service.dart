@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsService extends GetxService {
@@ -175,6 +176,9 @@ class SettingsService extends GetxService {
       await prefs.remove(currentSetUpPasswordKey);
       await prefs.remove(currentFcmTokenKey);
       await _secureStorage.delete(key: currentPasswordKey);
+      if (Get.isRegistered<OfflineRequestQueue>()) {
+        await Get.find<OfflineRequestQueue>().clearForSessionEnd();
+      }
       currentEmail.value = null;
       currentPassword.value = null;
       logInCurrentState.value = null;
