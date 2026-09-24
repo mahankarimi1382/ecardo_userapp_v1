@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
 
 class ChangePasscodeBottomSheet extends StatefulWidget {
@@ -20,10 +21,10 @@ class ChangePasscodeBottomSheet extends StatefulWidget {
 class _ChangePasscodeBottomSheetState extends State<ChangePasscodeBottomSheet> {
   final TwoFactorAuthenticationController controller = Get.find();
 
-  static final _digitLimit = [
-    FilteringTextInputFormatter.digitsOnly,
-    LengthLimitingTextInputFormatter(4),
-  ];
+  List<TextInputFormatter> get _digitLimit => [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(PasscodeHelper.maxDigits),
+      ];
 
   @override
   Widget build(BuildContext context) {
