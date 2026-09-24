@@ -166,6 +166,15 @@ class OfflineRequestQueue extends GetxService {
     await prefs.setString(_storageKey, jsonEncode(pending.toList()));
   }
 
+  /// Removes queued requests when the authenticated session ends. Requests
+  /// must never survive logout and be replayed under another user's token.
+  Future<void> clearForSessionEnd() async {
+    pending.clear();
+    flushFailed.value = false;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_storageKey);
+  }
+
   static String _uuidV4() {
     final r = Random.secure();
     final bytes = List<int>.generate(16, (_) => r.nextInt(256));

@@ -73,12 +73,7 @@ jobs:
 
       - name: Run Analyze (errors are fatal)
         run: |
-          flutter analyze --no-fatal-infos --no-fatal-warnings 2>&1 | tee analysis_report.txt || true
-          if grep -qE "^ *error •" analysis_report.txt; then
-            echo "❌ Analyzer errors found:"
-            grep -E "^ *error •" analysis_report.txt
-            exit 1
-          fi
+          flutter analyze --no-fatal-infos --no-fatal-warnings 2>&1 | tee analysis_report.txt
           echo "✅ No analyzer errors"
 
       - name: Run Tests

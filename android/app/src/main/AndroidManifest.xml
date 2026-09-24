@@ -22,7 +22,8 @@
     <!-- AUTH-BIO (A-5): QUERY_ALL_PACKAGES removed — no Dart code queries the
          package list (verified via codebase grep); the APK-install flow is
          covered by REQUEST_INSTALL_PACKAGES + the <queries> intents below. -->
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <!-- QR/KYC uses the camera, but it is not required for wallet access. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:name="${applicationName}"

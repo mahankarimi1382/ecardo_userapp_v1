@@ -19,6 +19,7 @@
 // ============================================================================
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -150,6 +151,15 @@ class AppUpdateController extends GetxController {
 
   // ----- Internal -----
   CancelToken? _cancelToken;
+
+  static const _trustedReleasePrefixes = <String>[
+    'https://github.com/mahankarimi1382/ecardo-apps-releases/releases/download/',
+    'https://github.com/mahankarimi1382/ecardo_userapp_v1/releases/download/',
+  ];
+
+  bool _isTrustedUpdateUrl(String url) => _trustedReleasePrefixes.any(
+        (prefix) => url.startsWith(prefix),
+      );
 
   @override
   void onInit() {
@@ -286,6 +296,11 @@ class AppUpdateController extends GetxController {
       errorMessage.value = 'Download URL is not configured.';
       return;
     }
+    if (!_isTrustedUpdateUrl(url.trim())) {
+      phase.value = AppUpdatePhase.error;
+      errorMessage.value = 'Update URL is not from an approved release source.';
+      return;
+    }
 
     // ----- Permissions -----
     final granted = await _ensureInstallPermission();
@@ -304,7 +319,9 @@ class AppUpdateController extends GetxController {
 
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final filePath = '${dir.path}/${config.apkFileName}';
+      final updatesDir = Directory('${dir.path}/updates');
+      await updatesDir.create(recursive: true);
+      final filePath = '${updatesDir.path}/${config.apkFileName}';
 
       _cancelToken = CancelToken();
       // Bare Dio() caused frequent "network error" on GitHub release URLs:
