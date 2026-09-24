@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_2_fa_section.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_and_change_passcode_section.dart';
@@ -63,10 +64,13 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
                     if (controller.isLoading.value ||
                         controller.isGenerateQRCodeLoading.value ||
                         controller.isGeneratePasscodeLoading.value ||
-                        controller.isChangePasscodeLoading.value ||
-                        controller.isDisablePasscodeLoading.value) {
+                        controller.isChangePasscodeLoading.value) {
                       return const CommonLoading();
                     }
+
+                    final hasPasscode = PasscodeHelper.userHasPasscode(
+                      controller.userModel.value.data?.passcode,
+                    );
 
                     return SingleChildScrollView(
                       physics: AlwaysScrollableScrollPhysics(),
@@ -83,12 +87,15 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
                               ? Generate2FaSection()
                               : Enable2FaSection(),
                           SizedBox(height: 30),
+                          // Passcode is mandatory — always show set or change.
+                          // Setting toggle only hides the section on deployments
+                          // that have not enabled passcode_verification yet.
                           settingsService.getSetting("passcode_verification") ==
                                   "1"
-                              ? controller.userModel.value.data!.passcode == "0"
-                                    ? GeneratePasscodeSection()
-                                    : DisableAndChangePasscodeSection()
-                              : SizedBox.shrink(),
+                              ? hasPasscode
+                                    ? const DisableAndChangePasscodeSection()
+                                    : const GeneratePasscodeSection()
+                              : const SizedBox.shrink(),
                         ],
                       ),
                     );
