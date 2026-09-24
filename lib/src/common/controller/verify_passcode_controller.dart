@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -9,9 +10,6 @@ import 'package:ecardo_user/src/network/service/network_service.dart';
 class VerifyPasscodeController extends GetxController {
   final RxBool isPasscodeVerifyLoading = false.obs;
   final RxBool isPasscodeFocused = false.obs;
-  /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
-  /// froze the locale at controller creation (language switches left stale
-  /// strings) and crashed when no localization context existed yet.
   AppLocalizations? get localization =>
       Get.context == null ? null : AppLocalizations.of(Get.context!);
 
@@ -26,9 +24,11 @@ class VerifyPasscodeController extends GetxController {
     });
   }
 
-  /// Submit Verify Passcode
+  /// Returns true when server accepts the passcode.
+  /// Caller must capture the passcode string BEFORE this clears the field.
   Future<bool> submitPasscodeVerify() async {
-    if (passcodeController.text.trim().isEmpty) {
+    final code = PasscodeHelper.normalize(passcodeController.text);
+    if (!PasscodeHelper.isValidFormat(code)) {
       ToastHelper().showErrorToast(
         localization!.verifyPasscodeValidationEnterPasscode,
       );
@@ -40,7 +40,7 @@ class VerifyPasscodeController extends GetxController {
     try {
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.verifyPasscodeEndpoint,
-        data: {"passcode": passcodeController.text.trim()},
+        data: {"passcode": code},
       );
 
       if (response.status == Status.completed) {
