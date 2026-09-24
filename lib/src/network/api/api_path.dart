@@ -6,11 +6,7 @@ class ApiPath {
   static const String countriesEndpoint = '/get-countries';
   static const String getSettingsEndpoint = '/get-settings';
 
-  // v1.0.26 (UPD-2): CF-edge-safe alias of /get-settings. The original URL
-  // got pinned STALE in the Cloudflare edge cache (origin served 1.0.25,
-  // edge kept serving 1.0.24), so the update check read a dead version.
-  // The v2 path has no stale edge entry and the response is now also
-  // Cache-Control: no-store server-side.
+  // v1.0.26 (UPD-2): CF-edge-safe alias of /get-settings.
   static const String getSettingsEndpointV2 = '/get-settings-v2';
   static const String languagesEndpoint = '/get-languages';
   static const String termsAndConditionsEndpoint = '/terms-conditions';
@@ -22,7 +18,6 @@ class ApiPath {
       '/change-language/$languageCode';
 
   /// S-024 — authoritative payment status for a gateway transaction.
-  /// Returns {data: {tnx, payment_status, success, amount, currency}}.
   static String paymentStatusEndpoint(String tnx) => '/user/payment-status/$tnx';
 
   static String getConverterEndpoint({
@@ -80,9 +75,7 @@ class ApiPath {
   static const String makePaymentEndpoint = '/user/payment/make';
   static const String paymentHistoryEndpoint = '/user/payment/history';
 
-  // Dynamic Password Endpoints
-  // M-3 (PAYMENT-FIX): was hardcoded '/pay/generate-otp' inside
-  // dynamic_password_screen.dart — the literal path value is unchanged.
+  // Dynamic Password / payment OTP (system E — web pro-pay only)
   static const String generateDynamicPasswordOtpEndpoint = '/pay/generate-otp';
 
   // Request Money Endpoints
@@ -124,7 +117,7 @@ class ApiPath {
   // Profile Settings Endpoints
   static const String updateProfileEndpoint = '/user/settings/profile';
 
-  // Change Password Endpoints
+  // Change Password Endpoints (system A)
   static const String changePasswordEndpoint = '/user/settings/change-password';
 
   // Id Verification Endpoints
@@ -136,12 +129,15 @@ class ApiPath {
   static const String referralFriendsEndpoint = '/user/referral/direct';
   static const String referralTreeEndpoint = '/user/referral/tree';
 
-  // Security Settings Endpoints
+  // Security — Google 2FA TOTP (system C — login only)
   static const String twoFaGenerateQRCodeEndpoint =
       '/user/settings/2fa/generate';
   static const String enableTwoFaEndpoint = '/user/settings/2fa/enable';
   static const String disableTwoFaEndpoint = '/user/settings/2fa/disable';
+
+  // Security — Transaction PIN / passcode (system B)
   static const String passcodeActiveEndpoint = '/user/passcode';
+  static const String passcodeStatusEndpoint = '/user/passcode/status';
   static const String changePasscodeEndpoint = '/user/passcode/change';
   static const String disablePasscodeEndpoint = '/user/passcode/disable';
   static const String verifyPasscodeEndpoint = '/user/passcode/verify';
@@ -229,11 +225,9 @@ class ApiPath {
   static String orderMessageEndpoint({required String orderId}) =>
       '/user/p2p/orders/$orderId/messages';
 
-  /// دریافت روش‌های پرداخت یک آگهی (GET)
   static String adPaymentMethodEndpoint({required String adId}) =>
       '/user/p2p/ads/$adId/payment-methods';
 
-  /// آپدیت روش پرداخت سفارش (PATCH) — به OrderController وصل است
   static String updateOrderPaymentMethodEndpoint({required String orderId}) =>
       '/user/p2p/orders/$orderId/payment-method';
 
@@ -249,14 +243,12 @@ class ApiPath {
   static String releaseOrderEndpoint({required String id}) =>
       '/user/p2p/orders/$id/release';
 
-  // v55 BUG-008 fix: endpoint صحیح برای تغییر متد پرداخت سفارش
-
   static String verifiedStatusEndPoint =
       '/user/p2p/verified-trader-application/status';
   static String applyVerificationEndPoint =
       '/user/p2p/verified-trader-application/apply';
 
-  // Remittance Endpoints (v1.0.4+5 — v3.8 API)
+  // Remittance Endpoints
   static const String remittanceMethodsEndpoint = '/user/remittance/methods';
   static const String remittanceQuoteEndpoint = '/user/remittance/quote';
   static const String remittanceStoreEndpoint = '/user/remittance/store';
@@ -266,12 +258,12 @@ class ApiPath {
   static String remittanceUploadEndpoint({required String uuid}) =>
       '/user/remittance/$uuid/upload';
 
-  // KYC Level Endpoints (v1.0.5 — v3.9 API)
+  // KYC Level Endpoints
   static const String kycLevelLevelsEndpoint = '/user/kyc-level/levels';
   static const String kycLevelBadgeEndpoint = '/user/kyc-level/badge';
   static const String kycLevelStatusEndpoint = '/user/kyc-level/status';
   static const String kycLevelSubmitEndpoint = '/user/kyc-level/submit';
 
-  // Auth Refresh (v1.0.5 — v3.9 API)
+  // Auth Refresh
   static const String tokenRefreshEndpoint = '/auth/user/refresh';
 }
