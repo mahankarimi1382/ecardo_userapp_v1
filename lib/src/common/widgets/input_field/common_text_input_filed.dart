@@ -85,6 +85,7 @@ class CommonTextInputField extends StatelessWidget {
       obscureText: obscureText,
       focusNode: focusNode,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       validator: validator,
       readOnly: readOnly,
       onTap: onTap,
