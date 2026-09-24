@@ -11,6 +11,8 @@ import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_fil
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
+/// Single bottom sheet for Transaction PIN on money flows (system B).
+/// Never asks for Google 2FA code.
 class VerifyPasscodeBottomSheet extends StatefulWidget {
   const VerifyPasscodeBottomSheet({super.key});
 
@@ -103,7 +105,7 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: "****",
+                    hintText: '****',
                     controller: controller.passcodeController,
                     focusNode: controller.passcodeFocusNode,
                     isFocused: controller.isPasscodeFocused.value,
@@ -111,7 +113,9 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                     obscureText: true,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
+                      LengthLimitingTextInputFormatter(
+                        PasscodeHelper.maxDigits,
+                      ),
                     ],
                   ),
                 ),
@@ -131,7 +135,8 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                               controller.passcodeController.text.trim();
                           if (!PasscodeHelper.isValidFormat(passcode)) {
                             ToastHelper().showErrorToast(
-                              localization.verifyPasscodeValidationEnterPasscode,
+                              localization
+                                  .verifyPasscodeValidationEnterPasscode,
                             );
                             return;
                           }
