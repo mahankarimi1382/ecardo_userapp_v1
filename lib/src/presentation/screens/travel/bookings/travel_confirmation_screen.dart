@@ -278,6 +278,51 @@ class TravelConfirmationScreen extends StatelessWidget {
                       height: 1.6,
                     ),
                   ),
+                  if (order.details['esim_iccid']?.trim().isNotEmpty == true) ...[
+                    SizedBox(height: 12.h),
+                    SelectableText(
+                      'ICCID: ${order.details['esim_iccid']}',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                  if (order.details['esim_sm_dp']?.trim().isNotEmpty == true) ...[
+                    SizedBox(height: 6.h),
+                    SelectableText(
+                      'SM-DP+: ${order.details['esim_sm_dp']}',
+                      style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp),
+                    ),
+                  ],
+                  if (order.details['esim_activation_code']?.trim().isNotEmpty ==
+                      true) ...[
+                    SizedBox(height: 10.h),
+                    SelectableText(
+                      order.details['esim_activation_code']!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: TextButton.icon(
+                        onPressed: () async {
+                          final code = order.details['esim_activation_code']!;
+                          await Clipboard.setData(ClipboardData(text: code));
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                localization.dynamicPasswordCopied,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.copy, size: 16),
+                        label: Text(localization.dynamicPasswordCopy),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -434,16 +479,26 @@ List<TravelVoucherEntry> travelVoucherEntries(
   return entries;
 }
 
-String travelVoucherData(TravelOrder order) => [
-  'ecardo-travel',
-  order.id,
-  order.reference,
-  order.type.name,
-  order.total.amount.toString(),
-  order.total.currency,
-  order.details['voucher_number'] ?? '',
-  order.details['supplier_reference'] ?? '',
-].join('|');
+String travelVoucherData(TravelOrder order) {
+  final lpa = order.details['esim_qr_payload']?.trim().isNotEmpty == true
+      ? order.details['esim_qr_payload']!.trim()
+      : order.details['esim_activation_code']?.trim();
+  if (order.type == TravelProductType.esim &&
+      lpa != null &&
+      lpa.isNotEmpty) {
+    return lpa;
+  }
+  return [
+    'ecardo-travel',
+    order.id,
+    order.reference,
+    order.type.name,
+    order.total.amount.toString(),
+    order.total.currency,
+    order.details['voucher_number'] ?? '',
+    order.details['supplier_reference'] ?? '',
+  ].join('|');
+}
 
 String _voucherLabel(AppLocalizations localization, String key) {
   final labels = {

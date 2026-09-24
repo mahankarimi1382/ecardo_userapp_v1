@@ -450,6 +450,19 @@ class TravelApiRepository implements TravelRepository {
   }
 
   TravelOrder _mapOrder(Map<String, dynamic> json) {
+    final activationMap = _map(json['activation']);
+    final esimIccid = activationMap['iccid']?.toString() ??
+        json['iccid']?.toString() ??
+        '';
+    final esimCode = activationMap['activation_code']?.toString() ??
+        activationMap['qr_payload']?.toString() ??
+        '';
+    final esimSmDp = activationMap['sm_dp_address']?.toString() ?? '';
+    final esimMatching = activationMap['matching_id']?.toString() ?? '';
+    final esimQrPayload = activationMap['qr_payload']?.toString() ??
+        activationMap['activation_code']?.toString() ??
+        '';
+
     final quote = _map(json['quote']);
     final request = _map(quote['request']);
     final hotel = _map(request['hotel']);
@@ -504,6 +517,11 @@ class TravelApiRepository implements TravelRepository {
         'booking_number': booking['booking_number']?.toString() ?? '',
         'voucher_number': voucher['voucher_number']?.toString() ?? '',
         'voucher_issued_at': voucher['issued_at']?.toString() ?? '',
+        'esim_iccid': esimIccid,
+        'esim_activation_code': esimCode,
+        'esim_sm_dp': esimSmDp,
+        'esim_matching_id': esimMatching,
+        'esim_qr_payload': esimQrPayload,
         'check_in':
             (json['check_in_date'] ?? request['check_in_date'])?.toString() ??
             '',

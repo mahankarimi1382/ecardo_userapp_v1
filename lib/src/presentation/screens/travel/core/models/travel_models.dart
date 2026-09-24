@@ -655,10 +655,13 @@ class TravelOrder {
 
   bool get hasReadyEsimActivation =>
       type == TravelProductType.esim &&
+      (details['esim_activation_code']?.trim().isNotEmpty == true ||
+          details['esim_qr_payload']?.trim().isNotEmpty == true) &&
       {
         TravelOrderStatus.issued,
         TravelOrderStatus.active,
         TravelOrderStatus.completed,
+        TravelOrderStatus.confirmed,
       }.contains(status);
 
   TravelOrderGroup get group => switch (status) {
