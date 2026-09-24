@@ -884,7 +884,7 @@ class _OrderTimelineSectionState extends State<_OrderTimelineSection> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.circle, size: 10, color: TravelTheme.primary),
+                      const Icon(Icons.circle, size: 10, color: TravelTheme.purple),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
