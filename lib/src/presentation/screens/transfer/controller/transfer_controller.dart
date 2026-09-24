@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -14,7 +15,6 @@ import 'package:ecardo_user/src/presentation/screens/transfer/model/transfer_con
 import 'package:ecardo_user/src/presentation/screens/transfer/model/transfer_wallet_model.dart';
 
 class TransferController extends GetxController {
-  // Global Variable
   final RxBool isLoading = false.obs;
   final RxBool isTransferConfigLoading = false.obs;
   final RxBool isTransferAmountLoading = false.obs;
@@ -23,7 +23,6 @@ class TransferController extends GetxController {
   final RxInt currentStep = 0.obs;
   final RxDouble charge = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
-  // phase1-fix (P0-7): fee calculation failed → Review must never show/confirm 0.00
   final RxBool chargeLoadFailed = false.obs;
   final List<String> steps = ['Amount', 'Review', 'Success'];
   final Rx<TransferConfigModel> transferConfigModel = TransferConfigModel().obs;
@@ -32,18 +31,16 @@ class TransferController extends GetxController {
   final Rxn<Map<String, dynamic>> successTransferData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  final localization = AppLocalizations.of(Get.context!)!;
+  AppLocalizations get localization =>
+      AppLocalizations.of(Get.context!)!;
 
-  // Wallet
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> transferWalletsList = <Wallets>[].obs;
 
-  // Recipient UID
   final RxBool isRecipientUidFocused = false.obs;
   final FocusNode recipientUidFocusNode = FocusNode();
   final recipientUidController = TextEditingController();
 
-  // Amount
   final RxBool isAmountFocused = false.obs;
   final amountController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
@@ -64,17 +61,14 @@ class TransferController extends GetxController {
     super.onClose();
   }
 
-  // Recipient Uid focus change handler
   void _handleRecipientUidFocusChange() {
     isRecipientUidFocused.value = recipientUidFocusNode.hasFocus;
   }
 
-  // Amount focus change handler
   void _handleAmountFocusChange() {
     isAmountFocused.value = amountFocusNode.hasFocus;
   }
 
-  // Next Step Function
   Future<void> nextStepWithValidation() async {
     if (currentStep.value == 0) {
       if (!validateAmountStep()) {
@@ -90,7 +84,6 @@ class TransferController extends GetxController {
     }
   }
 
-  // Fetch User
   Future<void> fetchUser() async {
     try {
       final response = await Get.find<NetworkService>().get(
@@ -106,7 +99,6 @@ class TransferController extends GetxController {
     } finally {}
   }
 
-  // Fetch Transfer Config
   Future<void> fetchTransferConfig() async {
     isTransferConfigLoading.value = true;
     try {
@@ -125,13 +117,10 @@ class TransferController extends GetxController {
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
     } finally {
-      // v1.0.24: was `finally {}` — the config spinner never cleared when
-      // the request failed (stuck loading screen).
       isTransferConfigLoading.value = false;
     }
   }
 
-  // Charge Calculation
   Future<void> _calculateCharge() async {
     final amount = double.tryParse(amountController.text) ?? 0.0;
     final userChargeStr =
@@ -153,7 +142,6 @@ class TransferController extends GetxController {
     isTransferConfigLoading.value = false;
   }
 
-  // Get Charge Converter
   Future<void> getChargeConverter() async {
     chargeLoadFailed.value = false;
     try {
@@ -183,7 +171,6 @@ class TransferController extends GetxController {
     } finally {}
   }
 
-  // Validate Amount Step
   bool validateAmountStep() {
     if (chargeLoadFailed.value) {
       ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -210,13 +197,13 @@ class TransferController extends GetxController {
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: wallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
-        "site_currency",
-      ) ??
-      'USD',
+            "site_currency",
+          ) ??
+          'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-        "site_currency_decimals",
-      ) ??
-      '2',
+            "site_currency_decimals",
+          ) ??
+          '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -247,9 +234,6 @@ class TransferController extends GetxController {
       return false;
     }
 
-    // v1.0.24: balance guard — the flow used to submit transfers larger than
-    // the wallet balance and only failed after the server rejected them
-    // (mirrors exchange_controller).
     final double availableBalance =
         double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
     if (enteredAmount > availableBalance) {
@@ -265,9 +249,8 @@ class TransferController extends GetxController {
     return true;
   }
 
-  // Transfer Amount
-  Future<void> transferAmount() async {
-    // v1.0.24: guard against double submission while a request is in flight.
+  /// [passcode] — verified 4-digit transaction passcode when required.
+  Future<void> transferAmount({String? passcode}) async {
     if (isTransferAmountLoading.isTrue) return;
     isTransferAmountLoading.value = true;
 
@@ -278,6 +261,9 @@ class TransferController extends GetxController {
           ? "default"
           : wallet.value!.id.toString(),
     };
+    if (passcode != null && PasscodeHelper.isValidFormat(passcode)) {
+      requestBody['passcode'] = PasscodeHelper.normalize(passcode);
+    }
 
     try {
       final response = await Get.find<NetworkService>().post(
@@ -299,7 +285,6 @@ class TransferController extends GetxController {
     }
   }
 
-  // Fetch Wallets
   Future<void> fetchTransferWallets() async {
     isLoading.value = true;
     try {
@@ -328,7 +313,6 @@ class TransferController extends GetxController {
     }
   }
 
-  // Fetch Beneficiary
   Future<void> fetchBeneficiary() async {
     isBeneficiaryLoading.value = true;
     try {
@@ -349,7 +333,6 @@ class TransferController extends GetxController {
     }
   }
 
-  // Clear Fields
   void clearFields() {
     transferConfigModel.value = TransferConfigModel();
     converterModel.value = ConverterModel();
