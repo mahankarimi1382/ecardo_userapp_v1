@@ -362,6 +362,7 @@ class TravelApiRepository implements TravelRepository {
     required TravelOrder order,
     required String reasonCode,
     String? customerNote,
+    required String eligibilityVersion,
     required String idempotencyKey,
   }) async {
     final token = await _ensureTravelAccessToken();
@@ -369,6 +370,7 @@ class TravelApiRepository implements TravelRepository {
       '/orders/${Uri.encodeComponent(order.id)}/refunds',
       data: {
         'reason_code': reasonCode,
+        'eligibility_version': eligibilityVersion,
         if (customerNote?.trim().isNotEmpty == true)
           'customer_note': customerNote!.trim(),
       },

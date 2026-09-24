@@ -681,6 +681,7 @@ Future<void> _showRefundRequestDialog(
   }
   final updatedOrder = await controller.requestRefund(
     order: order,
+    eligibilityVersion: eligibility.version,
     reasonCode: reasonCode,
     customerNote: noteController.text,
   );

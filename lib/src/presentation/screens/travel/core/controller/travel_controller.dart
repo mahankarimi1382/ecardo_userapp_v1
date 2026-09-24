@@ -560,6 +560,7 @@ class TravelController extends GetxController {
     required TravelOrder order,
     required String reasonCode,
     String? customerNote,
+    required String eligibilityVersion,
   }) async {
     if (isCheckoutLoading.value) return null;
     isCheckoutLoading.value = true;
@@ -574,6 +575,7 @@ class TravelController extends GetxController {
         order: order,
         reasonCode: reasonCode,
         customerNote: customerNote,
+        eligibilityVersion: eligibilityVersion,
         idempotencyKey: idempotencyKey,
       );
       final index = orders.indexWhere((item) => item.id == order.id);

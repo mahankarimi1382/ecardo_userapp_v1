@@ -202,6 +202,7 @@ class _FakeTravelRepository implements TravelRepository {
     required TravelOrder order,
     required String reasonCode,
     String? customerNote,
+    required String eligibilityVersion,
     required String idempotencyKey,
   }) async {
     refundKeys.add(idempotencyKey);

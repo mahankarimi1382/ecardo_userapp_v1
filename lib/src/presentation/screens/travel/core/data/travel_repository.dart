@@ -51,6 +51,7 @@ abstract interface class TravelRepository {
     required TravelOrder order,
     required String reasonCode,
     String? customerNote,
+    required String eligibilityVersion,
     required String idempotencyKey,
   });
 
