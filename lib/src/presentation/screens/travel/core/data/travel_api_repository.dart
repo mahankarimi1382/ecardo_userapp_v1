@@ -294,7 +294,46 @@ class TravelApiRepository implements TravelRepository {
     }
   }
 
+  
   @override
+  Future<TravelCancellationEligibility> getCancellationEligibility(
+    TravelOrder order,
+  ) async {
+    final response = await _authorizedGet(
+      '/orders/${Uri.encodeComponent(order.id)}/cancellation-eligibility',
+    );
+    final data = _map(response.data?['data']);
+    final penalty = _map(data['penalty']);
+    final refundable = _map(data['refundable']);
+    double parseAmt(dynamic v) =>
+        double.tryParse(v?.toString() ?? '') ?? 0;
+    return TravelCancellationEligibility(
+      eligible: data['eligible'] == true,
+      expiresAt: DateTime.tryParse(data['expires_at']?.toString() ?? ''),
+      penalty: TravelMoney(
+        amount: parseAmt(penalty['amount']),
+        currency: penalty['currency']?.toString() ??
+            order.total.currency,
+      ),
+      refundable: TravelMoney(
+        amount: parseAmt(refundable['amount']),
+        currency: refundable['currency']?.toString() ??
+            order.total.currency,
+      ),
+      refundDestination:
+          data['refund_destination']?.toString() ?? 'original_wallet',
+      requiresSupplierReview: data['requires_supplier_review'] == true,
+      estimatedCompletionAt: DateTime.tryParse(
+        data['estimated_completion_at']?.toString() ?? '',
+      ),
+      policySummary: data['policy_summary']?.toString(),
+      version: data['version']?.toString() ?? '',
+      reasonCode: data['reason_code']?.toString(),
+      openRefundId: data['open_refund_id']?.toString(),
+    );
+  }
+
+@override
   Future<TravelOrder> requestRefund({
     required TravelOrder order,
     required String reasonCode,

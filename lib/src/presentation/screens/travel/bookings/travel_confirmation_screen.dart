@@ -493,6 +493,21 @@ Future<void> _showRefundRequestDialog(
 ) async {
   final controller = ensureTravelController();
   final localization = AppLocalizations.of(context)!;
+  final eligibility = await controller.fetchCancellationEligibility(order);
+  if (!context.mounted) return;
+  if (eligibility == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(localization.travelCancellationUnavailable)),
+    );
+    return;
+  }
+  if (!eligibility.eligible) {
+    final msg = eligibility.policySummary?.trim().isNotEmpty == true
+        ? eligibility.policySummary!
+        : localization.travelCancellationUnavailable;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    return;
+  }
   final noteController = TextEditingController();
   var reasonCode = 'TRIP_CHANGED';
   final confirmed = await showDialog<bool>(
@@ -511,6 +526,46 @@ Future<void> _showRefundRequestDialog(
             children: [
               Text(localization.travelRefundReviewNotice),
               SizedBox(height: 16.h),
+              if (eligibility.policySummary != null &&
+                  eligibility.policySummary!.trim().isNotEmpty) ...[
+                Text(
+                  eligibility.policySummary!,
+                  style: TextStyle(
+                    color: TravelTheme.muted,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+              Text(
+                () {
+                  final amt =
+                      '${eligibility.refundable.amount} ${eligibility.refundable.currency}';
+                  final code = Localizations.localeOf(context).languageCode;
+                  if (code == 'fa') return 'برآورد مبلغ قابل استرداد: $amt';
+                  if (code == 'ar') return 'المبلغ المتوقع للاسترداد: $amt';
+                  return 'Estimated refund: $amt';
+                }(),
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              if (eligibility.requiresSupplierReview) ...[
+                SizedBox(height: 6.h),
+                Text(
+                  () {
+                    final code = Localizations.localeOf(context).languageCode;
+                    if (code == 'fa') {
+                      return 'مبلغ نهایی پس از بررسی تأمین‌کننده تأیید می‌شود.';
+                    }
+                    if (code == 'ar') {
+                      return 'المبلغ النهائي يحتاج مراجعة المورد.';
+                    }
+                    return 'Final amount requires supplier review.';
+                  }(),
+                  style: TextStyle(color: TravelTheme.warning, fontSize: 11.sp),
+                ),
+              ],
+              SizedBox(height: 12.h),
               DropdownButtonFormField<String>(
                 initialValue: reasonCode,
                 decoration: InputDecoration(

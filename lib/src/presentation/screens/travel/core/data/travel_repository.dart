@@ -53,4 +53,9 @@ abstract interface class TravelRepository {
     String? customerNote,
     required String idempotencyKey,
   });
+
+  Future<TravelCancellationEligibility> getCancellationEligibility(
+    TravelOrder order,
+  );
 }
+

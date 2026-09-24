@@ -533,6 +533,19 @@ class TravelController extends GetxController {
     _paymentIdempotencyKeys.remove(reservation.id);
   }
 
+
+  Future<TravelCancellationEligibility?> fetchCancellationEligibility(
+    TravelOrder order,
+  ) async {
+    try {
+      return await repository.getCancellationEligibility(order);
+    } catch (error) {
+      checkoutFailed.value = true;
+      checkoutError.value = travelSafeErrorMessage(error);
+      return null;
+    }
+  }
+
   Future<TravelOrder?> requestRefund({
     required TravelOrder order,
     required String reasonCode,

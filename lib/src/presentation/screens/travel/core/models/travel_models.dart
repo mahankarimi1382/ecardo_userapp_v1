@@ -469,6 +469,35 @@ String _travelDate(DateTime value) =>
     '${value.month.toString().padLeft(2, '0')}-'
     '${value.day.toString().padLeft(2, '0')}';
 
+
+class TravelCancellationEligibility {
+  final bool eligible;
+  final DateTime? expiresAt;
+  final TravelMoney penalty;
+  final TravelMoney refundable;
+  final String refundDestination;
+  final bool requiresSupplierReview;
+  final DateTime? estimatedCompletionAt;
+  final String? policySummary;
+  final String version;
+  final String? reasonCode;
+  final String? openRefundId;
+
+  const TravelCancellationEligibility({
+    required this.eligible,
+    this.expiresAt,
+    required this.penalty,
+    required this.refundable,
+    required this.refundDestination,
+    required this.requiresSupplierReview,
+    this.estimatedCompletionAt,
+    this.policySummary,
+    required this.version,
+    this.reasonCode,
+    this.openRefundId,
+  });
+}
+
 class TravelMoney {
   final double amount;
   final String currency;
