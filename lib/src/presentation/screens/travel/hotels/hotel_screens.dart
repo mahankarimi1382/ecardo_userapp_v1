@@ -908,6 +908,28 @@ class _HotelResultsScreenState extends State<HotelResultsScreen> {
                 onRetry: search == null
                     ? null
                     : () => controller.searchHotels(search),
+                onNotify: search == null
+                    ? null
+                    : () async {
+                        final dep = search.checkInDate;
+                        final dateStr =
+                            '${dep.year.toString().padLeft(4, '0')}-'
+                            '${dep.month.toString().padLeft(2, '0')}-'
+                            '${dep.day.toString().padLeft(2, '0')}';
+                        final ok = await controller.subscribeNotifyMe(
+                          serviceType: 'hotel',
+                          destination: search.city,
+                          travelDate: dateStr,
+                        );
+                        final ctx = Get.context;
+                        if (ctx == null || !ctx.mounted) return;
+                        Get.snackbar(
+                          ok ? 'OK' : 'Error',
+                          ok
+                              ? 'We will notify you when matching hotels are available.'
+                              : (controller.checkoutError.value ?? 'Request failed'),
+                        );
+                      },
               )
             else ...[
               _HotelResultActions(
@@ -1491,11 +1513,13 @@ class _HotelResultsEmptyState extends StatelessWidget {
   final bool hasError;
   final VoidCallback onEdit;
   final VoidCallback? onRetry;
+  final VoidCallback? onNotify;
 
   const _HotelResultsEmptyState({
     required this.hasError,
     required this.onEdit,
     required this.onRetry,
+    this.onNotify,
   });
 
   @override
@@ -1522,6 +1546,21 @@ class _HotelResultsEmptyState extends StatelessWidget {
           icon: const Icon(Icons.edit_outlined),
           label: Text(localization.travelSearchHotels),
         ),
+        if (onNotify != null) ...[
+          SizedBox(height: 8.h),
+          FilledButton.icon(
+            onPressed: onNotify,
+            icon: const Icon(Icons.notifications_active_outlined),
+            label: Text(
+              () {
+                final code = Localizations.localeOf(context).languageCode;
+                if (code == 'fa') return 'موجود شد خبرم کن';
+                if (code == 'ar') return 'أعلمني عند التوفر';
+                return 'Notify me when available';
+              }(),
+            ),
+          ),
+        ],
       ],
     );
   }
