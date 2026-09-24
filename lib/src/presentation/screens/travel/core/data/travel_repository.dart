@@ -57,5 +57,8 @@ abstract interface class TravelRepository {
   Future<TravelCancellationEligibility> getCancellationEligibility(
     TravelOrder order,
   );
+
+  Future<TravelOrderTimeline> getOrderEvents(TravelOrder order);
 }
+
 

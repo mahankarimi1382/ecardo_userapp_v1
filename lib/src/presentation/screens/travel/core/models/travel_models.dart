@@ -470,6 +470,37 @@ String _travelDate(DateTime value) =>
     '${value.day.toString().padLeft(2, '0')}';
 
 
+
+class TravelOrderEvent {
+  final String type;
+  final DateTime? timestamp;
+  final String? fromStatus;
+  final String? toStatus;
+  final String message;
+  final String? supportReference;
+
+  const TravelOrderEvent({
+    required this.type,
+    this.timestamp,
+    this.fromStatus,
+    this.toStatus,
+    required this.message,
+    this.supportReference,
+  });
+}
+
+class TravelOrderTimeline {
+  final String orderId;
+  final String currentStatus;
+  final List<TravelOrderEvent> events;
+
+  const TravelOrderTimeline({
+    required this.orderId,
+    required this.currentStatus,
+    required this.events,
+  });
+}
+
 class TravelCancellationEligibility {
   final bool eligible;
   final DateTime? expiresAt;

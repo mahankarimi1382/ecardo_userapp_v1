@@ -173,6 +173,16 @@ class _FakeTravelRepository implements TravelRepository {
   }
 
 
+
+  @override
+  Future<TravelOrderTimeline> getOrderEvents(TravelOrder order) async {
+    return TravelOrderTimeline(
+      orderId: order.id,
+      currentStatus: order.rawStatus,
+      events: const [],
+    );
+  }
+
   @override
   Future<TravelCancellationEligibility> getCancellationEligibility(
     TravelOrder order,

@@ -237,6 +237,8 @@ class TravelConfirmationScreen extends StatelessWidget {
               onPressed: () => downloadTravelVoucher(context, order),
             ),
           ],
+          _OrderTimelineSection(order: order),
+          SizedBox(height: 12.h),
           if (order.canRequestCancellation) ...[
             SizedBox(height: 12.h),
             Obx(() {
@@ -822,6 +824,89 @@ class _ConfirmationRow extends StatelessWidget {
               )
             : valueWidget,
       ],
+    );
+  }
+}
+
+
+class _OrderTimelineSection extends StatefulWidget {
+  final TravelOrder order;
+  const _OrderTimelineSection({required this.order});
+
+  @override
+  State<_OrderTimelineSection> createState() => _OrderTimelineSectionState();
+}
+
+class _OrderTimelineSectionState extends State<_OrderTimelineSection> {
+  late final Future<TravelOrderTimeline?> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = ensureTravelController().fetchOrderEvents(widget.order);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<TravelOrderTimeline?>(
+      future: _future,
+      builder: (context, snapshot) {
+        final timeline = snapshot.data;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Center(child: SizedBox(
+              width: 24, height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )),
+          );
+        }
+        if (timeline == null || timeline.events.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        return TravelCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                () {
+                  final code = Localizations.localeOf(context).languageCode;
+                  if (code == 'fa') return 'وضعیت سفارش';
+                  if (code == 'ar') return 'حالة الطلب';
+                  return 'Order timeline';
+                }(),
+                style: const TextStyle(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 12),
+              ...timeline.events.map((e) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.circle, size: 10, color: TravelTheme.primary),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(e.message, style: const TextStyle(fontWeight: FontWeight.w600)),
+                            if (e.timestamp != null)
+                              Text(
+                                e.timestamp!.toLocal().toString().split('.').first,
+                                style: TextStyle(color: TravelTheme.muted, fontSize: 11),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
     );
   }
 }

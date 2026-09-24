@@ -534,6 +534,16 @@ class TravelController extends GetxController {
   }
 
 
+
+  Future<TravelOrderTimeline?> fetchOrderEvents(TravelOrder order) async {
+    try {
+      return await repository.getOrderEvents(order);
+    } catch (error) {
+      checkoutError.value = travelSafeErrorMessage(error);
+      return null;
+    }
+  }
+
   Future<TravelCancellationEligibility?> fetchCancellationEligibility(
     TravelOrder order,
   ) async {

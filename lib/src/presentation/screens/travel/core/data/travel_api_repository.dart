@@ -295,6 +295,30 @@ class TravelApiRepository implements TravelRepository {
   }
 
   
+
+  @override
+  Future<TravelOrderTimeline> getOrderEvents(TravelOrder order) async {
+    final response = await _authorizedGet(
+      '/orders/${Uri.encodeComponent(order.id)}/events',
+    );
+    final data = _map(response.data?['data']);
+    final events = _listOfMaps(data['events']).map((item) {
+      return TravelOrderEvent(
+        type: item['type']?.toString() ?? 'status_change',
+        timestamp: DateTime.tryParse(item['timestamp']?.toString() ?? ''),
+        fromStatus: item['from_status']?.toString(),
+        toStatus: item['to_status']?.toString(),
+        message: item['message']?.toString() ?? '',
+        supportReference: item['support_reference']?.toString(),
+      );
+    }).toList();
+    return TravelOrderTimeline(
+      orderId: data['order_id']?.toString() ?? order.id,
+      currentStatus: data['current_status']?.toString() ?? order.rawStatus,
+      events: events,
+    );
+  }
+
   @override
   Future<TravelCancellationEligibility> getCancellationEligibility(
     TravelOrder order,
