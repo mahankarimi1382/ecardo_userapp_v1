@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
-import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_2_fa_section.dart';
-import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_and_change_passcode_section.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/enable_2_fa_section.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_2_fa_section.dart';
-import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_passcode_section.dart';
 
+/// System C — Google Authenticator TOTP for **login only**.
+/// Transaction PIN lives on [TransactionPinScreen], not here.
 class TwoFactorAuthentication extends StatefulWidget {
   const TwoFactorAuthentication({super.key});
 
@@ -24,7 +22,6 @@ class TwoFactorAuthentication extends StatefulWidget {
 
 class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
   final TwoFactorAuthenticationController controller = Get.find();
-  final SettingsService settingsService = Get.find();
 
   @override
   void initState() {
@@ -55,47 +52,41 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
               CommonAppBar(
                 title: localization.twoFactorAuthenticationScreenTitle,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Text(
+                  'فقط برای ورود به حساب (Google Authenticator). برای انتقال وجه از «رمز انتقال» استفاده کنید.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.lightTextTertiary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               Expanded(
                 child: RefreshIndicator(
                   color: AppColors.lightPrimary,
                   onRefresh: () => loadData(),
                   child: Obx(() {
                     if (controller.isLoading.value ||
-                        controller.isGenerateQRCodeLoading.value ||
-                        controller.isGeneratePasscodeLoading.value ||
-                        controller.isChangePasscodeLoading.value) {
+                        controller.isGenerateQRCodeLoading.value) {
                       return const CommonLoading();
                     }
 
-                    final hasPasscode = PasscodeHelper.userHasPasscode(
-                      controller.userModel.value.data?.passcode,
-                    );
-
                     return SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           controller.userModel.value.data?.twoFa == true
                               ? Disable2FaSection()
-                              : controller
-                                        .userModel
-                                        .value
-                                        .data
-                                        ?.google2faSecret ==
-                                    null
+                              : controller.userModel.value.data
+                                          ?.google2faSecret ==
+                                      null
                               ? Generate2FaSection()
                               : Enable2FaSection(),
-                          SizedBox(height: 30),
-                          // Passcode is mandatory — always show set or change.
-                          // Setting toggle only hides the section on deployments
-                          // that have not enabled passcode_verification yet.
-                          settingsService.getSetting("passcode_verification") ==
-                                  "1"
-                              ? hasPasscode
-                                    ? const DisableAndChangePasscodeSection()
-                                    : const GeneratePasscodeSection()
-                              : const SizedBox.shrink(),
+                          const SizedBox(height: 40),
                         ],
                       ),
                     );
@@ -109,7 +100,7 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
               visible:
                   controller.isEnableTwoFaLoading.value ||
                   controller.isDisableTwoFaLoading.value,
-              child: CommonLoading(),
+              child: const CommonLoading(),
             ),
           ),
         ],
