@@ -6,6 +6,8 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/set_passcode_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart';
 
 class SetUpPasswordController extends GetxController {
   final RxBool isLoading = false.obs;
@@ -66,15 +68,19 @@ class SetUpPasswordController extends GetxController {
       if (response.status == Status.completed) {
         await Get.find<SettingsService>().saveSetUpPassword(true);
         await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
-        // Mandatory transaction passcode before continuing onboarding.
-        Get.offNamed(
-          BaseRoute.setPasscode,
+        resetFields();
+        // Mandatory 4-digit transaction passcode before onboarding continues.
+        if (Get.isRegistered<SetPasscodeController>()) {
+          Get.delete<SetPasscodeController>();
+        }
+        Get.put(SetPasscodeController());
+        Get.off(
+          () => const SetPasscodeScreen(),
           arguments: {
             'next': BaseRoute.signUpStatus,
             'next_args': {"is_password_set_up": true},
           },
         );
-        resetFields();
       }
     } catch (e, stackTrace) {
       debugPrint('❌ setUpPassword() error: $e');
