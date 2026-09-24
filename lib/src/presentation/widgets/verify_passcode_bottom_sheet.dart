@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -7,6 +8,8 @@ import 'package:ecardo_user/src/common/controller/verify_passcode_controller.dar
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 class VerifyPasscodeBottomSheet extends StatefulWidget {
   const VerifyPasscodeBottomSheet({super.key});
@@ -100,11 +103,16 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: "",
+                    hintText: "****",
                     controller: controller.passcodeController,
                     focusNode: controller.passcodeFocusNode,
                     isFocused: controller.isPasscodeFocused.value,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
+                    obscureText: true,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
                   ),
                 ),
               ),
@@ -119,14 +127,16 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                   onPressed: controller.isPasscodeVerifyLoading.value
                       ? null
                       : () async {
-                          // EX-04: capture the entered passcode BEFORE the
-                          // controller clears it, and return the VALUE (not
-                          // just a bool) so money flows can forward it in
-                          // the submission body for server-side validation.
                           final passcode =
                               controller.passcodeController.text.trim();
-                          final success = await controller
-                              .submitPasscodeVerify();
+                          if (!PasscodeHelper.isValidFormat(passcode)) {
+                            ToastHelper().showErrorToast(
+                              localization.verifyPasscodeValidationEnterPasscode,
+                            );
+                            return;
+                          }
+                          final success =
+                              await controller.submitPasscodeVerify();
                           if (success) {
                             Get.back(result: passcode);
                           }
