@@ -84,9 +84,8 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
 
   Future<bool> _hasLocalUnlockMethod() async {
     if (await hasPinSet()) return true;
-    if (!Get.isRegistered<SettingsService>()) return false;
-    return await Get.find<SettingsService>().getBiometricEnableOrDisable() ==
-        true;
+    // getBiometricEnableOrDisable is a static prefs reader (not instance method).
+    return await SettingsService.getBiometricEnableOrDisable() == true;
   }
 
   Future<bool> unlock(String pin) async {
