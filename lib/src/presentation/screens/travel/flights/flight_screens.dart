@@ -636,6 +636,30 @@ class _FlightResultsScreenState extends State<FlightResultsScreen> {
                 onRetry: search == null
                     ? null
                     : () => controller.searchFlights(search),
+                onNotify: search == null
+                    ? null
+                    : () async {
+                        final dep = search.departureDate;
+                        final dateStr = dep == null
+                            ? null
+                            : '${dep.year.toString().padLeft(4, '0')}-'
+                                '${dep.month.toString().padLeft(2, '0')}-'
+                                '${dep.day.toString().padLeft(2, '0')}';
+                        final ok = await controller.subscribeNotifyMe(
+                          serviceType: 'flight',
+                          origin: search.origin,
+                          destination: search.destination,
+                          travelDate: dateStr,
+                        );
+                        final ctx = Get.context;
+                        if (ctx == null || !ctx.mounted) return;
+                        Get.snackbar(
+                          ok ? 'OK' : 'Error',
+                          ok
+                              ? 'We will notify you when matching flights are available.'
+                              : (controller.checkoutError.value ?? 'Request failed'),
+                        );
+                      },
               ),
               if (controller.upcomingFlightOffers.isNotEmpty) ...[
                 SizedBox(height: 24.h),
@@ -1365,11 +1389,13 @@ class _FlightResultsEmptyState extends StatelessWidget {
   final bool hasError;
   final VoidCallback onEdit;
   final VoidCallback? onRetry;
+  final VoidCallback? onNotify;
 
   const _FlightResultsEmptyState({
     required this.hasError,
     required this.onEdit,
     required this.onRetry,
+    this.onNotify,
   });
 
   @override
@@ -1396,6 +1422,21 @@ class _FlightResultsEmptyState extends StatelessWidget {
           icon: const Icon(Icons.edit_outlined),
           label: Text(localization.travelSearchFlights),
         ),
+        if (onNotify != null) ...[
+          SizedBox(height: 8.h),
+          FilledButton.icon(
+            onPressed: onNotify,
+            icon: const Icon(Icons.notifications_active_outlined),
+            label: Text(
+              () {
+                final code = Localizations.localeOf(context).languageCode;
+                if (code == 'fa') return 'موجود شد خبرم کن';
+                if (code == 'ar') return 'أعلمني عند التوفر';
+                return 'Notify me when available';
+              }(),
+            ),
+          ),
+        ],
       ],
     );
   }
