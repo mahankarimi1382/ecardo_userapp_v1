@@ -15,18 +15,12 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     permissions:
-      # Required for `gh release create/upload` to push tags and assets
       contents: write
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      # CI infra fix: stock runner images leave too little free disk for
-      # Flutter + Android (NDK download + Gradle caches hit ENOSPC —
-      # "No space left on device" killed Build APK on main pushes).
-      # Reclaim ~10GB of preinstalled toolchains we never use.
-      # The Android SDK under /usr/local/lib/android is intentionally KEPT.
       - name: Free disk space
         shell: bash
         run: |
@@ -50,8 +44,6 @@ jobs:
       - name: Accept Android SDK licenses
         shell: bash
         run: |
-          # Pre-accept all Android SDK licenses so Gradle can install
-          # required components non-interactively.
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
 
       - name: Setup Flutter
@@ -66,8 +58,6 @@ jobs:
       - name: Generate localizations
         run: flutter gen-l10n
 
-      # phase1-fix (P0-1): analyze is a real gate now. Errors fail the build;
-      # warnings/infos are reported in the artifact and still need cleanup.
       - name: Run Analyze (errors are fatal)
         run: |
           flutter analyze --no-fatal-infos --no-fatal-warnings 2>&1 | tee analysis_report.txt || true
@@ -78,16 +68,9 @@ jobs:
           fi
           echo "✅ No analyzer errors"
 
-      # phase1-fix (P0-1): the existing test suite now runs on every PR/push.
       - name: Run Tests
         run: flutter test
 
-      # ==========================================================================
-      # Release keystore setup — TAG BUILDS ONLY (phase1-fix, P0-2)
-      # --------------------------------------------------------------------------
-      # Fail-closed: a tag release without the SIGNING_* secrets is an error,
-      # never a silent fallback to the public debug keystore.
-      # ==========================================================================
       - name: Decode release keystore
         if: startsWith(github.ref, 'refs/tags/v')
         env:
@@ -98,12 +81,8 @@ jobs:
         run: |
           if [ -z "$SIGNING_KEYSTORE_BASE64" ]; then
             echo "❌ SIGNING_KEYSTORE_BASE64 is not set."
-            echo "   Refusing to build a release without a real signing key"
-            echo "   (the debug-fallback keystore has been removed entirely)."
-            echo "   Set the four SIGNING_* secrets in: Settings → Secrets and variables → Actions"
             exit 1
           fi
-
           echo "$SIGNING_KEYSTORE_BASE64" | base64 -d > android/ecardo-release.keystore
           cat > android/key.properties <<EOF
           storeFile=ecardo-release.keystore
@@ -112,15 +91,10 @@ jobs:
           keyPassword=$SIGNING_KEY_PASSWORD
           EOF
           echo "✅ Release keystore configured."
-          ls -la android/ecardo-release.keystore
 
-      # release build (signed) only for tags; debug build as the compile gate
-      # for PRs and main pushes (phase1-fix, P0-1/P0-2)
       - name: Build APK
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            # Single ABI (arm64) — avoids AGP conflict with ndk.abiFilters + split-per-abi.
-            # Smaller than fat arm+arm64 APK; covers virtually all devices in use.
             flutter build apk --release --obfuscate --split-debug-info=build/symbols \
               --target-platform android-arm64 --tree-shake-icons 2>&1 | tee build_log.txt
             test -f build/app/outputs/flutter-apk/app-release.apk
@@ -131,10 +105,6 @@ jobs:
           fi
           echo "APK built successfully!"
 
-      # ==========================================================================
-      # Post-build signature verification — TAG BUILDS ONLY
-      # Fails the build if the APK is unsigned.
-      # ==========================================================================
       - name: Verify APK signature
         if: startsWith(github.ref, 'refs/tags/v')
         shell: python
@@ -143,75 +113,43 @@ jobs:
           APK_PATH = "build/app/outputs/flutter-apk/app-release.apk"
           MAGIC = b"APK Sig Block 42"
           V2_ID, V3_ID, V31_ID = 0x7109871A, 0xF05368C0, 0x1B93AD61
-
           if not os.path.exists(APK_PATH):
-              print(f"❌ APK not found at {APK_PATH}")
-              sys.exit(1)
-
+              print(f"❌ APK not found at {APK_PATH}"); sys.exit(1)
           size = os.path.getsize(APK_PATH)
           print(f"APK size: {size:,} bytes ({size/1024/1024:.2f} MB)")
-
           with open(APK_PATH, "rb") as f:
               data = f.read()
-
           with zipfile.ZipFile(APK_PATH) as z:
               v1_files = [n for n in z.namelist()
                           if n.startswith("META-INF/") and
                           (n.endswith(".SF") or n.endswith(".RSA") or n.endswith(".DSA")
                            or n == "META-INF/MANIFEST.MF")]
           print(f"v1 (JAR) signature files: {len(v1_files)}")
-          for f in v1_files: print(f"  - {f}")
-
           sig = b"\x50\x4b\x05\x06"
           eocd_pos = data.rfind(sig, max(0, len(data)-65535-22))
           if eocd_pos < 0:
               print("❌ EOCD not found"); sys.exit(1)
           cd_offset = struct.unpack("<I", data[eocd_pos+16:eocd_pos+20])[0]
-          print(f"Central directory offset: {cd_offset:,}")
           v2_found = False
           v3_found = False
           if cd_offset >= 32:
               magic = data[cd_offset-16:cd_offset]
-              print(f"APK Signing Block magic: {magic!r}")
               if magic == MAGIC:
                   block_size = struct.unpack("<Q", data[cd_offset-24:cd_offset-16])[0]
-                  print(f"Signing block size: {block_size:,}")
                   pos = cd_offset - block_size
                   pair_count = 0
                   while pos < cd_offset - 24 and pair_count < 50:
                       pair_len = struct.unpack("<Q", data[pos:pos+8])[0]
                       pair_id = struct.unpack("<I", data[pos+8:pos+12])[0]
-                      name = {V2_ID:"v2 (Android 7+)",
-                              V3_ID:"v3 (Android 9+)",
-                              V31_ID:"v3.1 (Android 11+)"}.get(pair_id, f"0x{pair_id:08x}")
-                      print(f"  Pair #{pair_count}: id=0x{pair_id:08X} ({name}), size={pair_len:,}")
                       if pair_id == V2_ID: v2_found = True
-                      if pair_id == V3_ID: v3_found = True
-                      if pair_id == V31_ID: v3_found = True
+                      if pair_id in (V3_ID, V31_ID): v3_found = True
                       pos += 8 + pair_len
                       pair_count += 1
-              else:
-                  print("⚠️  No APK Signing Block (magic mismatch)")
-
-          print()
-          print("=" * 60)
           if v1_files or v2_found or v3_found:
               print("✅ APK IS SIGNED — installable on Android.")
           else:
-              print("🔴 FATAL: APK IS COMPLETELY UNSIGNED!")
-              sys.exit(2)
+              print("🔴 FATAL: APK IS COMPLETELY UNSIGNED!"); sys.exit(2)
 
-      # ==========================================================================
-      # Auto-publish to GitHub Releases — TAG BUILDS ONLY (phase1-fix, P0-1)
-      # --------------------------------------------------------------------------
-      # Publishing is no longer automatic on every push to main. It happens
-      # only when a v* tag is pushed, an existing tag is never overwritten,
-      # and main is still the target.
-      # v1.0.46: the duplicate APK artifact upload step was removed — the APK
-      # is published to Releases and mirrored to the public repo below, and
-      # the artifact service consumed the account's storage quota (uploads
-      # then failed repo-wide with "Artifact storage quota has been hit").
-      # ==========================================================================
       - name: Publish APK to GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
@@ -222,10 +160,6 @@ jobs:
           APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
           STAGED="ecardo_user_v${VERSION}.apk"
           cp "$APK_PATH" "$STAGED"
-
-          # If a human/agent pre-created an empty Release for this tag (notes only),
-          # still attach the APK. Previously we hard-failed here, which skipped
-          # Mirror + Notify and left users without an update notification.
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "ℹ️  Release $TAG already exists — uploading APK with --clobber."
           else
@@ -236,16 +170,9 @@ jobs:
           Source: https://github.com/mahankarimi1382/ecardo_userapp_v1/commit/${GITHUB_SHA}" \
               --target main
           fi
-
           gh release upload "$TAG" "$STAGED" --clobber
           echo "✅ Release $TAG published with APK"
-          gh release view "$TAG" --json assets,url -q '"URL: \(.url)\nAssets: \(.assets | map(.name) | join(", "))"'
 
-      # ==========================================================================
-      # Mirror APK to the public release channel (ecardo-apps-releases).
-      # The app repo is PRIVATE — end users download from the public repo.
-      # This step must succeed before the server notification fires.
-      # ==========================================================================
       - name: Mirror APK to public releases repo
         if: startsWith(github.ref, 'refs/tags/v')
         env:
@@ -262,6 +189,11 @@ jobs:
           PUB="mahankarimi1382/ecardo-apps-releases"
           PUB_TAG="${PREFIX}-v${VERSION}"
           cp "$APK_PATH" "$APK_NAME"
+          # Prefer PAT for public mirror; fall back to GITHUB_TOKEN if PAT missing (may lack cross-repo scope)
+          if [ -z "$GH_TOKEN" ]; then
+            echo "⚠️ ECRDO_RELEASE_TOKEN empty — trying GITHUB_TOKEN for mirror"
+            export GH_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          fi
           gh release view "$PUB_TAG" -R "$PUB" >/dev/null 2>&1 || \
             gh release create "$PUB_TAG" -R "$PUB" \
               --title "eCardo ${PREFIX} v${VERSION}" \
@@ -271,11 +203,6 @@ jobs:
           echo "PUBLIC_URL=$PUBLIC_URL" >> "$GITHUB_ENV"
           echo "✅ Mirrored: $PUBLIC_URL"
 
-      # ==========================================================================
-      # Notify eCardo Server of the new release — TAG BUILDS ONLY
-      # phase1-fix (P1): no more `curl -k`, no `|| true`, no
-      # continue-on-error — a failed deploy notification fails the run.
-      # ==========================================================================
       - name: Notify eCardo Server of new release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
@@ -284,10 +211,8 @@ jobs:
           DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?ECARDO_DEPLOY_SECRET is not configured}"
           VERSION="${GITHUB_REF_NAME#v}"
           DOWNLOAD_URL="${PUBLIC_URL:?Mirror step must run first — public APK missing}"
-
-          echo "Notifying server: version=$VERSION (link mode, no APK upload)"
+          echo "Notifying server: version=$VERSION"
           echo "download_url=$DOWNLOAD_URL"
-
           set -o pipefail
           if curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
@@ -303,20 +228,13 @@ jobs:
           else
             code=$?
             if [ "$code" -eq 60 ] || grep -qi "SSL certificate problem" notify-result.txt; then
-              echo "⚠️ SERVER NOT NOTIFIED: TLS handshake failed on ecardo.ir (curl exit 60)."
-              echo "   This should not happen — ecardo.ir is the same fronted domain the"
-              echo "   app itself uses (verified publicly-trusted chain). If you see this,"
-              echo "   check the certificate chain on ecardo.ir immediately."
-              echo "   The RELEASE ITSELF IS PUBLISHED and downloadable."
+              echo "⚠️ SERVER NOT NOTIFIED: TLS issue — release still published."
               exit 0
             fi
-            echo "❌ Server notification failed (curl exit $code) — see notify-result.txt"
+            echo "❌ Server notification failed (curl exit $code)"
             exit 1
           fi
 
-      # Diagnostics only — must never mask a finished release (the artifact
-      # quota failure must not flip a green run red), so it can't fail the
-      # job, and retention is short to protect the account storage quota.
       - name: Upload Build Log
         if: always()
         continue-on-error: true
@@ -330,13 +248,9 @@ jobs:
             analysis_report.txt
             notify-result.txt
 
-
-  # -------------------------------------------------------------------------
-  # Ensure a v* release tag exists for the pubspec version after every main
-  # push. Without this, CI green on main does NOT publish APK / notify the
-  # server — users never see an in-app update. Tag builds already handle
-  # signed APK + mirror + webhook; this job only creates the missing tag.
-  # -------------------------------------------------------------------------
+  # Create missing v* tag for pubspec version on every main push.
+  # Prefer ECRDO_RELEASE_TOKEN (retriggers workflows on tag push).
+  # Fall back to GITHUB_TOKEN so a missing/expired PAT never blocks tagging.
   ensure-release-tag:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -346,12 +260,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # Must NOT use GITHUB_TOKEN (silent tag push). ECRDO_RELEASE_TOKEN triggers workflows.
-          token: ${{ secrets.ECRDO_RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create v* tag when pubspec version is untagged
         env:
-          GH_TOKEN: ${{ secrets.ECRDO_RELEASE_TOKEN }}
+          PAT: ${{ secrets.ECRDO_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           VERSION=$(python3 -c "
@@ -376,5 +290,20 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "${TAG}" -m "userapp ${TAG} (auto-tag from main ${GITHUB_SHA::7})"
+
+          # Prefer PAT so the tag push starts a NEW workflow run (signed APK + notify).
+          # GITHUB_TOKEN can still create the tag but does not re-trigger workflows.
+          PUSH_TOKEN="${PAT:-$GITHUB_TOKEN}"
+          git remote set-url origin "https://x-access-token:${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push origin "refs/tags/${TAG}"
-          echo "Created and pushed ${TAG} -> triggers signed release + server notify"
+          echo "Created and pushed ${TAG}"
+
+          if [ -n "${PAT:-}" ]; then
+            echo "✅ Used ECRDO_RELEASE_TOKEN — tag push should trigger signed release + server notify"
+          else
+            echo "⚠️ ECRDO_RELEASE_TOKEN missing — tag created with GITHUB_TOKEN only."
+            echo "   Tag push will NOT auto-start another workflow. Re-run Actions on tag ${TAG} or restore the PAT."
+            # Best-effort: request workflow_dispatch for this tag (needs workflow_dispatch + PAT for cross-event).
+            # Using REST to create a workflow_dispatch on main is a no-op for tag builds;
+            # operator must re-run the tag build from Actions UI if PAT is absent.
+          fi
