@@ -4,8 +4,8 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/change_passcode_bottom_sheet.dart';
-import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_passcode_bottom_sheet.dart';
 
+/// Passcode is mandatory and unique — user may only change it, never disable.
 class DisableAndChangePasscodeSection extends StatelessWidget {
   const DisableAndChangePasscodeSection({super.key});
 
@@ -61,36 +61,24 @@ class DisableAndChangePasscodeSection extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 12),
+            Text(
+              localization.generatePasscodeSectionDescription,
+              style: TextStyle(
+                letterSpacing: 0,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: AppColors.lightTextTertiary,
+              ),
+            ),
             const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: CommonButton(
-                    onPressed: () async {
-                      Get.bottomSheet(ChangePasscodeBottomSheet());
-                    },
-                    width: double.infinity,
-                    text: localization.disableChangePasscodeButtonChange,
-                    fontSize: 13,
-                    height: 35,
-                    borderRadius: 10,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: CommonButton(
-                    onPressed: () async {
-                      Get.bottomSheet(DisablePasscodeBottomSheet());
-                    },
-                    width: double.infinity,
-                    text: localization.disableChangePasscodeButtonDisable,
-                    backgroundColor: AppColors.error,
-                    fontSize: 13,
-                    height: 35,
-                    borderRadius: 10,
-                  ),
-                ),
-              ],
+            CommonButton(
+              onPressed: () async {
+                Get.bottomSheet(const ChangePasscodeBottomSheet());
+              },
+              width: double.infinity,
+              text: localization.disableChangePasscodeButtonChange,
+              borderRadius: 10,
             ),
           ],
         ),
