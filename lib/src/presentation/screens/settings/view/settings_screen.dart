@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/transaction_pin/transaction_pin_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -125,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final c2 = TextEditingController();
     final ok = await Get.dialog<bool>(
       AlertDialog(
-        title: const Text('PIN چهار رقمی'),
+        title: Text(l10nPick(Get.context!, en: 'App Lock PIN (4 digits)', fa: 'PIN قفل دستگاه (۴ رقم)', ar: 'رمز قفل التطبيق', zh: '设备锁定PIN')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -155,7 +156,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (Get.isRegistered<AppLockService>()) {
         await Get.find<AppLockService>().setPin(c1.text);
       }
-      await settings.setAppPin('set'); // flag only — hash lives in secure storage
+      await settings.setAppPin('set');
       Get.snackbar('PIN', 'ذخیره شد', snackPosition: SnackPosition.BOTTOM);
     } else if (ok == true) {
       Get.snackbar('PIN', 'PIN باید ۴ رقم و یکسان باشد', snackPosition: SnackPosition.BOTTOM);
@@ -216,8 +217,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     'حذف حساب',
                     'از طریق پشتیبانی درخواست دهید',
                     () async {
-                      // Option B: no public delete-account API in this app —
-                      // route user to support ticket instead of profile.
                       if (settings.getSetting('user_ticket') == '1') {
                         Get.toNamed(BaseRoute.supportTickets);
                       } else {
@@ -243,16 +242,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _navTile(
                     Icons.lock_outline,
                     loc.settingsChangePassword,
-                    null,
+                    l10nPick(context, en: 'Account password', fa: 'رمز ورود حساب', ar: 'كلمة مرور الحساب', zh: '登录密码'),
                     () => Get.toNamed(BaseRoute.changePassword),
+                  ),
+                  _navTile(
+                    Icons.vpn_key_outlined,
+                    l10nPick(context, en: 'Transaction PIN', fa: 'رمز انتقال وجه', ar: 'رمز التحويل', zh: '转账密码'),
+                    l10nPick(context, en: '4–6 digits for transfers & payments', fa: '۴ تا ۶ رقم برای انتقال و پرداخت', ar: '4–6 أرقام للتحويل والدفع', zh: '转账与支付用4–6位'),
+                    () {
+                      Get.to(() => const TransactionPinScreen());
+                    },
                   ),
                   if (settings.getSetting('fa_verification') == '1')
                     _navTile(
                       Icons.security,
                       loc.settingsTwoFactorAuthentication,
-                      null,
+                      l10nPick(context, en: 'Google Authenticator — login only', fa: 'ورود دو مرحله‌ای — فقط لاگین', ar: 'المصادقة الثنائية — تسجيل الدخول فقط', zh: '双重认证—仅登录'),
                       () => Get.toNamed(BaseRoute.twoFactorAuthentication),
                     ),
+                  _navTile(
+                    Icons.password_outlined,
+                    l10nPick(context, en: 'Payment OTP generator', fa: 'رمزساز پرداخت (رمز یک‌بارمصرف)', ar: 'مولّد OTP للدفع', zh: '支付一次性密码'),
+                    l10nPick(context, en: 'For web / pro-pay pages only', fa: 'فقط برای صفحه پرداخت وب', ar: 'لصفحات الدفع على الويب فقط', zh: '仅用于网页支付'),
+                    () => Get.toNamed(BaseRoute.dynamicPassword),
+                  ),
                   if (_bioSupported)
                     SwitchListTile.adaptive(
                       contentPadding: EdgeInsets.zero,
@@ -316,8 +329,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.pin_outlined),
-                    title: const Text('تغییر PIN اپ'),
-                    subtitle: const Text('۴ رقم'),
+                    title: Text(l10nPick(context, en: 'App Lock PIN', fa: 'PIN قفل دستگاه', ar: 'رمز قفل التطبيق', zh: '设备锁定PIN')),
+                    subtitle: Text(l10nPick(context, en: 'Local device unlock only — not transfer PIN', fa: 'فقط باز کردن قفل اپ — نه رمز انتقال', ar: 'لفتح التطبيق فقط — ليس رمز التحويل', zh: '仅用于解锁应用，非转账密码')),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: _changePin,
                   ),
