@@ -8,22 +8,18 @@ import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 
 class SetUpPasswordController extends GetxController {
-  // Global Variable
   final RxBool isLoading = false.obs;
 
-  // Password
   final RxBool isPasswordFocused = false.obs;
   final RxBool isPasswordVisible = true.obs;
   final FocusNode passwordFocusNode = FocusNode();
   final passwordController = TextEditingController();
 
-  // Confirm Password
   final RxBool isConfirmPasswordFocused = false.obs;
   final RxBool isConfirmPasswordVisible = true.obs;
   final FocusNode confirmPasswordFocusNode = FocusNode();
   final confirmPasswordController = TextEditingController();
 
-  // Terms & Condition
   final RxBool isTermsAndConditionChecked = false.obs;
 
   @override
@@ -44,17 +40,14 @@ class SetUpPasswordController extends GetxController {
     super.onClose();
   }
 
-  // Password focus change handler
   void _handlePasswordFocusChange() {
     isPasswordFocused.value = passwordFocusNode.hasFocus;
   }
 
-  // Confirm Password focus change handler
   void _handleConfirmPasswordFocusChange() {
     isConfirmPasswordFocused.value = confirmPasswordFocusNode.hasFocus;
   }
 
-  // Set Up Password
   Future<void> setUpPassword() async {
     isLoading.value = true;
     try {
@@ -73,9 +66,13 @@ class SetUpPasswordController extends GetxController {
       if (response.status == Status.completed) {
         await Get.find<SettingsService>().saveSetUpPassword(true);
         await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
-        Get.toNamed(
-          BaseRoute.signUpStatus,
-          arguments: {"is_password_set_up": true},
+        // Mandatory transaction passcode before continuing onboarding.
+        Get.offNamed(
+          BaseRoute.setPasscode,
+          arguments: {
+            'next': BaseRoute.signUpStatus,
+            'next_args': {"is_password_set_up": true},
+          },
         );
         resetFields();
       }
@@ -90,7 +87,6 @@ class SetUpPasswordController extends GetxController {
     }
   }
 
-  // Reset Fields
   void resetFields() {
     passwordController.clear();
     confirmPasswordController.clear();
