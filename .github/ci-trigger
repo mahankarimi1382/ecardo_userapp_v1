@@ -1,0 +1,4 @@
+# CI trigger — safe to delete
+# Last attempt after free minutes exhausted (2000/2000).
+# Purpose: start Flutter Android Build + release-if-untagged for v1.0.86
+triggered_at: 2026-09-24T13:20:00Z
