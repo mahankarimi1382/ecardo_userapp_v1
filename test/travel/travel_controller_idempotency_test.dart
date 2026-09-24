@@ -54,6 +54,7 @@ void main() {
         await controller.requestRefund(
           order: order,
           reasonCode: 'customer_request',
+          eligibilityVersion: 'test-elig-1',
         ),
         isNull,
       );
@@ -61,6 +62,7 @@ void main() {
         await controller.requestRefund(
           order: order,
           reasonCode: 'customer_request',
+          eligibilityVersion: 'test-elig-1',
         ),
         isNotNull,
       );
