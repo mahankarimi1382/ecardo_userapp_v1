@@ -152,14 +152,35 @@ class AppUpdateController extends GetxController {
   // ----- Internal -----
   CancelToken? _cancelToken;
 
-  static const _trustedReleasePrefixes = <String>[
-    'https://github.com/mahankarimi1382/ecardo-apps-releases/releases/download/',
-    'https://github.com/mahankarimi1382/ecardo_userapp_v1/releases/download/',
-  ];
+  static const _trustedReleaseRepositories = <String>{
+    'mahankarimi1382/ecardo-apps-releases',
+    'mahankarimi1382/ecardo_userapp_v1',
+  };
 
-  bool _isTrustedUpdateUrl(String url) => _trustedReleasePrefixes.any(
-        (prefix) => url.startsWith(prefix),
-      );
+  /// Validates a direct, public GitHub release asset URL. This intentionally
+  /// rejects look-alike hosts, user-info URLs and arbitrary redirectors.
+  static bool isTrustedUpdateUrl(String url) {
+    final uri = Uri.tryParse(url.trim());
+    if (uri == null ||
+        uri.scheme != 'https' ||
+        uri.host != 'github.com' ||
+        uri.userInfo.isNotEmpty ||
+        uri.hasQuery ||
+        uri.hasFragment) {
+      return false;
+    }
+    final segments = uri.pathSegments;
+    if (segments.length != 6 ||
+        segments[2] != 'releases' ||
+        segments[3] != 'download' ||
+        segments.any((segment) => segment.isEmpty)) {
+      return false;
+    }
+    final repository = '${segments[0]}/${segments[1]}';
+    final asset = segments[5].toLowerCase();
+    return _trustedReleaseRepositories.contains(repository) &&
+        asset.endsWith('.apk');
+  }
 
   @override
   void onInit() {
@@ -194,7 +215,9 @@ class AppUpdateController extends GetxController {
     final settings = Get.find<SettingsService>();
     final server = settings.getSetting(config.settingKeyVersion) ?? '';
     final link = settings.getSetting(config.settingKeyUpdateLink) ?? '';
-    if (server.isEmpty || link.isEmpty) return false;
+    if (server.isEmpty || link.isEmpty || !isTrustedUpdateUrl(link)) {
+      return false;
+    }
 
     final info = await PackageInfo.fromPlatform();
     return _isVersionNewer(server, info.version);
@@ -262,6 +285,11 @@ class AppUpdateController extends GetxController {
         }
         return;
       }
+      if (!isTrustedUpdateUrl(link)) {
+        phase.value = AppUpdatePhase.error;
+        errorMessage.value = 'Update URL is not from an approved release source.';
+        return;
+      }
 
       final info = await PackageInfo.fromPlatform();
       currentVersion.value = info.version;
@@ -296,7 +324,7 @@ class AppUpdateController extends GetxController {
       errorMessage.value = 'Download URL is not configured.';
       return;
     }
-    if (!_isTrustedUpdateUrl(url.trim())) {
+    if (!isTrustedUpdateUrl(url)) {
       phase.value = AppUpdatePhase.error;
       errorMessage.value = 'Update URL is not from an approved release source.';
       return;

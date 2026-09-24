@@ -41,9 +41,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
   bool _isLoading = true;
   bool _redirectProcessed = false;
 
-  /// Transaction id extracted from the gateway URL (pro-pay/{tnx}).
-  String? get _tnx {
-    final match = RegExp(r'pro-pay/([^/?#]+)').firstMatch(widget.paymentUrl);
+  /// Transaction id extracted from a gateway URL (pro-pay/{tnx}).
+  String? _transactionIdFromUrl(String url) {
+    final match = RegExp(r'pro-pay/([^/?#]+)').firstMatch(url);
     return match?.group(1);
   }
 
@@ -105,7 +105,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _redirectProcessed = true;
 
     // 1) Ask the server first when we can identify the transaction.
-    final tnx = _tnx;
+    final tnx = _transactionIdFromUrl(url) ??
+        _transactionIdFromUrl(widget.paymentUrl);
     if (tnx != null && tnx.isNotEmpty) {
       final serverState = await _queryServerStatus(tnx);
       if (serverState != null) {
