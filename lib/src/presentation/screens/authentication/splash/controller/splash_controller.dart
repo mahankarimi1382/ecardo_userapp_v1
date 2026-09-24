@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/session_timeout_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -37,7 +38,7 @@ class SplashController extends GetxController {
     }
 
     final loginState = await SettingsService.getLoginCurrentState();
-    final isLoggedIn = loginState != null && loginState.isNotEmpty;
+    final isLoggedIn = loginState == 'logged_in';
 
     // AUTH-BIO: the biometric gate moved here from sign_in_screen. If the
     // user enabled biometrics and is logged in, the system prompt is shown
@@ -58,15 +59,16 @@ class SplashController extends GetxController {
                 .get(endpoint: ApiPath.userEndpoint)
                 .timeout(const Duration(seconds: 3));
             if (res.status == Status.completed) {
+              _beginAuthenticatedSession();
               Get.offAllNamed(BaseRoute.navigation);
             } else {
-              await _showSessionExpiredAndGoSignIn();
+              await _clearExpiredSessionAndGoSignIn();
             }
           } on TimeoutException {
             // Weak network: prefer dashboard over blocking splash.
             Get.offAllNamed(BaseRoute.navigation);
           } catch (_) {
-            await _showSessionExpiredAndGoSignIn();
+            await _clearExpiredSessionAndGoSignIn();
           }
         } else if (isLoggedIn) {
           Get.offNamed(BaseRoute.signIn);
@@ -122,14 +124,11 @@ class SplashController extends GetxController {
   Future<bool> _tryAutoBiometricLogin() async {
     try {
       final loginState = await SettingsService.getLoginCurrentState();
-      if (loginState == null || loginState.isEmpty) return false;
+      if (loginState != 'logged_in') return false;
 
       final biometricEnabled =
           await SettingsService.getBiometricEnableOrDisable() ?? false;
       if (!biometricEnabled) return false;
-
-      final savedEmail = await SettingsService.getLoggedInUserEmail();
-      if (savedEmail == null || savedEmail.isEmpty) return false;
 
       // 1.0.51: prefer bearer token — no password needed for unlock.
       final tokenService = Get.find<TokenService>();
@@ -166,6 +165,7 @@ class SplashController extends GetxController {
             final user = UserModel.fromJson(response.data!);
             final completed = user.data?.boardingSteps?.completed == true;
             if (completed) {
+              _beginAuthenticatedSession();
               Get.offAllNamed(BaseRoute.navigation);
             } else {
               Get.offNamed(
@@ -183,6 +183,8 @@ class SplashController extends GetxController {
       }
 
       // Legacy one-shot: password still on device from older builds.
+      final savedEmail = await SettingsService.getLoggedInUserEmail();
+      if (savedEmail == null || savedEmail.isEmpty) return false;
       final savedPassword = await SettingsService.getLoggedInUserPassword();
       if (savedPassword == null || savedPassword.isEmpty) {
         return false;
@@ -202,7 +204,13 @@ class SplashController extends GetxController {
     }
   }
 
-  Future<void> _showSessionExpiredAndGoSignIn() async {
+  Future<void> _clearExpiredSessionAndGoSignIn() async {
+    if (Get.isRegistered<TokenService>()) {
+      await Get.find<TokenService>().clearToken();
+    }
+    if (Get.isRegistered<SettingsService>()) {
+      await Get.find<SettingsService>().wipeSession();
+    }
     try {
       final ctx = Get.context;
       if (ctx != null && ctx.mounted) {
@@ -222,5 +230,11 @@ class SplashController extends GetxController {
       }
     } catch (_) {}
     Get.offAllNamed(BaseRoute.signIn);
+  }
+
+  void _beginAuthenticatedSession() {
+    if (Get.isRegistered<SessionTimeoutService>()) {
+      Get.find<SessionTimeoutService>().beginAuthenticatedSession();
+    }
   }
 }

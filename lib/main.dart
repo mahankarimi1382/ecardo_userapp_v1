@@ -17,6 +17,9 @@ import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'package:ecardo_user/src/common/services/connectivity_watch_service.dart';
+import 'package:ecardo_user/src/common/services/session_manager.dart';
+import 'package:ecardo_user/src/common/services/session_timeout_service.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 
@@ -120,12 +123,21 @@ Future<void> _initializeServices() async {
   );
   Get.put<TokenService>(TokenService());
   Get.put(NetworkService());
+  Get.put<SessionManager>(SessionManager(), permanent: true);
   Get.put<PermissionFlowService>(PermissionFlowService(), permanent: true);
   Get.put<NotificationHistoryService>(NotificationHistoryService(), permanent: true);
   Get.put<AppBadgeService>(AppBadgeService(), permanent: true);
   Get.put<OfflineRequestQueue>(OfflineRequestQueue(), permanent: true);
   await Get.putAsync<AppLockService>(() async => AppLockService().init(), permanent: true);
   await Get.putAsync<LocaleThemeService>(() async => LocaleThemeService().init(), permanent: true);
+  await Get.putAsync<ConnectivityWatchService>(
+    () async => ConnectivityWatchService().init(),
+    permanent: true,
+  );
+  await Get.putAsync<SessionTimeoutService>(
+    () async => SessionTimeoutService().init(),
+    permanent: true,
+  );
   Future.microtask(() => Get.find<OfflineRequestQueue>().init());
   Future.microtask(() => Get.find<NotificationHistoryService>().init());
   Future.microtask(() => Get.find<AppBadgeService>().init());

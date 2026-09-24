@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/session_timeout_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -99,6 +100,9 @@ class SignInController extends GetxController {
 
   /// Route user after full auth: force passcode if missing, else home/onboarding.
   void _routeAfterAuth() {
+    if (Get.isRegistered<SessionTimeoutService>()) {
+      Get.find<SessionTimeoutService>().beginAuthenticatedSession();
+    }
     final data = userModel.value.data;
     final completed = data?.boardingSteps?.completed == true;
     final hasPasscode = PasscodeHelper.userHasPasscode(data?.passcode);
@@ -238,12 +242,8 @@ class SignInController extends GetxController {
       );
 
       if (response.status == Status.completed) {
-        try {
-          final bio = BiometricAuthService();
-          if (await bio.isBiometricAvailable()) {
-            await settingsService.saveBiometricEnableOrDisable(true);
-          }
-        } catch (_) {}
+        // Biometric login is opt-in only. A successful password login must
+        // never silently change the user's device-authentication preference.
         if (Get.isRegistered<PermissionFlowService>()) {
           await Get.find<PermissionFlowService>().requestNotification(
             context: Get.context,
