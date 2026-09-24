@@ -12,10 +12,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  # ------------------------------------------------------------------
+  # Gate: analyze + test + APK (debug on main/PR, signed release on tags)
+  # ------------------------------------------------------------------
   build:
     runs-on: ubuntu-24.04
     permissions:
       contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout source
@@ -24,15 +29,11 @@ jobs:
       - name: Free disk space
         shell: bash
         run: |
-          echo "Disk before cleanup:"
           df -h /
           sudo rm -rf /usr/share/dotnet /usr/local/.ghcup /opt/ghc \
-                      /usr/local/share/boost \
-                      /opt/hostedtoolcache/CodeQL || true
+                      /usr/local/share/boost /opt/hostedtoolcache/CodeQL || true
           sudo docker image prune --all --force >/dev/null 2>&1 || true
           sudo apt-get clean || true
-          sudo rm -rf /var/lib/apt/lists/* || true
-          echo "Disk after cleanup:"
           df -h /
 
       - name: Setup Java
@@ -43,8 +44,7 @@ jobs:
 
       - name: Accept Android SDK licenses
         shell: bash
-        run: |
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -57,6 +57,19 @@ jobs:
 
       - name: Generate localizations
         run: flutter gen-l10n
+
+      - name: Read pubspec version
+        id: version
+        run: |
+          VERSION=$(python3 -c "
+          import re
+          text = open('pubspec.yaml').read()
+          m = re.search(r'^version:\s*([0-9]+\.[0-9]+\.[0-9]+)', text, re.M)
+          assert m, 'version not found'
+          print(m.group(1))
+          ")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "pubspec version=$VERSION"
 
       - name: Run Analyze (errors are fatal)
         run: |
@@ -80,8 +93,7 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: |
           if [ -z "$SIGNING_KEYSTORE_BASE64" ]; then
-            echo "❌ SIGNING_KEYSTORE_BASE64 is not set."
-            exit 1
+            echo "❌ SIGNING_KEYSTORE_BASE64 is not set."; exit 1
           fi
           echo "$SIGNING_KEYSTORE_BASE64" | base64 -d > android/ecardo-release.keystore
           cat > android/key.properties <<EOF
@@ -90,7 +102,6 @@ jobs:
           keyAlias=$SIGNING_KEY_ALIAS
           keyPassword=$SIGNING_KEY_PASSWORD
           EOF
-          echo "✅ Release keystore configured."
 
       - name: Build APK
         run: |
@@ -98,7 +109,6 @@ jobs:
             flutter build apk --release --obfuscate --split-debug-info=build/symbols \
               --target-platform android-arm64 --tree-shake-icons 2>&1 | tee build_log.txt
             test -f build/app/outputs/flutter-apk/app-release.apk
-            ls -lh build/app/outputs/flutter-apk/*.apk || true
           else
             flutter build apk --debug 2>&1 | tee build_log.txt
             test -f build/app/outputs/flutter-apk/app-debug.apk
@@ -114,41 +124,27 @@ jobs:
           MAGIC = b"APK Sig Block 42"
           V2_ID, V3_ID, V31_ID = 0x7109871A, 0xF05368C0, 0x1B93AD61
           if not os.path.exists(APK_PATH):
-              print(f"❌ APK not found at {APK_PATH}"); sys.exit(1)
-          size = os.path.getsize(APK_PATH)
-          print(f"APK size: {size:,} bytes ({size/1024/1024:.2f} MB)")
-          with open(APK_PATH, "rb") as f:
-              data = f.read()
+              print(f"❌ APK not found"); sys.exit(1)
+          with open(APK_PATH, "rb") as f: data = f.read()
           with zipfile.ZipFile(APK_PATH) as z:
-              v1_files = [n for n in z.namelist()
-                          if n.startswith("META-INF/") and
-                          (n.endswith(".SF") or n.endswith(".RSA") or n.endswith(".DSA")
-                           or n == "META-INF/MANIFEST.MF")]
-          print(f"v1 (JAR) signature files: {len(v1_files)}")
-          sig = b"\x50\x4b\x05\x06"
-          eocd_pos = data.rfind(sig, max(0, len(data)-65535-22))
-          if eocd_pos < 0:
-              print("❌ EOCD not found"); sys.exit(1)
-          cd_offset = struct.unpack("<I", data[eocd_pos+16:eocd_pos+20])[0]
-          v2_found = False
-          v3_found = False
-          if cd_offset >= 32:
-              magic = data[cd_offset-16:cd_offset]
-              if magic == MAGIC:
-                  block_size = struct.unpack("<Q", data[cd_offset-24:cd_offset-16])[0]
-                  pos = cd_offset - block_size
-                  pair_count = 0
-                  while pos < cd_offset - 24 and pair_count < 50:
-                      pair_len = struct.unpack("<Q", data[pos:pos+8])[0]
-                      pair_id = struct.unpack("<I", data[pos+8:pos+12])[0]
-                      if pair_id == V2_ID: v2_found = True
-                      if pair_id in (V3_ID, V31_ID): v3_found = True
-                      pos += 8 + pair_len
-                      pair_count += 1
-          if v1_files or v2_found or v3_found:
-              print("✅ APK IS SIGNED — installable on Android.")
-          else:
-              print("🔴 FATAL: APK IS COMPLETELY UNSIGNED!"); sys.exit(2)
+              v1 = [n for n in z.namelist() if n.startswith("META-INF/") and
+                    (n.endswith((".SF",".RSA",".DSA")) or n.endswith("MANIFEST.MF"))]
+          eocd = data.rfind(b"\x50\x4b\x05\x06", max(0, len(data)-65557))
+          if eocd < 0: sys.exit(1)
+          cd = struct.unpack("<I", data[eocd+16:eocd+20])[0]
+          v2=v3=False
+          if cd >= 32 and data[cd-16:cd] == MAGIC:
+              block = struct.unpack("<Q", data[cd-24:cd-16])[0]
+              pos = cd - block
+              while pos < cd - 24:
+                  plen = struct.unpack("<Q", data[pos:pos+8])[0]
+                  pid = struct.unpack("<I", data[pos+8:pos+12])[0]
+                  if pid == V2_ID: v2 = True
+                  if pid in (V3_ID, V31_ID): v3 = True
+                  pos += 8 + plen
+          if not (v1 or v2 or v3):
+              print("🔴 UNSIGNED"); sys.exit(2)
+          print("✅ SIGNED")
 
       - name: Publish APK to GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -157,83 +153,49 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           TAG="v$VERSION"
-          APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
           STAGED="ecardo_user_v${VERSION}.apk"
-          cp "$APK_PATH" "$STAGED"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "ℹ️  Release $TAG already exists — uploading APK with --clobber."
-          else
-            gh release create "$TAG" \
-              --title "v${VERSION}" \
-              --notes "Auto-published release from tag ${GITHUB_REF_NAME} (commit ${GITHUB_SHA::7}).
-
-          Source: https://github.com/mahankarimi1382/ecardo_userapp_v1/commit/${GITHUB_SHA}" \
-              --target main
-          fi
+          cp build/app/outputs/flutter-apk/app-release.apk "$STAGED"
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" --title "v${VERSION}" \
+              --notes "Auto-published from ${GITHUB_REF_NAME} (${GITHUB_SHA::7})." --target main
           gh release upload "$TAG" "$STAGED" --clobber
-          echo "✅ Release $TAG published with APK"
 
       - name: Mirror APK to public releases repo
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ secrets.ECRDO_RELEASE_TOKEN }}
+          FALLBACK_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
-          case "$GITHUB_REPOSITORY" in
-            *userapp*)     PREFIX="userapp";     APK_NAME="ecardo_user_v${VERSION}.apk";;
-            *merchantapp*) PREFIX="merchantapp"; APK_NAME="ecardo_merchant_v${VERSION}.apk";;
-            *agentapp*)    PREFIX="agentapp";    APK_NAME="ecardo_agent_v${VERSION}.apk";;
-            *) echo "Unknown repo"; exit 1;;
-          esac
+          APK_NAME="ecardo_user_v${VERSION}.apk"
           PUB="mahankarimi1382/ecardo-apps-releases"
-          PUB_TAG="${PREFIX}-v${VERSION}"
-          cp "$APK_PATH" "$APK_NAME"
-          # Prefer PAT for public mirror; fall back to GITHUB_TOKEN if PAT missing (may lack cross-repo scope)
-          if [ -z "$GH_TOKEN" ]; then
-            echo "⚠️ ECRDO_RELEASE_TOKEN empty — trying GITHUB_TOKEN for mirror"
-            export GH_TOKEN="${{ secrets.GITHUB_TOKEN }}"
-          fi
+          PUB_TAG="userapp-v${VERSION}"
+          cp build/app/outputs/flutter-apk/app-release.apk "$APK_NAME"
+          export GH_TOKEN="${GH_TOKEN:-$FALLBACK_TOKEN}"
           gh release view "$PUB_TAG" -R "$PUB" >/dev/null 2>&1 || \
             gh release create "$PUB_TAG" -R "$PUB" \
-              --title "eCardo ${PREFIX} v${VERSION}" \
-              --notes "Public mirror of ${GITHUB_REPOSITORY} release v${VERSION} — built and signed by GitHub Actions."
+              --title "eCardo userapp v${VERSION}" \
+              --notes "Public mirror of ${GITHUB_REPOSITORY} v${VERSION}"
           gh release upload "$PUB_TAG" -R "$PUB" "$APK_NAME" --clobber
-          PUBLIC_URL="https://github.com/${PUB}/releases/download/${PUB_TAG}/${APK_NAME}"
-          echo "PUBLIC_URL=$PUBLIC_URL" >> "$GITHUB_ENV"
-          echo "✅ Mirrored: $PUBLIC_URL"
+          echo "PUBLIC_URL=https://github.com/${PUB}/releases/download/${PUB_TAG}/${APK_NAME}" >> "$GITHUB_ENV"
 
       - name: Notify eCardo Server of new release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
         run: |
-          DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?ECARDO_DEPLOY_SECRET is not configured}"
+          DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?missing}"
           VERSION="${GITHUB_REF_NAME#v}"
-          DOWNLOAD_URL="${PUBLIC_URL:?Mirror step must run first — public APK missing}"
-          echo "Notifying server: version=$VERSION"
-          echo "download_url=$DOWNLOAD_URL"
+          DOWNLOAD_URL="${PUBLIC_URL:?mirror missing}"
           set -o pipefail
-          if curl --fail-with-body --show-error --silent \
+          curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
-            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" \
-            -H "Accept: application/json" \
-            -H "Content-Type: application/json" \
-            -H "Origin: https://ecardo.ir" \
-            -H "X-ECardo-Deploy-Source: github-actions" \
-            --compressed \
+            -A "Mozilla/5.0" -H "Accept: application/json" \
+            -H "Content-Type: application/json" -H "Origin: https://ecardo.ir" \
+            -H "X-ECardo-Deploy-Source: github-actions" --compressed \
             -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\"}" \
-            | tee notify-result.txt; then
-            grep -q "Successfully deployed" notify-result.txt
-          else
-            code=$?
-            if [ "$code" -eq 60 ] || grep -qi "SSL certificate problem" notify-result.txt; then
-              echo "⚠️ SERVER NOT NOTIFIED: TLS issue — release still published."
-              exit 0
-            fi
-            echo "❌ Server notification failed (curl exit $code)"
-            exit 1
-          fi
+            | tee notify-result.txt
+          grep -q "Successfully deployed" notify-result.txt
 
       - name: Upload Build Log
         if: always()
@@ -248,62 +210,154 @@ jobs:
             analysis_report.txt
             notify-result.txt
 
-  # Create missing v* tag for pubspec version on every main push.
-  # Prefer ECRDO_RELEASE_TOKEN (retriggers workflows on tag push).
-  # Fall back to GITHUB_TOKEN so a missing/expired PAT never blocks tagging.
-  ensure-release-tag:
+  # ------------------------------------------------------------------
+  # On main: if pubspec version has no v* tag yet, create tag + full
+  # signed release + mirror + server notify IN THIS SAME RUN.
+  # (GITHUB_TOKEN tag push does not start a second workflow — so we
+  # must publish here or users never get an update notification.)
+  # ------------------------------------------------------------------
+  release-if-untagged:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    needs: [build]
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create v* tag when pubspec version is untagged
+      - name: Decide whether release is needed
+        id: gate
+        run: |
+          set -euo pipefail
+          VERSION="${{ needs.build.outputs.version }}"
+          TAG="v${VERSION}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q .; then
+            echo "Tag ${TAG} already exists — skip release-if-untagged."
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag ${TAG} missing — will create tag and release."
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create annotated tag
+        if: steps.gate.outputs.needed == 'true'
         env:
           PAT: ${{ secrets.ECRDO_RELEASE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          VERSION=$(python3 -c "
-          import re
-          text = open('pubspec.yaml').read()
-          m = re.search(r'^version:\s*([0-9]+\.[0-9]+\.[0-9]+)', text, re.M)
-          assert m, 'version: x.y.z not found in pubspec.yaml'
-          print(m.group(1))
-          ")
-          TAG="v${VERSION}"
-          echo "pubspec version=$VERSION tag=$TAG"
-
-          if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
-            echo "Tag ${TAG} already exists locally — nothing to do."
-            exit 0
-          fi
-          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q .; then
-            echo "Tag ${TAG} already exists on origin — nothing to do."
-            exit 0
-          fi
-
+          TAG="${{ steps.gate.outputs.tag }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "${TAG}" -m "userapp ${TAG} (auto-tag from main ${GITHUB_SHA::7})"
-
-          # Prefer PAT so the tag push starts a NEW workflow run (signed APK + notify).
-          # GITHUB_TOKEN can still create the tag but does not re-trigger workflows.
+          git tag -a "$TAG" -m "userapp ${TAG} (release-if-untagged ${GITHUB_SHA::7})"
           PUSH_TOKEN="${PAT:-$GITHUB_TOKEN}"
           git remote set-url origin "https://x-access-token:${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push origin "refs/tags/${TAG}"
-          echo "Created and pushed ${TAG}"
+          echo "✅ Pushed ${TAG}"
 
-          if [ -n "${PAT:-}" ]; then
-            echo "✅ Used ECRDO_RELEASE_TOKEN — tag push should trigger signed release + server notify"
-          else
-            echo "⚠️ ECRDO_RELEASE_TOKEN missing — tag created with GITHUB_TOKEN only."
-            echo "   Tag push will NOT auto-start another workflow. Re-run Actions on tag ${TAG} or restore the PAT."
-            # Best-effort: request workflow_dispatch for this tag (needs workflow_dispatch + PAT for cross-event).
-            # Using REST to create a workflow_dispatch on main is a no-op for tag builds;
-            # operator must re-run the tag build from Actions UI if PAT is absent.
+      - name: Free disk space
+        if: steps.gate.outputs.needed == 'true'
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/.ghcup /opt/ghc \
+                      /usr/local/share/boost /opt/hostedtoolcache/CodeQL || true
+          sudo docker image prune --all --force >/dev/null 2>&1 || true
+
+      - name: Setup Java
+        if: steps.gate.outputs.needed == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Accept Android SDK licenses
+        if: steps.gate.outputs.needed == 'true'
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
+
+      - name: Setup Flutter
+        if: steps.gate.outputs.needed == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.44.6"
+          cache: true
+
+      - name: Install + l10n
+        if: steps.gate.outputs.needed == 'true'
+        run: |
+          flutter pub get
+          flutter gen-l10n
+
+      - name: Decode release keystore
+        if: steps.gate.outputs.needed == 'true'
+        env:
+          SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          if [ -z "$SIGNING_KEYSTORE_BASE64" ]; then
+            echo "❌ SIGNING_KEYSTORE_BASE64 missing"; exit 1
           fi
+          echo "$SIGNING_KEYSTORE_BASE64" | base64 -d > android/ecardo-release.keystore
+          cat > android/key.properties <<EOF
+          storeFile=ecardo-release.keystore
+          storePassword=$SIGNING_STORE_PASSWORD
+          keyAlias=$SIGNING_KEY_ALIAS
+          keyPassword=$SIGNING_KEY_PASSWORD
+          EOF
+
+      - name: Build signed release APK
+        if: steps.gate.outputs.needed == 'true'
+        run: |
+          flutter build apk --release --obfuscate --split-debug-info=build/symbols \
+            --target-platform android-arm64 --tree-shake-icons 2>&1 | tee build_log.txt
+          test -f build/app/outputs/flutter-apk/app-release.apk
+          ls -lh build/app/outputs/flutter-apk/*.apk
+
+      - name: Publish + mirror + notify
+        if: steps.gate.outputs.needed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ECRDO_RELEASE_TOKEN: ${{ secrets.ECRDO_RELEASE_TOKEN }}
+          ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.gate.outputs.version }}"
+          TAG="v${VERSION}"
+          APK_NAME="ecardo_user_v${VERSION}.apk"
+          cp build/app/outputs/flutter-apk/app-release.apk "$APK_NAME"
+
+          # Private repo release
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" --title "v${VERSION}" \
+              --notes "Auto-published by release-if-untagged (${GITHUB_SHA::7})." --target main
+          gh release upload "$TAG" "$APK_NAME" --clobber
+          echo "✅ GitHub Release $TAG"
+
+          # Public mirror (needs PAT with access to ecardo-apps-releases)
+          PUB="mahankarimi1382/ecardo-apps-releases"
+          PUB_TAG="userapp-v${VERSION}"
+          export GH_TOKEN="${ECRDO_RELEASE_TOKEN:-$GH_TOKEN}"
+          gh release view "$PUB_TAG" -R "$PUB" >/dev/null 2>&1 || \
+            gh release create "$PUB_TAG" -R "$PUB" \
+              --title "eCardo userapp v${VERSION}" \
+              --notes "Public mirror of ${GITHUB_REPOSITORY} v${VERSION}"
+          gh release upload "$PUB_TAG" -R "$PUB" "$APK_NAME" --clobber
+          DOWNLOAD_URL="https://github.com/${PUB}/releases/download/${PUB_TAG}/${APK_NAME}"
+          echo "✅ Mirrored $DOWNLOAD_URL"
+
+          # Server notify → app_version
+          DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?ECARDO_DEPLOY_SECRET missing}"
+          set -o pipefail
+          curl --fail-with-body --show-error --silent \
+            -X POST https://ecardo.ir/api/user/github-deploy-webhook \
+            -A "Mozilla/5.0" -H "Accept: application/json" \
+            -H "Content-Type: application/json" -H "Origin: https://ecardo.ir" \
+            -H "X-ECardo-Deploy-Source: github-actions" --compressed \
+            -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\"}" \
+            | tee notify-result.txt
+          grep -q "Successfully deployed" notify-result.txt
+          echo "✅ Server notified app_version=$VERSION"
