@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -18,6 +19,11 @@ class ChangePasscodeBottomSheet extends StatefulWidget {
 
 class _ChangePasscodeBottomSheetState extends State<ChangePasscodeBottomSheet> {
   final TwoFactorAuthenticationController controller = Get.find();
+
+  static final _digitLimit = [
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(4),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -98,11 +104,13 @@ class _ChangePasscodeBottomSheetState extends State<ChangePasscodeBottomSheet> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: "",
+                    hintText: "****",
                     controller: controller.oldPasscodeController,
                     focusNode: controller.oldPasscodeFocusNode,
                     isFocused: controller.isOldPasscodeFocused.value,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
+                    obscureText: true,
+                    inputFormatters: _digitLimit,
                   ),
                 ),
               ),
@@ -112,11 +120,13 @@ class _ChangePasscodeBottomSheetState extends State<ChangePasscodeBottomSheet> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: "",
+                    hintText: "****",
                     controller: controller.newPasscodeController,
                     focusNode: controller.newPasscodeFocusNode,
                     isFocused: controller.isNewPasscodeFocused.value,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
+                    obscureText: true,
+                    inputFormatters: _digitLimit,
                   ),
                 ),
               ),
@@ -126,11 +136,13 @@ class _ChangePasscodeBottomSheetState extends State<ChangePasscodeBottomSheet> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: "",
+                    hintText: "****",
                     controller: controller.changedConfirmPasscodeController,
                     focusNode: controller.changedConfirmPasscodeFocusNode,
                     isFocused: controller.isChangeConfirmPasscodeFocused.value,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
+                    obscureText: true,
+                    inputFormatters: _digitLimit,
                   ),
                 ),
               ),
