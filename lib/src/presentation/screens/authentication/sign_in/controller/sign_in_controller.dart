@@ -8,14 +8,15 @@ import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart'
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:ecardo_user/src/helper/network_error_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/set_passcode_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart';
 
 class SignInController extends GetxController {
   final RxBool isLoading = false.obs;
@@ -28,25 +29,18 @@ class SignInController extends GetxController {
   final Rx<UserModel> userModel = UserModel().obs;
   final SettingsService settingsService = Get.find<SettingsService>();
 
-  // Email
   final RxBool isEmailFocused = false.obs;
   final FocusNode emailFocusNode = FocusNode();
   final TextEditingController emailController = TextEditingController();
 
-  // Password
   final RxBool isPasswordFocused = false.obs;
   final RxBool isPasswordVisible = true.obs;
   final FocusNode passwordFocusNode = FocusNode();
   final TextEditingController passwordController = TextEditingController();
 
-  // Biometric
   final RxString biometricEmail = "".obs;
   final RxString biometricPassword = "".obs;
 
-  // AUTH-BIO follow-up (wave Task-10, QA-VALIDATE finding): credentials
-  // staged for persistence AFTER a successful 2FA verification. The non-2FA
-  // branch saves them immediately; 2FA users must get the same treatment or
-  // the splash biometric gate can never be satisfied for them.
   final RxString pendingTwoFaEmail = "".obs;
   final RxString pendingTwoFaPassword = "".obs;
 
@@ -54,15 +48,9 @@ class SignInController extends GetxController {
   void onInit() {
     super.onInit();
     clearSignUpStatus();
-    // AUTH-BIO (A-4): `logged_in` used to be persisted HERE — before the
-    // user actually signed in — which corrupted the state semantics (splash
-    // sent every visitor back to sign-in forever). Persistence now happens
-    // in fetchUser() only after the full auth chain succeeds (and after the
-    // 2FA verification for 2FA users — see TwoFactorAuthController).
     loadSavedEmail();
     loadBiometricStatus();
     refreshBiometricButton();
-    // Stagger form entrance animation flag
     Future.delayed(const Duration(milliseconds: 80), () {
       formVisible.value = true;
     });
@@ -81,15 +69,11 @@ class SignInController extends GetxController {
   }
 
   Future<void> clearSignUpStatus() async {
-    // phase2-fix: visiting the sign-in screen must NOT wipe a valid session
-    // token (it used to — any navigation here logged the user out).
     await Get.find<SettingsService>().saveEmailVerified(false);
     await Get.find<SettingsService>().saveSetUpPassword(false);
   }
 
   Future<void> setLogInState() async {
-    // AUTH-BIO (A-4): called only after the full auth chain succeeds
-    // (fetchUser / 2FA verification), never at controller init.
     await settingsService.saveLoginCurrentState("logged_in");
   }
 
@@ -113,6 +97,37 @@ class SignInController extends GetxController {
     isPasswordFocused.value = passwordFocusNode.hasFocus;
   }
 
+  /// Route user after full auth: force passcode if missing, else home/onboarding.
+  void _routeAfterAuth() {
+    final data = userModel.value.data;
+    final completed = data?.boardingSteps?.completed == true;
+    final hasPasscode = PasscodeHelper.userHasPasscode(data?.passcode);
+
+    if (!hasPasscode) {
+      if (Get.isRegistered<SetPasscodeController>()) {
+        Get.delete<SetPasscodeController>();
+      }
+      Get.put(SetPasscodeController());
+      Get.offAll(
+        () => const SetPasscodeScreen(),
+        arguments: {
+          'next': completed ? BaseRoute.navigation : BaseRoute.signUpStatus,
+          if (!completed) 'next_args': {"is_login_state": true},
+        },
+      );
+      return;
+    }
+
+    if (completed) {
+      Get.offAllNamed(BaseRoute.navigation);
+      resetFields();
+    } else {
+      Get.toNamed(
+        BaseRoute.signUpStatus,
+        arguments: {"is_login_state": true},
+      );
+    }
+  }
 
   Future<void> refreshBiometricButton() async {
     try {
@@ -127,7 +142,6 @@ class SignInController extends GetxController {
           : null;
       final hasSession = (email != null && email.isNotEmpty) ||
           (token != null && token.isNotEmpty);
-      // Hide (not disable) when unsupported or OS biometrics cancelled.
       showBiometricButton.value = available && enabled && hasSession;
     } catch (_) {
       showBiometricButton.value = false;
@@ -193,15 +207,7 @@ class SignInController extends GetxController {
       if (response.status == Status.completed && response.data != null) {
         userModel.value = UserModel.fromJson(response.data!);
         await setLogInState();
-        final completed = userModel.value.data?.boardingSteps?.completed == true;
-        if (completed) {
-          Get.offAllNamed(BaseRoute.navigation);
-        } else {
-          Get.toNamed(
-            BaseRoute.signUpStatus,
-            arguments: {"is_login_state": true},
-          );
-        }
+        _routeAfterAuth();
       } else {
         ToastHelper().showErrorToast('ورود با بیومتریک ناموفق بود.');
       }
@@ -232,7 +238,6 @@ class SignInController extends GetxController {
       );
 
       if (response.status == Status.completed) {
-        // Enable biometric for next visits when device supports it.
         try {
           final bio = BiometricAuthService();
           if (await bio.isBiometricAvailable()) {
@@ -246,8 +251,6 @@ class SignInController extends GetxController {
           );
         }
 
-        // Soft offer: biometric already auto-enabled when available.
-        // Offer PIN as backup if none set.
         try {
           await _offerSecuritySetup();
         } catch (_) {}
@@ -280,16 +283,7 @@ class SignInController extends GetxController {
       if (response.status == Status.completed) {
         userModel.value = UserModel.fromJson(response.data!);
 
-        // v1.0.24 (2FA bypass fix): when the user has 2FA enabled the client
-        // MUST route to the verification screen. The previous condition
-        // additionally required the local `fa_verification` setting to be
-        // exactly "1" — if that setting was missing/“0” the check was
-        // silently skipped and the app continued to the account even for
-        // 2FA-protected users. Server-side TwoFaCheck remains the real gate.
         if (userModel.value.data!.twoFa == true) {
-          // AUTH-BIO follow-up: stash the would-be-saved credentials so
-          // TwoFactorAuthController persists them once the full auth chain
-          // completes (same expressions as the non-2FA branch below).
           pendingTwoFaEmail.value =
               useBiometric ? biometricEmail.value : emailController.text;
           pendingTwoFaPassword.value =
@@ -299,22 +293,9 @@ class SignInController extends GetxController {
           await Get.find<SettingsService>().saveLoggedInUserEmail(
             useBiometric ? biometricEmail.value : emailController.text,
           );
-          // 1.0.51: never persist password for biometric re-entry — token only.
           await Get.find<SettingsService>().clearLoggedInUserPassword();
-
-          // AUTH-BIO (A-4): persist `logged_in` only after the full auth
-          // chain (login → FCM registration → fetchUser) has succeeded.
           await setLogInState();
-
-          if (userModel.value.data!.boardingSteps?.completed == true) {
-            Get.offAllNamed(BaseRoute.navigation);
-            resetFields();
-          } else {
-            Get.toNamed(
-              BaseRoute.signUpStatus,
-              arguments: {"is_login_state": true},
-            );
-          }
+          _routeAfterAuth();
         }
       }
     } catch (e, s) {
@@ -334,9 +315,6 @@ class SignInController extends GetxController {
     required bool useBiometric,
   }) async {
     try {
-      // AUTH-BIO (A-3): single source of truth for the getSetupFcm device
-      // registration (shared with the token-refresh path in
-      // FirebaseMessagingService). Same endpoint, same payload shape.
       await FirebaseMessagingService.instance().registerTokenWithBackend();
     } catch (e, s) {
       debugPrint('❌ postFcmNotification() error: $e');
@@ -353,7 +331,6 @@ class SignInController extends GetxController {
     isPasswordFocused.value = false;
   }
 
-  /// Soft prompt: suggest PIN backup after a successful password login.
   Future<void> _offerSecuritySetup() async {
     try {
       if (!Get.isRegistered<AppLockService>()) return;
