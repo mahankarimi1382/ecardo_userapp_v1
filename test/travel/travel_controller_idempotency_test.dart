@@ -172,6 +172,21 @@ class _FakeTravelRepository implements TravelRepository {
     return _order(status: TravelOrderStatus.paymentReceived);
   }
 
+
+  @override
+  Future<TravelCancellationEligibility> getCancellationEligibility(
+    TravelOrder order,
+  ) async {
+    return TravelCancellationEligibility(
+      eligible: true,
+      penalty: const TravelMoney(amount: 0, currency: 'USD'),
+      refundable: order.total,
+      refundDestination: 'original_wallet',
+      requiresSupplierReview: false,
+      version: 'test-elig-1',
+    );
+  }
+
   @override
   Future<TravelOrder> requestRefund({
     required TravelOrder order,
