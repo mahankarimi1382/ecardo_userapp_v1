@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -57,7 +58,7 @@ class TwoFactorAuthenticationController extends GetxController {
   final FocusNode changedConfirmPasscodeFocusNode = FocusNode();
   final changedConfirmPasscodeController = TextEditingController();
 
-  // Password Controller
+  // Password Controller (legacy disable path — UI no longer exposes disable)
   final RxBool isPasswordFocused = false.obs;
   final FocusNode passwordFocusNode = FocusNode();
   final passwordController = TextEditingController();
@@ -92,7 +93,6 @@ class TwoFactorAuthenticationController extends GetxController {
     });
   }
 
-  // Fetch User
   Future<void> fetchUser() async {
     try {
       final response = await Get.find<NetworkService>().get(
@@ -110,7 +110,6 @@ class TwoFactorAuthenticationController extends GetxController {
     } finally {}
   }
 
-  // Get QR Code
   Future<void> getQRCode() async {
     try {
       final response = await Get.find<NetworkService>().post(
@@ -136,7 +135,6 @@ class TwoFactorAuthenticationController extends GetxController {
     isGenerateQRCodeLoading.value = false;
   }
 
-  // Enable Two Factor
   Future<void> submitEnableTwoFa() async {
     isEnableTwoFaLoading.value = true;
     try {
@@ -160,7 +158,6 @@ class TwoFactorAuthenticationController extends GetxController {
     }
   }
 
-  // Disable Two factor
   Future<void> submitDisableTwoFa() async {
     isDisableTwoFaLoading.value = true;
     try {
@@ -184,7 +181,6 @@ class TwoFactorAuthenticationController extends GetxController {
     }
   }
 
-  // Submit Generate Passcode
   Future<void> submitGeneratePasscode() async {
     if (!validateAddPasscodeStep()) {
       return;
@@ -192,11 +188,14 @@ class TwoFactorAuthenticationController extends GetxController {
     Get.back();
     isGeneratePasscodeLoading.value = true;
     try {
+      final code = PasscodeHelper.normalize(passcodeController.text);
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.passcodeActiveEndpoint,
         data: {
-          "passcode": passcodeController.text,
-          "passcode_confirmation": confirmPasscodeController.text,
+          "passcode": code,
+          "passcode_confirmation": PasscodeHelper.normalize(
+            confirmPasscodeController.text,
+          ),
         },
       );
       if (response.status == Status.completed) {
@@ -204,7 +203,9 @@ class TwoFactorAuthenticationController extends GetxController {
         passcodeController.clear();
         confirmPasscodeController.clear();
         await fetchUser();
-        await Get.find<HomeController>().fetchUser();
+        if (Get.isRegistered<HomeController>()) {
+          await Get.find<HomeController>().fetchUser();
+        }
       }
     } finally {
       isGeneratePasscodeLoading.value = false;
@@ -213,7 +214,6 @@ class TwoFactorAuthenticationController extends GetxController {
     }
   }
 
-  // Submit Change Passcode
   Future<void> submitChangePasscode() async {
     if (!validateChangePasscodeStep()) {
       return;
@@ -224,9 +224,11 @@ class TwoFactorAuthenticationController extends GetxController {
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.changePasscodeEndpoint,
         data: {
-          "old_passcode": oldPasscodeController.text,
-          "passcode": newPasscodeController.text,
-          "passcode_confirmation": changedConfirmPasscodeController.text,
+          "old_passcode": PasscodeHelper.normalize(oldPasscodeController.text),
+          "passcode": PasscodeHelper.normalize(newPasscodeController.text),
+          "passcode_confirmation": PasscodeHelper.normalize(
+            changedConfirmPasscodeController.text,
+          ),
         },
       );
       if (response.status == Status.completed) {
@@ -235,7 +237,9 @@ class TwoFactorAuthenticationController extends GetxController {
         newPasscodeController.clear();
         changedConfirmPasscodeController.clear();
         await fetchUser();
-        await Get.find<HomeController>().fetchUser();
+        if (Get.isRegistered<HomeController>()) {
+          await Get.find<HomeController>().fetchUser();
+        }
       }
     } finally {
       isChangePasscodeLoading.value = false;
@@ -245,94 +249,59 @@ class TwoFactorAuthenticationController extends GetxController {
     }
   }
 
-  // Submit Disable Passcode
+  /// Disable is intentionally not offered in the UI — passcode is mandatory.
+  /// Method kept only for API completeness; do not wire to screens.
   Future<void> submitDisablePasscode() async {
-    if (!validateDisablePasscodeStep()) {
-      return;
-    }
-    Get.back();
-    isDisablePasscodeLoading.value = true;
-    try {
-      final response = await Get.find<NetworkService>().post(
-        endpoint: ApiPath.disablePasscodeEndpoint,
-        data: {"password": passwordController.text},
-      );
-      if (response.status == Status.completed) {
-        ToastHelper().showSuccessToast(response.data!["message"]);
-        passwordController.clear();
-        await fetchUser();
-        await Get.find<HomeController>().fetchUser();
-      }
-    } finally {
-      isDisablePasscodeLoading.value = false;
-      passwordController.clear();
-    }
+    ToastHelper().showErrorToast(
+      AppLocalizations.of(Get.context!)!.twoFactorValidationEnterPasscode,
+    );
   }
 
-  // Validate Disable Password Step
-  bool validateDisablePasscodeStep() {
-    // Validate Password
-    if (passwordController.text.isEmpty) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterPassword);
-      return false;
-    }
-
-    return true;
-  }
-
-  // Validate Change Passcode Step
   bool validateChangePasscodeStep() {
-    // Validate Old Passcode
+    final loc = AppLocalizations.of(Get.context!)!;
     if (oldPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterOldPasscode);
+      ToastHelper().showErrorToast(loc.twoFactorValidationEnterOldPasscode);
       return false;
     }
-
-    // Validate New Passcode
-    if (newPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterNewPasscode);
+    if (!PasscodeHelper.isValidFormat(oldPasscodeController.text)) {
+      ToastHelper().showErrorToast(loc.twoFactorValidationEnterOldPasscode);
       return false;
     }
-
-    // Validate Confirm Passcode
-    if (changedConfirmPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterConfirmPasscode);
+    if (!PasscodeHelper.isValidFormat(newPasscodeController.text)) {
+      ToastHelper().showErrorToast(loc.twoFactorValidationEnterNewPasscode);
       return false;
     }
-
-    // Validate New Passcode and Confirm Passcode
-    if (newPasscodeController.text != changedConfirmPasscodeController.text) {
+    if (!PasscodeHelper.isValidFormat(changedConfirmPasscodeController.text)) {
+      ToastHelper().showErrorToast(loc.twoFactorValidationEnterConfirmPasscode);
+      return false;
+    }
+    if (newPasscodeController.text.trim() !=
+        changedConfirmPasscodeController.text.trim()) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.twoFactorValidationNewPasscodesDoNotMatch,
+        loc.twoFactorValidationNewPasscodesDoNotMatch,
       );
       return false;
     }
-
     return true;
   }
 
-  // Validate Add Passcode Step
   bool validateAddPasscodeStep() {
-    // Validate Passcode
-    if (passcodeController.text.isEmpty) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterPasscode);
+    final loc = AppLocalizations.of(Get.context!)!;
+    if (!PasscodeHelper.isValidFormat(passcodeController.text)) {
+      ToastHelper().showErrorToast(loc.twoFactorValidationEnterPasscode);
       return false;
     }
-
-    // Validate Confirm Passcode
-    if (confirmPasscodeController.text.isEmpty) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.twoFactorValidationEnterConfirmPasscode);
+    if (!PasscodeHelper.isValidFormat(confirmPasscodeController.text)) {
+      ToastHelper().showErrorToast(loc.twoFactorValidationEnterConfirmPasscode);
       return false;
     }
-
-    // Validate Passcode and Confirm Passcode
-    if (passcodeController.text != confirmPasscodeController.text) {
+    if (passcodeController.text.trim() !=
+        confirmPasscodeController.text.trim()) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.twoFactorValidationPasscodesDoNotMatch,
+        loc.twoFactorValidationPasscodesDoNotMatch,
       );
       return false;
     }
-
     return true;
   }
 
