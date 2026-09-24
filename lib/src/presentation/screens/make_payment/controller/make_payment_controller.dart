@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -14,14 +15,12 @@ import 'package:ecardo_user/src/presentation/screens/make_payment/model/payment_
 import 'package:ecardo_user/src/presentation/screens/make_payment/model/payment_wallet_model.dart';
 
 class MakePaymentController extends GetxController {
-  // Global Variable
   final RxBool isLoading = false.obs;
   final RxBool isPaymentSettingsLoading = false.obs;
   final RxBool isMakePaymentLoading = false.obs;
   final RxBool isBeneficiaryLoading = false.obs;
   final RxDouble charge = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
-  // phase1-fix (P0-7): fee calculation failed → Review must never show/confirm 0.00
   final RxBool chargeLoadFailed = false.obs;
   final Rx<PaymentSettingsModel> paymentSettings = PaymentSettingsModel().obs;
   final Rx<ConverterModel> converterModel = ConverterModel().obs;
@@ -29,26 +28,21 @@ class MakePaymentController extends GetxController {
   final Rxn<Map<String, dynamic>> successPaymentData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  final localization = AppLocalizations.of(Get.context!)!;
+  AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
 
-  // Wallet
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> paymentWalletsList = <Wallets>[].obs;
 
-  // Stepper
   final RxInt currentStep = 0.obs;
 
-  // Merchant MID
   final RxBool isMerchantFocused = false.obs;
   final FocusNode merchantFocusNode = FocusNode();
   final merchantMidController = TextEditingController();
 
-  // Amount
   final RxBool isAmountFocused = false.obs;
   final amountController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
 
-  // Steps
   final List<String> steps = ['Amount', 'Review', 'Success'];
 
   @override
@@ -67,17 +61,14 @@ class MakePaymentController extends GetxController {
     super.onClose();
   }
 
-  // Merchant focus change handler
   void _handleMerchantFocusChange() {
     isMerchantFocused.value = merchantFocusNode.hasFocus;
   }
 
-  // Amount focus change handler
   void _handleAmountFocusChange() {
     isAmountFocused.value = amountFocusNode.hasFocus;
   }
 
-  // Next Step Function
   Future<void> nextStepWithValidation() async {
     if (currentStep.value == 0) {
       if (!validateAmountStep()) {
@@ -93,7 +84,6 @@ class MakePaymentController extends GetxController {
     }
   }
 
-  // Fetch User
   Future<void> fetchUser() async {
     try {
       final response = await Get.find<NetworkService>().get(
@@ -109,7 +99,6 @@ class MakePaymentController extends GetxController {
     } finally {}
   }
 
-  // Fetch Payment Settings
   Future<void> fetchPaymentSettings() async {
     isPaymentSettingsLoading.value = true;
     try {
@@ -126,33 +115,26 @@ class MakePaymentController extends GetxController {
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
     } finally {
-      // v1.0.24: was `finally {}` — the settings spinner never cleared when
-      // the request failed (stuck loading screen).
       isPaymentSettingsLoading.value = false;
     }
   }
 
-  // Charge Calculation
   Future<void> _calculateCharge() async {
     final amount = double.tryParse(amountController.text) ?? 0.0;
     final userChargeStr = paymentSettings.value.data?.userCharge ?? "0";
     final userChargeType =
         paymentSettings.value.data?.userChargeType ?? "fixed";
 
-    double calculatedCharge = 0.0;
-
     if (userChargeType == "percentage") {
       final percent = double.tryParse(userChargeStr) ?? 0.0;
-      calculatedCharge = amount * percent / 100;
-      charge.value = calculatedCharge;
-      totalAmount.value = amount + calculatedCharge;
+      charge.value = amount * percent / 100;
+      totalAmount.value = amount + charge.value;
     } else {
       await getChargeConverter();
     }
     isPaymentSettingsLoading.value = false;
   }
 
-  // Get Charge Converter
   Future<void> getChargeConverter() async {
     chargeLoadFailed.value = false;
     try {
@@ -182,9 +164,8 @@ class MakePaymentController extends GetxController {
     } finally {}
   }
 
-  // Make Payment
-  Future<void> makePayment() async {
-    // v1.0.24: guard against double submission while a request is in flight.
+  /// [passcode] — verified 4-digit transaction passcode when required.
+  Future<void> makePayment({String? passcode}) async {
     if (isMakePaymentLoading.isTrue) return;
     isMakePaymentLoading.value = true;
 
@@ -195,6 +176,9 @@ class MakePaymentController extends GetxController {
           : wallet.value!.id,
       'amount': amountController.text.trim(),
     };
+    if (passcode != null && PasscodeHelper.isValidFormat(passcode)) {
+      requestBody['passcode'] = PasscodeHelper.normalize(passcode);
+    }
 
     try {
       final response = await Get.find<NetworkService>().post(
@@ -216,13 +200,11 @@ class MakePaymentController extends GetxController {
     }
   }
 
-  // Validate Amount Step
   bool validateAmountStep() {
     if (chargeLoadFailed.value) {
       ToastHelper().showErrorToast(localization.allControllerLoadError);
       return false;
     }
-    // Validate Wallet
     final walletData = wallet.value;
     if (walletData == null || (walletData.name ?? '').isEmpty) {
       ToastHelper().showErrorToast(
@@ -248,13 +230,13 @@ class MakePaymentController extends GetxController {
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: wallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
-        "site_currency",
-      ) ??
-      'USD',
+            "site_currency",
+          ) ??
+          'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-        "site_currency_decimals",
-      ) ??
-      '2',
+            "site_currency_decimals",
+          ) ??
+          '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -284,9 +266,6 @@ class MakePaymentController extends GetxController {
       return false;
     }
 
-    // v1.0.24: balance guard — the flow used to submit payments larger than
-    // the wallet balance and only failed after the server rejected them
-    // (mirrors exchange_controller).
     final double availableBalance =
         double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
     if (enteredAmount > availableBalance) {
@@ -302,7 +281,6 @@ class MakePaymentController extends GetxController {
     return true;
   }
 
-  // Fetch Wallets
   Future<void> fetchWallets() async {
     try {
       final response = await Get.find<NetworkService>().get(
@@ -326,7 +304,6 @@ class MakePaymentController extends GetxController {
     } finally {}
   }
 
-  // Fetch Beneficiary
   Future<void> fetchBeneficiary() async {
     isBeneficiaryLoading.value = true;
     try {
@@ -347,7 +324,6 @@ class MakePaymentController extends GetxController {
     }
   }
 
-  // Clear Fields
   void clearFields() {
     paymentSettings.value = PaymentSettingsModel();
     converterModel.value = ConverterModel();
