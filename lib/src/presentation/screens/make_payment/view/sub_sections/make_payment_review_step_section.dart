@@ -6,6 +6,8 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
@@ -96,8 +98,9 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                     () => _buildReviewDynamicContent(
                       context,
                       title: localization.makePaymentReviewStepSectionCharge,
-                      content:
-                          controller.chargeLoadFailed.value ? '—' : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                      content: controller.chargeLoadFailed.value
+                          ? '—'
+                          : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                       contentColor: AppColors.error,
                     ),
                   ),
@@ -112,8 +115,9 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                       context,
                       title:
                           localization.makePaymentReviewStepSectionTotalAmount,
-                      content:
-                          controller.chargeLoadFailed.value ? '—' : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                      content: controller.chargeLoadFailed.value
+                          ? '—'
+                          : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                       contentColor: AppColors.success,
                     ),
                   ),
@@ -147,35 +151,37 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                 Expanded(
                   child: Obx(
                     () => CommonIconButton(
-                      // v1.0.24: bind to the submit state — a second tap
-                      // while the request is in flight must not fire.
                       isLoading: controller.isMakePaymentLoading.value,
                       onPressed: () async {
-                        if ((controller.userModel.value.data?.passcode ?? "0") == "0") {
-                          controller.currentStep.value == 1
-                              ? controller.makePayment()
-                              : controller.nextStepWithValidation();
+                        final saved =
+                            controller.userModel.value.data?.passcode;
+                        final hasPasscode =
+                            PasscodeHelper.userHasPasscode(saved);
+
+                        if (!hasPasscode) {
+                          ToastHelper().showErrorToast(
+                            localization.twoFactorValidationEnterPasscode,
+                          );
                           return;
                         }
 
-                        final bool isPasscodeEnabled =
-                            Get.find<SettingsService>().getSetting(
-                              "make_payment_passcode_status",
+                        final moduleOn = settingsService.getSetting(
+                              PasscodeHelper.makePaymentSetting,
                             ) ==
-                            "1";
+                            '1';
 
-                        if (isPasscodeEnabled) {
-                          final bool? isVerified = await Get.bottomSheet<bool>(
-                            VerifyPasscodeBottomSheet(),
+                        if (moduleOn || hasPasscode) {
+                          final String? verified =
+                              await Get.bottomSheet<String>(
+                            const VerifyPasscodeBottomSheet(),
                           );
-                          if (isVerified != true) return;
-                          controller.currentStep.value == 1
-                              ? controller.makePayment()
-                              : controller.nextStepWithValidation();
+                          if (verified == null ||
+                              !PasscodeHelper.isValidFormat(verified)) {
+                            return;
+                          }
+                          await controller.makePayment(passcode: verified);
                         } else {
-                          controller.currentStep.value == 1
-                              ? controller.makePayment()
-                              : controller.nextStepWithValidation();
+                          await controller.makePayment();
                         }
                       },
                       width: double.infinity,
