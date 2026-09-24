@@ -7,6 +7,8 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
@@ -101,8 +103,9 @@ class CashOutReviewStepSection extends StatelessWidget {
                       () => _buildReviewDynamicContent(
                         context,
                         title: localizations.cashOutReviewCharge,
-                        content:
-                            controller.chargeLoadFailed.value ? '—' : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                        content: controller.chargeLoadFailed.value
+                            ? '—'
+                            : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.error,
                       ),
                     ),
@@ -116,8 +119,9 @@ class CashOutReviewStepSection extends StatelessWidget {
                       () => _buildReviewDynamicContent(
                         context,
                         title: localizations.cashOutReviewTotalAmount,
-                        content:
-                            controller.chargeLoadFailed.value ? '—' : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                        content: controller.chargeLoadFailed.value
+                            ? '—'
+                            : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.success,
                       ),
                     ),
@@ -153,35 +157,37 @@ class CashOutReviewStepSection extends StatelessWidget {
                   Expanded(
                     child: Obx(
                       () => CommonIconButton(
-                        // v1.0.24: bind to the submit state — a second tap
-                        // while the request is in flight must not fire.
                         isLoading: controller.isCashOutLoading.value,
                         onPressed: () async {
-                          if ((controller.userModel.value.data?.passcode ?? "0") == "0") {
-                            controller.cashOut();
+                          final saved =
+                              controller.userModel.value.data?.passcode;
+                          final hasPasscode =
+                              PasscodeHelper.userHasPasscode(saved);
+
+                          if (!hasPasscode) {
+                            ToastHelper().showErrorToast(
+                              localizations.twoFactorValidationEnterPasscode,
+                            );
                             return;
                           }
 
-                          final bool isPasscodeEnabled =
-                              Get.find<SettingsService>().getSetting(
-                                "cashout_passcode_status",
+                          final moduleOn = settingsService.getSetting(
+                                PasscodeHelper.cashOutSetting,
                               ) ==
-                              "1";
+                              '1';
 
-                          if (isPasscodeEnabled) {
-                            // EX-04: the sheet now returns the verified
-                            // passcode value (String?) instead of a bool.
-                            final verifiedPasscode =
+                          if (moduleOn || hasPasscode) {
+                            final verified =
                                 await Get.bottomSheet<String>(
                               const VerifyPasscodeBottomSheet(),
                             );
-                            if (verifiedPasscode == null ||
-                                verifiedPasscode.isEmpty) {
+                            if (verified == null ||
+                                !PasscodeHelper.isValidFormat(verified)) {
                               return;
                             }
-                            controller.cashOut();
+                            await controller.cashOut(passcode: verified);
                           } else {
-                            controller.cashOut();
+                            await controller.cashOut();
                           }
                         },
                         width: double.infinity,
