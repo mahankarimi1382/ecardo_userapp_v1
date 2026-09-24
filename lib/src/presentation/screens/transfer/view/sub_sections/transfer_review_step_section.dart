@@ -7,6 +7,8 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
@@ -101,8 +103,9 @@ class TransferReviewStepSection extends StatelessWidget {
                       () => _buildReviewDynamicContent(
                         context,
                         title: localization.transferReviewStepSectionCharge,
-                        content:
-                            controller.chargeLoadFailed.value ? '—' : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                        content: controller.chargeLoadFailed.value
+                            ? '—'
+                            : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.error,
                       ),
                     ),
@@ -117,8 +120,9 @@ class TransferReviewStepSection extends StatelessWidget {
                         context,
                         title:
                             localization.transferReviewStepSectionTotalAmount,
-                        content:
-                            controller.chargeLoadFailed.value ? '—' : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
+                        content: controller.chargeLoadFailed.value
+                            ? '—'
+                            : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                         contentColor: AppColors.black,
                       ),
                     ),
@@ -154,34 +158,48 @@ class TransferReviewStepSection extends StatelessWidget {
                   Expanded(
                     child: Obx(
                       () => CommonIconButton(
-                        // v1.0.24: bind to the submit state — a second tap
-                        // while the request is in flight must not fire.
                         isLoading: controller.isTransferAmountLoading.value,
                         onPressed: () async {
-                          if (controller.userModel.value.data!.passcode == "0") {
-                            controller.transferAmount();
+                          final saved =
+                              controller.userModel.value.data?.passcode;
+                          final hasPasscode =
+                              PasscodeHelper.userHasPasscode(saved);
+
+                          // Mandatory: user must have set a passcode.
+                          if (!hasPasscode) {
+                            ToastHelper().showErrorToast(
+                              localization.twoFactorValidationEnterPasscode,
+                            );
                             return;
                           }
 
-                          final bool isPasscodeEnabled =
-                              Get.find<SettingsService>().getSetting(
-                                "transfer_money_passcode_status",
+                          final moduleOn = settingsService.getSetting(
+                                PasscodeHelper.transferSetting,
                               ) ==
-                              "1";
+                              '1';
 
-                          if (isPasscodeEnabled) {
-                            final bool? isVerified = await Get.bottomSheet<bool>(
-                              VerifyPasscodeBottomSheet(),
+                          // Always require passcode when user has one and
+                          // module toggle is on (default production path).
+                          if (moduleOn || hasPasscode) {
+                            final String? verified =
+                                await Get.bottomSheet<String>(
+                              const VerifyPasscodeBottomSheet(),
                             );
-                            if (isVerified != true) return;
-                            controller.transferAmount();
+                            if (verified == null ||
+                                !PasscodeHelper.isValidFormat(verified)) {
+                              return;
+                            }
+                            await controller.transferAmount(
+                              passcode: verified,
+                            );
                           } else {
-                            controller.transferAmount();
+                            await controller.transferAmount();
                           }
                         },
                         width: double.infinity,
                         height: 52,
-                        text: localization.transferReviewStepSectionConfirmButton,
+                        text:
+                            localization.transferReviewStepSectionConfirmButton,
                         icon: PngAssets.reviewArrowRightCommonIcon,
                         iconWidth: 18,
                         iconHeight: 18,
