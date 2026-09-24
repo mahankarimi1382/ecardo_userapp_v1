@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -14,7 +15,6 @@ import 'package:ecardo_user/src/presentation/screens/cash_out/model/cash_out_con
 import 'package:ecardo_user/src/presentation/screens/cash_out/model/cash_out_wallet_model.dart';
 
 class CashOutController extends GetxController {
-  // Global Variable
   final RxBool isLoading = false.obs;
   final RxBool isCashOutLoading = false.obs;
   final RxBool isBeneficiaryLoading = false.obs;
@@ -22,7 +22,6 @@ class CashOutController extends GetxController {
   final RxInt currentStep = 0.obs;
   final RxDouble charge = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
-  // phase1-fix (P0-7): fee calculation failed → Review must never show/confirm 0.00
   final RxBool chargeLoadFailed = false.obs;
   final List<String> steps = ['Amount', 'Review', 'Success'];
   final Rx<CashOutConfigModel> cashOutConfig = CashOutConfigModel().obs;
@@ -31,18 +30,15 @@ class CashOutController extends GetxController {
   final Rxn<Map<String, dynamic>> successCashOutData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  final localization = AppLocalizations.of(Get.context!)!;
+  AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
 
-  // Wallet
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> cashOutWalletsList = <Wallets>[].obs;
 
-  // Agent AID
   final RxBool isAgentAidFocused = false.obs;
   final FocusNode agentAidFocusNode = FocusNode();
   final agentAidController = TextEditingController();
 
-  // Amount
   final RxBool isAmountFocused = false.obs;
   final amountController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
@@ -63,17 +59,14 @@ class CashOutController extends GetxController {
     super.onClose();
   }
 
-  // Agent Aid focus change handler
   void _handleAgentAidFocusChange() {
     isAgentAidFocused.value = agentAidFocusNode.hasFocus;
   }
 
-  // Amount focus change handler
   void _handleAmountFocusChange() {
     isAmountFocused.value = amountFocusNode.hasFocus;
   }
 
-  // Next Step Function
   Future<void> nextStepWithValidation() async {
     if (currentStep.value == 0) {
       if (!validateAmountStep()) {
@@ -89,7 +82,6 @@ class CashOutController extends GetxController {
     }
   }
 
-  // Fetch User
   Future<void> fetchUser() async {
     try {
       final response = await Get.find<NetworkService>().get(
@@ -105,7 +97,6 @@ class CashOutController extends GetxController {
     } finally {}
   }
 
-  // Fetch Cash Out Config
   Future<void> fetchCashOutConfig() async {
     isCashoutConfigLoading.value = true;
     try {
@@ -122,13 +113,10 @@ class CashOutController extends GetxController {
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
     } finally {
-      // v1.0.24: was `finally {}` — the config spinner never cleared when
-      // the request failed (stuck loading screen).
       isCashoutConfigLoading.value = false;
     }
   }
 
-  // Charge Calculation
   Future<void> _calculateCharge() async {
     final amount = double.tryParse(amountController.text) ?? 0.0;
     final userChargeStr = cashOutConfig.value.data!.settings!.charge ?? "0";
@@ -149,7 +137,6 @@ class CashOutController extends GetxController {
     isCashoutConfigLoading.value = false;
   }
 
-  // Get Charge Converter
   Future<void> getChargeConverter() async {
     chargeLoadFailed.value = false;
     try {
@@ -179,7 +166,6 @@ class CashOutController extends GetxController {
     } finally {}
   }
 
-  // Validate Amount Step
   bool validateAmountStep() {
     if (chargeLoadFailed.value) {
       ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -204,13 +190,13 @@ class CashOutController extends GetxController {
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: wallet.value!.code!,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
-        "site_currency",
-      ) ??
-      'USD',
+            "site_currency",
+          ) ??
+          'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-        "site_currency_decimals",
-      ) ??
-      '2',
+            "site_currency_decimals",
+          ) ??
+          '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -240,9 +226,6 @@ class CashOutController extends GetxController {
       return false;
     }
 
-    // v1.0.24: balance guard — the flow used to submit cash-outs larger than
-    // the wallet balance and only failed after the server rejected them
-    // (mirrors exchange_controller).
     final double availableBalance =
         double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
     if (enteredAmount > availableBalance) {
@@ -258,7 +241,6 @@ class CashOutController extends GetxController {
     return true;
   }
 
-  // Fetch Wallets
   Future<void> fetchWallets() async {
     isLoading.value = true;
     try {
@@ -285,9 +267,7 @@ class CashOutController extends GetxController {
     }
   }
 
-  // Cash Out Function
-  Future<void> cashOut() async {
-    // v1.0.24: guard against double submission while a request is in flight.
+  Future<void> cashOut({String? passcode}) async {
     if (isCashOutLoading.isTrue) return;
     isCashOutLoading.value = true;
 
@@ -298,6 +278,9 @@ class CashOutController extends GetxController {
           ? "default"
           : wallet.value!.id.toString(),
     };
+    if (passcode != null && PasscodeHelper.isValidFormat(passcode)) {
+      requestBody['passcode'] = PasscodeHelper.normalize(passcode);
+    }
 
     try {
       final response = await Get.find<NetworkService>().post(
@@ -319,7 +302,6 @@ class CashOutController extends GetxController {
     }
   }
 
-  // Fetch Beneficiary
   Future<void> fetchBeneficiary() async {
     isBeneficiaryLoading.value = true;
     try {
@@ -340,7 +322,6 @@ class CashOutController extends GetxController {
     }
   }
 
-  // Clear Fields
   void clearFields() {
     converterModel.value = ConverterModel();
     agentAidController.clear();
