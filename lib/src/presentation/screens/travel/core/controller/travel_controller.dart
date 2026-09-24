@@ -535,6 +535,26 @@ class TravelController extends GetxController {
 
 
 
+
+  Future<bool> subscribeNotifyMe({
+    required String serviceType,
+    String? origin,
+    String? destination,
+    String? travelDate,
+  }) async {
+    try {
+      await repository.subscribeNotifyMe(
+        serviceType: serviceType,
+        origin: origin,
+        destination: destination,
+        travelDate: travelDate,
+      );
+      return true;
+    } catch (error) {
+      checkoutError.value = travelSafeErrorMessage(error);
+      return false;
+    }
+  }
   Future<TravelOrderTimeline?> fetchOrderEvents(TravelOrder order) async {
     try {
       return await repository.getOrderEvents(order);

@@ -835,4 +835,28 @@ class TravelApiRepository implements TravelRepository {
     final day = value.day.toString().padLeft(2, '0');
     return '${value.year}-$month-$day';
   }
+
+  @override
+  Future<Map<String, dynamic>> subscribeNotifyMe({
+    required String serviceType,
+    String? origin,
+    String? destination,
+    String? travelDate,
+  }) async {
+    final token = await _ensureTravelAccessToken();
+    final response = await _client.post<Map<String, dynamic>>(
+      '/notify-me',
+      data: {
+        'service_type': serviceType,
+        if (origin != null && origin.isNotEmpty) 'origin': origin,
+        if (destination != null && destination.isNotEmpty)
+          'destination': destination,
+        if (travelDate != null && travelDate.isNotEmpty)
+          'travel_date': travelDate,
+        'channel': 'push',
+      },
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+    return _map(response.data?['data']);
+  }
 }

@@ -176,6 +176,14 @@ class _FakeTravelRepository implements TravelRepository {
 
 
 
+
+  @override
+  Future<Map<String, dynamic>> subscribeNotifyMe({
+    required String serviceType,
+    String? origin,
+    String? destination,
+    String? travelDate,
+  }) async => {'id': 'notify-test', 'status': 'active'};
   @override
   Future<TravelOrderTimeline> getOrderEvents(TravelOrder order) async {
     return TravelOrderTimeline(

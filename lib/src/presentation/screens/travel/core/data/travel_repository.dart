@@ -60,6 +60,13 @@ abstract interface class TravelRepository {
   );
 
   Future<TravelOrderTimeline> getOrderEvents(TravelOrder order);
+
+  Future<Map<String, dynamic>> subscribeNotifyMe({
+    required String serviceType,
+    String? origin,
+    String? destination,
+    String? travelDate,
+  });
 }
 
 

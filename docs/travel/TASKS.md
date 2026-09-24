@@ -36,7 +36,7 @@ Updated: July 28, 2026.
 - [ ] `TRAVEL-BE-003`: cancellation eligibility, penalties, and estimate versions require backend eligibility endpoints.
 - [ ] `TRAVEL-BE-004`: authoritative order event timelines require backend order-event payloads.
 - [ ] `TRAVEL-ESIM-001`: install QR / SM-DP+ / activation code artifacts require secure backend eSIM artifact data.
-- [ ] `TRAVEL-UX-016`: notify-me for sold-out inventory requires a backend notification/consent contract.
+- [x] `TRAVEL-UX-016`: notify-me API + client subscribe (POST /notify-me); push delivery fulfillment is later.
 
 ## Definition of Done
 
