@@ -152,8 +152,10 @@ class WalletLiveRateService extends GetxService {
     if (code == 'USDT' && ratesIrr.containsKey('USDT_IRT')) {
       return ratesIrr['USDT_IRT'];
     }
-    // IRR / IRT / TMN are the base.
-    if (code == 'IRR' || code == 'IRT' || code == 'TMN') return 1;
+    // IRR is the base (1 IRR = 1). IRT/TMN/TOMAN are Toman: 1 unit = 10 IRR.
+    // Fixed 2026-09-25: IRT wallets were undervalued exactly 10x (12M Toman showed ~$5 instead of ~$51).
+    if (code == 'IRR') return 1;
+    if (code == 'IRT' || code == 'TMN' || code == 'TOMAN') return 10;
     return null;
   }
 
