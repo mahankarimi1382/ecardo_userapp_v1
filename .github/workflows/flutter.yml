@@ -188,14 +188,29 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           DOWNLOAD_URL="${PUBLIC_URL:?mirror missing}"
           set -o pipefail
+          # v1.0.91: publish the digest of the EXACT artifact we mirrored.
+          # The in-app updater hashes the file it downloads and refuses to
+          # install on a mismatch, so a missing/stale digest here means every
+          # user gets "integrity check failed" right after a successful
+          # download. sha256sum must read the same staged APK the mirror step
+          # uploaded, not a rebuild.
+          APK_NAME="ecardo_user_v${VERSION}.apk"
+          SHA256="$(sha256sum "$APK_NAME" | awk '{print $1}')"
+          echo "apk=$APK_NAME sha256=$SHA256"
+          test -n "$SHA256"
+          echo "SHA256=${SHA256}" >> "$GITHUB_ENV"
           curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0" -H "Accept: application/json" \
             -H "Content-Type: application/json" -H "Origin: https://ecardo.ir" \
             -H "X-ECardo-Deploy-Source: github-actions" --compressed \
-            -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\"}" \
+            -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\",\"sha256\":\"$SHA256\"}" \
             | tee notify-result.txt
           grep -q "Successfully deployed" notify-result.txt
+          # v1.0.91: the webhook now reports whether the push notification was
+          # actually delivered. Fail the step when it was not, so a silent
+          # notification regression can never look like a green release again.
+          python3 -c "import json,sys;n=(json.load(open('notify-result.txt')).get('notification') or {});print('notification:',json.dumps(n,ensure_ascii=False));sys.exit(0 if n.get('sent') else 1)"
 
       - name: Upload Build Log
         if: always()
