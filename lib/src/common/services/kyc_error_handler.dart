@@ -65,6 +65,11 @@ class KycErrorHandler {
   static const String featureRequiredCode = 'KYC_FEATURE_REQUIRED';
   static const String checkUnavailableCode = 'KYC_CHECK_UNAVAILABLE';
 
+  // Values carried in Get.arguments as 'block_type' so the destination screen
+  // can tell a WHOLE-APP block from a single-feature block.
+  static const String blockTypeLevelRequired = 'level_required';
+  static const String blockTypeFeatureRequired = 'feature_required';
+
   /// RequestOptions.extra flag set once the block has been routed, so the
   /// shared 403/503 error branches can suppress the raw toast / maintenance
   /// takeover for KYC blocks.
@@ -174,6 +179,16 @@ class KycErrorHandler {
           'required_level': info.requiredLevel,
           'current_level': info.currentLevel,
           'feature': info.feature,
+          // v1.0.90: the screen needs to tell a WHOLE-APP block apart from a
+          // single-feature block. A levelRequired block comes from the server
+          // guard that sits in front of every authenticated user route, so
+          // there is no screen the user could legitimately "come back to" —
+          // offering an escape hatch there just bounces them into the same
+          // wall. A featureRequired block (or a client-side KYC-locked tile)
+          // only disables one feature, so "later" stays meaningful.
+          'block_type': info.type == KycBlockType.levelRequired
+              ? blockTypeLevelRequired
+              : blockTypeFeatureRequired,
         },
       );
     });

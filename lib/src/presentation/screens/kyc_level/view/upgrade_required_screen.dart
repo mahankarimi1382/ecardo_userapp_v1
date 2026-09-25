@@ -19,17 +19,36 @@ import 'package:ecardo_user/src/network/service/network_service.dart';
 ///     feature را دارد) و اگر استخراج شکست خورد، پیام جنریک نشان داده
 ///     می‌شود — هیچ‌وقت کرش نمی‌کند.
 ///
-/// همه‌ی متن‌ها از کاتالوگ l10n می‌آیند (en/fa/zh/ar/ru/tr).
+/// v1.0.90: دو اصلاح ناوبری که فقط بعد از هم‌راستا شدن سرور با این قرارداد
+/// دیده شدند:
+///   ۱) دکمهٔ اصلی دیگر از `offAllNamed(navigation)` + push با تأخیر ۳۰۰ms
+///      استفاده نمی‌کند. آن الگو هم به یک صفحهٔ گاردشده تکیه می‌کرد (که خودش
+///      دوباره ۴۰۳ می‌داد) و هم با درخواست هم‌زمانِ صفحهٔ خانه مسابقهٔ ناوبری
+///      می‌ساخت. حالا یک ناوبری تمیز و مستقیم به صفحهٔ احراز هویت است.
+///   ۲) دکمهٔ «بعداً» و دکمهٔ بازگشت فقط وقتی نمایش داده می‌شوند که مسدودی
+///      فقط یک feature را بسته باشد. در مسدودی سراسری (level_required) هر
+///      صفحهٔ دیگری در اپ هم ۴۰۳ می‌دهد، پس «بعداً» فقط کاربر را به همان
+///      دیوار برمی‌گرداند.
+///
+/// همه‌ی متن‌ها از کاتالوگ l10n می‌آیند (en/fa/zh/ar/ru/tr) — کلید جدیدی
+/// اضافه نشده، چون فایل‌های تولیدشدهٔ l10n در این ریپو STALE هستند و CI
+/// آن‌ها را بازتولید می‌کند (see l10n.yaml).
 class UpgradeRequiredScreen extends StatefulWidget {
   final int? requiredLevel;
   final int? currentLevel;
   final String? featureName;
+
+  /// 'level_required' (مسدودی سراسری) | 'feature_required' | null.
+  /// null یعنی «نامشخص» و مثل feature_required رفتار می‌شود (بازگشتی‌ها
+  /// مثل tile های KYC-locked که فقط feature را می‌فرستند).
+  final String? blockType;
 
   const UpgradeRequiredScreen({
     super.key,
     this.requiredLevel,
     this.currentLevel,
     this.featureName,
+    this.blockType,
   });
 
   @override
@@ -42,7 +61,13 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
   int? _requiredLevel;
   int? _currentLevel;
   String? _feature;
+  String? _blockType;
   bool _resolving = false;
+
+  /// مسدودی سراسری: سرور کل گروه روت‌های کاربر را بسته، پس هیچ «بعداً»ای
+  /// وجود ندارد که کاربر را به جای امنی برساند.
+  bool get _isAppWideBlock =>
+      _blockType == KycErrorHandler.blockTypeLevelRequired;
 
   @override
   void initState() {
@@ -67,6 +92,7 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
     _requiredLevel = _asInt(widget.requiredLevel);
     _currentLevel = _asInt(widget.currentLevel);
     _feature = widget.featureName;
+    _blockType = widget.blockType;
 
     final args = Get.arguments;
     if (args is Map) {
@@ -77,6 +103,12 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
           argFeature != null &&
           argFeature.isNotEmpty) {
         _feature = argFeature;
+      }
+      final argBlockType = args['block_type']?.toString();
+      if ((_blockType == null || _blockType!.isEmpty) &&
+          argBlockType != null &&
+          argBlockType.isNotEmpty) {
+        _blockType = argBlockType;
       }
     }
   }
@@ -136,10 +168,15 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.lightSurface,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
-          onPressed: () => Get.back(),
-        ),
+        leading: _isAppWideBlock
+            // مسدودی سراسری: بازگشت، کاربر را به صفحه‌ای می‌برد که دوباره
+            // ۴۰۳ می‌دهد. به‌جای دکمهٔ بی‌اثر، هیچ ناوبری پیشنهاد نمی‌شود.
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.arrow_back,
+                    color: AppColors.lightTextPrimary),
+                onPressed: () => Get.back(),
+              ),
       ),
       body: Center(
         child: Padding(
@@ -242,12 +279,17 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
                       _LevelInfo(
                         label: localization?.kycUpgradeCurrentLevel ??
                             'Your level',
-                        level: _currentLevel ?? 1,
+                        // v1.0.90: the old `_currentLevel ?? 1` told a
+                        // level-0 (never-verified) user their level was 1,
+                        // which contradicts the server's current_level=0 and
+                        // the "0 = Unverified" level row. Show the real value
+                        // and only fall back to 0, the honest unknown.
+                        level: _currentLevel ?? 0,
                         color: AppColors.warning,
                         chipText: localization?.kycUpgradeLevelChip(
-                              _currentLevel ?? 1,
+                              _currentLevel ?? 0,
                             ) ??
-                            'Level ${_currentLevel ?? 1}',
+                            'Level ${_currentLevel ?? 0}',
                       ),
                       Container(
                           width: 1,
@@ -275,13 +317,12 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
                 width: double.infinity,
                 height: 50.h,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Get.offAllNamed(BaseRoute.navigation);
-                    // Navigate to KYC verification
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      Get.toNamed(BaseRoute.idVerification);
-                    });
-                  },
+                  // v1.0.90: one clean navigation straight to the (unguarded)
+                  // KYC submission route. The previous
+                  // `Get.offAllNamed(navigation)` + 300ms-delayed
+                  // `Get.toNamed(idVerification)` both depended on a guarded
+                  // screen and raced with the home screen's own request.
+                  onPressed: () => Get.offAllNamed(BaseRoute.idVerification),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.lightPrimary,
                     foregroundColor: AppColors.white,
@@ -297,17 +338,20 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 12.h),
 
-              // Secondary button
-              TextButton(
-                onPressed: () => Get.back(),
-                child: Text(
-                  localization?.kycUpgradeLater ?? "I'll do it later",
-                  style: TextStyle(
-                      fontSize: 14.sp, color: AppColors.lightTextSecondary),
+              // Secondary button — only when a non-app-wide screen exists to
+              // return to. See _isAppWideBlock.
+              if (!_isAppWideBlock) ...[
+                SizedBox(height: 12.h),
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text(
+                    localization?.kycUpgradeLater ?? "I'll do it later",
+                    style: TextStyle(
+                        fontSize: 14.sp, color: AppColors.lightTextSecondary),
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

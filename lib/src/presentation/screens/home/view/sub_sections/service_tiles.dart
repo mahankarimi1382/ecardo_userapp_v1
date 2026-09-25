@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
@@ -117,7 +118,13 @@ void onTileTap(BuildContext context, ResolvedTile resolved) {
     case TileState.kycLocked:
       Get.toNamed(
         BaseRoute.upgradeRequired,
-        arguments: <String, dynamic>{'feature': resolved.tile.feature},
+        arguments: <String, dynamic>{
+          'feature': resolved.tile.feature,
+          // v1.0.90: a KYC-locked tile only disables THIS feature — the rest
+          // of the app still works, so the destination screen must keep its
+          // "I'll do it later" escape hatch (an app-wide block would not).
+          'block_type': KycErrorHandler.blockTypeFeatureRequired,
+        },
       );
       return;
     case TileState.comingSoon:
