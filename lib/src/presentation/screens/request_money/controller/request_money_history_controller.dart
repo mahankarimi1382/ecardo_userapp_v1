@@ -13,10 +13,15 @@ class RequestMoneyHistoryController extends GetxController {
   final RxBool isPageLoading = false.obs;
   final RxBool isTransactionsLoading = false.obs;
   final RxBool isFilter = false.obs;
+  // BUGFIX: these must match RequestMoneyController::history's
+  // 'in:pending,success,rejected' rule exactly. The generic /user/transactions
+  // endpoint stores 'Success'/'Pending'/'Failed', which is why the capitalised
+  // list worked there and 422'd the whole paginated request here. The money
+  // request lifecycle also has a 'rejected' state that 'Failed' never matched.
   final RxList<String> statusList = <String>[
-    "Success",
-    "Pending",
-    "Failed",
+    "pending",
+    "success",
+    "rejected",
   ].obs;
   final RxInt selectedStatusIndex = (-1).obs;
   final Rx<RequestMoneyHistoryModel> receivedRequestModel =

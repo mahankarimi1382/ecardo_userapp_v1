@@ -21,23 +21,40 @@ class KycLevelController extends GetxController {
   @override
   void onInit() { super.onInit(); fetchStatus(); }
 
+  // BUGFIX: these two had no try/catch, so a failed request left isLoading
+  // stuck true (permanent spinner) AND threw out of onInit. The second effect
+  // is the serious one: service_tiles.hasKycFeature fails OPEN when
+  // badge == null, so one failed /kyc-level/status call left every KYC-gated
+  // dashboard tile tappable for the rest of the session. Reset loading in a
+  // finally and leave the server as the authority.
+
   Future<void> fetchLevels() async {
     isLoading.value = true;
-    final response = await _networkService.get(endpoint: ApiPath.kycLevelLevelsEndpoint);
-    isLoading.value = false;
-    if (response.status == Status.completed) {
-      final data = response.data?['data'] as List<dynamic>?;
-      if (data != null) levels.value = data.map((e) => KycLevel.fromJson(e as Map<String, dynamic>)).toList();
+    try {
+      final response = await _networkService.get(endpoint: ApiPath.kycLevelLevelsEndpoint);
+      if (response.status == Status.completed) {
+        final data = response.data?['data'] as List<dynamic>?;
+        if (data != null) levels.value = data.map((e) => KycLevel.fromJson(e as Map<String, dynamic>)).toList();
+      }
+    } catch (e) {
+      debugPrint('❌ fetchLevels() error: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 
   Future<void> fetchStatus() async {
     isLoading.value = true;
-    final response = await _networkService.get(endpoint: ApiPath.kycLevelStatusEndpoint);
-    isLoading.value = false;
-    if (response.status == Status.completed) {
-      final data = response.data?['data'] as Map<String, dynamic>?;
-      if (data != null) { status.value = KycStatus.fromJson(data); badge.value = status.value!.badge; }
+    try {
+      final response = await _networkService.get(endpoint: ApiPath.kycLevelStatusEndpoint);
+      if (response.status == Status.completed) {
+        final data = response.data?['data'] as Map<String, dynamic>?;
+        if (data != null) { status.value = KycStatus.fromJson(data); badge.value = status.value!.badge; }
+      }
+    } catch (e) {
+      debugPrint('❌ fetchStatus() error: $e');
+    } finally {
+      isLoading.value = false;
     }
     await fetchLevels();
   }

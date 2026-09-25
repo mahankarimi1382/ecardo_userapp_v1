@@ -64,9 +64,14 @@ class Disable2FaSection extends StatelessWidget {
             () => CommonTextInputField(
               focusNode: controller.disable2FaFocusNode,
               isFocused: controller.isDisable2FaFocused.value,
-              hintText: "",
+              // BUGFIX: the server disables 2FA with Hash::check against the
+              // ACCOUNT PASSWORD (SettingsController 'disable' branch), so a
+              // numeric keypad made this a one-way door — no user could turn
+              // 2FA off. It is now a real password field.
+              hintText: localization.changePasswordCurrentPassword,
+              obscureText: true,
               controller: controller.disable2FaController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.visiblePassword,
             ),
           ),
           SizedBox(height: 20),

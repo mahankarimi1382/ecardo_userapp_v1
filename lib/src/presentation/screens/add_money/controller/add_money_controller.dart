@@ -228,14 +228,36 @@ class AddMoneyController extends GetxController {
       );
 
       if (response.status == Status.completed) {
-        final String redirectUrl = response.data!["data"]['redirect_url'];
-        final paymentResult = await Get.to<Map<String, dynamic>>(
-          () => WebViewScreen(paymentUrl: redirectUrl),
-          fullscreenDialog: false,
-        );
-        if (paymentResult != null && paymentResult['success'] == true) {
-          successPaymentData.value = paymentResult['data'];
+        // The server answers with ONE of two shapes: {redirect_url} for a
+        // hosted/redirect gateway, or {transaction} for a wallet/sandbox
+        // gateway. Force-unwrapping ['redirect_url'] threw a TypeError on the
+        // second shape AFTER the deposit row had already been created, so the
+        // user saw a generic error for a real pending deposit.
+        final raw = response.data?["data"];
+        final Map<String, dynamic>? payload =
+            raw is Map<String, dynamic> ? raw : null;
+        final redirectUrl = payload?["redirect_url"]?.toString();
+
+        if (redirectUrl == null || redirectUrl.isEmpty) {
+          // No redirect: the deposit exists and is waiting on the gateway.
+          pendingPaymentData.value = payload;
           currentStep.value = 2;
+          ToastHelper().showSuccessToast(localization!.addMoneySuccess);
+        } else {
+          final paymentResult = await Get.to<Map<String, dynamic>>(
+            () => WebViewScreen(paymentUrl: redirectUrl),
+            fullscreenDialog: false,
+          );
+          if (paymentResult != null && paymentResult['success'] == true) {
+            successPaymentData.value = paymentResult['data'];
+            currentStep.value = 2;
+          } else if (paymentResult == null) {
+            // The user backed out of the gateway page. The deposit is still
+            // open server-side, so say so instead of silently resetting.
+            pendingPaymentData.value = payload;
+            currentStep.value = 2;
+            ToastHelper().showSuccessToast(localization!.addMoneySuccess);
+          }
         }
       }
     } catch (e, stackTrace) {

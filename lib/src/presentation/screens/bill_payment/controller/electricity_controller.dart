@@ -140,11 +140,13 @@ class ElectricityController extends GetxController {
       final Map<String, dynamic> requestBody = {
         "service_id": serviceData.value!.id.toString(),
         "amount": amountText.value,
-        "data": [
-          dynamicFieldControllers.map(
-            (key, controller) => MapEntry(key, controller.text),
-          ),
-        ],
+        // BUGFIX: Map.map yields Iterable<MapEntry>, and MapEntry is not
+        // JSON-encodable — NetworkService jsonEncodes the body before its own
+        // try block, so every bill payment threw before hitting the network.
+        // The server reads array_values(data[0]), i.e. a list of field maps.
+        "data": dynamicFieldControllers.map(
+          (key, controller) => <String, dynamic>{key: controller.text},
+        ).toList(),
       };
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.payBillEndpoint,

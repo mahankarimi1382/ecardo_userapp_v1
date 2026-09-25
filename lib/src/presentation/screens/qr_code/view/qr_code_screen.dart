@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -127,16 +128,6 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   Future<void> downloadQr(GlobalKey key, String fileName) async {
     final localization = AppLocalizations.of(context)!;
     try {
-      if (Platform.isAndroid) {
-        var status = await Permission.manageExternalStorage.request();
-        if (!status.isGranted) {
-          ToastHelper().showErrorToast(
-            localization.qrCodeScreenPermissionRequired,
-          );
-          return;
-        }
-      }
-
       final ctx = key.currentContext;
       if (ctx == null) {
         ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -154,10 +145,22 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       }
       Uint8List pngBytes = byteData.buffer.asUint8List();
 
-      final String path = "/storage/emulated/0/Download/$fileName.png";
-      final File file = File(path);
+      // Write to the app's own documents directory. The previous code asked
+      // for MANAGE_EXTERNAL_STORAGE and then wrote to a hardcoded
+      // /storage/emulated/0/Download path: that permission is absent from the
+      // manifest, so the request was ALWAYS denied and the download button was
+      // permanently dead on Android; the hardcoded path is also unwritable on
+      // iOS. The app-scoped directory needs no permission and works on both.
+      final Directory dir = await getApplicationDocumentsDirectory();
+      final File file = File('${dir.path}/$fileName.png');
 
       await file.writeAsBytes(pngBytes);
+
+      final result = await OpenFilex.open(file.path);
+      if (result.type != ResultType.done) {
+        // Saved regardless — only the "open it for me" convenience failed.
+        debugPrint('⚠️ downloadQr(): saved but could not open (${result.message})');
+      }
       ToastHelper().showSuccessToast(localization.qrCodeScreenDownloadSuccess);
     } catch (e) {
       debugPrint('❌ downloadQr() error: $e');

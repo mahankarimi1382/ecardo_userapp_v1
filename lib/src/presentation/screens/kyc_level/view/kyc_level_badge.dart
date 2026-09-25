@@ -35,6 +35,10 @@ class _KycLevelBadgeState extends State<KycLevelBadge> {
       final response = await _networkService.get(
         endpoint: ApiPath.kycLevelBadgeEndpoint,
       );
+      // BUGFIX: every setState below runs after an await, so the widget can be
+      // disposed while the request is in flight — "setState() called after
+      // dispose()". Guard each one on mounted.
+      if (!mounted) return;
       if (response.status == Status.completed && response.data != null) {
         final data = response.data!['data'] as Map<String, dynamic>?;
         if (data != null) {
@@ -47,6 +51,7 @@ class _KycLevelBadgeState extends State<KycLevelBadge> {
       }
       setState(() => _isLoading = false);
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
     }
   }

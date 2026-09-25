@@ -49,6 +49,10 @@ class NetworkService extends getx.GetxService {
     '/user/gifts',
     '/user/withdraw',
     '/user/exchange',
+    // The server guards remittance store with the idempotency middleware
+    // (FIX-R5), but that middleware is a pass-through when the header is
+    // absent — so without this entry the double-debit guard was inert.
+    '/user/remittance/store',
   ];
 
   AppLocalizations? get localization {
