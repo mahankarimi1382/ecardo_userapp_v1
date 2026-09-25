@@ -1,87 +1,87 @@
-# ECARDO FLUTTER CODEBASE REALITY REPORT
+# گزارش وضعیت واقعی کدهای فلاتر ECARDO
 
-## 1. Executive Architecture Summary
-- **SDK & Build Versions**:
-  - Flutter Version: `^3.22.x` (Inferred via dart SDK `^3.9.2` and comments hinting `Flutter 3.44.6` in `pubspec.yaml`, though `3.44` doesn't exist. Dart `3.9.2` means Flutter `3.29.x`).
-  - Dart SDK: `^3.9.2`
-  - Version: `1.0.89+89`
-- **Core Architecture Patterns**:
-  - The application relies heavily on **GetX** (`get: ^4.7.2`) for State Management, Dependency Injection (`Get.put`, `Get.find`, `GetxService`), and Routing (`GetMaterialApp`, `GetPage`, `Get.to`).
-  - No `go_router` or `bloc`/`cubit` is used in this repository. All state and routing are managed via GetX Controllers/Bindings.
-- **State Management Health**:
-  - Widespread usage of GetX `Obx` and `Rx` variables for reactive UI.
-  - **Issue**: Mixed usage of `Get.put` and Route Bindings (`routes_handler.dart`). Some views use `Get.find` directly, crashing if visited without the route binding (e.g., `remittance_details.dart:16`).
-- **Build Configuration**:
-  - `kDebugMode` is heavily used throughout the app (especially in `NetworkService`, `TokenService`, `FirebaseMessagingService`, and error handlers) to log debugging information (e.g., tokens, API requests, errors).
+## 1. خلاصه معماری اجرایی
+- **نسخه‌های SDK و Build**:
+  - نسخه فلاتر: `^3.22.x` (با توجه به SDK دارت `^3.9.2` و نظراتی که به `Flutter 3.44.6` در `pubspec.yaml` اشاره دارد، اگرچه `3.44` وجود ندارد. دارت `3.9.2` به معنی فلاتر `3.29.x` است).
+  - نسخه دارت (Dart SDK): `^3.9.2`
+  - نسخه برنامه: `1.0.89+89`
+- **الگوهای اصلی معماری**:
+  - این برنامه به شدت از **GetX** (`get: ^4.7.2`) برای مدیریت وضعیت (State Management)، تزریق وابستگی (`Get.put`، `Get.find`، `GetxService`) و مسیریابی (`GetMaterialApp`، `GetPage`، `Get.to`) استفاده می‌کند.
+  - هیچ اثری از `go_router` یا `bloc`/`cubit` در این مخزن وجود ندارد. تمام وضعیت‌ها و مسیریابی‌ها توسط کنترلرها/بایندینگ‌های GetX مدیریت می‌شوند.
+- **سلامت مدیریت وضعیت**:
+  - استفاده گسترده از متغیرهای `Obx` و `Rx` متعلق به GetX برای رابط کاربری واکنش‌گرا (Reactive UI).
+  - **مشکل**: استفاده ترکیبی از `Get.put` و بایندینگ‌های مسیر (`routes_handler.dart`). برخی از نماها مستقیماً از `Get.find` استفاده می‌کنند که اگر بدون بایندینگ مسیر بازدید شوند، باعث کرش کردن برنامه می‌شوند (مثلاً `remittance_details.dart:16`).
+- **پیکربندی Build**:
+  - متغیر `kDebugMode` به وفور در سراسر برنامه (به ویژه در `NetworkService`، `TokenService`، `FirebaseMessagingService` و کنترل‌کننده‌های خطا) برای ثبت اطلاعات دیباگ (مانند توکن‌ها، درخواست‌های API، خطاها) استفاده شده است.
 
-## 2. API & Network Catalog
+## 2. کاتالوگ API و شبکه
 
-| # | Feature / Module | HTTP Method | Endpoint Path | Caller File & Line | Status (Connected / Mock / Broken) |
+| # | قابلیت / ماژول | متد HTTP | مسیر Endpoint | فایل فراخوان و خط | وضعیت (متصل / ماک شده / خراب) |
 |---|---|---|---|---|---|
-| 1 | Auth (Login) | POST | `/api/auth/user/login` | `network_service.dart:154` | Connected (Base `https://ecardo.ir`) |
-| 2 | Auth (Register) | POST | `/api/auth/user/register` | `network_service.dart:178` | Connected |
-| 3 | Travel (Base) | GET/POST | `/api/v1/` | `travel_api_repository.dart:9` | Connected (`https://trip.ecardo.ir/api/v1`) |
-| 4 | Exchange Fee | GET | `/` | `fee_ecardo_rate_source.dart:9` | Connected (`https://fee.ecardo.ir`) |
-| 5 | Token Refresh | POST | `/api/auth/user/refresh` | `api_path.dart:167` | Connected |
-| 6 | Bill Payments | POST | `/user/pay-bill` | `api_path.dart:104` | Connected / Broken Safeguards (No idempotency/timeout, bypassed) |
-| 7 | Dynamic Password OTP | POST | `/pay/generate-otp` | `api_path.dart:45` | Broken (Hardcoded `404` found in `flow_test_report.md` probing) |
-| 8 | Rate Alert | POST | `N/A` | `rate_alert_placeholder.dart:71` | Mocked (UI only, TODO backend) |
-| 9 | Add/Edit Payment Account | POST/PUT | `/user/p2p/payment-accounts` | `add_payment_method_controller.dart:209` | Partial (Bypasses Dio wrappers, raw `Dio()`) |
+| 1 | احراز هویت (ورود) | POST | `/api/auth/user/login` | `network_service.dart:154` | متصل (پایه `https://ecardo.ir`) |
+| 2 | احراز هویت (ثبت‌نام) | POST | `/api/auth/user/register` | `network_service.dart:178` | متصل |
+| 3 | سفر (پایه) | GET/POST | `/api/v1/` | `travel_api_repository.dart:9` | متصل (`https://trip.ecardo.ir/api/v1`) |
+| 4 | کارمزد تبدیل ارز | GET | `/` | `fee_ecardo_rate_source.dart:9` | متصل (`https://fee.ecardo.ir`) |
+| 5 | تازه‌سازی توکن (Refresh) | POST | `/api/auth/user/refresh` | `api_path.dart:167` | متصل |
+| 6 | پرداخت قبوض | POST | `/user/pay-bill` | `api_path.dart:104` | متصل / محافظ‌های خراب (بدون آیدمپوتنسی/تایم‌اوت، دور زده شده) |
+| 7 | رمز پویای OTP | POST | `/pay/generate-otp` | `api_path.dart:45` | خراب (برگشتِ هاردکد `404` که در تست `flow_test_report.md` یافت شد) |
+| 8 | هشدار نرخ (Rate Alert) | POST | `ندارد` | `rate_alert_placeholder.dart:71` | ماک شده (فقط UI، اتصال به بک‌اند TODO است) |
+| 9 | افزودن/ویرایش حساب پرداخت | POST/PUT | `/user/p2p/payment-accounts` | `add_payment_method_controller.dart:209` | جزئی (لفاف‌های Dio را دور می‌زند، استفاده از `Dio()` خام) |
 
-## 3. Screen & User Journey Reality Matrix
+## 3. ماتریس واقعیت مسیرها و سفرهای کاربر
 
-*(Note: GetX is used instead of GoRouter. There are no Block/Cubit state managers, only GetX Controllers.)*
+*(توجه: از GetX به جای GoRouter استفاده شده است. هیچ کنترل‌کننده وضعیت Block/Cubit وجود ندارد، فقط کنترلرهای GetX موجود هستند.)*
 
-| Module | Screen Widget | Route Path | Auth Guard? | Backend Connected? | Notes / Mock Evidence |
+| ماژول | ویجت صفحه (Screen) | مسیر (Route) | گارد احراز هویت؟ | اتصال به بک‌اند؟ | یادداشت‌ها / شواهد ماک |
 |---|---|---|---|---|---|
-| **Auth** | `SignInScreen` | `/sign_in_route` | Splash Gate | `REAL_API` | Biometrics guard is UI-based (`onTap`). `POST_NOTIFICATIONS` missing explicit runtime guard for Android 13+. |
-| **Auth** | `AuthIdVerification` | `/auth_id_verification_route` | Splash Gate | `REAL_API` | - |
-| **Travel** | `TravelScreen` | `/travel_route` | No (Bypass) | `REAL_API` / `MOCKED` | UI uses mock strings (e.g. `travelMockHotelEspinas`) in `travel_widgets.dart:18`. API is connected to `trip.ecardo.ir`. |
-| **Wallet** | `WalletsScreen` | `/wallets_route` | Yes | `REAL_API` | Live rates. |
-| **Exchange** | `ExchangeScreen` | `/exchange_route` | Yes | `PARTIAL` | Rate alert is completely non-functional (`rate_alert_placeholder.dart:71`). |
-| **Remittance**| `RemittanceDetails` | `/remittance_details_route` | Yes | `REAL_API` | Dead deep-link route. Missing `GetPage` binding causes `Get.find` to crash. Hardcoded 2 decimal precision. |
-| **P2P** | `P2PTrading` | `/p2p_trading_route` | Yes | `PARTIAL` | P2P apply_verification and payment_account screens use raw `Dio()` instances. |
-| **Bill Payment**| `BillPaymentScreen`| `/bill_payment_route` | Yes | `BROKEN` | Lacks double-submit guard, balance guards, and state handling. Force unwraps `charge!` leading to crashes. |
+| **احراز هویت** | `SignInScreen` | `/sign_in_route` | گیت Splash | `REAL_API` | گارد بیومتریک مبتنی بر UI است (`onTap`). برای `POST_NOTIFICATIONS` گارد صریح در زمان اجرا در اندروید 13+ جا افتاده است. |
+| **احراز هویت** | `AuthIdVerification` | `/auth_id_verification_route` | گیت Splash | `REAL_API` | - |
+| **سفر (Travel)** | `TravelScreen` | `/travel_route` | خیر (دور زده شده) | `REAL_API` / `MOCKED` | رابط کاربری از رشته‌های ماک شده (مثل `travelMockHotelEspinas`) در `travel_widgets.dart:18` استفاده می‌کند. API به `trip.ecardo.ir` متصل است. |
+| **کیف پول** | `WalletsScreen` | `/wallets_route` | بله | `REAL_API` | نرخ‌های لحظه‌ای. |
+| **تبدیل ارز** | `ExchangeScreen` | `/exchange_route` | بله | `PARTIAL` | ویژگی هشدار نرخ کاملاً غیرفعال است (`rate_alert_placeholder.dart:71`). |
+| **حواله (Remittance)** | `RemittanceDetails` | `/remittance_details_route` | بله | `REAL_API` | مسیر دیپ‌لینک مرده. نبود بایندینگ `GetPage` باعث کرش کردن `Get.find` می‌شود. دقت اعشار روی ۲ هاردکد شده است. |
+| **P2P** | `P2PTrading` | `/p2p_trading_route` | بله | `PARTIAL` | صفحات apply_verification و payment_account در P2P از نمونه‌های `Dio()` خام استفاده می‌کنند. |
+| **پرداخت قبض**| `BillPaymentScreen`| `/bill_payment_route` | بله | `BROKEN` | فاقد گارد سابمیت دوگانه، گاردهای موجودی و مدیریت وضعیت است. Force unwrap روی `charge!` باعث کرش می‌شود. |
 
-## 4. Critical Security & Data Integrity Findings
+## 4. یافته‌های حیاتی امنیتی و یکپارچگی داده‌ها
 
-- **Sensitive Data & Token Storage**:
-  - `TokenService` correctly migrated from `SharedPreferences` to `FlutterSecureStorage` (in `token_service.dart:17`).
-  - Passcode and App Locks use `FlutterSecureStorage` with `encryptedSharedPreferences: true`.
-  - Some general settings are still saved in `SharedPreferences` (e.g., `AppUpdateController`).
-- **Network Logger & PII leakage risks**:
-  - In `network_service.dart:771`, HTTP Headers (Authorization) and Request Bodies (e.g., Login Passwords, Payment Data) are logged using `_log` and `jsonEncode`.
-  - The `_log` function checks `kDebugMode` before printing. If `kDebugMode` is true (Dev/Staging), passwords, tokens, and PII are exposed in the standard output. The code redacts token length now (`<redacted X chars>`) but request bodies might still be exposed.
-- **Hardcoded Secrets or Test Endpoints**:
-  - Base URLs are hardcoded:
-    - Main API: `https://ecardo.ir/api`
-    - Travel API: `https://trip.ecardo.ir/api/v1`
-    - Fee API: `https://fee.ecardo.ir`
-  - There are no hardcoded Firebase secret keys directly in the repo (expects `firebase-credentials.json` or google-services config).
+- **ذخیره‌سازی داده‌های حساس و توکن‌ها**:
+  - کلاس `TokenService` به درستی از `SharedPreferences` به `FlutterSecureStorage` مهاجرت کرده است (در `token_service.dart:17`).
+  - رمز عبور و قفل‌های برنامه از `FlutterSecureStorage` با گزینه `encryptedSharedPreferences: true` استفاده می‌کنند.
+  - برخی تنظیمات عمومی هنوز در `SharedPreferences` ذخیره می‌شوند (مثلاً `AppUpdateController`).
+- **خطر درز اطلاعات شخصی (PII) در لاگر شبکه**:
+  - در `network_service.dart:771`، هدرهای HTTP (Authorization) و بدنه درخواست‌ها (مانند رمزهای ورود، داده‌های پرداخت) با استفاده از `_log` و `jsonEncode` لاگ می‌شوند.
+  - تابع `_log` قبل از چاپ کردن وضعیت `kDebugMode` را بررسی می‌کند. اگر `kDebugMode` صحیح باشد (در محیط‌های Dev/Staging)، رمزها، توکن‌ها و اطلاعات شخصی در خروجی استاندارد افشا می‌شوند. کد اکنون طول توکن را پنهان می‌کند (`<redacted X chars>`) اما بدنه درخواست‌ها ممکن است همچنان افشا شوند.
+- **اسرار هاردکد شده یا نقاط انتهایی (Endpoints) تستی**:
+  - آدرس‌های پایه (Base URLs) هاردکد شده‌اند:
+    - اصلی: `https://ecardo.ir/api`
+    - سفر: `https://trip.ecardo.ir/api/v1`
+    - کارمزد: `https://fee.ecardo.ir`
+  - هیچ کلید مخفی فایربیس به صورت هاردکد در مخزن وجود ندارد (انتظار می‌رود فایل `firebase-credentials.json` یا پیکربندی google-services ارائه شود).
 
-## 5. Incomplete, Mocked & Abandoned Code
+## 5. کدهای ناقص، ماک شده و رها شده
 
-- **Mocked/Stub UI Elements**:
-  - **Rate Alert**: `rate_alert_placeholder.dart:71` is completely mocked. The UI shows "Coming soon" and the API call is marked as a `TODO`.
-  - **Travel Mocks**: `travel_widgets.dart:18-29` contains explicit mock variables (`travelMockHotelEspinas`, `travelMockFlightTehranIstanbul`, etc.) mapped to translations, presumably to bypass missing inventory in staging.
-- **Orphan Files and Dead Routes**:
-  - Removed route constant: `BaseRoute.setPasscode` was removed (never used via GetPage).
-  - Dead Routes: The routes for `invoice*` and `replayTicket` (M-6 in audit docs) fell through to `unknownRoute` (Splash). `BaseRoute.replayTicket` is registered inline but not perfectly mapped.
-- **High-severity TODOs / FIXMEs**:
+- **المان‌های کاربری ماک/شبیه‌سازی شده**:
+  - **هشدار نرخ (Rate Alert)**: مسیر `rate_alert_placeholder.dart:71` کاملاً ماک شده است. رابط کاربری پیام "به زودی" را نشان می‌دهد و فراخوانی API به عنوان `TODO` مشخص شده است.
+  - **ماک‌های سفر**: `travel_widgets.dart:18-29` حاوی متغیرهای صریح ماک شده است (`travelMockHotelEspinas`، `travelMockFlightTehranIstanbul` و غیره) که به ترجمه‌ها نگاشت شده‌اند، احتمالاً برای دور زدن کمبود موجودی در محیط استیجینگ.
+- **فایل‌های یتیم و مسیرهای مرده**:
+  - ثابت مسیر حذف شده: `BaseRoute.setPasscode` حذف شده است (هرگز از طریق GetPage استفاده نشده بود).
+  - مسیرهای مرده: مسیرهای `invoice*` و `replayTicket` (مورد M-6 در اسناد ممیزی) به مسیر ناشناخته `unknownRoute` (همان Splash) سقوط کرده‌اند. `BaseRoute.replayTicket` به صورت درون‌خطی ثبت شده اما به شکل کامل نگاشت نشده است.
+- **موارد TODO / FIXME با شدت بالا**:
   - `remittance_details.dart:16` - `TODO(lead): add a RemittanceBinding`.
-  - `remittance_controller.dart:694` - Hardcoded decimals: `TODO(lead): exchange-rate precision is not exposed`.
-  - Multiple `force-unwrap` variables (`double.tryParse(x!)!`) in Request Money details, causing fatal crashes if data is missing.
-  - Six controllers (Bill Payment, P2P Verification, Withdraw) use raw `dio.Dio()` bypassing the `NetworkService`, meaning they lack 401 token refresh loops, Idempotency-Keys, and connection timeouts.
+  - `remittance_controller.dart:694` - اعشار هاردکد شده: `TODO(lead): exchange-rate precision is not exposed`.
+  - چندین متغیر با اعمال `force-unwrap` (مانند `double.tryParse(x!)!`) در بخش جزئیات Request Money وجود دارد که در صورت نبود داده باعث کرش‌های مهلک می‌شوند.
+  - شش کنترلر (شامل پرداخت قبض، تاییدیه P2P، برداشت) از `dio.Dio()` خام استفاده می‌کنند و `NetworkService` را دور می‌زنند، به این معنی که فاقد حلقه‌های تازه‌سازی توکن 401، کلیدهای آیدمپوتنسی و تایم‌اوت‌های اتصال هستند.
 
-## 6. Top 5 Urgent Blockers for the Product Owner
+## 6. پنج بلاکر (مسدودکننده) فوری برتر برای مالک محصول (Product Owner)
 
-1. **[P0] Bill Payment & Network Bypasses (Broken Core Flow / Security)**
-   - 6 Controllers (Airtime, Electricity, Internet, P2P Verification, Withdraw) instantiate a raw `Dio()` client. They bypass token refresh (401), Idempotency Keys (Double Submit protections), and Timeouts. Bill payments lack balance checks before submission.
-2. **[P1] Missing Route Bindings Causing Crashes (Broken Core Flow)**
-   - Deep-linking or navigating to `/remittance_details_route`, `/kyc_submit_wizard_route`, and `/dynamic_password_route` without previous controller initialization causes fatal crashes due to `Get.find` failing.
-3. **[P1] Force-Unwrap Crashes in Financial Transactions (Data Integrity)**
-   - Widespread use of `double.tryParse(...)!` in `VirtualCardDetails` and `RequestMoneyDetails`. If the backend returns `null` or a malformed string, the app throws a fatal exception.
-4. **[P2] Dynamic Password (OTP) Endpoint 404 (Broken Feature)**
-   - `POST /pay/generate-otp` is hardcoded outside of `ApiPath` and yields a 404 response on the server, rendering the "Dynamic Password" feature completely broken.
-5. **[P2] Rate Alert (Incomplete Feature)**
-   - The Rate Alert feature is purely visual (`rate_alert_placeholder.dart`) and functionally inert (mocked).
+1. **[P0] پرداخت قبض و دور زدن‌های شبکه (جریان اصلی خراب / امنیتی)**
+   - 6 کنترلر (شارژ، برق، اینترنت، تایید P2P، برداشت) یک کلاینت خام `Dio()` ایجاد می‌کنند. این‌ها تازه‌سازی توکن (401)، کلیدهای آیدمپوتنسی (محافظ‌های ارسال دوگانه) و تایم‌اوت‌ها را دور می‌زنند. پرداخت‌های قبوض فاقد بررسی موجودی قبل از ارسال هستند.
+2. **[P1] نبود بایندینگ‌های مسیر که باعث کرش می‌شوند (جریان اصلی خراب)**
+   - دیپ‌لینک زدن یا هدایت به `/remittance_details_route`، `/kyc_submit_wizard_route` و `/dynamic_password_route` بدون مقداردهی اولیه کنترلر قبلی، باعث کرش‌های مهلک می‌شود زیرا `Get.find` با خطا مواجه می‌شود.
+3. **[P1] کرش‌های ناشی از Force-Unwrap در تراکنش‌های مالی (یکپارچگی داده‌ها)**
+   - استفاده گسترده از `double.tryParse(...)!` در `VirtualCardDetails` و `RequestMoneyDetails`. اگر بک‌اند `null` یا یک رشته نامعتبر برگرداند، برنامه با یک خطای مهلک روبرو می‌شود.
+4. **[P2] خطای 404 در نقطه انتهایی رمز پویا (OTP) (ویژگی خراب)**
+   - مسیر `POST /pay/generate-otp` خارج از `ApiPath` هاردکد شده و پاسخ 404 را از سرور دریافت می‌کند، که باعث می‌شود ویژگی "رمز پویا" کاملاً خراب و غیرقابل استفاده باشد.
+5. **[P2] هشدار نرخ (ویژگی ناقص)**
+   - ویژگی هشدار نرخ کاملاً بصری (`rate_alert_placeholder.dart`) است و از نظر عملکردی هیچ کاری انجام نمی‌دهد (ماک شده است).
