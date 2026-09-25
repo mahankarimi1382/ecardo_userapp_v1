@@ -364,6 +364,13 @@ jobs:
           DOWNLOAD_URL="https://github.com/${PUB}/releases/download/${PUB_TAG}/${APK_NAME}"
           echo "✅ Mirrored $DOWNLOAD_URL"
 
+          # Digest of the exact artifact we just mirrored. The in-app updater hashes
+          # the file it downloads and refuses to install on a mismatch, so this must
+          # be the staged APK above — not a rebuild, not an older release's digest.
+          SHA256="$(sha256sum "$APK_NAME" | awk '{print $1}')"
+          test -n "$SHA256"
+          echo "✅ APK sha256=$SHA256"
+          #
           # Server notify → app_version
           DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?ECARDO_DEPLOY_SECRET missing}"
           set -o pipefail
@@ -372,7 +379,11 @@ jobs:
             -A "Mozilla/5.0" -H "Accept: application/json" \
             -H "Content-Type: application/json" -H "Origin: https://ecardo.ir" \
             -H "X-ECardo-Deploy-Source: github-actions" --compressed \
-            -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\"}" \
+            -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\",\"sha256\":\"$SHA256\"}" \
             | tee notify-result.txt
           grep -q "Successfully deployed" notify-result.txt
-          echo "✅ Server notified app_version=$VERSION"
+          echo "✅ Server notified app_version=$VERSION sha256=$SHA256"
+          # The webhook reports whether the push to users actually went out. Without
+          # this assertion a failed notification is indistinguishable from a working
+          # one, because the old controller swallowed every FCM error.
+          python3 -c "import json,sys;n=(json.load(open('notify-result.txt')).get('notification') or {});print('notification:',json.dumps(n,ensure_ascii=False));sys.exit(0 if n.get('sent') else 1)"
