@@ -19,7 +19,10 @@
 // ============================================================================
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -82,6 +85,10 @@ class AppUpdateConfig {
   /// SharedPreferences key that the backend populates with "1" to force.
   final String settingKeyForceUpdate;
 
+  /// Optional APK sha256 hex from backend (`app_apk_sha256`). When non-empty,
+  /// the downloaded file is verified before handing off to the installer.
+  final String settingKeySha256;
+
   const AppUpdateConfig({
     required this.autoUpdatePrefsKey,
     required this.lastPromptedVersionPrefsKey,
@@ -89,6 +96,7 @@ class AppUpdateConfig {
     required this.settingKeyVersion,
     required this.settingKeyUpdateLink,
     required this.settingKeyForceUpdate,
+    this.settingKeySha256 = 'app_apk_sha256',
   });
 
   /// Default configuration for the eCardo **user** app.
@@ -340,6 +348,30 @@ class AppUpdateController extends GetxController {
           totalBytesLabel.value = _formatBytes(total);
         },
       );
+
+      // ----- Integrity check (when server published sha256) -----
+      final expectedSha = (settings.getSetting(config.settingKeySha256) ?? '')
+          .trim()
+          .toLowerCase();
+      if (expectedSha.isNotEmpty) {
+        final file = File(filePath);
+        if (!await file.exists()) {
+          phase.value = AppUpdatePhase.error;
+          errorMessage.value = 'Downloaded update file is missing.';
+          return;
+        }
+        final digest = await sha256.bind(file.openRead()).first;
+        final actual = digest.toString();
+        if (actual != expectedSha) {
+          try {
+            await file.delete();
+          } catch (_) {}
+          phase.value = AppUpdatePhase.error;
+          errorMessage.value =
+              'Update file integrity check failed. Please try again.';
+          return;
+        }
+      }
 
       // ----- Hand off to system installer -----
       phase.value = AppUpdatePhase.installing;
