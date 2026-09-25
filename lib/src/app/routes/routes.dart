@@ -28,8 +28,9 @@ class BaseRoute {
 
   static const String setUpPassword = "/set_up_password_route";
 
-  /// Mandatory 4-digit transaction passcode (first stage / missing passcode).
-  static const String setPasscode = "/set_passcode_route";
+  // v1.0.88 — removed dead constant setPasscode:
+  // never used via GetPage or Get.toNamed; screen is opened with
+  // Get.off(() => const SetPasscodeScreen()) directly.
 
   static const String personalInfo = "/personal_info_route";
 
@@ -125,7 +126,7 @@ class BaseRoute {
 
   static const String cable = "/cable_route";
 
-  static const String toll = "/tool_route";
+  static const String toll = "/toll_route";
 
   static const String virtualCard = "/virtual_card_route";
 

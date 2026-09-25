@@ -628,6 +628,43 @@ class NetworkService extends getx.GetxService {
     }
   }
 
+  /// v1.0.88 — PATCH support (P2P ads/{id}/status-update and
+  /// orders/{id}/payment-method on server accept only PATCH;
+  /// previous post + {'_method': 'PATCH'} → 405 Method Not Allowed).
+  Future<ApiResponse<Map<String, dynamic>>> patch({
+    required String endpoint,
+    Map<String, dynamic>? data,
+    bool isForeground = true,
+  }) async {
+    String url = '${_dio.options.baseUrl}$endpoint';
+    _log('📤 PATCH Request URL: $url');
+
+    if (data != null) {
+      _log('📦 PATCH Request Body: ${jsonEncode(data)}');
+    } else {
+      _log('📦 PATCH Request Body: No body data');
+    }
+
+    try {
+      final response = await _dio.patch(
+        endpoint,
+        data: data != null ? jsonEncode(data) : null,
+        options: Options(extra: {'isForeground': isForeground}),
+      );
+
+      return _handleResponse(response, "PATCH");
+    } on DioException catch (e) {
+      return _handleDioException(e, "PATCH");
+    } catch (e) {
+      _log('PATCH Exception: ${e.toString()}', icon: '❌');
+      ToastHelper().showErrorToast(
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
+      return ApiResponse.error(e.toString());
+    }
+  }
+
   Future<ApiResponse<Map<String, dynamic>>> delete({
     required String endpoint,
     Map<String, dynamic>? data,

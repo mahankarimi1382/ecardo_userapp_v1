@@ -23,14 +23,15 @@ class OfflineRequestQueue extends GetxService {
   StreamSubscription? _sub;
   bool _flushing = false;
 
+  // v1.0.88 — fixed whitelist: previous values did not match real endpoints
+  // so no offline POSTs were ever queued. Real endpoints used by app:
+  // /user/settings/profile, /setup-fcm, /change-language/{code}, etc.
   static const _allowedPrefixes = <String>[
-    '/user/profile',
-    '/user/update',
-    '/user/settings',
-    '/user/language',
-    '/user/fcm',
-    '/setup',
-    '/user/device',
+    '/user/settings/profile',
+    '/user/settings/change-password',
+    '/setup-fcm',
+    '/change-language/',
+    '/mark-as-read-notification',
   ];
 
   static const _blockedKeywords = <String>[

@@ -91,7 +91,7 @@ class CableController extends GetxController {
     isLoading.value = true;
     try {
       final response = await Get.find<NetworkService>().get(
-        endpoint: "${ApiPath.getBillCountriesEndpoint}/cable",
+        endpoint: "${ApiPath.getBillCountriesEndpoint}/cables",
       );
 
       if (response.status == Status.completed) {
@@ -113,7 +113,7 @@ class CableController extends GetxController {
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint:
-            "${ApiPath.getPayBillServicesEndpoint}/${countryController.text}/cable",
+            "${ApiPath.getPayBillServicesEndpoint}/${countryController.text}/cables",
       );
       if (response.status == Status.completed) {
         final payBillServiceModel = PayBillServiceModel.fromJson(

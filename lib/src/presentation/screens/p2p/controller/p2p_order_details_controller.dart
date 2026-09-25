@@ -160,13 +160,12 @@ class P2pOrderDetailsController extends GetxController {
 
     isUpdatingPaymentMethod.value = true;
     try {
-      final response = await Get.find<NetworkService>().post(
+      final response = await Get.find<NetworkService>().patch(
         endpoint: ApiPath.updateOrderPaymentMethodEndpoint(
           orderId: '$orderId',
         ),
         data: <String, dynamic>{
           'payment_method_id': newPaymentMethodId,
-          '_method': 'PATCH',
         },
       );
 

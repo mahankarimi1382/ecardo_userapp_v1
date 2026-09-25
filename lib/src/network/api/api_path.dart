@@ -11,8 +11,6 @@ class ApiPath {
   static const String languagesEndpoint = '/get-languages';
   static const String termsAndConditionsEndpoint = '/terms-conditions';
   static const String getSetupFcm = '/setup-fcm';
-  static const String getTransactionsTypesAndStatusEndpoint =
-      '/get-transaction-types-and-statuses';
 
   static String translationEndpoint({required String languageCode}) =>
       '/change-language/$languageCode';

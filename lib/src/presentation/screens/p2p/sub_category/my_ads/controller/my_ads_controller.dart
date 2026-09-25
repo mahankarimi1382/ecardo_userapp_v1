@@ -291,9 +291,9 @@ class MyAdsController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-      final response = await Get.find<NetworkService>().post(
+      final response = await Get.find<NetworkService>().patch(
         endpoint: ApiPath.updateAdStatusEndpoint(adId: adId),
-        data: {'status': status, '_method': 'PATCH'},
+        data: {'status': status},
       );
 
       if (response.status == Status.completed) {
