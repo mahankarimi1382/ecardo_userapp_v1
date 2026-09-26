@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
@@ -108,6 +110,11 @@ class TravelersScreen extends StatelessWidget {
     final nationalityController = TextEditingController(
       text: traveler?.nationalityCode ?? 'IR',
     );
+    // The travel service requires both dates when saving a traveler
+    // (passport_expiry after +6 months, birth_date before -1 year). They were
+    // never collected, so the save could never succeed.
+    final passportExpiry = Rxn<DateTime>(traveler?.passportExpiry);
+    final birthDate = Rxn<DateTime>(traveler?.birthDate);
     final formKey = GlobalKey<FormState>();
 
     await showModalBottomSheet<void>(
@@ -170,6 +177,38 @@ class TravelersScreen extends StatelessWidget {
                         : localization.travelNationalityCodeInvalid,
                   ),
                 ),
+                SizedBox(height: 12.h),
+                Obx(
+                  () => Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: CommonSingleDatePicker(
+                      hintText: localization.travelBirthDate,
+                      initialDate: birthDate.value,
+                      firstDate: DateTime(1920),
+                      lastDate: DateTime.now().subtract(
+                        const Duration(days: 365),
+                      ),
+                      isFocused: false,
+                      datePattern: 'yyyy-MM-dd',
+                      onDateSelected: (value) => birthDate.value = value,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Obx(
+                  () => Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: CommonSingleDatePicker(
+                      hintText: localization.travelPassportExpiry,
+                      initialDate: passportExpiry.value,
+                      firstDate: DateTime.now().add(const Duration(days: 180)),
+                      lastDate: DateTime.now().add(const Duration(days: 365 * 15)),
+                      isFocused: false,
+                      datePattern: 'yyyy-MM-dd',
+                      onDateSelected: (value) => passportExpiry.value = value,
+                    ),
+                  ),
+                ),
                 SizedBox(height: 18.h),
                 Obx(
                   () => CommonButton(
@@ -178,6 +217,15 @@ class TravelersScreen extends StatelessWidget {
                     isLoading: controller.isLoading.value,
                     onPressed: () async {
                       if (formKey.currentState?.validate() != true) {
+                        return;
+                      }
+                      // Both dates are mandatory server-side; check here so the
+                      // user gets the local field error instead of a 422.
+                      if (birthDate.value == null ||
+                          passportExpiry.value == null) {
+                        ToastHelper().showErrorToast(
+                          localization.travelFieldRequired,
+                        );
                         return;
                       }
                       await controller.saveTraveler(
@@ -190,6 +238,8 @@ class TravelersScreen extends StatelessWidget {
                           nationalityCode: nationalityController.text
                               .trim()
                               .toUpperCase(),
+                          birthDate: birthDate.value,
+                          passportExpiry: passportExpiry.value,
                         ),
                       );
                       if (sheetContext.mounted) {

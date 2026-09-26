@@ -49,7 +49,10 @@ class TravelApiRepository implements TravelRepository {
     String query = '',
     int limit = 20,
   }) async {
-    if (type == TravelProductType.esim) return const [];
+    // No special case for eSIM any more. It used to short-circuit to an empty
+    // list here, which hid the real reason: the service 404'd this endpoint for
+    // eSIM. The service now answers every advertised service with a
+    // well-formed result, so the client just asks.
     final response = await _client.get<Map<String, dynamic>>(
       '/travel/services/${type.name}/suggestions',
       queryParameters: {
@@ -612,13 +615,103 @@ class TravelApiRepository implements TravelRepository {
         .toList();
   }
 
+  // The travel service exposes a single traveler profile at
+  // GET/PUT /me/traveler-profile (first_name, last_name, passport_number,
+  // passport_expiry, birth_date, nationality_code, gender). These two methods
+  // used to throw UnsupportedError, which made the Saved Travelers screen
+  // unusable end to end: the save button always threw, and because the
+  // controller's try had no catch, the bottom sheet never popped and no error
+  // was shown. They now talk to the real endpoint.
   @override
-  Future<List<TravelTraveler>> getTravelers() =>
-      throw UnsupportedError('Saved travelers are not exposed yet.');
+  Future<List<TravelTraveler>> getTravelers() async {
+    final profile = await _fetchTravelerProfile();
+    if (profile == null) return const <TravelTraveler>[];
+
+    final traveler = _travelerFromProfile(profile);
+    return traveler == null ? const <TravelTraveler>[] : <TravelTraveler>[
+      traveler,
+    ];
+  }
 
   @override
-  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) =>
-      throw UnsupportedError('Saved travelers are not exposed yet.');
+  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) async {
+    final payload = <String, dynamic>{
+      'first_name': traveler.firstName,
+      'last_name': traveler.lastName.isEmpty
+          ? traveler.firstName
+          : traveler.lastName,
+      'passport_number': traveler.passportNumber,
+      'nationality_code': traveler.nationalityCode,
+      if (traveler.passportExpiry != null)
+        'passport_expiry': _dateOnly(traveler.passportExpiry!),
+      if (traveler.birthDate != null)
+        'birth_date': _dateOnly(traveler.birthDate!),
+      if (traveler.gender != null && traveler.gender!.isNotEmpty)
+        'gender': traveler.gender,
+    };
+
+    await _client.put<Map<String, dynamic>>(
+      '/me/traveler-profile',
+      data: payload,
+      options: Options(
+        headers: {'Authorization': 'Bearer ${await _ensureTravelAccessToken()}'},
+      ),
+    );
+
+    // Re-read so the caller stores exactly what the service persisted.
+    final saved = await _fetchTravelerProfile();
+    if (saved != null) {
+      final mapped = _travelerFromProfile(saved);
+      if (mapped != null) return mapped;
+    }
+    return traveler;
+  }
+
+  Future<Map<String, dynamic>?> _fetchTravelerProfile() async {
+    final response = await _client.get<Map<String, dynamic>>(
+      '/me/traveler-profile',
+      options: Options(
+        headers: {'Authorization': 'Bearer ${await _ensureTravelAccessToken()}'},
+      ),
+    );
+    return _map(response.data?['data']);
+  }
+
+  TravelTraveler? _travelerFromProfile(Map<String, dynamic> data) {
+    final profile = _map(data['profile']);
+    if (profile.isEmpty) return null;
+
+    final first = profile['first_name']?.toString().trim() ?? '';
+    final last = profile['last_name']?.toString().trim() ?? '';
+    final fullName = ('$first $last').trim();
+    final passport = profile['passport_number']?.toString().trim() ?? '';
+
+    // Nothing saved yet -> show the empty state rather than a blank row.
+    if (fullName.isEmpty && passport.isEmpty) return null;
+
+    return TravelTraveler(
+      id: profile['id']?.toString() ?? 'me',
+      fullName: fullName.isEmpty ? first : fullName,
+      passportNumber: passport,
+      nationalityCode:
+          profile['nationality_code']?.toString().trim().toUpperCase() ?? '',
+      passportExpiry: _parseDate(profile['passport_expiry']),
+      birthDate: _parseDate(profile['birth_date']),
+      gender: profile['gender']?.toString(),
+    );
+  }
+
+  static String _dateOnly(DateTime value) =>
+      '${value.year.toString().padLeft(4, '0')}-'
+      '${value.month.toString().padLeft(2, '0')}-'
+      '${value.day.toString().padLeft(2, '0')}';
+
+  static DateTime? _parseDate(Object? raw) {
+    if (raw == null) return null;
+    final text = raw.toString().trim();
+    if (text.isEmpty) return null;
+    return DateTime.tryParse(text);
+  }
 
   @override
   Future<List<TravelActivity>> getActivity() =>

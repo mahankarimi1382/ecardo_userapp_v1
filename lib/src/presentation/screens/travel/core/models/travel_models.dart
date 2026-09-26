@@ -596,12 +596,42 @@ class TravelTraveler {
   final String passportNumber;
   final String nationalityCode;
 
+  // The travel service's PUT /me/traveler-profile makes these REQUIRED
+  // (passport_expiry: date after +6 months, birth_date: date before -1 year).
+  // The form never collected them, which is why saving a traveler could never
+  // have succeeded.
+  final DateTime? passportExpiry;
+  final DateTime? birthDate;
+  final String? gender;
+
   const TravelTraveler({
     required this.id,
     required this.fullName,
     required this.passportNumber,
     required this.nationalityCode,
+    this.passportExpiry,
+    this.birthDate,
+    this.gender,
   });
+
+  String get firstName {
+    final parts = fullName.trim().split(RegExp(r'\s+'));
+    return parts.isEmpty ? '' : parts.first;
+  }
+
+  String get lastName {
+    final parts = fullName.trim().split(RegExp(r'\s+'));
+    return parts.length < 2 ? '' : parts.sublist(1).join(' ');
+  }
+
+  /// The two dates are server-required; a traveler missing either cannot be
+  /// saved, so the form validates before calling the repository.
+  bool get isSaveable =>
+      fullName.trim().isNotEmpty &&
+      passportNumber.trim().isNotEmpty &&
+      nationalityCode.trim().length == 2 &&
+      passportExpiry != null &&
+      birthDate != null;
 }
 
 class TravelOrder {
