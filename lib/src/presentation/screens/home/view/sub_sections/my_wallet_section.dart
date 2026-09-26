@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
@@ -136,7 +137,8 @@ class MyWalletSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 _buildLiveRateChip(
-                  label: _liveConversionLabel(wallet) ?? 'نرخ در دسترس نیست',
+                  label: _liveConversionLabel(wallet) ??
+                      l10nPick(context, en: 'Live rate unavailable', fa: 'نرخ در دسترس نیست', ar: 'السعر المباشر غير متاح', zh: '暂无实时汇率'),
                   isDefaultWallet: isDefaultWallet,
                   unavailable: _liveConversionLabel(wallet) == null,
                 ),
@@ -332,7 +334,8 @@ class MyWalletSection extends StatelessWidget {
               final shown = toman >= 1000
                   ? toman.toStringAsFixed(0)
                   : toman.toStringAsFixed(0);
-              return '≈ $shown تومان';
+              return '≈ $shown '
+                  '${l10nPickAuto(en: 'Toman', fa: 'تومان', ar: 'تومان', zh: '托曼')}';
             }
           }
         }

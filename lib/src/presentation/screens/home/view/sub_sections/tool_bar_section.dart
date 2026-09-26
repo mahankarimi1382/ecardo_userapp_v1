@@ -4,6 +4,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 /// Dashboard greeting header: avatar + time-based hello + notif badge + settings.
@@ -41,16 +42,29 @@ class _ToolBarSectionState extends State<ToolBarSection>
     super.dispose();
   }
 
-  String _greeting() {
+  // WAVE-2: was hardcoded Persian — localized for en/fa/ar/zh.
+  String _greeting(BuildContext context) {
     final h = DateTime.now().hour;
-    if (h >= 5 && h < 12) return 'صبح بخیر';
-    if (h >= 12 && h < 17) return 'عصر بخیر';
-    if (h >= 17 && h < 22) return 'شب بخیر';
-    return 'خوش برگشتی';
+    if (h >= 5 && h < 12) {
+      return l10nPick(context,
+          en: 'Good morning', fa: 'صبح بخیر', ar: 'صباح الخير', zh: '早上好');
+    }
+    if (h >= 12 && h < 17) {
+      return l10nPick(context,
+          en: 'Good afternoon', fa: 'عصر بخیر', ar: 'مساء الخير', zh: '下午好');
+    }
+    if (h >= 17 && h < 22) {
+      return l10nPick(context,
+          en: 'Good evening', fa: 'شب بخیر', ar: 'مساء الخير', zh: '晚上好');
+    }
+    return l10nPick(context,
+        en: 'Welcome back', fa: 'خوش برگشتی', ar: 'أهلاً بعودتك', zh: '欢迎回来');
   }
 
-  String _firstName(String? full) {
-    if (full == null || full.trim().isEmpty) return 'کاربر';
+  String _firstName(BuildContext context, String? full) {
+    if (full == null || full.trim().isEmpty) {
+      return l10nPick(context, en: 'User', fa: 'کاربر', ar: 'مستخدم', zh: '用户');
+    }
     return full.trim().split(RegExp(r'\s+')).first;
   }
 
@@ -65,8 +79,10 @@ class _ToolBarSectionState extends State<ToolBarSection>
         : 0;
     final unread = serverUnread + localUnread;
     final avatarPath = user?.avatarPath;
-    final name = _firstName(user?.userName);
-    final initial = name.isNotEmpty ? String.fromCharCodes(name.runes.take(1)) : 'ک';
+    final name = _firstName(context, user?.userName);
+    final initial = name.isNotEmpty
+        ? String.fromCharCodes(name.runes.take(1))
+        : l10nPick(context, en: 'U', fa: 'ک', ar: 'م', zh: '用');
 
     return FadeTransition(
       opacity: _fade,
@@ -84,7 +100,9 @@ class _ToolBarSectionState extends State<ToolBarSection>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${_greeting()}، $name',
+                    '${_greeting(context)}'
+                    '${l10nPick(context, en: ', ', fa: '، ', ar: '، ', zh: '， ')}'
+                    '$name',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.subtitle.copyWith(
@@ -94,7 +112,13 @@ class _ToolBarSectionState extends State<ToolBarSection>
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '👋 خوش برگشتی',
+                    l10nPick(
+                      context,
+                      en: '👋 Welcome back',
+                      fa: '👋 خوش برگشتی',
+                      ar: '👋 أهلاً بعودتك',
+                      zh: '👋 欢迎回来',
+                    ),
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.white.withValues(alpha: 0.75),
                     ),

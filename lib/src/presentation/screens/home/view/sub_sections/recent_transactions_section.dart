@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
@@ -34,9 +35,15 @@ class RecentTransactionsSection extends StatelessWidget {
                   true)
               ? EmptyView(
                   icon: Icons.receipt_long_outlined,
-                  title: 'هنوز تراکنشی نداری',
-                  subtitle: 'اولین واریز یا انتقال را انجام بده تا تاریخچه اینجا بیاید.',
-                  ctaLabel: 'اولین تراکنش',
+                  title: l10nPick(context, en: 'No transactions yet', fa: 'هنوز تراکنشی نداری', ar: 'لا توجد معاملات بعد', zh: '暂无交易记录'),
+                  subtitle: l10nPick(
+                    context,
+                    en: 'Make your first deposit or transfer and it shows up here.',
+                    fa: 'اولین واریز یا انتقال را انجام بده تا تاریخچه اینجا بیاید.',
+                    ar: 'قم بأول إيداع أو تحويل وسيظهر هنا.',
+                    zh: '完成第一笔充值或转账后，交易记录会显示在这里。',
+                  ),
+                  ctaLabel: l10nPick(context, en: 'First transaction', fa: 'اولین تراکنش', ar: 'أول معاملة', zh: '首笔交易'),
                   onCta: () => Get.toNamed(BaseRoute.transfer),
                 )
               : Container(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
@@ -189,9 +190,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                _dirChip('همه', 0),
-                _dirChip('ورودی', 1),
-                _dirChip('خروجی', 2),
+                _dirChip(l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', zh: '全部'), 0),
+                _dirChip(l10nPick(context, en: 'Incoming', fa: 'ورودی', ar: 'واردة', zh: '收入'), 1),
+                _dirChip(l10nPick(context, en: 'Outgoing', fa: 'خروجی', ar: 'صادرة', zh: '支出'), 2),
               ],
             ),
           ),

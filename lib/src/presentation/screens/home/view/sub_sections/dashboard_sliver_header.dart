@@ -4,6 +4,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 /// Collapsing dashboard greeting header (no dual-layout overflow).
@@ -23,17 +24,30 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
     return oldDelegate.topInset != topInset;
   }
 
-  String _greeting() {
+  // WAVE-2: was hardcoded Persian — localized for en/fa/ar/zh.
+  String _greeting(BuildContext context) {
     final h = DateTime.now().hour;
-    if (h >= 5 && h < 12) return 'صبح بخیر';
-    if (h >= 12 && h < 17) return 'عصر بخیر';
-    if (h >= 17 && h < 22) return 'شب بخیر';
-    return 'خوش برگشتی';
+    if (h >= 5 && h < 12) {
+      return l10nPick(context,
+          en: 'Good morning', fa: 'صبح بخیر', ar: 'صباح الخير', zh: '早上好');
+    }
+    if (h >= 12 && h < 17) {
+      return l10nPick(context,
+          en: 'Good afternoon', fa: 'عصر بخیر', ar: 'مساء الخير', zh: '下午好');
+    }
+    if (h >= 17 && h < 22) {
+      return l10nPick(context,
+          en: 'Good evening', fa: 'شب بخیر', ar: 'مساء الخير', zh: '晚上好');
+    }
+    return l10nPick(context,
+        en: 'Welcome back', fa: 'خوش برگشتی', ar: 'أهلاً بعودتك', zh: '欢迎回来');
   }
 
-  String _firstName(HomeController home) {
+  String _firstName(BuildContext context, HomeController home) {
     final full = home.dashboardModel.value.data?.user?.userName ?? '';
-    if (full.trim().isEmpty) return 'کاربر';
+    if (full.trim().isEmpty) {
+      return l10nPick(context, en: 'User', fa: 'کاربر', ar: 'مستخدم', zh: '用户');
+    }
     return full.trim().split(RegExp(r'\s+')).first;
   }
 
@@ -58,11 +72,12 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
 
     return Obx(() {
       final home = Get.find<HomeController>();
-      final name = _firstName(home);
+      final name = _firstName(context, home);
       final unread = _unread(home);
       final avatarPath = home.dashboardModel.value.data?.user?.avatarPath;
-      final initial =
-          name.isNotEmpty ? String.fromCharCodes(name.runes.take(1)) : 'ک';
+      final initial = name.isNotEmpty
+          ? String.fromCharCodes(name.runes.take(1))
+          : l10nPick(context, en: 'U', fa: 'ک', ar: 'م', zh: '用');
 
       return Material(
         color: AppColors.lightPrimary,
@@ -92,7 +107,9 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '${_greeting()}، $name',
+                                '${_greeting(context)}'
+                                '${l10nPick(context, en: ', ', fa: '، ', ar: '، ', zh: '， ')}'
+                                '$name',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
@@ -103,7 +120,13 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                                 ),
                               ),
                               Text(
-                                '👋 خوش برگشتی',
+                                l10nPick(
+                                  context,
+                                  en: '👋 Welcome back',
+                                  fa: '👋 خوش برگشتی',
+                                  ar: '👋 أهلاً بعودتك',
+                                  zh: '👋 欢迎回来',
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

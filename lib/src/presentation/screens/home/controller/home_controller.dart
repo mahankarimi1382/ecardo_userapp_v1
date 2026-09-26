@@ -17,6 +17,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/home/model/dashboard_model.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
@@ -101,7 +102,12 @@ class HomeController extends GetxController {
         fetchUser(),
       ]);
     } catch (e) {
-      loadError.value = 'بارگذاری داشبورد ناموفق بود. دوباره تلاش کنید.';
+      loadError.value = l10nPickAuto(
+        en: 'Could not load the dashboard. Please try again.',
+        fa: 'بارگذاری داشبورد ناموفق بود. دوباره تلاش کنید.',
+        ar: 'فشل تحميل لوحة التحكم. حاول مجددًا.',
+        zh: '仪表盘加载失败，请重试。',
+      );
       debugPrint('loadData error: $e');
     } finally {
       isLoading.value = false;
