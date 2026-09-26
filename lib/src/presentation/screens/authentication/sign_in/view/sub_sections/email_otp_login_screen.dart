@@ -9,7 +9,6 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/mask_email_helper.dart';
-import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/email_otp_login_controller.dart';
 
 /// WAVE-1: passwordless sign-in with a 6-digit email code — an entry path

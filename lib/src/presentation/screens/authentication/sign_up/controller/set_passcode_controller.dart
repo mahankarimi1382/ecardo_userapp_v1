@@ -80,7 +80,7 @@ class SetPasscodeController extends GetxController {
     }
     if (!PasscodeHelper.isValidFormat(confirm)) {
       ToastHelper().showErrorToast(
-          loc?.twoFactorValidationConfirmPasscode ?? fallback);
+          loc?.twoFactorValidationEnterConfirmPasscode ?? fallback);
       return;
     }
     if (code != confirm) {
