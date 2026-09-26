@@ -713,10 +713,6 @@ class TravelApiRepository implements TravelRepository {
     return DateTime.tryParse(text);
   }
 
-  @override
-  Future<List<TravelActivity>> getActivity() =>
-      throw UnsupportedError('Combined activity is not exposed yet.');
-
   Future<List<Map<String, dynamic>>> _searchService(
     String service,
     Map<String, dynamic> criteria,

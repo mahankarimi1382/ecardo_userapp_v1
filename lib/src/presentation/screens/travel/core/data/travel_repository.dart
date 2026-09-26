@@ -32,8 +32,6 @@ abstract interface class TravelRepository {
 
   Future<List<TravelOrder>> getOrders();
 
-  Future<List<TravelActivity>> getActivity();
-
   Future<TravelReservation> createReservation({
     required TravelProductType type,
     required String productId,
