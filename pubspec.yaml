@@ -2,7 +2,7 @@ name: ecardo_user
 description: "eCardo — International Financial Super App for users (multi-currency wallet, cards, transfers, remittance, travel, P2P, bill payments)."
 publish_to: 'none'
 
-version: 1.0.95+95
+version: 1.0.96+96
 
 environment:
   sdk: ^3.9.2

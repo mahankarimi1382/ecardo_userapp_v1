@@ -110,11 +110,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _confirmLogout() async {
     final go = await Get.dialog<bool>(
       AlertDialog(
-        title: const Text('خروج از حساب'),
-        content: const Text('از حساب کاربری خارج می‌شوید؟'),
+        title: Text(l10nPick(context, en: 'Sign out', fa: 'خروج از حساب')),
+        content: Text(l10nPick(context, en: 'You will be signed out of your account.', fa: 'از حساب کاربری خارج می‌شوید؟')),
         actions: [
-          TextButton(onPressed: () => Get.back(result: false), child: const Text('انصراف')),
-          TextButton(onPressed: () => Get.back(result: true), child: const Text('خروج')),
+          TextButton(onPressed: () => Get.back(result: false), child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف'))),
+          TextButton(onPressed: () => Get.back(result: true), child: Text(l10nPick(context, en: 'Sign out', fa: 'خروج'))),
         ],
       ),
     );
@@ -126,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final c2 = TextEditingController();
     final ok = await Get.dialog<bool>(
       AlertDialog(
-        title: Text(l10nPick(Get.context!, en: 'App Lock PIN (4 digits)', fa: 'PIN قفل دستگاه (۴ رقم)', ar: 'رمز قفل التطبيق', zh: '设备锁定PIN')),
+        title: Text(l10nPick(context, en: 'App Lock PIN (4 digits)', fa: 'PIN قفل دستگاه (۴ رقم)', ar: 'رمز قفل التطبيق', zh: '设备锁定PIN')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -135,20 +135,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               keyboardType: TextInputType.number,
               maxLength: 4,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'PIN جدید'),
+              decoration: InputDecoration(labelText: l10nPick(context, en: 'New PIN', fa: 'PIN جدید')),
             ),
             TextField(
               controller: c2,
               keyboardType: TextInputType.number,
               maxLength: 4,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'تکرار PIN'),
+              decoration: InputDecoration(labelText: l10nPick(context, en: 'Repeat PIN', fa: 'تکرار PIN')),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(result: false), child: const Text('انصراف')),
-          TextButton(onPressed: () => Get.back(result: true), child: const Text('ذخیره')),
+          TextButton(onPressed: () => Get.back(result: false), child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف'))),
+          TextButton(onPressed: () => Get.back(result: true), child: Text(l10nPick(context, en: 'Save', fa: 'ذخیره'))),
         ],
       ),
     );
@@ -157,9 +157,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         await Get.find<AppLockService>().setPin(c1.text);
       }
       await settings.setAppPin('set');
-      Get.snackbar('PIN', 'ذخیره شد', snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('PIN', l10nPick(context, en: 'Saved', fa: 'ذخیره شد'), snackPosition: SnackPosition.BOTTOM);
     } else if (ok == true) {
-      Get.snackbar('PIN', 'PIN باید ۴ رقم و یکسان باشد', snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('PIN', l10nPick(context, en: 'The PIN must be 4 digits and match', fa: 'PIN باید ۴ رقم و یکسان باشد'), snackPosition: SnackPosition.BOTTOM);
     }
   }
 
@@ -201,8 +201,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _group(l10nPick(context, en: 'Account', fa: 'حساب کاربری', ar: 'الحساب', zh: '账户'), [
                   _navTile(
                     Icons.person_outline,
-                    'پروفایل',
-                    'نام و عکس',
+                    l10nPick(context, en: 'Profile', fa: 'پروفایل', ar: 'الملف الشخصي', zh: '个人资料'),
+                    l10nPick(context, en: 'Name and photo', fa: 'نام و عکس', ar: 'الاسم والصورة', zh: '姓名与照片'),
                     () => Get.toNamed(BaseRoute.profileSettings),
                   ),
                   if (settings.getSetting('kyc_verification') == '1')
@@ -214,22 +214,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   _navTile(
                     Icons.delete_outline,
-                    'حذف حساب',
-                    'از طریق پشتیبانی درخواست دهید',
+                    l10nPick(context, en: 'Delete account', fa: 'حذف حساب', ar: 'حذف الحساب', zh: '删除账户'),
+                    l10nPick(context, en: 'Request through support', fa: 'از طریق پشتیبانی درخواست دهید', ar: 'اطلب عبر الدعم', zh: '通过客服申请'),
                     () async {
                       if (settings.getSetting('user_ticket') == '1') {
                         Get.toNamed(BaseRoute.supportTickets);
                       } else {
                         Get.dialog(
                           AlertDialog(
-                            title: const Text('حذف حساب'),
-                            content: const Text(
-                              'برای حذف حساب با پشتیبانی eCardo تماس بگیرید.',
+                            title: Text(l10nPick(context, en: 'Delete account', fa: 'حذف حساب', ar: 'حذف الحساب', zh: '删除账户')),
+                            content: Text(
+                              l10nPick(context, en: 'To delete your account, please contact eCardo support.', fa: 'برای حذف حساب با پشتیبانی eCardo تماس بگیرید.'),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Get.back(),
-                                child: const Text('باشه'),
+                                child: Text(l10nPick(context, en: 'OK', fa: 'باشه')),
                               ),
                             ],
                           ),
@@ -270,11 +270,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     SwitchListTile.adaptive(
                       contentPadding: EdgeInsets.zero,
                       secondary: const Icon(Icons.fingerprint),
-                      title: const Text('ورود با بیومتریک'),
+                      title: Text(l10nPick(context, en: 'Sign in with biometrics', fa: 'ورود با بیومتریک', ar: 'الدخول بالبصمة', zh: '生物识别登录')),
                       subtitle: Text(
                         _bioEnabled
-                            ? 'فعال'
-                            : 'با اثر انگشت یا چهره وارد شوید',
+                            ? l10nPick(context, en: 'Enabled', fa: 'فعال')
+                            : l10nPick(context, en: 'Sign in with your fingerprint or face', fa: 'با اثر انگشت یا چهره وارد شوید'),
                         style: const TextStyle(fontSize: 12),
                       ),
                       value: _bioEnabled,
@@ -285,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SwitchListTile.adaptive(
                     contentPadding: EdgeInsets.zero,
                     secondary: const Icon(Icons.login),
-                    title: const Text('ورود خودکار'),
+                    title: Text(l10nPick(context, en: 'Auto sign-in', fa: 'ورود خودکار', ar: 'تسجيل دخول تلقائي', zh: '自动登录')),
                     value: _autoLogin,
                     onChanged: (v) async {
                       await settings.setAutoLogin(v);
@@ -295,7 +295,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.timer_outlined),
-                    title: const Text('قفل خودکار اپ'),
+                    title: Text(l10nPick(context, en: 'Auto app lock', fa: 'قفل خودکار اپ', ar: 'قفل التطبيق التلقائي', zh: '自动锁定应用')),
                     subtitle: Text(_lockLabel(_lockMinutes)),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () async {
@@ -306,11 +306,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               for (final e in {
-                                -1: 'فوری (با هر بار خروج از اپ)',
-                                1: '۱ دقیقه',
-                                5: '۵ دقیقه',
-                                15: '۱۵ دقیقه',
-                                0: 'هرگز',
+                                -1: l10nPick(context, en: 'Immediately (every time you leave)', fa: 'فوری (با هر بار خروج از اپ)'),
+                                1: l10nPick(context, en: '1 minute', fa: '۱ دقیقه'),
+                                5: l10nPick(context, en: '5 minutes', fa: '۵ دقیقه'),
+                                15: l10nPick(context, en: '15 minutes', fa: '۱۵ دقیقه'),
+                                0: l10nPick(context, en: 'Never', fa: 'هرگز'),
                               }.entries)
                                 ListTile(
                                   title: Text(e.value),
@@ -344,18 +344,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           : Icons.notifications_off_outlined,
                       color: _notifGranted ? AppColors.success : AppColors.error,
                     ),
-                    title: const Text('دسترسی اعلان سیستم'),
-                    subtitle: Text(_notifGranted ? 'فعال' : 'غیرفعال — برای تراکنش‌ها لازم است'),
+                    title: Text(l10nPick(context, en: 'System notification access', fa: 'دسترسی اعلان سیستم', ar: 'إذن إشعارات النظام', zh: '系统通知权限')),
+                    subtitle: Text(_notifGranted
+                        ? l10nPick(context, en: 'Enabled', fa: 'فعال')
+                        : l10nPick(context, en: 'Disabled — required for transactions', fa: 'غیرفعال — برای تراکنش‌ها لازم است')),
                     trailing: _notifGranted
                         ? null
                         : TextButton(
                             onPressed: () => openAppSettings(),
-                            child: const Text('تنظیمات'),
+                            child: Text(l10nPick(context, en: 'Settings', fa: 'تنظیمات')),
                           ),
                   ),
                   SwitchListTile.adaptive(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('اعلان مالی'),
+                    title: Text(l10nPick(context, en: 'Financial notifications', fa: 'اعلان مالی', ar: 'الإشعارات المالية', zh: '资金通知')),
                     value: _notifFinancial,
                     onChanged: (v) async {
                       await settings.setNotifPref(
@@ -367,7 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SwitchListTile.adaptive(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('اعلان تبلیغاتی'),
+                    title: Text(l10nPick(context, en: 'Promotional notifications', fa: 'اعلان تبلیغاتی', ar: 'إشعارات ترويجية', zh: '推广通知')),
                     value: _notifPromo,
                     onChanged: (v) async {
                       await settings.setNotifPref(
@@ -377,15 +379,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() => _notifPromo = v);
                     },
                   ),
-                  const ListTile(
+                  ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text('اعلان امنیتی'),
-                    subtitle: Text('همیشه فعال'),
-                    trailing: Icon(Icons.lock, size: 18, color: AppColors.success),
+                    title: Text(l10nPick(context, en: 'Security notifications', fa: 'اعلان امنیتی', ar: 'إشعارات الأمان', zh: '安全通知')),
+                    subtitle: Text(l10nPick(context, en: 'Always on', fa: 'همیشه فعال', ar: 'مفعّل دائماً', zh: '始终开启')),
+                    trailing: const Icon(Icons.lock, size: 18, color: AppColors.success),
                   ),
                   SwitchListTile.adaptive(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('صدا'),
+                    title: Text(l10nPick(context, en: 'Sound', fa: 'صدا', ar: 'الصوت', zh: '声音')),
                     value: _notifSound,
                     onChanged: (v) async {
                       await settings.setNotifPref(
@@ -397,7 +399,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SwitchListTile.adaptive(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('ویبره'),
+                    title: Text(l10nPick(context, en: 'Vibration', fa: 'ویبره', ar: 'الاهتزاز', zh: '振动')),
                     value: _notifVibrate,
                     onChanged: (v) async {
                       await settings.setNotifPref(
@@ -417,8 +419,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _group(l10nPick(context, en: 'Permissions', fa: 'دسترسی‌ها', ar: 'الصلاحيات', zh: '权限'), [
                   _navTile(
                     Icons.admin_panel_settings_outlined,
-                    'مدیریت دسترسی‌ها',
-                    'دوربین، گالری، اعلان، …',
+                    l10nPick(context, en: 'Manage permissions', fa: 'مدیریت دسترسی‌ها', ar: 'إدارة الأذونات', zh: '管理权限'),
+                    l10nPick(context, en: 'Camera, gallery, notifications, …', fa: 'دوربین، گالری، اعلان، …', ar: 'الكاميرا، المعرض، الإشعارات، …'),
                     () => Get.toNamed(BaseRoute.permissionsSettings),
                   ),
                 ]),
@@ -459,7 +461,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.palette_outlined),
-                    title: const Text('تم'),
+                    title: Text(l10nPick(context, en: 'Theme', fa: 'تم', ar: 'المظهر', zh: '主题')),
                     subtitle: Text(_themeLabel(_themePref)),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () async {
@@ -470,9 +472,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               for (final e in {
-                                'system': 'سیستم',
-                                'light': 'روشن',
-                                'dark': 'تیره',
+                                'system': l10nPick(context, en: 'System', fa: 'سیستم', ar: 'النظام', zh: '跟随系统'),
+                                'light': l10nPick(context, en: 'Light', fa: 'روشن', ar: 'فاتح', zh: '浅色'),
+                                'dark': l10nPick(context, en: 'Dark', fa: 'تیره', ar: 'داكن', zh: '深色'),
                               }.entries)
                                 ListTile(
                                   title: Text(e.value),
@@ -488,8 +490,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.currency_exchange),
-                    title: const Text('واحد نمایش نرخ'),
-                    subtitle: Text(_rateUnit == 'toman' ? 'تومان' : 'ریال (IRR)'),
+                    title: Text(l10nPick(context, en: 'Rate display unit', fa: 'واحد نمایش نرخ', ar: 'وحدة عرض السعر', zh: '汇率显示单位')),
+                    subtitle: Text(_rateUnit == 'toman' ? _tomanLabel : _rialLabel),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () async {
                       final v = await showModalBottomSheet<String>(
@@ -499,11 +501,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               ListTile(
-                                title: const Text('ریال (IRR)'),
+                                title: Text(_rialLabel),
                                 onTap: () => Navigator.pop(ctx, 'irr'),
                               ),
                               ListTile(
-                                title: const Text('تومان'),
+                                title: Text(_tomanLabel),
                                 onTap: () => Navigator.pop(ctx, 'toman'),
                               ),
                             ],
@@ -528,20 +530,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.info_outline),
-                    title: const Text('درباره ما'),
-                    subtitle: Text(_version.isEmpty ? 'eCardo' : 'نسخه $_version'),
+                    title: Text(l10nPick(context, en: 'About us', fa: 'درباره ما', ar: 'من نحن', zh: '关于我们')),
+                    subtitle: Text(_versionLabel()),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.policy_outlined),
-                    title: const Text('قوانین و حریم خصوصی'),
+                    title: Text(l10nPick(context, en: 'Terms and privacy', fa: 'قوانین و حریم خصوصی', ar: 'الشروط والخصوصية', zh: '条款与隐私')),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () => Get.toNamed(BaseRoute.privacyPolicy),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.system_update),
-                    title: const Text('بررسی به‌روزرسانی'),
+                    title: Text(l10nPick(context, en: 'Check for updates', fa: 'بررسی به‌روزرسانی', ar: 'التحقق من التحديثات', zh: '检查更新')),
                     onTap: () {
                       if (Get.isRegistered<AppUpdateController>()) {
                         Get.find<AppUpdateController>().checkForUpdate();
@@ -569,17 +571,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  String get _rialLabel => l10nPick(
+        context,
+        en: 'IRR (Rial)',
+        fa: 'ریال (IRR)',
+        ar: 'ريال (IRR)',
+        zh: 'IRR (里亚尔)',
+      );
+
+  String get _tomanLabel => l10nPick(
+        context,
+        en: 'Toman',
+        fa: 'تومان',
+        ar: 'تومان',
+        zh: '托曼',
+      );
+
+  String _versionLabel() {
+    if (_version.isEmpty) return 'eCardo';
+    return l10nPick(
+      context,
+      en: 'Version $_version',
+      fa: 'نسخه $_version',
+      ar: 'الإصدار $_version',
+      zh: '版本 $_version',
+    );
+  }
+
   String _lockLabel(int m) {
-    if (m < 0) return 'فوری';
-    if (m == 0) return 'هرگز';
-    if (m == 1) return '۱ دقیقه';
-    return '$m دقیقه';
+    if (m < 0) return l10nPick(context, en: 'Immediately', fa: 'فوری');
+    if (m == 0) return l10nPick(context, en: 'Never', fa: 'هرگز');
+    if (m == 1) return l10nPick(context, en: '1 minute', fa: '۱ دقیقه');
+    return l10nPick(context, en: '$m minutes', fa: '$m دقیقه');
   }
 
   String _themeLabel(String m) => switch (m) {
-        'light' => 'روشن',
-        'dark' => 'تیره',
-        _ => 'سیستم',
+        'light' => l10nPick(context, en: 'Light', fa: 'روشن', ar: 'فاتح', zh: '浅色'),
+        'dark' => l10nPick(context, en: 'Dark', fa: 'تیره', ar: 'داكن', zh: '深色'),
+        _ => l10nPick(context, en: 'System', fa: 'سیستم', ar: 'النظام', zh: '跟随系统'),
       };
 
   Widget _group(String title, List<Widget> children) {
