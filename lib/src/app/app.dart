@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/common/widgets/offline_queue_banner.dart';
 import 'package:ecardo_user/src/presentation/widgets/app_lock_wrapper.dart';
 import 'package:ecardo_user/src/app/constants/app_strings.dart';
 import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
+import 'package:ecardo_user/src/app/bindings/initial_binding.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/app/routes/routes_handler.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -67,6 +68,9 @@ class _EcardoUserState extends State<EcardoUser> {
           theme: LightTheme().lightTheme(context),
           darkTheme: DarkTheme().darkTheme(context),
           getPages: routesHandler,
+          // WAVE-1: session layer live — 401 single-flight logout, VPN banner,
+          // 30-min idle timeout (services were dead code until now).
+          initialBinding: InitialBinding(),
           initialRoute: BaseRoute.root,
           unknownRoute: GetPage(
             name: '/not-found',

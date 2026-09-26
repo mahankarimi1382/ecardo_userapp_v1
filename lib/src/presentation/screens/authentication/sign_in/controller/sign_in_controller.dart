@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart'
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -19,6 +20,25 @@ import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/cont
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart';
 
 class SignInController extends GetxController {
+  // P-4 pattern: null-safe localization (mirrors app_update_controller).
+  AppLocalizations? get localizationOrNull {
+    final ctx = Get.context;
+    if (ctx == null || !ctx.mounted) return null;
+    return AppLocalizations.of(ctx);
+  }
+
+  // WAVE-1: locale-aware strings without ARB codegen (en/fa/ar/zh).
+  String _pick({
+    required String en,
+    required String fa,
+    String? ar,
+    String? zh,
+  }) {
+    final ctx = Get.context;
+    if (ctx == null) return en;
+    return l10nPick(ctx, en: en, fa: fa, ar: ar, zh: zh);
+  }
+
   final RxBool isLoading = false.obs;
   final RxBool isBiometricEnable = false.obs;
   final RxBool isPressed = false.obs;
@@ -155,28 +175,54 @@ class SignInController extends GetxController {
     final pass = passwordController.text;
     var ok = true;
     if (email.isEmpty) {
-      emailError.value = 'ایمیل یا نام کاربری الزامی است';
+      emailError.value = _pick(
+        en: 'Email or username is required',
+        fa: 'ایمیل یا نام کاربری الزامی است',
+        ar: 'البريد الإلكتروني أو اسم المستخدم مطلوب',
+        zh: '请输入邮箱或用户名',
+      );
       ok = false;
     } else if (!email.contains('@') && email.length < 3) {
-      emailError.value = 'مقدار وارد شده معتبر نیست';
+      emailError.value = _pick(
+        en: 'The entered value is not valid',
+        fa: 'مقدار وارد شده معتبر نیست',
+        ar: 'القيمة المدخلة غير صالحة',
+        zh: '输入的值无效',
+      );
       ok = false;
     } else if (email.contains('@') &&
         !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
-      emailError.value = 'فرمت ایمیل صحیح نیست';
+      emailError.value = _pick(
+        en: 'Email format is not valid',
+        fa: 'فرمت ایمیل صحیح نیست',
+        ar: 'تنسيق البريد الإلكتروني غير صحيح',
+        zh: '邮箱格式不正确',
+      );
       ok = false;
     }
     if (pass.isEmpty) {
-      passwordError.value = 'رمز عبور الزامی است';
+      passwordError.value = _pick(
+        en: 'Password is required',
+        fa: 'رمز عبور الزامی است',
+        ar: 'كلمة المرور مطلوبة',
+        zh: '请输入密码',
+      );
       ok = false;
     } else if (pass.length < 4) {
-      passwordError.value = 'رمز عبور خیلی کوتاه است';
+      passwordError.value = _pick(
+        en: 'Password is too short',
+        fa: 'رمز عبور خیلی کوتاه است',
+        ar: 'كلمة المرور قصيرة جدًا',
+        zh: '密码太短',
+      );
       ok = false;
     }
     return ok;
   }
 
   String _friendlyNetworkError(Object e) {
-    return NetworkErrorHelper.from(e).messageFa;
+    // WAVE-1: message is locale-aware now (was Persian-only `messageFa`).
+    return NetworkErrorHelper.from(e).message;
   }
 
   Future<void> signInWithBiometricTap() async {
@@ -193,7 +239,12 @@ class SignInController extends GetxController {
       final token = Get.find<TokenService>().accessToken.value;
       if (token == null || token.isEmpty) {
         ToastHelper().showErrorToast(
-          'نشست منقضی شده. با ایمیل و رمز وارد شوید.',
+          _pick(
+            en: 'Session expired. Sign in with your email and password.',
+            fa: 'نشست منقضی شده. با ایمیل و رمز وارد شوید.',
+            ar: 'انتهت الجلسة. سجّل الدخول بالبريد وكلمة المرور.',
+            zh: '会话已过期，请使用邮箱和密码登录。',
+          ),
         );
         showBiometricButton.value = false;
         return;
@@ -209,7 +260,12 @@ class SignInController extends GetxController {
         await setLogInState();
         _routeAfterAuth();
       } else {
-        ToastHelper().showErrorToast('ورود با بیومتریک ناموفق بود.');
+        ToastHelper().showErrorToast(_pick(
+          en: 'Biometric sign-in failed.',
+          fa: 'ورود با بیومتریک ناموفق بود.',
+          ar: 'فشل تسجيل الدخول بالخصائص الحيوية.',
+          zh: '生物识别登录失败。',
+        ));
       }
     } catch (e) {
       ToastHelper().showErrorToast(_friendlyNetworkError(e));
@@ -301,8 +357,13 @@ class SignInController extends GetxController {
     } catch (e, s) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $s');
+      // P-4: null-safe localization (was `AppLocalizations.of(Get.context!)!`).
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localizationOrNull?.allControllerLoadError ??
+            _pick(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isLoading.value = false;
@@ -338,6 +399,7 @@ class SignInController extends GetxController {
       if (await lock.hasPinSet()) return;
       await Future<void>.delayed(const Duration(milliseconds: 600));
       if (Get.context == null) return;
+      // WAVE-1: was hardcoded Persian — localized for all four locales.
       final setPin = await Get.bottomSheet<bool>(
         SafeArea(
           child: Padding(
@@ -345,13 +407,24 @@ class SignInController extends GetxController {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'تنظیم PIN پشتیبان؟',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                Text(
+                  _pick(
+                    en: 'Set a backup PIN?',
+                    fa: 'تنظیم PIN پشتیبان؟',
+                    ar: 'تعيين رمز PIN احتياطي؟',
+                    zh: '设置备用 PIN？',
+                  ),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'اگر بیومتریک در دسترس نباشد، با PIN چهار رقمی وارد می‌شوید.',
+                Text(
+                  _pick(
+                    en: 'If biometrics are unavailable, you sign in with a 4-digit PIN.',
+                    fa: 'اگر بیومتریک در دسترس نباشد، با PIN چهار رقمی وارد می‌شوید.',
+                    ar: 'إذا لم تكن الخصائص الحيوية متاحة، ستدخل برمز PIN من أربعة أرقام.',
+                    zh: '如果生物识别不可用，将使用 4 位 PIN 登录。',
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -360,14 +433,24 @@ class SignInController extends GetxController {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => Get.back(result: false),
-                        child: const Text('بعداً'),
+                        child: Text(_pick(
+                          en: 'Later',
+                          fa: 'بعداً',
+                          ar: 'لاحقًا',
+                          zh: '稍后',
+                        )),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => Get.back(result: true),
-                        child: const Text('تنظیم PIN'),
+                        child: Text(_pick(
+                          en: 'Set PIN',
+                          fa: 'تنظیم PIN',
+                          ar: 'تعيين PIN',
+                          zh: '设置 PIN',
+                        )),
                       ),
                     ),
                   ],
@@ -381,7 +464,12 @@ class SignInController extends GetxController {
       if (setPin == true) {
         Get.snackbar(
           'PIN',
-          'از تنظیمات → امنیت → تغییر PIN تنظیم کنید',
+          _pick(
+            en: 'Set it later from Settings → Security → Change PIN',
+            fa: 'از تنظیمات → امنیت → تغییر PIN تنظیم کنید',
+            ar: 'عيّنها لاحقًا من الإعدادات ← الأمان ← تغيير PIN',
+            zh: '稍后在“设置 → 安全 → 修改 PIN”中设置',
+          ),
           snackPosition: SnackPosition.BOTTOM,
         );
       }

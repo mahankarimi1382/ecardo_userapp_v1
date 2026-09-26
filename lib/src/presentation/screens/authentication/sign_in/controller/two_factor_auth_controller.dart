@@ -7,9 +7,28 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
 
 class TwoFactorAuthController extends GetxController {
+  // P-4 pattern: null-safe localization (mirrors app_update_controller).
+  AppLocalizations? get localizationOrNull {
+    final ctx = Get.context;
+    if (ctx == null || !ctx.mounted) return null;
+    return AppLocalizations.of(ctx);
+  }
+
+  String _pick({
+    required String en,
+    required String fa,
+    String? ar,
+    String? zh,
+  }) {
+    final ctx = Get.context;
+    if (ctx == null) return en;
+    return l10nPick(ctx, en: en, fa: fa, ar: ar, zh: zh);
+  }
+
   // Global Variable
   final RxBool isLoading = false.obs;
 
@@ -37,9 +56,10 @@ class TwoFactorAuthController extends GetxController {
         final SignInController? signIn = Get.isRegistered<SignInController>()
             ? Get.find<SignInController>()
             : null;
-        if (signIn != null &&
-            signIn.pendingTwoFaEmail.value.isNotEmpty &&
-            signIn.pendingTwoFaPassword.value.isNotEmpty) {
+        // WAVE-1: gate relaxed to email-only — the email-code login path
+        // stages an email with NO password (staged password is dropped right
+        // below anyway; biometrics have been token-only since 1.0.51).
+        if (signIn != null && signIn.pendingTwoFaEmail.value.isNotEmpty) {
           await Get.find<SettingsService>()
               .saveLoggedInUserEmail(signIn.pendingTwoFaEmail.value);
           // 1.0.51: token-only biometric — drop any staged password.
@@ -73,8 +93,13 @@ class TwoFactorAuthController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ submitTwoFaVerification() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      // P-4: null-safe localization (was `AppLocalizations.of(Get.context!)!`).
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localizationOrNull?.allControllerLoadError ??
+            _pick(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isLoading.value = false;

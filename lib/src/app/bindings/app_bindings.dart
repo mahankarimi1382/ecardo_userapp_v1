@@ -16,6 +16,7 @@ import '../../presentation/screens/authentication/forgot_password/controller/for
 import '../../presentation/screens/authentication/forgot_password/controller/forgot_password_pin_verification_controller.dart';
 import '../../presentation/screens/authentication/forgot_password/controller/reset_password_controller.dart';
 import '../../presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
+import '../../presentation/screens/authentication/sign_in/controller/email_otp_login_controller.dart';
 import '../../presentation/screens/authentication/sign_in/controller/two_factor_auth_controller.dart';
 import '../../presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
 import '../../presentation/screens/authentication/sign_up/controller/email_controller.dart';
@@ -97,6 +98,14 @@ class TwoFactorAuthBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut<TwoFactorAuthController>(() => TwoFactorAuthController());
+  }
+}
+
+// WAVE-1: passwordless sign-in with an email code.
+class EmailOtpLoginBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.put<EmailOtpLoginController>(EmailOtpLoginController());
   }
 }
 

@@ -27,6 +27,7 @@ import '../../presentation/screens/authentication/forgot_password/view/forgot_pa
 import '../../presentation/screens/authentication/forgot_password/view/sub_sections/forgot_password_pin_verification.dart';
 import '../../presentation/screens/authentication/forgot_password/view/sub_sections/reset_password.dart';
 import '../../presentation/screens/authentication/sign_in/view/sign_in_screen.dart';
+import '../../presentation/screens/authentication/sign_in/view/sub_sections/email_otp_login_screen.dart';
 import '../../presentation/screens/authentication/sign_in/view/sub_sections/two_factor_auth.dart';
 import '../../presentation/screens/authentication/sign_up/view/auth_id_verification/auth_id_verification_screen.dart';
 import '../../presentation/screens/authentication/sign_up/view/email/email_screen.dart';
@@ -86,6 +87,9 @@ class RoutesConfig {
   static const welcome = WelcomeScreen();
 
   static const signIn = SignInScreen();
+
+  // WAVE-1: passwordless sign-in with a 6-digit email code.
+  static const emailOtpLogin = EmailOtpLoginScreen();
 
   static const twoFactorAuth = TwoFactorAuth();
 

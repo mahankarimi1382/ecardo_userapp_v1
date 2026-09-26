@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -10,6 +11,13 @@ import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 
 class ForgotPasswordPinVerificationController extends GetxController {
+  // P-4 pattern: null-safe localization (mirrors app_update_controller).
+  AppLocalizations? get localizationOrNull {
+    final ctx = Get.context;
+    if (ctx == null || !ctx.mounted) return null;
+    return AppLocalizations.of(ctx);
+  }
+
   // Global Variable
   final RxBool isLoading = false.obs;
   final RxBool isPinEnabled = true.obs;
@@ -73,7 +81,7 @@ class ForgotPasswordPinVerificationController extends GetxController {
       debugPrint('❌ submitResetVerifyOtp() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
       );
     } finally {
       isLoading.value = false;
@@ -97,7 +105,7 @@ class ForgotPasswordPinVerificationController extends GetxController {
       debugPrint('❌ submitForgotPassword() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
       );
     } finally {
       isLoading.value = false;

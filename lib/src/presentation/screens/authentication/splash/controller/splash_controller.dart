@@ -12,6 +12,8 @@ import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
 
 class SplashController extends GetxController {
@@ -206,14 +208,35 @@ class SplashController extends GetxController {
     try {
       final ctx = Get.context;
       if (ctx != null && ctx.mounted) {
+        // WAVE-1: was hardcoded Persian — localized for all four locales.
+        final l10n = AppLocalizations.of(ctx);
         await Get.dialog(
           AlertDialog(
-            title: const Text('نشست منقضی شد'),
-            content: const Text('برای ادامه، دوباره وارد حساب شوید.'),
+            title: Text(
+              l10n?.unauthorizedDialogTitle ??
+                  l10nPick(ctx, en: 'Session expired', fa: 'نشست منقضی شد'),
+            ),
+            content: Text(
+              l10nPick(
+                ctx,
+                en: 'Please sign in again to continue.',
+                fa: 'برای ادامه، دوباره وارد حساب شوید.',
+                ar: 'يرجى تسجيل الدخول مرة أخرى للمتابعة.',
+                zh: '请重新登录以继续。',
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Get.back(),
-                child: const Text('ورود مجدد'),
+                child: Text(
+                  l10nPick(
+                    ctx,
+                    en: 'Sign in',
+                    fa: 'ورود مجدد',
+                    ar: 'تسجيل الدخول',
+                    zh: '重新登录',
+                  ),
+                ),
               ),
             ],
           ),

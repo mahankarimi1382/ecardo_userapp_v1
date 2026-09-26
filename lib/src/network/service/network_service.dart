@@ -406,6 +406,62 @@ class NetworkService extends getx.GetxService {
     }
   }
 
+  // WAVE-1: request a 6-digit email login code (unauthenticated channel).
+  // The server answers identically whether the email exists or not — no
+  // account enumeration.
+  Future<ApiResponse<Map<String, dynamic>>> requestLoginOtp({
+    required String email,
+  }) async {
+    _log('📤 Login OTP Request for $email');
+    try {
+      final response = await _globalDio.post(
+        '${_globalDio.options.baseUrl}${ApiPath.loginOtpRequestEndpoint}',
+        data: {'email': email},
+      );
+      if (response.statusCode == 200) {
+        return ApiResponse.completed(Map<String, dynamic>.from(response.data));
+      }
+      return ApiResponse.error('Request failed.');
+    } on DioException catch (e) {
+      return _handleDioException(e, "Login OTP Request");
+    } catch (e) {
+      _log('LoginOtpRequest Exception: ${e.toString()}', icon: '❌');
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+  // WAVE-1: verify the email code and persist the bearer token — the
+  // response shape is identical to login(), so the shared post-login chain
+  // (fetchUser → 2FA gate → passcode/onboarding) can run unchanged.
+  Future<ApiResponse<Map<String, dynamic>>> verifyLoginOtp({
+    required String email,
+    required String code,
+  }) async {
+    _log('📤 Login OTP Verify for $email (code not logged)');
+    try {
+      final response = await _globalDio.post(
+        '${_globalDio.options.baseUrl}${ApiPath.loginOtpVerifyEndpoint}',
+        data: {'email': email, 'code': code},
+      );
+      if (response.statusCode == 200) {
+        final accessToken = response.data["data"]?["token"];
+        if (accessToken is String && accessToken.isNotEmpty) {
+          await _tokenService.clearToken();
+          await _tokenService.saveAccessToken(accessToken);
+          _setupInterceptors();
+          _log('🔑 Login OTP token saved');
+        }
+        return ApiResponse.completed(Map<String, dynamic>.from(response.data));
+      }
+      return ApiResponse.error('Verification failed.');
+    } on DioException catch (e) {
+      return _handleDioException(e, "Login OTP Verify");
+    } catch (e) {
+      _log('LoginOtpVerify Exception: ${e.toString()}', icon: '❌');
+      return ApiResponse.error(e.toString());
+    }
+  }
+
   // Register POST Method
   Future<ApiResponse<Map<String, dynamic>>> register({
     required Map<String, dynamic> data,

@@ -47,6 +47,10 @@ class ApiPath {
   static const String logoutEndpoint = '/auth/user/logout';
   static const String kycRejectedEndpoint = '/user/kyc/rejected-data';
 
+  // WAVE-1: passwordless login via 6-digit email code (additive to password).
+  static const String loginOtpRequestEndpoint = '/auth/user/login-otp/request';
+  static const String loginOtpVerifyEndpoint = '/auth/user/login-otp/verify';
+
   // Dashboard Endpoints
   static const String dashboardEndpoint = '/user/dashboard';
   static const String userEndpoint = '/auth/user/get';

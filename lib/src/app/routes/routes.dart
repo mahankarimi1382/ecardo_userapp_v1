@@ -9,6 +9,9 @@ class BaseRoute {
 
   static const String signIn = "/sign_in_route";
 
+  // WAVE-1: passwordless sign-in with a 6-digit email code.
+  static const String emailOtpLogin = "/email_otp_login_route";
+
   static const String twoFactorAuth = "/two_factor_auth_route";
 
   static const String email = "/email_route";

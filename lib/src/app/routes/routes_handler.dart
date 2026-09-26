@@ -35,6 +35,13 @@ List<GetPage> routesHandler = [
     binding: TwoFactorAuthBinding(),
   ),
 
+  // WAVE-1: passwordless sign-in with a 6-digit email code.
+  GetPage(
+    name: BaseRoute.emailOtpLogin,
+    page: () => RoutesConfig.emailOtpLogin,
+    binding: EmailOtpLoginBinding(),
+  ),
+
   GetPage(
     name: BaseRoute.email,
     page: () => RoutesConfig.email,

@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_auth_text_input_field.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
 
@@ -323,7 +324,13 @@ class _SignInScreenState extends State<SignInScreen>
                                 color: AppColors.lightPrimary,
                               ),
                               label: Text(
-                                'ورود با اثرانگشت / چهره',
+                                l10nPick(
+                                  context,
+                                  en: 'Sign in with fingerprint / face',
+                                  fa: 'ورود با اثرانگشت / چهره',
+                                  ar: 'تسجيل الدخول بالبصمة / الوجه',
+                                  zh: '使用指纹 / 面容登录',
+                                ),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 14.sp,
@@ -346,6 +353,41 @@ class _SignInScreenState extends State<SignInScreen>
                         }),
                         SizedBox(height: 16.h),
                         _TelegramSignInButton(localizations: localizations),
+                        SizedBox(height: 12.h),
+                        // WAVE-1: passwordless entry via email code — no SMS
+                        // dependency, so CN/RU/AR users can always sign in.
+                        OutlinedButton.icon(
+                          onPressed: () => Get.toNamed(BaseRoute.emailOtpLogin),
+                          icon: Icon(
+                            Icons.mail_outline_rounded,
+                            size: 22.sp,
+                            color: AppColors.lightPrimary,
+                          ),
+                          label: Text(
+                            l10nPick(
+                              context,
+                              en: 'Sign in with email code',
+                              fa: 'ورود با کد ایمیل',
+                              ar: 'تسجيل الدخول برمز البريد',
+                              zh: '使用邮箱验证码登录',
+                            ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14.sp,
+                              color: AppColors.lightPrimary,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: Size(double.infinity, 48.h),
+                            side: BorderSide(
+                              color:
+                                  AppColors.lightPrimary.withValues(alpha: 0.45),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 20.h),
                         Wrap(
                           children: [

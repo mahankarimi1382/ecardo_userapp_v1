@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -61,20 +62,30 @@ class SetPasscodeController extends GetxController {
   }
 
   Future<void> submit() async {
-    final loc = AppLocalizations.of(Get.context!)!;
+    // P-4: null-safe localization (was `AppLocalizations.of(Get.context!)!`).
+    // Generated `of(BuildContext)` takes a non-null context — guard first.
+    final ctx = Get.context;
+    final loc = (ctx != null && ctx.mounted) ? AppLocalizations.of(ctx) : null;
+    final fallback = l10nPickAuto(
+      en: 'Something went wrong. Please try again.',
+      fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+    );
     final code = PasscodeHelper.normalize(passcodeController.text);
     final confirm = PasscodeHelper.normalize(confirmController.text);
 
     if (!PasscodeHelper.isValidFormat(code)) {
-      ToastHelper().showErrorToast(loc.twoFactorValidationEnterPasscode);
+      ToastHelper().showErrorToast(
+          loc?.twoFactorValidationEnterPasscode ?? fallback);
       return;
     }
     if (!PasscodeHelper.isValidFormat(confirm)) {
-      ToastHelper().showErrorToast(loc.twoFactorValidationEnterConfirmPasscode);
+      ToastHelper().showErrorToast(
+          loc?.twoFactorValidationConfirmPasscode ?? fallback);
       return;
     }
     if (code != confirm) {
-      ToastHelper().showErrorToast(loc.twoFactorValidationPasscodesDoNotMatch);
+      ToastHelper().showErrorToast(
+          loc?.twoFactorValidationPasscodesDoNotMatch ?? fallback);
       return;
     }
 
@@ -103,7 +114,7 @@ class SetPasscodeController extends GetxController {
     } catch (e, st) {
       debugPrint('❌ SetPasscodeController.submit: $e');
       debugPrint('$st');
-      ToastHelper().showErrorToast(loc.allControllerLoadError);
+      ToastHelper().showErrorToast(loc?.allControllerLoadError ?? fallback);
     } finally {
       isLoading.value = false;
     }
