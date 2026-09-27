@@ -51,7 +51,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
 
     // WAVE-REVIEW: اگر لیست کیف‌ها شکست خورد/خالی ماند، به‌جای کارت مردهٔ
     // «Wallets Not Found» بدون دکمه، کارت خطا + Retry نشان بده.
-    debugPrint('EX-DIAG: outer Obx enter');
     return Obx(() {
       if (controller.walletLoadError.value ||
           (!controller.isLoading.value &&
@@ -122,7 +121,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           // WAVE-REVIEW: خواندن .value صریح — isEmpty روی RxList در GetX 4.7
           // از طریق proxy ثبت نمی‌شود و Obx «improper use» پرتاب می‌کرد
           // (یکی از دو کارت خطای صفحهٔ اکسچنج).
-          debugPrint('EX-DIAG: pairs Obx enter');
           Obx(() {
             final recentPairs = controller.recentPairs.value;
             if (recentPairs.isEmpty) return const SizedBox();
@@ -204,7 +202,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           // بودند، خارج از scope) → GetX «improper use» پرتاب می‌کرد و
           // خلاصهٔ کارمزد/حدود هیچ‌وقت رندر نمی‌شد (کارت خطا به‌جای اعداد).
           // حالا خواندن‌ها مستقیم داخل scope همین Obx است.
-          debugPrint('EX-DIAG: fee Obx enter');
           Obx(() {
             final fromWallet = controller.fromWallet.value;
             if (fromWallet == null) return const SizedBox();
@@ -217,7 +214,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           // Continue button (disabled state when amount invalid)
           Padding(
             padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-            debugPrint('EX-DIAG: continue Obx enter');
             child: Obx(() {
               final isValid = controller.isAmountValid;
               return CommonButton(
@@ -241,7 +237,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
             }),
           ),
           // Inline error hint shown only after a failed attempt
-          debugPrint('EX-DIAG: hint Obx enter');
           Obx(() {
             if (!controller.isContinueInvalid.value) return const SizedBox();
             if (controller.isAmountValid) return const SizedBox();
