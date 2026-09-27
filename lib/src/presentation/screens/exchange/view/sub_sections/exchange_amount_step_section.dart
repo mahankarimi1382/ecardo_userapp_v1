@@ -75,8 +75,7 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           // بود — بیلدرش Rx مستقیم می‌خواند و ثبت می‌شد، ولی در v1.0.103
           // improper use از این Obx هم آمد؛ فرم بلاک با خواندن صریح امن‌تر.
           Obx(() {
-            debugPrint('EX-DIAG: swap Obx enter');
-            return ExchangeSwapCard(
+              return ExchangeSwapCard(
               fromWallet: controller.fromWallet.value,
               toWallet: controller.toWallet.value,
               fromWalletsList: controller.fromExchangeWalletsList,
@@ -99,7 +98,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           }),
           const SizedBox(height: 16),
           // Live rate badge
-          debugPrint('EX-DIAG: badge Obx enter');
           Obx(() {
             final rateService = controller.rateService;
             return Padding(
