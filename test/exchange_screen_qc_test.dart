@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -140,6 +141,13 @@ void main() {
   }
 
   Widget buildSubject() => GetMaterialApp(
+        // WAVE-REVIEW: مثل اپ واقعی (app.dart) — .w/.r ویجت‌ها به
+        // ScreenUtilInitializer نیاز دارند وگرنه LateInitializationError.
+        builder: (context, child) => ScreenUtilInit(
+          designSize: const Size(376, 812),
+          minTextAdapt: true,
+          child: child ?? const SizedBox.shrink(),
+        ),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
