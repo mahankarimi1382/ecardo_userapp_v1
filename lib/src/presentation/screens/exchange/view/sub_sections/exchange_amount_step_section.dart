@@ -188,7 +188,19 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           }),
           const SizedBox(height: 16),
           // Fee summary + min/max
-          Obx(() => _FeeAndLimitsSummary(controller: controller)),
+          // WAVE-REVIEW: قبلاً `Obx(() => _FeeAndLimitsSummary(...))` بود —
+          // بیلدر هیچ Rx مستقیمی نمی‌خواند (خواندن‌ها در build فرزندِ بعدی
+          // بودند، خارج از scope) → GetX «improper use» پرتاب می‌کرد و
+          // خلاصهٔ کارمزد/حدود هیچ‌وقت رندر نمی‌شد (کارت خطا به‌جای اعداد).
+          // حالا خواندن‌ها مستقیم داخل scope همین Obx است.
+          Obx(() {
+            final fromWallet = controller.fromWallet.value;
+            if (fromWallet == null) return const SizedBox();
+            return _FeeAndLimitsSummary(
+              controller: controller,
+              fromWallet: fromWallet,
+            );
+          }),
           const SizedBox(height: 24),
           // Continue button (disabled state when amount invalid)
           Padding(
@@ -366,17 +378,18 @@ class _RecentPairChip extends StatelessWidget {
 }
 
 class _FeeAndLimitsSummary extends StatelessWidget {
-  const _FeeAndLimitsSummary({required this.controller});
+  const _FeeAndLimitsSummary({
+    required this.controller,
+    required this.fromWallet,
+  });
 
   final ExchangeController controller;
+  final Wallets fromWallet;
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final settings = Get.find<SettingsService>();
-
-    final fromWallet = controller.fromWallet.value;
-    if (fromWallet == null) return const SizedBox();
 
     final decimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: fromWallet.code ?? '',

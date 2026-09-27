@@ -180,7 +180,10 @@ void main() {
       seedOwnerWallets();
 
       await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
+      // WAVE-REVIEW: pumpAndSettle با تایمر ۶۰ ثانیه‌ای سرویس نرخ settle
+      // نمی‌شود — پمپ صریح.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
 
       // REGRESSION 1 — no build exception: the owner-reported state threw
       // inside the swap-card / fee widgets and rendered the global
@@ -205,7 +208,10 @@ void main() {
       controller.walletLoadError.value = true;
 
       await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
+      // WAVE-REVIEW: pumpAndSettle با تایمر ۶۰ ثانیه‌ای سرویس نرخ settle
+      // نمی‌شود — پمپ صریح.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
 
       expect(tester.takeException(), isNull);
       expect(find.text('Try again'), findsOneWidget);
