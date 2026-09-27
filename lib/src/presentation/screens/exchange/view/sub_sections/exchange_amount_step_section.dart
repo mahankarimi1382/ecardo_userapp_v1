@@ -113,8 +113,12 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           }),
           const SizedBox(height: 16),
           // Recent pairs — horizontal scrollable chip row. Hidden if empty.
+          // WAVE-REVIEW: خواندن .value صریح — isEmpty روی RxList در GetX 4.7
+          // از طریق proxy ثبت نمی‌شود و Obx «improper use» پرتاب می‌کرد
+          // (یکی از دو کارت خطای صفحهٔ اکسچنج).
           Obx(() {
-            if (controller.recentPairs.isEmpty) return const SizedBox();
+            final recentPairs = controller.recentPairs.value;
+            if (recentPairs.isEmpty) return const SizedBox();
             return Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
               child: Column(
@@ -136,10 +140,10 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
                     height: 32,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
-                      itemCount: controller.recentPairs.length,
+                      itemCount: recentPairs.length,
                       separatorBuilder: (_, _) => const SizedBox(width: 8),
                       itemBuilder: (_, index) {
-                        final pair = controller.recentPairs[index];
+                        final pair = recentPairs[index];
                         return _RecentPairChip(
                           pair: pair,
                           onTap: () => controller.selectRecentPair(pair),
