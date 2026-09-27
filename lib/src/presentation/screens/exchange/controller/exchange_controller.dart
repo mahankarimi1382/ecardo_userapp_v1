@@ -437,6 +437,18 @@ class ExchangeController extends GetxController {
   Future<void> getExchangeRateConverter() async {
     isExchangeConfigLoading.value = true;
     try {
+      // WAVE-REVIEW (ریشهٔ «Not Found» هنگام ورود): این متد با متن مبلغِ
+      // خالی صدا زده می‌شود (بعد از انتخاب کیف، پیش از تایپ کاربر) →
+      // URL ناقص `/api/convert//IRT/...` → 404 «Not Found» سرور و توست
+      // روی ورود به صفحه. گارد: مبلغ صفر/خالی = هیچ فراخوانی؛ پیش‌نمایش صفر.
+      final rawAmount = amountController.text.trim();
+      final amount = double.tryParse(rawAmount) ?? 0.0;
+      if (amount <= 0) {
+        exchangeReviewRate.value = 0.0;
+        exchangeAmount.value = 0.0;
+        isExchangeConfigLoading.value = false;
+        return;
+      }
       // v1.0.40 (crash fix): force-unwrapped wallet codes crashed the
       // config chain when no exchange wallet was resolvable yet.
       final fromCode = fromWallet.value?.code;
@@ -444,7 +456,7 @@ class ExchangeController extends GetxController {
       if (fromCode == null || toCode == null) return;
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getCurrencyToCurrencyConverterEndpoint(
-          amount: amountController.text,
+          amount: rawAmount,
           toCurrencyCode: toCode,
           fromCurrencyCode: fromCode,
         ),
