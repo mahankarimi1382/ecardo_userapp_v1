@@ -5,7 +5,6 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_amount_step_section.dart';
@@ -16,7 +15,7 @@ import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_s
 /// Exchange screen — full-bleed, German-minimalist layout.
 ///
 /// Hierarchy (top to bottom):
-///   1. Transparent AppBar shell (CommonDefaultAppBar) + CommonAppBar
+///   1. Bare non-leading AppBar shell + CommonAppBar (single back — WAVE-REVIEW)
 ///      row with back button + history menu
 ///   2. Step indicator — pinned under app bar, always visible
 ///   3. Step content — fills the remaining viewport with horizontal
@@ -57,8 +56,16 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                   ),
                   child: Column(
                     children: [
-                      // Transparent AppBar shell for elevation control
-                      const CommonDefaultAppBar(),
+                      // WAVE-REVIEW: قبلاً CommonDefaultAppBar (با دکمه برگشت
+                      // ضمنی) + CommonAppBar (با دکمه برگشت خودش) پشت هم رندر
+                      // می‌شدند → دو دکمه برگشت. حالا فقط پوستهٔ بدون-برگشت +
+                      // CommonAppBar با یک دکمه برگشت.
+                      AppBar(
+                        backgroundColor: AppColors.lightBackground,
+                        surfaceTintColor: AppColors.lightBackground,
+                        automaticallyImplyLeading: false,
+                        elevation: 0,
+                      ),
                       // Title row + history menu (only on step 0)
                       Obx(
                         () => CommonAppBar(

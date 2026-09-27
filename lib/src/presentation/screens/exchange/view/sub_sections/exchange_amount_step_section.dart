@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pairs_store.dart';
@@ -48,6 +49,19 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
+    // WAVE-REVIEW: اگر لیست کیف‌ها شکست خورد/خالی ماند، به‌جای کارت مردهٔ
+    // «Wallets Not Found» بدون دکمه، کارت خطا + Retry نشان بده.
+    return Obx(() {
+      if (controller.walletLoadError.value ||
+          (!controller.isLoading.value &&
+              controller.fromExchangeWalletsList.isEmpty)) {
+        return _WalletLoadErrorCard(onRetry: () => controller.loadData());
+      }
+      return _normalContent(loc);
+    });
+  }
+
+  Widget _normalContent(AppLocalizations loc) {
     return SingleChildScrollView(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
@@ -486,6 +500,66 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// WAVE-REVIEW: کارت خطا + Retry — وقتی کیف‌ها لود نشدند، به‌جای فرم مردهٔ
+/// «Wallets Not Found» بدون دکمه، این کارت نمایش داده می‌شود.
+class _WalletLoadErrorCard extends StatelessWidget {
+  const _WalletLoadErrorCard({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    String pick({
+      required String en,
+      required String fa,
+      String? ar,
+      String? zh,
+    }) =>
+        l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.error_outline_rounded,
+              size: 44,
+              color: AppColors.error,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              pick(
+                en: 'Could not load your wallets',
+                fa: 'بارگذاری کیف‌ها ناموفق بود',
+                ar: 'فشل تحميل المحافظ',
+                zh: '钱包加载失败',
+              ),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(height: 16),
+            CommonButton(
+              onPressed: onRetry,
+              width: 180,
+              text: pick(
+                en: 'Try again',
+                fa: 'تلاش مجدد',
+                ar: 'إعادة المحاولة',
+                zh: '重试',
+              ),
             ),
           ],
         ),

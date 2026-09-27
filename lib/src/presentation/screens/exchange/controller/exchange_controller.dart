@@ -573,54 +573,83 @@ class ExchangeController extends GetxController {
   // ------------------ wallets ------------------
 
   Future<void> fetchWallets() async {
-    try {
-      final response = await Get.find<NetworkService>().get(
-        endpoint: "${ApiPath.walletsEndpoint}?exchange",
-      );
-
-      if (response.status == Status.completed) {
-        final exchangeWalletsModel = ExchangeWalletModel.fromJson(
-          response.data!,
+    walletLoadError.value = false;
+    // WAVE-REVIEW: یک تلاشِ شبکه‌ایِ ناپایدار نباید کل صفحه را مرده بگذارد —
+    // تا ۲ بار با تاخیر کوتاه تلاش می‌کنیم و در شکست نهایی، سکشن Amount
+    // کارت خطا + Retry نشان می‌دهد (نه فرم مردهٔ بدون دکمه).
+    Object? lastError;
+    Response? response;
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        response = await Get.find<NetworkService>().get(
+          endpoint: "${ApiPath.walletsEndpoint}?exchange",
         );
-
-        fromExchangeWalletsList.assignAll(
-          exchangeWalletsModel.data?.wallets ?? [],
-        );
-        toExchangeWalletsList.assignAll(
-          exchangeWalletsModel.data?.wallets ?? [],
-        );
-
-        if (fromExchangeWalletsList.isNotEmpty &&
-            toExchangeWalletsList.isNotEmpty) {
-          final arguments =
-              Get.arguments is Map ? Get.arguments as Map : {};
-          final requestedFrom =
-              arguments['from_currency']?.toString().toUpperCase();
-          final requestedTo =
-              arguments['to_currency']?.toString().toUpperCase();
-          fromWallet.value = fromExchangeWalletsList.firstWhereOrNull(
-                (wallet) => wallet.code?.toUpperCase() == requestedFrom,
-              ) ??
-              fromExchangeWalletsList.firstWhereOrNull(
-                (wallet) =>
-                    wallet.code?.toUpperCase() != requestedTo &&
-                    (double.tryParse(wallet.balance ?? '0') ?? 0) > 0,
-              ) ??
-              fromExchangeWalletsList.first;
-          toWallet.value = toExchangeWalletsList.firstWhereOrNull(
-                (wallet) => wallet.code?.toUpperCase() == requestedTo,
-              ) ??
-              toExchangeWalletsList.firstWhereOrNull(
-                (wallet) => wallet.code != fromWallet.value?.code,
-              ) ??
-              toExchangeWalletsList.first;
-
-          calculateExchange();
+        lastError = null;
+        break;
+      } catch (e, stackTrace) {
+        lastError = e;
+        debugPrint('❌ fetchWallets() attempt ${attempt + 1} error: $e');
+        debugPrint('📍 StackTrace: $stackTrace');
+        if (attempt == 0) {
+          await Future.delayed(const Duration(milliseconds: 600));
         }
       }
-    } catch (e, stackTrace) {
-      debugPrint('❌ fetchWallets() error: $e');
-      debugPrint('📍 StackTrace: $stackTrace');
+    }
+
+    if (lastError != null || response == null) {
+      walletLoadError.value = true;
+      ToastHelper().showErrorToast(
+        localizationOrNull?.allControllerLoadError ??
+        'Something went wrong. Please try again.',
+      );
+      return;
+    }
+
+    if (response.status == Status.completed) {
+      final exchangeWalletsModel = ExchangeWalletModel.fromJson(
+        response.data!,
+      );
+
+      fromExchangeWalletsList.assignAll(
+        exchangeWalletsModel.data?.wallets ?? [],
+      );
+      toExchangeWalletsList.assignAll(
+        exchangeWalletsModel.data?.wallets ?? [],
+      );
+      walletLoadError.value = fromExchangeWalletsList.isEmpty;
+
+      if (fromExchangeWalletsList.isNotEmpty &&
+          toExchangeWalletsList.isNotEmpty) {
+        final arguments =
+            Get.arguments is Map ? Get.arguments as Map : {};
+        final requestedFrom =
+            arguments['from_currency']?.toString().toUpperCase();
+        final requestedTo =
+            arguments['to_currency']?.toString().toUpperCase();
+        fromWallet.value = fromExchangeWalletsList.firstWhereOrNull(
+              (wallet) => wallet.code?.toUpperCase() == requestedFrom,
+            ) ??
+            fromExchangeWalletsList.firstWhereOrNull(
+              (wallet) =>
+                  wallet.code?.toUpperCase() != requestedTo &&
+                  (double.tryParse(wallet.balance ?? '0') ?? 0) > 0,
+            ) ??
+            fromExchangeWalletsList.first;
+        toWallet.value = toExchangeWalletsList.firstWhereOrNull(
+              (wallet) => wallet.code?.toUpperCase() == requestedTo,
+            ) ??
+            toExchangeWalletsList.firstWhereOrNull(
+              (wallet) => wallet.code != fromWallet.value?.code,
+            ) ??
+            toExchangeWalletsList.first;
+
+        calculateExchange();
+      } else {
+        // پاسخ 200 بود ولی لیست کیف‌ها خالی برگشت — صفحه مرده نماند.
+        walletLoadError.value = true;
+      }
+    } else {
+      walletLoadError.value = true;
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
         'Something went wrong. Please try again.',
