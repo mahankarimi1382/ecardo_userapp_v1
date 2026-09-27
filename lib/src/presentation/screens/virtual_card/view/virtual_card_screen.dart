@@ -9,8 +9,10 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/epay_card_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_cards_model.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/epay_cards_section.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart';
 
 class VirtualCardScreen extends StatefulWidget {
@@ -33,6 +35,8 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
     super.initState();
     controller.syncCardBackgroundImageFromSettings();
     controller.fetchVirtualCards();
+    // WAVE-REVIEW: PayCardo (ePay) cards — USDT-funded, USD-spending.
+    Get.put(EpayCardController()).fetchEpayCards();
   }
 
   @override
@@ -68,6 +72,10 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                               index,
                             );
                           }),
+                          // WAVE-REVIEW: PayCardo (ePay) section — USDT-funded,
+                          // USD-spending cards (server /api/epay/*).
+                          SizedBox(height: 12.h),
+                          const EpayCardsSection(),
                         ],
                       ),
                     ),

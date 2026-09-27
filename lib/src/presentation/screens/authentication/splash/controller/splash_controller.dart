@@ -25,6 +25,13 @@ class SplashController extends GetxController {
   /// user simply signs in manually — sign-in is always reachable.
   static const Duration _biometricPromptTimeout = Duration(seconds: 30);
 
+  /// WAVE-REVIEW (بازبینی مالک): نتیجه گیت بیومتریک — وقتی پرامپت آغاز شد و
+  /// کاربر لغو/شکست خورد، جلسه باید قفل بماند (ورود با رمز)، نه این‌که با
+  /// توکن ذخیره‌شده وارد داشبورد شود.
+  static const String _bioNotStarted = 'not_started';
+  static const String _bioSuccess = 'success';
+  static const String _bioFailed = 'failed';
+
   Future<void> navigateBasedOnAuth() async {
     final connectivityResult = await Connectivity().checkConnectivity();
 
@@ -44,9 +51,16 @@ class SplashController extends GetxController {
     // AUTH-BIO: the biometric gate moved here from sign_in_screen. If the
     // user enabled biometrics and is logged in, the system prompt is shown
     // automatically (no touch) and navigation WAITS for its result.
-    final biometricLoginStarted = await _tryAutoBiometricLogin();
+    final bioOutcome = await _tryAutoBiometricLogin();
 
-    if (!biometricLoginStarted) {
+    if (bioOutcome == _bioFailed) {
+      // WAVE-REVIEW: کاربر پرامپت بیومتریک را لغو کرد یا شکست خورد —
+      // جلسه قفل می‌ماند؛ ورود فقط با re-auth (رمز/دوباره بیومتریک).
+      Get.offAllNamed(BaseRoute.signIn);
+      return;
+    }
+
+    if (bioOutcome != _bioSuccess) {
       try {
         final tokenService = Get.find<TokenService>();
         await tokenService.loadAccessToken();
@@ -119,19 +133,22 @@ class SplashController extends GetxController {
   /// submitSignIn → login API → FCM registration → fetchUser → home /
   /// 2FA / sign-up status.
   ///
-  /// Returns true only when the login chain has been started (it then owns
-  /// all further navigation); false means "fall through to normal routing".
-  Future<bool> _tryAutoBiometricLogin() async {
+  /// Returns [_bioSuccess] when the login chain has been started (it then
+  /// owns all further navigation), [_bioFailed] when the prompt was shown
+  /// but the user cancelled/failed (session stays locked → sign-in), and
+  /// [_bioNotStarted] when the biometric path did not apply (fall through
+  /// to normal routing).
+  Future<String> _tryAutoBiometricLogin() async {
     try {
       final loginState = await SettingsService.getLoginCurrentState();
-      if (loginState == null || loginState.isEmpty) return false;
+      if (loginState == null || loginState.isEmpty) return _bioNotStarted;
 
       final biometricEnabled =
           await SettingsService.getBiometricEnableOrDisable() ?? false;
-      if (!biometricEnabled) return false;
+      if (!biometricEnabled) return _bioNotStarted;
 
       final savedEmail = await SettingsService.getLoggedInUserEmail();
-      if (savedEmail == null || savedEmail.isEmpty) return false;
+      if (savedEmail == null || savedEmail.isEmpty) return _bioNotStarted;
 
       // 1.0.51: prefer bearer token — no password needed for unlock.
       final tokenService = Get.find<TokenService>();
@@ -142,15 +159,16 @@ class SplashController extends GetxController {
       final biometricAuth = BiometricAuthService();
       if (!await biometricAuth.isBiometricAvailable()) {
         debugPrint('AUTH-BIO: biometrics unavailable — falling back to sign-in');
-        return false;
+        return _bioNotStarted;
       }
 
       final success = await biometricAuth
           .authenticateWithBiometrics()
           .timeout(_biometricPromptTimeout, onTimeout: () => false);
       if (!success) {
-        debugPrint('AUTH-BIO: biometric auth failed/cancelled — sign-in fallback');
-        return false;
+        // WAVE-REVIEW: لغو/شکست پرامپت = جلسه قفل می‌ماند (نه ورود با توکن).
+        debugPrint('AUTH-BIO: biometric auth failed/cancelled — session locked');
+        return _bioFailed;
       }
 
       if (hasToken) {
@@ -175,19 +193,20 @@ class SplashController extends GetxController {
                 arguments: {"is_login_state": true},
               );
             }
-            return true;
+            return _bioSuccess;
           }
         } catch (e) {
           debugPrint('AUTH-BIO: token unlock failed: $e');
         }
-        // Token rejected — force password sign-in.
-        return false;
+        // Token rejected — session is not usable, force password sign-in.
+        await _showSessionExpiredAndGoSignIn();
+        return _bioSuccess;
       }
 
       // Legacy one-shot: password still on device from older builds.
       final savedPassword = await SettingsService.getLoggedInUserPassword();
       if (savedPassword == null || savedPassword.isEmpty) {
-        return false;
+        return _bioFailed;
       }
 
       Get.offNamed(BaseRoute.signIn);
@@ -196,11 +215,11 @@ class SplashController extends GetxController {
       controller.biometricPassword.value = savedPassword;
       await controller.submitSignIn(useBiometric: true);
       // After this login, password is cleared by SignInController (1.0.51).
-      return true;
+      return _bioSuccess;
     } catch (e, s) {
       debugPrint('AUTH-BIO: unexpected error: $e');
       debugPrint('$s');
-      return false;
+      return _bioNotStarted;
     }
   }
 

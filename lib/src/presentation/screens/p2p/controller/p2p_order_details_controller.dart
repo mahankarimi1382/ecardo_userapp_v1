@@ -39,6 +39,9 @@ class P2pOrderDetailsController extends GetxController {
   final RxBool isTransferExpanded = true.obs;
   final RxBool isNotifySellerExpanded = true.obs;
   Timer? _countdownTimer;
+  // WAVE-REVIEW: وقتی شمارش به صفر می‌رسد، وضعیت سرور (expired/released)
+  // یک‌بار fetch می‌شود تا کاربر بدون دست‌کشیدن صفحه ببیند.
+  bool _zeroRefreshDone = false;
 
   @override
   void onInit() {
@@ -303,6 +306,8 @@ class P2pOrderDetailsController extends GetxController {
 
   void _startCountdown() {
     _countdownTimer?.cancel();
+    // ددلاین تازه ممکن است بعد از رفرش/تمدید متفاوت باشد.
+    _zeroRefreshDone = false;
     _updateCountdown();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       _updateCountdown();
@@ -318,6 +323,11 @@ class P2pOrderDetailsController extends GetxController {
     final now = DateTime.now();
     final diff = deadline.difference(now);
     remainingDuration.value = diff.isNegative ? Duration.zero : diff;
+    if (diff.isNegative && !_zeroRefreshDone) {
+      // WAVE-REVIEW: تایمر زنده به صفر رسید — وضعیت سرور یک‌بار fetch شود.
+      _zeroRefreshDone = true;
+      fetchOrderDetails();
+    }
   }
 
   String get countdownText {

@@ -51,6 +51,11 @@ class ApiPath {
   static const String loginOtpRequestEndpoint = '/auth/user/login-otp/request';
   static const String loginOtpVerifyEndpoint = '/auth/user/login-otp/verify';
 
+  // WAVE-REVIEW: PayCardo (ePay) — USDT-funded, USD-spending virtual cards.
+  static const String epayCardsEndpoint = '/epay/cards';
+  static const String epayIssueEndpoint = '/epay/cards/issue';
+  static const String epayTopupEndpoint = '/epay/cards/topup';
+
   // Dashboard Endpoints
   static const String dashboardEndpoint = '/user/dashboard';
   static const String userEndpoint = '/auth/user/get';
