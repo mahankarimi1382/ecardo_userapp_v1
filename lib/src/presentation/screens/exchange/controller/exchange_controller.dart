@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_config_model.dart';
@@ -49,6 +50,9 @@ class ExchangeController extends GetxController {
   final RxBool isExchangeConfigLoading = false.obs;
   final RxBool isExchangeWalletLoading = false.obs;
   final RxBool isCalculateExchangeRateLoading = false.obs;
+  /// WAVE-REVIEW: لیست کیف‌ها شکست خورد/خالی ماند → سکشن Amount کارت خطا +
+  /// Retry نشان می‌دهد (به‌جای فرم مردهٔ «Wallets Not Found» بدون دکمه).
+  final RxBool walletLoadError = false.obs;
 
   // ------------------ step state ------------------
   final RxInt currentStep = 0.obs;
@@ -578,7 +582,7 @@ class ExchangeController extends GetxController {
     // تا ۲ بار با تاخیر کوتاه تلاش می‌کنیم و در شکست نهایی، سکشن Amount
     // کارت خطا + Retry نشان می‌دهد (نه فرم مردهٔ بدون دکمه).
     Object? lastError;
-    Response? response;
+    ApiResponse<Map<String, dynamic>>? response;
     for (var attempt = 0; attempt < 2; attempt++) {
       try {
         response = await Get.find<NetworkService>().get(
