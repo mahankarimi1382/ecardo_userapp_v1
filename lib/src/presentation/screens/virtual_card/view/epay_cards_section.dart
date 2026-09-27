@@ -93,7 +93,7 @@ class EpayCardsSection extends StatelessWidget {
             children: [
               for (final card in controller.epayCards)
                 Container(
-                  margin: EdgeInsetsDirectional.fromLTRB(18.w, 0, 18.w, 12.h),
+                  margin: EdgeInsetsDirectional.only(start: 18.w, end: 18.w, bottom: 12.h),
                   padding: EdgeInsets.all(14.w),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16.r),

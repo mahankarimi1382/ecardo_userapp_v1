@@ -73,7 +73,7 @@ class EpayCardController extends GetxController {
   Future<void> topUpCard(double amount) async {
     if (amount < 1) {
       ToastHelper().showErrorToast(_pick(
-        en: 'Minimum top-up is $1',
+        en: 'Minimum top-up is \$1',
         fa: 'حداقل شارژ ۱ دلار است',
         ar: 'الحد الأدنى للشحن ١ دولار',
         zh: '最低充值 1 美元',
