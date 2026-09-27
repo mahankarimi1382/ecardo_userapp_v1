@@ -71,27 +71,32 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 8),
-          debugPrint('EX-DIAG: swap Obx enter');
-          Obx(() => ExchangeSwapCard(
-                fromWallet: controller.fromWallet.value,
-                toWallet: controller.toWallet.value,
-                fromWalletsList: controller.fromExchangeWalletsList,
-                toWalletsList: controller.toExchangeWalletsList,
-                onFromWalletSelected: (Wallets w) {
-                  controller.fromWallet.value = w;
-                  controller.calculateExchange();
-                },
-                onToWalletSelected: (Wallets w) {
-                  controller.toWallet.value = w;
-                  controller.calculateExchange();
-                },
-                onSwapPressed: controller.swapWallets,
-                amountController: controller.amountController,
-                amountFocusNode: controller.amountFocusNode,
-                isAmountFocused: controller.isAmountFocused.value,
-                calculatedToAmount: controller.liveToAmount.value,
-                isCalculating: controller.isCalculateExchangeRateLoading.value,
-              )),
+          // WAVE-REVIEW: قبلاً `Obx(() => ExchangeSwapCard(...))` arrow-form
+          // بود — بیلدرش Rx مستقیم می‌خواند و ثبت می‌شد، ولی در v1.0.103
+          // improper use از این Obx هم آمد؛ فرم بلاک با خواندن صریح امن‌تر.
+          Obx(() {
+            debugPrint('EX-DIAG: swap Obx enter');
+            return ExchangeSwapCard(
+              fromWallet: controller.fromWallet.value,
+              toWallet: controller.toWallet.value,
+              fromWalletsList: controller.fromExchangeWalletsList,
+              toWalletsList: controller.toExchangeWalletsList,
+              onFromWalletSelected: (Wallets w) {
+                controller.fromWallet.value = w;
+                controller.calculateExchange();
+              },
+              onToWalletSelected: (Wallets w) {
+                controller.toWallet.value = w;
+                controller.calculateExchange();
+              },
+              onSwapPressed: controller.swapWallets,
+              amountController: controller.amountController,
+              amountFocusNode: controller.amountFocusNode,
+              isAmountFocused: controller.isAmountFocused.value,
+              calculatedToAmount: controller.liveToAmount.value,
+              isCalculating: controller.isCalculateExchangeRateLoading.value,
+            );
+          }),
           const SizedBox(height: 16),
           // Live rate badge
           debugPrint('EX-DIAG: badge Obx enter');
