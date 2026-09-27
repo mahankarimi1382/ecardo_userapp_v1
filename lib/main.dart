@@ -14,6 +14,7 @@ import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
 import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
 import 'package:ecardo_user/src/common/services/app_badge_service.dart';
+import 'package:ecardo_user/src/common/services/client_error_reporter.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
@@ -53,13 +54,22 @@ Future<void> main() async {
 /// framework's blank GREY screen — the "frozen grey page" reported on the
 /// home screen. From now on every widget-build error renders a graceful
 /// card instead, and the real error still goes to the console for triage.
+///
+/// WAVE-REVIEW: هر خطای رندر حالا به `/api/client-error-report` هم گزارش
+/// می‌شود (fire-and-forget، throttle داخلی) — باگ صفحهٔ اکسچنج روی دستگاه
+/// مالک بدون stack دستگاه قابل تشخیص نبود.
 void _installGlobalErrorHandlers() {
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
     debugPrint('❌ FlutterError: ${details.exception}');
+    ClientErrorReporter.instance.reportFlutterError(details);
   };
   ErrorWidget.builder = (details) {
     debugPrint('❌ Widget build error: ${details.exception}');
+    ClientErrorReporter.instance.reportBuildError(
+      details.exception,
+      details.stack,
+    );
     return Material(
       color: const Color(0xFFF8F8F8),
       child: SafeArea(
