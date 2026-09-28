@@ -76,8 +76,7 @@ class _SignUpBonusPopUpState extends State<SignUpBonusPopUp>
                       localizations.signUpBonusCongratulations,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFFA869FF),
-                        fontSize: 24,
+                        color: AppColors.mutedBlue,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0,
                       ),
@@ -96,7 +95,7 @@ class _SignUpBonusPopUpState extends State<SignUpBonusPopUp>
                       "${Get.find<SettingsService>().getSetting("currency_symbol")}${widget.signUpBonus}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFFA869FF),
+                        color: AppColors.mutedBlue,
                         fontSize: 30,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0,

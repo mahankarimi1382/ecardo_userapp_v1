@@ -81,12 +81,12 @@ void _installGlobalErrorHandlers() {
               children: [
                 const Icon(
                   Icons.error_outline_rounded,
-                  color: Color(0xFF7445FF),
+                  color: AppColors.lightPrimary,
                   size: 44,
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'eCardo',
+                  AppStrings.appName,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
