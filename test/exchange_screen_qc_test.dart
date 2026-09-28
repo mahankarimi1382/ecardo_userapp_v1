@@ -185,37 +185,30 @@ void main() {
     'regression: the amount step builds with the real owner wallets — '
     'Continue button present, no dead "Wallets Not Found" state, no exception',
     (tester) async {
-      // WAVE-REVIEW: هر استثنایی که در build رخ دهد با context کامل
-      // (شامل ویجت مقصر) ضبط می‌شود تا دقیق قابل ردیابی باشد.
+      final originalOnError = FlutterError.onError;
       final frameworkErrors = <FlutterErrorDetails>[];
       FlutterError.onError = (details) => frameworkErrors.add(details);
 
-      seedOwnerWallets();
+      try {
+        seedOwnerWallets();
 
-      await tester.pumpWidget(buildSubject());
-      // WAVE-REVIEW: pumpAndSettle با تایمر ۶۰ ثانیه‌ای سرویس نرخ settle
-      // نمی‌شود — پمپ صریح.
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
+        await tester.pumpWidget(buildSubject());
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 400));
 
-      // REGRESSION 1 — no build exception: the owner-reported state threw
-      // inside the swap-card / fee widgets and rendered the global
-      // "Something went wrong rendering this section" card TWICE.
-      for (final e in frameworkErrors) {
-        debugPrint('FRAMEWORK ERROR: ${e.exception}');
-        debugPrint('culprit: ${e.context?.toDescription()}');
+        for (final e in frameworkErrors) {
+          debugPrint('FRAMEWORK ERROR: ${e.exception}');
+          debugPrint('culprit: ${e.context?.toDescription()}');
+        }
+        expect(frameworkErrors, isEmpty,
+            reason: 'no widget-build exception expected');
+
+        expect(find.text('Continue'), findsOneWidget);
+        expect(find.text('Wallets Not Found'), findsNothing);
+        expect(find.text('Main Wallet'), findsOneWidget);
+      } finally {
+        FlutterError.onError = originalOnError;
       }
-      expect(frameworkErrors, isEmpty,
-          reason: 'no widget-build exception expected');
-
-      // The next-step (Continue) button is present — the owner's #1 ask.
-      expect(find.text('Continue'), findsOneWidget);
-
-      // No dead "Wallets Not Found" empty state anywhere.
-      expect(find.text('Wallets Not Found'), findsNothing);
-
-      // The from-side shows the USD Main Wallet the selection picked.
-      expect(find.text('Main Wallet'), findsOneWidget);
     },
   );
 

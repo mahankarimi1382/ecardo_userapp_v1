@@ -74,7 +74,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           // بود — بیلدرش Rx مستقیم می‌خواند و ثبت می‌شد، ولی در v1.0.103
           // improper use از این Obx هم آمد؛ فرم بلاک با خواندن صریح امن‌تر.
           Obx(() {
-            debugPrint('EX-DIAG: obx#1 enter');
               return ExchangeSwapCard(
               fromWallet: controller.fromWallet.value,
               toWallet: controller.toWallet.value,
@@ -99,7 +98,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           const SizedBox(height: 16),
           // Live rate badge
           Obx(() {
-            debugPrint('EX-DIAG: obx#2 enter');
             final rateService = controller.rateService;
             return Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
@@ -124,7 +122,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           // از طریق proxy ثبت نمی‌شود و Obx «improper use» پرتاب می‌کرد
           // (یکی از دو کارت خطای صفحهٔ اکسچنج).
           Obx(() {
-            debugPrint('EX-DIAG: obx#3 enter');
             final recentPairs = controller.recentPairs.value;
             if (recentPairs.isEmpty) return const SizedBox();
             return Padding(
@@ -170,7 +167,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           const SizedBox(height: 16),
           // Quick percent chips
           Obx(() {
-            debugPrint('EX-DIAG: obx#4 enter');
             if (controller.fromWallet.value == null) return const SizedBox();
             return Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
@@ -207,7 +203,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           // خلاصهٔ کارمزد/حدود هیچ‌وقت رندر نمی‌شد (کارت خطا به‌جای اعداد).
           // حالا خواندن‌ها مستقیم داخل scope همین Obx است.
           Obx(() {
-            debugPrint('EX-DIAG: obx#5 enter');
             final fromWallet = controller.fromWallet.value;
             if (fromWallet == null) return const SizedBox();
             return _FeeAndLimitsSummary(
@@ -243,7 +238,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           ),
           // Inline error hint shown only after a failed attempt
           Obx(() {
-            debugPrint('EX-DIAG: obx#6 enter');
             if (!controller.isContinueInvalid.value) return const SizedBox();
             if (controller.isAmountValid) return const SizedBox();
             return Padding(

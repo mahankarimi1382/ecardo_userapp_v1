@@ -126,6 +126,7 @@ class ExchangeController extends GetxController {
   /// Live preview of the destination amount, kept in sync with the
   /// debounced amount input + current rate.
   final RxDouble liveToAmount = 0.0.obs;
+  final RxString amountInput = ''.obs;
 
   /// True when the user pressed Continue but validation failed — used to
   /// render the Continue button in an errored / disabled state.
@@ -808,7 +809,8 @@ class ExchangeController extends GetxController {
 
   /// Debounced preview recomputation. While the user is typing, we wait
   /// 300ms after the last keystroke before hitting the converter endpoint.
-  void onAmountChanged(String _) {
+  void onAmountChanged(String val) {
+    amountInput.value = val;
     isContinueInvalid.value = false;
     _amountDebounce?.cancel();
     _amountDebounce = Timer(const Duration(milliseconds: 300), () {
@@ -991,14 +993,14 @@ class ExchangeController extends GetxController {
   ExchangeRateService get rateService => _rateService;
 
   bool get isAmountValid {
-    final amount = double.tryParse(amountController.text) ?? 0.0;
+    final from = fromWallet.value;
+    final to = toWallet.value;
+    final text = amountInput.value.isNotEmpty ? amountInput.value : amountController.text;
+    if (from == null || to == null) return false;
+    final amount = double.tryParse(text) ?? 0.0;
     if (amount <= 0) return false;
-    final min = double.tryParse(
-      fromWallet.value?.exchangeLimit?.min ?? '0',
-    ) ?? 0.0;
-    final max = double.tryParse(
-      fromWallet.value?.exchangeLimit?.max ?? '0',
-    ) ?? double.infinity;
+    final min = double.tryParse(from.exchangeLimit?.min ?? '0') ?? 0.0;
+    final max = double.tryParse(from.exchangeLimit?.max ?? '0') ?? double.infinity;
     return amount >= min && amount <= max;
   }
 }
