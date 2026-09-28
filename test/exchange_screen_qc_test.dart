@@ -185,6 +185,11 @@ void main() {
     'regression: the amount step builds with the real owner wallets — '
     'Continue button present, no dead "Wallets Not Found" state, no exception',
     (tester) async {
+      // WAVE-REVIEW: هر استثنایی که در build رخ دهد با context کامل
+      // (شامل ویجت مقصر) ضبط می‌شود تا دقیق قابل ردیابی باشد.
+      final frameworkErrors = <FlutterErrorDetails>[];
+      FlutterError.onError = (details) => frameworkErrors.add(details);
+
       seedOwnerWallets();
 
       await tester.pumpWidget(buildSubject());
@@ -196,7 +201,12 @@ void main() {
       // REGRESSION 1 — no build exception: the owner-reported state threw
       // inside the swap-card / fee widgets and rendered the global
       // "Something went wrong rendering this section" card TWICE.
-      expect(tester.takeException(), isNull);
+      for (final e in frameworkErrors) {
+        debugPrint('FRAMEWORK ERROR: ${e.exception}');
+        debugPrint('culprit: ${e.context?.toDescription()}');
+      }
+      expect(frameworkErrors, isEmpty,
+          reason: 'no widget-build exception expected');
 
       // The next-step (Continue) button is present — the owner's #1 ask.
       expect(find.text('Continue'), findsOneWidget);
