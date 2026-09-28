@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'dart:io';
 import 'dart:ui';
 
@@ -65,9 +66,7 @@ class _SignInScreenState extends State<SignInScreen>
       },
       child: Scaffold(
         appBar: const CommonDefaultAppBar(),
-        backgroundColor: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFF121212)
-            : AppColors.lightBackground,
+        backgroundColor: AppColors.lightBackground,
         body: Stack(
           children: [
             FadeTransition(
@@ -78,10 +77,15 @@ class _SignInScreenState extends State<SignInScreen>
               child: Column(
                 children: [
                   SizedBox(
-                    height: 0.30.sh,
+                    height: 0.26.sh,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
+                        PositionedDirectional(
+                          top: 12.h,
+                          end: 18.w,
+                          child: const _LanguagePickerButton(),
+                        ),
                         Positioned.fill(
                           child: ImageFiltered(
                             imageFilter: ImageFilter.blur(
@@ -136,7 +140,10 @@ class _SignInScreenState extends State<SignInScreen>
                   ),
 
                   Container(
-                    height: 0.70.sh,
+                    // UX-FIX (login): minHeight instead of fixed 70% — with
+                    // the keyboard open a fixed 0.70.sh pushed the login
+                    // button below the fold and the sheet clipped it.
+                    constraints: BoxConstraints(minHeight: 0.62.sh),
                     margin: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
                     padding: EdgeInsetsDirectional.only(
                       top: 3.h,
@@ -171,6 +178,7 @@ class _SignInScreenState extends State<SignInScreen>
                                     autofillHints: const [AutofillHints.email],
                                     controller: controller.emailController,
                                     focusNode: controller.emailFocusNode,
+                                    onChanged: controller.onEmailChanged,
                                     isFocused: controller.isEmailFocused.value,
                                     keyboardType: TextInputType.emailAddress,
                                     suffixIcon: Obx(
@@ -224,11 +232,21 @@ class _SignInScreenState extends State<SignInScreen>
                                     ],
                                     controller: controller.passwordController,
                                     focusNode: controller.passwordFocusNode,
+                                    onChanged: controller.onPasswordChanged,
                                     isFocused:
                                         controller.isPasswordFocused.value,
                                     obscureText:
                                         controller.isPasswordVisible.value,
                                     keyboardType: TextInputType.visiblePassword,
+                                    // UX-FIX (login): keyboard "done" now
+                                    // submits the form instead of just
+                                    // closing the keyboard.
+                                    textInputAction: TextInputAction.done,
+                                    onFieldSubmitted: (_) {
+                                      if (!controller.isLoading.value) {
+                                        controller.submitSignIn();
+                                      }
+                                    },
                                     suffixIcon: GestureDetector(
                                       onTap: () {
                                         controller.isPasswordVisible.toggle();
@@ -508,6 +526,141 @@ class _TelegramSignInButton extends StatelessWidget {
         minimumSize: Size(double.infinity, 48.h),
         side: BorderSide(color: AppColors.lightBorder),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    );
+  }
+}
+
+
+class _LanguagePickerButton extends StatelessWidget {
+  const _LanguagePickerButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final currentCode = Localizations.localeOf(context).languageCode;
+    final currentName = LocaleThemeService.nativeName(currentCode);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _showLanguageModal(context),
+        borderRadius: BorderRadius.circular(20.r),
+        child: Container(
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 6.h),
+          decoration: BoxDecoration(
+            color: AppColors.white.withValues(alpha: 0.85),
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(
+              color: AppColors.lightPrimary.withValues(alpha: 0.35),
+              width: 1.2.w,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withValues(alpha: 0.05),
+                blurRadius: 10.r,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.language_rounded,
+                size: 16.sp,
+                color: AppColors.lightPrimary,
+              ),
+              SizedBox(width: 5.w),
+              Text(
+                currentName,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+              SizedBox(width: 2.w),
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: 16.sp,
+                color: AppColors.lightTextTertiary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageModal(BuildContext context) {
+    final currentCode = Localizations.localeOf(context).languageCode;
+
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: AppColors.lightBorder,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                l10nPick(
+                  context,
+                  en: 'Select language',
+                  fa: 'انتخاب زبان',
+                  ar: 'اختر اللغة',
+                  zh: '选择语言',
+                ),
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+              SizedBox(height: 12.h),
+              for (final c in LocaleThemeService.supported)
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
+                  title: Text(
+                    LocaleThemeService.nativeName(c),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: c == currentCode ? FontWeight.w800 : FontWeight.w600,
+                      color: c == currentCode
+                          ? AppColors.lightPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                  trailing: c == currentCode
+                      ? Icon(
+                          Icons.check_circle_rounded,
+                          color: AppColors.lightPrimary,
+                          size: 20.sp,
+                        )
+                      : null,
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    if (Get.isRegistered<LocaleThemeService>()) {
+                      await Get.find<LocaleThemeService>().setLanguage(c);
+                    }
+                  },
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

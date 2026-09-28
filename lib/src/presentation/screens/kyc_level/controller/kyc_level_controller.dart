@@ -49,7 +49,7 @@ class KycLevelController extends GetxController {
       final response = await _networkService.get(endpoint: ApiPath.kycLevelStatusEndpoint);
       if (response.status == Status.completed) {
         final data = response.data?['data'] as Map<String, dynamic>?;
-        if (data != null) { status.value = KycStatus.fromJson(data); badge.value = status.value!.badge; }
+        if (data != null) { status.value = KycStatus.fromJson(data); badge.value = status.value?.badge; }
       }
     } catch (e) {
       debugPrint('❌ fetchStatus() error: $e');

@@ -133,6 +133,15 @@ class EmailOtpLoginController extends GetxController {
     } catch (e, s) {
       debugPrint('❌ verifyCode() error: $e');
       debugPrint('📍 StackTrace: $s');
+      // UX-FIX (otp): a wrong/expired code must clear the boxes so the
+      // user re-types cleanly instead of wondering why Verify is dead.
+      pinCodeController.clear();
+      ToastHelper().showErrorToast(_pick(
+        en: 'The code is wrong or expired. Try again.',
+        fa: 'کد اشتباه یا منقضی شده است. دوباره تلاش کنید.',
+        ar: 'الرمز خاطئ أو منتهي. حاول مرة أخرى.',
+        zh: '验证码错误或已过期，请重试。',
+      ));
     } finally {
       isLoading.value = false;
     }

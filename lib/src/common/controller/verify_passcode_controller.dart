@@ -30,7 +30,7 @@ class VerifyPasscodeController extends GetxController {
     final code = PasscodeHelper.normalize(passcodeController.text);
     if (!PasscodeHelper.isValidFormat(code)) {
       ToastHelper().showErrorToast(
-        localization!.verifyPasscodeValidationEnterPasscode,
+        localization?.verifyPasscodeValidationEnterPasscode ?? 'Please enter your passcode',
       );
       return false;
     }
@@ -51,7 +51,7 @@ class VerifyPasscodeController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ submitPasscodeVerify() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? 'Passcode verification failed');
       return false;
     } finally {
       isPasscodeVerifyLoading.value = false;

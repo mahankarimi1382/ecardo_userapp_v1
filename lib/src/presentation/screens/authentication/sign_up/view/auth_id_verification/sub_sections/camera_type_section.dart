@@ -37,7 +37,17 @@ class CameraTypeSection extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 16.h),
-                    CommonAppBar(title: localizations.cameraTypeBack),
+                    CommonAppBar(
+                      title: localizations.cameraTypeBack,
+                      isBackLogicApply: true,
+                      backLogicFunction: () {
+                        if (controller.currentFieldIndex.value > 0) {
+                          controller.currentFieldIndex.value--;
+                        } else {
+                          Get.back();
+                        }
+                      },
+                    ),
                     Stack(
                       alignment: Alignment.center,
                       children: [

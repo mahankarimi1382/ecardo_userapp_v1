@@ -159,36 +159,13 @@ class CashOutReviewStepSection extends StatelessWidget {
                       () => CommonIconButton(
                         isLoading: controller.isCashOutLoading.value,
                         onPressed: () async {
-                          final saved =
-                              controller.userModel.value.data?.passcode;
-                          final hasPasscode =
-                              PasscodeHelper.userHasPasscode(saved);
-
-                          if (!hasPasscode) {
-                            ToastHelper().showErrorToast(
-                              localizations.twoFactorValidationEnterPasscode,
-                            );
+                          final verified = await Get.bottomSheet<String>(
+                            const VerifyPasscodeBottomSheet(),
+                          );
+                          if (verified == null || !PasscodeHelper.isValidFormat(verified)) {
                             return;
                           }
-
-                          final moduleOn = settingsService.getSetting(
-                                PasscodeHelper.cashOutSetting,
-                              ) ==
-                              '1';
-
-                          if (moduleOn || hasPasscode) {
-                            final verified =
-                                await Get.bottomSheet<String>(
-                              const VerifyPasscodeBottomSheet(),
-                            );
-                            if (verified == null ||
-                                !PasscodeHelper.isValidFormat(verified)) {
-                              return;
-                            }
-                            await controller.cashOut(passcode: verified);
-                          } else {
-                            await controller.cashOut();
-                          }
+                          await controller.cashOut(passcode: verified);
                         },
                         width: double.infinity,
                         height: 52,

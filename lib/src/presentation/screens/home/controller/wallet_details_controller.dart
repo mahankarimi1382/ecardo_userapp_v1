@@ -40,7 +40,7 @@ class WalletDetailsController extends GetxController {
   }
 
   // Fetch Wallets
-  Future<void> fetchWallets({required int id}) async {
+  Future<void> fetchWallets({int? id}) async {
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.walletsEndpoint,
@@ -49,21 +49,29 @@ class WalletDetailsController extends GetxController {
       if (response.status == Status.completed) {
         final walletsModel = WalletsModel.fromJson(response.data!);
         walletsList.clear();
-        walletsList.value = walletsModel.data!.wallets ?? [];
-        final selectedWallet = walletsList.firstWhere((w) => w.id == id);
-        wallet.value = selectedWallet;
-        walletName.value = wallet.value!.name ?? "";
-        walletIcon.value = (wallet.value!.isDefault == true
-            ? wallet.value!.symbol
-            : wallet.value!.icon)!;
-        walletId.value = wallet.value!.id.toString();
+        final list = walletsModel.data?.wallets ?? [];
+        walletsList.assignAll(list);
+        if (list.isNotEmpty) {
+          final selectedWallet = list.firstWhere(
+            (w) => w.id == id,
+            orElse: () => list.first,
+          );
+          wallet.value = selectedWallet;
+          walletName.value = selectedWallet.name ?? "";
+          walletIcon.value = (selectedWallet.isDefault == true
+              ? selectedWallet.symbol
+              : selectedWallet.icon) ?? "";
+          walletId.value = selectedWallet.id.toString();
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      final ctx = Get.context;
+      final msg = (ctx != null && ctx.mounted)
+          ? AppLocalizations.of(ctx)?.allControllerLoadError
+          : null;
+      ToastHelper().showErrorToast(msg ?? 'Failed to load wallet');
     } finally {}
   }
 
@@ -106,7 +114,7 @@ class WalletDetailsController extends GetxController {
       debugPrint('❌ fetchTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        ((Get.context != null && Get.context!.mounted) ? AppLocalizations.of(Get.context!)?.allControllerLoadError : null) ?? 'Failed to load transactions',
       );
     } finally {
       isLoading.value = false;

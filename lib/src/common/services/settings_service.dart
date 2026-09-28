@@ -313,7 +313,7 @@ class SettingsService extends GetxService {
 
   Future<String> getThemeModePref() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(themeModeKey) ?? 'system';
+    return prefs.getString(themeModeKey) ?? 'light';
   }
 
   Future<void> setThemeModePref(String mode) async {

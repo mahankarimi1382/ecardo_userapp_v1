@@ -210,7 +210,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.badge_outlined,
                       loc.settingsIdVerification,
                       null,
-                      () => Get.toNamed(BaseRoute.kycHistory),
+                      () => Get.toNamed(BaseRoute.idVerification),
                     ),
                   _navTile(
                     Icons.delete_outline,

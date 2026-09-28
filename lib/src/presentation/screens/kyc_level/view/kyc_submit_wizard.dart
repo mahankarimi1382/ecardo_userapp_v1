@@ -35,17 +35,33 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
-    return Scaffold(
-      backgroundColor: AppColors.lightSurface,
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (_currentStep > 0) {
+          setState(() => _currentStep--);
+        } else {
+          Get.back();
+        }
+      },
+      child: Scaffold(
         backgroundColor: AppColors.lightSurface,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
+        appBar: AppBar(
+          backgroundColor: AppColors.lightSurface,
+          elevation: 0,
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
+            onPressed: () {
+              if (_currentStep > 0) {
+                setState(() => _currentStep--);
+              } else {
+                Get.back();
+              }
+            },
+          ),
+          title: Text(
           localization?.kycSubmitWizardTitleForLevel(widget.targetLevel) ??
               'Verification — level ${widget.targetLevel}',
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
@@ -105,6 +121,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           ],
         );
       }),
+    ),
     );
   }
 

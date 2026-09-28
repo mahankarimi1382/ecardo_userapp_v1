@@ -373,13 +373,16 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
               ),
             ],
 
-            if (isCompleted)
+            // Unblock user: allow them to proceed to dashboard when all steps are submitted
+            // or when review is pending, so they are never trapped on this screen.
+            if (isCompleted || allStepsCompleted || isReview) ...[
+              if (!isCompleted) SizedBox(height: 12.h),
               CommonButton(
                 onPressed: () => controller.postFcmNotification(),
                 width: double.infinity,
-
                 text: localizations.signUpStatusDashboard,
               ),
+            ],
 
             if (isPersonalInfo && !(isReview || isRejected || isCompleted)) ...[
               SizedBox(height: 15.h),

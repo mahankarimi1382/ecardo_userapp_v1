@@ -26,6 +26,7 @@ class DarkTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: scheme,
+
       scaffoldBackgroundColor: AppColors.deepBlack,
       fontFamily: 'Plus Jakarta Sans',
       fontFamilyFallback: const ['Vazirmatn', 'NotoSansRU'],

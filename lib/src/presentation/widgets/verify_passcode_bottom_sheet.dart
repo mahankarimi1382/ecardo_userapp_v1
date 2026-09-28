@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -112,9 +113,8 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                     keyboardType: TextInputType.number,
                     obscureText: true,
                     inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(
-                        PasscodeHelper.maxDigits,
+                      DigitNormalizationFormatter(
+                        maxLength: PasscodeHelper.maxDigits,
                       ),
                     ],
                   ),

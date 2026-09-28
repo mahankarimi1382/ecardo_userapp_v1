@@ -153,36 +153,13 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                     () => CommonIconButton(
                       isLoading: controller.isMakePaymentLoading.value,
                       onPressed: () async {
-                        final saved =
-                            controller.userModel.value.data?.passcode;
-                        final hasPasscode =
-                            PasscodeHelper.userHasPasscode(saved);
-
-                        if (!hasPasscode) {
-                          ToastHelper().showErrorToast(
-                            localization.twoFactorValidationEnterPasscode,
-                          );
+                        final verified = await Get.bottomSheet<String>(
+                          const VerifyPasscodeBottomSheet(),
+                        );
+                        if (verified == null || !PasscodeHelper.isValidFormat(verified)) {
                           return;
                         }
-
-                        final moduleOn = settingsService.getSetting(
-                              PasscodeHelper.makePaymentSetting,
-                            ) ==
-                            '1';
-
-                        if (moduleOn || hasPasscode) {
-                          final String? verified =
-                              await Get.bottomSheet<String>(
-                            const VerifyPasscodeBottomSheet(),
-                          );
-                          if (verified == null ||
-                              !PasscodeHelper.isValidFormat(verified)) {
-                            return;
-                          }
-                          await controller.makePayment(passcode: verified);
-                        } else {
-                          await controller.makePayment();
-                        }
+                        await controller.makePayment(passcode: verified);
                       },
                       width: double.infinity,
                       height: 52,
