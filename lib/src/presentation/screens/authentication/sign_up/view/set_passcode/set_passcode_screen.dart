@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -24,11 +25,18 @@ class SetPasscodeScreen extends StatefulWidget {
 }
 
 class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
-  final SetPasscodeController controller = Get.find();
+  late final SetPasscodeController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<SetPasscodeController>()
+        ? Get.find<SetPasscodeController>()
+        : Get.put(SetPasscodeController());
+  }
 
   static final _digitLimit = [
-    FilteringTextInputFormatter.digitsOnly,
-    LengthLimitingTextInputFormatter(4),
+    const DigitNormalizationFormatter(maxLength: 4),
   ];
 
   @override

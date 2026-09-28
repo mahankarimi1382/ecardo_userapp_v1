@@ -18,13 +18,23 @@ class AuthIdVerificationScreen extends StatefulWidget {
 }
 
 class _AuthIdVerificationScreenState extends State<AuthIdVerificationScreen> {
-  final AuthIdVerificationController controller = Get.find();
-  final String kycId = Get.arguments["kyc_id"] ?? "";
-  final List<Fields> fields = (Get.arguments["fields"] as List<Fields>?) ?? [];
+  late final AuthIdVerificationController controller;
+  String kycId = "";
+  List<Fields> fields = [];
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<AuthIdVerificationController>()
+        ? Get.find<AuthIdVerificationController>()
+        : Get.put(AuthIdVerificationController());
+    final args = Get.arguments;
+    if (args is Map) {
+      kycId = (args["kyc_id"]?.toString()) ?? "";
+      if (args["fields"] is List) {
+        fields = (args["fields"] as List).whereType<Fields>().toList();
+      }
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.kycId.value = kycId;
       controller.fields.value = fields;
@@ -34,8 +44,18 @@ class _AuthIdVerificationScreenState extends State<AuthIdVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CommonDefaultAppBar(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (controller.currentFieldIndex.value > 0) {
+          controller.currentFieldIndex.value--;
+        } else {
+          Get.back();
+        }
+      },
+      child: Scaffold(
+        appBar: CommonDefaultAppBar(),
       body: Obx(() {
         if (fields.isEmpty) {
           return NoDataFound();
@@ -49,6 +69,7 @@ class _AuthIdVerificationScreenState extends State<AuthIdVerificationScreen> {
         final currentField = fields[controller.currentFieldIndex.value];
         return _buildFieldScreen(currentField);
       }),
+    ),
     );
   }
 

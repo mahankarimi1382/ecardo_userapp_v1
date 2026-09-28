@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 /// Transaction PIN (رمز انتقال وجه / پس‌کد) — system B.
 ///
 /// Distinct from:
@@ -63,7 +64,7 @@ class PasscodeHelper {
     return RegExp(r'^\d+$').hasMatch(v);
   }
 
-  static String normalize(String value) => value.trim();
+  static String normalize(String value) => DigitNormalizationFormatter.normalize(value);
 
   /// Input formatters for PIN fields (digits + max length from server).
   static List<dynamic> digitFormatters() {

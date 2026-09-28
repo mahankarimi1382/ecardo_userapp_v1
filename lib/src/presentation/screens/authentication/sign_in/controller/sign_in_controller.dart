@@ -349,7 +349,7 @@ class SignInController extends GetxController {
       if (response.status == Status.completed) {
         userModel.value = UserModel.fromJson(response.data!);
 
-        if (userModel.value.data!.twoFa == true) {
+        if (userModel.value.data?.twoFa == true) {
           pendingTwoFaEmail.value =
               useBiometric ? biometricEmail.value : emailController.text;
           pendingTwoFaPassword.value =

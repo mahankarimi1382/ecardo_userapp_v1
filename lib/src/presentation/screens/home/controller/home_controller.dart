@@ -141,20 +141,23 @@ Future<void> changeLanguage(String languageCode) async {
     final code = languageNativeNames.containsKey(languageCode)
         ? languageCode
         : 'en';
-    final nativeName = languageNativeNames[code]!;
+    final nativeName = languageNativeNames[code] ?? 'English';
     language.value = nativeName;
     languageController.text = nativeName;
 
-    await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
-      code,
-    );
-
-    Get.updateLocale(Locale(code));
-    } catch (e, stackTrace) {
-      debugPrint('❌ changeLanguage() error: $e');
-      debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.homeLanguageChangeFailed);
+    if (Get.isRegistered<LocaleThemeService>()) {
+      await Get.find<LocaleThemeService>().setLanguage(code);
+    } else {
+      await Get.find<SettingsService>().saveLanguageLocaleCurrentState(code);
+      Get.updateLocale(Locale(code));
     }
+  } catch (e, stackTrace) {
+    debugPrint('❌ changeLanguage() error: $e');
+    debugPrint('📍 StackTrace: $stackTrace');
+    ToastHelper().showErrorToast(
+      localization?.homeLanguageChangeFailed ?? 'Failed to change language',
+    );
+  }
 }
 
   // Toggle Biometric

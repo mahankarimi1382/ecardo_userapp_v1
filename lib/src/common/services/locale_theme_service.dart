@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -35,6 +36,14 @@ class LocaleThemeService extends GetxService {
     if (Get.isRegistered<SettingsService>()) {
       await Get.find<SettingsService>().saveLanguageLocaleCurrentState(code);
     }
+    try {
+      if (Get.isRegistered<HomeController>()) {
+        final home = Get.find<HomeController>();
+        final name = nativeName(code);
+        home.language.value = name;
+        home.languageController.text = name;
+      }
+    } catch (_) {}
   }
 
   Future<void> setThemeModePref(String mode) async {
@@ -45,9 +54,8 @@ class LocaleThemeService extends GetxService {
   }
 
   ThemeMode _parseTheme(String mode) => switch (mode) {
-        'light' => ThemeMode.light,
         'dark' => ThemeMode.dark,
-        _ => ThemeMode.system,
+        _ => ThemeMode.light,
       };
 
   static String nativeName(String code) => switch (code) {

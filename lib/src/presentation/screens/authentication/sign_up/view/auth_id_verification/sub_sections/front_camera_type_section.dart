@@ -37,7 +37,17 @@ class FrontCameraTypeSection extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 16.h),
-                    CommonAppBar(title: localizations.frontCameraTypeBack),
+                    CommonAppBar(
+                      title: localizations.frontCameraTypeBack,
+                      isBackLogicApply: true,
+                      backLogicFunction: () {
+                        if (controller.currentFieldIndex.value > 0) {
+                          controller.currentFieldIndex.value--;
+                        } else {
+                          Get.back();
+                        }
+                      },
+                    ),
                     Stack(
                       alignment: Alignment.center,
                       children: [

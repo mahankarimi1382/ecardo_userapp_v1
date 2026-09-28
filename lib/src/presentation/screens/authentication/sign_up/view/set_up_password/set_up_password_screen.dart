@@ -24,7 +24,18 @@ class SetUpPasswordScreen extends StatefulWidget {
 }
 
 class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
-  final SetUpPasswordController controller = Get.find();
+  late final SetUpPasswordController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<SetUpPasswordController>()
+        ? Get.find<SetUpPasswordController>()
+        : Get.put(SetUpPasswordController());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.resetFields();
+    });
+  }
 
   @override
   void initState() {
@@ -202,6 +213,7 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                       ),
                       SizedBox(height: 5.h),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Obx(
                             () => Checkbox(
@@ -219,54 +231,52 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                               value:
                                   controller.isTermsAndConditionChecked.value,
                               onChanged: (bool? value) {
-                                Future.microtask(() {
-                                  controller.isTermsAndConditionChecked.value =
-                                      value!;
-                                });
+                                controller.isTermsAndConditionChecked.value =
+                                    value ?? false;
                               },
                             ),
                           ),
-                          SizedBox(width: 3.w),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  controller.isTermsAndConditionChecked.value =
-                                      !controller
-                                          .isTermsAndConditionChecked
-                                          .value;
-                                },
-                                child: Text(
-                                  localizations.setupPasswordAgreeTerms,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0,
-                                    fontSize: 14.sp,
-                                    color: AppColors.lightTextPrimary,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.to(
-                                    () => WebViewDynamic(
-                                      dynamicUrl:
-                                          "${ApiPath.baseUrl}${ApiPath.termsAndConditionsEndpoint}",
+                          SizedBox(width: 6.w),
+                          Expanded(
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    controller.isTermsAndConditionChecked.toggle();
+                                  },
+                                  child: Text(
+                                    localizations.setupPasswordAgreeTerms,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0,
+                                      fontSize: 13.sp,
+                                      color: AppColors.lightTextPrimary,
                                     ),
-                                  );
-                                },
-                                child: Text(
-                                  localizations.setupPasswordTermsConditions,
-                                  style: TextStyle(
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14.sp,
-                                    color: AppColors.lightPrimary,
                                   ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 4),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                      () => WebViewDynamic(
+                                        dynamicUrl:
+                                            "${ApiPath.baseUrl}${ApiPath.termsAndConditionsEndpoint}",
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    localizations.setupPasswordTermsConditions,
+                                    style: TextStyle(
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13.sp,
+                                      color: AppColors.lightPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

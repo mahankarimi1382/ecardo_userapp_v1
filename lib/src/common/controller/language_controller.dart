@@ -39,13 +39,16 @@ class LanguageController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchLanguages() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? 'Failed to load languages');
     } finally {}
   }
 
   Future<void> changeLanguage(String selectedLocale) async {
-    await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
-      selectedLocale,
-    );
+    if (Get.isRegistered<LocaleThemeService>()) {
+      await Get.find<LocaleThemeService>().setLanguage(selectedLocale);
+    } else {
+      Get.updateLocale(Locale(selectedLocale));
+      await Get.find<SettingsService>().saveLanguageLocaleCurrentState(selectedLocale);
+    }
   }
 }

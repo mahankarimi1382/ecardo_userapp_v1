@@ -79,55 +79,7 @@ class _IdVerificationState extends State<IdVerification> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
-                        padding: const EdgeInsetsDirectional.only(
-                          start: 18,
-                          end: 18,
-                          top: 16,
-                        ),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              localization.idVerificationCenterTitle,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 18,
-                                letterSpacing: 0,
-                                color: AppColors.lightTextPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Divider(
-                              color: AppColors.black.withValues(alpha: 0.15),
-                              height: 0,
-                            ),
-                            const SizedBox(height: 24),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.5,
-                              child: Center(
-                                child: Text(
-                                  localization.idVerificationNothingToSubmit,
-                                  style: TextStyle(
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                    color: AppColors.lightTextPrimary,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                      ),
+
                     ],
                   ),
                 ),
