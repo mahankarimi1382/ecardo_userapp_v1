@@ -4,7 +4,6 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 class DarkTheme {
   ThemeData darkTheme(BuildContext context) {
     const brand = AppColors.mainSoftBlue;
-    const brandDeep = AppColors.darkGray;
     const scheme = ColorScheme.dark(
       primary: brand,
       onPrimary: AppColors.deepBlack,
