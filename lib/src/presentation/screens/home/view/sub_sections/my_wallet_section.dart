@@ -87,7 +87,7 @@ class MyWalletSection extends StatelessWidget {
     // a wallet served with any of them null threw mid-build and grey-screened
     // the whole home page. Degrade gracefully instead.
     final currencyCode = wallet.code ?? '';
-    final currencyIcon = wallet.icon.toString();
+    final currencyIcon = wallet.icon?.toString() ?? "";
     final currencySymbol = wallet.symbol.toString();
     final title = wallet.name ?? currencyCode;
     final formatedBalance = wallet.formattedBalance ?? '0';
@@ -174,15 +174,21 @@ class MyWalletSection extends StatelessWidget {
                   color: AppColors.lightTextPrimary.withValues(alpha: 0.20),
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: Image.network(
-                  currencyIcon,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(
-                      PngAssets.commonErrorIcon,
-                      color: AppColors.error.withValues(alpha: 0.7),
-                    );
-                  },
-                ),
+                child: (currencyIcon.isNotEmpty && currencyIcon != "null")
+                    ? Image.network(
+                        currencyIcon,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            PngAssets.commonErrorIcon,
+                            color: AppColors.error.withValues(alpha: 0.7),
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        PngAssets.cryptocurrencyIcon,
+                        width: 24,
+                        height: 24,
+                      ),
               ),
         const SizedBox(width: 10),
         Column(

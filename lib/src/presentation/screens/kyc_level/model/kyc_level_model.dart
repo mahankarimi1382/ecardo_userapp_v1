@@ -83,7 +83,19 @@ class KycLevel {
   bool get isLocked => status == 'locked';
 
   /// آیا این سطح به feature خاصی دسترسی دارد؟
-  bool hasFeature(String feature) => features.contains(feature);
+  bool hasFeature(String feature) {
+    if (features.contains(feature)) return true;
+    final norm = feature.replaceAll('-', '_').toLowerCase();
+    if (features.map((f) => f.replaceAll('-', '_').toLowerCase()).contains(norm)) {
+      return true;
+    }
+    // Cross-layer aliases
+    if (norm == 'request_money' && (features.contains('request_money') || features.contains('request-money'))) return true;
+    if ((norm == 'payment_links' || norm == 'pay_bill') && features.contains('payment')) return true;
+    if ((norm == 'gift_send' || norm == 'gift_redeem' || norm == 'gift_cards') && features.contains('gift')) return true;
+    if ((norm == 'virtual_card' || norm == 'virtual_cards') && features.contains('paycardo')) return true;
+    return false;
+  }
 }
 
 /// Badge کاربر — اطلاعات خلاصه‌ی سطح فعلی + مرحله بعدی.
@@ -155,7 +167,19 @@ class KycBadge {
   bool get isRejected => kycStatus == 'failed';
   bool get isNotSubmitted => kycStatus == 'not_submitted';
 
-  bool hasFeature(String feature) => features.contains(feature);
+  bool hasFeature(String feature) {
+    if (features.contains(feature)) return true;
+    final norm = feature.replaceAll('-', '_').toLowerCase();
+    if (features.map((f) => f.replaceAll('-', '_').toLowerCase()).contains(norm)) {
+      return true;
+    }
+    // Cross-layer aliases
+    if (norm == 'request_money' && (features.contains('request_money') || features.contains('request-money'))) return true;
+    if ((norm == 'payment_links' || norm == 'pay_bill') && features.contains('payment')) return true;
+    if ((norm == 'gift_send' || norm == 'gift_redeem' || norm == 'gift_cards') && features.contains('gift')) return true;
+    if ((norm == 'virtual_card' || norm == 'virtual_cards') && features.contains('paycardo')) return true;
+    return false;
+  }
 }
 
 /// اطلاعات سطح بعدی برای ارتقا.

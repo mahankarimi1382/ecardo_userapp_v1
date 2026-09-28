@@ -25,7 +25,7 @@ class WalletDetails extends StatefulWidget {
 
 class _WalletDetailsState extends State<WalletDetails> {
   final WalletDetailsController controller = Get.find();
-  final walletId = Get.arguments['wallet_id'];
+  final walletId = Get.arguments is Map ? Get.arguments['wallet_id'] : null;
   late ScrollController _scrollController;
 
   @override
@@ -165,12 +165,13 @@ class _WalletDetailsState extends State<WalletDetails> {
                         padding: const EdgeInsetsDirectional.symmetric(
                           horizontal: 18,
                         ),
-                        child: Image.asset(
-                          isRtl
-                              ? PngAssets.arrowLeftCommonIcon
-                              : PngAssets.arrowLeftCommonIcon,
-                          width: 28,
-                          color: AppColors.white,
+                        child: Transform.rotate(
+                          angle: isRtl ? 3.14159 : 0,
+                          child: Image.asset(
+                            PngAssets.arrowLeftCommonIcon,
+                            width: 28,
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -185,7 +186,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                               localization.walletDetailsWalletsNotFound,
                           dropdownItems: controller.walletsList,
                           bottomSheetHeight: 450,
-                          currentlySelectedValue: controller.wallet.value!.name,
+                          currentlySelectedValue: controller.wallet.value?.name ?? "",
                           onItemSelected: (value) async {
                             final selectedWallet = controller.walletsList
                                 .firstWhere((w) => w.name == value);
@@ -226,7 +227,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                         children: [
                           Row(
                             children: [
-                              controller.wallet.value!.isDefault == true
+                              controller.wallet.value?.isDefault == true
                                   ? Container(
                                       alignment: Alignment.center,
                                       width: 28,

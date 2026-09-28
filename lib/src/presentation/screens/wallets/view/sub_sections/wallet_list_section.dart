@@ -107,17 +107,23 @@ class WalletListSection extends StatelessWidget {
                                   ),
                                   borderRadius: BorderRadius.circular(100),
                                 ),
-                                child: Image.network(
-                                  item.icon!,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      PngAssets.commonErrorIcon,
-                                      color: AppColors.error.withValues(
-                                        alpha: 0.7,
+                                child: (item.icon != null && item.icon!.isNotEmpty)
+                                    ? Image.network(
+                                        item.icon!,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Image.asset(
+                                            PngAssets.commonErrorIcon,
+                                            color: AppColors.error.withValues(
+                                              alpha: 0.7,
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : Image.asset(
+                                        PngAssets.cryptocurrencyIcon,
+                                        width: 24,
+                                        height: 24,
                                       ),
-                                    );
-                                  },
-                                ),
                               ),
                         SizedBox(width: 10),
                         Column(
@@ -159,8 +165,8 @@ class WalletListSection extends StatelessWidget {
                     ),
                     Text(
                       item.isDefault == true
-                          ? "${item.symbol}${item.formattedBalance}"
-                          : "${item.formattedBalance} ${item.code}",
+                          ? "${item.symbol ?? ''}${item.formattedBalance ?? '0'}"
+                          : "${item.formattedBalance ?? '0'} ${item.code ?? ''}",
                       style: const TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w700,

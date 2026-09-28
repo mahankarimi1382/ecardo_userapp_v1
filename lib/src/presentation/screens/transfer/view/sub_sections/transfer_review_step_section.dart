@@ -160,41 +160,15 @@ class TransferReviewStepSection extends StatelessWidget {
                       () => CommonIconButton(
                         isLoading: controller.isTransferAmountLoading.value,
                         onPressed: () async {
-                          final saved =
-                              controller.userModel.value.data?.passcode;
-                          final hasPasscode =
-                              PasscodeHelper.userHasPasscode(saved);
-
-                          // Mandatory: user must have set a passcode.
-                          if (!hasPasscode) {
-                            ToastHelper().showErrorToast(
-                              localization.twoFactorValidationEnterPasscode,
-                            );
+                          final String? verified = await Get.bottomSheet<String>(
+                            const VerifyPasscodeBottomSheet(),
+                          );
+                          if (verified == null || !PasscodeHelper.isValidFormat(verified)) {
                             return;
                           }
-
-                          final moduleOn = settingsService.getSetting(
-                                PasscodeHelper.transferSetting,
-                              ) ==
-                              '1';
-
-                          // Always require passcode when user has one and
-                          // module toggle is on (default production path).
-                          if (moduleOn || hasPasscode) {
-                            final String? verified =
-                                await Get.bottomSheet<String>(
-                              const VerifyPasscodeBottomSheet(),
-                            );
-                            if (verified == null ||
-                                !PasscodeHelper.isValidFormat(verified)) {
-                              return;
-                            }
-                            await controller.transferAmount(
-                              passcode: verified,
-                            );
-                          } else {
-                            await controller.transferAmount();
-                          }
+                          await controller.transferAmount(
+                            passcode: verified,
+                          );
                         },
                         width: double.infinity,
                         height: 52,

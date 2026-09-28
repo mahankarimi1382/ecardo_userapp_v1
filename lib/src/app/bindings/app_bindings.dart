@@ -328,6 +328,9 @@ class IDVerificationBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut<IdVerificationController>(() => IdVerificationController());
+    if (!Get.isRegistered<KycLevelController>()) {
+      Get.lazyPut<KycLevelController>(() => KycLevelController());
+    }
   }
 }
 
