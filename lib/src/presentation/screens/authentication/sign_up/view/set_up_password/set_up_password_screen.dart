@@ -37,13 +37,7 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.resetFields();
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
