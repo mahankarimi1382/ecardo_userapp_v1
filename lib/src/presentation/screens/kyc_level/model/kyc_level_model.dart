@@ -64,7 +64,7 @@ class KycLevel {
       case 'blue':
         return 0xFF2196F3;
       case 'purple':
-        return 0xFF7445FF;
+        return 0xFFABC3EA;
       default:
         return 0xFF9E9E9E; // gray
     }
@@ -144,7 +144,7 @@ class KycBadge {
       case 'blue':
         return 0xFF2196F3;
       case 'purple':
-        return 0xFF7445FF;
+        return 0xFFABC3EA;
       default:
         return 0xFF9E9E9E;
     }

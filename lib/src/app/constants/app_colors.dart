@@ -1,37 +1,45 @@
 import 'package:flutter/material.dart';
 
-/// AppColors — central color palette for the eCardo app.
-///
-/// All screens should reference colors from this class only.
-/// Never hardcode hex values in widgets.
+/// AppColors — central color palette for the bank of al barkat app.
+/// Based on NUVO Palette (Dark / Neutral / Soft Blue / Warm Metallic).
 class AppColors {
+  // ------------------ NUVO PALETTE SPEC ------------------
+  static const Color deepBlack = Color(0xFF161614); /* Primary Background */
+  static const Color darkGray = Color(0xFF262625); /* Secondary Background */
+  static const Color softGray = Color(0xFF656262); /* Secondary Text / Icons */
+  static const Color warmWhite = Color(0xFFE7E0DE); /* Primary Text / Light Surface */
+  static const Color lightWarmGray = Color(0xFFD5CBC8); /* Borders / Dividers */
+  static const Color mainSoftBlue = Color(0xFFABC3EA); /* Primary Accent / Main Surface */
+  static const Color mutedBlue = Color(0xFF849ACD); /* Secondary Accent / Cards */
+  static const Color warmBrown = Color(0xFF87624C); /* Financial / Card Elements */
+  static const Color taupeBronze = Color(0xFFB3A9A5); /* Warm Neutral / Metallic */
+
   // ------------------ LIGHT THEME ------------------
 
   // Background Colors
-  static const Color lightBackground = Color(0xFFF8F8F8);
+  static const Color lightBackground = Color(0xFFF9F9FB);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightCard = Color(0xFFFFFFFF);
 
-  // Primary Colors
-  static const Color lightPrimary = Color(0xFF7445FF);
-  static const Color lightPrimaryContainer = Color(0xFFEFEDFF);
-  static const Color lightPrimaryDark = Color(0xFF5A35CC);
+  // Primary Colors (Monochrome & Black/White with Deep Black primary)
+  static const Color lightPrimary = deepBlack;
+  static const Color lightPrimaryContainer = mainSoftBlue;
+  static const Color lightPrimaryDark = darkGray;
 
   // Accent / Secondary
-  static const Color lightSecondary = Color(0xFF00BFA6);
-  static const Color lightAccent = Color(0xFFFF7A00);
+  static const Color lightSecondary = mutedBlue;
+  static const Color lightAccent = mainSoftBlue;
 
   // Text Colors
-  static const Color lightTextPrimary = Color(0xFF2D2D2D);
-  static Color lightTextTertiary = Color(0xFF2D2D2D).withValues(alpha: 0.60);
-  static const Color lightTextSecondary = Color(0xFF6B6B6B);
-  // phase3-fix: 0xFF9E9E9E failed WCAG AA on white (≈2.7:1)
-  static const Color lightTextHint = Color(0xFF757575);
+  static const Color lightTextPrimary = deepBlack;
+  static Color lightTextTertiary = deepBlack.withValues(alpha: 0.60);
+  static const Color lightTextSecondary = softGray;
+  static const Color lightTextHint = softGray;
   static const Color lightTextOnPrimary = Color(0xFFFFFFFF);
 
   // Border / Divider
-  static const Color lightBorder = Color(0xFFE0E0E0);
-  static const Color lightDivider = Color(0xFFEEEEEE);
+  static const Color lightBorder = lightWarmGray;
+  static const Color lightDivider = lightWarmGray;
   static const Color lightShadow = Color(0x1A000000);
 
   // ------------------ UTILITY ------------------
@@ -43,23 +51,22 @@ class AppColors {
   static const Color warningContainer = Color(0xFFFFF8E1);
   static const Color success = Color(0xFF14AE6F);
   static const Color successContainer = Color(0xFFE8F8F0);
-  static const Color info = Color(0xFF2196F3);
-  static const Color infoContainer = Color(0xFFE3F2FD);
+  static const Color info = mutedBlue;
+  static const Color infoContainer = Color(0xFFEBF1FA);
 
   // Neutral
   static const Color white = Colors.white;
   static const Color black = Colors.black;
   static const Color transparent = Colors.transparent;
-  static const Color grey = Color(0xFF9E9E9E);
-  static const Color greyLight = Color(0xFFBDBDBD);
-  static const Color greyDark = Color(0xFF616161);
+  static const Color grey = softGray;
+  static const Color greyLight = lightWarmGray;
+  static const Color greyDark = darkGray;
 
-  // ------------------ DARK THEME (future) ------------------
-  // Placeholder — will be filled when dark theme is implemented
-  static const Color darkBackground = Color(0xFF121212);
-  static const Color darkSurface = Color(0xFF1E1E1E);
-  static const Color darkPrimary = Color(0xFF9D7AFF);
-  static const Color darkTextPrimary = Color(0xFFFFFFFF);
-  static const Color darkTextSecondary = Color(0xFFB0B0B0);
-  static const Color darkBorder = Color(0xFF2A2A2A);
+  // ------------------ DARK THEME ------------------
+  static const Color darkBackground = deepBlack;
+  static const Color darkSurface = darkGray;
+  static const Color darkPrimary = mainSoftBlue;
+  static const Color darkTextPrimary = warmWhite;
+  static const Color darkTextSecondary = softGray;
+  static const Color darkBorder = darkGray;
 }

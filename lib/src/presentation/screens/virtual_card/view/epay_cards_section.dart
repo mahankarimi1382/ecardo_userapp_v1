@@ -98,7 +98,7 @@ class EpayCardsSection extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16.r),
                     gradient: const LinearGradient(
-                      colors: [Color(0xFF3D248F), Color(0xFF7445FF)],
+                      colors: [AppColors.deepBlack, AppColors.darkGray],
                     ),
                   ),
                   child: Column(

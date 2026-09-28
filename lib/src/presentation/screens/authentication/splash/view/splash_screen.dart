@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_strings.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/splash/controller/splash_controller.dart';
@@ -40,10 +41,10 @@ class _SplashScreenState extends State<SplashScreen>
   String _version = '';
 
   static const _gradientColors = [
-    Color(0xFF8B6BFF),
-    AppColors.lightPrimary,
-    AppColors.lightPrimaryDark,
-    Color(0xFF3D248F),
+    Color(0xFF262625),
+    Color(0xFF1E1E1C),
+    AppColors.deepBlack,
+    Color(0xFF10100E),
   ];
 
   @override
@@ -55,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
-        systemNavigationBarColor: Color(0xFF3D248F),
+        systemNavigationBarColor: AppColors.deepBlack,
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
@@ -140,7 +141,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       // Critical: default Scaffold is white — any gap would show as
       // "half white page". Match the gradient bottom stop.
-      backgroundColor: const Color(0xFF3D248F),
+      backgroundColor: AppColors.deepBlack,
       body: SizedBox(
         width: size.width,
         height: size.height,
@@ -166,7 +167,7 @@ class _SplashScreenState extends State<SplashScreen>
                 left: -80,
                 child: _orb(
                   180,
-                  const Color(0xFF00BFA6).withValues(alpha: 0.10),
+                  AppColors.mainSoftBlue.withValues(alpha: 0.12),
                 ),
               ),
               Positioned(
@@ -241,7 +242,7 @@ class _SplashScreenState extends State<SplashScreen>
                         child: SlideTransition(
                           position: _wordSlide,
                           child: Text(
-                            'eCardo',
+                            AppStrings.appName,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: (42.sp).clamp(28.0, 48.0).toDouble(),

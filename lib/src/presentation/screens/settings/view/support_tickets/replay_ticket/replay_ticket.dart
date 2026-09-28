@@ -116,7 +116,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           padding: const EdgeInsetsDirectional.only(end: 18),
                           child: CommonButton(
                             backgroundColor: AppColors.transparent,
-                            borderColor: Color(0xFF7445FF),
+                            borderColor: AppColors.lightPrimary,
                             borderWidth: 1.5,
                             width: 125,
                             height: 40,

@@ -208,7 +208,7 @@ class _Avatar extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
-        color: Color(0xFF3D248F),
+        color: AppColors.darkGray,
         shape: BoxShape.circle,
       ),
       child: Text(

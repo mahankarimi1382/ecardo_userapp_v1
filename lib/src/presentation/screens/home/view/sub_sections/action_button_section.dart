@@ -47,7 +47,7 @@ class ActionButtonSection extends StatelessWidget {
                 );
               }
             },
-            backgroundColor: const Color(0xFFA869FF).withValues(alpha: 0.3),
+            backgroundColor: const Color(0xFFABC3EA).withValues(alpha: 0.25),
           ),
           _buildButtons(
             context,
@@ -63,7 +63,7 @@ class ActionButtonSection extends StatelessWidget {
                 );
               }
             },
-            backgroundColor: const Color(0xFFFF77BA).withValues(alpha: 0.3),
+            backgroundColor: const Color(0xFFB3A9A5).withValues(alpha: 0.28),
           ),
           if (Get.find<SettingsService>().getSetting("agent_system") == "1")
             _buildButtons(
@@ -80,7 +80,7 @@ class ActionButtonSection extends StatelessWidget {
                   );
                 }
               },
-              backgroundColor: const Color(0xFFFFBB8C).withValues(alpha: 0.3),
+              backgroundColor: const Color(0xFF849ACD).withValues(alpha: 0.25),
             ),
           _buildButtons(
             context,
@@ -96,7 +96,7 @@ class ActionButtonSection extends StatelessWidget {
                 );
               }
             },
-            backgroundColor: const Color(0xFFA869FF).withValues(alpha: 0.3),
+            backgroundColor: const Color(0xFFABC3EA).withValues(alpha: 0.25),
           ),
         ],
       ),

@@ -161,8 +161,8 @@ class CommonVirtualCardView extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _color(primaryColor, const Color(0xFF7445FF)),
-            _color(secondaryColor, const Color(0xFF4C2BB3)),
+            _color(primaryColor, const Color(0xFF161614)),
+            _color(secondaryColor, const Color(0xFF262625)),
           ],
         ),
       ),
