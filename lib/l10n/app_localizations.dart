@@ -15166,6 +15166,18 @@ abstract class AppLocalizations {
   /// **'Choose your destination to see available services'**
   String get travelServicesHint;
 
+  /// No description provided for @travelAvailableNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Available now'**
+  String get travelAvailableNow;
+
+  /// No description provided for @travelComingSoonSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get travelComingSoonSection;
+
   /// No description provided for @businessServicesTitle.
   ///
   /// In en, this message translates to:
@@ -15363,6 +15375,930 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Money Transfer'**
   String get businessServiceMoneyTransfer;
+
+  /// No description provided for @twoFactorValidationEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get twoFactorValidationEnterPassword;
+
+  /// No description provided for @twoFactorValidationEnterOldPasscode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your old passcode'**
+  String get twoFactorValidationEnterOldPasscode;
+
+  /// No description provided for @twoFactorValidationEnterNewPasscode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a new passcode'**
+  String get twoFactorValidationEnterNewPasscode;
+
+  /// No description provided for @twoFactorValidationEnterConfirmPasscode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your passcode'**
+  String get twoFactorValidationEnterConfirmPasscode;
+
+  /// No description provided for @twoFactorValidationEnterPasscode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a passcode'**
+  String get twoFactorValidationEnterPasscode;
+
+  /// No description provided for @twoFactorValidationPasscodesDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passcode and confirm passcode do not match'**
+  String get twoFactorValidationPasscodesDoNotMatch;
+
+  /// No description provided for @twoFactorValidationNewPasscodesDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'New passcode and confirm passcode do not match'**
+  String get twoFactorValidationNewPasscodesDoNotMatch;
+
+  /// No description provided for @webViewLinkCannotOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'This link cannot be opened in the app.'**
+  String get webViewLinkCannotOpen;
+
+  /// No description provided for @networkReconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'You are back online'**
+  String get networkReconnected;
+
+  /// No description provided for @vpnHintBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'VPN detected — turn it off for a more stable experience'**
+  String get vpnHintBanner;
+
+  /// No description provided for @signInWithTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Telegram'**
+  String get signInWithTelegram;
+
+  /// No description provided for @signInTelegramUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram sign-in will be available once enabled on the server.'**
+  String get signInTelegramUnavailable;
+
+  /// No description provided for @sessionExpiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please sign in again.'**
+  String get sessionExpiredMessage;
+
+  /// No description provided for @travelFromPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get travelFromPrice;
+
+  /// No description provided for @travelSearchAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get travelSearchAction;
+
+  /// No description provided for @travelSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search…'**
+  String get travelSearchPlaceholder;
+
+  /// No description provided for @travelMockCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Toman'**
+  String get travelMockCurrency;
+
+  /// No description provided for @travelMyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'My requests'**
+  String get travelMyRequests;
+
+  /// No description provided for @travelRequestReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking code'**
+  String get travelRequestReference;
+
+  /// No description provided for @travelRequestSubmittedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted at'**
+  String get travelRequestSubmittedAt;
+
+  /// No description provided for @travelRequestDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Request details'**
+  String get travelRequestDetails;
+
+  /// No description provided for @travelRequestUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get travelRequestUnderReview;
+
+  /// No description provided for @travelRequestApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get travelRequestApproved;
+
+  /// No description provided for @travelRequestRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get travelRequestRejected;
+
+  /// No description provided for @travelRequestSubmittedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request submitted'**
+  String get travelRequestSubmittedTitle;
+
+  /// No description provided for @travelRequestSubmittedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request was recorded with the “Under review” status. The result will be reported to you in “My requests”.'**
+  String get travelRequestSubmittedDescription;
+
+  /// No description provided for @travelRequestBackHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to travel services'**
+  String get travelRequestBackHome;
+
+  /// No description provided for @travelRequestEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No requests yet'**
+  String get travelRequestEmptyTitle;
+
+  /// No description provided for @travelRequestEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests you submit through the travel services — and their review status — will show up here.'**
+  String get travelRequestEmptyDescription;
+
+  /// No description provided for @travelFormSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit request'**
+  String get travelFormSubmit;
+
+  /// No description provided for @travelFormRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get travelFormRequired;
+
+  /// No description provided for @travelFormPickHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick'**
+  String get travelFormPickHint;
+
+  /// No description provided for @travelExtraUnderReviewNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This request is recorded internally. After the operators review it, its status updates in “My requests”.'**
+  String get travelExtraUnderReviewNote;
+
+  /// No description provided for @travelFieldTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get travelFieldTime;
+
+  /// No description provided for @travelFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get travelFieldName;
+
+  /// No description provided for @travelFieldPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get travelFieldPhone;
+
+  /// No description provided for @travelFieldNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get travelFieldNote;
+
+  /// No description provided for @travelFieldQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get travelFieldQuantity;
+
+  /// No description provided for @travelFieldAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get travelFieldAddress;
+
+  /// No description provided for @travelFieldAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (Toman)'**
+  String get travelFieldAmount;
+
+  /// No description provided for @travelCatalogNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches your search.'**
+  String get travelCatalogNoResults;
+
+  /// No description provided for @travelCatalogDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get travelCatalogDetails;
+
+  /// No description provided for @travelCatalogRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get travelCatalogRating;
+
+  /// No description provided for @travelCatalogRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get travelCatalogRequest;
+
+  /// No description provided for @travelCatalogPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get travelCatalogPerDay;
+
+  /// No description provided for @travelCatalogPerPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'per person'**
+  String get travelCatalogPerPerson;
+
+  /// No description provided for @travelCatalogPerItem.
+  ///
+  /// In en, this message translates to:
+  /// **'per item'**
+  String get travelCatalogPerItem;
+
+  /// No description provided for @travelCatalogPerService.
+  ///
+  /// In en, this message translates to:
+  /// **'per service'**
+  String get travelCatalogPerService;
+
+  /// No description provided for @travelTrainHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Rail journeys — safe and affordable'**
+  String get travelTrainHero;
+
+  /// No description provided for @travelTrainClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Train class'**
+  String get travelTrainClass;
+
+  /// No description provided for @travelTrainEconomy.
+  ///
+  /// In en, this message translates to:
+  /// **'Economy'**
+  String get travelTrainEconomy;
+
+  /// No description provided for @travelTrainCoupe.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupe'**
+  String get travelTrainCoupe;
+
+  /// No description provided for @travelTrainVip.
+  ///
+  /// In en, this message translates to:
+  /// **'VIP'**
+  String get travelTrainVip;
+
+  /// No description provided for @travelTrainResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Train results'**
+  String get travelTrainResults;
+
+  /// No description provided for @travelTrainResultsGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a train; compare departure times, classes and remaining seats.'**
+  String get travelTrainResultsGuidance;
+
+  /// No description provided for @travelSortRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get travelSortRecommended;
+
+  /// No description provided for @travelSortCheapest.
+  ///
+  /// In en, this message translates to:
+  /// **'Cheapest'**
+  String get travelSortCheapest;
+
+  /// No description provided for @travelSortEarliest.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest'**
+  String get travelSortEarliest;
+
+  /// No description provided for @travelSortFastest.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest'**
+  String get travelSortFastest;
+
+  /// No description provided for @travelTrainNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Train number'**
+  String get travelTrainNumber;
+
+  /// No description provided for @travelTrainDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Train details'**
+  String get travelTrainDetails;
+
+  /// No description provided for @travelTrainContinueToPassengers.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to passengers'**
+  String get travelTrainContinueToPassengers;
+
+  /// No description provided for @travelTrainDetailsGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the train, classes and cancellation rules before adding passengers.'**
+  String get travelTrainDetailsGuidance;
+
+  /// No description provided for @travelTrainOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get travelTrainOperator;
+
+  /// No description provided for @travelTrainWagon.
+  ///
+  /// In en, this message translates to:
+  /// **'Wagon'**
+  String get travelTrainWagon;
+
+  /// No description provided for @travelTrainWagonType.
+  ///
+  /// In en, this message translates to:
+  /// **'Open saloon / closed coupe depending on class'**
+  String get travelTrainWagonType;
+
+  /// No description provided for @travelTrainSeatsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'seats left'**
+  String get travelTrainSeatsLeft;
+
+  /// No description provided for @travelTrainPolicyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation is allowed up to 48h before departure with a 10% penalty. The contact mobile must be active; the ticket is issued after approval and payment and can be tracked in “My requests”.'**
+  String get travelTrainPolicyNote;
+
+  /// No description provided for @travelTrainPassengers.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger details'**
+  String get travelTrainPassengers;
+
+  /// No description provided for @travelTrainPassengerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger'**
+  String get travelTrainPassengerLabel;
+
+  /// No description provided for @travelTrainConfirmBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit ticket request'**
+  String get travelTrainConfirmBooking;
+
+  /// No description provided for @travelTrainNationalCode.
+  ///
+  /// In en, this message translates to:
+  /// **'National ID'**
+  String get travelTrainNationalCode;
+
+  /// No description provided for @travelTrainGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get travelTrainGender;
+
+  /// No description provided for @travelTrainContactPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact mobile'**
+  String get travelTrainContactPhone;
+
+  /// No description provided for @travelTrainBookingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The train ticket is issued after approval and payment; its status is tracked in “My requests”.'**
+  String get travelTrainBookingNote;
+
+  /// No description provided for @travelVisaHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination visas, without the hassle'**
+  String get travelVisaHero;
+
+  /// No description provided for @travelVisaIntroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a destination country, fill in the application form and send your documents. The review is handled by our operators.'**
+  String get travelVisaIntroDescription;
+
+  /// No description provided for @travelVisaStepDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Send documents'**
+  String get travelVisaStepDocuments;
+
+  /// No description provided for @travelVisaStepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator review'**
+  String get travelVisaStepReview;
+
+  /// No description provided for @travelVisaStepIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa issued'**
+  String get travelVisaStepIssue;
+
+  /// No description provided for @travelVisaCountries.
+  ///
+  /// In en, this message translates to:
+  /// **'Countries with visa service'**
+  String get travelVisaCountries;
+
+  /// No description provided for @travelVisaProcessingDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing: {days} business days'**
+  String travelVisaProcessingDays(int days);
+
+  /// No description provided for @travelVisaFormTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa application form'**
+  String get travelVisaFormTitle;
+
+  /// No description provided for @travelVisaDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Required documents'**
+  String get travelVisaDocuments;
+
+  /// No description provided for @travelVisaType.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa type'**
+  String get travelVisaType;
+
+  /// No description provided for @travelVisaTourist.
+  ///
+  /// In en, this message translates to:
+  /// **'Tourist'**
+  String get travelVisaTourist;
+
+  /// No description provided for @travelVisaBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get travelVisaBusiness;
+
+  /// No description provided for @travelVisaEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries'**
+  String get travelVisaEntries;
+
+  /// No description provided for @travelVisaSingleEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Single entry'**
+  String get travelVisaSingleEntry;
+
+  /// No description provided for @travelVisaMultipleEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple entry'**
+  String get travelVisaMultipleEntry;
+
+  /// No description provided for @travelVisaApplicants.
+  ///
+  /// In en, this message translates to:
+  /// **'Applicants'**
+  String get travelVisaApplicants;
+
+  /// No description provided for @travelVisaTravelDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel date'**
+  String get travelVisaTravelDate;
+
+  /// No description provided for @travelVisaFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name (Latin)'**
+  String get travelVisaFullName;
+
+  /// No description provided for @travelVisaPassportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport number'**
+  String get travelVisaPassportNumber;
+
+  /// No description provided for @travelVisaPassportExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport expiry date'**
+  String get travelVisaPassportExpiry;
+
+  /// No description provided for @travelVisaSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit visa request'**
+  String get travelVisaSubmit;
+
+  /// No description provided for @travelReserveDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Reservation date'**
+  String get travelReserveDate;
+
+  /// No description provided for @travelCarRentalHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Book your travel car online'**
+  String get travelCarRentalHero;
+
+  /// No description provided for @travelCarAgency.
+  ///
+  /// In en, this message translates to:
+  /// **'Rental company'**
+  String get travelCarAgency;
+
+  /// No description provided for @travelCarSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Seats'**
+  String get travelCarSeats;
+
+  /// No description provided for @travelCarTransmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Transmission'**
+  String get travelCarTransmission;
+
+  /// No description provided for @travelCarAutomatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get travelCarAutomatic;
+
+  /// No description provided for @travelCarManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get travelCarManual;
+
+  /// No description provided for @travelCarDeposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Refundable deposit'**
+  String get travelCarDeposit;
+
+  /// No description provided for @travelCarPickupDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup date'**
+  String get travelCarPickupDate;
+
+  /// No description provided for @travelCarReturnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Return date'**
+  String get travelCarReturnDate;
+
+  /// No description provided for @travelTourHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready-made tours with a clear plan'**
+  String get travelTourHero;
+
+  /// No description provided for @travelTourDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Tour length'**
+  String get travelTourDays;
+
+  /// No description provided for @travelTourStars.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel rating'**
+  String get travelTourStars;
+
+  /// No description provided for @travelTourCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining capacity'**
+  String get travelTourCapacity;
+
+  /// No description provided for @travelTourDepartureDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure date'**
+  String get travelTourDepartureDate;
+
+  /// No description provided for @travelBoatHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea and leisure routes'**
+  String get travelBoatHero;
+
+  /// No description provided for @travelBoatDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Journey time'**
+  String get travelBoatDuration;
+
+  /// No description provided for @travelBoatCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity'**
+  String get travelBoatCapacity;
+
+  /// No description provided for @travelBoatClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Ferry class'**
+  String get travelBoatClass;
+
+  /// No description provided for @travelRestaurantHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Reserve your table before you arrive'**
+  String get travelRestaurantHero;
+
+  /// No description provided for @travelRestaurantCuisine.
+  ///
+  /// In en, this message translates to:
+  /// **'Cuisine'**
+  String get travelRestaurantCuisine;
+
+  /// No description provided for @travelRestaurantHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours'**
+  String get travelRestaurantHours;
+
+  /// No description provided for @travelRestaurantCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity'**
+  String get travelRestaurantCapacity;
+
+  /// No description provided for @travelRestaurantGuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Guests'**
+  String get travelRestaurantGuests;
+
+  /// No description provided for @travelFoodHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast delivery to your stay'**
+  String get travelFoodHero;
+
+  /// No description provided for @travelFoodPreparation.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparation time'**
+  String get travelFoodPreparation;
+
+  /// No description provided for @travelSupermarketHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel essentials, delivered to your door'**
+  String get travelSupermarketHero;
+
+  /// No description provided for @travelSupermarketUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get travelSupermarketUnit;
+
+  /// No description provided for @travelStoreHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel store — delivered at the destination'**
+  String get travelStoreHero;
+
+  /// No description provided for @travelStoreBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get travelStoreBrand;
+
+  /// No description provided for @travelStoreWarranty.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty'**
+  String get travelStoreWarranty;
+
+  /// No description provided for @travelLocalHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Local services at the destination'**
+  String get travelLocalHero;
+
+  /// No description provided for @travelLocalDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Service duration'**
+  String get travelLocalDuration;
+
+  /// No description provided for @travelLocalLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get travelLocalLanguages;
+
+  /// No description provided for @travelInsuranceHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Insure your trip'**
+  String get travelInsuranceHero;
+
+  /// No description provided for @travelInsuranceCoverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Coverage limit'**
+  String get travelInsuranceCoverage;
+
+  /// No description provided for @travelInsuranceDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Validity'**
+  String get travelInsuranceDuration;
+
+  /// No description provided for @travelTranslatorHero.
+  ///
+  /// In en, this message translates to:
+  /// **'An interpreter at the destination'**
+  String get travelTranslatorHero;
+
+  /// No description provided for @travelTranslatorLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get travelTranslatorLanguages;
+
+  /// No description provided for @travelTranslatorExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get travelTranslatorExperience;
+
+  /// No description provided for @travelEmergencyHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency support for travellers'**
+  String get travelEmergencyHero;
+
+  /// No description provided for @travelEmergencyContactsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency numbers'**
+  String get travelEmergencyContactsTitle;
+
+  /// No description provided for @travelEmergencyRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Request assistance'**
+  String get travelEmergencyRequest;
+
+  /// No description provided for @travelEmergencySubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get travelEmergencySubject;
+
+  /// No description provided for @travelTaxiHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfers and city rides'**
+  String get travelTaxiHero;
+
+  /// No description provided for @travelTaxiCarClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Car class'**
+  String get travelTaxiCarClass;
+
+  /// No description provided for @travelSimTopUpHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Top up a SIM at the destination'**
+  String get travelSimTopUpHero;
+
+  /// No description provided for @travelSimOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get travelSimOperator;
+
+  /// No description provided for @travelSimNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile number'**
+  String get travelSimNumber;
+
+  /// No description provided for @travelSimAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Top-up amount'**
+  String get travelSimAmount;
+
+  /// No description provided for @travelPayDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'To use this payment method, link your account and submit a top-up request. The status is tracked in “My requests”.'**
+  String get travelPayDescription;
+
+  /// No description provided for @travelPayLinkAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Link account & submit top-up'**
+  String get travelPayLinkAccount;
+
+  /// No description provided for @travelPayTopUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet top-up'**
+  String get travelPayTopUp;
+
+  /// No description provided for @travelPayAccountId.
+  ///
+  /// In en, this message translates to:
+  /// **'Account ID'**
+  String get travelPayAccountId;
+
+  /// No description provided for @travelAliPayDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'International payments with AliPay'**
+  String get travelAliPayDescription;
+
+  /// No description provided for @travelMirPayDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian payments with MirPay'**
+  String get travelMirPayDescription;
+
+  /// No description provided for @travelContactPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact mobile'**
+  String get travelContactPhone;
+
+  /// No description provided for @travelVisaCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get travelVisaCountry;
 }
 
 class _AppLocalizationsDelegate

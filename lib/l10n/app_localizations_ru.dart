@@ -8087,6 +8087,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Выберите страну назначения, чтобы увидеть доступные услуги';
 
   @override
+  String get travelAvailableNow => 'Доступно сейчас';
+
+  @override
+  String get travelComingSoonSection => 'Скоро';
+
+  @override
   String get businessServicesTitle => 'Деловые и коммерческие услуги';
 
   @override
@@ -8185,4 +8191,485 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get businessServiceMoneyTransfer => 'Денежный перевод';
+
+  @override
+  String get twoFactorValidationEnterPassword => 'Введите пароль';
+
+  @override
+  String get twoFactorValidationEnterOldPasscode =>
+      'Введите старый код доступа';
+
+  @override
+  String get twoFactorValidationEnterNewPasscode => 'Введите новый код доступа';
+
+  @override
+  String get twoFactorValidationEnterConfirmPasscode =>
+      'Подтвердите код доступа';
+
+  @override
+  String get twoFactorValidationEnterPasscode => 'Введите код доступа';
+
+  @override
+  String get twoFactorValidationPasscodesDoNotMatch =>
+      'Код доступа и подтверждение не совпадают';
+
+  @override
+  String get twoFactorValidationNewPasscodesDoNotMatch =>
+      'Новый код и подтверждение не совпадают';
+
+  @override
+  String get webViewLinkCannotOpen => 'Эту ссылку нельзя открыть в приложении.';
+
+  @override
+  String get networkReconnected => 'You are back online';
+
+  @override
+  String get vpnHintBanner =>
+      'VPN detected — turn it off for a more stable experience';
+
+  @override
+  String get signInWithTelegram => 'Continue with Telegram';
+
+  @override
+  String get signInTelegramUnavailable =>
+      'Telegram sign-in will be available once enabled on the server.';
+
+  @override
+  String get sessionExpiredMessage =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get travelFromPrice => 'От';
+
+  @override
+  String get travelSearchAction => 'Поиск';
+
+  @override
+  String get travelSearchPlaceholder => 'Поиск…';
+
+  @override
+  String get travelMockCurrency => 'томан';
+
+  @override
+  String get travelMyRequests => 'Мои заявки';
+
+  @override
+  String get travelRequestReference => 'Код отслеживания';
+
+  @override
+  String get travelRequestSubmittedAt => 'Дата отправки';
+
+  @override
+  String get travelRequestDetails => 'Детали заявки';
+
+  @override
+  String get travelRequestUnderReview => 'На рассмотрении';
+
+  @override
+  String get travelRequestApproved => 'Одобрено';
+
+  @override
+  String get travelRequestRejected => 'Отклонено';
+
+  @override
+  String get travelRequestSubmittedTitle => 'Заявка отправлена';
+
+  @override
+  String get travelRequestSubmittedDescription =>
+      'Ваша заявка записана со статусом «На рассмотрении». Результат будет сообщён в разделе «Мои заявки».';
+
+  @override
+  String get travelRequestBackHome => 'Назад к туристическим услугам';
+
+  @override
+  String get travelRequestEmptyTitle => 'Заявок пока нет';
+
+  @override
+  String get travelRequestEmptyDescription =>
+      'Заявки, отправленные через туристические услуги, и их статус появятся здесь.';
+
+  @override
+  String get travelFormSubmit => 'Отправить заявку';
+
+  @override
+  String get travelFormRequired => 'Обязательное поле';
+
+  @override
+  String get travelFormPickHint => 'Выбрать';
+
+  @override
+  String get travelExtraUnderReviewNote =>
+      'Заявка сохраняется внутри системы; после проверки специалистами её статус обновится в «Моих заявках».';
+
+  @override
+  String get travelFieldTime => 'Время';
+
+  @override
+  String get travelFieldName => 'ФИО';
+
+  @override
+  String get travelFieldPhone => 'Номер телефона';
+
+  @override
+  String get travelFieldNote => 'Примечания';
+
+  @override
+  String get travelFieldQuantity => 'Количество';
+
+  @override
+  String get travelFieldAddress => 'Адрес';
+
+  @override
+  String get travelFieldAmount => 'Сумма (томан)';
+
+  @override
+  String get travelCatalogNoResults => 'Ничего не найдено по вашему запросу.';
+
+  @override
+  String get travelCatalogDetails => 'Детали';
+
+  @override
+  String get travelCatalogRating => 'Рейтинг';
+
+  @override
+  String get travelCatalogRequest => 'Отправить заявку';
+
+  @override
+  String get travelCatalogPerDay => 'день';
+
+  @override
+  String get travelCatalogPerPerson => 'за человека';
+
+  @override
+  String get travelCatalogPerItem => 'за единицу';
+
+  @override
+  String get travelCatalogPerService => 'за услугу';
+
+  @override
+  String get travelTrainHero => 'Путешествия на поезде — безопасно и выгодно';
+
+  @override
+  String get travelTrainClass => 'Класс поезда';
+
+  @override
+  String get travelTrainEconomy => 'Эконом';
+
+  @override
+  String get travelTrainCoupe => 'Купе';
+
+  @override
+  String get travelTrainVip => 'VIP';
+
+  @override
+  String get travelTrainResults => 'Результаты поиска поездов';
+
+  @override
+  String get travelTrainResultsGuidance =>
+      'Выберите поезд; сравните время отправления, классы и оставшиеся места.';
+
+  @override
+  String get travelSortRecommended => 'Рекомендуемые';
+
+  @override
+  String get travelSortCheapest => 'Дешевле всех';
+
+  @override
+  String get travelSortEarliest => 'Раннее отправление';
+
+  @override
+  String get travelSortFastest => 'Быстрее всех';
+
+  @override
+  String get travelTrainNumber => 'Номер поезда';
+
+  @override
+  String get travelTrainDetails => 'Детали поезда';
+
+  @override
+  String get travelTrainContinueToPassengers => 'Перейти к пассажирам';
+
+  @override
+  String get travelTrainDetailsGuidance =>
+      'Проверьте поезд, классы и правила отмены до добавления пассажиров.';
+
+  @override
+  String get travelTrainOperator => 'Перевозчик';
+
+  @override
+  String get travelTrainWagon => 'Вагон';
+
+  @override
+  String get travelTrainWagonType => 'Плацкарт / купе в зависимости от класса';
+
+  @override
+  String get travelTrainSeatsLeft => 'мест осталось';
+
+  @override
+  String get travelTrainPolicyNote =>
+      'Отмена возможна не позднее чем за 48 часов до отправления со штрафом 10%. Контактный телефон должен быть активен; билет оформляется после подтверждения и оплаты, статус отслеживается в «Моих заявках».';
+
+  @override
+  String get travelTrainPassengers => 'Данные пассажиров';
+
+  @override
+  String get travelTrainPassengerLabel => 'Пассажир';
+
+  @override
+  String get travelTrainConfirmBooking => 'Отправить заявку на билет';
+
+  @override
+  String get travelTrainNationalCode => 'Национальный код';
+
+  @override
+  String get travelTrainGender => 'Пол';
+
+  @override
+  String get travelTrainContactPhone => 'Контактный мобильный';
+
+  @override
+  String get travelTrainBookingNote =>
+      'Билет оформляется после подтверждения и оплаты; статус отслеживается в «Моих заявках».';
+
+  @override
+  String get travelVisaHero => 'Визы в страны назначения — без хлопот';
+
+  @override
+  String get travelVisaIntroDescription =>
+      'Выберите страну, заполните форму заявки и отправьте документы. Проверку выполняют наши специалисты.';
+
+  @override
+  String get travelVisaStepDocuments => 'Отправка документов';
+
+  @override
+  String get travelVisaStepReview => 'Проверка специалистом';
+
+  @override
+  String get travelVisaStepIssue => 'Выдача визы';
+
+  @override
+  String get travelVisaCountries => 'Страны с визовой услугой';
+
+  @override
+  String travelVisaProcessingDays(int days) {
+    return 'Срок рассмотрения: $days рабочих дней';
+  }
+
+  @override
+  String get travelVisaFormTitle => 'Форма визовой заявки';
+
+  @override
+  String get travelVisaDocuments => 'Необходимые документы';
+
+  @override
+  String get travelVisaType => 'Тип визы';
+
+  @override
+  String get travelVisaTourist => 'Туристическая';
+
+  @override
+  String get travelVisaBusiness => 'Деловая';
+
+  @override
+  String get travelVisaEntries => 'Количество въездов';
+
+  @override
+  String get travelVisaSingleEntry => 'Однократная';
+
+  @override
+  String get travelVisaMultipleEntry => 'Многократная';
+
+  @override
+  String get travelVisaApplicants => 'Заявители';
+
+  @override
+  String get travelVisaTravelDate => 'Дата поездки';
+
+  @override
+  String get travelVisaFullName => 'ФИО (латиницей)';
+
+  @override
+  String get travelVisaPassportNumber => 'Номер паспорта';
+
+  @override
+  String get travelVisaPassportExpiry => 'Срок действия паспорта';
+
+  @override
+  String get travelVisaSubmit => 'Отправить визовую заявку';
+
+  @override
+  String get travelReserveDate => 'Дата бронирования';
+
+  @override
+  String get travelCarRentalHero => 'Арендуйте авто для поездки онлайн';
+
+  @override
+  String get travelCarAgency => 'Компания аренды';
+
+  @override
+  String get travelCarSeats => 'Мест';
+
+  @override
+  String get travelCarTransmission => 'Коробка передач';
+
+  @override
+  String get travelCarAutomatic => 'Автомат';
+
+  @override
+  String get travelCarManual => 'Механика';
+
+  @override
+  String get travelCarDeposit => 'Возвратный залог';
+
+  @override
+  String get travelCarPickupDate => 'Дата получения';
+
+  @override
+  String get travelCarReturnDate => 'Дата возврата';
+
+  @override
+  String get travelTourHero => 'Готовые туры с понятной программой';
+
+  @override
+  String get travelTourDays => 'Длительность тура';
+
+  @override
+  String get travelTourStars => 'Класс отеля';
+
+  @override
+  String get travelTourCapacity => 'Оставшиеся места';
+
+  @override
+  String get travelTourDepartureDate => 'Дата отправления';
+
+  @override
+  String get travelBoatHero => 'Морские и прогулочные маршруты';
+
+  @override
+  String get travelBoatDuration => 'Время в пути';
+
+  @override
+  String get travelBoatCapacity => 'Вместимость';
+
+  @override
+  String get travelBoatClass => 'Класс парома';
+
+  @override
+  String get travelRestaurantHero => 'Забронируйте столик до прибытия';
+
+  @override
+  String get travelRestaurantCuisine => 'Кухня';
+
+  @override
+  String get travelRestaurantHours => 'Часы работы';
+
+  @override
+  String get travelRestaurantCapacity => 'Вместимость';
+
+  @override
+  String get travelRestaurantGuests => 'Гости';
+
+  @override
+  String get travelFoodHero => 'Быстрая доставка к месту проживания';
+
+  @override
+  String get travelFoodPreparation => 'Время приготовления';
+
+  @override
+  String get travelSupermarketHero => 'Необходимое для поездки — к вашей двери';
+
+  @override
+  String get travelSupermarketUnit => 'Единица';
+
+  @override
+  String get travelStoreHero =>
+      'Магазин в поездке — доставка в пункт назначения';
+
+  @override
+  String get travelStoreBrand => 'Бренд';
+
+  @override
+  String get travelStoreWarranty => 'Гарантия';
+
+  @override
+  String get travelLocalHero => 'Местные услуги в пункте назначения';
+
+  @override
+  String get travelLocalDuration => 'Длительность услуги';
+
+  @override
+  String get travelLocalLanguages => 'Языки';
+
+  @override
+  String get travelInsuranceHero => 'Застрахуйте свою поездку';
+
+  @override
+  String get travelInsuranceCoverage => 'Лимит покрытия';
+
+  @override
+  String get travelInsuranceDuration => 'Срок действия';
+
+  @override
+  String get travelTranslatorHero => 'Переводчик в пункте назначения';
+
+  @override
+  String get travelTranslatorLanguages => 'Языки';
+
+  @override
+  String get travelTranslatorExperience => 'Опыт';
+
+  @override
+  String get travelEmergencyHero => 'Экстренная поддержка путешественников';
+
+  @override
+  String get travelEmergencyContactsTitle => 'Экстренные номера';
+
+  @override
+  String get travelEmergencyRequest => 'Запросить помощь';
+
+  @override
+  String get travelEmergencySubject => 'Тема';
+
+  @override
+  String get travelTaxiHero => 'Трансфер и поездки по городу';
+
+  @override
+  String get travelTaxiCarClass => 'Класс автомобиля';
+
+  @override
+  String get travelSimTopUpHero => 'Пополнение SIM в стране назначения';
+
+  @override
+  String get travelSimOperator => 'Оператор';
+
+  @override
+  String get travelSimNumber => 'Мобильный номер';
+
+  @override
+  String get travelSimAmount => 'Сумма пополнения';
+
+  @override
+  String get travelPayDescription =>
+      'Чтобы использовать этот способ оплаты, привяжите счёт и отправьте заявку на пополнение. Статус отслеживается в «Моих заявках».';
+
+  @override
+  String get travelPayLinkAccount => 'Привязать счёт и пополнить';
+
+  @override
+  String get travelPayTopUp => 'Пополнение кошелька';
+
+  @override
+  String get travelPayAccountId => 'ID счёта';
+
+  @override
+  String get travelAliPayDescription => 'Международные платежи через AliPay';
+
+  @override
+  String get travelMirPayDescription => 'Платежи в России через MirPay';
+
+  @override
+  String get travelContactPhone => 'Контактный мобильный';
+
+  @override
+  String get travelVisaCountry => 'Страна';
 }

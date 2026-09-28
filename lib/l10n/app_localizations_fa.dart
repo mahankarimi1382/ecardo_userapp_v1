@@ -8087,6 +8087,12 @@ class AppLocalizationsFa extends AppLocalizations {
       'کشور مقصد خود را انتخاب کنید تا خدمات موجود را ببینید';
 
   @override
+  String get travelAvailableNow => 'در دسترس الان';
+
+  @override
+  String get travelComingSoonSection => 'به‌زودی';
+
+  @override
   String get businessServicesTitle => 'خدمات بازرگانی و کسب‌وکار';
 
   @override
@@ -8185,4 +8191,483 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get businessServiceMoneyTransfer => 'انتقال پول';
+
+  @override
+  String get twoFactorValidationEnterPassword => 'لطفاً رمز عبور را وارد کنید';
+
+  @override
+  String get twoFactorValidationEnterOldPasscode =>
+      'لطفاً رمز عبور قبلی را وارد کنید';
+
+  @override
+  String get twoFactorValidationEnterNewPasscode =>
+      'لطفاً رمز عبور جدید را وارد کنید';
+
+  @override
+  String get twoFactorValidationEnterConfirmPasscode =>
+      'لطفاً تکرار رمز عبور را وارد کنید';
+
+  @override
+  String get twoFactorValidationEnterPasscode => 'لطفاً رمز عبور را وارد کنید';
+
+  @override
+  String get twoFactorValidationPasscodesDoNotMatch =>
+      'رمز عبور و تکرار آن یکسان نیستند';
+
+  @override
+  String get twoFactorValidationNewPasscodesDoNotMatch =>
+      'رمز جدید و تکرار آن یکسان نیستند';
+
+  @override
+  String get webViewLinkCannotOpen => 'این پیوند در اپ باز نمی‌شود.';
+
+  @override
+  String get networkReconnected => 'اتصال اینترنت برقرار شد';
+
+  @override
+  String get vpnHintBanner => 'VPN فعال است — برای تجربه پایدارتر خاموشش کنید';
+
+  @override
+  String get signInWithTelegram => 'ورود با تلگرام';
+
+  @override
+  String get signInTelegramUnavailable =>
+      'ورود با تلگرام به‌محض فعال‌سازی سمت سرور در دسترس خواهد بود.';
+
+  @override
+  String get sessionExpiredMessage => 'نشست شما منقضی شد. دوباره وارد شوید.';
+
+  @override
+  String get travelFromPrice => 'شروع از';
+
+  @override
+  String get travelSearchAction => 'جستجو';
+
+  @override
+  String get travelSearchPlaceholder => 'جستجو…';
+
+  @override
+  String get travelMockCurrency => 'تومان';
+
+  @override
+  String get travelMyRequests => 'درخواست‌های من';
+
+  @override
+  String get travelRequestReference => 'شماره پیگیری';
+
+  @override
+  String get travelRequestSubmittedAt => 'تاریخ ثبت';
+
+  @override
+  String get travelRequestDetails => 'جزئیات درخواست';
+
+  @override
+  String get travelRequestUnderReview => 'در حال بررسی';
+
+  @override
+  String get travelRequestApproved => 'تأیید شده';
+
+  @override
+  String get travelRequestRejected => 'رد شده';
+
+  @override
+  String get travelRequestSubmittedTitle => 'درخواست شما ثبت شد';
+
+  @override
+  String get travelRequestSubmittedDescription =>
+      'درخواست شما با وضعیت «در حال بررسی» ثبت شد. نتیجه بررسی از بخش «درخواست‌های من» به شما اطلاع داده می‌شود.';
+
+  @override
+  String get travelRequestBackHome => 'بازگشت به خدمات سفر';
+
+  @override
+  String get travelRequestEmptyTitle => 'هنوز درخواستی ثبت نکرده‌اید';
+
+  @override
+  String get travelRequestEmptyDescription =>
+      'با استفاده از خدمات سفر، درخواست‌های شما و وضعیت بررسی‌شان در این صفحه نمایش داده می‌شود.';
+
+  @override
+  String get travelFormSubmit => 'ثبت درخواست';
+
+  @override
+  String get travelFormRequired => 'این فیلد الزامی است';
+
+  @override
+  String get travelFormPickHint => 'انتخاب کنید';
+
+  @override
+  String get travelExtraUnderReviewNote =>
+      'این درخواست به‌صورت داخلی ثبت می‌شود و پس از بررسی کارشناسان، وضعیت آن در «درخواست‌های من» به‌روزرسانی می‌شود.';
+
+  @override
+  String get travelFieldTime => 'ساعت';
+
+  @override
+  String get travelFieldName => 'نام و نام خانوادگی';
+
+  @override
+  String get travelFieldPhone => 'شماره تماس';
+
+  @override
+  String get travelFieldNote => 'توضیحات';
+
+  @override
+  String get travelFieldQuantity => 'تعداد';
+
+  @override
+  String get travelFieldAddress => 'آدرس';
+
+  @override
+  String get travelFieldAmount => 'مبلغ (تومان)';
+
+  @override
+  String get travelCatalogNoResults => 'موردی مطابق جستجوی شما یافت نشد.';
+
+  @override
+  String get travelCatalogDetails => 'جزئیات';
+
+  @override
+  String get travelCatalogRating => 'امتیاز';
+
+  @override
+  String get travelCatalogRequest => 'ارسال درخواست';
+
+  @override
+  String get travelCatalogPerDay => 'روز';
+
+  @override
+  String get travelCatalogPerPerson => 'هر نفر';
+
+  @override
+  String get travelCatalogPerItem => 'عدد';
+
+  @override
+  String get travelCatalogPerService => 'هر خدمت';
+
+  @override
+  String get travelTrainHero => 'سفر ریلی، امن و اقتصادی';
+
+  @override
+  String get travelTrainClass => 'درجه قطار';
+
+  @override
+  String get travelTrainEconomy => 'اقتصادی';
+
+  @override
+  String get travelTrainCoupe => 'کوپه‌ای';
+
+  @override
+  String get travelTrainVip => 'ویژه (VIP)';
+
+  @override
+  String get travelTrainResults => 'نتایج قطار';
+
+  @override
+  String get travelTrainResultsGuidance =>
+      'قطار موردنظر را انتخاب کنید؛ زمان حرکت، درجه و صندلی‌های باقی‌مانده را مقایسه کنید.';
+
+  @override
+  String get travelSortRecommended => 'پیشنهادی';
+
+  @override
+  String get travelSortCheapest => 'ارزان‌ترین';
+
+  @override
+  String get travelSortEarliest => 'زودترین حرکت';
+
+  @override
+  String get travelSortFastest => 'سریع‌ترین';
+
+  @override
+  String get travelTrainNumber => 'شماره قطار';
+
+  @override
+  String get travelTrainDetails => 'جزئیات قطار';
+
+  @override
+  String get travelTrainContinueToPassengers => 'ادامه و ثبت مسافران';
+
+  @override
+  String get travelTrainDetailsGuidance =>
+      'قبل از ثبت مسافران، قطار، درجه‌ها و قوانین کنسلی را بررسی کنید.';
+
+  @override
+  String get travelTrainOperator => 'اپراتور';
+
+  @override
+  String get travelTrainWagon => 'واگن';
+
+  @override
+  String get travelTrainWagonType => 'سالن‌دار / کوپه‌ای بسته به درجه';
+
+  @override
+  String get travelTrainSeatsLeft => 'صندلی باقی‌مانده';
+
+  @override
+  String get travelTrainPolicyNote =>
+      'کنسلی تا ۴۸ ساعت قبل از حرکت با کسر ۱۰٪ جریمه امکان‌پذیر است. تلفن همراه در لحظه ثبت باید فعال باشد؛ بلیط پس از تأیید و پرداخت صادر و در «درخواست‌های من» قابل پیگیری است.';
+
+  @override
+  String get travelTrainPassengers => 'مشخصات مسافران';
+
+  @override
+  String get travelTrainPassengerLabel => 'مسافر';
+
+  @override
+  String get travelTrainConfirmBooking => 'ثبت درخواست بلیط';
+
+  @override
+  String get travelTrainNationalCode => 'کد ملی';
+
+  @override
+  String get travelTrainGender => 'جنسیت';
+
+  @override
+  String get travelTrainContactPhone => 'موبایل تماس';
+
+  @override
+  String get travelTrainBookingNote =>
+      'بلیط قطار پس از تأیید و پرداخت صادر می‌شود و وضعیت آن در «درخواست‌های من» قابل پیگیری است.';
+
+  @override
+  String get travelVisaHero => 'ویزای کشورهای مقصد، بدون پیچیدگی';
+
+  @override
+  String get travelVisaIntroDescription =>
+      'کشور مقصد را انتخاب کنید، فرم درخواست را تکمیل کنید و مدارک را ارسال کنید. بررسی توسط کارشناسان انجام می‌شود.';
+
+  @override
+  String get travelVisaStepDocuments => 'ارسال مدارک';
+
+  @override
+  String get travelVisaStepReview => 'بررسی کارشناس';
+
+  @override
+  String get travelVisaStepIssue => 'صدور ویزا';
+
+  @override
+  String get travelVisaCountries => 'کشورهای دارای سرویس ویزا';
+
+  @override
+  String travelVisaProcessingDays(int days) {
+    return 'زمان بررسی: $days روز کاری';
+  }
+
+  @override
+  String get travelVisaFormTitle => 'فرم درخواست ویزا';
+
+  @override
+  String get travelVisaDocuments => 'مدارک لازم';
+
+  @override
+  String get travelVisaType => 'نوع ویزا';
+
+  @override
+  String get travelVisaTourist => 'گردشگری';
+
+  @override
+  String get travelVisaBusiness => 'تجاری';
+
+  @override
+  String get travelVisaEntries => 'تعداد ورود';
+
+  @override
+  String get travelVisaSingleEntry => 'تک‌ورود';
+
+  @override
+  String get travelVisaMultipleEntry => 'چندورود';
+
+  @override
+  String get travelVisaApplicants => 'تعداد متقاضیان';
+
+  @override
+  String get travelVisaTravelDate => 'تاریخ سفر';
+
+  @override
+  String get travelVisaFullName => 'نام و نام خانوادگی (لاتین)';
+
+  @override
+  String get travelVisaPassportNumber => 'شماره پاسپورت';
+
+  @override
+  String get travelVisaPassportExpiry => 'تاریخ انقضای پاسپورت';
+
+  @override
+  String get travelVisaSubmit => 'ثبت درخواست ویزا';
+
+  @override
+  String get travelReserveDate => 'تاریخ رزرو';
+
+  @override
+  String get travelCarRentalHero => 'خودروی سفرتان را آنلاین رزرو کنید';
+
+  @override
+  String get travelCarAgency => 'اجاره‌دهنده';
+
+  @override
+  String get travelCarSeats => 'ظرفیت';
+
+  @override
+  String get travelCarTransmission => 'گیربکس';
+
+  @override
+  String get travelCarAutomatic => 'اتوماتیک';
+
+  @override
+  String get travelCarManual => 'دنده‌ای';
+
+  @override
+  String get travelCarDeposit => 'ودیعه قابل استرداد';
+
+  @override
+  String get travelCarPickupDate => 'تاریخ تحویل';
+
+  @override
+  String get travelCarReturnDate => 'تاریخ بازگشت';
+
+  @override
+  String get travelTourHero => 'تورهای آماده با برنامه شفاف';
+
+  @override
+  String get travelTourDays => 'مدت تور';
+
+  @override
+  String get travelTourStars => 'درجه هتل';
+
+  @override
+  String get travelTourCapacity => 'ظرفیت باقی‌مانده';
+
+  @override
+  String get travelTourDepartureDate => 'تاریخ حرکت';
+
+  @override
+  String get travelBoatHero => 'مسیرهای دریایی و تفریحی';
+
+  @override
+  String get travelBoatDuration => 'مدت سفر';
+
+  @override
+  String get travelBoatCapacity => 'ظرفیت';
+
+  @override
+  String get travelBoatClass => 'کلاس کشتی';
+
+  @override
+  String get travelRestaurantHero => 'میز رستوران را قبل از رسیدن رزرو کنید';
+
+  @override
+  String get travelRestaurantCuisine => 'نوع آشپزی';
+
+  @override
+  String get travelRestaurantHours => 'ساعات کاری';
+
+  @override
+  String get travelRestaurantCapacity => 'ظرفیت';
+
+  @override
+  String get travelRestaurantGuests => 'تعداد مهمان';
+
+  @override
+  String get travelFoodHero => 'ارسال سریع غذا به محل اقامت';
+
+  @override
+  String get travelFoodPreparation => 'زمان آماده‌سازی';
+
+  @override
+  String get travelSupermarketHero => 'خرید ملزومات سفر، درب اقامتگاه';
+
+  @override
+  String get travelSupermarketUnit => 'واحد';
+
+  @override
+  String get travelStoreHero => 'فروشگاه سفر — ارسال به مقصد';
+
+  @override
+  String get travelStoreBrand => 'برند';
+
+  @override
+  String get travelStoreWarranty => 'گارانتی';
+
+  @override
+  String get travelLocalHero => 'خدمات محلی مقصد';
+
+  @override
+  String get travelLocalDuration => 'مدت خدمت';
+
+  @override
+  String get travelLocalLanguages => 'زبان‌ها';
+
+  @override
+  String get travelInsuranceHero => 'سفرتان را بیمه کنید';
+
+  @override
+  String get travelInsuranceCoverage => 'سقف پوشش';
+
+  @override
+  String get travelInsuranceDuration => 'مدت اعتبار';
+
+  @override
+  String get travelTranslatorHero => 'مترجم همراه در مقصد';
+
+  @override
+  String get travelTranslatorLanguages => 'زبان‌ها';
+
+  @override
+  String get travelTranslatorExperience => 'سابقه';
+
+  @override
+  String get travelEmergencyHero => 'پشتیبانی فوری مسافران';
+
+  @override
+  String get travelEmergencyContactsTitle => 'شماره‌های فوری';
+
+  @override
+  String get travelEmergencyRequest => 'درخواست کمک';
+
+  @override
+  String get travelEmergencySubject => 'موضوع درخواست';
+
+  @override
+  String get travelTaxiHero => 'ترانسفر و سفر درون‌شهری';
+
+  @override
+  String get travelTaxiCarClass => 'نوع خودرو';
+
+  @override
+  String get travelSimTopUpHero => 'شارژ سیم‌کارت در مقصد';
+
+  @override
+  String get travelSimOperator => 'اپراتور';
+
+  @override
+  String get travelSimNumber => 'شماره موبایل';
+
+  @override
+  String get travelSimAmount => 'مبلغ شارژ';
+
+  @override
+  String get travelPayDescription =>
+      'برای استفاده از این روش پرداخت، حساب خود را متصل کنید و درخواست شارژ ثبت کنید. وضعیت اتصال در «درخواست‌های من» قابل پیگیری است.';
+
+  @override
+  String get travelPayLinkAccount => 'اتصال حساب و ثبت شارژ';
+
+  @override
+  String get travelPayTopUp => 'شارژ کیف پول';
+
+  @override
+  String get travelPayAccountId => 'شناسه حساب';
+
+  @override
+  String get travelAliPayDescription => 'پرداخت بین‌المللی با AliPay';
+
+  @override
+  String get travelMirPayDescription => 'پرداخت روسی با MirPay';
+
+  @override
+  String get travelContactPhone => 'موبایل تماس';
+
+  @override
+  String get travelVisaCountry => 'کشور';
 }

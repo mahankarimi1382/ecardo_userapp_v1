@@ -8079,6 +8079,12 @@ class AppLocalizationsTr extends AppLocalizations {
       'Mevcut hizmetleri görmek için varış ülkenizi seçin';
 
   @override
+  String get travelAvailableNow => 'Şimdi kullanılabilir';
+
+  @override
+  String get travelComingSoonSection => 'Yakında';
+
+  @override
   String get businessServicesTitle => 'Ticari ve İş Hizmetleri';
 
   @override
@@ -8177,4 +8183,485 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get businessServiceMoneyTransfer => 'Para Transferi';
+
+  @override
+  String get twoFactorValidationEnterPassword => 'Lütfen şifrenizi girin';
+
+  @override
+  String get twoFactorValidationEnterOldPasscode =>
+      'Lütfen eski parolanızı girin';
+
+  @override
+  String get twoFactorValidationEnterNewPasscode =>
+      'Lütfen yeni bir parola girin';
+
+  @override
+  String get twoFactorValidationEnterConfirmPasscode =>
+      'Lütfen parolanızı onaylayın';
+
+  @override
+  String get twoFactorValidationEnterPasscode => 'Lütfen bir parola girin';
+
+  @override
+  String get twoFactorValidationPasscodesDoNotMatch =>
+      'Parola ve onayı eşleşmiyor';
+
+  @override
+  String get twoFactorValidationNewPasscodesDoNotMatch =>
+      'Yeni parola ve onayı eşleşmiyor';
+
+  @override
+  String get webViewLinkCannotOpen => 'Bu bağlantı uygulamada açılamıyor.';
+
+  @override
+  String get networkReconnected => 'You are back online';
+
+  @override
+  String get vpnHintBanner =>
+      'VPN detected — turn it off for a more stable experience';
+
+  @override
+  String get signInWithTelegram => 'Continue with Telegram';
+
+  @override
+  String get signInTelegramUnavailable =>
+      'Telegram sign-in will be available once enabled on the server.';
+
+  @override
+  String get sessionExpiredMessage =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get travelFromPrice => 'Başlangıç';
+
+  @override
+  String get travelSearchAction => 'Ara';
+
+  @override
+  String get travelSearchPlaceholder => 'Ara…';
+
+  @override
+  String get travelMockCurrency => 'Toman';
+
+  @override
+  String get travelMyRequests => 'Taleplerim';
+
+  @override
+  String get travelRequestReference => 'Takip kodu';
+
+  @override
+  String get travelRequestSubmittedAt => 'Gönderim tarihi';
+
+  @override
+  String get travelRequestDetails => 'Talep detayları';
+
+  @override
+  String get travelRequestUnderReview => 'İncelemede';
+
+  @override
+  String get travelRequestApproved => 'Onaylandı';
+
+  @override
+  String get travelRequestRejected => 'Reddedildi';
+
+  @override
+  String get travelRequestSubmittedTitle => 'Talebiniz gönderildi';
+
+  @override
+  String get travelRequestSubmittedDescription =>
+      'Talebiniz “İncelemede” durumuyla kaydedildi. Sonuç “Taleplerim” bölümünde bildirilecek.';
+
+  @override
+  String get travelRequestBackHome => 'Seyahat hizmetlerine dön';
+
+  @override
+  String get travelRequestEmptyTitle => 'Henüz talep yok';
+
+  @override
+  String get travelRequestEmptyDescription =>
+      'Seyahat hizmetleri üzerinden gönderdiğiniz talepler ve inceleme durumları burada görünecek.';
+
+  @override
+  String get travelFormSubmit => 'Talebi gönder';
+
+  @override
+  String get travelFormRequired => 'Bu alan zorunludur';
+
+  @override
+  String get travelFormPickHint => 'Seç';
+
+  @override
+  String get travelExtraUnderReviewNote =>
+      'Bu talep dahili olarak kaydedilir; yetkililer inceledikten sonra durumu “Taleplerim” bölümünde güncellenir.';
+
+  @override
+  String get travelFieldTime => 'Saat';
+
+  @override
+  String get travelFieldName => 'Ad soyad';
+
+  @override
+  String get travelFieldPhone => 'Telefon numarası';
+
+  @override
+  String get travelFieldNote => 'Notlar';
+
+  @override
+  String get travelFieldQuantity => 'Adet';
+
+  @override
+  String get travelFieldAddress => 'Adres';
+
+  @override
+  String get travelFieldAmount => 'Tutar (Toman)';
+
+  @override
+  String get travelCatalogNoResults => 'Aramanızla eşleşen sonuç yok.';
+
+  @override
+  String get travelCatalogDetails => 'Detaylar';
+
+  @override
+  String get travelCatalogRating => 'Puan';
+
+  @override
+  String get travelCatalogRequest => 'Talep gönder';
+
+  @override
+  String get travelCatalogPerDay => 'gün';
+
+  @override
+  String get travelCatalogPerPerson => 'kişi başı';
+
+  @override
+  String get travelCatalogPerItem => 'adet';
+
+  @override
+  String get travelCatalogPerService => 'hizmet başı';
+
+  @override
+  String get travelTrainHero => 'Demiryolu yolculuğu — güvenli ve ekonomik';
+
+  @override
+  String get travelTrainClass => 'Tren sınıfı';
+
+  @override
+  String get travelTrainEconomy => 'Ekonomi';
+
+  @override
+  String get travelTrainCoupe => 'Kupe';
+
+  @override
+  String get travelTrainVip => 'VIP';
+
+  @override
+  String get travelTrainResults => 'Tren sonuçları';
+
+  @override
+  String get travelTrainResultsGuidance =>
+      'Treninizi seçin; kalkış saatlerini, sınıfları ve kalan koltukları karşılaştırın.';
+
+  @override
+  String get travelSortRecommended => 'Önerilen';
+
+  @override
+  String get travelSortCheapest => 'En ucuz';
+
+  @override
+  String get travelSortEarliest => 'En erken kalkış';
+
+  @override
+  String get travelSortFastest => 'En hızlı';
+
+  @override
+  String get travelTrainNumber => 'Tren numarası';
+
+  @override
+  String get travelTrainDetails => 'Tren detayları';
+
+  @override
+  String get travelTrainContinueToPassengers => 'Yolculara geç';
+
+  @override
+  String get travelTrainDetailsGuidance =>
+      'Yolcu eklemeden önce treni, sınıfları ve iptal kurallarını inceleyin.';
+
+  @override
+  String get travelTrainOperator => 'İşletici';
+
+  @override
+  String get travelTrainWagon => 'Vagon';
+
+  @override
+  String get travelTrainWagonType => 'Sınıfa göre açık kupe / kapalı kupe';
+
+  @override
+  String get travelTrainSeatsLeft => 'koltuk kaldı';
+
+  @override
+  String get travelTrainPolicyNote =>
+      'Kalkıştan 48 saat öncesine kadar %10 ceza ile iptal mümkündür. İletişim telefonu aktif olmalıdır; bilet onay ve ödeme sonrası düzenlenir ve “Taleplerim” üzerinden takip edilir.';
+
+  @override
+  String get travelTrainPassengers => 'Yolcu bilgileri';
+
+  @override
+  String get travelTrainPassengerLabel => 'Yolcu';
+
+  @override
+  String get travelTrainConfirmBooking => 'Bilet talebini gönder';
+
+  @override
+  String get travelTrainNationalCode => 'Ulusal kimlik no';
+
+  @override
+  String get travelTrainGender => 'Cinsiyet';
+
+  @override
+  String get travelTrainContactPhone => 'İletişim cep telefonu';
+
+  @override
+  String get travelTrainBookingNote =>
+      'Tren bileti onay ve ödeme sonrası düzenlenir; durumu “Taleplerim” üzerinden takip edilir.';
+
+  @override
+  String get travelVisaHero => 'Varış ülkesi vizaları, zahmetsizce';
+
+  @override
+  String get travelVisaIntroDescription =>
+      'Ülkeyi seçin, başvuru formunu doldurun ve belgelerinizi gönderin. İnceleme ekibimiz tarafından yapılır.';
+
+  @override
+  String get travelVisaStepDocuments => 'Belgeleri gönder';
+
+  @override
+  String get travelVisaStepReview => 'Yetkili incelemesi';
+
+  @override
+  String get travelVisaStepIssue => 'Vize düzenlenir';
+
+  @override
+  String get travelVisaCountries => 'Vize hizmeti olan ülkeler';
+
+  @override
+  String travelVisaProcessingDays(int days) {
+    return 'İnceleme: $days iş günü';
+  }
+
+  @override
+  String get travelVisaFormTitle => 'Vize başvuru formu';
+
+  @override
+  String get travelVisaDocuments => 'Gerekli belgeler';
+
+  @override
+  String get travelVisaType => 'Vize türü';
+
+  @override
+  String get travelVisaTourist => 'Turistik';
+
+  @override
+  String get travelVisaBusiness => 'Ticari';
+
+  @override
+  String get travelVisaEntries => 'Giriş sayısı';
+
+  @override
+  String get travelVisaSingleEntry => 'Tek giriş';
+
+  @override
+  String get travelVisaMultipleEntry => 'Çok giriş';
+
+  @override
+  String get travelVisaApplicants => 'Başvuru sayısı';
+
+  @override
+  String get travelVisaTravelDate => 'Seyahat tarihi';
+
+  @override
+  String get travelVisaFullName => 'Ad soyad (Latin)';
+
+  @override
+  String get travelVisaPassportNumber => 'Pasaport numarası';
+
+  @override
+  String get travelVisaPassportExpiry => 'Pasaport son geçerlilik';
+
+  @override
+  String get travelVisaSubmit => 'Vize talebini gönder';
+
+  @override
+  String get travelReserveDate => 'Rezervasyon tarihi';
+
+  @override
+  String get travelCarRentalHero => 'Seyahat aracınızı çevrimiçi kiralayın';
+
+  @override
+  String get travelCarAgency => 'Kiralama şirketi';
+
+  @override
+  String get travelCarSeats => 'Koltuk';
+
+  @override
+  String get travelCarTransmission => 'Vites';
+
+  @override
+  String get travelCarAutomatic => 'Otomatik';
+
+  @override
+  String get travelCarManual => 'Manuel';
+
+  @override
+  String get travelCarDeposit => 'İade edilebilir depozito';
+
+  @override
+  String get travelCarPickupDate => 'Teslim alma tarihi';
+
+  @override
+  String get travelCarReturnDate => 'İade tarihi';
+
+  @override
+  String get travelTourHero => 'Net programlı hazır turlar';
+
+  @override
+  String get travelTourDays => 'Tur süresi';
+
+  @override
+  String get travelTourStars => 'Otel sınıfı';
+
+  @override
+  String get travelTourCapacity => 'Kalan kapasite';
+
+  @override
+  String get travelTourDepartureDate => 'Hareket tarihi';
+
+  @override
+  String get travelBoatHero => 'Deniz ve eğlence güzergâhları';
+
+  @override
+  String get travelBoatDuration => 'Yolculuk süresi';
+
+  @override
+  String get travelBoatCapacity => 'Kapasite';
+
+  @override
+  String get travelBoatClass => 'Feri sınıfı';
+
+  @override
+  String get travelRestaurantHero => 'Varmadan önce masanızı ayırtın';
+
+  @override
+  String get travelRestaurantCuisine => 'Mutfak';
+
+  @override
+  String get travelRestaurantHours => 'Çalışma saatleri';
+
+  @override
+  String get travelRestaurantCapacity => 'Kapasite';
+
+  @override
+  String get travelRestaurantGuests => 'Misafir sayısı';
+
+  @override
+  String get travelFoodHero => 'Konaklamanıza hızlı teslimat';
+
+  @override
+  String get travelFoodPreparation => 'Hazırlama süresi';
+
+  @override
+  String get travelSupermarketHero => 'Seyahat temel ihtiyaçları, kapınızda';
+
+  @override
+  String get travelSupermarketUnit => 'Birim';
+
+  @override
+  String get travelStoreHero => 'Seyahat mağazası — varışta teslim';
+
+  @override
+  String get travelStoreBrand => 'Marka';
+
+  @override
+  String get travelStoreWarranty => 'Garanti';
+
+  @override
+  String get travelLocalHero => 'Varış noktasında yerel hizmetler';
+
+  @override
+  String get travelLocalDuration => 'Hizmet süresi';
+
+  @override
+  String get travelLocalLanguages => 'Diller';
+
+  @override
+  String get travelInsuranceHero => 'Seyahatinizi sigortalayın';
+
+  @override
+  String get travelInsuranceCoverage => 'Teminat limiti';
+
+  @override
+  String get travelInsuranceDuration => 'Geçerlilik';
+
+  @override
+  String get travelTranslatorHero => 'Varış noktasında refakatçi tercüman';
+
+  @override
+  String get travelTranslatorLanguages => 'Diller';
+
+  @override
+  String get travelTranslatorExperience => 'Deneyim';
+
+  @override
+  String get travelEmergencyHero => 'Seyahat edenler için acil destek';
+
+  @override
+  String get travelEmergencyContactsTitle => 'Acil numaralar';
+
+  @override
+  String get travelEmergencyRequest => 'Yardım talebi';
+
+  @override
+  String get travelEmergencySubject => 'Konu';
+
+  @override
+  String get travelTaxiHero => 'Transfer ve şehir içi yolculuk';
+
+  @override
+  String get travelTaxiCarClass => 'Araç sınıfı';
+
+  @override
+  String get travelSimTopUpHero => 'Varış noktasında SIM yükleme';
+
+  @override
+  String get travelSimOperator => 'Operatör';
+
+  @override
+  String get travelSimNumber => 'Cep numarası';
+
+  @override
+  String get travelSimAmount => 'Yükleme tutarı';
+
+  @override
+  String get travelPayDescription =>
+      'Bu ödeme yöntemini kullanmak için hesabınızı bağlayın ve yükleme talebi oluşturun. Durum “Taleplerim” üzerinden takip edilir.';
+
+  @override
+  String get travelPayLinkAccount => 'Hesabı bağla ve yükleme gönder';
+
+  @override
+  String get travelPayTopUp => 'Cüzdan yükleme';
+
+  @override
+  String get travelPayAccountId => 'Hesap kimliği';
+
+  @override
+  String get travelAliPayDescription => 'AliPay ile uluslararası ödemeler';
+
+  @override
+  String get travelMirPayDescription => 'MirPay ile Rusya ödemeleri';
+
+  @override
+  String get travelContactPhone => 'İletişim cep telefonu';
+
+  @override
+  String get travelVisaCountry => 'Ülke';
 }

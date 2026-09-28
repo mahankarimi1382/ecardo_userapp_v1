@@ -8078,6 +8078,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose your destination to see available services';
 
   @override
+  String get travelAvailableNow => 'Available now';
+
+  @override
+  String get travelComingSoonSection => 'Coming soon';
+
+  @override
   String get businessServicesTitle => 'Business & Commercial Services';
 
   @override
@@ -8176,4 +8182,487 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get businessServiceMoneyTransfer => 'Money Transfer';
+
+  @override
+  String get twoFactorValidationEnterPassword => 'Please enter your password';
+
+  @override
+  String get twoFactorValidationEnterOldPasscode =>
+      'Please enter your old passcode';
+
+  @override
+  String get twoFactorValidationEnterNewPasscode =>
+      'Please enter a new passcode';
+
+  @override
+  String get twoFactorValidationEnterConfirmPasscode =>
+      'Please confirm your passcode';
+
+  @override
+  String get twoFactorValidationEnterPasscode => 'Please enter a passcode';
+
+  @override
+  String get twoFactorValidationPasscodesDoNotMatch =>
+      'Passcode and confirm passcode do not match';
+
+  @override
+  String get twoFactorValidationNewPasscodesDoNotMatch =>
+      'New passcode and confirm passcode do not match';
+
+  @override
+  String get webViewLinkCannotOpen => 'This link cannot be opened in the app.';
+
+  @override
+  String get networkReconnected => 'You are back online';
+
+  @override
+  String get vpnHintBanner =>
+      'VPN detected — turn it off for a more stable experience';
+
+  @override
+  String get signInWithTelegram => 'Continue with Telegram';
+
+  @override
+  String get signInTelegramUnavailable =>
+      'Telegram sign-in will be available once enabled on the server.';
+
+  @override
+  String get sessionExpiredMessage =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get travelFromPrice => 'From';
+
+  @override
+  String get travelSearchAction => 'Search';
+
+  @override
+  String get travelSearchPlaceholder => 'Search…';
+
+  @override
+  String get travelMockCurrency => 'Toman';
+
+  @override
+  String get travelMyRequests => 'My requests';
+
+  @override
+  String get travelRequestReference => 'Tracking code';
+
+  @override
+  String get travelRequestSubmittedAt => 'Submitted at';
+
+  @override
+  String get travelRequestDetails => 'Request details';
+
+  @override
+  String get travelRequestUnderReview => 'Under review';
+
+  @override
+  String get travelRequestApproved => 'Approved';
+
+  @override
+  String get travelRequestRejected => 'Rejected';
+
+  @override
+  String get travelRequestSubmittedTitle => 'Request submitted';
+
+  @override
+  String get travelRequestSubmittedDescription =>
+      'Your request was recorded with the “Under review” status. The result will be reported to you in “My requests”.';
+
+  @override
+  String get travelRequestBackHome => 'Back to travel services';
+
+  @override
+  String get travelRequestEmptyTitle => 'No requests yet';
+
+  @override
+  String get travelRequestEmptyDescription =>
+      'Requests you submit through the travel services — and their review status — will show up here.';
+
+  @override
+  String get travelFormSubmit => 'Submit request';
+
+  @override
+  String get travelFormRequired => 'This field is required';
+
+  @override
+  String get travelFormPickHint => 'Pick';
+
+  @override
+  String get travelExtraUnderReviewNote =>
+      'This request is recorded internally. After the operators review it, its status updates in “My requests”.';
+
+  @override
+  String get travelFieldTime => 'Time';
+
+  @override
+  String get travelFieldName => 'Full name';
+
+  @override
+  String get travelFieldPhone => 'Phone number';
+
+  @override
+  String get travelFieldNote => 'Notes';
+
+  @override
+  String get travelFieldQuantity => 'Quantity';
+
+  @override
+  String get travelFieldAddress => 'Address';
+
+  @override
+  String get travelFieldAmount => 'Amount (Toman)';
+
+  @override
+  String get travelCatalogNoResults => 'Nothing matches your search.';
+
+  @override
+  String get travelCatalogDetails => 'Details';
+
+  @override
+  String get travelCatalogRating => 'Rating';
+
+  @override
+  String get travelCatalogRequest => 'Send request';
+
+  @override
+  String get travelCatalogPerDay => 'day';
+
+  @override
+  String get travelCatalogPerPerson => 'per person';
+
+  @override
+  String get travelCatalogPerItem => 'per item';
+
+  @override
+  String get travelCatalogPerService => 'per service';
+
+  @override
+  String get travelTrainHero => 'Rail journeys — safe and affordable';
+
+  @override
+  String get travelTrainClass => 'Train class';
+
+  @override
+  String get travelTrainEconomy => 'Economy';
+
+  @override
+  String get travelTrainCoupe => 'Coupe';
+
+  @override
+  String get travelTrainVip => 'VIP';
+
+  @override
+  String get travelTrainResults => 'Train results';
+
+  @override
+  String get travelTrainResultsGuidance =>
+      'Pick a train; compare departure times, classes and remaining seats.';
+
+  @override
+  String get travelSortRecommended => 'Recommended';
+
+  @override
+  String get travelSortCheapest => 'Cheapest';
+
+  @override
+  String get travelSortEarliest => 'Earliest';
+
+  @override
+  String get travelSortFastest => 'Fastest';
+
+  @override
+  String get travelTrainNumber => 'Train number';
+
+  @override
+  String get travelTrainDetails => 'Train details';
+
+  @override
+  String get travelTrainContinueToPassengers => 'Continue to passengers';
+
+  @override
+  String get travelTrainDetailsGuidance =>
+      'Review the train, classes and cancellation rules before adding passengers.';
+
+  @override
+  String get travelTrainOperator => 'Operator';
+
+  @override
+  String get travelTrainWagon => 'Wagon';
+
+  @override
+  String get travelTrainWagonType =>
+      'Open saloon / closed coupe depending on class';
+
+  @override
+  String get travelTrainSeatsLeft => 'seats left';
+
+  @override
+  String get travelTrainPolicyNote =>
+      'Cancellation is allowed up to 48h before departure with a 10% penalty. The contact mobile must be active; the ticket is issued after approval and payment and can be tracked in “My requests”.';
+
+  @override
+  String get travelTrainPassengers => 'Passenger details';
+
+  @override
+  String get travelTrainPassengerLabel => 'Passenger';
+
+  @override
+  String get travelTrainConfirmBooking => 'Submit ticket request';
+
+  @override
+  String get travelTrainNationalCode => 'National ID';
+
+  @override
+  String get travelTrainGender => 'Gender';
+
+  @override
+  String get travelTrainContactPhone => 'Contact mobile';
+
+  @override
+  String get travelTrainBookingNote =>
+      'The train ticket is issued after approval and payment; its status is tracked in “My requests”.';
+
+  @override
+  String get travelVisaHero => 'Destination visas, without the hassle';
+
+  @override
+  String get travelVisaIntroDescription =>
+      'Pick a destination country, fill in the application form and send your documents. The review is handled by our operators.';
+
+  @override
+  String get travelVisaStepDocuments => 'Send documents';
+
+  @override
+  String get travelVisaStepReview => 'Operator review';
+
+  @override
+  String get travelVisaStepIssue => 'Visa issued';
+
+  @override
+  String get travelVisaCountries => 'Countries with visa service';
+
+  @override
+  String travelVisaProcessingDays(int days) {
+    return 'Processing: $days business days';
+  }
+
+  @override
+  String get travelVisaFormTitle => 'Visa application form';
+
+  @override
+  String get travelVisaDocuments => 'Required documents';
+
+  @override
+  String get travelVisaType => 'Visa type';
+
+  @override
+  String get travelVisaTourist => 'Tourist';
+
+  @override
+  String get travelVisaBusiness => 'Business';
+
+  @override
+  String get travelVisaEntries => 'Entries';
+
+  @override
+  String get travelVisaSingleEntry => 'Single entry';
+
+  @override
+  String get travelVisaMultipleEntry => 'Multiple entry';
+
+  @override
+  String get travelVisaApplicants => 'Applicants';
+
+  @override
+  String get travelVisaTravelDate => 'Travel date';
+
+  @override
+  String get travelVisaFullName => 'Full name (Latin)';
+
+  @override
+  String get travelVisaPassportNumber => 'Passport number';
+
+  @override
+  String get travelVisaPassportExpiry => 'Passport expiry date';
+
+  @override
+  String get travelVisaSubmit => 'Submit visa request';
+
+  @override
+  String get travelReserveDate => 'Reservation date';
+
+  @override
+  String get travelCarRentalHero => 'Book your travel car online';
+
+  @override
+  String get travelCarAgency => 'Rental company';
+
+  @override
+  String get travelCarSeats => 'Seats';
+
+  @override
+  String get travelCarTransmission => 'Transmission';
+
+  @override
+  String get travelCarAutomatic => 'Automatic';
+
+  @override
+  String get travelCarManual => 'Manual';
+
+  @override
+  String get travelCarDeposit => 'Refundable deposit';
+
+  @override
+  String get travelCarPickupDate => 'Pickup date';
+
+  @override
+  String get travelCarReturnDate => 'Return date';
+
+  @override
+  String get travelTourHero => 'Ready-made tours with a clear plan';
+
+  @override
+  String get travelTourDays => 'Tour length';
+
+  @override
+  String get travelTourStars => 'Hotel rating';
+
+  @override
+  String get travelTourCapacity => 'Remaining capacity';
+
+  @override
+  String get travelTourDepartureDate => 'Departure date';
+
+  @override
+  String get travelBoatHero => 'Sea and leisure routes';
+
+  @override
+  String get travelBoatDuration => 'Journey time';
+
+  @override
+  String get travelBoatCapacity => 'Capacity';
+
+  @override
+  String get travelBoatClass => 'Ferry class';
+
+  @override
+  String get travelRestaurantHero => 'Reserve your table before you arrive';
+
+  @override
+  String get travelRestaurantCuisine => 'Cuisine';
+
+  @override
+  String get travelRestaurantHours => 'Opening hours';
+
+  @override
+  String get travelRestaurantCapacity => 'Capacity';
+
+  @override
+  String get travelRestaurantGuests => 'Guests';
+
+  @override
+  String get travelFoodHero => 'Fast delivery to your stay';
+
+  @override
+  String get travelFoodPreparation => 'Preparation time';
+
+  @override
+  String get travelSupermarketHero =>
+      'Travel essentials, delivered to your door';
+
+  @override
+  String get travelSupermarketUnit => 'Unit';
+
+  @override
+  String get travelStoreHero => 'Travel store — delivered at the destination';
+
+  @override
+  String get travelStoreBrand => 'Brand';
+
+  @override
+  String get travelStoreWarranty => 'Warranty';
+
+  @override
+  String get travelLocalHero => 'Local services at the destination';
+
+  @override
+  String get travelLocalDuration => 'Service duration';
+
+  @override
+  String get travelLocalLanguages => 'Languages';
+
+  @override
+  String get travelInsuranceHero => 'Insure your trip';
+
+  @override
+  String get travelInsuranceCoverage => 'Coverage limit';
+
+  @override
+  String get travelInsuranceDuration => 'Validity';
+
+  @override
+  String get travelTranslatorHero => 'An interpreter at the destination';
+
+  @override
+  String get travelTranslatorLanguages => 'Languages';
+
+  @override
+  String get travelTranslatorExperience => 'Experience';
+
+  @override
+  String get travelEmergencyHero => 'Emergency support for travellers';
+
+  @override
+  String get travelEmergencyContactsTitle => 'Emergency numbers';
+
+  @override
+  String get travelEmergencyRequest => 'Request assistance';
+
+  @override
+  String get travelEmergencySubject => 'Subject';
+
+  @override
+  String get travelTaxiHero => 'Transfers and city rides';
+
+  @override
+  String get travelTaxiCarClass => 'Car class';
+
+  @override
+  String get travelSimTopUpHero => 'Top up a SIM at the destination';
+
+  @override
+  String get travelSimOperator => 'Operator';
+
+  @override
+  String get travelSimNumber => 'Mobile number';
+
+  @override
+  String get travelSimAmount => 'Top-up amount';
+
+  @override
+  String get travelPayDescription =>
+      'To use this payment method, link your account and submit a top-up request. The status is tracked in “My requests”.';
+
+  @override
+  String get travelPayLinkAccount => 'Link account & submit top-up';
+
+  @override
+  String get travelPayTopUp => 'Wallet top-up';
+
+  @override
+  String get travelPayAccountId => 'Account ID';
+
+  @override
+  String get travelAliPayDescription => 'International payments with AliPay';
+
+  @override
+  String get travelMirPayDescription => 'Russian payments with MirPay';
+
+  @override
+  String get travelContactPhone => 'Contact mobile';
+
+  @override
+  String get travelVisaCountry => 'Country';
 }

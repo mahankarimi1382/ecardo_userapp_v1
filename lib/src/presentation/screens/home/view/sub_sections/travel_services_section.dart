@@ -11,14 +11,24 @@ import 'package:ecardo_user/src/presentation/screens/travel/core/controller/trav
 import 'package:ecardo_user/src/presentation/screens/travel/esim/esim_intro_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/flights/flight_search_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/hotels/hotel_search_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/services/catalog_service_screens.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/services/extra_service_registry.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/services/quick_service_screens.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/trains/train_screens.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/visa/visa_screens.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 
 /// Travel services card — same tile grid language as financial / business.
 ///
 /// v1.0.52: destination country chips removed from the dashboard; country
-/// selection belongs inside each service flow. Hotels / Flights / eSIM are
-/// live modules (addon-gated only, no KYC feature lock on the tile). The
-/// rest stay greyed notBuilt until their screens ship.
+/// selection belongs inside each service flow.
+///
+/// vNext (travel services expansion): every extra service tile is live.
+/// Trains mirror the flights skeleton on a deterministic demo catalog; visa
+/// is an internal application form landing in the under-review state; the
+/// remaining services browse curated in-app catalogs / request forms. All
+/// extra-service submissions live in the local request book (no backend
+/// contract yet) — see travel/services/travel_service_request.dart.
 class TravelServicesSection extends StatefulWidget {
   const TravelServicesSection({super.key});
 
@@ -65,108 +75,162 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         beforeNavigate: _ensureTravelController,
         pageBuilder: () => const EsimIntroScreen(),
       ),
-      // Not shipped yet — same size tiles, grey + lock (notBuilt).
+      // Extra services — demo catalogs + internal request forms.
       ServiceTile(
         title: localization.travelServiceVisa,
         iconData: Icons.approval_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => const VisaIntroScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceTrain,
         iconData: Icons.train_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => const TrainSearchScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceCarRental,
         iconData: Icons.directions_car_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('carRental')),
       ),
       ServiceTile(
         title: localization.travelServiceTaxi,
         iconData: Icons.local_taxi_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => taxiRequestScreen(localization),
       ),
       ServiceTile(
         title: localization.travelServiceTour,
         iconData: Icons.tour_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('tour')),
       ),
       ServiceTile(
         title: localization.travelServiceBoat,
         iconData: Icons.directions_boat_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('boat')),
       ),
       ServiceTile(
         title: localization.travelServiceLocal,
         iconData: Icons.place_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('local')),
       ),
       ServiceTile(
         title: localization.travelServiceFood,
         iconData: Icons.delivery_dining_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('food')),
       ),
       ServiceTile(
         title: localization.travelServiceSupermarket,
         iconData: Icons.storefront_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('supermarket')),
       ),
       ServiceTile(
         title: localization.travelServiceRestaurant,
         iconData: Icons.restaurant_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('restaurant')),
       ),
       ServiceTile(
         title: localization.travelServiceStore,
         iconData: Icons.shopping_bag_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('store')),
       ),
       ServiceTile(
         title: localization.travelServiceTranslator,
         iconData: Icons.translate_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('translator')),
       ),
       ServiceTile(
         title: localization.travelServiceEmergency,
         iconData: Icons.support_agent_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => const EmergencyServiceScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceAliPay,
         iconData: Icons.account_balance_wallet_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => WalletServiceScreen(
+          serviceKey: 'aliPay',
+          brandStart: const Color(0xFF1677FF),
+          brandEnd: const Color(0xFF0E42A8),
+          description: (localization) => localization.travelAliPayDescription,
+        ),
       ),
       ServiceTile(
         title: localization.travelServiceMirPay,
         iconData: Icons.credit_card_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => WalletServiceScreen(
+          serviceKey: 'mirPay',
+          brandStart: const Color(0xFF2BB673),
+          brandEnd: const Color(0xFF157A4A),
+          description: (localization) => localization.travelMirPayDescription,
+        ),
       ),
       ServiceTile(
         title: localization.travelServiceSimTopUp,
         iconData: Icons.phone_android_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => simTopUpRequestScreen(localization),
       ),
       ServiceTile(
         title: localization.travelServiceInsurance,
         iconData: Icons.health_and_safety_rounded,
         route: '',
-        available: false,
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () =>
+            CatalogServiceScreen(config: extraServiceConfig('insurance')),
       ),
     ];
   }

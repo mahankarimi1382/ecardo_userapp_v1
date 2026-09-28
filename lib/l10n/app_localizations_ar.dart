@@ -8030,6 +8030,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get travelServicesHint => 'اختر وجهتك لعرض الخدمات المتاحة';
 
   @override
+  String get travelAvailableNow => 'متاح الآن';
+
+  @override
+  String get travelComingSoonSection => 'قريباً';
+
+  @override
   String get businessServicesTitle => 'الخدمات التجارية والأعمال';
 
   @override
@@ -8128,4 +8134,483 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get businessServiceMoneyTransfer => 'تحويل أموال';
+
+  @override
+  String get twoFactorValidationEnterPassword => 'يرجى إدخال كلمة المرور';
+
+  @override
+  String get twoFactorValidationEnterOldPasscode =>
+      'يرجى إدخال رمز المرور القديم';
+
+  @override
+  String get twoFactorValidationEnterNewPasscode => 'يرجى إدخال رمز مرور جديد';
+
+  @override
+  String get twoFactorValidationEnterConfirmPasscode => 'يرجى تأكيد رمز المرور';
+
+  @override
+  String get twoFactorValidationEnterPasscode => 'يرجى إدخال رمز المرور';
+
+  @override
+  String get twoFactorValidationPasscodesDoNotMatch =>
+      'رمز المرور وتأكيده غير متطابقين';
+
+  @override
+  String get twoFactorValidationNewPasscodesDoNotMatch =>
+      'رمز المرور الجديد وتأكيده غير متطابقين';
+
+  @override
+  String get webViewLinkCannotOpen => 'لا يمكن فتح هذا الرابط في التطبيق.';
+
+  @override
+  String get networkReconnected => 'You are back online';
+
+  @override
+  String get vpnHintBanner =>
+      'VPN detected — turn it off for a more stable experience';
+
+  @override
+  String get signInWithTelegram => 'Continue with Telegram';
+
+  @override
+  String get signInTelegramUnavailable =>
+      'Telegram sign-in will be available once enabled on the server.';
+
+  @override
+  String get sessionExpiredMessage =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get travelFromPrice => 'يبدأ من';
+
+  @override
+  String get travelSearchAction => 'بحث';
+
+  @override
+  String get travelSearchPlaceholder => 'بحث…';
+
+  @override
+  String get travelMockCurrency => 'تومان';
+
+  @override
+  String get travelMyRequests => 'طلباتي';
+
+  @override
+  String get travelRequestReference => 'رمز التتبع';
+
+  @override
+  String get travelRequestSubmittedAt => 'تاريخ الإرسال';
+
+  @override
+  String get travelRequestDetails => 'تفاصيل الطلب';
+
+  @override
+  String get travelRequestUnderReview => 'قيد المراجعة';
+
+  @override
+  String get travelRequestApproved => 'مقبول';
+
+  @override
+  String get travelRequestRejected => 'مرفوض';
+
+  @override
+  String get travelRequestSubmittedTitle => 'تم إرسال طلبك';
+
+  @override
+  String get travelRequestSubmittedDescription =>
+      'تم تسجيل طلبك بحالة «قيد المراجعة». سيتم إبلاغك بالنتيجة في «طلباتي».';
+
+  @override
+  String get travelRequestBackHome => 'العودة إلى خدمات السفر';
+
+  @override
+  String get travelRequestEmptyTitle => 'لا توجد طلبات بعد';
+
+  @override
+  String get travelRequestEmptyDescription =>
+      'الطلبات التي ترسلها عبر خدمات السفر وحالتها ستظهر هنا.';
+
+  @override
+  String get travelFormSubmit => 'إرسال الطلب';
+
+  @override
+  String get travelFormRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get travelFormPickHint => 'اختر';
+
+  @override
+  String get travelExtraUnderReviewNote =>
+      'يُسجل هذا الطلب داخلياً، وبعد مراجعة المختصين تُحدَّث حالته في «طلباتي».';
+
+  @override
+  String get travelFieldTime => 'الوقت';
+
+  @override
+  String get travelFieldName => 'الاسم الكامل';
+
+  @override
+  String get travelFieldPhone => 'رقم الهاتف';
+
+  @override
+  String get travelFieldNote => 'ملاحظات';
+
+  @override
+  String get travelFieldQuantity => 'الكمية';
+
+  @override
+  String get travelFieldAddress => 'العنوان';
+
+  @override
+  String get travelFieldAmount => 'المبلغ (تومان)';
+
+  @override
+  String get travelCatalogNoResults => 'لا نتائج مطابقة لبحثك.';
+
+  @override
+  String get travelCatalogDetails => 'التفاصيل';
+
+  @override
+  String get travelCatalogRating => 'التقييم';
+
+  @override
+  String get travelCatalogRequest => 'إرسال الطلب';
+
+  @override
+  String get travelCatalogPerDay => 'اليوم';
+
+  @override
+  String get travelCatalogPerPerson => 'للشخص';
+
+  @override
+  String get travelCatalogPerItem => 'للوحدة';
+
+  @override
+  String get travelCatalogPerService => 'للخدمة';
+
+  @override
+  String get travelTrainHero => 'سفر بالسكك الحديدية — آمن واقتصادي';
+
+  @override
+  String get travelTrainClass => 'درجة القطار';
+
+  @override
+  String get travelTrainEconomy => 'اقتصادية';
+
+  @override
+  String get travelTrainCoupe => 'مقصورة';
+
+  @override
+  String get travelTrainVip => 'VIP';
+
+  @override
+  String get travelTrainResults => 'نتائج القطارات';
+
+  @override
+  String get travelTrainResultsGuidance =>
+      'اختر قطارك وقارن أوقات المغادرة والدرجات والمقاعد المتبقية.';
+
+  @override
+  String get travelSortRecommended => 'موصى به';
+
+  @override
+  String get travelSortCheapest => 'الأرخص';
+
+  @override
+  String get travelSortEarliest => 'الأبكر مغادرة';
+
+  @override
+  String get travelSortFastest => 'الأسرع';
+
+  @override
+  String get travelTrainNumber => 'رقم القطار';
+
+  @override
+  String get travelTrainDetails => 'تفاصيل القطار';
+
+  @override
+  String get travelTrainContinueToPassengers => 'متابعة إلى المسافرين';
+
+  @override
+  String get travelTrainDetailsGuidance =>
+      'راجع القطار والدرجات وشروط الإلغاء قبل إضافة المسافرين.';
+
+  @override
+  String get travelTrainOperator => 'المشغل';
+
+  @override
+  String get travelTrainWagon => 'العربة';
+
+  @override
+  String get travelTrainWagonType => 'صالة مفتوحة / مقصورة مغلقة حسب الدرجة';
+
+  @override
+  String get travelTrainSeatsLeft => 'مقعد متبقي';
+
+  @override
+  String get travelTrainPolicyNote =>
+      'الإلغاء ممكن حتى 48 ساعة قبل المغادرة مع خصم 10%. يجب أن يكون الهاتف المتنقل فعالاً؛ يصدر التذكرة بعد الموافقة والدفع ويمكن تتبعها في «طلباتي».';
+
+  @override
+  String get travelTrainPassengers => 'بيانات المسافرين';
+
+  @override
+  String get travelTrainPassengerLabel => 'مسافر';
+
+  @override
+  String get travelTrainConfirmBooking => 'إرسال طلب التذكرة';
+
+  @override
+  String get travelTrainNationalCode => 'الرمز الوطني';
+
+  @override
+  String get travelTrainGender => 'الجنس';
+
+  @override
+  String get travelTrainContactPhone => 'هاتف التواصل';
+
+  @override
+  String get travelTrainBookingNote =>
+      'تذكرة القطار تصدر بعد الموافقة والدفع، وتُتتبع حالتها في «طلباتي».';
+
+  @override
+  String get travelVisaHero => 'تأشيرات دول مقصدك دون تعقيد';
+
+  @override
+  String get travelVisaIntroDescription =>
+      'اختر الدولة، املأ نموذج الطلب وأرسل المستندات. تتولى مراجعتها فريقنا.';
+
+  @override
+  String get travelVisaStepDocuments => 'إرسال المستندات';
+
+  @override
+  String get travelVisaStepReview => 'مراجعة المختصين';
+
+  @override
+  String get travelVisaStepIssue => 'إصدار التأشيرة';
+
+  @override
+  String get travelVisaCountries => 'الدول المتوفرة لخدمة التأشيرة';
+
+  @override
+  String travelVisaProcessingDays(int days) {
+    return 'مدة المراجعة: $days يوم عمل';
+  }
+
+  @override
+  String get travelVisaFormTitle => 'نموذج طلب التأشيرة';
+
+  @override
+  String get travelVisaDocuments => 'المستندات المطلوبة';
+
+  @override
+  String get travelVisaType => 'نوع التأشيرة';
+
+  @override
+  String get travelVisaTourist => 'سياحية';
+
+  @override
+  String get travelVisaBusiness => 'تجارية';
+
+  @override
+  String get travelVisaEntries => 'عدد مرات الدخول';
+
+  @override
+  String get travelVisaSingleEntry => 'دخول واحد';
+
+  @override
+  String get travelVisaMultipleEntry => 'دخول متعدد';
+
+  @override
+  String get travelVisaApplicants => 'عدد المتقدمين';
+
+  @override
+  String get travelVisaTravelDate => 'تاريخ السفر';
+
+  @override
+  String get travelVisaFullName => 'الاسم الكامل (لاتيني)';
+
+  @override
+  String get travelVisaPassportNumber => 'رقم جواز السفر';
+
+  @override
+  String get travelVisaPassportExpiry => 'تاريخ انتهاء الجواز';
+
+  @override
+  String get travelVisaSubmit => 'إرسال طلب التأشيرة';
+
+  @override
+  String get travelReserveDate => 'تاريخ الحجز';
+
+  @override
+  String get travelCarRentalHero => 'احجز سيارة سفرك عبر الإنترنت';
+
+  @override
+  String get travelCarAgency => 'شركة التأجير';
+
+  @override
+  String get travelCarSeats => 'المقاعد';
+
+  @override
+  String get travelCarTransmission => 'ناقل الحركة';
+
+  @override
+  String get travelCarAutomatic => 'أوتوماتيك';
+
+  @override
+  String get travelCarManual => 'يدوي';
+
+  @override
+  String get travelCarDeposit => 'تأمين قابل للاسترداد';
+
+  @override
+  String get travelCarPickupDate => 'تاريخ الاستلام';
+
+  @override
+  String get travelCarReturnDate => 'تاريخ الإرجاع';
+
+  @override
+  String get travelTourHero => 'جولات جاهزة بخطة واضحة';
+
+  @override
+  String get travelTourDays => 'مدة الجولة';
+
+  @override
+  String get travelTourStars => 'تصنيف الفندق';
+
+  @override
+  String get travelTourCapacity => 'السعة المتبقية';
+
+  @override
+  String get travelTourDepartureDate => 'تاريخ المغادرة';
+
+  @override
+  String get travelBoatHero => 'مسارات بحرية وترفيهية';
+
+  @override
+  String get travelBoatDuration => 'مدة الرحلة';
+
+  @override
+  String get travelBoatCapacity => 'السعة';
+
+  @override
+  String get travelBoatClass => 'درجة العبارة';
+
+  @override
+  String get travelRestaurantHero => 'احجز طاولتك قبل وصولك';
+
+  @override
+  String get travelRestaurantCuisine => 'نوع المطبخ';
+
+  @override
+  String get travelRestaurantHours => 'ساعات العمل';
+
+  @override
+  String get travelRestaurantCapacity => 'السعة';
+
+  @override
+  String get travelRestaurantGuests => 'عدد الضيوف';
+
+  @override
+  String get travelFoodHero => 'توصيل سريع إلى مكان إقامتك';
+
+  @override
+  String get travelFoodPreparation => 'وقت التحضير';
+
+  @override
+  String get travelSupermarketHero => 'احتياجات السفر تُوصل إلى بابك';
+
+  @override
+  String get travelSupermarketUnit => 'الوحدة';
+
+  @override
+  String get travelStoreHero => 'متجر السفر — التسليم في الوجهة';
+
+  @override
+  String get travelStoreBrand => 'العلامة التجارية';
+
+  @override
+  String get travelStoreWarranty => 'الضمان';
+
+  @override
+  String get travelLocalHero => 'خدمات محلية في الوجهة';
+
+  @override
+  String get travelLocalDuration => 'مدة الخدمة';
+
+  @override
+  String get travelLocalLanguages => 'اللغات';
+
+  @override
+  String get travelInsuranceHero => 'أمِّن رحلتك';
+
+  @override
+  String get travelInsuranceCoverage => 'حد التغطية';
+
+  @override
+  String get travelInsuranceDuration => 'مدة الصلاحية';
+
+  @override
+  String get travelTranslatorHero => 'مترجم مرافق في الوجهة';
+
+  @override
+  String get travelTranslatorLanguages => 'اللغات';
+
+  @override
+  String get travelTranslatorExperience => 'الخبرة';
+
+  @override
+  String get travelEmergencyHero => 'دعم طارئ للمسافرين';
+
+  @override
+  String get travelEmergencyContactsTitle => 'أرقام الطوارئ';
+
+  @override
+  String get travelEmergencyRequest => 'طلب مساعدة';
+
+  @override
+  String get travelEmergencySubject => 'موضوع الطلب';
+
+  @override
+  String get travelTaxiHero => 'النقل والتنقل داخل المدينة';
+
+  @override
+  String get travelTaxiCarClass => 'فئة السيارة';
+
+  @override
+  String get travelSimTopUpHero => 'شحن شريحة الهاتف في الوجهة';
+
+  @override
+  String get travelSimOperator => 'المشغل';
+
+  @override
+  String get travelSimNumber => 'رقم الهاتف';
+
+  @override
+  String get travelSimAmount => 'مبلغ الشحن';
+
+  @override
+  String get travelPayDescription =>
+      'لاستخدام وسيلة الدفع هذه، اربط حسابك وأرسل طلب شحن. تُتتبع الحالة في «طلباتي».';
+
+  @override
+  String get travelPayLinkAccount => 'ربط الحساب وإرسال الشحن';
+
+  @override
+  String get travelPayTopUp => 'شحن المحفظة';
+
+  @override
+  String get travelPayAccountId => 'معرف الحساب';
+
+  @override
+  String get travelAliPayDescription => 'مدفوعات دولية عبر AliPay';
+
+  @override
+  String get travelMirPayDescription => 'مدفوعات روسية عبر MirPay';
+
+  @override
+  String get travelContactPhone => 'هاتف التواصل';
+
+  @override
+  String get travelVisaCountry => 'الدولة';
 }

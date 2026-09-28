@@ -7864,6 +7864,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelServicesHint => '选择目的地国家以查看可用服务';
 
   @override
+  String get travelAvailableNow => '现已可用';
+
+  @override
+  String get travelComingSoonSection => '即将推出';
+
+  @override
   String get businessServicesTitle => '商贸与企业服务';
 
   @override
@@ -7961,4 +7967,473 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get businessServiceMoneyTransfer => '转账';
+
+  @override
+  String get twoFactorValidationEnterPassword => '请输入密码';
+
+  @override
+  String get twoFactorValidationEnterOldPasscode => '请输入旧通行码';
+
+  @override
+  String get twoFactorValidationEnterNewPasscode => '请输入新通行码';
+
+  @override
+  String get twoFactorValidationEnterConfirmPasscode => '请确认通行码';
+
+  @override
+  String get twoFactorValidationEnterPasscode => '请输入通行码';
+
+  @override
+  String get twoFactorValidationPasscodesDoNotMatch => '通行码与确认不一致';
+
+  @override
+  String get twoFactorValidationNewPasscodesDoNotMatch => '新通行码与确认不一致';
+
+  @override
+  String get webViewLinkCannotOpen => '无法在应用中打开此链接。';
+
+  @override
+  String get networkReconnected => 'You are back online';
+
+  @override
+  String get vpnHintBanner =>
+      'VPN detected — turn it off for a more stable experience';
+
+  @override
+  String get signInWithTelegram => 'Continue with Telegram';
+
+  @override
+  String get signInTelegramUnavailable =>
+      'Telegram sign-in will be available once enabled on the server.';
+
+  @override
+  String get sessionExpiredMessage =>
+      'Your session has expired. Please sign in again.';
+
+  @override
+  String get travelFromPrice => '起价';
+
+  @override
+  String get travelSearchAction => '搜索';
+
+  @override
+  String get travelSearchPlaceholder => '搜索…';
+
+  @override
+  String get travelMockCurrency => '土曼';
+
+  @override
+  String get travelMyRequests => '我的申请';
+
+  @override
+  String get travelRequestReference => '跟踪码';
+
+  @override
+  String get travelRequestSubmittedAt => '提交时间';
+
+  @override
+  String get travelRequestDetails => '申请详情';
+
+  @override
+  String get travelRequestUnderReview => '审核中';
+
+  @override
+  String get travelRequestApproved => '已批准';
+
+  @override
+  String get travelRequestRejected => '已拒绝';
+
+  @override
+  String get travelRequestSubmittedTitle => '申请已提交';
+
+  @override
+  String get travelRequestSubmittedDescription =>
+      '您的申请已记录为“审核中”状态。结果将在“我的申请”中通知您。';
+
+  @override
+  String get travelRequestBackHome => '返回旅游服务';
+
+  @override
+  String get travelRequestEmptyTitle => '暂无申请';
+
+  @override
+  String get travelRequestEmptyDescription => '您通过旅游服务提交的申请及其审核状态将显示在这里。';
+
+  @override
+  String get travelFormSubmit => '提交申请';
+
+  @override
+  String get travelFormRequired => '此字段为必填项';
+
+  @override
+  String get travelFormPickHint => '请选择';
+
+  @override
+  String get travelExtraUnderReviewNote => '该申请将在内部记录；工作人员审核后，状态将在“我的申请”中更新。';
+
+  @override
+  String get travelFieldTime => '时间';
+
+  @override
+  String get travelFieldName => '姓名';
+
+  @override
+  String get travelFieldPhone => '电话号码';
+
+  @override
+  String get travelFieldNote => '备注';
+
+  @override
+  String get travelFieldQuantity => '数量';
+
+  @override
+  String get travelFieldAddress => '地址';
+
+  @override
+  String get travelFieldAmount => '金额（土曼）';
+
+  @override
+  String get travelCatalogNoResults => '没有与您搜索匹配的结果。';
+
+  @override
+  String get travelCatalogDetails => '详情';
+
+  @override
+  String get travelCatalogRating => '评分';
+
+  @override
+  String get travelCatalogRequest => '提交申请';
+
+  @override
+  String get travelCatalogPerDay => '每天';
+
+  @override
+  String get travelCatalogPerPerson => '每人';
+
+  @override
+  String get travelCatalogPerItem => '每件';
+
+  @override
+  String get travelCatalogPerService => '每次服务';
+
+  @override
+  String get travelTrainHero => '铁路旅行 — 安全又经济';
+
+  @override
+  String get travelTrainClass => '列车等级';
+
+  @override
+  String get travelTrainEconomy => '经济座';
+
+  @override
+  String get travelTrainCoupe => '包厢';
+
+  @override
+  String get travelTrainVip => 'VIP';
+
+  @override
+  String get travelTrainResults => '列车结果';
+
+  @override
+  String get travelTrainResultsGuidance => '选择您的列车；比较出发时间、等级和剩余座位。';
+
+  @override
+  String get travelSortRecommended => '推荐';
+
+  @override
+  String get travelSortCheapest => '最便宜';
+
+  @override
+  String get travelSortEarliest => '最早出发';
+
+  @override
+  String get travelSortFastest => '最快';
+
+  @override
+  String get travelTrainNumber => '车次';
+
+  @override
+  String get travelTrainDetails => '列车详情';
+
+  @override
+  String get travelTrainContinueToPassengers => '继续填写乘客';
+
+  @override
+  String get travelTrainDetailsGuidance => '添加乘客前，请查看列车、等级和退票规则。';
+
+  @override
+  String get travelTrainOperator => '运营商';
+
+  @override
+  String get travelTrainWagon => '车厢';
+
+  @override
+  String get travelTrainWagonType => '视等级为开放座席 / 封闭包厢';
+
+  @override
+  String get travelTrainSeatsLeft => '余票';
+
+  @override
+  String get travelTrainPolicyNote =>
+      '发车前48小时内可退票，收取10%手续费。联系手机需保持畅通；车票在批准并付款后出票，可在“我的申请”中跟踪。';
+
+  @override
+  String get travelTrainPassengers => '乘客信息';
+
+  @override
+  String get travelTrainPassengerLabel => '乘客';
+
+  @override
+  String get travelTrainConfirmBooking => '提交购票申请';
+
+  @override
+  String get travelTrainNationalCode => '国民代码';
+
+  @override
+  String get travelTrainGender => '性别';
+
+  @override
+  String get travelTrainContactPhone => '联系手机';
+
+  @override
+  String get travelTrainBookingNote => '火车票将在批准并付款后出票；状态可在“我的申请”中跟踪。';
+
+  @override
+  String get travelVisaHero => '目的国签证，轻松办理';
+
+  @override
+  String get travelVisaIntroDescription => '选择目的国，填写申请表并提交材料。由我们的专员进行审核。';
+
+  @override
+  String get travelVisaStepDocuments => '提交材料';
+
+  @override
+  String get travelVisaStepReview => '专员审核';
+
+  @override
+  String get travelVisaStepIssue => '签证签发';
+
+  @override
+  String get travelVisaCountries => '提供签证服务的国家';
+
+  @override
+  String travelVisaProcessingDays(int days) {
+    return '审核时间：$days 个工作日';
+  }
+
+  @override
+  String get travelVisaFormTitle => '签证申请表';
+
+  @override
+  String get travelVisaDocuments => '所需材料';
+
+  @override
+  String get travelVisaType => '签证类型';
+
+  @override
+  String get travelVisaTourist => '旅游';
+
+  @override
+  String get travelVisaBusiness => '商务';
+
+  @override
+  String get travelVisaEntries => '入境次数';
+
+  @override
+  String get travelVisaSingleEntry => '单次入境';
+
+  @override
+  String get travelVisaMultipleEntry => '多次入境';
+
+  @override
+  String get travelVisaApplicants => '申请人数';
+
+  @override
+  String get travelVisaTravelDate => '出行日期';
+
+  @override
+  String get travelVisaFullName => '姓名（拉丁字母）';
+
+  @override
+  String get travelVisaPassportNumber => '护照号码';
+
+  @override
+  String get travelVisaPassportExpiry => '护照有效期';
+
+  @override
+  String get travelVisaSubmit => '提交签证申请';
+
+  @override
+  String get travelReserveDate => '预订日期';
+
+  @override
+  String get travelCarRentalHero => '在线预订您的旅行用车';
+
+  @override
+  String get travelCarAgency => '租车公司';
+
+  @override
+  String get travelCarSeats => '座位数';
+
+  @override
+  String get travelCarTransmission => '变速箱';
+
+  @override
+  String get travelCarAutomatic => '自动挡';
+
+  @override
+  String get travelCarManual => '手动挡';
+
+  @override
+  String get travelCarDeposit => '可退押金';
+
+  @override
+  String get travelCarPickupDate => '取车日期';
+
+  @override
+  String get travelCarReturnDate => '还车日期';
+
+  @override
+  String get travelTourHero => '行程清晰的跟团游';
+
+  @override
+  String get travelTourDays => '行程天数';
+
+  @override
+  String get travelTourStars => '酒店等级';
+
+  @override
+  String get travelTourCapacity => '剩余名额';
+
+  @override
+  String get travelTourDepartureDate => '出发日期';
+
+  @override
+  String get travelBoatHero => '海上与休闲航线';
+
+  @override
+  String get travelBoatDuration => '航行时间';
+
+  @override
+  String get travelBoatCapacity => '载客量';
+
+  @override
+  String get travelBoatClass => '船舱等级';
+
+  @override
+  String get travelRestaurantHero => '提前预订您的餐桌';
+
+  @override
+  String get travelRestaurantCuisine => '菜系';
+
+  @override
+  String get travelRestaurantHours => '营业时间';
+
+  @override
+  String get travelRestaurantCapacity => '容纳人数';
+
+  @override
+  String get travelRestaurantGuests => '用餐人数';
+
+  @override
+  String get travelFoodHero => '快速送餐到住处';
+
+  @override
+  String get travelFoodPreparation => '备餐时间';
+
+  @override
+  String get travelSupermarketHero => '旅行必需品，送货上门';
+
+  @override
+  String get travelSupermarketUnit => '单位';
+
+  @override
+  String get travelStoreHero => '旅行商店 — 送货到目的地';
+
+  @override
+  String get travelStoreBrand => '品牌';
+
+  @override
+  String get travelStoreWarranty => '保修';
+
+  @override
+  String get travelLocalHero => '目的地本地服务';
+
+  @override
+  String get travelLocalDuration => '服务时长';
+
+  @override
+  String get travelLocalLanguages => '语言';
+
+  @override
+  String get travelInsuranceHero => '为您的旅行投保';
+
+  @override
+  String get travelInsuranceCoverage => '保障额度';
+
+  @override
+  String get travelInsuranceDuration => '有效期';
+
+  @override
+  String get travelTranslatorHero => '目的地随行翻译';
+
+  @override
+  String get travelTranslatorLanguages => '语言';
+
+  @override
+  String get travelTranslatorExperience => '经验';
+
+  @override
+  String get travelEmergencyHero => '旅行者紧急支持';
+
+  @override
+  String get travelEmergencyContactsTitle => '紧急电话';
+
+  @override
+  String get travelEmergencyRequest => '请求协助';
+
+  @override
+  String get travelEmergencySubject => '申请主题';
+
+  @override
+  String get travelTaxiHero => '接送与市内出行';
+
+  @override
+  String get travelTaxiCarClass => '车型';
+
+  @override
+  String get travelSimTopUpHero => '在目的地为 SIM 卡充值';
+
+  @override
+  String get travelSimOperator => '运营商';
+
+  @override
+  String get travelSimNumber => '手机号码';
+
+  @override
+  String get travelSimAmount => '充值金额';
+
+  @override
+  String get travelPayDescription => '要使用此支付方式，请绑定您的账户并提交充值申请。状态可在“我的申请”中跟踪。';
+
+  @override
+  String get travelPayLinkAccount => '绑定账户并提交充值';
+
+  @override
+  String get travelPayTopUp => '钱包充值';
+
+  @override
+  String get travelPayAccountId => '账户 ID';
+
+  @override
+  String get travelAliPayDescription => '使用 AliPay 进行国际支付';
+
+  @override
+  String get travelMirPayDescription => '使用 MirPay 进行俄罗斯支付';
+
+  @override
+  String get travelContactPhone => '联系手机';
+
+  @override
+  String get travelVisaCountry => '国家';
 }
