@@ -113,6 +113,16 @@ class SignInController extends GetxController {
     isEmailFocused.value = emailFocusNode.hasFocus;
   }
 
+  /// UX-FIX (login): stale validation errors vanished only on next submit.
+  /// Clearing them the moment the user edits the field feels alive.
+  void onEmailChanged(String _) {
+    if (emailError.value.isNotEmpty) emailError.value = '';
+  }
+
+  void onPasswordChanged(String _) {
+    if (passwordError.value.isNotEmpty) passwordError.value = '';
+  }
+
   void _handlePasswordFocusChange() {
     isPasswordFocused.value = passwordFocusNode.hasFocus;
   }

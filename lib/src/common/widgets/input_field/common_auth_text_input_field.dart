@@ -13,6 +13,8 @@ class CommonAuthTextInputField extends StatelessWidget {
   final bool isFocused;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final void Function(String)? onFieldSubmitted;
+  final TextInputAction? textInputAction;
   final bool readOnly;
   final bool enabled;
   final TextStyle? textStyle;
@@ -38,6 +40,8 @@ class CommonAuthTextInputField extends StatelessWidget {
     this.isFocused = false,
     this.keyboardType,
     this.validator,
+    this.onFieldSubmitted,
+    this.textInputAction,
     this.readOnly = false,
     this.enabled = true,
     this.textStyle,
@@ -67,6 +71,8 @@ class CommonAuthTextInputField extends StatelessWidget {
         focusNode: focusNode,
         keyboardType: keyboardType,
         validator: validator,
+        textInputAction: textInputAction,
+        onFieldSubmitted: onFieldSubmitted,
         readOnly: readOnly,
         enabled: enabled,
         autofillHints: autofillHints,

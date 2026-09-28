@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -219,6 +220,9 @@ class EmailOtpLoginScreen extends StatelessWidget {
         SizedBox(height: 24.h),
         PinCodeTextField(
           keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          autoFocus: true,
+          autoDismissKeyboard: false,
           cursorColor: AppColors.lightPrimary,
           textStyle: TextStyle(
             fontWeight: FontWeight.w700,
@@ -245,6 +249,14 @@ class EmailOtpLoginScreen extends StatelessWidget {
           ),
           appContext: context,
           length: 6,
+          // UX-FIX (otp): auto-verify the moment the 6th digit lands —
+          // the user no longer needs to hunt for the Verify button.
+          onChanged: (value) {
+            if (value.length == 6 &&
+                !controller.isLoading.value) {
+              controller.verifyCode();
+            }
+          },
         ),
         SizedBox(height: 20.h),
         Obx(

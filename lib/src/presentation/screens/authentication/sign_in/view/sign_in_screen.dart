@@ -78,7 +78,11 @@ class _SignInScreenState extends State<SignInScreen>
               child: Column(
                 children: [
                   SizedBox(
-                    height: 0.30.sh,
+                    // UX-FIX (login): fixed 30% of viewport height clipped
+                    // the form when the keyboard opened (0.30.sh + 0.70.sh
+                    // > remaining viewport). The header now takes only the
+                    // space it needs and the form stays reachable by scroll.
+                    height: 0.26.sh,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -136,7 +140,10 @@ class _SignInScreenState extends State<SignInScreen>
                   ),
 
                   Container(
-                    height: 0.70.sh,
+                    // UX-FIX (login): minHeight instead of fixed 70% — with
+                    // the keyboard open a fixed 0.70.sh pushed the login
+                    // button below the fold and the sheet clipped it.
+                    constraints: BoxConstraints(minHeight: 0.62.sh),
                     margin: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
                     padding: EdgeInsetsDirectional.only(
                       top: 3.h,
@@ -171,6 +178,7 @@ class _SignInScreenState extends State<SignInScreen>
                                     autofillHints: const [AutofillHints.email],
                                     controller: controller.emailController,
                                     focusNode: controller.emailFocusNode,
+                                    onChanged: controller.onEmailChanged,
                                     isFocused: controller.isEmailFocused.value,
                                     keyboardType: TextInputType.emailAddress,
                                     suffixIcon: Obx(
@@ -224,11 +232,21 @@ class _SignInScreenState extends State<SignInScreen>
                                     ],
                                     controller: controller.passwordController,
                                     focusNode: controller.passwordFocusNode,
+                                    onChanged: controller.onPasswordChanged,
                                     isFocused:
                                         controller.isPasswordFocused.value,
                                     obscureText:
                                         controller.isPasswordVisible.value,
                                     keyboardType: TextInputType.visiblePassword,
+                                    // UX-FIX (login): keyboard "done" now
+                                    // submits the form instead of just
+                                    // closing the keyboard.
+                                    textInputAction: TextInputAction.done,
+                                    onFieldSubmitted: (_) {
+                                      if (!controller.isLoading.value) {
+                                        controller.submitSignIn();
+                                      }
+                                    },
                                     suffixIcon: GestureDetector(
                                       onTap: () {
                                         controller.isPasswordVisible.toggle();
