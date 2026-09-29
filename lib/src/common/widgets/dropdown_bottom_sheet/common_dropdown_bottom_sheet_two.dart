@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 
 class CommonDropdownBottomSheetTwo extends StatefulWidget {
@@ -76,27 +77,29 @@ class _CommonDropdownBottomSheetTwoState
         ? AppColors.lightPrimary.withValues(alpha: 0.60)
         : AppColors.lightTextPrimary.withValues(alpha: 0.20);
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuart,
-      height: widget.bottomSheetHeight,
-      margin: const EdgeInsets.symmetric(horizontal: 18),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
-            blurRadius: 40,
-            spreadRadius: 0,
-            offset: const Offset(0, 0),
+    return SafeArea(
+      top: false,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutQuart,
+        height: widget.bottomSheetHeight,
+        margin: const EdgeInsets.symmetric(horizontal: 18),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadiusDirectional.only(
+            topStart: Radius.circular(20),
+            topEnd: Radius.circular(20),
           ),
-        ],
-      ),
-      child: Column(
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.06),
+              blurRadius: 40,
+              spreadRadius: 0,
+              offset: const Offset(0, 0),
+            ),
+          ],
+        ),
+        child: Column(
         children: [
           SizedBox(height: 12),
           Container(
@@ -203,7 +206,7 @@ class _CommonDropdownBottomSheetTwoState
         padding: EdgeInsetsDirectional.only(
           start: 18,
           end: 18,
-          bottom: 18,
+          bottom: AppSpacing.bottomSafe(context, 18),
         ),
         itemCount: _filteredItems.length,
         itemBuilder: (context, index) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/image_picker_controller.dart';
 
@@ -19,12 +20,14 @@ class ImagePickerDropdownBottomSheet extends StatelessWidget {
     final Color backgroundColorBottom = AppColors.white;
     final Color textColor = AppColors.black;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuart,
-      height: 230,
+    return SafeArea(
+      top: false,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutQuart,
+        height: AppSpacing.bottomSafe(context, 230),
 
-      decoration: BoxDecoration(
+        decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -176,6 +179,7 @@ class ImagePickerDropdownBottomSheet extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }

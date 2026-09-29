@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/model/kyc_history_model.dart';
 
 class KycDetailsBottomSheet extends StatelessWidget {
@@ -13,17 +14,19 @@ class KycDetailsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
 
-    return AnimatedContainer(
-      width: double.infinity,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuart,
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
-        ),
+    return SafeArea(
+      top: false,
+      child: AnimatedContainer(
+        width: double.infinity,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutQuart,
+        margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadiusDirectional.only(
+            topStart: Radius.circular(20),
+            topEnd: Radius.circular(20),
+          ),
         boxShadow: [
           BoxShadow(
             color: AppColors.black.withValues(alpha: 0.06),
@@ -255,7 +258,7 @@ class KycDetailsBottomSheet extends StatelessWidget {
                           ),
                         ],
                       ),
-                    SizedBox(height: 30),
+                    SizedBox(height: AppSpacing.bottomSafe(context, 20)),
                   ],
                 ),
               ),
@@ -263,6 +266,7 @@ class KycDetailsBottomSheet extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 

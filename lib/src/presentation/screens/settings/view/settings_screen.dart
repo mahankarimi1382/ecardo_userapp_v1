@@ -110,11 +110,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _confirmLogout() async {
     final go = await Get.dialog<bool>(
       AlertDialog(
-        title: Text(l10nPick(context, en: 'Sign out', fa: 'خروج از حساب')),
-        content: Text(l10nPick(context, en: 'You will be signed out of your account.', fa: 'از حساب کاربری خارج می‌شوید؟')),
+        title: Text(l10nPick(
+          context,
+          en: 'Sign out',
+          fa: 'خروج از حساب',
+          ar: 'تسجيل الخروج',
+          tr: 'Çıkış Yap',
+          ru: 'Выход из аккаунта',
+          zh: '退出登录',
+        )),
+        content: Text(l10nPick(
+          context,
+          en: 'You will be signed out of your account.',
+          fa: 'از حساب کاربری خارج می‌شوید؟',
+          ar: 'هل أنت متأكد من تسجيل الخروج من حسابك؟',
+          tr: 'Hesabınızdan çıkış yapmak istediğinize emin misiniz?',
+          ru: 'Вы действительно хотите выйти из своего аккаунта?',
+          zh: '确定要退出当前账户吗？',
+        )),
         actions: [
-          TextButton(onPressed: () => Get.back(result: false), child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف'))),
-          TextButton(onPressed: () => Get.back(result: true), child: Text(l10nPick(context, en: 'Sign out', fa: 'خروج'))),
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text(l10nPick(
+              context,
+              en: 'Cancel',
+              fa: 'انصراف',
+              ar: 'إلغاء',
+              tr: 'İptal',
+              ru: 'Отмена',
+              zh: '取消',
+            )),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: Text(l10nPick(
+              context,
+              en: 'Sign out',
+              fa: 'خروج',
+              ar: 'خروج',
+              tr: 'Çıkış',
+              ru: 'Выйти',
+              zh: '退出',
+            )),
+          ),
         ],
       ),
     );
@@ -191,11 +229,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
-              padding: const EdgeInsetsDirectional.fromSTEB(
+              padding: EdgeInsetsDirectional.fromSTEB(
                 AppSpacing.page,
                 12,
                 AppSpacing.page,
-                32,
+                AppSpacing.bottomSafe(context, 32),
               ),
               children: [
                 _group(l10nPick(context, en: 'Account', fa: 'حساب کاربری', ar: 'الحساب', zh: '账户'), [
@@ -224,7 +262,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           AlertDialog(
                             title: Text(l10nPick(context, en: 'Delete account', fa: 'حذف حساب', ar: 'حذف الحساب', zh: '删除账户')),
                             content: Text(
-                              l10nPick(context, en: 'To delete your account, please contact eCardo support.', fa: 'برای حذف حساب با پشتیبانی eCardo تماس بگیرید.'),
+                              l10nPick(
+                                context,
+                                en: 'To delete your account, please contact Al Barakat support.',
+                                fa: 'برای حذف حساب با پشتیبانی Al Barakat تماس بگیرید.',
+                                ar: 'لحذف حسابك، يُرجى التواصل مع دعم Al Barakat.',
+                                tr: 'Hesabınızı silmek için lütfen Al Barakat desteği ile iletişime geçin.',
+                                ru: 'Для удаления аккаунта свяжитесь со службой поддержки Al Barakat.',
+                                zh: '如需注销账户，请联系 Al Barakat 客服。',
+                              ),
                             ),
                             actions: [
                               TextButton(
@@ -530,20 +576,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.info_outline),
-                    title: Text(l10nPick(context, en: 'About us', fa: 'درباره ما', ar: 'من نحن', zh: '关于我们')),
+                    title: Text(l10nPick(
+                      context,
+                      en: 'About us',
+                      fa: 'درباره ما',
+                      ar: 'من نحن',
+                      tr: 'Hakkımızda',
+                      ru: 'О нас',
+                      zh: '关于我们',
+                    )),
                     subtitle: Text(_versionLabel()),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.policy_outlined),
-                    title: Text(l10nPick(context, en: 'Terms and privacy', fa: 'قوانین و حریم خصوصی', ar: 'الشروط والخصوصية', zh: '条款与隐私')),
+                    title: Text(l10nPick(
+                      context,
+                      en: 'Terms and privacy',
+                      fa: 'قوانین و حریم خصوصی',
+                      ar: 'الشروط والخصوصية',
+                      tr: 'Koşullar ve gizlilik',
+                      ru: 'Условия и конфиденциальность',
+                      zh: '条款与隐私',
+                    )),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () => Get.toNamed(BaseRoute.privacyPolicy),
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.system_update),
-                    title: Text(l10nPick(context, en: 'Check for updates', fa: 'بررسی به‌روزرسانی', ar: 'التحقق من التحديثات', zh: '检查更新')),
+                    title: Text(l10nPick(
+                      context,
+                      en: 'Check for updates',
+                      fa: 'بررسی به‌روزرسانی',
+                      ar: 'التحقق من التحديثات',
+                      tr: 'Güncellemeleri denetle',
+                      ru: 'Проверить обновления',
+                      zh: '检查更新',
+                    )),
                     onTap: () {
                       if (Get.isRegistered<AppUpdateController>()) {
                         Get.find<AppUpdateController>().checkForUpdate();
@@ -588,12 +658,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
 
   String _versionLabel() {
-    if (_version.isEmpty) return 'eCardo';
+    if (_version.isEmpty) return 'Al Barakat';
     return l10nPick(
       context,
       en: 'Version $_version',
       fa: 'نسخه $_version',
       ar: 'الإصدار $_version',
+      tr: 'Sürüm $_version',
+      ru: 'Версия $_version',
       zh: '版本 $_version',
     );
   }
