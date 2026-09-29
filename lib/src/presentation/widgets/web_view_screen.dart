@@ -68,13 +68,32 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
             if (url.contains('/success')) {
               await _handleReturnUrl(url, treatAsSuccessHint: true);
-            } else if (url.contains('/cancel')) {
+            } else if (url.contains('/cancel') || url.contains('/failed')) {
+              // wallet-modules v1.0.122: also intercept '/failed' — the sandbox
+              // gateway's result page (gateway/sandbox/failed/{token}) left the
+              // user stranded on a server-rendered page instead of popping back
+              // into the app. The server verdict is still authoritative.
               await _handleReturnUrl(url, treatAsSuccessHint: false);
             }
           },
         ),
       )
-      ..loadRequest(Uri.parse(widget.paymentUrl));
+      ..loadRequest(Uri.parse(_localizedPaymentUrl()));
+  }
+
+  /// wallet-modules v1.0.122: carry the app's UI language into the hosted
+  /// payment pages (pro-pay / gateway sandbox) so the confirm/cancel step is
+  /// localized too (server renders fa by default; en/fa/zh are supported).
+  String _localizedPaymentUrl() {
+    final locale = Get.locale?.languageCode;
+    if (locale == null || !['en', 'fa', 'zh'].contains(locale)) {
+      return widget.paymentUrl;
+    }
+    if (widget.paymentUrl.contains('lang=')) {
+      return widget.paymentUrl;
+    }
+    final separator = widget.paymentUrl.contains('?') ? '&' : '?';
+    return '${widget.paymentUrl}${separator}lang=$locale';
   }
 
   /// Single decision point for the return URL. Authoritative source is the

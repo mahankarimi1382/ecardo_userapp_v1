@@ -15,6 +15,9 @@ import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections
 class GiftCardController extends GetxController {
   // Global Variables
   final RxBool isGiftCardLoading = false.obs;
+  // wallet-modules v1.0.122: true when the products fetch actually failed,
+  // so the UI can show a retry state instead of the empty state.
+  final RxBool isGiftCardError = false.obs;
   final RxBool isInitialized = false.obs;
   final RxBool isGiftCardLoadingMore = false.obs;
   final RxBool isGiftCardDetailsLoading = false.obs;
@@ -177,6 +180,9 @@ class GiftCardController extends GetxController {
     } else {
       isGiftCardLoadingMore.value = true;
     }
+    // wallet-modules v1.0.122: distinguishes "loaded, empty" from "fetch
+    // failed" so the screen shows a retry state instead of the empty state.
+    isGiftCardError.value = false;
 
     try {
       final queryParams = _buildQueryParameters();
@@ -199,10 +205,17 @@ class GiftCardController extends GetxController {
         } else {
           currentPage.value++;
         }
+      } else if (currentPage.value == 1) {
+        // A real API failure (server error, auth, KYC block) must surface as
+        // an error state, never as "no gift cards found".
+        isGiftCardError.value = true;
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getGiftCardProducts() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      if (currentPage.value == 1) {
+        isGiftCardError.value = true;
+      }
       ToastHelper().showErrorToast(localization!.allControllerLoadError);
     } finally {
       isGiftCardLoading.value = false;
