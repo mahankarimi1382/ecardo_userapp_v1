@@ -1,7 +1,6 @@
-import 'package:ecardo_user/src/common/controller/country_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 /// Reactive locale + theme so settings changes apply without app restart.
@@ -37,31 +36,27 @@ class LocaleThemeService extends GetxService {
     // otherwise the switch silently does nothing.
     final normalized = code.trim().toLowerCase();
     if (!supported.contains(normalized)) return;
-    locale.value = Locale(normalized);
-    Get.updateLocale(locale.value);
+
+    // Persist FIRST so the splash relaunch below boots with the new language.
     if (Get.isRegistered<SettingsService>()) {
       await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
         normalized,
       );
     }
-    try {
-      if (Get.isRegistered<HomeController>()) {
-        final home = Get.find<HomeController>();
-        final name = nativeName(code);
-        home.language.value = name;
-        home.languageController.text = name;
-      }
-    } catch (_) {}
 
-    // مورد ۳ (v1.0.118): بعد از تغییر زبان، لیست کشورها را دوباره load کن
-    // تا نام‌های کشور با زبان جدید از API دریافت شوند (Accept-Language header).
-    try {
-      if (Get.isRegistered<CountryController>()) {
-        Get.find<CountryController>().fetchCountries();
-      }
-    } catch (_) {}
+    locale.value = Locale(normalized);
+    Get.updateLocale(locale.value);
+
+    // wallet-modules v1.0.122: rebuild the navigation stack from the splash
+    // instead of hot-swapping the locale over live routes. The full-tree
+    // rebuild used to crash the app in release builds — a Get.find on a
+    // controller whose route was long gone ("GetX 'Mpa' not found", error_log
+    // #62) fires when every live route re-builds at once — and it also left
+    // stale-translated screens (controllers capture AppLocalizations at
+    // construction). A clean restart re-registers every controller, so the
+    // crash class is gone and the whole app renders in the new language.
+    Get.offAllNamed(BaseRoute.root);
   }
-
   Future<void> setThemeModePref(String mode) async {
     themeMode.value = _parseTheme(mode);
     if (Get.isRegistered<SettingsService>()) {
