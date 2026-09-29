@@ -165,9 +165,13 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         foregroundColor: AppColors.lightTextPrimary,
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
+      // wallet-modules v1.0.122: SafeArea(bottom) — the usage-hint box used to
+      // stick to the system navigation bar / gesture area on notched devices.
+      body: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
           children: [
             const SizedBox(height: 20),
             Container(
@@ -291,9 +295,10 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 ],
               ),
             ),
-          ],
+            ],
+          ),
+          ),
         ),
-      ),
-    );
+      );
   }
 }

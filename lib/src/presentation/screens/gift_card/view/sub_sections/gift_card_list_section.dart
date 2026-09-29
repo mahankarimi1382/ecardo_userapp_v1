@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
@@ -70,6 +71,52 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
 
             if (controller.isGiftCardLoading.value && cardProductList.isEmpty) {
               return CommonLoading();
+            }
+
+            // wallet-modules v1.0.122: a real fetch failure (server error,
+            // auth, KYC block) must NOT read as "no gift cards" — show a
+            // retry state instead (same pattern as the referral screen).
+            if (controller.isGiftCardError.value && cardProductList.isEmpty) {
+              final localization = AppLocalizations.of(context)!;
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.wifi_off_rounded,
+                      size: 48,
+                      color: AppColors.lightTextTertiary,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      localization.allControllerLoadError,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        letterSpacing: 0,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.lightTextTertiary,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.lightPrimary,
+                        foregroundColor: AppColors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                      onPressed: loadData,
+                      icon: const Icon(Icons.refresh_rounded, size: 18),
+                      label: Text(
+                        localization.noInternetConnectionRetryButton,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             if (cardProductList.isEmpty) {
