@@ -51,13 +51,14 @@ class LicenseController extends GetxController {
   Future<void> fetchCatalog({String? category, String? search}) async {
     try {
       isLoadingCatalog.value = true;
-      final queryParams = <String, dynamic>{};
-      if (category != null && category != 'all') queryParams['category'] = category;
-      if (search != null && search.isNotEmpty) queryParams['search'] = search;
+      String ep = '/user/licenses/catalog';
+      final qp = <String>[];
+      if (category != null && category != 'all') qp.add('category=$category');
+      if (search != null && search.isNotEmpty) qp.add('search=${Uri.encodeComponent(search)}');
+      if (qp.isNotEmpty) ep += '?${qp.join('&')}';
 
       final ApiResponse<Map<String, dynamic>> res = await _networkService.get(
-        url: '/user/licenses/catalog',
-        queryParams: queryParams,
+        endpoint: ep,
       );
 
       if (res.status == Status.completed && res.data != null) {
@@ -78,7 +79,7 @@ class LicenseController extends GetxController {
     try {
       isLoadingProduct.value = true;
       final ApiResponse<Map<String, dynamic>> res = await _networkService.get(
-        url: '/user/licenses/catalog/$slug',
+        endpoint: '/user/licenses/catalog/$slug',
       );
 
       if (res.status == Status.completed && res.data != null) {
@@ -106,7 +107,7 @@ class LicenseController extends GetxController {
     try {
       isCreatingOrder.value = true;
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
-        url: '/user/licenses/orders',
+        endpoint: '/user/licenses/orders',
         data: {
           'product_id': productId,
           'edition': edition,
@@ -146,7 +147,7 @@ class LicenseController extends GetxController {
       if (walletId != null) body['wallet_id'] = walletId;
 
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
-        url: '/user/licenses/orders/$orderId/pay-wallet',
+        endpoint: '/user/licenses/orders/$orderId/pay-wallet',
         data: body,
       );
 
@@ -180,7 +181,7 @@ class LicenseController extends GetxController {
     try {
       isPaying.value = true;
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
-        url: '/user/licenses/orders/$orderId/pay-crypto',
+        endpoint: '/user/licenses/orders/$orderId/pay-crypto',
         data: {'network': network},
       );
 
@@ -199,7 +200,7 @@ class LicenseController extends GetxController {
   Future<bool> confirmActivation(int orderId) async {
     try {
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
-        url: '/user/licenses/orders/$orderId/confirm-activation',
+        endpoint: '/user/licenses/orders/$orderId/confirm-activation',
         data: {},
       );
 
@@ -219,7 +220,7 @@ class LicenseController extends GetxController {
     try {
       isLoadingMyLicenses.value = true;
       final ApiResponse<Map<String, dynamic>> res = await _networkService.get(
-        url: '/user/licenses/my-licenses',
+        endpoint: '/user/licenses/my-licenses',
       );
 
       if (res.status == Status.completed && res.data != null) {
@@ -236,7 +237,7 @@ class LicenseController extends GetxController {
     try {
       isLoadingMyOrders.value = true;
       final ApiResponse<Map<String, dynamic>> res = await _networkService.get(
-        url: '/user/licenses/my-orders',
+        endpoint: '/user/licenses/my-orders',
       );
 
       if (res.status == Status.completed && res.data != null) {
@@ -252,7 +253,7 @@ class LicenseController extends GetxController {
   Future<bool> cancelOrder(int orderId, {String? reason}) async {
     try {
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
-        url: '/user/licenses/orders/$orderId/cancel',
+        endpoint: '/user/licenses/orders/$orderId/cancel',
         data: {'reason': reason ?? 'Cancelled by user'},
       );
 
@@ -271,7 +272,7 @@ class LicenseController extends GetxController {
   Future<bool> submitDispute(int orderId, String reasonType, String description, {String? screenshot}) async {
     try {
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
-        url: '/user/licenses/orders/$orderId/dispute',
+        endpoint: '/user/licenses/orders/$orderId/dispute',
         data: {
           'reason_type': reasonType,
           'description': description,
@@ -303,7 +304,7 @@ class LicenseController extends GetxController {
   Future<LicenseOrderItem?> renewLicense(int keyId, {int? durationMonths}) async {
     try {
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
-        url: '/user/licenses/renew/$keyId',
+        endpoint: '/user/licenses/renew/$keyId',
         data: durationMonths != null ? {'duration_months': durationMonths} : {},
       );
 
