@@ -10,14 +10,11 @@ import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/network_error_helper.dart';
-import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/set_passcode_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart';
 
 class SignInController extends GetxController {
   // P-4 pattern: null-safe localization (mirrors app_update_controller).
@@ -127,26 +124,12 @@ class SignInController extends GetxController {
     isPasswordFocused.value = passwordFocusNode.hasFocus;
   }
 
-  /// Route user after full auth: force passcode if missing, else home/onboarding.
+  /// Route user after full auth: home when onboarding is done, else onboarding.
+  /// Transaction passcode is no longer forced after login — it stays optional
+  /// and is managed from Settings → Transaction PIN.
   void _routeAfterAuth() {
     final data = userModel.value.data;
     final completed = data?.boardingSteps?.completed == true;
-    final hasPasscode = PasscodeHelper.userHasPasscode(data?.passcode, data?.hasPasscode);
-
-    if (!hasPasscode) {
-      if (Get.isRegistered<SetPasscodeController>()) {
-        Get.delete<SetPasscodeController>();
-      }
-      Get.put(SetPasscodeController());
-      Get.offAll(
-        () => const SetPasscodeScreen(),
-        arguments: {
-          'next': completed ? BaseRoute.navigation : BaseRoute.signUpStatus,
-          if (!completed) 'next_args': {"is_login_state": true},
-        },
-      );
-      return;
-    }
 
     if (completed) {
       Get.offAllNamed(BaseRoute.navigation);

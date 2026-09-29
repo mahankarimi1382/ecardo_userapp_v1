@@ -6,8 +6,6 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/set_passcode_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart';
 
 class SetUpPasswordController extends GetxController {
   final RxBool isLoading = false.obs;
@@ -69,17 +67,11 @@ class SetUpPasswordController extends GetxController {
         await Get.find<SettingsService>().saveSetUpPassword(true);
         await Get.find<SettingsService>().saveBiometricEnableOrDisable(false);
         resetFields();
-        // Mandatory 4-digit transaction passcode before onboarding continues.
-        if (Get.isRegistered<SetPasscodeController>()) {
-          Get.delete<SetPasscodeController>();
-        }
-        Get.put(SetPasscodeController());
-        Get.off(
-          () => const SetPasscodeScreen(),
-          arguments: {
-            'next': BaseRoute.signUpStatus,
-            'next_args': {"is_password_set_up": true},
-          },
+        // Transaction passcode is optional now — it can be set later from
+        // Settings → Transaction PIN. Continue onboarding right away.
+        Get.offNamed(
+          BaseRoute.signUpStatus,
+          arguments: {"is_password_set_up": true},
         );
       }
     } catch (e, stackTrace) {
