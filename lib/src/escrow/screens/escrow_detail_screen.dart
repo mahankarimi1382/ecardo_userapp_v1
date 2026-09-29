@@ -413,7 +413,7 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
               ),
               icon: const Icon(Icons.star_rounded, color: Colors.white),
               onPressed: _showRatingDialog,
-              child: Text(
+              label: Text(
                 l10nPick(context, fa: 'ثبت امتیاز معامله (Submit Rating)', en: 'Submit Rating'),
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.white),
               ),

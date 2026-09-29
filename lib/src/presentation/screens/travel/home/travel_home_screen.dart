@@ -295,6 +295,11 @@ class _Services extends StatelessWidget {
             label: l10nPick(context, en: 'Tours', fa: 'تور مسافرتی'),
             foreground: Colors.white,
             onTap: () => Get.to(() => const TourListScreen()),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: _ServiceTile(
             color: const Color(0xFF6C5CE7),
             icon: Icons.card_membership_rounded,
             label: l10nPick(context, en: 'Visa', fa: 'خدمات ویزا'),
