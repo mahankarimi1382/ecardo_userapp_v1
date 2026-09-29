@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/services/passcode_status_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -238,11 +239,17 @@ class ExchangeReviewStepSection extends StatelessWidget {
                                   return;
                                 }
 
+                                // QA-2026-09-29 (exchange passcode): the
+                                // exchange PIN flag is withheld from public
+                                // /get-settings; read it from the authed
+                                // /user/passcode/status endpoint instead.
+                                final PasscodeStatusService passcodeStatus =
+                                    Get.isRegistered<PasscodeStatusService>()
+                                        ? Get.find<PasscodeStatusService>()
+                                        : Get.put(PasscodeStatusService());
+                                await passcodeStatus.ensureLoaded();
                                 final bool isPasscodeEnabled =
-                                    settings.getSetting(
-                                          "exchange_passcode_status",
-                                        ) ==
-                                        "1";
+                                    passcodeStatus.exchangePasscodeEnabled;
 
                                 if (isPasscodeEnabled) {
                                   final String? verifiedPasscode =

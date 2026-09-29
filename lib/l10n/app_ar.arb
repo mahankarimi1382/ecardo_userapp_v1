@@ -2833,5 +2833,15 @@
     }
   },
   "travelContactPhone": "هاتف التواصل",
-  "travelVisaCountry": "الدولة"
+  "travelVisaCountry": "الدولة",
+  "commonRetry": "إعادة المحاولة",
+  "cardsInactiveSupport": "يرجى التواصل مع الدعم لتفعيل خدمات البطاقات على حسابك.",
+  "cardsEmptyTitle": "لا توجد بطاقات بعد",
+  "cardsEmptySubtitle": "أنشئ أول بطاقة افتراضية للبدء.",
+  "remittanceUploadSkippedFiles": "تم تخطي {count} ملف غير موجود على القرص. جارٍ تحميل الباقي.",
+  "remittanceTrackingUuid": "معرّف التتبع",
+  "remittanceReference": "الرقم المرجعي",
+  "remittanceTracking": "التتبع",
+  "remittanceCreated": "تاريخ الإنشاء",
+  "remittanceTrackTitle": "تتبع الحوالة"
 }

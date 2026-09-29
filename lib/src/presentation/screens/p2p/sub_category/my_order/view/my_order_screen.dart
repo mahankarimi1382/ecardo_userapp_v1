@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/controller/my_order_controller.dart';
@@ -44,6 +45,42 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
     return Obx(() {
       if (controller.isLoading.value) {
         return const CommonLoading();
+      }
+
+      // QA-2026-09-29 (p2p states): failed load shows an Error+Retry state —
+      // never the Empty view.
+      if (controller.ordersLoadError.value.isNotEmpty &&
+          controller.orderList.isEmpty) {
+        return ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            SizedBox(height: 80.h),
+            Icon(Icons.cloud_off_rounded, size: 48.sp, color: AppColors.error),
+            SizedBox(height: 12.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Text(
+                controller.ordersLoadError.value,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+            ),
+            SizedBox(height: 14.h),
+            Center(
+              child: TextButton.icon(
+                onPressed: () => controller.fetchMyOrders(isRefresh: true),
+                icon: const Icon(Icons.refresh_rounded),
+                label: Text(
+                  AppLocalizations.of(context)!.commonRetry,
+                ),
+              ),
+            ),
+          ],
+        );
       }
 
       return RefreshIndicator(

@@ -33,9 +33,9 @@ class RemittanceSuccessSection extends StatelessWidget {
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(color: AppColors.lightPrimaryContainer, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.lightPrimary.withValues(alpha: 0.2))),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            _Info('Tracking UUID', r.uuid),
+            _Info(l.remittanceTrackingUuid, r.uuid),
             SizedBox(height: 8.h),
-            _Info('Reference', r.trx),
+            _Info(l.remittanceReference, r.trx),
             SizedBox(height: 8.h),
             _Info(l.remittanceDocumentType, c.localizedStatusLabel(r.status)),
             SizedBox(height: 8.h),

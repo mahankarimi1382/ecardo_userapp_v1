@@ -21,6 +21,9 @@ class P2pOrderDetailsController extends GetxController {
   });
 
   final RxBool isLoading = false.obs;
+  // QA-2026-09-29 (p2p states): set when the order fetch fails so the screen
+  // can render an Error+Retry state instead of "no order details found".
+  final RxString detailsLoadError = ''.obs;
   final RxBool isPaymentMethodsLoading = false.obs;
   final RxBool isUpdatingPaymentMethod = false.obs;
   final RxBool isCancellingOrder = false.obs;
@@ -73,16 +76,25 @@ class P2pOrderDetailsController extends GetxController {
         if (selectedFromOrder != null) {
           selectedPaymentMethodId.value = selectedFromOrder;
         }
+        // QA-2026-09-29 (p2p states): success clears any previous error.
+        detailsLoadError.value = '';
         await fetchAdPaymentMethods();
         _startCountdown();
+      } else {
+        // QA-2026-09-29 (p2p states): a failed fetch gets its own Error state
+        // instead of rendering "no order details".
+        detailsLoadError.value =
+            response.message ??
+            AppLocalizations.of(Get.context!)?.p2pFailedToLoadOrderDetails ??
+            'Failed to load order details';
       }
     } catch (e, stackTrace) {
       debugPrint('fetchOrderDetails() error: $e');
       debugPrint('StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)?.p2pFailedToLoadOrderDetails ??
-            'Failed to load order details',
-      );
+      detailsLoadError.value =
+          AppLocalizations.of(Get.context!)?.p2pFailedToLoadOrderDetails ??
+              'Failed to load order details';
+      ToastHelper().showErrorToast(detailsLoadError.value);
     } finally {
       isLoading.value = false;
     }

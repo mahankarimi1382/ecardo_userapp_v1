@@ -2832,5 +2832,15 @@
     }
   },
   "travelContactPhone": "İletişim cep telefonu",
-  "travelVisaCountry": "Ülke"
+  "travelVisaCountry": "Ülke",
+  "commonRetry": "Tekrar dene",
+  "cardsInactiveSupport": "Kart hizmetlerini hesabınızda etkinleştirmek için lütfen destekle iletişime geçin.",
+  "cardsEmptyTitle": "Henüz kart yok",
+  "cardsEmptySubtitle": "Başlamak için ilk sanal kartınızı oluşturun.",
+  "remittanceUploadSkippedFiles": "Diskte bulunmayan {count} dosya atlandı. Kalanlar yükleniyor.",
+  "remittanceTrackingUuid": "Takip UUID",
+  "remittanceReference": "Referans",
+  "remittanceTracking": "Takip",
+  "remittanceCreated": "Oluşturulma",
+  "remittanceTrackTitle": "Havaleyi takip et"
 }

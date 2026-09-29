@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/epay_card_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_cards_model.dart';
@@ -45,43 +46,174 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
 
     return Scaffold(
       appBar: CommonDefaultAppBar(),
-      body: Obx(
-        () => Column(
-          children: [
-            SizedBox(height: 16.h),
-            CommonAppBar(
-              title: localization.virtualCardScreenAppBarTitle,
-              selectedIndex: widget.embeddedInTabs ? 0 : null,
-            ),
-            Expanded(
-              child: controller.isLoading.value
-                  ? const CommonLoading()
-                  : RefreshIndicator(
-                      onRefresh: controller.fetchVirtualCards,
-                      color: AppColors.lightPrimary,
-                      child: ListView(
-                        padding: EdgeInsets.only(bottom: 30.h),
-                        children: [
-                          _buildCreateCardSection(localization),
-                          SizedBox(height: 16.h),
-                          ...List.generate(controller.virtualCardList.length, (
-                            index,
-                          ) {
-                            return _cardItem(
-                              controller.virtualCardList[index],
-                              index,
-                            );
-                          }),
-                          // WAVE-REVIEW: PayCardo (ePay) section — USDT-funded,
-                          // USD-spending cards (server /api/epay/*).
-                          SizedBox(height: 12.h),
-                          const EpayCardsSection(),
-                        ],
+      body: Column(
+        children: [
+          SizedBox(height: 16.h),
+          CommonAppBar(
+            title: localization.virtualCardScreenAppBarTitle,
+            selectedIndex: widget.embeddedInTabs ? 0 : null,
+          ),
+          Expanded(
+            child: Obx(() {
+              final homeCtrl = Get.isRegistered<HomeController>()
+                  ? Get.find<HomeController>()
+                  : null;
+              final isUserLoading = homeCtrl != null &&
+                  (homeCtrl.isLoading.value ||
+                      homeCtrl.userModel.value.data == null);
+
+              // 1. Initial / Loading state — NEVER display inactive/error while data is in-flight
+              if (controller.isLoading.value ||
+                  controller.loadState.value == CardsLoadState.initial ||
+                  controller.loadState.value == CardsLoadState.loading ||
+                  isUserLoading) {
+                return const CommonLoading();
+              }
+
+              // 2. Inactive state — ONLY when user data has fully loaded AND cards addon is disabled
+              final isCardsAddonDisabled = homeCtrl != null &&
+                  homeCtrl.userModel.value.data != null &&
+                  homeCtrl.userModel.value.data?.addons?.virtualCards == false;
+
+              if (isCardsAddonDisabled ||
+                  controller.loadState.value == CardsLoadState.inactive) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.credit_card_off_rounded,
+                          size: 56.sp,
+                          color: AppColors.softGray,
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          localization.myCardsNotEnabled,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.lightTextPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          localization.cardsInactiveSupport,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: AppColors.lightTextTertiary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              // 3. Error state — show helpful retry view
+              if (controller.loadState.value == CardsLoadState.error) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.cloud_off_rounded,
+                          size: 48.sp,
+                          color: AppColors.error,
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          controller.errorMessage.value.isNotEmpty
+                              ? controller.errorMessage.value
+                              : localization.allControllerLoadError,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.lightTextPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        TextButton.icon(
+                          onPressed: () => controller.fetchVirtualCards(),
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: Text(localization.commonRetry),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              // 4. Empty state — the API responded and confirmed the user has no cards.
+              if (controller.loadState.value == CardsLoadState.empty) {
+                return ListView(
+                  padding: EdgeInsets.only(bottom: 30.h),
+                  children: [
+                    SizedBox(height: 32.h),
+                    Icon(
+                      Icons.credit_card_rounded,
+                      size: 56.sp,
+                      color: AppColors.softGray,
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      localization.cardsEmptyTitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.lightTextPrimary,
                       ),
                     ),
-            ),
-          ],
-        ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      localization.cardsEmptySubtitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: AppColors.lightTextTertiary,
+                      ),
+                    ),
+                    _buildCreateCardSection(localization),
+                    SizedBox(height: 12.h),
+                    const EpayCardsSection(),
+                  ],
+                );
+              }
+
+              // 5. Success state — normal list with card creation and PayCardo section
+              return RefreshIndicator(
+                onRefresh: controller.fetchVirtualCards,
+                color: AppColors.lightPrimary,
+                child: ListView(
+                  padding: EdgeInsets.only(bottom: 30.h),
+                  children: [
+                    _buildCreateCardSection(localization),
+                    SizedBox(height: 16.h),
+                    ...List.generate(controller.virtualCardList.length, (
+                      index,
+                    ) {
+                      return _cardItem(
+                        controller.virtualCardList[index],
+                        index,
+                      );
+                    }),
+                    // WAVE-REVIEW: PayCardo (ePay) section — USDT-funded,
+                    // USD-spending cards (server /api/epay/*).
+                    SizedBox(height: 12.h),
+                    const EpayCardsSection(),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

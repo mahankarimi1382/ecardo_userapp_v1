@@ -315,7 +315,12 @@ class CreateVirtualCardController extends GetxController {
       final model = WalletsModel.fromJson(response.data!);
       irrWallets.assignAll(
         (model.data?.wallets ?? []).where(
-          (wallet) => wallet.code?.toUpperCase() == 'IRR',
+          // QA-2026-09-29 (cards): the Toman wallet is provisioned with the
+          // display code IRT (IRR currency row is inactive), so matching only
+          // IRR left the list empty and blocked card issuance for every user.
+          (wallet) =>
+              wallet.code?.toUpperCase() == 'IRR' ||
+              wallet.code?.toUpperCase() == 'IRT',
         ),
       );
       selectedIrrWallet.value = irrWallets.firstOrNull;

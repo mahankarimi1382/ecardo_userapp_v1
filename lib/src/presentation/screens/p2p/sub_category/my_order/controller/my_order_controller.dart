@@ -9,6 +9,9 @@ import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/m
 
 class MyOrderController extends GetxController {
   final RxBool isLoading = false.obs;
+  // QA-2026-09-29 (p2p states): first-page load failure — rendered as an
+  // Error+Retry state so it is never conflated with "no orders".
+  final RxString ordersLoadError = ''.obs;
   final RxBool isPaginationLoading = false.obs;
   final RxBool hasMoreData = true.obs;
   final RxInt currentPage = 1.obs;
@@ -93,10 +96,22 @@ class MyOrderController extends GetxController {
         if (hasMoreData.value) {
           currentPage.value++;
         }
+        // QA-2026-09-29 (p2p states): success clears any previous error.
+        ordersLoadError.value = '';
+      } else if (isRefresh || currentPage.value == 1) {
+        // QA-2026-09-29 (p2p states): first-page failure gets its own
+        // Error state instead of rendering the Empty view.
+        ordersLoadError.value =
+            response.message ??
+            AppLocalizations.of(Get.context!)!.allControllerLoadError;
       }
     } catch (e, stackTrace) {
       debugPrint('fetchMyOrders() error: $e');
       debugPrint('StackTrace: $stackTrace');
+      if (isRefresh || currentPage.value == 1) {
+        ordersLoadError.value =
+            AppLocalizations.of(Get.context!)!.allControllerLoadError;
+      }
       ToastHelper().showErrorToast(
         AppLocalizations.of(Get.context!)!.allControllerLoadError,
       );

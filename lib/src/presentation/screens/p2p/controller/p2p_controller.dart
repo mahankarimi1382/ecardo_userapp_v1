@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/model/p2p_marketplace_response_model.dart';
+import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/controller/my_order_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/model/payment_account_response_model.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
 
@@ -84,6 +85,10 @@ class P2pController extends GetxController {
       .where((value) => value.isNotEmpty)
       .toList();
   final RxBool isMarketplaceLoading = false.obs;
+  // QA-2026-09-29 (p2p states): non-empty while the first marketplace page
+  // failed — the view shows a dedicated Error+Retry state instead of the
+  // Empty view so failures are never mistaken for "no ads".
+  final RxString marketplaceLoadError = ''.obs;
   final RxBool isMarketplacePaginationLoading = false.obs;
   final RxBool hasMoreMarketplaceData = true.obs;
   final RxInt marketplaceCurrentPage = 1.obs;
@@ -126,6 +131,13 @@ class P2pController extends GetxController {
     selectedTopTabIndex.value = index;
     if (index == 0 && p2pAds.isEmpty && !isMarketplaceLoading.value) {
       fetchInitialCurrenciesAndMarketplace();
+    }
+    // QA-2026-09-29 (p2p states): switching back to My Orders used to show a
+    // stale snapshot (Get.put returns the existing controller without re-running
+    // onInit). Refetch whenever the tab is (re)selected and the controller is
+    // already live.
+    if (index == 1 && Get.isRegistered<MyOrderController>()) {
+      Get.find<MyOrderController>().fetchMyOrders(isRefresh: true);
     }
   }
 
@@ -431,10 +443,22 @@ class P2pController extends GetxController {
         if (hasMoreMarketplaceData.value) {
           marketplaceCurrentPage.value++;
         }
+        // QA-2026-09-29 (p2p states): a completed fetch clears any previous
+        // error so the list no longer conflates "failed" with "empty".
+        marketplaceLoadError.value = '';
+      } else if (isRefresh || marketplaceCurrentPage.value == 1) {
+        // QA-2026-09-29 (p2p states): surface first-page failures as an
+        // Error state (with retry) instead of showing the Empty view.
+        marketplaceLoadError.value =
+            response.message ?? localization.p2pLoadAdsFailed;
+        ToastHelper().showErrorToast(marketplaceLoadError.value);
       }
     } catch (e, stackTrace) {
       debugPrint('fetchMarketplaceAds() error: $e');
       debugPrint('StackTrace: $stackTrace');
+      if (isRefresh || marketplaceCurrentPage.value == 1) {
+        marketplaceLoadError.value = localization.p2pLoadAdsFailed;
+      }
       ToastHelper().showErrorToast(localization.p2pLoadAdsFailed);
     } finally {
       isMarketplaceLoading.value = false;

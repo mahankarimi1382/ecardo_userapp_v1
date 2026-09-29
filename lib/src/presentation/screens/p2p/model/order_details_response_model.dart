@@ -111,9 +111,10 @@ class Data {
     feePercent: json["fee_percent"],
     feeAssetAmount: json["fee_asset_amount"],
     sellerLockedAsset: json["seller_locked_asset"],
-    paymentDeadlineAt: json["payment_deadline_at"] == null
-        ? null
-        : DateTime.parse(json["payment_deadline_at"]),
+    // QA-2026-09-29 (p2p): DateTime.parse throws on any non-ISO timestamp,
+    // which aborted the whole fromJson and left the order screen showing
+    // "no details". Tolerate malformed dates instead.
+    paymentDeadlineAt: _tryParseDate(json["payment_deadline_at"]),
     markedPaidAt: json["marked_paid_at"],
     completedAt: json["completed_at"],
     cancelledAt: json["cancelled_at"],
@@ -130,15 +131,16 @@ class Data {
         ? null
         : RecipientPaymentMethod.fromJson(json["recipient_payment_method"]),
     chatEnabled: json["chat_enabled"],
-    createdAt: json["created_at"] == null
-        ? null
-        : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null
-        ? null
-        : DateTime.parse(json["updated_at"]),
+    createdAt: _tryParseDate(json["created_at"]),
+    updatedAt: _tryParseDate(json["updated_at"]),
     marketType: json["market_type"],
     isCashDollar: json["is_cash_dollar"],
   );
+
+  static DateTime? _tryParseDate(dynamic value) {
+    if (value == null) return null;
+    return DateTime.tryParse(value.toString());
+  }
 
   Map<String, dynamic> toJson() => {
     "id": id,

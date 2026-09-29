@@ -2972,5 +2972,22 @@
   "travelAliPayDescription": "International payments with AliPay",
   "travelMirPayDescription": "Russian payments with MirPay",
   "travelContactPhone": "Contact mobile",
-  "travelVisaCountry": "Country"
+  "travelVisaCountry": "Country",
+  "commonRetry": "Retry",
+  "cardsInactiveSupport": "Please contact support to activate card services on your account.",
+  "cardsEmptyTitle": "No cards yet",
+  "cardsEmptySubtitle": "Create your first virtual card to get started.",
+  "remittanceUploadSkippedFiles": "Skipped {count} file(s) missing on disk. Uploading the rest.",
+  "@remittanceUploadSkippedFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "remittanceTrackingUuid": "Tracking UUID",
+  "remittanceReference": "Reference",
+  "remittanceTracking": "Tracking",
+  "remittanceCreated": "Created",
+  "remittanceTrackTitle": "Track remittance"
 }

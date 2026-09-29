@@ -13,6 +13,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -689,6 +690,14 @@ class RemittanceController extends GetxController {
       ToastHelper().showErrorToast(_l?.remittanceErrNoRemittance ?? 'No remittance to upload to');
       return false;
     }
+    // QA-2026-09-29 (intl transfer): an empty uuid would hit
+    // /user/remittance//upload (404) — fail with the real reason instead.
+    if (remittance.uuid.isEmpty) {
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrSubmissionFailed ?? 'Submission failed',
+      );
+      return false;
+    }
 
     if (pendingAttachments.isEmpty) {
       ToastHelper().showErrorToast(_l?.remittanceErrAddDocument ?? 'Please add at least one document');
@@ -717,7 +726,7 @@ class RemittanceController extends GetxController {
     int skipped = 0;
     for (final attachment in pendingAttachments) {
       final path = attachment['path'];
-      final type = attachment['type'] ?? 'document';
+      final type = attachment['type'] ?? 'other';
       if (path == null || path.isEmpty) {
         skipped++;
         continue;
@@ -730,10 +739,13 @@ class RemittanceController extends GetxController {
         skipped++;
         continue;
       }
+      // QA-2026-09-29 (intl transfer): createMultipartFile attaches an
+      // explicit filename + content type (some devices hand us cache paths
+      // whose inferred application/octet-stream trips downstream consumers).
       formData.files.add(
         MapEntry(
           'files[]',
-          await MultipartFile.fromFile(path),
+          await UploadHelper.createMultipartFile(file),
         ),
       );
       types.add(type);
@@ -755,7 +767,8 @@ class RemittanceController extends GetxController {
       // Non-fatal warning — some files were skipped but we still have
       // at least one to upload.
       ToastHelper().showErrorToast(
-        '$skipped file(s) skipped (missing on disk). Uploading the rest.',
+        _l?.remittanceUploadSkippedFiles(skipped) ??
+            'Skipped $skipped file(s) missing on disk. Uploading the rest.',
       );
     }
 
