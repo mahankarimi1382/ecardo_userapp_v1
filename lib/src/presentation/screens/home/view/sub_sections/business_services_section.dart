@@ -80,8 +80,8 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
       ServiceTile(
         title: localization.businessServiceStocks,
         iconData: Icons.trending_up_rounded,
-        route: '',
-        available: false,
+        route: BaseRoute.stockHome,
+        available: true,
       ),
     ];
   }

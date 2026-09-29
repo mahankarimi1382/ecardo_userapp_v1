@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/stock/screens/stock_home_screen.dart';
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
 import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart';
@@ -236,4 +237,7 @@ class RoutesConfig {
 
   // App self-update (v1.0.8+8)
   static const appUpdate = AppUpdateScreen();
+}
+  // Stock Trading
+  static const stockHome = StockHomeScreen();
 }

@@ -527,4 +527,10 @@ List<GetPage> routesHandler = [
     name: BaseRoute.appUpdate,
     page: () => RoutesConfig.appUpdate,
   ),
+]
+  // Stock Trading Routes
+  GetPage(
+    name: BaseRoute.stockHome,
+    page: () => RoutesConfig.stockHome,
+  ),
 ];

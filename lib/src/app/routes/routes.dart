@@ -165,3 +165,6 @@ class BaseRoute {
 
   static const String appUpdate = "/app_update_route";
 }
+  // Stock Trading (بورس‌های بین‌المللی)
+  static const String stockHome = "/stock_home_route";
+}
