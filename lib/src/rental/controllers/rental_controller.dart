@@ -84,6 +84,12 @@ class RentalController extends GetxController {
     return ok;
   }
 
+  Future<bool> submitHandover(int bookingId, String phase, List<String> photos, int odometer, int fuelPct) async {
+    final ok = await _api.submitHandover(bookingId, phase, photos, odometer, fuelPct);
+    if (ok) await fetchBooking(bookingId);
+    return ok;
+  }
+
   Future<bool> confirmPickup(int bookingId) async {
     final ok = await _api.confirmPickup(bookingId);
     if (ok) await fetchBooking(bookingId);
@@ -98,6 +104,12 @@ class RentalController extends GetxController {
 
   Future<bool> acceptSettlement(int bookingId) async {
     final ok = await _api.acceptSettlement(bookingId);
+    if (ok) await fetchBooking(bookingId);
+    return ok;
+  }
+
+  Future<bool> fileDispute(int bookingId, String type, double amount) async {
+    final ok = await _api.fileDispute(bookingId, type, amount);
     if (ok) await fetchBooking(bookingId);
     return ok;
   }

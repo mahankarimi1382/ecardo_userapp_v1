@@ -95,11 +95,8 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ServiceTile(
         title: localization.travelServiceCarRental,
         iconData: Icons.directions_car_rounded,
-        route: '',
-        available: travelOn,
-        beforeNavigate: _ensureTravelController,
-        pageBuilder: () =>
-            CatalogServiceScreen(config: extraServiceConfig('carRental')),
+        route: BaseRoute.rentalHome,
+        available: true,
       ),
       ServiceTile(
         title: localization.travelServiceTaxi,

@@ -52,6 +52,11 @@ class RemittanceScreen extends StatelessWidget {
         title: Text(l.remittanceTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
         actions: [
           IconButton(
+            icon: const Icon(Icons.track_changes, color: AppColors.lightTextPrimary),
+            tooltip: 'رهگیری حواله',
+            onPressed: () => Get.toNamed(BaseRoute.remittanceTrack),
+          ),
+          IconButton(
             icon: const Icon(Icons.history, color: AppColors.lightTextPrimary),
             onPressed: () => Get.toNamed(BaseRoute.remittanceHistory),
           ),

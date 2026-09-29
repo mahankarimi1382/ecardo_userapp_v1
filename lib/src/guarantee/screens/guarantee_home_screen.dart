@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/guarantee_controller.dart';
@@ -18,20 +19,39 @@ class GuaranteeHomeScreen extends StatefulWidget {
 class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
   final GuaranteeController controller = Get.put(GuaranteeController());
 
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchInstruments();
+    controller.fetchMyCases();
+  }
+
   String _statusFa(String status) {
     switch (status) {
-      case 'DRAFT': return 'پیش‌نویس';
+      case 'DRAFT': return 'پیش‌نویس پرونده';
       case 'UNDER_REVIEW': return 'در حال بررسی';
       case 'COMPLEMENT_REQUIRED': return 'نیاز به تکمیل مدارک';
       case 'MARGIN_PENDING': return 'در انتظار تودیع';
       case 'IN_ISSUANCE': return 'در حال صدور';
-      case 'ISSUED': return 'صادر شد';
+      case 'ISSUED': return 'صادر شد (فعال)';
       case 'CLAIMED': return 'مطالبه‌شده';
       case 'EXPIRED': return 'منقضی';
       case 'RELEASED': return 'تضامین آزاد شد';
       case 'REJECTED': return 'رد شد';
       case 'CANCELLED': return 'لغو';
       default: return status;
+    }
+  }
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'RELEASED': return Colors.green;
+      case 'ISSUED': return Colors.teal;
+      case 'CLAIMED': return Colors.red;
+      case 'REJECTED': case 'CANCELLED': return Colors.grey;
+      case 'MARGIN_PENDING': case 'IN_ISSUANCE': return Colors.orange;
+      case 'UNDER_REVIEW': case 'COMPLEMENT_REQUIRED': return Colors.blue;
+      default: return Colors.blueGrey;
     }
   }
 
@@ -90,7 +110,6 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary),
                   onPressed: () async {
-                    final controller = Get.find<GuaranteeController>();
                     final err = await controller.createCase(
                       instrumentId: inst.id,
                       beneficiaryName: beneficiaryCtrl.text.trim(),
@@ -122,7 +141,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(l10nPick(context, en: 'Bank Guarantees & LC', fa: 'ضمانت‌نامه بانکی'))),
+      appBar: AppBar(title: Text(l10nPick(context, en: 'Bank Guarantees & LC', fa: 'ضمانت‌نامه بانکی و LC'))),
       body: Obx(() {
         if (controller.isLoadingInstruments.value) {
           return const Center(child: CircularProgressIndicator());
@@ -130,14 +149,14 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
         return ListView(
           padding: EdgeInsets.all(16.w),
           children: [
-            Text(l10nPick(context, en: 'Instruments', fa: 'ابزارها'),
+            Text(l10nPick(context, en: 'Instruments Catalog', fa: 'کاتالوگ ابزارها (ضمانت‌نامه و اعتبار اسنادی)'),
               style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
             SizedBox(height: 8.h),
             ...controller.instruments.map((inst) => Card(
               margin: EdgeInsets.only(bottom: 8.h),
               child: ListTile(
                 title: Text(inst.name, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.sp)),
-                subtitle: Text('${inst.code} · ${inst.marginPct}%'),
+                subtitle: Text('${inst.code} · وجه التزام: ${inst.marginPct}٪'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => _showCreateSheet(context, inst),
               ),
@@ -155,15 +174,24 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
               margin: EdgeInsets.only(bottom: 8.h),
               child: ListTile(
                 title: Text(c.caseNo, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.sp)),
-                subtitle: Text(c.instrument?.name ?? c.beneficiaryName, style: TextStyle(fontSize: 11.sp)),
-                trailing: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Text(_statusFa(c.status), style: TextStyle(fontSize: 9.sp, color: AppColors.lightPrimary)),
+                subtitle: Text('${c.instrument?.name ?? c.beneficiaryName} · ${c.amount} ${c.currency}',
+                  style: TextStyle(fontSize: 11.sp)),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: _statusColor(c.status).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(_statusFa(c.status),
+                        style: TextStyle(fontSize: 9.sp, color: _statusColor(c.status), fontWeight: FontWeight.w700)),
+                    ),
+                    const Icon(Icons.chevron_right, size: 18),
+                  ],
                 ),
+                onTap: () => Get.toNamed(BaseRoute.guaranteeDetail, arguments: c.id),
               ),
             )),
           ],

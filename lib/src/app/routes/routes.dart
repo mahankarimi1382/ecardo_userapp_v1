@@ -188,6 +188,9 @@ class BaseRoute {
   static const String loanDetail = "/loan_detail_route";
   static const String rentalHome = "/rental_home_route";
   static const String guaranteeHome = "/guarantee_home_route";
+  static const String rentalDetail = "/rental_detail_route";
+  static const String guaranteeDetail = "/guarantee_detail_route";
+  static const String remittanceTrack = "/remittance_track_route";
   // License Store Service
   static const String licenseStore = "/license_store_route";
   static const String licenseMyLicenses = "/license_my_licenses_route";

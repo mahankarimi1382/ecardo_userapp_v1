@@ -61,6 +61,87 @@ class GuaranteeBankOfferModel {
   }
 }
 
+class CaseDocumentModel {
+  final int id;
+  final String docType;
+  final String fileRef;
+  final String status;
+  final String? reviewerNote;
+
+  const CaseDocumentModel({
+    required this.id,
+    required this.docType,
+    required this.fileRef,
+    required this.status,
+    this.reviewerNote,
+  });
+
+  factory CaseDocumentModel.fromJson(Map<String, dynamic> json) {
+    return CaseDocumentModel(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      docType: json['doc_type']?.toString() ?? '',
+      fileRef: json['file_ref']?.toString() ?? '',
+      status: json['status']?.toString() ?? 'PENDING',
+      reviewerNote: json['reviewer_note']?.toString(),
+    );
+  }
+}
+
+class GuaranteeMarginModel {
+  final int id;
+  final double amount;
+  final double feeAmount;
+  final String currency;
+  final String source;
+  final String status;
+
+  const GuaranteeMarginModel({
+    required this.id,
+    required this.amount,
+    required this.feeAmount,
+    required this.currency,
+    required this.source,
+    required this.status,
+  });
+
+  factory GuaranteeMarginModel.fromJson(Map<String, dynamic> json) {
+    return GuaranteeMarginModel(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      amount: (json['amount'] as num?)?.toDouble() ?? 0,
+      feeAmount: (json['fee_amount'] as num?)?.toDouble() ?? 0,
+      currency: json['currency']?.toString() ?? 'IRR',
+      source: json['source']?.toString() ?? 'WALLET_FIAT',
+      status: json['status']?.toString() ?? 'LOCKED',
+    );
+  }
+}
+
+class IssuedInstrumentModel {
+  final int id;
+  final String bankRef;
+  final String documentRef;
+  final DateTime? issueDate;
+  final DateTime? expiryDate;
+
+  const IssuedInstrumentModel({
+    required this.id,
+    required this.bankRef,
+    required this.documentRef,
+    this.issueDate,
+    this.expiryDate,
+  });
+
+  factory IssuedInstrumentModel.fromJson(Map<String, dynamic> json) {
+    return IssuedInstrumentModel(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      bankRef: json['bank_ref']?.toString() ?? '',
+      documentRef: json['document_ref']?.toString() ?? '',
+      issueDate: json['issue_date'] != null ? DateTime.tryParse(json['issue_date'].toString()) : null,
+      expiryDate: json['expiry_date'] != null ? DateTime.tryParse(json['expiry_date'].toString()) : null,
+    );
+  }
+}
+
 class GuaranteeCaseModel {
   final int id;
   final String caseNo;
@@ -71,6 +152,9 @@ class GuaranteeCaseModel {
   final String currency;
   final int validityMonths;
   final String status;
+  final GuaranteeMarginModel? margin;
+  final IssuedInstrumentModel? issued;
+  final List<CaseDocumentModel> documents;
   final List<GuaranteeEventModel> events;
 
   const GuaranteeCaseModel({
@@ -83,6 +167,9 @@ class GuaranteeCaseModel {
     required this.currency,
     required this.validityMonths,
     required this.status,
+    this.margin,
+    this.issued,
+    this.documents = const [],
     required this.events,
   });
 
@@ -101,6 +188,15 @@ class GuaranteeCaseModel {
       currency: json['currency']?.toString() ?? 'IRR',
       validityMonths: (json['validity_months'] as num?)?.toInt() ?? 0,
       status: json['status']?.toString() ?? 'DRAFT',
+      margin: json['margin'] is Map<String, dynamic>
+          ? GuaranteeMarginModel.fromJson(json['margin'] as Map<String, dynamic>)
+          : null,
+      issued: json['issued'] is Map<String, dynamic>
+          ? IssuedInstrumentModel.fromJson(json['issued'] as Map<String, dynamic>)
+          : null,
+      documents: ((json['documents'] as List?) ?? [])
+          .map((e) => CaseDocumentModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList(),
       events: ((json['events'] as List?) ?? [])
           .map((e) => GuaranteeEventModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList(),

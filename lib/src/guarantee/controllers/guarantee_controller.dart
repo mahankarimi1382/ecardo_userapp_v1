@@ -13,6 +13,7 @@ class GuaranteeController extends GetxController {
 
   final isLoadingInstruments = false.obs;
   final isLoadingCases = false.obs;
+  final isLoadingDetail = false.obs;
   final isSubmitting = false.obs;
 
   Future<void> fetchInstruments() async {
@@ -34,7 +35,12 @@ class GuaranteeController extends GetxController {
   }
 
   Future<void> fetchCase(int id) async {
-    selectedCase.value = await _api.getCase(id);
+    try {
+      isLoadingDetail.value = true;
+      selectedCase.value = await _api.getCase(id);
+    } finally {
+      isLoadingDetail.value = false;
+    }
   }
 
   /// Create case — returns error string or null
@@ -43,6 +49,8 @@ class GuaranteeController extends GetxController {
     required String beneficiaryName,
     required double amount,
     required int validityMonths,
+    int? bankOfferId,
+    String? contractRef,
   }) async {
     try {
       isSubmitting.value = true;
@@ -51,6 +59,8 @@ class GuaranteeController extends GetxController {
         beneficiaryName: beneficiaryName,
         amount: amount,
         validityMonths: validityMonths,
+        bankOfferId: bankOfferId,
+        contractRef: contractRef,
       );
       if (result == null) return 'ERR_NETWORK: خطا در ایجاد پرونده';
       await fetchMyCases();
@@ -82,7 +92,10 @@ class GuaranteeController extends GetxController {
 
   Future<bool> cancelCase(int caseId) async {
     final ok = await _api.cancel(caseId);
-    if (ok) await fetchCase(caseId);
+    if (ok) {
+      selectedCase.value = null;
+      await fetchMyCases();
+    }
     return ok;
   }
 }
