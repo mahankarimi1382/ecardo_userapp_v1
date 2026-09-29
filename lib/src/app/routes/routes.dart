@@ -181,11 +181,7 @@ class BaseRoute {
   static const String visaHome = "/visa_home_route";
   static const String visaDetail = "/visa_detail_route";
   static const String visaList = "/visa_list_route";
-}
-<<<<<<< HEAD
 
-=======
   // Stock Trading (بورس‌های بین‌المللی)
   static const String stockHome = "/stock_home_route";
 }
->>>>>>> origin/agent/travel-stock-trading
