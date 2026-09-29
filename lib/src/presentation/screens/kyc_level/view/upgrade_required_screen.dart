@@ -163,7 +163,24 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
     final hasResolvedLevel = _requiredLevel != null;
     final featureLabel = _featureDisplayLabel(localization, _feature);
 
-    return Scaffold(
+    // باگ ۱: دکمه back سیستم (gesture/hardware) در صفحه‌های KYC باید redirect
+    // کند. وقتی مسدودی feature-level باشد، Get.back() کافی است؛ وقتی
+    // مسدودی app-wide باشد، back به navigation اصلی برمی‌گردد.
+    return PopScope(
+      canPop: !_isAppWideBlock && (Navigator.canPop(context) || (Get.key.currentState?.canPop() ?? false)),
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (_isAppWideBlock) {
+          Get.offAllNamed(BaseRoute.navigation);
+        } else {
+          if (Get.key.currentState?.canPop() ?? false) {
+            Get.back();
+          } else {
+            Get.offAllNamed(BaseRoute.navigation);
+          }
+        }
+      },
+      child: Scaffold(
       backgroundColor: AppColors.lightSurface,
       appBar: AppBar(
         backgroundColor: AppColors.lightSurface,
@@ -175,7 +192,13 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
             : IconButton(
                 icon: const Icon(Icons.arrow_back,
                     color: AppColors.lightTextPrimary),
-                onPressed: () => Get.back(),
+                onPressed: () {
+                  if (Get.key.currentState?.canPop() ?? false) {
+                    Get.back();
+                  } else {
+                    Get.offAllNamed(BaseRoute.navigation);
+                  }
+                },
               ),
       ),
       body: Center(
@@ -356,7 +379,8 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
           ),
         ),
       ),
-    );
+    ), // end Scaffold
+    ); // end PopScope
   }
 
   /// نام نمایشی feature — کلیدهای شناخته‌شده ترجمه می‌شوند، بقیه به‌صورت

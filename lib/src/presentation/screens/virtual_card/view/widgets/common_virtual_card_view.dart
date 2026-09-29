@@ -50,7 +50,8 @@ class CommonVirtualCardView extends StatelessWidget {
         borderRadius: BorderRadius.circular(18.r),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF9E7EF8).withValues(alpha: 0.30),
+            // مورد ۴ (v1.0.118): سایه NUVO Muted Blue جایگزین بنفش
+            color: AppColors.mutedBlue.withValues(alpha: 0.30),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),

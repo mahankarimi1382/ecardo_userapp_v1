@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/common/controller/country_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,6 +43,14 @@ class LocaleThemeService extends GetxService {
         final name = nativeName(code);
         home.language.value = name;
         home.languageController.text = name;
+      }
+    } catch (_) {}
+
+    // مورد ۳ (v1.0.118): بعد از تغییر زبان، لیست کشورها را دوباره load کن
+    // تا نام‌های کشور با زبان جدید از API دریافت شوند (Accept-Language header).
+    try {
+      if (Get.isRegistered<CountryController>()) {
+        Get.find<CountryController>().fetchCountries();
       }
     } catch (_) {}
   }

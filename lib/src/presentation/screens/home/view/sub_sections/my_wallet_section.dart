@@ -105,14 +105,35 @@ class MyWalletSection extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          image: DecorationImage(
-            image: AssetImage(
-              isDefaultWallet
-                  ? PngAssets.walletFrameOne
-                  : PngAssets.walletFrameTwo,
+          // مورد ۴ (v1.0.118): جایگزینی تصویر frame با گرادیان پالت NUVO
+          // کارت پیش‌فرض: گرادیان Deep Black → Dark Gray
+          // کارت غیرپیش‌فرض: گرادیان Soft Blue → Muted Blue
+          gradient: isDefaultWallet
+              ? const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppColors.deepBlack,      // #161614 — Primary Background
+                    AppColors.darkGray,       // #262625 — Secondary Background
+                  ],
+                )
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppColors.mainSoftBlue,   // #ABC3EA — Primary Accent
+                    AppColors.mutedBlue,      // #849ACD — Secondary Accent
+                  ],
+                ),
+          boxShadow: [
+            BoxShadow(
+              color: isDefaultWallet
+                  ? AppColors.deepBlack.withValues(alpha: 0.30)
+                  : AppColors.mutedBlue.withValues(alpha: 0.35),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
             ),
-            fit: BoxFit.fill,
-          ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

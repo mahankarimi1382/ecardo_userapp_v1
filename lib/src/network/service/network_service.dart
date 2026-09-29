@@ -171,6 +171,12 @@ class NetworkService extends getx.GetxService {
                     : 'unknown';
           }
 
+          // مورد ۳ (v1.0.118): ارسال زبان فعال در هر درخواست به API
+          // تا ترجمه اسامی (مثل کشورها) بر اساس زبان انتخاب‌شده برگردد.
+          final langCode = getx.Get.locale?.languageCode ?? 'en';
+          options.headers['Accept-Language'] = langCode;
+          options.headers['X-App-Language'] = langCode;
+
           return handler.next(options);
         },
         onResponse: (response, handler) {
