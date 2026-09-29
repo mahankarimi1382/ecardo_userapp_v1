@@ -199,13 +199,26 @@ jobs:
           echo "apk=$APK_NAME sha256=$SHA256"
           test -n "$SHA256"
           echo "SHA256=${SHA256}" >> "$GITHUB_ENV"
-          curl --fail-with-body --show-error --silent \
+          # Transient ecardo.ir 5xx (e.g. 503 "Server Error" on v1.0.118 and
+          # v1.0.121 tag builds) must not fail a release whose APK is already
+          # published and mirrored — retry transport-level failures only.
+          # A 200 with notification.sent=false still fails the checks below.
+          attempt=1
+          until curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0" -H "Accept: application/json" \
             -H "Content-Type: application/json" -H "Origin: https://ecardo.ir" \
             -H "X-ECardo-Deploy-Source: github-actions" --compressed \
             -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\",\"sha256\":\"$SHA256\"}" \
-            | tee notify-result.txt
+            | tee notify-result.txt; do
+            if [ "$attempt" -ge 4 ]; then
+              echo "❌ Server notify failed after $attempt attempts"
+              exit 1
+            fi
+            echo "⚠️ notify attempt $attempt failed — retrying in $((attempt * 15))s"
+            sleep "$((attempt * 15))"
+            attempt=$((attempt + 1))
+          done
           grep -q "Successfully deployed" notify-result.txt
           # v1.0.91: the webhook now reports whether the push notification was
           # actually delivered. Fail the step when it was not, so a silent
@@ -374,13 +387,23 @@ jobs:
           # Server notify → app_version
           DEPLOY_SECRET="${ECARDO_DEPLOY_SECRET:?ECARDO_DEPLOY_SECRET missing}"
           set -o pipefail
-          curl --fail-with-body --show-error --silent \
+          # Same transient-5xx retry as the tag-build notify step above.
+          attempt=1
+          until curl --fail-with-body --show-error --silent \
             -X POST https://ecardo.ir/api/user/github-deploy-webhook \
             -A "Mozilla/5.0" -H "Accept: application/json" \
             -H "Content-Type: application/json" -H "Origin: https://ecardo.ir" \
             -H "X-ECardo-Deploy-Source: github-actions" --compressed \
             -d "{\"secret\":\"$DEPLOY_SECRET\",\"app_type\":\"user\",\"version\":\"$VERSION\",\"download_url\":\"$DOWNLOAD_URL\",\"sha256\":\"$SHA256\"}" \
-            | tee notify-result.txt
+            | tee notify-result.txt; do
+            if [ "$attempt" -ge 4 ]; then
+              echo "❌ Server notify failed after $attempt attempts"
+              exit 1
+            fi
+            echo "⚠️ notify attempt $attempt failed — retrying in $((attempt * 15))s"
+            sleep "$((attempt * 15))"
+            attempt=$((attempt + 1))
+          done
           grep -q "Successfully deployed" notify-result.txt
           echo "✅ Server notified app_version=$VERSION sha256=$SHA256"
           # The webhook reports whether the push to users actually went out. Without
