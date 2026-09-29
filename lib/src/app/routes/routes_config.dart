@@ -245,7 +245,7 @@ class RoutesConfig {
   static const tourHome = TourListScreen();
   static const tourMatch = TourMatchScreen();
   static const tourMyBookings = TourMyBookingsScreen();
-}
+
   // Escrow
   static const escrowHome = EscrowListScreen();
 }

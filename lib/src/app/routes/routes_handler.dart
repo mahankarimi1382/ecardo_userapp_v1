@@ -529,7 +529,7 @@ List<GetPage> routesHandler = [
     name: BaseRoute.appUpdate,
     page: () => RoutesConfig.appUpdate,
   ),
-,
+
   // Tours Routes
   GetPage(
     name: BaseRoute.tourHome,
@@ -553,7 +553,7 @@ List<GetPage> routesHandler = [
       return TourDetailScreen(tourId: tourId ?? 1);
     },
   ),
-];
+
   // Escrow Routes
   GetPage(
     name: BaseRoute.escrowHome,

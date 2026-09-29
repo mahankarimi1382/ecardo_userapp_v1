@@ -1,3 +1,5 @@
+import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -283,8 +285,17 @@ class _Services extends StatelessWidget {
               onTap: () => _openService(visibleServices[index].type),
             ),
           ),
-          if (index < visibleServices.length - 1) SizedBox(width: 12.w),
+          SizedBox(width: 8.w),
         ],
+        Expanded(
+          child: _ServiceTile(
+            color: const Color(0xFF9B51E0),
+            icon: Icons.tour_rounded,
+            label: l10nPick(context, en: 'Tours', fa: 'تور مسافرتی'),
+            foreground: Colors.white,
+            onTap: () => Get.to(() => const TourListScreen()),
+          ),
+        ),
       ],
     );
   }
@@ -437,3 +448,4 @@ class _ActivityTile extends StatelessWidget {
     );
   }
 }
+

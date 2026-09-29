@@ -164,6 +164,7 @@ class BaseRoute {
   static const String upgradeRequired = "/upgrade_required_route";
 
   static const String appUpdate = "/app_update_route";
+
   // Tours (تورهای مسافرتی)
   static const String tourHome = "/tour_home_route";
   static const String tourDetail = "/tour_detail_route";
@@ -172,8 +173,9 @@ class BaseRoute {
   static const String tourPayment = "/tour_payment_route";
   static const String tourMyBookings = "/tour_my_bookings_route";
   static const String tourVoucher = "/tour_voucher_route";
-}
+
   // Escrow (معامله امانی)
   static const String escrowHome = "/escrow_home_route";
   static const String escrowDetail = "/escrow_detail_route";
 }
+
