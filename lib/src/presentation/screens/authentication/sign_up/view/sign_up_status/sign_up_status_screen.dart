@@ -83,28 +83,27 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
         isKycVerification;
   }
 
-  // Get current status
+  // Get current status - server boarding_steps is primary source of truth
   bool getEmailVerificationStatus() {
-    if (isLogInState || isPersonalInfo || isIdVerification) {
-      return controller
-              .userModel
-              .value
-              .data
-              ?.boardingSteps
-              ?.emailVerification ==
-          true;
-    } else {
-      return emailVerified.value;
-    }
+    final serverVal = controller
+        .userModel
+        .value
+        .data
+        ?.boardingSteps
+        ?.emailVerification;
+    if (serverVal != null) return serverVal;
+    return emailVerified.value;
   }
 
   bool getPasswordSetupStatus() {
-    if (isLogInState || isPersonalInfo || isIdVerification) {
-      return controller.userModel.value.data?.boardingSteps?.passwordSetup ==
-          true;
-    } else {
-      return setUpPassword.value;
-    }
+    final serverVal = controller
+        .userModel
+        .value
+        .data
+        ?.boardingSteps
+        ?.passwordSetup;
+    if (serverVal != null) return serverVal;
+    return setUpPassword.value;
   }
 
   // Get ID verification

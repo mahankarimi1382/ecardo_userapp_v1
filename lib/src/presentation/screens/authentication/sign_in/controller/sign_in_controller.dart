@@ -131,7 +131,7 @@ class SignInController extends GetxController {
   void _routeAfterAuth() {
     final data = userModel.value.data;
     final completed = data?.boardingSteps?.completed == true;
-    final hasPasscode = PasscodeHelper.userHasPasscode(data?.passcode);
+    final hasPasscode = PasscodeHelper.userHasPasscode(data?.passcode, data?.hasPasscode);
 
     if (!hasPasscode) {
       if (Get.isRegistered<SetPasscodeController>()) {

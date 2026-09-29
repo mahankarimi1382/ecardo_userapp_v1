@@ -99,6 +99,7 @@ class SetPasscodeController extends GetxController {
         },
       );
       if (response.status == Status.completed) {
+        PasscodeHelper.hasPasscodeFromStatus = true;
         final msg = response.data?['message']?.toString();
         if (msg != null && msg.isNotEmpty) {
           ToastHelper().showSuccessToast(msg);

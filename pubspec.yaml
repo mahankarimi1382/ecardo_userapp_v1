@@ -3,7 +3,7 @@ description: "eCardo — International Financial Super App for users (multi-curr
 publish_to: 'none'
 
 
-version: 1.0.113+113
+version: 1.0.114+114
 
 environment:
   sdk: ^3.9.2
