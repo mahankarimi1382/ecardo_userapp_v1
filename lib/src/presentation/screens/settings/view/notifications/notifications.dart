@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/responsive.dart';
 import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/notification_controller.dart';
@@ -67,12 +69,52 @@ class _NotificationsState extends State<Notifications>
     super.dispose();
   }
 
-  String _relativeTime(DateTime at) {
+  String _relativeTime(BuildContext context, DateTime at) {
     final d = DateTime.now().difference(at);
-    if (d.inMinutes < 1) return 'همین الان';
-    if (d.inMinutes < 60) return '${d.inMinutes} دقیقه پیش';
-    if (d.inHours < 24) return '${d.inHours} ساعت پیش';
-    if (d.inDays < 7) return '${d.inDays} روز پیش';
+    if (d.inMinutes < 1) {
+      return l10nPick(
+        context,
+        en: 'Just now',
+        fa: 'همین الان',
+        ar: 'الآن',
+        tr: 'Az önce',
+        ru: 'Только что',
+        zh: '刚刚',
+      );
+    }
+    if (d.inMinutes < 60) {
+      return l10nPick(
+        context,
+        en: '${d.inMinutes}m ago',
+        fa: '${d.inMinutes} دقیقه پیش',
+        ar: 'منذ ${d.inMinutes} دقيقة',
+        tr: '${d.inMinutes} dk önce',
+        ru: '${d.inMinutes} мин назад',
+        zh: '${d.inMinutes}分钟前',
+      );
+    }
+    if (d.inHours < 24) {
+      return l10nPick(
+        context,
+        en: '${d.inHours}h ago',
+        fa: '${d.inHours} ساعت پیش',
+        ar: 'منذ ${d.inHours} ساعة',
+        tr: '${d.inHours} sa önce',
+        ru: '${d.inHours} ч назад',
+        zh: '${d.inHours}小时前',
+      );
+    }
+    if (d.inDays < 7) {
+      return l10nPick(
+        context,
+        en: '${d.inDays}d ago',
+        fa: '${d.inDays} روز پیش',
+        ar: 'منذ ${d.inDays} يوم',
+        tr: '${d.inDays} gün önce',
+        ru: '${d.inDays} дн назад',
+        zh: '${d.inDays}天前',
+      );
+    }
     return '${at.year}/${at.month}/${at.day}';
   }
 
@@ -130,10 +172,10 @@ class _NotificationsState extends State<Notifications>
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: pad),
                   children: [
-                    _chip('همه', _NotifFilter.all),
-                    _chip('خوانده‌نشده', _NotifFilter.unread),
-                    _chip('مالی', _NotifFilter.financial),
-                    _chip('سیستمی', _NotifFilter.system),
+                    _chip(l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', tr: 'Tümü', ru: 'Все', zh: '全部'), _NotifFilter.all),
+                    _chip(l10nPick(context, en: 'Unread', fa: 'خوانده‌نشده', ar: 'غير مقروءة', tr: 'Okunmamış', ru: 'Непрочитанные', zh: '未读'), _NotifFilter.unread),
+                    _chip(l10nPick(context, en: 'Financial', fa: 'مالی', ar: 'مالي', tr: 'Finansal', ru: 'Финансовые', zh: '财务'), _NotifFilter.financial),
+                    _chip(l10nPick(context, en: 'System', fa: 'سیستمی', ar: 'النظام', tr: 'Sistem', ru: 'Системные', zh: '系统'), _NotifFilter.system),
                   ],
                 ),
               ),
@@ -181,10 +223,33 @@ class _NotificationsState extends State<Notifications>
                         children: [
                           EmptyView(
                             icon: Icons.notifications_none_rounded,
-                            title: 'هنوز اعلانی نداری',
-                            subtitle:
-                                'اعلان‌های مهم اینجا نشون داده میشن.',
-                            ctaLabel: 'بروزرسانی',
+                            title: l10nPick(
+                              context,
+                              en: 'No notifications yet',
+                              fa: 'هنوز اعلانی نداری',
+                              ar: 'لا توجد إشعارات بعد',
+                              tr: 'Henüz bildirim yok',
+                              ru: 'Пока нет уведомлений',
+                              zh: '暂无通知',
+                            ),
+                            subtitle: l10nPick(
+                              context,
+                              en: 'Important notifications will appear here.',
+                              fa: 'اعلان‌های مهم اینجا نشون داده میشن.',
+                              ar: 'ستظهر الإشعارات المهمة هنا.',
+                              tr: 'Önemli bildirimler burada görünecektir.',
+                              ru: 'Важные уведомления появятся здесь.',
+                              zh: '重要通知将在此显示。',
+                            ),
+                            ctaLabel: l10nPick(
+                              context,
+                              en: 'Refresh',
+                              fa: 'بروزرسانی',
+                              ar: 'تحديث',
+                              tr: 'Yenile',
+                              ru: 'Обновить',
+                              zh: '刷新',
+                            ),
                             onCta: refreshData,
                           ),
                         ],
@@ -197,11 +262,19 @@ class _NotificationsState extends State<Notifications>
                       padding: EdgeInsets.symmetric(horizontal: pad),
                       children: [
                         if (showLocal && filteredLocal.isNotEmpty) ...[
-                          const Padding(
-                            padding: EdgeInsets.only(top: 8, bottom: 6),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 6),
                             child: Text(
-                              'اعلان‌های اخیر (دستگاه)',
-                              style: TextStyle(
+                              l10nPick(
+                                context,
+                                en: 'Recent notifications (device)',
+                                fa: 'اعلان‌های اخیر (دستگاه)',
+                                ar: 'الإشعارات الأخيرة (الجهاز)',
+                                tr: 'Son bildirimler (cihaz)',
+                                ru: 'Недавние уведомления (устройство)',
+                                zh: '最近通知 (设备)',
+                              ),
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13,
                               ),
@@ -212,11 +285,19 @@ class _NotificationsState extends State<Notifications>
                           }),
                         ],
                         if (showServer && server.isNotEmpty) ...[
-                          const Padding(
-                            padding: EdgeInsets.only(top: 12, bottom: 6),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12, bottom: 6),
                             child: Text(
-                              'اعلان‌های حساب',
-                              style: TextStyle(
+                              l10nPick(
+                                context,
+                                en: 'Account notifications',
+                                fa: 'اعلان‌های حساب',
+                                ar: 'إشعارات الحساب',
+                                tr: 'Hesap bildirimleri',
+                                ru: 'Уведомления аккаунта',
+                                zh: '账户通知',
+                              ),
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13,
                               ),
@@ -308,7 +389,7 @@ class _NotificationsState extends State<Notifications>
                             );
                           }),
                         ],
-                        const SizedBox(height: 24),
+                        SizedBox(height: AppSpacing.bottomSafe(context, 24)),
                       ],
                     );
                   }),
@@ -399,7 +480,7 @@ class _NotificationsState extends State<Notifications>
                     ),
                   const SizedBox(height: 4),
                   Text(
-                    _relativeTime(item.at),
+                    _relativeTime(context, item.at),
                     style: TextStyle(
                       fontSize: 11.5,
                       color: AppColors.lightTextPrimary.withValues(alpha: 0.45),

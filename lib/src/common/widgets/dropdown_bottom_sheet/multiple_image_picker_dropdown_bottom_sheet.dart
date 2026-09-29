@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/multiple_image_picker_controller.dart';
 
@@ -19,12 +20,14 @@ class MultipleImagePickerDropdownBottomSheet extends StatelessWidget {
     final MultipleImagePickerController multipleImagePickerController =
         Get.find<MultipleImagePickerController>();
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuart,
-      height: 250,
-      margin: EdgeInsets.symmetric(horizontal: 18),
-      decoration: BoxDecoration(
+    return SafeArea(
+      top: false,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutQuart,
+        height: AppSpacing.bottomSafe(context, 250),
+        margin: const EdgeInsets.symmetric(horizontal: 18),
+        decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadiusDirectional.only(
           topStart: Radius.circular(20),
@@ -185,6 +188,7 @@ class MultipleImagePickerDropdownBottomSheet extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }

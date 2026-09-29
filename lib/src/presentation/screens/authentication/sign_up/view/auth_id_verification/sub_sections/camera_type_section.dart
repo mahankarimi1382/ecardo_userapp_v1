@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -218,7 +219,9 @@ class CameraTypeSection extends StatelessWidget {
                                 textColor: AppColors.lightTextPrimary,
                               ),
                             ],
-                            SizedBox(height: 40.h),
+                            SizedBox(
+                              height: AppSpacing.bottomSafe(context, 20.h),
+                            ),
                           ],
                         ),
                       ),

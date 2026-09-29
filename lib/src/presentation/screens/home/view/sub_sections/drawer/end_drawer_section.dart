@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/svg/svg_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
@@ -307,8 +308,8 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
     final localization = AppLocalizations.of(context)!;
 
     return Padding(
-      padding: const EdgeInsetsDirectional.only(
-        bottom: 50,
+      padding: EdgeInsetsDirectional.only(
+        bottom: AppSpacing.bottomSafe(context, 20),
         start: 28,
         end: 28,
       ),

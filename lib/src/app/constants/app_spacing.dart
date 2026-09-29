@@ -9,6 +9,19 @@ class AppSpacing {
 
   static EdgeInsets get pageInsets =>
       const EdgeInsets.symmetric(horizontal: page);
+
+  /// Platform-adaptive bottom spacing that respects system navigation bars / Home Indicator.
+  /// If the platform reports a bottom inset (Android gesture/nav bar, iOS home bar),
+  /// it is added to [extra]. If on web or devices with 0 bottom inset, only [extra] is used.
+  static double bottomSafe(BuildContext context, [double extra = 16]) {
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
+    return bottomInset > 0 ? bottomInset + extra : extra;
+  }
+
+  /// An EdgeInsets with safe bottom padding.
+  static EdgeInsets bottomSafeInsets(BuildContext context, [double extra = 16]) {
+    return EdgeInsets.only(bottom: bottomSafe(context, extra));
+  }
 }
 
 class AppTextStyles {
