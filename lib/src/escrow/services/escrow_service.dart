@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:get/get.dart' as getx;
 import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -9,7 +10,7 @@ class EscrowService extends getx.GetxService {
   /// Get escrow configuration (rules, inspection limits, fee rates)
   Future<Map<String, dynamic>?> getConfig() async {
     final response = await _network.get(endpoint: '/user/escrow/config');
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }
     return null;
@@ -26,7 +27,7 @@ class EscrowService extends getx.GetxService {
     final path = '/user/escrow${queryStr.isNotEmpty ? '?$queryStr' : ''}';
 
     final response = await _network.get(endpoint: path);
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       final list = data is List ? data : (data is Map ? data['data'] as List? : null);
       if (list != null) {
@@ -39,7 +40,7 @@ class EscrowService extends getx.GetxService {
   /// Get full order details by ID
   Future<EscrowOrderModel?> getOrderDetails(int id) async {
     final response = await _network.get(endpoint: '/user/escrow/$id');
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -51,7 +52,7 @@ class EscrowService extends getx.GetxService {
   /// Step 1: Create new escrow deal (draft)
   Future<EscrowOrderModel?> createOrder(Map<String, dynamic> payload) async {
     final response = await _network.post(endpoint: '/user/escrow', data: payload);
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -63,7 +64,7 @@ class EscrowService extends getx.GetxService {
   /// Step 2: Send for approval
   Future<EscrowOrderModel?> sendApproval(int id) async {
     final response = await _network.post(endpoint: '/user/escrow/$id/send-approval');
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -75,7 +76,7 @@ class EscrowService extends getx.GetxService {
   /// Step 2: Accept terms (Counterparty)
   Future<EscrowOrderModel?> acceptTerms(int id) async {
     final response = await _network.post(endpoint: '/user/escrow/$id/accept-terms');
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -89,7 +90,7 @@ class EscrowService extends getx.GetxService {
     final response = await _network.post(endpoint: '/user/escrow/$id/request-changes',
       data: {'reason': reason},
     );
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -105,7 +106,7 @@ class EscrowService extends getx.GetxService {
         if (walletId != null) 'wallet_id': walletId,
       },
     );
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -121,7 +122,7 @@ class EscrowService extends getx.GetxService {
         if (reason != null && reason.isNotEmpty) 'reason': reason,
       },
     );
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -145,7 +146,7 @@ class EscrowService extends getx.GetxService {
         if (shippingNotes != null) 'shipping_notes': shippingNotes,
       },
     );
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -157,7 +158,7 @@ class EscrowService extends getx.GetxService {
   /// Step 5: Confirm delivery (Buyer)
   Future<EscrowOrderModel?> confirmDelivery(int id) async {
     final response = await _network.post(endpoint: '/user/escrow/$id/confirm-delivery');
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -169,7 +170,7 @@ class EscrowService extends getx.GetxService {
   /// Step 6: Approve & Release funds to seller
   Future<EscrowOrderModel?> approveRelease(int id) async {
     final response = await _network.post(endpoint: '/user/escrow/$id/approve-release');
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -183,7 +184,7 @@ class EscrowService extends getx.GetxService {
     final response = await _network.post(endpoint: '/user/escrow/$id/extend-inspection',
       data: {'hours': hours},
     );
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowOrderModel.fromJson(data);
@@ -205,7 +206,7 @@ class EscrowService extends getx.GetxService {
         if (evidenceFiles != null) 'evidence_files': evidenceFiles,
       },
     );
-    if (response.status && response.data != null) {
+    if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
         return EscrowDisputeModel.fromJson(data);
