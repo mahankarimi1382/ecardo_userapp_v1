@@ -10,6 +10,8 @@ import 'package:ecardo_user/src/presentation/screens/settings/model/kyc_history_
 class KycHistoryController extends GetxController {
   // Global
   final RxBool isLoading = false.obs;
+  final RxBool hasError = false.obs;
+  final RxString errorMessage = "".obs;
   final RxList<KycHistoryData> kycHistoryList = <KycHistoryData>[].obs;
 
   @override
@@ -21,6 +23,8 @@ class KycHistoryController extends GetxController {
   // Fetch KYC History
   Future<void> fetchKycHistory() async {
     isLoading.value = true;
+    hasError.value = false;
+    errorMessage.value = "";
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.kycHistoryEndpoint,
@@ -28,11 +32,19 @@ class KycHistoryController extends GetxController {
       if (response.status == Status.completed) {
         final kycHistoryModel = KycHistoryModel.fromJson(response.data!);
         kycHistoryList.clear();
-        kycHistoryList.assignAll(kycHistoryModel.data!);
+        kycHistoryList.assignAll(kycHistoryModel.data ?? []);
+      } else if (response.status == Status.error) {
+        hasError.value = true;
+        errorMessage.value = response.message ?? "";
+        ToastHelper().showErrorToast(
+          response.message ??
+              AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        );
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchKycHistory() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      hasError.value = true;
       ToastHelper().showErrorToast(
         AppLocalizations.of(Get.context!)!.allControllerLoadError,
       );

@@ -117,7 +117,12 @@ class TwoFactorAuthenticationController extends GetxController {
       );
       if (response.status == Status.completed) {
         qrCode.value = "";
-        qrCode.value = response.data?["data"]["qr_code"] ?? "";
+        qrCode.value = response.data?["data"]?["qr_code"]?.toString() ?? "";
+      } else if (response.status == Status.error) {
+        ToastHelper().showErrorToast(
+          response.message ??
+              AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        );
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getQRCode() error: $e');
@@ -130,28 +135,44 @@ class TwoFactorAuthenticationController extends GetxController {
 
   Future<void> loadGenerate2Fa() async {
     isGenerateQRCodeLoading.value = true;
-    await getQRCode();
-    await fetchUser();
-    isGenerateQRCodeLoading.value = false;
+    try {
+      await getQRCode();
+      await fetchUser();
+    } catch (e, stackTrace) {
+      debugPrint('❌ loadGenerate2Fa() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+    } finally {
+      isGenerateQRCodeLoading.value = false;
+    }
   }
 
   Future<void> submitEnableTwoFa() async {
     isEnableTwoFaLoading.value = true;
+    final loc = AppLocalizations.of(Get.context!);
     try {
+      final code = enable2FaController.text.trim();
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.enableTwoFaEndpoint,
-        data: {"one_time_password": enable2FaController.text},
+        data: {"one_time_password": code},
       );
       if (response.status == Status.completed) {
         await fetchUser();
         enable2FaController.clear();
-        ToastHelper().showSuccessToast(response.data!["message"]);
+        final msg = response.data?["message"]?.toString() ??
+            loc?.enable2FaSectionTitle ??
+            '2FA enabled successfully';
+        ToastHelper().showSuccessToast(msg);
+      } else if (response.status == Status.error) {
+        final msg = response.message ??
+            loc?.allControllerLoadError ??
+            'Failed to enable 2FA';
+        ToastHelper().showErrorToast(msg);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitEnableTwoFa() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        loc?.allControllerLoadError ?? 'Failed to enable 2FA',
       );
     } finally {
       isEnableTwoFaLoading.value = false;
@@ -160,21 +181,31 @@ class TwoFactorAuthenticationController extends GetxController {
 
   Future<void> submitDisableTwoFa() async {
     isDisableTwoFaLoading.value = true;
+    final loc = AppLocalizations.of(Get.context!);
     try {
+      final password = disable2FaController.text.trim();
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.disableTwoFaEndpoint,
-        data: {"one_time_password": disable2FaController.text},
+        data: {"one_time_password": password},
       );
       if (response.status == Status.completed) {
         await fetchUser();
         disable2FaController.clear();
-        ToastHelper().showSuccessToast(response.data!["message"]);
+        final msg = response.data?["message"]?.toString() ??
+            loc?.disable2FaSectionTitle ??
+            '2FA disabled successfully';
+        ToastHelper().showSuccessToast(msg);
+      } else if (response.status == Status.error) {
+        final msg = response.message ??
+            loc?.allControllerLoadError ??
+            'Failed to disable 2FA';
+        ToastHelper().showErrorToast(msg);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitDisableTwoFa() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        loc?.allControllerLoadError ?? 'Failed to disable 2FA',
       );
     } finally {
       isDisableTwoFaLoading.value = false;

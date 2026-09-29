@@ -12,7 +12,6 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
-import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/session_manager.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -632,12 +631,21 @@ class NetworkService extends getx.GetxService {
     _log('📦 POST (multipart) Fields: ${data.fields.length}, Files: ${data.files.length}');
 
     try {
-      // Pass the FormData directly — Dio auto-sets Content-Type to
-      // multipart/form-data with the proper boundary.
+      // Pass the FormData with explicit multipart boundary and extended timeouts
+      // so large uploads don't abort with premature timeout or inherit application/json.
       final response = await _dio.post(
         endpoint,
         data: data,
-        options: Options(extra: {'isForeground': isForeground}),
+        options: Options(
+          contentType: 'multipart/form-data',
+          sendTimeout: const Duration(seconds: 120),
+          receiveTimeout: const Duration(seconds: 120),
+          extra: {'isForeground': isForeground},
+          headers: {
+            'Content-Type': 'multipart/form-data; boundary=${data.boundary}',
+            'Accept': 'application/json',
+          },
+        ),
       );
       return _handleResponse(response, "POST (multipart)");
     } on DioException catch (e) {

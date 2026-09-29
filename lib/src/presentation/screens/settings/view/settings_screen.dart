@@ -33,7 +33,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   bool _bioSupported = false;
   bool _bioEnabled = false;
-  bool _autoLogin = true;
   int _lockMinutes = 0;
   bool _notifFinancial = true;
   bool _notifPromo = false;
@@ -63,7 +62,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       enabled = false;
     }
     final lock = await settings.getAppLockMinutes();
-    final auto = await settings.getAutoLogin();
     final fin = await settings.getNotifPref(SettingsService.notifFinancialKey);
     final promo = await settings.getNotifPref(
       SettingsService.notifPromoKey,
@@ -84,7 +82,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _bioSupported = supported;
       _bioEnabled = enabled;
       _lockMinutes = lock;
-      _autoLogin = auto;
       _notifFinancial = fin;
       _notifPromo = promo;
       _notifSound = sound;
@@ -152,11 +149,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+    if (!mounted) return;
     if (ok == true && c1.text.length == 4 && c1.text == c2.text) {
       if (Get.isRegistered<AppLockService>()) {
         await Get.find<AppLockService>().setPin(c1.text);
       }
       await settings.setAppPin('set');
+      if (!mounted) return;
       Get.snackbar('PIN', l10nPick(context, en: 'Saved', fa: 'ذخیره شد'), snackPosition: SnackPosition.BOTTOM);
     } else if (ok == true) {
       Get.snackbar('PIN', l10nPick(context, en: 'The PIN must be 4 digits and match', fa: 'PIN باید ۴ رقم و یکسان باشد'), snackPosition: SnackPosition.BOTTOM);
@@ -212,31 +211,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       null,
                       () => Get.toNamed(BaseRoute.idVerification),
                     ),
-                  _navTile(
-                    Icons.delete_outline,
-                    l10nPick(context, en: 'Delete account', fa: 'حذف حساب', ar: 'حذف الحساب', zh: '删除账户'),
-                    l10nPick(context, en: 'Request through support', fa: 'از طریق پشتیبانی درخواست دهید', ar: 'اطلب عبر الدعم', zh: '通过客服申请'),
-                    () async {
-                      if (settings.getSetting('user_ticket') == '1') {
-                        Get.toNamed(BaseRoute.supportTickets);
-                      } else {
-                        Get.dialog(
-                          AlertDialog(
-                            title: Text(l10nPick(context, en: 'Delete account', fa: 'حذف حساب', ar: 'حذف الحساب', zh: '删除账户')),
-                            content: Text(
-                              l10nPick(context, en: 'To delete your account, please contact eCardo support.', fa: 'برای حذف حساب با پشتیبانی eCardo تماس بگیرید.'),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Get.back(),
-                                child: Text(l10nPick(context, en: 'OK', fa: 'باشه')),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                  ),
                 ]),
                 _group(l10nPick(context, en: 'Security', fa: 'امنیت', ar: 'الأمان', zh: '安全'), [
                   _navTile(
@@ -282,16 +256,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     )
                   else
                     const SizedBox.shrink(),
-                  SwitchListTile.adaptive(
-                    contentPadding: EdgeInsets.zero,
-                    secondary: const Icon(Icons.login),
-                    title: Text(l10nPick(context, en: 'Auto sign-in', fa: 'ورود خودکار', ar: 'تسجيل دخول تلقائي', zh: '自动登录')),
-                    value: _autoLogin,
-                    onChanged: (v) async {
-                      await settings.setAutoLogin(v);
-                      setState(() => _autoLogin = v);
-                    },
-                  ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.timer_outlined),

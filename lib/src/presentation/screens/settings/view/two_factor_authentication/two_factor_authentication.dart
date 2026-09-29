@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/disable_2_fa_section.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/enable_2_fa_section.dart';
@@ -31,11 +32,16 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
 
   Future<void> loadData() async {
     controller.isLoading.value = true;
-    await controller.fetchUser();
-    if (controller.userModel.value.data?.google2faSecret != null) {
-      await controller.getQRCode();
+    try {
+      await controller.fetchUser();
+      if (controller.userModel.value.data?.google2faSecret != null) {
+        await controller.getQRCode();
+      }
+    } catch (e) {
+      debugPrint('Error loading 2FA data: $e');
+    } finally {
+      controller.isLoading.value = false;
     }
-    controller.isLoading.value = false;
   }
 
   @override
@@ -56,7 +62,13 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Text(
-                  'فقط برای ورود به حساب (Google Authenticator). برای انتقال وجه از «رمز انتقال» استفاده کنید.',
+                  l10nPick(
+                    context,
+                    en: 'For account login only (Google Authenticator). For transfers, use Transaction PIN.',
+                    fa: 'فقط برای ورود به حساب (Google Authenticator). برای انتقال وجه از «رمز انتقال» استفاده کنید.',
+                    ar: 'لتسجيل الدخول إلى الحساب فقط (Google Authenticator). للتحويلات، استخدم رمز التحويل.',
+                    zh: '仅用于账户登录 (Google Authenticator)。转账请使用转账密码。',
+                  ),
                   style: TextStyle(
                     fontSize: 13,
                     color: AppColors.lightTextTertiary,

@@ -1,10 +1,12 @@
 import 'dart:io' show File;
 
-import 'package:dio/dio.dart' as dio show FormData, MultipartFile;
+import 'package:dio/dio.dart' as dio show FormData;
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -83,8 +85,22 @@ class KycLevelController extends GetxController {
         final key = 'documents[${entry.key}]';
         final isLocalFile = !kIsWeb && entry.value.isNotEmpty && File(entry.value).existsSync();
         if (isLocalFile) {
+          final file = File(entry.value);
+          if (UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes)) {
+            isSubmitting.value = false;
+            ToastHelper().showErrorToast(
+              l10nPick(
+                Get.context!,
+                en: 'File size must not exceed 5MB',
+                fa: 'حجم فایل نباید بیشتر از ۵ مگابایت باشد',
+                ar: 'يجب ألا يتجاوز حجم الملف 5 ميجابايت',
+                zh: '文件大小不能超过 5MB',
+              ),
+            );
+            return false;
+          }
           formData.files.add(
-            MapEntry(key, await dio.MultipartFile.fromFile(entry.value)),
+            MapEntry(key, await UploadHelper.createMultipartFile(file)),
           );
         } else {
           formData.fields.add(MapEntry(key, entry.value));

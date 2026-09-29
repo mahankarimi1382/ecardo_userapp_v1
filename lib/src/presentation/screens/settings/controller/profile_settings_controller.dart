@@ -6,7 +6,10 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/image_picker_controller.dart';
 import 'package:ecardo_user/src/common/model/country_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/helper/country_city_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -73,6 +76,9 @@ class ProfileSettingsController extends GetxController {
   final RxBool isCityFocused = false.obs;
   final FocusNode cityFocusNode = FocusNode();
   final cityController = TextEditingController();
+  final RxList<String> cityList = <String>[].obs;
+  final RxBool isCityLoading = false.obs;
+  final RxString city = "".obs;
 
   // Zip Code
   final RxBool isZipCodeFocused = false.obs;
@@ -226,6 +232,26 @@ class ProfileSettingsController extends GetxController {
     } finally {}
   }
 
+  // Update Cities based on Country Code
+  void updateCitiesForCountry(String code, {String? name, bool resetCity = true}) {
+    isCityLoading.value = true;
+    try {
+      final cities = CountryCityHelper.getCities(code, countryName: name);
+      cityList.assignAll(cities);
+      if (resetCity) {
+        city.value = "";
+        cityController.text = "";
+      } else if (cityController.text.isNotEmpty) {
+        if (!cityList.contains(cityController.text)) {
+          cityList.insert(0, cityController.text);
+        }
+        city.value = cityController.text;
+      }
+    } finally {
+      isCityLoading.value = false;
+    }
+  }
+
   // Fetch Countries
   Future<void> fetchCountries() async {
     try {
@@ -236,13 +262,18 @@ class ProfileSettingsController extends GetxController {
         final countryModel = CountryModel.fromJson(response.data!);
         countryList.clear();
         countryList.value = countryModel.data ?? [];
-        final findCountry = countryList.firstWhere(
+        final findCountry = countryList.firstWhereOrNull(
           (item) => item.code == countryCode.value,
         );
-        country.value = findCountry.name ?? "";
-        countryController.text = findCountry.name ?? "";
-        countryCode.value = findCountry.code ?? "";
-        countryDialCode.value = findCountry.dialCode ?? "";
+        if (findCountry != null) {
+          country.value = findCountry.name ?? "";
+          countryController.text = findCountry.name ?? "";
+          countryCode.value = findCountry.code ?? "";
+          countryDialCode.value = findCountry.dialCode ?? "";
+          updateCitiesForCountry(findCountry.code ?? "", name: findCountry.name, resetCity: false);
+        } else if (countryCode.value.isNotEmpty) {
+          updateCitiesForCountry(countryCode.value, resetCity: false);
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCountries() error: $e');
@@ -255,8 +286,23 @@ class ProfileSettingsController extends GetxController {
 
   Future<void> submitUpdateProfile() async {
     isProfileUpdateLoading.value = true;
+    final loc = AppLocalizations.of(Get.context!)!;
     try {
       final imageFile = imagePickerController.selectedImage.value;
+      if (imageFile != null &&
+          UploadHelper.exceedsSize(imageFile, UploadHelper.maxAvatarBytes)) {
+        ToastHelper().showErrorToast(
+          l10nPick(
+            Get.context!,
+            en: 'Avatar image must not exceed 2MB',
+            fa: 'حجم تصویر پروفایل نباید بیشتر از ۲ مگابایت باشد',
+            ar: 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت',
+            zh: '头像图片大小不能超过 2MB',
+          ),
+        );
+        isProfileUpdateLoading.value = false;
+        return;
+      }
 
       String formattedDob;
       try {
@@ -270,7 +316,6 @@ class ProfileSettingsController extends GetxController {
       // (dropdown values are localized). The old `== "Male"` compared a
       // Persian/Arabic label with an English literal and silently rewrote
       // every non-English profile to "female"; "Other" also became "female".
-      final loc = AppLocalizations.of(Get.context!)!;
       final genderLabel = gender.value;
       final String genderCode;
       if (genderLabel == loc.profileSettingsGenderMale) {
@@ -302,10 +347,7 @@ class ProfileSettingsController extends GetxController {
         'zip_code': zipCodeController.text,
         'address': addressController.text,
         if (imageFile != null)
-          'avatar': await dio.MultipartFile.fromFile(
-            imageFile.path,
-            filename: imageFile.path.split('/').last,
-          ),
+          'avatar': await UploadHelper.createMultipartFile(imageFile),
       });
       // PAYMENT-FIX (P-1): was a raw `dio.Dio()` POST (no timeout, no
       // 401-refresh, and a `e.response!` force-unwrap in the 422 handler).
@@ -323,14 +365,22 @@ class ProfileSettingsController extends GetxController {
         if (message != null && message.isNotEmpty) {
           ToastHelper().showSuccessToast(message);
         }
+        imagePickerController.clearImage();
+        await fetchUser();
+        if (Get.isRegistered<HomeController>()) {
+          await Get.find<HomeController>().fetchUser();
+          await Get.find<HomeController>().fetchDashboard();
+        }
         Get.back();
-        await Get.find<HomeController>().fetchDashboard();
+      } else if (response.status == Status.error) {
+        final msg = response.message ?? loc.allControllerLoadError;
+        ToastHelper().showErrorToast(msg);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitUpdateProfile() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        loc.allControllerLoadError,
       );
     } finally {
       isProfileUpdateLoading.value = false;

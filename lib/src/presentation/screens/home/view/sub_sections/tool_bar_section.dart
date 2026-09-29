@@ -91,7 +91,7 @@ class _ToolBarSectionState extends State<ToolBarSection>
         child: Row(
           children: [
             GestureDetector(
-              onTap: () => home.openEndDrawer(),
+              onTap: () => Get.toNamed(BaseRoute.profileSettings),
               child: _Avatar(path: avatarPath, initial: initial),
             ),
             const SizedBox(width: AppSpacing.cardGap),
@@ -141,10 +141,6 @@ class _ToolBarSectionState extends State<ToolBarSection>
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () => Get.toNamed(BaseRoute.profileSettings),
-              icon: const Icon(Icons.settings_outlined, color: AppColors.white),
-            ),
           ],
         ),
       ),
@@ -167,7 +163,7 @@ class _Avatar extends StatelessWidget {
           width: 44,
           height: 44,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _fallback(),
+          errorBuilder: (context, error, stackTrace) => _fallback(),
         ),
       );
     }

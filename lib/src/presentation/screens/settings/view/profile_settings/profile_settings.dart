@@ -15,6 +15,8 @@ import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic
 import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/profile_settings_controller.dart';
 
 class ProfileSettings extends StatefulWidget {
@@ -53,8 +55,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     controller.phoneController.text = user?.phone ?? "";
     controller.countryCode.value = user?.country ?? "";
     controller.cityController.text = user?.city ?? "";
+    controller.city.value = user?.city ?? "";
     controller.zipCodeController.text = user?.zipCode ?? "";
-    controller.addressController.text = user?.address ?? "";
     controller.addressController.text = user?.address ?? "";
     try {
       final raw = user?.createdAt;
@@ -442,6 +444,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               selectedCountry.code ?? "";
                                           controller.countryDialCode.value =
                                               selectedCountry.dialCode ?? "";
+                                          controller.updateCitiesForCountry(
+                                            selectedCountry.code ?? "",
+                                            name: selectedCountry.name,
+                                            resetCity: true,
+                                          );
                                         }
                                       },
                                       selectedValue: controller.countryList
@@ -472,11 +479,19 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           CommonRequiredLabelAndDynamicField(
                             labelText: localization.profileSettingsCity,
                             isLabelRequired: false,
-                            dynamicField: Obx(
-                              () => CommonTextInputField(
+                            dynamicField: Obx(() {
+                              final hasCountry =
+                                  controller.countryCode.value.isNotEmpty;
+                              final isCityLoading =
+                                  controller.isCityLoading.value;
+
+                              return CommonTextInputField(
                                 textStyle: TextStyle(
                                   fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
+                                  color: hasCountry
+                                      ? AppColors.lightTextTertiary
+                                      : AppColors.lightTextTertiary
+                                          .withValues(alpha: 0.4),
                                   letterSpacing: 0,
                                   height: 1.1,
                                   fontWeight: FontWeight.w600,
@@ -484,11 +499,75 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 focusNode: controller.cityFocusNode,
                                 isFocused: controller.isCityFocused.value,
                                 backgroundColor: AppColors.transparent,
-                                hintText: "",
+                                readOnly: true,
+                                onTap: () {
+                                  if (!hasCountry) {
+                                    ToastHelper().showErrorToast(
+                                      l10nPick(
+                                        context,
+                                        en: 'Please select a country first',
+                                        fa: 'لطفاً ابتدا کشور را انتخاب کنید',
+                                        ar: 'يرجى تحديد الدولة أولاً',
+                                        zh: '请先选择国家',
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  if (isCityLoading) return;
+                                  if (controller.cityList.isEmpty) {
+                                    ToastHelper().showErrorToast(
+                                      l10nPick(
+                                        context,
+                                        en: 'No cities found for selected country',
+                                        fa: 'شهری برای این کشور یافت نشد',
+                                        ar: 'لم يتم العثور على مدن للدولة المحددة',
+                                        zh: '未找到所选国家的城市',
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  Get.bottomSheet(
+                                    CommonDropdownBottomSheet(
+                                      title: localization.profileSettingsCity,
+                                      isShowTitle: true,
+                                      showSearch: true,
+                                      notFoundText: localization
+                                          .profileSettingsCountryNotFound,
+                                      onValueSelected: (value) {
+                                        controller.city.value = value;
+                                        controller.cityController.text = value;
+                                      },
+                                      selectedValue:
+                                          controller.cityList.toList(),
+                                      dropdownItems:
+                                          controller.cityList.toList(),
+                                      selectedItem:
+                                          controller.cityController.text,
+                                      textController:
+                                          controller.cityController,
+                                      currentlySelectedValue:
+                                          controller.cityController.text,
+                                      bottomSheetHeight: 500,
+                                    ),
+                                  );
+                                },
+                                hintText: hasCountry
+                                    ? localization.profileSettingsCity
+                                    : l10nPick(
+                                        context,
+                                        en: 'Select country first',
+                                        fa: 'ابتدا کشور را انتخاب کنید',
+                                        ar: 'حدد الدولة أولاً',
+                                        zh: '请先选择国家',
+                                      ),
                                 controller: controller.cityController,
-                                keyboardType: TextInputType.text,
-                              ),
-                            ),
+                                suffixIconColor: hasCountry
+                                    ? AppColors.lightTextTertiary
+                                    : AppColors.lightTextTertiary
+                                        .withValues(alpha: 0.3),
+                              );
+                            }),
                           ),
                           SizedBox(height: 16),
                           CommonRequiredLabelAndDynamicField(
