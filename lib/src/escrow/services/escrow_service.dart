@@ -8,7 +8,7 @@ class EscrowService extends getx.GetxService {
 
   /// Get escrow configuration (rules, inspection limits, fee rates)
   Future<Map<String, dynamic>?> getConfig() async {
-    final response = await _network.get(path: '/user/escrow/config');
+    final response = await _network.get(endpoint: '/user/escrow/config');
     if (response.status && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }
@@ -25,7 +25,7 @@ class EscrowService extends getx.GetxService {
     final queryStr = Uri(queryParameters: params.map((k, v) => MapEntry(k, v.toString()))).query;
     final path = '/user/escrow${queryStr.isNotEmpty ? '?$queryStr' : ''}';
 
-    final response = await _network.get(path: path);
+    final response = await _network.get(endpoint: path);
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       final list = data is List ? data : (data is Map ? data['data'] as List? : null);
@@ -38,7 +38,7 @@ class EscrowService extends getx.GetxService {
 
   /// Get full order details by ID
   Future<EscrowOrderModel?> getOrderDetails(int id) async {
-    final response = await _network.get(path: '/user/escrow/$id');
+    final response = await _network.get(endpoint: '/user/escrow/$id');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -50,7 +50,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 1: Create new escrow deal (draft)
   Future<EscrowOrderModel?> createOrder(Map<String, dynamic> payload) async {
-    final response = await _network.post(path: '/user/escrow', data: payload);
+    final response = await _network.post(endpoint: '/user/escrow', data: payload);
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -62,7 +62,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 2: Send for approval
   Future<EscrowOrderModel?> sendApproval(int id) async {
-    final response = await _network.post(path: '/user/escrow/$id/send-approval');
+    final response = await _network.post(endpoint: '/user/escrow/$id/send-approval');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -74,7 +74,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 2: Accept terms (Counterparty)
   Future<EscrowOrderModel?> acceptTerms(int id) async {
-    final response = await _network.post(path: '/user/escrow/$id/accept-terms');
+    final response = await _network.post(endpoint: '/user/escrow/$id/accept-terms');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -86,8 +86,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 2: Request changes
   Future<EscrowOrderModel?> requestChanges(int id, String reason) async {
-    final response = await _network.post(
-      path: '/user/escrow/$id/request-changes',
+    final response = await _network.post(endpoint: '/user/escrow/$id/request-changes',
       data: {'reason': reason},
     );
     if (response.status && response.data != null) {
@@ -101,8 +100,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 3: Pay into escrow
   Future<EscrowOrderModel?> payIntoEscrow(int id, {int? walletId}) async {
-    final response = await _network.post(
-      path: '/user/escrow/$id/pay',
+    final response = await _network.post(endpoint: '/user/escrow/$id/pay',
       data: {
         if (walletId != null) 'wallet_id': walletId,
       },
@@ -118,8 +116,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 3: Cancel deal
   Future<EscrowOrderModel?> cancelDeal(int id, {String? reason}) async {
-    final response = await _network.post(
-      path: '/user/escrow/$id/cancel',
+    final response = await _network.post(endpoint: '/user/escrow/$id/cancel',
       data: {
         if (reason != null && reason.isNotEmpty) 'reason': reason,
       },
@@ -140,8 +137,7 @@ class EscrowService extends getx.GetxService {
     String? trackingUrl,
     String? shippingNotes,
   }) async {
-    final response = await _network.post(
-      path: '/user/escrow/$id/shipment',
+    final response = await _network.post(endpoint: '/user/escrow/$id/shipment',
       data: {
         'shipping_carrier': carrier,
         'tracking_number': trackingNumber,
@@ -160,7 +156,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 5: Confirm delivery (Buyer)
   Future<EscrowOrderModel?> confirmDelivery(int id) async {
-    final response = await _network.post(path: '/user/escrow/$id/confirm-delivery');
+    final response = await _network.post(endpoint: '/user/escrow/$id/confirm-delivery');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -172,7 +168,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 6: Approve & Release funds to seller
   Future<EscrowOrderModel?> approveRelease(int id) async {
-    final response = await _network.post(path: '/user/escrow/$id/approve-release');
+    final response = await _network.post(endpoint: '/user/escrow/$id/approve-release');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -184,8 +180,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 6: Request inspection extension
   Future<EscrowOrderModel?> extendInspection(int id, {int hours = 48}) async {
-    final response = await _network.post(
-      path: '/user/escrow/$id/extend-inspection',
+    final response = await _network.post(endpoint: '/user/escrow/$id/extend-inspection',
       data: {'hours': hours},
     );
     if (response.status && response.data != null) {
@@ -203,8 +198,7 @@ class EscrowService extends getx.GetxService {
     required String description,
     List<String>? evidenceFiles,
   }) async {
-    final response = await _network.post(
-      path: '/user/escrow/$id/dispute',
+    final response = await _network.post(endpoint: '/user/escrow/$id/dispute',
       data: {
         'type': type,
         'description': description,
@@ -222,8 +216,7 @@ class EscrowService extends getx.GetxService {
 
   /// Step 7: Submit mutual rating
   Future<bool> submitRating(int id, {required int rating, String? comment}) async {
-    final response = await _network.post(
-      path: '/user/escrow/$id/rating',
+    final response = await _network.post(endpoint: '/user/escrow/$id/rating',
       data: {
         'rating': rating,
         if (comment != null) 'comment': comment,

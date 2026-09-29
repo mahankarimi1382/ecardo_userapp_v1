@@ -22,7 +22,7 @@ class TourService extends getx.GetxService {
     final queryStr = Uri(queryParameters: params.map((k, v) => MapEntry(k, v.toString()))).query;
     final path = '/user/tours${queryStr.isNotEmpty ? '?$queryStr' : ''}';
 
-    final response = await _network.get(path: path);
+    final response = await _network.get(endpoint: path);
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       final toursRaw = data is Map ? data['tours'] : null;
@@ -35,7 +35,7 @@ class TourService extends getx.GetxService {
 
   /// Get tour details
   Future<TourModel?> getTourDetail(int id) async {
-    final response = await _network.get(path: '/user/tours/$id');
+    final response = await _network.get(endpoint: '/user/tours/$id');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -47,8 +47,7 @@ class TourService extends getx.GetxService {
 
   /// Quiz matching engine (Tour-Yar)
   Future<List<TourModel>> matchTours(Map<String, dynamic> answers) async {
-    final response = await _network.post(
-      path: '/user/tours/match',
+    final response = await _network.post(endpoint: '/user/tours/match',
       data: {'answers': answers},
     );
     if (response.status && response.data != null) {
@@ -63,8 +62,7 @@ class TourService extends getx.GetxService {
 
   /// Step 2: Create initial booking (Draft)
   Future<TourBookingModel?> bookTour(Map<String, dynamic> payload) async {
-    final response = await _network.post(
-      path: '/user/tours/book',
+    final response = await _network.post(endpoint: '/user/tours/book',
       data: payload,
     );
     if (response.status && response.data != null) {
@@ -78,8 +76,7 @@ class TourService extends getx.GetxService {
 
   /// Step 3: Customize booking (hotel & activities)
   Future<TourBookingModel?> customizeBooking(int bookingId, Map<String, dynamic> payload) async {
-    final response = await _network.post(
-      path: '/user/tours/bookings/$bookingId/customize',
+    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/customize',
       data: payload,
     );
     if (response.status && response.data != null) {
@@ -96,8 +93,7 @@ class TourService extends getx.GetxService {
     int bookingId,
     List<Map<String, dynamic>> travelers,
   ) async {
-    final response = await _network.post(
-      path: '/user/tours/bookings/$bookingId/travelers',
+    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/travelers',
       data: {'travelers': travelers},
     );
     if (response.status && response.data != null) {
@@ -119,8 +115,7 @@ class TourService extends getx.GetxService {
       'payment_mode': paymentMode,
       if (walletId != null) 'wallet_id': walletId,
     };
-    final response = await _network.post(
-      path: '/user/tours/bookings/$bookingId/pay',
+    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/pay',
       data: payload,
     );
     if (response.status && response.data != null) {
@@ -137,8 +132,7 @@ class TourService extends getx.GetxService {
     final payload = <String, dynamic>{
       if (walletId != null) 'wallet_id': walletId,
     };
-    final response = await _network.post(
-      path: '/user/tours/bookings/$bookingId/pay-remainder',
+    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/pay-remainder',
       data: payload,
     );
     if (response.status && response.data != null) {
@@ -157,7 +151,7 @@ class TourService extends getx.GetxService {
     final queryStr = Uri(queryParameters: params.map((k, v) => MapEntry(k, v.toString()))).query;
     final path = '/user/tours/my-bookings${queryStr.isNotEmpty ? '?$queryStr' : ''}';
 
-    final response = await _network.get(path: path);
+    final response = await _network.get(endpoint: path);
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       final rawList = data is Map ? data['bookings'] : (data is List ? data : null);
@@ -170,7 +164,7 @@ class TourService extends getx.GetxService {
 
   /// Get single booking details (including voucher details)
   Future<TourBookingModel?> getBookingDetails(int id) async {
-    final response = await _network.get(path: '/user/tours/bookings/$id');
+    final response = await _network.get(endpoint: '/user/tours/bookings/$id');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -182,8 +176,7 @@ class TourService extends getx.GetxService {
 
   /// Cancel booking
   Future<bool> cancelBooking(int id) async {
-    final response = await _network.post(
-      path: '/user/tours/bookings/$id/cancel',
+    final response = await _network.post(endpoint: '/user/tours/bookings/$id/cancel',
       data: {},
     );
     return response.status;

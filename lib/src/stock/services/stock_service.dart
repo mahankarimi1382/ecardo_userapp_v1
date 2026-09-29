@@ -8,7 +8,7 @@ class StockService extends getx.GetxService {
 
   /// Fetch 6 fixed risk assessment questions
   Future<List<Map<String, dynamic>>> getRiskQuestions() async {
-    final response = await _network.get(path: '/stock/risk-quiz');
+    final response = await _network.get(endpoint: '/stock/risk-quiz');
     if (response.status && response.data != null) {
       final list = response.data!['data']?['questions'] as List?;
       if (list != null) {
@@ -20,7 +20,7 @@ class StockService extends getx.GetxService {
 
   /// Submit risk assessment quiz answers
   Future<Map<String, dynamic>?> submitRiskQuiz(Map<String, String> answers) async {
-    final response = await _network.post(path: '/stock/risk-quiz', data: {'answers': answers});
+    final response = await _network.post(endpoint: '/stock/risk-quiz', data: {'answers': answers});
     if (response.status && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }
@@ -29,7 +29,7 @@ class StockService extends getx.GetxService {
 
   /// Get user's trading account & balances
   Future<StockTradingAccountModel?> getAccount() async {
-    final response = await _network.get(path: '/stock/account');
+    final response = await _network.get(endpoint: '/stock/account');
     if (response.status && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -41,7 +41,7 @@ class StockService extends getx.GetxService {
 
   /// List all international markets
   Future<List<StockMarketModel>> getMarkets() async {
-    final response = await _network.get(path: '/stock/markets');
+    final response = await _network.get(endpoint: '/stock/markets');
     if (response.status && response.data != null) {
       final list = response.data!['data'] as List?;
       if (list != null) {
@@ -57,7 +57,7 @@ class StockService extends getx.GetxService {
     required String to,
     required double amount,
   }) async {
-    final response = await _network.get(path: '/stock/fx-quote?from=$from&to=$to&amount=$amount');
+    final response = await _network.get(endpoint: '/stock/fx-quote?from=$from&to=$to&amount=$amount');
     if (response.status && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }
@@ -74,8 +74,7 @@ class StockService extends getx.GetxService {
     double? limitPrice,
     bool acknowledgedRisk = false,
   }) async {
-    final response = await _network.post(
-      path: '/stock/orders',
+    final response = await _network.post(endpoint: '/stock/orders',
       data: {
         'symbol_id': symbolId,
         'side': side,
@@ -98,7 +97,7 @@ class StockService extends getx.GetxService {
 
   /// Get user's portfolio holdings
   Future<Map<String, dynamic>?> getPortfolio() async {
-    final response = await _network.get(path: '/stock/portfolio');
+    final response = await _network.get(endpoint: '/stock/portfolio');
     if (response.status && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }
