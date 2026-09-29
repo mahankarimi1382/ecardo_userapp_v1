@@ -46,8 +46,8 @@ class ExchangeDesignTokens {
   static const Color divider = Color(0x0F000000); // 6% black
 
   // ------------------ Quick chip ------------------
-  static const Color chipBackground = Color(0x0F7445FF); // 6% primary
-  static const Color chipBorder = Color(0x267445FF); // 15% primary
+  static const Color chipBackground = Color(0x0F161614); // 6% primary
+  static const Color chipBorder = Color(0x26161614); // 15% primary
   static const Color chipText = AppColors.lightPrimary;
 
   // ------------------ Stale / disconnected states ------------------
@@ -59,8 +59,7 @@ class ExchangeDesignTokens {
   // the app is light-only today. Defining them now costs nothing and
   // means dark mode becomes a 1-line flip per call site later.
   static const Color darkBrandGradientStart = AppColors.darkPrimary;
-  static const Color darkBrandGradientEnd =
-      Color(0xFF3A22A0); // darker than lightPrimaryDark
+  static const Color darkBrandGradientEnd = AppColors.darkGray;
   static const Color darkCardSurface = AppColors.darkSurface;
   static const Color darkCardBorder = Color(0x1AFFFFFF);
   static const Color darkDivider = Color(0x14FFFFFF);

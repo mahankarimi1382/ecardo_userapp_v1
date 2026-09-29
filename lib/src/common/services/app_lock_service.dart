@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 /// App lock with hashed PIN + auto-lock on resume.
@@ -25,14 +26,8 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
 
   Future<AppLockService> init() async {
     WidgetsBinding.instance.addObserver(this);
-    final hasPin = await hasPinSet();
-    final autoLogin = Get.isRegistered<SettingsService>()
-        ? await Get.find<SettingsService>().getAutoLogin()
-        : true;
-    // Cold start: if PIN set and auto-login off → start locked.
-    if (hasPin && !autoLogin) {
-      locked.value = true;
-    }
+    // Cold start: NEVER start locked automatically.
+    locked.value = false;
     final prefsFail = await _secure.read(key: _failedKey);
     failedAttempts.value = int.tryParse(prefsFail ?? '0') ?? 0;
     return this;
@@ -55,14 +50,13 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   }
 
   Future<void> _onResumed() async {
+    final loginState = await SettingsService.getLoginCurrentState();
+    if (loginState == null || loginState.isEmpty) return;
     if (!await hasPinSet()) return;
     final timeout = await getAutoLockTimeout();
-    if (timeout == Duration.zero) {
-      // "never" unless auto-login is off → lock every resume
-      final autoLogin = await Get.find<SettingsService>().getAutoLogin();
-      if (!autoLogin) await lock();
-      return;
-    }
+    // 0 = Never auto-lock on resume
+    if (timeout == Duration.zero) return;
+
     if (timeout.inMilliseconds < 0) {
       // immediate: any backgrounding locks
       await lock();
@@ -75,10 +69,32 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
     }
   }
 
+  static bool isPreAuthRoute(String? route) {
+    if (route == null || route.isEmpty) return true;
+    return route == BaseRoute.root ||
+        route == BaseRoute.splash ||
+        route == BaseRoute.noInternetConnection ||
+        route == BaseRoute.welcome ||
+        route == BaseRoute.signIn ||
+        route == BaseRoute.emailOtpLogin ||
+        route == BaseRoute.twoFactorAuth ||
+        route == BaseRoute.email ||
+        route == BaseRoute.verifyEmail ||
+        route == BaseRoute.signUpStatus ||
+        route == BaseRoute.setUpPassword ||
+        route == BaseRoute.forgotPassword ||
+        route == BaseRoute.forgotPasswordPinVerification ||
+        route == BaseRoute.resetPassword ||
+        route == BaseRoute.appUpdate;
+  }
+
   Future<bool> isLocked() async => locked.value;
 
   Future<void> lock() async {
+    final loginState = await SettingsService.getLoginCurrentState();
+    if (loginState == null || loginState.isEmpty) return;
     if (!await hasPinSet()) return;
+    if (isPreAuthRoute(Get.currentRoute)) return;
     locked.value = true;
   }
 

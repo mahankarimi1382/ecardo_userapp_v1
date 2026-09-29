@@ -1,3 +1,5 @@
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'dart:ui';
 
@@ -39,14 +41,53 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
     const DigitNormalizationFormatter(maxLength: 4),
   ];
 
+  void _skip() {
+    final route = controller.nextRoute;
+    final args = controller.nextArgs;
+    if (route == BaseRoute.navigation) {
+      Get.offAllNamed(route);
+    } else {
+      Get.offNamed(route, arguments: args);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
     return PopScope(
-      canPop: false,
+      canPop: true,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _skip();
+      },
       child: Scaffold(
-        appBar: const CommonDefaultAppBar(),
+        appBar: AppBar(
+          backgroundColor: AppColors.lightBackground,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
+            onPressed: _skip,
+          ),
+          actions: [
+            TextButton(
+              onPressed: _skip,
+              child: Text(
+                l10nPick(
+                  context,
+                  en: 'Later',
+                  fa: 'بعداً',
+                  ar: 'لاحقاً',
+                  zh: '稍后',
+                ),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.lightPrimary,
+                ),
+              ),
+            ),
+          ],
+        ),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -73,7 +114,7 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
                             Image.asset(
                               PngAssets.appLogo,
                               fit: BoxFit.contain,
-                              width: 105.w,
+                              width: 155.w,
                             ),
                             SizedBox(height: 16.h),
                             Text(
@@ -168,6 +209,24 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
                           onPressed: controller.submit,
                           width: double.infinity,
                           text: loc.generatePasscodeButtonConfirm,
+                        ),
+                        SizedBox(height: 16.h),
+                        TextButton(
+                          onPressed: _skip,
+                          child: Text(
+                            l10nPick(
+                              context,
+                              en: 'Skip for now',
+                              fa: 'فعلاً رد شو',
+                              ar: 'تخطي الآن',
+                              zh: '暂时跳过',
+                            ),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.lightTextTertiary,
+                            ),
+                          ),
                         ),
                       ],
                     ),

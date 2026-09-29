@@ -32,18 +32,28 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   final ImagePicker _picker = ImagePicker();
   int _currentStep = 0;
 
+  void _handleBack() {
+    if (_currentStep > 0) {
+      setState(() => _currentStep--);
+    } else {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      } else if (Get.key.currentState?.canPop() ?? false) {
+        Get.back();
+      } else {
+        Get.offAllNamed(BaseRoute.navigation);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     return PopScope(
-      canPop: false,
+      canPop: _currentStep == 0 && Navigator.canPop(context),
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
-        if (_currentStep > 0) {
-          setState(() => _currentStep--);
-        } else {
-          Get.back();
-        }
+        _handleBack();
       },
       child: Scaffold(
         backgroundColor: AppColors.lightSurface,
@@ -53,13 +63,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
-            onPressed: () {
-              if (_currentStep > 0) {
-                setState(() => _currentStep--);
-              } else {
-                Get.back();
-              }
-            },
+            onPressed: _handleBack,
           ),
           title: Text(
           localization?.kycSubmitWizardTitleForLevel(widget.targetLevel) ??

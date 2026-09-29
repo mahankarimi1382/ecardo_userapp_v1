@@ -20,6 +20,8 @@ import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_strings.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -81,12 +83,12 @@ void _installGlobalErrorHandlers() {
               children: [
                 const Icon(
                   Icons.error_outline_rounded,
-                  color: Color(0xFF7445FF),
+                  color: AppColors.lightPrimary,
                   size: 44,
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'eCardo',
+                  AppStrings.appName,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,

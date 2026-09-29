@@ -48,7 +48,8 @@ class PasscodeHelper {
 
   /// True when the user has an active server-side passcode.
   /// Prefer [hasPasscodeFromStatus] when set; else user JSON sentinel.
-  static bool userHasPasscode(String? stored) {
+  static bool userHasPasscode(String? stored, [bool? hasPasscodeField]) {
+    if (hasPasscodeField != null) return hasPasscodeField;
     if (hasPasscodeFromStatus != null) return hasPasscodeFromStatus!;
     if (stored == null) return false;
     final v = stored.trim();

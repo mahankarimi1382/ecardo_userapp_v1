@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
@@ -42,35 +43,49 @@ class _AuthIdVerificationScreenState extends State<AuthIdVerificationScreen> {
     });
   }
 
+  void _handleBack() {
+    if (controller.currentFieldIndex.value > 0) {
+      controller.currentFieldIndex.value--;
+    } else {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      } else if (Get.key.currentState?.canPop() ?? false) {
+        Get.back();
+      } else {
+        Get.offAllNamed(BaseRoute.navigation);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        if (controller.currentFieldIndex.value > 0) {
-          controller.currentFieldIndex.value--;
-        } else {
-          Get.back();
-        }
-      },
-      child: Scaffold(
-        appBar: CommonDefaultAppBar(),
-      body: Obx(() {
-        if (fields.isEmpty) {
-          return NoDataFound();
-        }
+    return Obx(() {
+      final isFirst = controller.currentFieldIndex.value <= 0;
+      final canPop = isFirst && Navigator.canPop(context);
+      return PopScope(
+        canPop: canPop,
+        onPopInvokedWithResult: (didPop, _) {
+          if (didPop) return;
+          _handleBack();
+        },
+        child: Scaffold(
+          appBar: CommonDefaultAppBar(),
+          body: Obx(() {
+            if (fields.isEmpty) {
+              return NoDataFound();
+            }
 
-        if (controller.currentFieldIndex.value < 0 ||
-            controller.currentFieldIndex.value >= fields.length) {
-          return SizedBox.shrink();
-        }
+            if (controller.currentFieldIndex.value < 0 ||
+                controller.currentFieldIndex.value >= fields.length) {
+              return SizedBox.shrink();
+            }
 
-        final currentField = fields[controller.currentFieldIndex.value];
-        return _buildFieldScreen(currentField);
-      }),
-    ),
-    );
+            final currentField = fields[controller.currentFieldIndex.value];
+            return _buildFieldScreen(currentField);
+          }),
+        ),
+      );
+    });
   }
 
   Widget _buildFieldScreen(Fields field) {

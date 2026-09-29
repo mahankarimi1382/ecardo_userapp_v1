@@ -51,7 +51,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                           Image.asset(
                             PngAssets.appLogo,
                             fit: BoxFit.contain,
-                            width: 105.w,
+                            width: 155.w,
                           ),
                           SizedBox(height: 20.h),
                           Text(

@@ -32,6 +32,7 @@ class UserData {
   String? providerId;
   String? balance;
   String? passcode;
+  bool? hasPasscode;
   String? country;
   String? gender;
   String? dateOfBirth;
@@ -81,6 +82,7 @@ class UserData {
     this.providerId,
     this.balance,
     this.passcode,
+    this.hasPasscode,
     this.country,
     this.gender,
     this.dateOfBirth,
@@ -130,7 +132,8 @@ class UserData {
     provider = json['provider'];
     providerId = json['provider_id'];
     balance = json['balance'];
-    passcode = json['passcode'];
+    passcode = json['passcode']?.toString();
+    hasPasscode = json['has_passcode'] == true || (passcode != null && passcode != '0' && passcode != '');
     country = json['country'];
     gender = json['gender'];
     dateOfBirth = json['date_of_birth'];

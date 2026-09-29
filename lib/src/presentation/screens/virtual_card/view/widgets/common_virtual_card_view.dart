@@ -46,13 +46,53 @@ class CommonVirtualCardView extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 200.h,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18.r),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF9E7EF8).withValues(alpha: 0.30),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
           Positioned.fill(child: _background()),
+          // World map watermark
+          Positioned.fill(
+            child: Center(
+              child: Opacity(
+                opacity: 0.18,
+                child: Image.asset(
+                  PngAssets.cardMap,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+          // Translucent angled shield overlay on the left
+          PositionedDirectional(
+            top: 0,
+            start: 0,
+            bottom: 0,
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: 0.14,
+                child: SvgPicture.asset(
+                  SvgAssets.cardShape,
+                  fit: BoxFit.fill,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
+              ),
+            ),
+          ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.w, 56.h, 16.w, 16.h),
+            padding: EdgeInsetsDirectional.fromSTEB(18.w, 54.h, 18.w, 16.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -65,9 +105,10 @@ class CommonVirtualCardView extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontSize: 18.sp,
                     color: AppColors.white,
+                    letterSpacing: 0.5,
                   ),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 14.h),
                 Row(
                   children: [
                     Expanded(
@@ -76,8 +117,9 @@ class CommonVirtualCardView extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w700,
                           fontSize: 20.sp,
+                          letterSpacing: 2.0,
                           color: AppColors.white,
                         ),
                       ),
@@ -89,8 +131,8 @@ class CommonVirtualCardView extends StatelessWidget {
                           isRevealed
                               ? SvgAssets.hideEyeIcon
                               : SvgAssets.showEyeIcon,
-                          width: 18.w,
-                          height: 18.h,
+                          width: 20.w,
+                          height: 20.h,
                           colorFilter: const ColorFilter.mode(
                             AppColors.white,
                             BlendMode.srcIn,
@@ -99,7 +141,7 @@ class CommonVirtualCardView extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 12.h),
                 Row(
                   children: [
                     Expanded(
@@ -122,15 +164,17 @@ class CommonVirtualCardView extends StatelessWidget {
               ],
             ),
           ),
+          // Top-start: Brand / VISA logo
           PositionedDirectional(
-            top: 16.h,
-            start: 16.w,
-            child: Image.asset(PngAssets.cardChip, width: 38.w, height: 28.h),
-          ),
-          PositionedDirectional(
-            top: 16.h,
-            end: 16.w,
+            top: 18.h,
+            start: 18.w,
             child: _brand(),
+          ),
+          // Top-end: Gold EMV Chip
+          PositionedDirectional(
+            top: 18.h,
+            end: 18.w,
+            child: Image.asset(PngAssets.cardChip, width: 38.w, height: 28.h),
           ),
         ],
       ),
@@ -160,9 +204,11 @@ class CommonVirtualCardView extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
           colors: [
-            _color(primaryColor, const Color(0xFF7445FF)),
-            _color(secondaryColor, const Color(0xFF4C2BB3)),
+            _color(primaryColor, const Color(0xFFBEA8FD)),
+            _color(secondaryColor, const Color(0xFF9876F5)),
           ],
         ),
       ),
@@ -177,7 +223,20 @@ class CommonVirtualCardView extends StatelessWidget {
         width: 52.w,
         height: 22.h,
         fit: BoxFit.contain,
-        errorBuilder: (_, _, _) => _networkText(),
+        errorBuilder: (_, _, _) => _visaOrNetwork(),
+      );
+    }
+    return _visaOrNetwork();
+  }
+
+  Widget _visaOrNetwork() {
+    final net = network?.trim().toLowerCase() ?? '';
+    if (net.contains('visa') || net.isEmpty) {
+      return Image.asset(
+        PngAssets.cardVisa,
+        width: 52.w,
+        height: 18.h,
+        fit: BoxFit.contain,
       );
     }
     return _networkText();
@@ -192,7 +251,7 @@ class CommonVirtualCardView extends StatelessWidget {
         value,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.end,
+        textAlign: TextAlign.start,
         style: TextStyle(
           color: AppColors.white,
           fontSize: 14.sp,
@@ -227,11 +286,11 @@ class _ValueBlock extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 11.sp,
-            color: AppColors.white,
-            fontWeight: FontWeight.w700,
+            color: AppColors.white.withValues(alpha: 0.8),
+            fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 4.h),
+        SizedBox(height: 3.h),
         Text(
           value,
           maxLines: 1,
@@ -239,7 +298,7 @@ class _ValueBlock extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             color: AppColors.white,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ],
@@ -257,13 +316,13 @@ class _StatusBadge extends StatelessWidget {
     final normalized = status.toLowerCase();
     final active = normalized == 'active' || normalized == 'completed';
     return Container(
-      constraints: BoxConstraints(minWidth: 70.w, maxWidth: 88.w),
+      constraints: BoxConstraints(minWidth: 64.w, maxWidth: 88.w),
       height: 24.h,
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: active ? const Color(0xFFDBFFDA) : const Color(0xFFF8D8D8),
-        borderRadius: BorderRadius.circular(8.r),
+        color: active ? const Color(0xFFD4F4D2) : const Color(0xFFFDE8E8),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Text(
         _humanize(status),
@@ -272,7 +331,7 @@ class _StatusBadge extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 12.sp,
-          color: active ? AppColors.success : AppColors.error,
+          color: active ? const Color(0xFF2E7238) : const Color(0xFFC53030),
         ),
       ),
     );

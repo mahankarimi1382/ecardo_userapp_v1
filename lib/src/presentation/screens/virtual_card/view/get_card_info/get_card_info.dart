@@ -151,16 +151,31 @@ class GetCardInfo extends StatelessWidget {
             width: double.infinity,
             height: 200.h,
             decoration: BoxDecoration(
-              color: Color(0xFFB69EFD),
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(18.r),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFBEA8FD), Color(0xFF9876F5)],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF9E7EF8).withValues(alpha: 0.30),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
+            clipBehavior: Clip.antiAlias,
             child: Stack(
               children: [
                 Center(
                   child: SizedBox(
                     width: 290.w,
                     height: 130.h,
-                    child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain),
+                    child: Opacity(
+                      opacity: 0.18,
+                      child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain),
+                    ),
                   ),
                 ),
                 Padding(
@@ -251,8 +266,8 @@ class GetCardInfo extends StatelessWidget {
                                 width: 70.w,
                                 height: 24.h,
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFDBFFDA),
-                                  borderRadius: BorderRadius.circular(8.r),
+                                  color: const Color(0xFFD4F4D2),
+                                  borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Center(
                                   child: Text(
@@ -261,7 +276,7 @@ class GetCardInfo extends StatelessWidget {
                                       letterSpacing: 0,
                                       fontWeight: FontWeight.w700,
                                       fontSize: 12.sp,
-                                      color: Color(0xFF468C45),
+                                      color: const Color(0xFF2E7238),
                                     ),
                                   ),
                                 ),
@@ -274,39 +289,40 @@ class GetCardInfo extends StatelessWidget {
                   ),
                 ),
                 PositionedDirectional(
-                  top: 6.h,
-                  end: 6.w,
-                  bottom: 6.h,
+                  top: 0,
+                  start: 0,
+                  bottom: 0,
                   child: IgnorePointer(
                     child: Opacity(
-                      opacity: 0.12,
+                      opacity: 0.14,
                       child: SvgPicture.asset(
                         SvgAssets.cardShape,
                         fit: BoxFit.fill,
-                        colorFilter: ColorFilter.mode(
-                          Color(0xFFB69EFD),
-                          BlendMode.overlay,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
                         ),
                       ),
                     ),
                   ),
                 ),
                 PositionedDirectional(
-                  top: 16.h,
-                  start: 16.w,
+                  top: 18.h,
+                  start: 18.w,
+                  child: Image.asset(
+                    PngAssets.cardVisa,
+                    width: 48.w,
+                    height: 16.h,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                PositionedDirectional(
+                  top: 18.h,
+                  end: 18.w,
                   child: Image.asset(
                     PngAssets.cardChip,
                     width: 38.w,
                     height: 28.h,
-                  ),
-                ),
-                PositionedDirectional(
-                  top: 16.h,
-                  end: 16.w,
-                  child: Image.asset(
-                    PngAssets.cardVisa,
-                    width: 48.w,
-                    height: 15.h,
                   ),
                 ),
               ],

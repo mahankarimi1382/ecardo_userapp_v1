@@ -70,11 +70,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comment_welcome => '==== Welcome Screen ====';
 
   @override
-  String get welcomeTitle => 'Добро пожаловать в eCardo';
+  String get welcomeTitle => 'Добро пожаловать в bank of al barkat';
 
   @override
   String get welcomeDescription =>
-      'eCardo предоставляет управление несколькими кошельками, мгновенный обмен и безопасные транзакции.';
+      'bank of al barkat предоставляет управление несколькими кошельками, мгновенный обмен и безопасные транзакции.';
 
   @override
   String get welcomeSignIn => 'Войти';
@@ -450,7 +450,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get signUpStatusSubtitle =>
-      'A Quick 4-Step Process to Keep Your eCardo Account Secure';
+      'A Quick 4-Step Process to Keep Your bank of al barkat Account Secure';
 
   @override
   String get signUpStatusStep => 'Step';
@@ -2830,7 +2830,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shareReceipt => 'Поделиться квитанцией';
 
   @override
-  String get shareReceiptBody => 'Моя квитанция о транзакции eCardo';
+  String get shareReceiptBody => 'Моя квитанция о транзакции bank of al barkat';
 
   @override
   String get shareReceiptFailed => 'Не удалось поделиться квитанцией.';
@@ -5784,10 +5784,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get filterMyOrder => 'Filter My Order';
 
   @override
-  String get comment_travel => '==== eCardo Travel ====';
+  String get comment_travel => '==== bank of al barkat Travel ====';
 
   @override
-  String get travelTitle => 'eCardo Travel';
+  String get travelTitle => 'bank of al barkat Travel';
 
   @override
   String get travelHeroEyebrow => 'A better travel experience';
@@ -5811,11 +5811,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelViewAll => 'View all';
 
   @override
-  String get travelMainWallet => 'Main eCardo wallet';
+  String get travelMainWallet => 'Main bank of al barkat wallet';
 
   @override
   String get travelWalletSharedDescription =>
-      'The same secure wallet you use across eCardo';
+      'The same secure wallet you use across bank of al barkat';
 
   @override
   String get travelHotelSearch => 'Hotel search';
@@ -5876,7 +5876,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get travelHotelDescription =>
-      'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the eCardo Travel API.';
+      'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the bank of al barkat Travel API.';
 
   @override
   String get travelPolicies => 'Policies';
@@ -5972,7 +5972,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get travelPassengerFromProfile =>
-      'Details are shared from your eCardo profile';
+      'Details are shared from your bank of al barkat profile';
 
   @override
   String get travelFareDetails => 'Fare details';
@@ -5994,7 +5994,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get travelEsimIntroDescription =>
-      'Choose a digital data package, pay from your main eCardo wallet and activate it without replacing your physical SIM.';
+      'Choose a digital data package, pay from your main bank of al barkat wallet and activate it without replacing your physical SIM.';
 
   @override
   String get travelEsimInstantTitle => 'Instant delivery';
@@ -6041,7 +6041,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelWalletCheckout => 'Wallet checkout';
 
   @override
-  String get travelBackendConfirmedPrice => 'Price confirmed by eCardo Travel';
+  String get travelBackendConfirmedPrice => 'Price confirmed by bank of al barkat Travel';
 
   @override
   String get travelPaymentMethod => 'Payment method';
@@ -6143,7 +6143,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get travelHotelPendingConfirmationDescription =>
-      'Payment was received. eCardo Travel is confirming the hotel with the authorized supplier before issuing your voucher.';
+      'Payment was received. bank of al barkat Travel is confirming the hotel with the authorized supplier before issuing your voucher.';
 
   @override
   String get travelPaidAmount => 'Paid amount';
@@ -6153,7 +6153,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get travelActivationInstructions =>
-      'Open your device cellular settings, add an eSIM and use the secure installation details returned by the eCardo backend.';
+      'Open your device cellular settings, add an eSIM and use the secure installation details returned by the bank of al barkat backend.';
 
   @override
   String get travelViewMyBookings => 'View my bookings';
@@ -6274,7 +6274,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelAccount => 'Travel account';
 
   @override
-  String get travelAccountHolder => 'eCardo member';
+  String get travelAccountHolder => 'bank of al barkat member';
 
   @override
   String get travelMemberDescription =>
@@ -6347,7 +6347,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelMockFlightTehranIstanbul => 'Tehran to Istanbul';
 
   @override
-  String get travelMockAirlineOne => 'eCardo Air';
+  String get travelMockAirlineOne => 'bank of al barkat Air';
 
   @override
   String get travelMockAirlineTwo => 'Atlas Airways';
@@ -6654,7 +6654,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get travelPaymentReceivedDescription =>
-      'Payment was received. eCardo Travel is completing supplier confirmation before issuing the final document.';
+      'Payment was received. bank of al barkat Travel is completing supplier confirmation before issuing the final document.';
 
   @override
   String get travelSearchFailedDescription =>
@@ -7174,7 +7174,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Достигнут лимит биометрических попыток. Войдите с паролем';
 
   @override
-  String get biometricReason => 'Пройдите аутентификацию для входа в eCardo';
+  String get biometricReason => 'Пройдите аутентификацию для входа в bank of al barkat';
 
   @override
   String get biometricGenericError =>
@@ -7822,12 +7822,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String updateNotificationBody(String version) {
-    return 'Доступна eCardo v$version. Нажмите для обновления.';
+    return 'Доступна bank of al barkat v$version. Нажмите для обновления.';
   }
 
   @override
   String get updateNotificationBodyGeneric =>
-      'Доступна новая версия eCardo. Нажмите для обновления.';
+      'Доступна новая версия bank of al barkat. Нажмите для обновления.';
 
   @override
   String get updateDialogBody =>
@@ -7875,14 +7875,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get updateCheckingBody =>
-      'Связываемся с сервером eCardo для получения последней версии.';
+      'Связываемся с сервером bank of al barkat для получения последней версии.';
 
   @override
   String get updateUpToDateScreenTitle => 'У вас последняя версия!';
 
   @override
   String updateUpToDateScreenBody(String version) {
-    return 'eCardo v$version — последняя доступная версия.';
+    return 'bank of al barkat v$version — последняя доступная версия.';
   }
 
   @override

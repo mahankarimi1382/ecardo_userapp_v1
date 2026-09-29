@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
-/// phase2-fix: a real ThemeData. Previously this file held 3 properties, so
-/// every Material 3 widget fell back to the framework default purple seed
-/// and theming evolution (incl. dark mode) was impossible (audit A8-P0-1).
-/// LemiFont left the global fallback chain — it is a decorative CJK font
-/// never referenced as a UI family (audit A8-P1-3).
 class LightTheme {
   ThemeData lightTheme(BuildContext context) {
     const scheme = ColorScheme.light(
-      primary: AppColors.lightPrimary,
-      onPrimary: AppColors.lightTextOnPrimary,
-      secondary: AppColors.lightSecondary,
-      onSecondary: AppColors.lightTextOnPrimary,
+      primary: AppColors.deepBlack,
+      onPrimary: AppColors.warmWhite,
+      secondary: AppColors.mutedBlue,
+      onSecondary: AppColors.warmWhite,
       error: AppColors.error,
-      onError: AppColors.lightTextOnPrimary,
+      onError: AppColors.warmWhite,
       errorContainer: AppColors.errorContainer,
       onErrorContainer: AppColors.error,
       surface: AppColors.lightBackground,
-      onSurface: AppColors.lightTextPrimary,
+      onSurface: AppColors.deepBlack,
     );
 
     final baseText = Typography.material2021().black.apply(
           fontFamily: 'Plus Jakarta Sans',
-          bodyColor: AppColors.lightTextPrimary,
-          displayColor: AppColors.lightTextPrimary,
+          bodyColor: AppColors.deepBlack,
+          displayColor: AppColors.deepBlack,
         );
 
     return ThemeData(
@@ -37,22 +32,22 @@ class LightTheme {
       textTheme: baseText,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.lightBackground,
-        foregroundColor: AppColors.lightTextPrimary,
+        foregroundColor: AppColors.deepBlack,
         elevation: 0,
         centerTitle: true,
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.deepBlack,
         contentTextStyle: const TextStyle(
-          color: AppColors.lightTextOnPrimary,
+          color: AppColors.warmWhite,
           fontWeight: FontWeight.w600,
         ),
       ),
       dialogTheme: const DialogThemeData(
         backgroundColor: AppColors.lightBackground,
         titleTextStyle: TextStyle(
-          color: AppColors.lightTextPrimary,
+          color: AppColors.deepBlack,
           fontWeight: FontWeight.w700,
           fontSize: 18,
         ),
@@ -60,16 +55,40 @@ class LightTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.lightBorder),
+          borderSide: const BorderSide(color: AppColors.lightWarmGray),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.lightBorder),
+          borderSide: const BorderSide(color: AppColors.lightWarmGray),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.lightPrimary),
+          borderSide: const BorderSide(color: AppColors.deepBlack, width: 1.5),
         ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.deepBlack,
+          foregroundColor: AppColors.warmWhite,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: AppColors.deepBlack,
+        foregroundColor: AppColors.warmWhite,
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: AppColors.lightSurface,
+        selectedItemColor: AppColors.deepBlack,
+        unselectedItemColor: AppColors.softGray,
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.mainSoftBlue.withValues(alpha: 0.15),
+        selectedColor: AppColors.deepBlack,
+        labelStyle: const TextStyle(color: AppColors.deepBlack),
+        side: const BorderSide(color: AppColors.lightWarmGray),
       ),
     );
   }

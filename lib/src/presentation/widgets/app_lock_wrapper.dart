@@ -15,6 +15,10 @@ class AppLockWrapper extends StatelessWidget {
     return Obx(() {
       final locked = Get.find<AppLockService>().locked.value;
       if (!locked) return child;
+      final currentRoute = Get.currentRoute;
+      if (AppLockService.isPreAuthRoute(currentRoute)) {
+        return child;
+      }
       return Stack(
         fit: StackFit.expand,
         children: [
