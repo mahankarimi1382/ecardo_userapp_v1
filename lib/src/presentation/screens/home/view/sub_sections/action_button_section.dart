@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -35,7 +34,7 @@ class ActionButtonSection extends StatelessWidget {
         children: [
           _buildButtons(
             context,
-            icon: PngAssets.commonTransferIcon,
+            icon: Icons.swap_horiz,
             name: localizations.actionButtonTransfer,
             onPressed: () {
               if (Get.find<SettingsService>().getSetting("user_transfer") ==
@@ -51,7 +50,7 @@ class ActionButtonSection extends StatelessWidget {
           ),
           _buildButtons(
             context,
-            icon: PngAssets.commonWithdrawIcon,
+            icon: Icons.account_balance,
             name: localizations.actionButtonWithdraw,
             onPressed: () {
               if (Get.find<SettingsService>().getSetting("user_withdraw") ==
@@ -68,7 +67,7 @@ class ActionButtonSection extends StatelessWidget {
           if (Get.find<SettingsService>().getSetting("agent_system") == "1")
             _buildButtons(
               context,
-              icon: PngAssets.commonPaymentIcon,
+              icon: Icons.payments,
               name: localizations.actionButtonPayment,
               onPressed: () {
                 if (Get.find<SettingsService>().getSetting("user_payment") ==
@@ -84,7 +83,7 @@ class ActionButtonSection extends StatelessWidget {
             ),
           _buildButtons(
             context,
-            icon: PngAssets.commonExchangeIcon,
+            icon: Icons.currency_exchange,
             name: localizations.actionButtonExchange,
             onPressed: () {
               if (Get.find<SettingsService>().getSetting("user_exchange") ==
@@ -105,7 +104,7 @@ class ActionButtonSection extends StatelessWidget {
 
   Widget _buildButtons(
     BuildContext context, {
-    required String icon,
+    required IconData icon,
     required String name,
     required GestureTapCallback onPressed,
     required Color backgroundColor,
@@ -130,10 +129,10 @@ class ActionButtonSection extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
-                  child: Image(
-                    image: AssetImage(icon),
-                    width: 24,
-                    height: 24,
+                  child: Icon(
+                    icon,
+                    size: 24,
+                    color: AppColors.lightPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
