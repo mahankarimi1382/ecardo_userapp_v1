@@ -99,14 +99,16 @@ class EpayCardsSection extends StatelessWidget {
                   margin: EdgeInsetsDirectional.only(start: 18.w, end: 18.w, bottom: 16.h),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18.r),
+                    // مورد ۴ (v1.0.118): گرادیان NUVO Soft Blue → Muted Blue
+                    // جایگزین بنفش قبلی (BEA8FD → 9876F5)
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFFBEA8FD), Color(0xFF9876F5)],
+                      colors: [AppColors.mainSoftBlue, AppColors.mutedBlue],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF9E7EF8).withValues(alpha: 0.30),
+                        color: AppColors.mutedBlue.withValues(alpha: 0.30),
                         blurRadius: 18,
                         offset: const Offset(0, 8),
                       ),
