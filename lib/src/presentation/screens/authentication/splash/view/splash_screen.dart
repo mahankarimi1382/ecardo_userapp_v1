@@ -198,10 +198,10 @@ class _SplashScreenState extends State<SplashScreen>
                               );
                             },
                             child: Container(
-                              width: math.min(112.w, size.shortestSide * 0.28),
-                              height: math.min(112.w, size.shortestSide * 0.28),
+                              width: math.min(136.w, size.shortestSide * 0.34),
+                              height: math.min(136.w, size.shortestSide * 0.34),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(28),
+                                borderRadius: BorderRadius.circular(32),
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -216,19 +216,19 @@ class _SplashScreenState extends State<SplashScreen>
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.black.withValues(alpha: 0.22),
-                                    blurRadius: 28,
-                                    offset: const Offset(0, 12),
+                                    color: AppColors.black.withValues(alpha: 0.28),
+                                    blurRadius: 32,
+                                    offset: const Offset(0, 14),
                                   ),
                                 ],
                               ),
-                              padding: EdgeInsets.all(18.w),
+                              padding: EdgeInsets.all(22.w),
                               child: Image.asset(
-                                PngAssets.appLogo,
+                                PngAssets.appScreenIcon,
                                 fit: BoxFit.contain,
                                 errorBuilder: (_, __, ___) => Icon(
                                   Icons.account_balance_wallet_rounded,
-                                  size: 48.sp,
+                                  size: 56.sp,
                                   color: AppColors.white,
                                 ),
                               ),

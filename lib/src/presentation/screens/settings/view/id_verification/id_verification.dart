@@ -25,26 +25,46 @@ class _IdVerificationState extends State<IdVerification> {
     await controller.fetchUser();
   }
 
+  void _handleBack() {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else if (Get.key.currentState?.canPop() ?? false) {
+      Get.back();
+    } else {
+      Get.offAllNamed(BaseRoute.navigation);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final canPop = Navigator.canPop(context);
 
-    return Scaffold(
-      appBar: CommonDefaultAppBar(),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 18),
-            child: CommonAppBar(
-              title: localization.idVerificationScreenTitle,
-              rightSideWidget: CommonButton(
-                onPressed: () => Get.toNamed(BaseRoute.kycHistory),
-                width: 120,
-                height: 40,
-                text: localization.idVerificationHistoryButton,
-                borderRadius: 10,
-                fontSize: 14,
+    return PopScope(
+      canPop: canPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleBack();
+      },
+      child: Scaffold(
+        appBar: CommonDefaultAppBar(),
+        body: Column(
+          children: [
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 18),
+              child: CommonAppBar(
+                title: localization.idVerificationScreenTitle,
+                isBackLogicApply: true,
+                backLogicFunction: _handleBack,
+                rightSideWidget: CommonButton(
+                  onPressed: () => Get.toNamed(BaseRoute.kycHistory),
+                  width: 120,
+                  height: 40,
+                  text: localization.idVerificationHistoryButton,
+                  borderRadius: 10,
+                  fontSize: 14,
+                ),
               ),
             ),
           ),

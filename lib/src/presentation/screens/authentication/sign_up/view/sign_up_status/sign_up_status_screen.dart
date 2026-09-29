@@ -203,7 +203,7 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(PngAssets.appLogo, fit: BoxFit.contain, width: 105.w),
+              Image.asset(PngAssets.appLogo, fit: BoxFit.contain, width: 155.w),
               SizedBox(height: 20.h),
               Text(
                 localizations.signUpStatusTitle,

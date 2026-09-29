@@ -58,10 +58,16 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                       controller.currentFieldIndex.value = 0;
                       controller.fields.clear();
                       controller.fieldFiles.clear();
-                      Get.toNamed(
-                        BaseRoute.signUpStatus,
-                        arguments: {"is_login_state": true},
-                      );
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else if (Get.key.currentState?.canPop() ?? false) {
+                        Get.back();
+                      } else {
+                        Get.offAllNamed(
+                          BaseRoute.signUpStatus,
+                          arguments: {"is_login_state": true},
+                        );
+                      }
                     },
                   ),
                   const SizedBox(height: 30),

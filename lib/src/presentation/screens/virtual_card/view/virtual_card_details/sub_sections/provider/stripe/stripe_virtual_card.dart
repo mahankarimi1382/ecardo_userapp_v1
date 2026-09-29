@@ -21,7 +21,22 @@ class StripeVirtualCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 200.h,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18.r),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFBEA8FD), Color(0xFF9876F5)],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF9E7EF8).withValues(alpha: 0.30),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
           Center(
@@ -41,20 +56,38 @@ class StripeVirtualCard extends StatelessWidget {
                       bgImageUrl,
                       fit: BoxFit.fill,
                       errorBuilder: (context, error, stackTrace) =>
-                          Image.asset(PngAssets.cardMap, fit: BoxFit.fill),
+                          Opacity(opacity: 0.18, child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain)),
                     );
                   } else {
                     return Image.network(
                       bgImageUrl,
                       fit: BoxFit.fill,
                       errorBuilder: (context, error, stackTrace) =>
-                          Image.asset(PngAssets.cardMap, fit: BoxFit.fill),
+                          Opacity(opacity: 0.18, child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain)),
                     );
                   }
                 }
 
-                return Image.asset(PngAssets.cardMap, fit: BoxFit.contain);
+                return Opacity(opacity: 0.18, child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain));
               }),
+            ),
+          ),
+          PositionedDirectional(
+            top: 0,
+            start: 0,
+            bottom: 0,
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: 0.14,
+                child: SvgPicture.asset(
+                  SvgAssets.cardShape,
+                  fit: BoxFit.fill,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
+              ),
             ),
           ),
           Padding(
@@ -187,9 +220,9 @@ class StripeVirtualCard extends StatelessWidget {
                           height: 24.h,
                           decoration: BoxDecoration(
                             color: card?.status == "active"
-                                ? Color(0xFFDBFFDA)
+                                ? const Color(0xFFD4F4D2)
                                 : const Color(0xFFF8D8D8),
-                            borderRadius: BorderRadius.circular(8.r),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Center(
                             child: Text(
@@ -202,7 +235,7 @@ class StripeVirtualCard extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12.sp,
                                 color: card?.status == "active"
-                                    ? AppColors.success
+                                    ? const Color(0xFF2E7238)
                                     : AppColors.error,
                               ),
                             ),
@@ -216,14 +249,23 @@ class StripeVirtualCard extends StatelessWidget {
             ),
           ),
           PositionedDirectional(
-            top: 16.h,
-            start: 16.w,
-            child: Image.asset(PngAssets.cardChip, width: 38.w, height: 28.h),
+            top: 18.h,
+            start: 18.w,
+            child: Image.asset(
+              PngAssets.cardVisa,
+              width: 48.w,
+              height: 16.h,
+              fit: BoxFit.contain,
+            ),
           ),
           PositionedDirectional(
-            top: 16.h,
-            end: 16.w,
-            child: Image.asset(PngAssets.cardVisa, width: 48.w, height: 15.h),
+            top: 18.h,
+            end: 18.w,
+            child: Image.asset(
+              PngAssets.cardChip,
+              width: 38.w,
+              height: 28.h,
+            ),
           ),
         ],
       ),

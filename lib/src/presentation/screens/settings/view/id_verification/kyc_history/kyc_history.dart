@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
@@ -22,16 +23,37 @@ class KycHistory extends StatefulWidget {
 class _KycHistoryState extends State<KycHistory> {
   final KycHistoryController controller = Get.find();
 
+  void _handleBack() {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else if (Get.key.currentState?.canPop() ?? false) {
+      Get.back();
+    } else {
+      Get.offAllNamed(BaseRoute.navigation);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final canPop = Navigator.canPop(context);
 
-    return Scaffold(
-      appBar: CommonDefaultAppBar(),
-      body: Column(
-        children: [
-          SizedBox(height: 16),
-          CommonAppBar(title: localization.kycHistoryScreenTitle),
+    return PopScope(
+      canPop: canPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleBack();
+      },
+      child: Scaffold(
+        appBar: CommonDefaultAppBar(),
+        body: Column(
+          children: [
+            SizedBox(height: 16),
+            CommonAppBar(
+              title: localization.kycHistoryScreenTitle,
+              isBackLogicApply: true,
+              backLogicFunction: _handleBack,
+            ),
           SizedBox(height: 30),
           Expanded(
             child: RefreshIndicator(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 class CommonAppBar extends StatelessWidget {
@@ -27,6 +28,25 @@ class CommonAppBar extends StatelessWidget {
     this.backLogicFunction,
   });
 
+  void _handleBack(BuildContext context) {
+    if (isBackLogicApply == true && backLogicFunction != null) {
+      backLogicFunction!.call();
+      return;
+    }
+    if (selectedIndex != null) {
+      try {
+        Get.find<HomeController>().selectedIndex.value = 0;
+      } catch (_) {}
+    }
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else if (Get.key.currentState?.canPop() ?? false) {
+      Get.back();
+    } else {
+      Get.offAllNamed(BaseRoute.navigation);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -38,16 +58,7 @@ class CommonAppBar extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(start: 10.w),
               child: IconButton(
                 visualDensity: VisualDensity.compact,
-                onPressed: () async {
-                  if (selectedIndex != null) {
-                    Get.find<HomeController>().selectedIndex.value = 0;
-                    if (Navigator.canPop(context)) Get.back();
-                  } else if (isBackLogicApply == true) {
-                    backLogicFunction?.call();
-                  } else {
-                    if (Navigator.canPop(context)) Get.back();
-                  }
-                },
+                onPressed: () => _handleBack(context),
                 icon: Image.asset(
                   PngAssets.arrowLeftCommonIcon,
                   width: 25.w,
