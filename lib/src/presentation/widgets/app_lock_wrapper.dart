@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/lock_screen.dart';
 
@@ -17,16 +16,7 @@ class AppLockWrapper extends StatelessWidget {
       final locked = Get.find<AppLockService>().locked.value;
       if (!locked) return child;
       final currentRoute = Get.currentRoute;
-      if (currentRoute == BaseRoute.root ||
-          currentRoute == BaseRoute.splash ||
-          currentRoute == BaseRoute.welcome ||
-          currentRoute == BaseRoute.signIn ||
-          currentRoute == BaseRoute.signUp ||
-          currentRoute == BaseRoute.signUpStatus ||
-          currentRoute == BaseRoute.emailVerification ||
-          currentRoute == BaseRoute.setPassCode ||
-          currentRoute == BaseRoute.setUpPassword ||
-          currentRoute == BaseRoute.forgotPassword) {
+      if (AppLockService.isPreAuthRoute(currentRoute)) {
         return child;
       }
       return Stack(

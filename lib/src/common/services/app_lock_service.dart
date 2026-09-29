@@ -69,25 +69,32 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
     }
   }
 
+  static bool isPreAuthRoute(String? route) {
+    if (route == null || route.isEmpty) return true;
+    return route == BaseRoute.root ||
+        route == BaseRoute.splash ||
+        route == BaseRoute.noInternetConnection ||
+        route == BaseRoute.welcome ||
+        route == BaseRoute.signIn ||
+        route == BaseRoute.emailOtpLogin ||
+        route == BaseRoute.twoFactorAuth ||
+        route == BaseRoute.email ||
+        route == BaseRoute.verifyEmail ||
+        route == BaseRoute.signUpStatus ||
+        route == BaseRoute.setUpPassword ||
+        route == BaseRoute.forgotPassword ||
+        route == BaseRoute.forgotPasswordPinVerification ||
+        route == BaseRoute.resetPassword ||
+        route == BaseRoute.appUpdate;
+  }
+
   Future<bool> isLocked() async => locked.value;
 
   Future<void> lock() async {
     final loginState = await SettingsService.getLoginCurrentState();
     if (loginState == null || loginState.isEmpty) return;
     if (!await hasPinSet()) return;
-    final currentRoute = Get.currentRoute;
-    if (currentRoute == BaseRoute.root ||
-        currentRoute == BaseRoute.splash ||
-        currentRoute == BaseRoute.welcome ||
-        currentRoute == BaseRoute.signIn ||
-        currentRoute == BaseRoute.signUp ||
-        currentRoute == BaseRoute.signUpStatus ||
-        currentRoute == BaseRoute.emailVerification ||
-        currentRoute == BaseRoute.setPassCode ||
-        currentRoute == BaseRoute.setUpPassword ||
-        currentRoute == BaseRoute.forgotPassword) {
-      return;
-    }
+    if (isPreAuthRoute(Get.currentRoute)) return;
     locked.value = true;
   }
 
