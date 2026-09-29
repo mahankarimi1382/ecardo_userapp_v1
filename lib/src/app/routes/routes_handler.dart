@@ -8,6 +8,7 @@ import '../../presentation/screens/kyc_level/kyc_level_binding.dart';
 import '../../presentation/screens/remittance/binding/remittance_binding.dart';
 import '../../presentation/screens/kyc_level/view/kyc_submit_wizard.dart';
 import '../../presentation/screens/settings/view/support_tickets/replay_ticket/replay_ticket.dart';
+import '../../visa/screens/visa_detail_screen.dart';
 import 'routes_config.dart';
 
 List<GetPage> routesHandler = [
@@ -568,5 +569,23 @@ List<GetPage> routesHandler = [
           : (args is int ? args : null);
       return EscrowDetailScreen(orderId: orderId ?? 1);
     },
+  // Visa Routes
+  GetPage(
+    name: BaseRoute.visaHome,
+    page: () => RoutesConfig.visaHome,
+  ),
+  GetPage(
+    name: BaseRoute.visaDetail,
+    page: () {
+      final args = Get.arguments;
+      final caseNo = args is Map
+          ? (args['caseNo']?.toString() ?? '')
+          : (args is String ? args : '');
+      return VisaDetailScreen(caseNo: caseNo);
+    },
+  ),
+  GetPage(
+    name: BaseRoute.visaList,
+    page: () => RoutesConfig.visaList,
   ),
 ];

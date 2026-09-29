@@ -14,6 +14,7 @@ import '../core/models/travel_models.dart';
 import '../esim/esim_intro_screen.dart';
 import '../flights/flight_search_screen.dart';
 import '../hotels/hotel_search_screen.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 
@@ -294,6 +295,11 @@ class _Services extends StatelessWidget {
             label: l10nPick(context, en: 'Tours', fa: 'تور مسافرتی'),
             foreground: Colors.white,
             onTap: () => Get.to(() => const TourListScreen()),
+            color: const Color(0xFF6C5CE7),
+            icon: Icons.card_membership_rounded,
+            label: l10nPick(context, en: 'Visa', fa: 'خدمات ویزا'),
+            foreground: Colors.white,
+            onTap: () => Get.toNamed(BaseRoute.visaHome),
           ),
         ),
       ],

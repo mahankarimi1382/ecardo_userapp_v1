@@ -4,6 +4,8 @@ import 'package:ecardo_user/src/tour/screens/tour_match_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_my_bookings_screen.dart';
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
 import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
+import '../../visa/screens/visa_catalog_screen.dart';
+import '../../visa/screens/visa_list_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/data_bundle/data_bundle.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/internet/internet.dart';
@@ -248,4 +250,7 @@ class RoutesConfig {
 
   // Escrow
   static const escrowHome = EscrowListScreen();
+  // Visa Routes
+  static const visaHome = VisaCatalogScreen();
+  static const visaList = VisaListScreen();
 }

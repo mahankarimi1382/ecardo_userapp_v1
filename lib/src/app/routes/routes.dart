@@ -177,5 +177,9 @@ class BaseRoute {
   // Escrow (معامله امانی)
   static const String escrowHome = "/escrow_home_route";
   static const String escrowDetail = "/escrow_detail_route";
+  // Visa Service Routes
+  static const String visaHome = "/visa_home_route";
+  static const String visaDetail = "/visa_detail_route";
+  static const String visaList = "/visa_list_route";
 }
 
