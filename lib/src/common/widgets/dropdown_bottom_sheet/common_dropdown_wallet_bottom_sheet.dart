@@ -112,6 +112,7 @@ class _CommonDropdownWalletBottomSheetState
               : _buildItemsList(),
         ],
       ),
+    ),
     );
   }
 

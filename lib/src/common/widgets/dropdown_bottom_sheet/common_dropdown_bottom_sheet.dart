@@ -215,6 +215,7 @@ class _CommonDropdownBottomSheetState extends State<CommonDropdownBottomSheet> {
               : _buildItemsList(),
         ],
       ),
+    ),
     );
   }
 

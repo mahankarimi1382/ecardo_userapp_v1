@@ -227,6 +227,7 @@ class _CommonDropdownBottomSheetThreeState<T>
               : _buildItemsList(),
         ],
       ),
+    ),
     );
   }
 

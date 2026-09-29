@@ -164,6 +164,7 @@ class _CommonCountryDropdownBottomSheetState
           _filteredItems.isEmpty ? _buildEmptyState() : _buildItemsList(),
         ],
       ),
+    ),
     );
   }
 
