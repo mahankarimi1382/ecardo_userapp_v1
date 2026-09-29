@@ -166,4 +166,9 @@ class BaseRoute {
 
   // App self-update (v1.0.8+8)
   static const String appUpdate = "/app_update_route";
+
+  // Visa Service Routes
+  static const String visaHome = "/visa_home_route";
+  static const String visaDetail = "/visa_detail_route";
+  static const String visaList = "/visa_list_route";
 }

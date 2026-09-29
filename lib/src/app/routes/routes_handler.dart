@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../bindings/app_bindings.dart';
 import 'routes.dart';
 import '../../presentation/screens/kyc_level/kyc_level_binding.dart';
+import '../../visa/screens/visa_detail_screen.dart';
 import 'routes_config.dart';
 
 List<GetPage> routesHandler = [
@@ -474,5 +475,25 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.appUpdate,
     page: () => RoutesConfig.appUpdate,
+  ),
+
+  // Visa Routes
+  GetPage(
+    name: BaseRoute.visaHome,
+    page: () => RoutesConfig.visaHome,
+  ),
+  GetPage(
+    name: BaseRoute.visaDetail,
+    page: () {
+      final args = Get.arguments;
+      final caseNo = args is Map
+          ? (args['caseNo']?.toString() ?? '')
+          : (args is String ? args : '');
+      return VisaDetailScreen(caseNo: caseNo);
+    },
+  ),
+  GetPage(
+    name: BaseRoute.visaList,
+    page: () => RoutesConfig.visaList,
   ),
 ];
