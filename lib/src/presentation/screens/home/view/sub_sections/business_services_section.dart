@@ -63,14 +63,14 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
       ServiceTile(
         title: localization.businessServiceGuarantee,
         iconData: Icons.verified_user_rounded,
-        route: '',
-        available: false,
+        route: BaseRoute.guaranteeHome,
+        available: true,
       ),
       ServiceTile(
         title: localization.businessServiceBankLoan,
         iconData: Icons.account_balance_rounded,
-        route: '',
-        available: false,
+        route: BaseRoute.loanHome,
+        available: true,
       ),
       ServiceTile(
         title: l10nPick(

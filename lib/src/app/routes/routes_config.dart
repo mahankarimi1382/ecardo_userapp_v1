@@ -3,6 +3,13 @@ import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_match_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_my_bookings_screen.dart';
 import 'package:ecardo_user/src/stock/screens/stock_home_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_home_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_detail_screen.dart';
+import 'package:ecardo_user/src/rental/screens/rental_home_screen.dart';
+import 'package:ecardo_user/src/guarantee/screens/guarantee_home_screen.dart';
+import 'package:ecardo_user/src/rental/screens/rental_detail_screen.dart';
+import 'package:ecardo_user/src/guarantee/screens/guarantee_detail_screen.dart';
+import 'package:ecardo_user/src/remitv2/screens/remittance_track_screen.dart';
 import 'package:ecardo_user/src/license/view/license_store_screen.dart';
 import 'package:ecardo_user/src/license/view/license_my_licenses_screen.dart';
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
@@ -259,6 +266,15 @@ class RoutesConfig {
 
   // Stock Trading
   static const stockHome = StockHomeScreen();
+
+  // Loan & Credit
+  static const loanHome = LoanHomeScreen();
+  static const loanDetail = LoanDetailScreen(caseId: 0);
+  static const rentalHome = RentalHomeScreen();
+  static const guaranteeHome = GuaranteeHomeScreen();
+  static const rentalDetail = RentalDetailScreen(bookingId: 0);
+  static const guaranteeDetail = GuaranteeDetailScreen(caseId: 0);
+  static const remittanceTrack = RemittanceTrackScreen();
   static const licenseStore = LicenseStoreScreen();
   static const licenseMyLicenses = LicenseMyLicensesScreen();
 }
