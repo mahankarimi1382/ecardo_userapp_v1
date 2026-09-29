@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/stock/screens/stock_home_screen.dart';
 import 'package:ecardo_user/src/loan/screens/loan_home_screen.dart';
 import 'package:ecardo_user/src/loan/screens/loan_detail_screen.dart';
 import 'package:ecardo_user/src/rental/screens/rental_home_screen.dart';
+import 'package:ecardo_user/src/guarantee/screens/guarantee_home_screen.dart';
 import 'package:ecardo_user/src/license/view/license_store_screen.dart';
 import 'package:ecardo_user/src/license/view/license_my_licenses_screen.dart';
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
@@ -266,6 +267,7 @@ class RoutesConfig {
   // Loan & Credit
   static const loanHome = LoanHomeScreen();
   static const rentalHome = RentalHomeScreen();
+  static const guaranteeHome = GuaranteeHomeScreen();
   static const licenseStore = LicenseStoreScreen();
   static const licenseMyLicenses = LicenseMyLicensesScreen();
 }
