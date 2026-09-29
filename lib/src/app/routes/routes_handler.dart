@@ -1,3 +1,5 @@
+import 'package:ecardo_user/src/escrow/screens/escrow_detail_screen.dart';
+import 'package:ecardo_user/src/tour/screens/tour_detail_screen.dart';
 import 'package:get/get.dart';
 
 import '../bindings/app_bindings.dart';
@@ -526,5 +528,45 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.appUpdate,
     page: () => RoutesConfig.appUpdate,
+  ),
+,
+  // Tours Routes
+  GetPage(
+    name: BaseRoute.tourHome,
+    page: () => RoutesConfig.tourHome,
+  ),
+  GetPage(
+    name: BaseRoute.tourMatch,
+    page: () => RoutesConfig.tourMatch,
+  ),
+  GetPage(
+    name: BaseRoute.tourMyBookings,
+    page: () => RoutesConfig.tourMyBookings,
+  ),
+  GetPage(
+    name: BaseRoute.tourDetail,
+    page: () {
+      final args = Get.arguments;
+      final tourId = args is Map
+          ? int.tryParse('${args['tourId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return TourDetailScreen(tourId: tourId ?? 1);
+    },
+  ),
+];
+  // Escrow Routes
+  GetPage(
+    name: BaseRoute.escrowHome,
+    page: () => RoutesConfig.escrowHome,
+  ),
+  GetPage(
+    name: BaseRoute.escrowDetail,
+    page: () {
+      final args = Get.arguments;
+      final orderId = args is Map
+          ? int.tryParse('${args['orderId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return EscrowDetailScreen(orderId: orderId ?? 1);
+    },
   ),
 ];

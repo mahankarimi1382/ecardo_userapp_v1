@@ -50,12 +50,12 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
         route: BaseRoute.p2pTrading,
         available: addons?.p2pTrading == true,
       ),
-      // Escrow services — separate, not built yet (grey + lock).
+      // Escrow services — live module
       ServiceTile(
         title: localization.businessServiceP2pEscrow,
         iconData: Icons.gavel_rounded,
-        route: '',
-        available: false,
+        route: BaseRoute.escrowHome,
+        available: true,
       ),
       // Upcoming business modules — greyed with a lock; tapping explains
       // availability + the KYC level requirement.
