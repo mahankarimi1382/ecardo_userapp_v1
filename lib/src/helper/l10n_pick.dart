@@ -10,15 +10,6 @@ String l10nPick(
   required String en,
   required String fa,
   String? ar,
-  String? zh,
-}) {
-  switch (Localizations.localeOf(context).languageCode) {
-    case 'fa':
-      return fa;
-    case 'ar':
-      return ar ?? en;
-    case 'zh':
-      return zh ?? en;
   String? tr,
   String? ru,
   String? zh,
@@ -55,3 +46,4 @@ String l10nPickAuto({
   if (ctx == null) return en;
   return l10nPick(ctx, en: en, fa: fa, ar: ar, zh: zh);
 }
+
