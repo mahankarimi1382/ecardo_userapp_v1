@@ -69,8 +69,8 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
       ServiceTile(
         title: localization.businessServiceBankLoan,
         iconData: Icons.account_balance_rounded,
-        route: '',
-        available: false,
+        route: BaseRoute.loanHome,
+        available: true,
       ),
       ServiceTile(
         title: l10nPick(

@@ -1,4 +1,6 @@
 import 'package:ecardo_user/src/escrow/screens/escrow_detail_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_home_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_detail_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_detail_screen.dart';
 import 'package:get/get.dart';
 
@@ -594,6 +596,22 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.stockHome,
     page: () => RoutesConfig.stockHome,
+  ),
+
+  // Loan & Credit Routes
+  GetPage(
+    name: BaseRoute.loanHome,
+    page: () => RoutesConfig.loanHome,
+  ),
+  GetPage(
+    name: BaseRoute.loanDetail,
+    page: () {
+      final args = Get.arguments;
+      final caseId = args is Map
+          ? int.tryParse('${args['caseId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return LoanDetailScreen(caseId: caseId ?? 0);
+    },
   ),
 
   // License Store Routes
