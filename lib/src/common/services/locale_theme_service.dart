@@ -13,8 +13,9 @@ class LocaleThemeService extends GetxService {
 
   Future<LocaleThemeService> init() async {
     final saved = await SettingsService.getLanguageLocaleCurrentState();
-    if (saved != null && supported.contains(saved)) {
-      locale.value = Locale(saved);
+    final savedNormalized = saved?.trim().toLowerCase();
+    if (savedNormalized != null && supported.contains(savedNormalized)) {
+      locale.value = Locale(savedNormalized);
     } else {
       final device = Get.deviceLocale?.languageCode ??
           WidgetsBinding.instance.platformDispatcher.locale.languageCode;
@@ -31,11 +32,17 @@ class LocaleThemeService extends GetxService {
   }
 
   Future<void> setLanguage(String code) async {
-    if (!supported.contains(code)) return;
-    locale.value = Locale(code);
+    // wallet-modules v1.0.122: the server's /get-languages list carries
+    // mixed-case codes (e.g. "Fa" for Persian) — normalize before matching,
+    // otherwise the switch silently does nothing.
+    final normalized = code.trim().toLowerCase();
+    if (!supported.contains(normalized)) return;
+    locale.value = Locale(normalized);
     Get.updateLocale(locale.value);
     if (Get.isRegistered<SettingsService>()) {
-      await Get.find<SettingsService>().saveLanguageLocaleCurrentState(code);
+      await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
+        normalized,
+      );
     }
     try {
       if (Get.isRegistered<HomeController>()) {
