@@ -527,4 +527,12 @@ List<GetPage> routesHandler = [
     name: BaseRoute.appUpdate,
     page: () => RoutesConfig.appUpdate,
   ),
+  GetPage(
+    name: BaseRoute.licenseStore,
+    page: () => RoutesConfig.licenseStore,
+  ),
+  GetPage(
+    name: BaseRoute.licenseMyLicenses,
+    page: () => RoutesConfig.licenseMyLicenses,
+  ),
 ];

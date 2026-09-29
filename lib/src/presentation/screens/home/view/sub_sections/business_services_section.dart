@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -72,10 +73,16 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
         available: false,
       ),
       ServiceTile(
-        title: localization.businessServiceLicense,
-        iconData: Icons.workspace_premium_rounded,
-        route: '',
-        available: false,
+        title: l10nPick(
+          context,
+          en: 'License Store',
+          fa: 'فروشگاه لایسنس',
+          ar: 'متجر التراخيص',
+          zh: '许可证商店',
+        ),
+        iconData: Icons.vpn_key_rounded,
+        route: BaseRoute.licenseStore,
+        available: true,
       ),
       ServiceTile(
         title: localization.businessServiceStocks,

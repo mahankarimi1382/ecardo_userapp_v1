@@ -164,4 +164,8 @@ class BaseRoute {
   static const String upgradeRequired = "/upgrade_required_route";
 
   static const String appUpdate = "/app_update_route";
+
+  // License Store Service
+  static const String licenseStore = "/license_store_route";
+  static const String licenseMyLicenses = "/license_my_licenses_route";
 }

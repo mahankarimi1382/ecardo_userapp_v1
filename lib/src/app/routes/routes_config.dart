@@ -1,3 +1,5 @@
+import 'package:ecardo_user/src/license/view/license_store_screen.dart';
+import 'package:ecardo_user/src/license/view/license_my_licenses_screen.dart';
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
 import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart';
@@ -236,4 +238,7 @@ class RoutesConfig {
 
   // App self-update (v1.0.8+8)
   static const appUpdate = AppUpdateScreen();
+
+  static const licenseStore = LicenseStoreScreen();
+  static const licenseMyLicenses = LicenseMyLicensesScreen();
 }
