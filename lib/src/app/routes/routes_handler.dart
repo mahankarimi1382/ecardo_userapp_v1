@@ -569,6 +569,7 @@ List<GetPage> routesHandler = [
           : (args is int ? args : null);
       return EscrowDetailScreen(orderId: orderId ?? 1);
     },
+  ),
   // Visa Routes
   GetPage(
     name: BaseRoute.visaHome,
