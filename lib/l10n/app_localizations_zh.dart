@@ -5696,7 +5696,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMainWallet => 'bank of al barkat 主钱包';
 
   @override
-  String get travelWalletSharedDescription => '与您在 bank of al barkat 全站使用的同一个安全钱包';
+  String get travelWalletSharedDescription =>
+      '与您在 bank of al barkat 全站使用的同一个安全钱包';
 
   @override
   String get travelHotelSearch => '酒店搜索';

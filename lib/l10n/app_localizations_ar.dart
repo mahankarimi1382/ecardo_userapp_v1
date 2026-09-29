@@ -6005,7 +6005,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get travelWalletCheckout => 'الدفع بالمحفظة';
 
   @override
-  String get travelBackendConfirmedPrice => 'السعر مؤكد من bank of al barkat Travel';
+  String get travelBackendConfirmedPrice =>
+      'السعر مؤكد من bank of al barkat Travel';
 
   @override
   String get travelPaymentMethod => 'طريقة الدفع';
@@ -7135,7 +7136,8 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم استنفاد محاولات البصمة. يرجى تسجيل الدخول بكلمة المرور';
 
   @override
-  String get biometricReason => 'قم بالمصادقة لتسجيل الدخول إلى bank of al barkat';
+  String get biometricReason =>
+      'قم بالمصادقة لتسجيل الدخول إلى bank of al barkat';
 
   @override
   String get biometricGenericError => 'فشلت المصادقة الحيوية';

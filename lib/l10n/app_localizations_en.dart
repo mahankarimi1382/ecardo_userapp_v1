@@ -6043,7 +6043,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get travelWalletCheckout => 'Wallet checkout';
 
   @override
-  String get travelBackendConfirmedPrice => 'Price confirmed by bank of al barkat Travel';
+  String get travelBackendConfirmedPrice =>
+      'Price confirmed by bank of al barkat Travel';
 
   @override
   String get travelPaymentMethod => 'Payment method';

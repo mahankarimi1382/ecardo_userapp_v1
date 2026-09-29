@@ -6056,7 +6056,8 @@ class AppLocalizationsFa extends AppLocalizations {
   String get travelWalletCheckout => 'پرداخت از کیف پول';
 
   @override
-  String get travelBackendConfirmedPrice => 'قیمت تأییدشده توسط bank of al barkat Travel';
+  String get travelBackendConfirmedPrice =>
+      'قیمت تأییدشده توسط bank of al barkat Travel';
 
   @override
   String get travelPaymentMethod => 'روش پرداخت';
@@ -7191,7 +7192,8 @@ class AppLocalizationsFa extends AppLocalizations {
       'حداکثر تلاش‌های بیومتریک انجام شد. لطفاً با رمز عبور وارد شوید';
 
   @override
-  String get biometricReason => 'برای ورود به bank of al barkat، هویت خود را تأیید کنید';
+  String get biometricReason =>
+      'برای ورود به bank of al barkat، هویت خود را تأیید کنید';
 
   @override
   String get biometricGenericError => 'احراز هویت بیومتریک ناموفق بود';
@@ -7879,7 +7881,8 @@ class AppLocalizationsFa extends AppLocalizations {
   String get updateCheckingTitle => 'بررسی به‌روزرسانی…';
 
   @override
-  String get updateCheckingBody => 'در حال دریافت آخرین نسخه از سرور bank of al barkat.';
+  String get updateCheckingBody =>
+      'در حال دریافت آخرین نسخه از سرور bank of al barkat.';
 
   @override
   String get updateUpToDateScreenTitle => 'شما به‌روز هستید!';

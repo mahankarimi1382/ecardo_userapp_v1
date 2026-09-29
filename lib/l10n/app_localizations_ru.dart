@@ -6041,7 +6041,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelWalletCheckout => 'Wallet checkout';
 
   @override
-  String get travelBackendConfirmedPrice => 'Price confirmed by bank of al barkat Travel';
+  String get travelBackendConfirmedPrice =>
+      'Price confirmed by bank of al barkat Travel';
 
   @override
   String get travelPaymentMethod => 'Payment method';
@@ -7174,7 +7175,8 @@ class AppLocalizationsRu extends AppLocalizations {
       'Достигнут лимит биометрических попыток. Войдите с паролем';
 
   @override
-  String get biometricReason => 'Пройдите аутентификацию для входа в bank of al barkat';
+  String get biometricReason =>
+      'Пройдите аутентификацию для входа в bank of al barkat';
 
   @override
   String get biometricGenericError =>
