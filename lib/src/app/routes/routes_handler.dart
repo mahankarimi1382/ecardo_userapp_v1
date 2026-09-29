@@ -1,11 +1,7 @@
 import 'package:ecardo_user/src/escrow/screens/escrow_detail_screen.dart';
-import 'package:ecardo_user/src/loan/screens/loan_home_screen.dart';
 import 'package:ecardo_user/src/loan/screens/loan_detail_screen.dart';
-import 'package:ecardo_user/src/rental/screens/rental_home_screen.dart';
-import 'package:ecardo_user/src/guarantee/screens/guarantee_home_screen.dart';
 import 'package:ecardo_user/src/rental/screens/rental_detail_screen.dart';
 import 'package:ecardo_user/src/guarantee/screens/guarantee_detail_screen.dart';
-import 'package:ecardo_user/src/remitv2/screens/remittance_track_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_detail_screen.dart';
 import 'package:get/get.dart';
 
