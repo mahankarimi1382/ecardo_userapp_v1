@@ -223,6 +223,6 @@ class EscrowService extends getx.GetxService {
         if (comment != null) 'comment': comment,
       },
     );
-    return response.status;
+    return response.status == Status.completed;
   }
 }

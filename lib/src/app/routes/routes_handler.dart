@@ -595,7 +595,8 @@ List<GetPage> routesHandler = [
     name: BaseRoute.stockHome,
     page: () => RoutesConfig.stockHome,
   ),
-];
+
+  // License Store Routes
   GetPage(
     name: BaseRoute.licenseStore,
     page: () => RoutesConfig.licenseStore,

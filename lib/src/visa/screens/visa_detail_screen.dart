@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../helper/l10n_pick.dart';
 import '../controllers/visa_controller.dart';
+import '../models/visa_models.dart';
 import '../widgets/visa_widgets.dart';
 import 'visa_payment_screen.dart';
 import 'visa_result_screen.dart';

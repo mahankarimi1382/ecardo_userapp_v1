@@ -180,7 +180,7 @@ class TourService extends getx.GetxService {
     final response = await _network.post(endpoint: '/user/tours/bookings/$id/cancel',
       data: {},
     );
-    return response.status;
+    return response.status == Status.completed;
   }
 }
 
