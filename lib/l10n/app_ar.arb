@@ -2484,7 +2484,7 @@
   "kycSubmitWizardInvalidLevel": "مستوى غير صالح",
   "kycSubmitWizardRequiredDoc": "المستند المطلوب",
   "kycSubmitWizardTapToUpload": "اضغط للرفع",
-  "kycSubmitWizardFileFormat": "الصيغة: JPG، PNG، PDF — بحد أقصى 5 ميغابايت",
+  "kycSubmitWizardFileFormat": "الصيغة: JPG، PNG، PDF — بحد أقصى 20 ميغابايت",
   "kycSubmitWizardReviewTitle": "المراجعة والإرسال",
   "kycSubmitWizardNotUploaded": "لم يُرفع",
   "kycSubmitWizardReviewNote": "بعد الإرسال تتم مراجعة مستنداتك من قبل المشرف. يستغرق ذلك عادةً من 1 إلى 2 يوم عمل.",

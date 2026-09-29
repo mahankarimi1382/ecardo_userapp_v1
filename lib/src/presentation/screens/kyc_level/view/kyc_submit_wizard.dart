@@ -175,7 +175,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                   SizedBox(height: 4.h),
                   Text(
                     localization?.kycSubmitWizardFileFormat ??
-                        'Format: JPG, PNG, PDF — max 5MB',
+                        'Format: JPG, PNG, PDF — max 20MB',
                     style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextHint),
                   ),
                 ],

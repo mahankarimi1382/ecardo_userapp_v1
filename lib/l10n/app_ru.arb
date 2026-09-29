@@ -2483,7 +2483,7 @@
   "kycSubmitWizardInvalidLevel": "Недопустимый уровень",
   "kycSubmitWizardRequiredDoc": "Необходимый документ",
   "kycSubmitWizardTapToUpload": "Нажмите для загрузки",
-  "kycSubmitWizardFileFormat": "Формат: JPG, PNG, PDF — не более 5 МБ",
+  "kycSubmitWizardFileFormat": "Формат: JPG, PNG, PDF — не более 20 МБ",
   "kycSubmitWizardReviewTitle": "Проверка и отправка",
   "kycSubmitWizardNotUploaded": "Не загружено",
   "kycSubmitWizardReviewNote": "После отправки ваши документы проверяет администратор. Обычно это занимает 1–2 рабочих дня.",

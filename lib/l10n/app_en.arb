@@ -2607,7 +2607,7 @@
   "kycSubmitWizardInvalidLevel": "Invalid level",
   "kycSubmitWizardRequiredDoc": "Required document",
   "kycSubmitWizardTapToUpload": "Tap to upload",
-  "kycSubmitWizardFileFormat": "Format: JPG, PNG, PDF — max 5MB",
+  "kycSubmitWizardFileFormat": "Format: JPG, PNG, PDF — max 20MB",
   "kycSubmitWizardReviewTitle": "Review & submit",
   "kycSubmitWizardNotUploaded": "Not uploaded",
   "kycSubmitWizardReviewNote": "After submission your documents are reviewed by an admin. This usually takes 1–2 business days.",
