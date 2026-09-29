@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/common/services/session_timeout_service.dart';
 import 'package:ecardo_user/src/common/services/connectivity_watch_service.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/not_found/view/not_found_screen.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
@@ -12,7 +11,6 @@ import 'package:ecardo_user/src/app/config/theme/dark_theme.dart';
 import 'package:ecardo_user/src/common/widgets/offline_queue_banner.dart';
 import 'package:ecardo_user/src/presentation/widgets/app_lock_wrapper.dart';
 import 'package:ecardo_user/src/app/constants/app_strings.dart';
-import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 import 'package:ecardo_user/src/app/bindings/initial_binding.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/app/routes/routes_handler.dart';
@@ -54,14 +52,13 @@ class _EcardoUserState extends State<EcardoUser> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        // Reactive locale + theme (settings apply without restart).
-        return Obx(() {
-          final lts = Get.isRegistered<LocaleThemeService>()
-              ? Get.find<LocaleThemeService>()
-              : null;
-          final appLocale = lts?.locale.value ?? _locale;
-          final appTheme = lts?.themeMode.value ?? ThemeMode.system;
-          return GetMaterialApp(
+        final lts = Get.isRegistered<LocaleThemeService>()
+            ? Get.find<LocaleThemeService>()
+            : null;
+        final appLocale = lts?.locale.value ?? _locale;
+        final appTheme = lts?.themeMode.value ?? ThemeMode.system;
+
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: AppStrings.appName,
           themeMode: appTheme,
@@ -156,7 +153,6 @@ class _EcardoUserState extends State<EcardoUser> {
             );
           },
         );
-        });
       },
     );
   }

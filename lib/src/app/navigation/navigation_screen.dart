@@ -209,14 +209,17 @@ class _NavigationScreenState extends State<NavigationScreen> {
             }
 
             if (index == 2) {
-              if (!myCardsEnabled) {
-                ToastHelper().showErrorToast(localization.myCardsNotEnabled);
-                return;
-              }
-              // The virtual-cards route binding normally provides the
-              // controller; as an embedded tab we register it on first visit.
+              // Register VirtualCardController on first visit
               if (!Get.isRegistered<VirtualCardController>()) {
                 VirtualCardBinding().dependencies();
+              }
+              // Only gate if user data has finished loading and cards are explicitly disabled.
+              // While initial loading is in progress, allow tab switch so the screen displays its Loading state.
+              final userDataLoaded = !homeController.isLoading.value &&
+                  homeController.userModel.value.data != null;
+              if (userDataLoaded && !myCardsEnabled) {
+                ToastHelper().showErrorToast(localization.myCardsNotEnabled);
+                return;
               }
             }
 

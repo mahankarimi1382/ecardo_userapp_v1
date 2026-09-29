@@ -150,7 +150,13 @@ Future<void> changeLanguage(String languageCode) async {
       await Get.find<LocaleThemeService>().setLanguage(code);
     } else {
       await Get.find<SettingsService>().saveLanguageLocaleCurrentState(code);
-      Get.updateLocale(Locale(code));
+      final loc = Locale(code);
+      Get.locale = loc;
+      Get.updateLocale(loc);
+      final ctx = Get.context;
+      if (ctx != null) {
+        Get.rootController.restartApp();
+      }
     }
   } catch (e, stackTrace) {
     debugPrint('❌ changeLanguage() error: $e');

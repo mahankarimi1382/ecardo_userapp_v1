@@ -1,9 +1,11 @@
+import 'package:ecardo_user/src/app/config/theme/dark_theme.dart';
+import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
-/// Reactive locale + theme so settings changes apply without app restart.
+/// Reactive locale + theme so settings changes apply immediately without app restart.
 class LocaleThemeService extends GetxService {
   static const supported = ['fa', 'en', 'ar', 'zh'];
 
@@ -31,8 +33,14 @@ class LocaleThemeService extends GetxService {
 
   Future<void> setLanguage(String code) async {
     if (!supported.contains(code)) return;
-    locale.value = Locale(code);
-    Get.updateLocale(locale.value);
+    final newLocale = Locale(code);
+    locale.value = newLocale;
+    Get.locale = newLocale;
+    Get.updateLocale(newLocale);
+    final ctx = Get.context;
+    if (ctx != null) {
+      Get.rootController.restartApp();
+    }
     if (Get.isRegistered<SettingsService>()) {
       await Get.find<SettingsService>().saveLanguageLocaleCurrentState(code);
     }
@@ -47,7 +55,15 @@ class LocaleThemeService extends GetxService {
   }
 
   Future<void> setThemeModePref(String mode) async {
-    themeMode.value = _parseTheme(mode);
+    final parsed = _parseTheme(mode);
+    themeMode.value = parsed;
+    Get.changeThemeMode(parsed);
+    final ctx = Get.context;
+    if (ctx != null) {
+      Get.changeTheme(parsed == ThemeMode.dark
+          ? DarkTheme().darkTheme(ctx)
+          : LightTheme().lightTheme(ctx));
+    }
     if (Get.isRegistered<SettingsService>()) {
       await Get.find<SettingsService>().setThemeModePref(mode);
     }
@@ -55,7 +71,8 @@ class LocaleThemeService extends GetxService {
 
   ThemeMode _parseTheme(String mode) => switch (mode) {
         'dark' => ThemeMode.dark,
-        _ => ThemeMode.light,
+        'light' => ThemeMode.light,
+        _ => ThemeMode.system,
       };
 
   static String nativeName(String code) => switch (code) {
