@@ -80,8 +80,8 @@ class AuthIdVerificationController extends GetxController {
             isLoading.value = false;
             ToastHelper().showErrorToast(
               l10nPickAuto(
-                en: 'File size must not exceed 5MB',
-                fa: 'حجم فایل نباید بیشتر از ۵ مگابایت باشد',
+                en: 'File size must not exceed 20MB',
+                fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
               ),
             );
             return;

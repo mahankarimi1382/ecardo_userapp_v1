@@ -2483,7 +2483,7 @@
   "kycSubmitWizardInvalidLevel": "Geçersiz seviye",
   "kycSubmitWizardRequiredDoc": "Gerekli belge",
   "kycSubmitWizardTapToUpload": "Yüklemek için dokunun",
-  "kycSubmitWizardFileFormat": "Format: JPG, PNG, PDF — en fazla 5MB",
+  "kycSubmitWizardFileFormat": "Format: JPG, PNG, PDF — en fazla 20MB",
   "kycSubmitWizardReviewTitle": "Gözden geçir ve gönder",
   "kycSubmitWizardNotUploaded": "Yüklenmedi",
   "kycSubmitWizardReviewNote": "Gönderimden sonra belgeleriniz bir yönetici tarafından incelenir. Bu genellikle 1–2 iş günü sürer.",

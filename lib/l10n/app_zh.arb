@@ -2483,7 +2483,7 @@
   "kycSubmitWizardInvalidLevel": "无效等级",
   "kycSubmitWizardRequiredDoc": "所需文件",
   "kycSubmitWizardTapToUpload": "点击上传",
-  "kycSubmitWizardFileFormat": "格式：JPG、PNG、PDF — 最大 5MB",
+  "kycSubmitWizardFileFormat": "格式：JPG、PNG、PDF — 最大 20MB",
   "kycSubmitWizardReviewTitle": "检查并提交",
   "kycSubmitWizardNotUploaded": "未上传",
   "kycSubmitWizardReviewNote": "提交后，管理员将审核您的文件。通常需要 1–2 个工作日。",

@@ -6,8 +6,10 @@ class UploadHelper {
   /// Maximum avatar size: 2MB (aligned with Laravel validator max:2048).
   static const int maxAvatarBytes = 2 * 1024 * 1024;
 
-  /// Maximum KYC document size: 5MB (aligned with ImageUploadTrait 5100000 bytes).
-  static const int maxKycDocBytes = 5 * 1024 * 1024;
+  /// Maximum KYC document size: 20MB. The server's ImageUploadTrait now
+  /// accepts 20MB for KYC call sites (owner directive 2026-09-29 — camera
+  /// photos kept failing the old 5MB cap), while other callers keep 5MB.
+  static const int maxKycDocBytes = 20 * 1024 * 1024;
 
   /// Cleans and extracts the filename from a file path across platforms.
   static String extractFileName(String filePath) {

@@ -2484,7 +2484,7 @@
   "kycSubmitWizardInvalidLevel": "سطح نامعتبر",
   "kycSubmitWizardRequiredDoc": "مدرک مورد نیاز",
   "kycSubmitWizardTapToUpload": "برای آپلود لمس کنید",
-  "kycSubmitWizardFileFormat": "فرمت: JPG، PNG، PDF — حداکثر ۵ مگابایت",
+  "kycSubmitWizardFileFormat": "فرمت: JPG، PNG، PDF — حداکثر ۲۰ مگابایت",
   "kycSubmitWizardReviewTitle": "بررسی و ارسال",
   "kycSubmitWizardNotUploaded": "آپلود نشده",
   "kycSubmitWizardReviewNote": "پس از ارسال، مدارک توسط ادمین بررسی می‌شود. این فرآیند معمولاً ۱-۲ روز کاری طول می‌کشد.",

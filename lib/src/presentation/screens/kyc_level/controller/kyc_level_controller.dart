@@ -91,10 +91,10 @@ class KycLevelController extends GetxController {
             ToastHelper().showErrorToast(
               l10nPick(
                 Get.context!,
-                en: 'File size must not exceed 5MB',
-                fa: 'حجم فایل نباید بیشتر از ۵ مگابایت باشد',
-                ar: 'يجب ألا يتجاوز حجم الملف 5 ميجابايت',
-                zh: '文件大小不能超过 5MB',
+                en: 'File size must not exceed 20MB',
+                fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
+                ar: 'يجب ألا يتجاوز حجم الملف 20 ميجابايت',
+                zh: '文件大小不能超过 20MB',
               ),
             );
             return false;
