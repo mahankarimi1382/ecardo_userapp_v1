@@ -225,6 +225,18 @@ jobs:
           # notification regression can never look like a green release again.
           python3 -c "import json,sys;n=(json.load(open('notify-result.txt')).get('notification') or {});print('notification:',json.dumps(n,ensure_ascii=False));sys.exit(0 if n.get('sent') else 1)"
 
+      # wallet-modules v1.0.123: keep obfuscation symbols so field crashes
+      # (error_logs build_id) can be symbolicated to the exact class.
+      - name: Upload Debug Symbols
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-symbols-${{ github.sha }}
+          if-no-files-found: ignore
+          retention-days: 14
+          path: build/symbols/
+
       - name: Upload Build Log
         if: always()
         continue-on-error: true

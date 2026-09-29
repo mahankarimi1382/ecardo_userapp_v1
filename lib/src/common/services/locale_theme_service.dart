@@ -44,18 +44,16 @@ class LocaleThemeService extends GetxService {
       );
     }
 
+    // wallet-modules v1.0.123: rebuild the stack BEFORE touching the locale.
+    // v1.0.122 still crashed in the field (error_log #63, fresh build_id)
+    // because setting `locale.value` / Get.updateLocale while every live
+    // route is mounted triggers the full-tree rebuild that hits a Get.find
+    // on a long-dead controller. After offAllNamed only the splash is
+    // mounted, so applying the locale rebuilds one safe screen and the rest
+    // of the app comes up already localized via the splash's own navigation.
+    Get.offAllNamed(BaseRoute.root);
     locale.value = Locale(normalized);
     Get.updateLocale(locale.value);
-
-    // wallet-modules v1.0.122: rebuild the navigation stack from the splash
-    // instead of hot-swapping the locale over live routes. The full-tree
-    // rebuild used to crash the app in release builds — a Get.find on a
-    // controller whose route was long gone ("GetX 'Mpa' not found", error_log
-    // #62) fires when every live route re-builds at once — and it also left
-    // stale-translated screens (controllers capture AppLocalizations at
-    // construction). A clean restart re-registers every controller, so the
-    // crash class is gone and the whole app renders in the new language.
-    Get.offAllNamed(BaseRoute.root);
   }
   Future<void> setThemeModePref(String mode) async {
     themeMode.value = _parseTheme(mode);
