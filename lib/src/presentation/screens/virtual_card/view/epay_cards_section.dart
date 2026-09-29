@@ -285,7 +285,6 @@ class EpayCardsSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                ),
               Padding(
                 padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
                 child: CommonButton(

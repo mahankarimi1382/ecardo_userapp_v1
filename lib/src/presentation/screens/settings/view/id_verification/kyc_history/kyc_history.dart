@@ -202,7 +202,8 @@ class _KycHistoryState extends State<KycHistory> {
           ),
           ],
         ),
-      );
+      ),
+    );
   }
 
   // ── Presentational helpers ──

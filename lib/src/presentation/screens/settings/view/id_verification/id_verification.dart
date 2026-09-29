@@ -67,8 +67,7 @@ class _IdVerificationState extends State<IdVerification> {
                 ),
               ),
             ),
-          ),
-          Expanded(
+            Expanded(
             child: Obx(() {
               if (controller.isLoading.value) {
                 return const CommonLoading();
@@ -108,7 +107,8 @@ class _IdVerificationState extends State<IdVerification> {
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 
 }
