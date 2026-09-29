@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -75,21 +76,26 @@ class AuthIdVerificationController extends GetxController {
         final file = fieldFiles[fieldName];
 
         if (file != null) {
+          if (UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes)) {
+            isLoading.value = false;
+            ToastHelper().showErrorToast(
+              l10nPickAuto(
+                en: 'File size must not exceed 5MB',
+                fa: 'حجم فایل نباید بیشتر از ۵ مگابایت باشد',
+              ),
+            );
+            return;
+          }
           formData.files.add(
             MapEntry(
               "fields[$fieldName]",
-              await dio.MultipartFile.fromFile(
-                file.path,
-                filename: file.path.split("/").last,
-              ),
+              await UploadHelper.createMultipartFile(file),
             ),
           );
         }
       }
 
-      // v1.0.24: was a raw `dio.Dio()` call without timeout/401-refresh —
-      // a dead connection kept the spinner on forever. Route through
-      // NetworkService.postMultipart (timeouts + interceptors + error toasts).
+      // Route through NetworkService.postMultipart (timeouts + interceptors + error toasts).
       final response = await Get.find<NetworkService>().postMultipart(
         endpoint: ApiPath.userKycEndpoint,
         data: formData,
@@ -102,6 +108,14 @@ class AuthIdVerificationController extends GetxController {
           arguments: {"is_id_verification": true},
         );
         ToastHelper().showSuccessToast(response.data!["message"]);
+      } else if (response.status == Status.error) {
+        final msg = response.message ??
+            localizationOrNull?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            );
+        ToastHelper().showErrorToast(msg);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitIdVerification() error: $e');

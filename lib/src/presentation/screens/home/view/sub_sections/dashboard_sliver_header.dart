@@ -98,7 +98,10 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                     ignoring: eased < 0.15,
                     child: Row(
                       children: [
-                        _Avatar(path: avatarPath, initial: initial, size: 40),
+                        GestureDetector(
+                          onTap: () => Get.toNamed(BaseRoute.profileSettings),
+                          child: _Avatar(path: avatarPath, initial: initial, size: 40),
+                        ),
                         const SizedBox(width: AppSpacing.cardGap),
                         Expanded(
                           child: Column(
@@ -139,7 +142,6 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                           ),
                         ),
                         _NotifBtn(unread: unread),
-                        const _SettingsBtn(),
                       ],
                     ),
                   ),
@@ -165,7 +167,6 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                           ),
                         ),
                         _NotifBtn(unread: unread),
-                        const _SettingsBtn(),
                       ],
                     ),
                   ),
@@ -195,7 +196,7 @@ class _Avatar extends StatelessWidget {
           width: size,
           height: size,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _fb(),
+          errorBuilder: (context, error, stackTrace) => _fb(),
         ),
       );
     }
@@ -246,25 +247,6 @@ class _NotifBtn extends StatelessWidget {
           color: AppColors.white,
           size: 22,
         ),
-      ),
-    );
-  }
-}
-
-class _SettingsBtn extends StatelessWidget {
-  const _SettingsBtn();
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      visualDensity: VisualDensity.compact,
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-      onPressed: () => Get.toNamed(BaseRoute.profileSettings),
-      icon: const Icon(
-        Icons.settings_outlined,
-        color: AppColors.white,
-        size: 22,
       ),
     );
   }
