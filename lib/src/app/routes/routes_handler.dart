@@ -588,8 +588,7 @@ List<GetPage> routesHandler = [
     name: BaseRoute.visaList,
     page: () => RoutesConfig.visaList,
   ),
-];
-]
+
   // Stock Trading Routes
   GetPage(
     name: BaseRoute.stockHome,

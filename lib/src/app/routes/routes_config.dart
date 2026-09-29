@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 import 'package:ecardo_user/src/escrow/screens/escrow_list_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_match_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_my_bookings_screen.dart';
-=======
 import 'package:ecardo_user/src/stock/screens/stock_home_screen.dart';
->>>>>>> origin/agent/travel-stock-trading
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
 import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
 import '../../visa/screens/visa_catalog_screen.dart';
@@ -257,7 +254,7 @@ class RoutesConfig {
   // Visa Routes
   static const visaHome = VisaCatalogScreen();
   static const visaList = VisaListScreen();
-}
+
   // Stock Trading
   static const stockHome = StockHomeScreen();
 }
