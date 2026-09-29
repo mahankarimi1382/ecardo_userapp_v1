@@ -4,7 +4,8 @@
 // Full state-managed controller for the in-app self-update flow.
 //
 // Responsibilities:
-//   1. Fetch the latest version metadata from the backend SettingsService.
+//   1. Fetch the latest version metadata from /api/app-version (primary)
+//      with fallback to backend SettingsService.
 //   2. Compare the running version against the server version (semver-aware).
 //   3. Stream download progress (percent + downloaded/total bytes).
 //   4. Hand off the downloaded APK to the system Package Installer.
@@ -88,6 +89,9 @@ class AppUpdateConfig {
   /// the downloaded file is verified before handing off to the installer.
   final String settingKeySha256;
 
+  /// Dedicated app-version endpoint URL (default /api/app-version).
+  final String appVersionEndpoint;
+
   const AppUpdateConfig({
     required this.autoUpdatePrefsKey,
     required this.lastPromptedVersionPrefsKey,
@@ -96,6 +100,7 @@ class AppUpdateConfig {
     required this.settingKeyUpdateLink,
     required this.settingKeyForceUpdate,
     this.settingKeySha256 = 'app_apk_sha256',
+    this.appVersionEndpoint = 'https://ecardo.ir/api/app-version',
   });
 
   /// Default configuration for the eCardo **user** app.
@@ -106,6 +111,7 @@ class AppUpdateConfig {
     settingKeyVersion: 'app_version',
     settingKeyUpdateLink: 'app_update_link',
     settingKeyForceUpdate: 'app_force_update',
+    appVersionEndpoint: 'https://ecardo.ir/api/app-version',
   );
 
   /// Configuration for the eCardo **merchant** app.
@@ -116,6 +122,7 @@ class AppUpdateConfig {
     settingKeyVersion: 'app_version',
     settingKeyUpdateLink: 'app_update_link',
     settingKeyForceUpdate: 'app_force_update',
+    appVersionEndpoint: 'https://ecardo.ir/api/app-version',
   );
 
   /// Configuration for the eCardo **agent** app.
@@ -126,6 +133,7 @@ class AppUpdateConfig {
     settingKeyVersion: 'app_version',
     settingKeyUpdateLink: 'app_update_link',
     settingKeyForceUpdate: 'app_force_update',
+    appVersionEndpoint: 'https://ecardo.ir/api/app-version',
   );
 }
 
@@ -141,6 +149,8 @@ class AppUpdateController extends GetxController {
   final RxString totalBytesLabel = ''.obs;
   final RxString serverVersion = ''.obs;
   final RxString currentVersion = ''.obs;
+  final RxString updateUrl = ''.obs;
+  final RxString serverSha256 = ''.obs;
   final RxBool forceUpdate = false.obs;
   final RxBool autoUpdateEnabled = true.obs;
   final RxString errorMessage = ''.obs;
@@ -182,33 +192,69 @@ class AppUpdateController extends GetxController {
     autoUpdateEnabled.value = enabled;
   }
 
+  /// Helper to fetch metadata directly from /api/app-version.
+  Future<Map<String, dynamic>?> _fetchAppVersionApi() async {
+    try {
+      final dio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 12),
+          receiveTimeout: const Duration(seconds: 12),
+          headers: const {'Accept': 'application/json'},
+          validateStatus: (s) => s != null && s >= 200 && s < 400,
+        ),
+      );
+      final resp = await dio.get(config.appVersionEndpoint);
+      if (resp.statusCode == 200 && resp.data is Map) {
+        final data = resp.data['data'];
+        if (data is Map<String, dynamic>) {
+          return data;
+        } else if (data is Map) {
+          return Map<String, dynamic>.from(data);
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to query /api/app-version: $e');
+    }
+    return null;
+  }
+
   /// Returns true if the server has a newer version than the running app.
-  ///
-  /// Side-effect free: does not change [phase]. Useful for callers that only
-  /// need a yes/no answer (e.g. the splash screen deciding whether to show
-  /// the update dialog).
   Future<bool> isNewVersionAvailable() async {
-    final settings = Get.find<SettingsService>();
-    final server = settings.getSetting(config.settingKeyVersion) ?? '';
-    final link = settings.getSetting(config.settingKeyUpdateLink) ?? '';
+    String server = '';
+    String link = '';
+
+    final apiData = await _fetchAppVersionApi();
+    if (apiData != null) {
+      server = (apiData['version'] ?? '').toString().trim();
+      link = (apiData['update_url'] ?? '').toString().trim();
+      if (apiData['sha256'] != null) {
+        serverSha256.value = apiData['sha256'].toString().trim();
+      }
+    }
+
+    if (server.isEmpty || link.isEmpty) {
+      final settings = Get.find<SettingsService>();
+      server = settings.getSetting(config.settingKeyVersion) ?? '';
+      link = settings.getSetting(config.settingKeyUpdateLink) ?? '';
+    }
+
     if (server.isEmpty || link.isEmpty) return false;
+
+    updateUrl.value = link;
+    serverVersion.value = server;
 
     final info = await PackageInfo.fromPlatform();
     return _isVersionNewer(server, info.version);
   }
 
   /// v1.1 (UPD-NOTES): called by FirebaseMessagingService when an
-  /// `app_update` data message arrives. Carries the pushed release notes
-  /// (when the backend includes them) into the controller so the update
-  /// notification AND the popup dialog show WHAT changed, not just that
-  /// something changed.
+  /// `app_update` data message arrives.
   void setPushedUpdateNotes({required String version, String? notes}) {
     if (version.isNotEmpty) serverVersion.value = version;
     latestNotes.value = (notes ?? '').trim();
   }
 
-  /// v1.1 (UPD-NOTES): resolves the best available release-notes text for
-  /// [version]: the pushed notes first, then the backend settings key.
+  /// v1.1 (UPD-NOTES): resolves the best available release-notes text.
   String resolveNotes(String version) {
     if (latestNotes.value.isNotEmpty) return latestNotes.value;
     try {
@@ -220,10 +266,6 @@ class AppUpdateController extends GetxController {
   }
 
   /// Manual check triggered by the user from the settings screen.
-  ///
-  /// [showSnackbarWhenUpToDate] controls whether a snackbar is shown when
-  /// the app is already on the latest version. Defaults to true because the
-  /// user explicitly asked for a check.
   Future<void> checkForUpdate({
     bool showSnackbarWhenUpToDate = true,
   }) async {
@@ -238,17 +280,36 @@ class AppUpdateController extends GetxController {
     lastCheckedAt.value = DateTime.now();
 
     try {
-      final settings = Get.find<SettingsService>();
-      // Always refresh settings from the server so the comparison reflects
-      // what the admin just published, not what was cached from last launch.
-      await settings.fetchSettings();
+      String server = '';
+      String link = '';
+      bool force = false;
+      String expectedSha = '';
 
-      final server = settings.getSetting(config.settingKeyVersion) ?? '';
-      final link = settings.getSetting(config.settingKeyUpdateLink) ?? '';
-      final force = settings.getSetting(config.settingKeyForceUpdate) == '1';
+      // 1. Primary: dedicated /api/app-version endpoint
+      final apiData = await _fetchAppVersionApi();
+      if (apiData != null) {
+        server = (apiData['version'] ?? '').toString().trim();
+        link = (apiData['update_url'] ?? '').toString().trim();
+        force = apiData['force_update'] == true ||
+            apiData['force_update'] == 1 ||
+            apiData['force_update'] == '1';
+        expectedSha = (apiData['sha256'] ?? '').toString().trim();
+      }
+
+      // 2. Fallback: general settings service
+      if (server.isEmpty || link.isEmpty) {
+        final settings = Get.find<SettingsService>();
+        await settings.fetchSettings();
+        server = (settings.getSetting(config.settingKeyVersion) ?? '').trim();
+        link = (settings.getSetting(config.settingKeyUpdateLink) ?? '').trim();
+        force = settings.getSetting(config.settingKeyForceUpdate) == '1';
+        expectedSha = (settings.getSetting(config.settingKeySha256) ?? '').trim();
+      }
 
       serverVersion.value = server;
       forceUpdate.value = force;
+      updateUrl.value = link;
+      serverSha256.value = expectedSha;
 
       if (server.isEmpty || link.isEmpty) {
         phase.value = AppUpdatePhase.upToDate;
@@ -280,26 +341,27 @@ class AppUpdateController extends GetxController {
     }
   }
 
-  /// Starts the download → install flow. The UI should react to [phase]
-  /// transitions: when [downloading] it shows a progress bar, when
-  /// [installing] it shows an indeterminate spinner.
+  /// Starts the download → install flow.
   Future<void> startDownloadAndInstall() async {
     if (phase.value == AppUpdatePhase.downloading) return;
 
-    final settings = Get.find<SettingsService>();
-    final url = settings.getSetting(config.settingKeyUpdateLink) ?? '';
+    String url = updateUrl.value.trim();
+    if (url.isEmpty) {
+      final settings = Get.find<SettingsService>();
+      url = (settings.getSetting(config.settingKeyUpdateLink) ?? '').trim();
+    }
     if (url.isEmpty) {
       phase.value = AppUpdatePhase.error;
       errorMessage.value = 'Download URL is not configured.';
       return;
     }
 
-    // ----- Permissions -----
+    // ----- Permissions (Install unknown apps) -----
     final granted = await _ensureInstallPermission();
     if (!granted) {
       phase.value = AppUpdatePhase.error;
       errorMessage.value =
-          'Storage / install permission is required to download the update.';
+          'Install permission is required to update the application.';
       return;
     }
 
@@ -314,16 +376,13 @@ class AppUpdateController extends GetxController {
       final filePath = '${dir.path}/${config.apkFileName}';
 
       _cancelToken = CancelToken();
-      // Bare Dio() caused frequent "network error" on GitHub release URLs:
-      // no timeout, weak UA, and redirect/host quirks on mobile networks.
       final dio = Dio(
         BaseOptions(
           connectTimeout: const Duration(seconds: 45),
           receiveTimeout: const Duration(minutes: 10),
           sendTimeout: const Duration(seconds: 45),
           followRedirects: true,
-          maxRedirects: 5,
-          // Some CDNs reject non-browser clients.
+          maxRedirects: 8,
           headers: const {
             'Accept': '*/*',
             'User-Agent':
@@ -334,24 +393,52 @@ class AppUpdateController extends GetxController {
           validateStatus: (s) => s != null && s >= 200 && s < 400,
         ),
       );
-      await dio.download(
-        url.trim(),
-        filePath,
-        cancelToken: _cancelToken,
-        deleteOnError: true,
-        onReceiveProgress: (received, total) {
-          if (total <= 0) return;
-          final percent = (received / total * 100).clamp(0, 100).toInt();
-          progressPercent.value = percent;
-          downloadedBytesLabel.value = _formatBytes(received);
-          totalBytesLabel.value = _formatBytes(total);
-        },
-      );
+
+      // Attempt primary download; on failure, fall back to domestic mirror
+      try {
+        await dio.download(
+          url,
+          filePath,
+          cancelToken: _cancelToken,
+          deleteOnError: true,
+          onReceiveProgress: (received, total) {
+            if (total <= 0) return;
+            final percent = (received / total * 100).clamp(0, 100).toInt();
+            progressPercent.value = percent;
+            downloadedBytesLabel.value = _formatBytes(received);
+            totalBytesLabel.value = _formatBytes(total);
+          },
+        );
+      } catch (primaryError) {
+        const domesticMirror = 'https://ecardo.ir/apk/user/user-release.apk';
+        if (url != domesticMirror && _cancelToken?.isCancelled != true) {
+          debugPrint('Primary download failed ($primaryError), falling back to mirror: $domesticMirror');
+          progressPercent.value = 0;
+          await dio.download(
+            domesticMirror,
+            filePath,
+            cancelToken: _cancelToken,
+            deleteOnError: true,
+            onReceiveProgress: (received, total) {
+              if (total <= 0) return;
+              final percent = (received / total * 100).clamp(0, 100).toInt();
+              progressPercent.value = percent;
+              downloadedBytesLabel.value = _formatBytes(received);
+              totalBytesLabel.value = _formatBytes(total);
+            },
+          );
+        } else {
+          rethrow;
+        }
+      }
 
       // ----- Integrity check (when server published sha256) -----
-      final expectedSha = (settings.getSetting(config.settingKeySha256) ?? '')
+      final expectedSha = (serverSha256.value.isNotEmpty
+              ? serverSha256.value
+              : (Get.find<SettingsService>().getSetting(config.settingKeySha256) ?? ''))
           .trim()
           .toLowerCase();
+
       if (expectedSha.isNotEmpty) {
         final file = File(filePath);
         if (!await file.exists()) {
@@ -360,7 +447,7 @@ class AppUpdateController extends GetxController {
           return;
         }
         final digest = await sha256.bind(file.openRead()).first;
-        final actual = digest.toString();
+        final actual = digest.toString().toLowerCase();
         if (actual != expectedSha) {
           try {
             await file.delete();
@@ -372,21 +459,17 @@ class AppUpdateController extends GetxController {
         }
       }
 
-      // ----- Hand off to system installer -----
+      // ----- Hand off to system installer with explicit APK MIME type -----
       phase.value = AppUpdatePhase.installing;
-      final result = await OpenFilex.open(filePath);
+      final result = await OpenFilex.open(
+        filePath,
+        type: 'application/vnd.android.package-archive',
+      );
       if (result.type != ResultType.done) {
         phase.value = AppUpdatePhase.error;
         errorMessage.value = 'Failed to open APK: ${result.message}';
         return;
       }
-
-      // The user is now in the system installer UI. When they finish (either
-      // install or cancel), Android brings our app back to the foreground
-      // and our Activity resumes. We reset to idle so a future check works.
-      // We do NOT immediately reset to idle because the user might still be
-      // staring at the system installer; instead, we wait for the user to
-      // come back and explicitly dismiss our screen.
     } on DioException catch (e) {
       phase.value = AppUpdatePhase.error;
       final code = e.response?.statusCode;
@@ -425,8 +508,7 @@ class AppUpdateController extends GetxController {
     totalBytesLabel.value = '';
   }
 
-  /// Resets the controller to its idle state. The UI calls this when the
-  /// user dismisses the update screen.
+  /// Resets the controller to its idle state.
   void reset() {
     phase.value = AppUpdatePhase.idle;
     progressPercent.value = 0;
@@ -435,17 +517,13 @@ class AppUpdateController extends GetxController {
     errorMessage.value = '';
   }
 
-  /// Records that the user has been prompted about [version], so that
-  /// [shouldAutoPrompt] returns false for the same version on subsequent
-  /// launches. This prevents the dialog from reappearing every cold start.
+  /// Records that the user has been prompted about [version].
   Future<void> markVersionAsPrompted(String version) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(config.lastPromptedVersionPrefsKey, version);
   }
 
-  /// Returns true if the controller should auto-prompt about [version]
-  /// (i.e. the user has auto-update enabled and has not yet been prompted
-  /// about this specific version).
+  /// Returns true if the controller should auto-prompt about [version].
   Future<bool> shouldAutoPrompt(String version) async {
     if (!autoUpdateEnabled.value) return false;
     final prefs = await SharedPreferences.getInstance();
@@ -471,31 +549,26 @@ class AppUpdateController extends GetxController {
     }
   }
 
-  /// Requests the right storage/install permission depending on Android
-  /// version. Returns true if the app is allowed to download AND install.
+  /// Requests the install permission on Android 8.0+.
+  /// Note: Storage permission is NOT required on Android to download into
+  /// getApplicationDocumentsDirectory(), and requesting it on Android 13+
+  /// fails because READ/WRITE_EXTERNAL_STORAGE are deprecated.
   Future<bool> _ensureInstallPermission() async {
-    // Android 13+ does not need storage permission for the app's own
-    // documents directory, but older versions do.
-    final storage = await Permission.storage.request();
-    final storageOk = storage.isGranted || storage.isLimited;
-
-    // REQUEST_INSTALL_PACKAGES is its own permission on Android 8+.
-    // permission_handler exposes it as `Permission.requestInstallPackages`,
-    // but it may be `undefined` on iOS — guard with a try/catch.
-    bool installOk = true;
-    try {
-      final install = await Permission.requestInstallPackages.request();
-      installOk = install.isGranted || install.isLimited;
-    } on UnimplementedError {
-      // Older permission_handler or unsupported platform — ignore.
+    if (Platform.isAndroid) {
+      try {
+        final status = await Permission.requestInstallPackages.status;
+        if (!status.isGranted) {
+          await Permission.requestInstallPackages.request();
+        }
+      } catch (e) {
+        debugPrint('Install packages permission check: $e');
+      }
     }
-
-    return storageOk && installOk;
+    return true;
   }
 
   /// Returns true if [server] is strictly newer than [current] using
-  /// semver-style numeric comparison (1.0.10 > 1.0.9, even though
-  /// lexicographic comparison would say otherwise).
+  /// semver-style numeric comparison.
   bool _isVersionNewer(String server, String current) {
     final serverParts =
         server.split('.').map((e) => int.tryParse(e) ?? 0).toList();
@@ -535,8 +608,6 @@ class AppUpdateController extends GetxController {
     );
   }
 
-  /// Nullable localization getter — the controller outlives language
-  /// context changes, so every access must be null-safe (P-4 pattern).
   AppLocalizations? get localizationOrNull {
     final ctx = Get.context;
     if (ctx == null) return null;
