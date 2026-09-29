@@ -1,7 +1,7 @@
-import 'package:ecardo_user/src/network/response/status.dart';
 
 import 'package:get/get.dart' as getx;
 import 'package:ecardo_user/src/network/response/api_response.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import '../models/tour_model.dart';
 
@@ -48,7 +48,8 @@ class TourService extends getx.GetxService {
 
   /// Quiz matching engine (Tour-Yar)
   Future<List<TourModel>> matchTours(Map<String, dynamic> answers) async {
-    final response = await _network.post(endpoint: '/user/tours/match',
+    final response = await _network.post(
+      endpoint: '/user/tours/match',
       data: {'answers': answers},
     );
     if (response.status == Status.completed && response.data != null) {
@@ -63,7 +64,8 @@ class TourService extends getx.GetxService {
 
   /// Step 2: Create initial booking (Draft)
   Future<TourBookingModel?> bookTour(Map<String, dynamic> payload) async {
-    final response = await _network.post(endpoint: '/user/tours/book',
+    final response = await _network.post(
+      endpoint: '/user/tours/book',
       data: payload,
     );
     if (response.status == Status.completed && response.data != null) {
@@ -77,7 +79,8 @@ class TourService extends getx.GetxService {
 
   /// Step 3: Customize booking (hotel & activities)
   Future<TourBookingModel?> customizeBooking(int bookingId, Map<String, dynamic> payload) async {
-    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/customize',
+    final response = await _network.post(
+      endpoint: '/user/tours/bookings/$bookingId/customize',
       data: payload,
     );
     if (response.status == Status.completed && response.data != null) {
@@ -94,7 +97,8 @@ class TourService extends getx.GetxService {
     int bookingId,
     List<Map<String, dynamic>> travelers,
   ) async {
-    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/travelers',
+    final response = await _network.post(
+      endpoint: '/user/tours/bookings/$bookingId/travelers',
       data: {'travelers': travelers},
     );
     if (response.status == Status.completed && response.data != null) {
@@ -116,7 +120,8 @@ class TourService extends getx.GetxService {
       'payment_mode': paymentMode,
       if (walletId != null) 'wallet_id': walletId,
     };
-    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/pay',
+    final response = await _network.post(
+      endpoint: '/user/tours/bookings/$bookingId/pay',
       data: payload,
     );
     if (response.status == Status.completed && response.data != null) {
@@ -133,7 +138,8 @@ class TourService extends getx.GetxService {
     final payload = <String, dynamic>{
       if (walletId != null) 'wallet_id': walletId,
     };
-    final response = await _network.post(endpoint: '/user/tours/bookings/$bookingId/pay-remainder',
+    final response = await _network.post(
+      endpoint: '/user/tours/bookings/$bookingId/pay-remainder',
       data: payload,
     );
     if (response.status == Status.completed && response.data != null) {
@@ -177,7 +183,8 @@ class TourService extends getx.GetxService {
 
   /// Cancel booking
   Future<bool> cancelBooking(int id) async {
-    final response = await _network.post(endpoint: '/user/tours/bookings/$id/cancel',
+    final response = await _network.post(
+      endpoint: '/user/tours/bookings/$id/cancel',
       data: {},
     );
     return response.status == Status.completed;

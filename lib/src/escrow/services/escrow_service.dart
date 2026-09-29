@@ -1,6 +1,6 @@
-import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:get/get.dart' as getx;
 import 'package:ecardo_user/src/network/response/api_response.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import '../models/escrow_models.dart';
 
@@ -87,7 +87,8 @@ class EscrowService extends getx.GetxService {
 
   /// Step 2: Request changes
   Future<EscrowOrderModel?> requestChanges(int id, String reason) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/request-changes',
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/request-changes',
       data: {'reason': reason},
     );
     if (response.status == Status.completed && response.data != null) {
@@ -101,7 +102,8 @@ class EscrowService extends getx.GetxService {
 
   /// Step 3: Pay into escrow
   Future<EscrowOrderModel?> payIntoEscrow(int id, {int? walletId}) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/pay',
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/pay',
       data: {
         if (walletId != null) 'wallet_id': walletId,
       },
@@ -117,7 +119,8 @@ class EscrowService extends getx.GetxService {
 
   /// Step 3: Cancel deal
   Future<EscrowOrderModel?> cancelDeal(int id, {String? reason}) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/cancel',
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/cancel',
       data: {
         if (reason != null && reason.isNotEmpty) 'reason': reason,
       },
@@ -138,7 +141,8 @@ class EscrowService extends getx.GetxService {
     String? trackingUrl,
     String? shippingNotes,
   }) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/shipment',
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/shipment',
       data: {
         'shipping_carrier': carrier,
         'tracking_number': trackingNumber,
@@ -181,7 +185,8 @@ class EscrowService extends getx.GetxService {
 
   /// Step 6: Request inspection extension
   Future<EscrowOrderModel?> extendInspection(int id, {int hours = 48}) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/extend-inspection',
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/extend-inspection',
       data: {'hours': hours},
     );
     if (response.status == Status.completed && response.data != null) {
@@ -199,7 +204,8 @@ class EscrowService extends getx.GetxService {
     required String description,
     List<String>? evidenceFiles,
   }) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/dispute',
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/dispute',
       data: {
         'type': type,
         'description': description,
@@ -217,7 +223,8 @@ class EscrowService extends getx.GetxService {
 
   /// Step 7: Submit mutual rating
   Future<bool> submitRating(int id, {required int rating, String? comment}) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/rating',
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/rating',
       data: {
         'rating': rating,
         if (comment != null) 'comment': comment,
