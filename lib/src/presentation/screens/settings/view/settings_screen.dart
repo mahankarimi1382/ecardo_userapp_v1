@@ -456,7 +456,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                       if (code != null && Get.isRegistered<LocaleThemeService>()) {
                         await Get.find<LocaleThemeService>().setLanguage(code);
-                        if (mounted) setState(() {});
                       }
                     },
                   ),

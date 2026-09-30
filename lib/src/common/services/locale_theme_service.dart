@@ -44,14 +44,19 @@ class LocaleThemeService extends GetxService {
       );
     }
 
-    // wallet-modules v1.0.123: rebuild the stack BEFORE touching the locale.
-    // v1.0.122 still crashed in the field (error_log #63, fresh build_id)
-    // because setting `locale.value` / Get.updateLocale while every live
-    // route is mounted triggers the full-tree rebuild that hits a Get.find
-    // on a long-dead controller. After offAllNamed only the splash is
-    // mounted, so applying the locale rebuilds one safe screen and the rest
-    // of the app comes up already localized via the splash's own navigation.
+    // wallet-modules v1.0.123: replace the stack before changing locale so
+    // stale route controllers are not rebuilt. `Get.offAllNamed` starts a
+    // Navigator transition; it does NOT wait for the outgoing route to be
+    // disposed. Applying locale immediately here still rebuilds Settings /
+    // Navigation while their controllers are being removed, which can crash
+    // even though the preference was already persisted. Let the default
+    // 300ms GetX route transition and a frame complete first. Splash waits at
+    // least 900ms before auth navigation, so it remains the only live screen
+    // when the locale rebuild happens.
     Get.offAllNamed(BaseRoute.root);
+    await WidgetsBinding.instance.endOfFrame;
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+
     locale.value = Locale(normalized);
     Get.updateLocale(locale.value);
   }

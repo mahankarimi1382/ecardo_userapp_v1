@@ -12,9 +12,9 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 /// a dead controller — the release build froze until the process was killed,
 /// and the language only "applied" after a restart (it was persisted first).
 ///
-/// The fix (wallet-modules v1.0.123 in LocaleThemeService.setLanguage):
-/// persist FIRST, then Get.offAllNamed(BaseRoute.root) so only the splash is
-/// mounted, THEN apply the locale. These tests lock that behavior in.
+/// The v1.0.123 fix persisted first and re-rooted, but applied locale before
+/// GetX had finished disposing the outgoing route. v1.0.124 waits for that
+/// transition before applying locale. These tests lock the ordering in.
 ///
 /// The route table here is a minimal stand-in: the service only needs the
 /// NAME BaseRoute.root to exist. The real SplashBinding (network, plugins,
@@ -50,6 +50,30 @@ void main() {
     return service;
   }
 
+  /// Drive the route replacement animation before awaiting the service. The
+  /// service intentionally waits for the outgoing route to be disposed before
+  /// changing locale, so pumping the fake clock is part of this regression.
+  Future<void> switchLanguage(
+    WidgetTester tester,
+    LocaleThemeService service,
+    String code,
+  ) async {
+    final previousLocale = service.locale.value;
+    final pending = service.setLanguage(code);
+    await tester.pump();
+    expect(
+      service.locale.value,
+      previousLocale,
+      reason: 'locale must not rebuild the app during outgoing-route disposal',
+    );
+    // The shared-preferences future can resume after the first frame and
+    // schedule endOfFrame itself; advance a frame before the route-settle timer.
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    await pending;
+    await tester.pumpAndSettle();
+  }
+
   testWidgets(
     'setLanguage applies the locale, rebuilds the stack at root and persists the choice',
     (tester) async {
@@ -58,8 +82,7 @@ void main() {
 
       // The exact field trigger: /get-languages carries mixed-case codes
       // (e.g. "Fa") — normalization must not silently drop the switch.
-      await service.setLanguage('Fa');
-      await tester.pumpAndSettle();
+      await switchLanguage(tester, service, 'Fa');
 
       expect(service.locale.value, const Locale('fa'));
       expect(
@@ -81,8 +104,7 @@ void main() {
   testWidgets('setLanguage is a no-op for unsupported codes', (tester) async {
     final service = await pumpLanguageApp(tester);
 
-    await service.setLanguage('de');
-    await tester.pumpAndSettle();
+    await switchLanguage(tester, service, 'de');
 
     expect(service.locale.value, const Locale('en'));
     expect(Get.currentRoute, '/test-start');
@@ -94,14 +116,12 @@ void main() {
     (tester) async {
       final service = await pumpLanguageApp(tester);
 
-      await service.setLanguage('fa');
-      await tester.pumpAndSettle();
+      await switchLanguage(tester, service, 'fa');
       expect(service.locale.value, const Locale('fa'));
       expect(Get.currentRoute, BaseRoute.root);
       expect(await SettingsService.getLanguageLocaleCurrentState(), 'fa');
 
-      await service.setLanguage('en');
-      await tester.pumpAndSettle();
+      await switchLanguage(tester, service, 'en');
       expect(service.locale.value, const Locale('en'));
       expect(Get.currentRoute, BaseRoute.root);
       expect(await SettingsService.getLanguageLocaleCurrentState(), 'en');
@@ -113,17 +133,11 @@ void main() {
     (tester) async {
       final service = await pumpLanguageApp(tester);
 
-      // Scenario: user hammers the language list — every switch re-roots and
-      // the last one wins everywhere (storage + locale + route). Each tap in
-      // the real app is separated by at least one frame, so pump once between
-      // switches; calling updateLocale twice within a single frame phase is
-      // a scheduler-assertion artifact of the test binding, not a real path.
-      await service.setLanguage('zh');
-      await tester.pump();
-      await service.setLanguage('ar');
-      await tester.pump();
-      await service.setLanguage('fa');
-      await tester.pumpAndSettle();
+      // Scenario: the user changes language repeatedly. Each selection must
+      // finish disposing the previous route before the next locale rebuild.
+      await switchLanguage(tester, service, 'zh');
+      await switchLanguage(tester, service, 'ar');
+      await switchLanguage(tester, service, 'fa');
 
       expect(service.locale.value, const Locale('fa'));
       expect(Get.currentRoute, BaseRoute.root);
