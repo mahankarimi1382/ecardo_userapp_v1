@@ -66,6 +66,9 @@ void main() {
       previousLocale,
       reason: 'locale must not rebuild the app during outgoing-route disposal',
     );
+    // The shared-preferences future can resume after the first frame and
+    // schedule endOfFrame itself; advance a frame before the route-settle timer.
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.pump(const Duration(milliseconds: 400));
     await pending;
     await tester.pumpAndSettle();
