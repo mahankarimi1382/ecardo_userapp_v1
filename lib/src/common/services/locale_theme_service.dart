@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 /// Reactive locale + theme so settings changes apply without app restart.
@@ -37,29 +36,25 @@ class LocaleThemeService extends GetxService {
     final normalized = code.trim().toLowerCase();
     if (!supported.contains(normalized)) return;
 
-    // Persist FIRST so the splash relaunch below boots with the new language.
+    // Persist first so the choice survives an app restart.
     if (Get.isRegistered<SettingsService>()) {
       await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
         normalized,
       );
     }
 
-    // wallet-modules v1.0.123: replace the stack before changing locale so
-    // stale route controllers are not rebuilt. `Get.offAllNamed` starts a
-    // Navigator transition; it does NOT wait for the outgoing route to be
-    // disposed. Applying locale immediately here still rebuilds Settings /
-    // Navigation while their controllers are being removed, which can crash
-    // even though the preference was already persisted. Let the default
-    // 300ms GetX route transition and a frame complete first. Splash waits at
-    // least 900ms before auth navigation, so it remains the only live screen
-    // when the locale rebuild happens.
-    Get.offAllNamed(BaseRoute.root);
-    await WidgetsBinding.instance.endOfFrame;
-    await Future<void>.delayed(const Duration(milliseconds: 400));
-
-    locale.value = Locale(normalized);
-    Get.updateLocale(locale.value);
+    // Apply the language to the RUNNING app in place. Do NOT call
+    // `Get.updateLocale` (it force-restarts the app/Navigator) and do NOT
+    // re-root to `/` (that is the SplashScreen): both replay the splash logo
+    // and loading. Setting `Get.locale` keeps GetX's RTL Directionality and
+    // translations in sync, and `locale.value` rebuilds the reactive
+    // GetMaterialApp in `app.dart` with the new locale while the active
+    // route stays exactly where it is.
+    final nextLocale = Locale(normalized);
+    Get.locale = nextLocale;
+    locale.value = nextLocale;
   }
+
   Future<void> setThemeModePref(String mode) async {
     themeMode.value = _parseTheme(mode);
     if (Get.isRegistered<SettingsService>()) {
