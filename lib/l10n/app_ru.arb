@@ -2832,5 +2832,15 @@
     }
   },
   "travelContactPhone": "Контактный мобильный",
-  "travelVisaCountry": "Страна"
+  "travelVisaCountry": "Страна",
+  "commonRetry": "Повторить",
+  "cardsInactiveSupport": "Обратитесь в поддержку, чтобы активировать картосервис на вашем счёте.",
+  "cardsEmptyTitle": "Пока нет карт",
+  "cardsEmptySubtitle": "Создайте свою первую виртуальную карту, чтобы начать.",
+  "remittanceUploadSkippedFiles": "Пропущено файлов: {count} (отсутствуют на диске). Загружаем остальные.",
+  "remittanceTrackingUuid": "UUID отслеживания",
+  "remittanceReference": "Референс",
+  "remittanceTracking": "Отслеживание",
+  "remittanceCreated": "Создано",
+  "remittanceTrackTitle": "Отследить перевод"
 }

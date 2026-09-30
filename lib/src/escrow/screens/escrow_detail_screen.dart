@@ -20,7 +20,12 @@ class EscrowDetailScreen extends StatefulWidget {
 }
 
 class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
-  final EscrowController controller = Get.find<EscrowController>();
+  // QA-2026-09-29 (escrow): deep navigation (BaseRoute.escrowDetail from a
+  // deep-link) never passes through EscrowListScreen, so Get.find used to
+  // throw and render a dead error page. Register on demand instead.
+  late final EscrowController controller = Get.isRegistered<EscrowController>()
+      ? Get.find<EscrowController>()
+      : Get.put(EscrowController());
 
   @override
   void initState() {
@@ -198,7 +203,7 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                     const Divider(height: 20),
                     _buildInfoRow(l10nPick(context, fa: 'طرف خریدار', en: 'Buyer'), deal.buyer?.name ?? '-'),
                     _buildInfoRow(l10nPick(context, fa: 'طرف فروشنده', en: 'Seller'), deal.seller?.name ?? '-'),
-                    _buildInfoRow(l10nPick(context, fa: 'دوره بازرسی', en: 'Inspection Period'), '${deal.inspectionHours} ساعت پس از تحویل'),
+                    _buildInfoRow(l10nPick(context, fa: 'دوره بازرسی', en: 'Inspection Period'), l10nPick(context, fa: '${deal.inspectionHours} ساعت پس از تحویل', en: '${deal.inspectionHours} hours after delivery')),
                     _buildInfoRow(l10nPick(context, fa: 'پرداخت‌کننده کارمزد', en: 'Fee Payer'), deal.feePayer == 'BUYER' ? 'خریدار' : (deal.feePayer == 'SELLER' ? 'فروشنده' : '۵۰-۵۰')),
                     if (deal.shippingCompany != null)
                       _buildInfoRow(l10nPick(context, fa: 'شرکت حمل‌ونقل', en: 'Carrier'), deal.shippingCompany!),

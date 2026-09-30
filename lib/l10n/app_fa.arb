@@ -2833,5 +2833,15 @@
   "travelAliPayDescription": "پرداخت بین‌المللی با AliPay",
   "travelMirPayDescription": "پرداخت روسی با MirPay",
   "travelContactPhone": "موبایل تماس",
-  "travelVisaCountry": "کشور"
+  "travelVisaCountry": "کشور",
+  "commonRetry": "تلاش مجدد",
+  "cardsInactiveSupport": "لطفاً برای فعال‌سازی خدمات کارت با پشتیبانی تماس بگیرید.",
+  "cardsEmptyTitle": "هنوز کارتی ندارید",
+  "cardsEmptySubtitle": "برای شروع، اولین کارت مجازی خود را بسازید.",
+  "remittanceUploadSkippedFiles": "{count} فایل موجود روی دیسک نبود و رد شد. بقیه آپلود می‌شوند.",
+  "remittanceTrackingUuid": "شناسه رهگیری",
+  "remittanceReference": "شماره مرجع",
+  "remittanceTracking": "رهگیری",
+  "remittanceCreated": "تاریخ ایجاد",
+  "remittanceTrackTitle": "رهگیری حواله"
 }

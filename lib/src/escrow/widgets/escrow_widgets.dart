@@ -185,7 +185,9 @@ class EscrowTimelineWidget extends StatelessWidget {
                       ),
                     ),
                   Text(
-                    'توسط: ${ev.actorRole}',
+                    // QA-2026-09-29 (escrow): bilingual via l10nPick — was
+                    // Persian-only 'توسط:'.
+                    '${l10nPick(ctx, fa: 'توسط', en: 'by')}: ${ev.actorRole}',
                     style: TextStyle(fontSize: 9.sp, color: Colors.grey.shade400),
                   ),
                 ],

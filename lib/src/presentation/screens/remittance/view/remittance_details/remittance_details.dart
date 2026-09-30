@@ -55,7 +55,7 @@ class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             _StatusBanner(status: r.status, l: l),
             SizedBox(height: 16.h),
-            _Card('Tracking', [_Row('UUID', r.uuid), _Row('Reference', r.trx), if (r.createdAt != null) _Row('Created', _formatDate(r.createdAt!))]),
+            _Card(l.remittanceTracking, [_Row('UUID', r.uuid), _Row(l.remittanceReference, r.trx), if (r.createdAt != null) _Row(l.remittanceCreated, _formatDate(r.createdAt!))]),
             SizedBox(height: 16.h),
             _Card(l.remittancePayoutDetails, [
               // M-7 — decimals now come from DynamicDecimalsHelper via the

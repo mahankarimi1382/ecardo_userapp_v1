@@ -181,8 +181,8 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                       labelText: l10nPick(context, fa: 'واحد ارز', en: 'Currency'),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(14.r)),
                     ),
-                    items: const [
-                      DropdownMenuItem(value: 'IRR', child: Text('ریال')),
+                    items: [
+                      DropdownMenuItem(value: 'IRR', child: Text(l10nPick(context, fa: 'ریال / تومان', en: 'IRR'))),
                       DropdownMenuItem(value: 'USD', child: Text('USD')),
                       DropdownMenuItem(value: 'EUR', child: Text('EUR')),
                     ],
@@ -203,9 +203,26 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
               spacing: 8.w,
               children: [24, 48, 72, 120, 168].map((hrs) {
                 final isSel = _inspectionHours == hrs;
+                // QA-2026-09-29 (escrow): without an explicit selectedColor the
+                // theme's ChipThemeData.selectedColor (solid deepBlack) won —
+                // a tapped "time" chip turned black-on-black (label stayed
+                // deepBlack) and looked like the control was dead. Match the
+                // role chips: light tint + readable label in both states.
                 return ChoiceChip(
-                  label: Text('$hrs ساعت'),
+                  label: Text(
+                    l10nPick(context, fa: '$hrs ساعت', en: '$hrs hours'),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: isSel
+                          ? AppColors.lightPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
                   selected: isSel,
+                  selectedColor: AppColors.lightPrimary.withOpacity(0.2),
+                  backgroundColor: Colors.grey.shade100,
+                  showCheckmark: false,
                   onSelected: (v) => setState(() => _inspectionHours = hrs),
                 );
               }).toList(),

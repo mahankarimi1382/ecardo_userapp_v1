@@ -41,7 +41,9 @@ class RemittanceSenderSection extends StatelessWidget {
             )),
         SizedBox(height: 16.h),
         _Label(l.remittanceSenderPhone),
-        _Field(c.senderPhoneController, '+98 912 345 6789', keyboardType: TextInputType.phone),
+        // QA-2026-09-29 (intl transfer): explicit test-sample placeholder —
+        // obviously synthetic (zeros), never a real subscriber number.
+        _Field(c.senderPhoneController, '+98 912 000 0000', keyboardType: TextInputType.phone),
         SizedBox(height: 16.h),
         _Label(l.remittanceSenderIdNumber),
         _Field(c.senderIdNumberController, l.remittanceSenderIdNumber),

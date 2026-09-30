@@ -33,7 +33,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
   final iconList = [
     PngAssets.bottomNavigationHomeSolidIcon,
     PngAssets.bottomNavigationTransferSolidIcon,
-    PngAssets.virtualCardService,
+    // v1.0.122 (MY-CARDS): the service-tile image (virtual_card_service.png)
+    // rendered as an off-family blob in the nav bar; the wallet glyph is from
+    // the same bottom-navigation solid set as the other three tabs.
+    PngAssets.bottomNavigationWalletSolidIcon,
     PngAssets.bottomNavigationSettingsSolidIcon,
   ];
 
@@ -184,7 +187,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       : index == 1
                       ? 26
                       : index == 2
-                      ? 22
+                      ? 26
                       : 28,
                 ),
                 const SizedBox(height: 2),
@@ -209,14 +212,17 @@ class _NavigationScreenState extends State<NavigationScreen> {
             }
 
             if (index == 2) {
-              if (!myCardsEnabled) {
-                ToastHelper().showErrorToast(localization.myCardsNotEnabled);
-                return;
-              }
-              // The virtual-cards route binding normally provides the
-              // controller; as an embedded tab we register it on first visit.
+              // Register VirtualCardController on first visit
               if (!Get.isRegistered<VirtualCardController>()) {
                 VirtualCardBinding().dependencies();
+              }
+              // Only gate if user data has finished loading and cards are explicitly disabled.
+              // While initial loading is in progress, allow tab switch so the screen displays its Loading state.
+              final userDataLoaded = !homeController.isLoading.value &&
+                  homeController.userModel.value.data != null;
+              if (userDataLoaded && !myCardsEnabled) {
+                ToastHelper().showErrorToast(localization.myCardsNotEnabled);
+                return;
               }
             }
 

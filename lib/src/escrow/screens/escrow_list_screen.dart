@@ -108,6 +108,37 @@ class EscrowListScreen extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator(color: AppColors.lightPrimary));
               }
 
+              // QA-2026-09-29 (escrow states): a failed load shows an Error
+              // view with retry — previously errorMessage was written by the
+              // controller but never rendered, so failures looked like "no
+              // deals found".
+              if (controller.errorMessage.value.isNotEmpty &&
+                  controller.orders.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32.w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cloud_off_rounded, size: 48.w, color: AppColors.error),
+                        SizedBox(height: 14.h),
+                        Text(
+                          controller.errorMessage.value,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
+                        ),
+                        SizedBox(height: 12.h),
+                        TextButton.icon(
+                          onPressed: () => controller.loadOrders(refresh: true),
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: Text(l10nPick(context, fa: 'تلاش مجدد', en: 'Retry')),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
               if (controller.orders.isEmpty) {
                 return Center(
                   child: Padding(
@@ -212,7 +243,7 @@ class EscrowListScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'خریدار: ${deal.buyer?.name ?? "..."}',
+                    '${l10nPick(context, fa: 'خریدار', en: 'Buyer')}: ${deal.buyer?.name ?? "..."}',
                     style: TextStyle(fontSize: 11.sp, color: Colors.grey.shade600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -220,7 +251,7 @@ class EscrowListScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    'فروشنده: ${deal.seller?.name ?? "..."}',
+                    '${l10nPick(context, fa: 'فروشنده', en: 'Seller')}: ${deal.seller?.name ?? "..."}',
                     style: TextStyle(fontSize: 11.sp, color: Colors.grey.shade600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

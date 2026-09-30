@@ -37,6 +37,41 @@ class P2pOrderDetailsScreen extends StatelessWidget {
 
         final data = controller.orderData.value;
         if (data == null) {
+          // QA-2026-09-29 (p2p states): failed fetch shows Error+Retry;
+          // only a genuinely missing order shows the "not found" copy.
+          if (controller.detailsLoadError.value.isNotEmpty) {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.cloud_off_rounded,
+                      size: 48.sp,
+                      color: AppColors.error,
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      controller.detailsLoadError.value,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 14.h),
+                    TextButton.icon(
+                      onPressed: controller.fetchOrderDetails,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: Text(localization.commonRetry),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
           return Center(
             child: Text(
               localization.p2pNoOrderDetailsFound,

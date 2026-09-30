@@ -360,6 +360,16 @@ class P2pViewScreen extends GetView<P2pController> {
                   controller.p2pAds.isEmpty ||
               controller.isCurrenciesLoading.value) ...[
             const Expanded(child: CommonLoading()),
+          ] else if (controller.marketplaceLoadError.value.isNotEmpty &&
+              controller.p2pAds.isEmpty) ...[
+            // QA-2026-09-29 (p2p states): dedicated Error state with retry —
+            // a failed fetch must not render as "no ads found".
+            Expanded(
+              child: _P2pLoadErrorCard(
+                message: controller.marketplaceLoadError.value,
+                onRetry: () => controller.fetchMarketplaceAds(isRefresh: true),
+              ),
+            ),
           ] else if (controller.p2pAds.isEmpty) ...[
             Expanded(child: NoDataFound()),
           ] else ...[
@@ -824,5 +834,45 @@ class P2pViewScreen extends GetView<P2pController> {
       return Get.find<PaymentAccountController>();
     }
     return Get.put(PaymentAccountController());
+  }
+}
+
+/// QA-2026-09-29 (p2p states): dedicated marketplace Error card with retry.
+class _P2pLoadErrorCard extends StatelessWidget {
+  const _P2pLoadErrorCard({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cloud_off_rounded, size: 48.sp, color: AppColors.error),
+            SizedBox(height: 12.h),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.lightTextPrimary,
+              ),
+            ),
+            SizedBox(height: 14.h),
+            TextButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text(loc.commonRetry),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

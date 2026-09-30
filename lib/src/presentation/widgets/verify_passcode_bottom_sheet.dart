@@ -106,7 +106,11 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: '****',
+                    // QA-2026-09-29 (exchange): '****' glyphs sit high and
+                    // render smaller than the obscured input bullets, which
+                    // made the placeholder look mis-sized vs the input.
+                    // '••••' matches the obscured glyph metrics.
+                    hintText: '••••',
                     controller: controller.passcodeController,
                     focusNode: controller.passcodeFocusNode,
                     isFocused: controller.isPasscodeFocused.value,

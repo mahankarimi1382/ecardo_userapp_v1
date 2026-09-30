@@ -2832,5 +2832,15 @@
     }
   },
   "travelContactPhone": "联系手机",
-  "travelVisaCountry": "国家"
+  "travelVisaCountry": "国家",
+  "commonRetry": "重试",
+  "cardsInactiveSupport": "请联系客服为您开通卡片服务。",
+  "cardsEmptyTitle": "暂无卡片",
+  "cardsEmptySubtitle": "创建您的第一张虚拟卡以开始使用。",
+  "remittanceUploadSkippedFiles": "已跳过 {count} 个磁盘上不存在的文件，正在上传其余文件。",
+  "remittanceTrackingUuid": "追踪 UUID",
+  "remittanceReference": "参考编号",
+  "remittanceTracking": "追踪",
+  "remittanceCreated": "创建时间",
+  "remittanceTrackTitle": "汇款追踪"
 }
