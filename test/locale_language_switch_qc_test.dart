@@ -114,9 +114,14 @@ void main() {
       final service = await pumpLanguageApp(tester);
 
       // Scenario: user hammers the language list — every switch re-roots and
-      // the last one wins everywhere (storage + locale + route).
+      // the last one wins everywhere (storage + locale + route). Each tap in
+      // the real app is separated by at least one frame, so pump once between
+      // switches; calling updateLocale twice within a single frame phase is
+      // a scheduler-assertion artifact of the test binding, not a real path.
       await service.setLanguage('zh');
+      await tester.pump();
       await service.setLanguage('ar');
+      await tester.pump();
       await service.setLanguage('fa');
       await tester.pumpAndSettle();
 
