@@ -43,7 +43,6 @@ class _EcardoUserState extends State<EcardoUser> {
       setState(() {
         _locale = Locale(savedLocale);
       });
-      Get.updateLocale(Locale(savedLocale));
     }
   }
 
