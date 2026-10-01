@@ -191,4 +191,23 @@ class BaseRoute {
   // License Store Service
   static const String licenseStore = "/license_store_route";
   static const String licenseMyLicenses = "/license_my_licenses_route";
+
+  // Specialized Financial Services Full Flow Routes
+  static const String loanIntro = "/loan_intro_route";
+  static const String loanApplication = "/loan_application_route";
+  static const String loanConfirm = "/loan_confirm_route";
+  static const String loanTracking = "/loan_tracking_route";
+
+  static const String guaranteeIntro = "/guarantee_intro_route";
+  static const String guaranteeApplication = "/guarantee_application_route";
+  static const String guaranteeConfirm = "/guarantee_confirm_route";
+  static const String guaranteeTracking = "/guarantee_tracking_route";
+
+  static const String stockIntro = "/stock_intro_route";
+  static const String stockOrder = "/stock_order_route";
+  static const String stockConfirm = "/stock_confirm_route";
+  static const String stockTracking = "/stock_tracking_route";
+
+  static const String visaIntro = "/visa_intro_route";
+  static const String licenseIntro = "/license_intro_route";
 }

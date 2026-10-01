@@ -3,19 +3,33 @@ import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_match_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_my_bookings_screen.dart';
 import 'package:ecardo_user/src/stock/screens/stock_home_screen.dart';
+import 'package:ecardo_user/src/stock/screens/stock_intro_screen.dart';
+import 'package:ecardo_user/src/stock/screens/stock_order_screen.dart';
+import 'package:ecardo_user/src/stock/screens/stock_confirm_screen.dart';
+import 'package:ecardo_user/src/stock/screens/stock_tracking_screen.dart';
 import 'package:ecardo_user/src/loan/screens/loan_home_screen.dart';
 import 'package:ecardo_user/src/loan/screens/loan_detail_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_intro_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_application_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_confirm_screen.dart';
+import 'package:ecardo_user/src/loan/screens/loan_tracking_screen.dart';
 import 'package:ecardo_user/src/rental/screens/rental_home_screen.dart';
 import 'package:ecardo_user/src/guarantee/screens/guarantee_home_screen.dart';
+import 'package:ecardo_user/src/guarantee/screens/guarantee_intro_screen.dart';
+import 'package:ecardo_user/src/guarantee/screens/guarantee_application_screen.dart';
+import 'package:ecardo_user/src/guarantee/screens/guarantee_confirm_screen.dart';
+import 'package:ecardo_user/src/guarantee/screens/guarantee_tracking_screen.dart';
 import 'package:ecardo_user/src/rental/screens/rental_detail_screen.dart';
 import 'package:ecardo_user/src/guarantee/screens/guarantee_detail_screen.dart';
 import 'package:ecardo_user/src/remitv2/screens/remittance_track_screen.dart';
 import 'package:ecardo_user/src/license/view/license_store_screen.dart';
 import 'package:ecardo_user/src/license/view/license_my_licenses_screen.dart';
+import 'package:ecardo_user/src/license/view/license_intro_screen.dart';
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
 import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
 import '../../visa/screens/visa_catalog_screen.dart';
 import '../../visa/screens/visa_list_screen.dart';
+import '../../visa/screens/visa_intro_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/data_bundle/data_bundle.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/internet/internet.dart';
@@ -277,4 +291,23 @@ class RoutesConfig {
   static const remittanceTrack = RemittanceTrackScreen();
   static const licenseStore = LicenseStoreScreen();
   static const licenseMyLicenses = LicenseMyLicensesScreen();
+
+  // Specialized Financial Services Full Flow Routes
+  static const loanIntro = LoanIntroScreen();
+  static const loanApplication = LoanApplicationScreen();
+  static const loanConfirm = LoanConfirmScreen();
+  static const loanTracking = LoanTrackingScreen();
+
+  static const guaranteeIntro = GuaranteeIntroScreen();
+  static const guaranteeApplication = GuaranteeApplicationScreen();
+  static const guaranteeConfirm = GuaranteeConfirmScreen();
+  static const guaranteeTracking = GuaranteeTrackingScreen();
+
+  static const stockIntro = StockIntroScreen();
+  static const stockOrder = StockOrderScreen();
+  static const stockConfirm = StockOrderConfirmScreen();
+  static const stockTracking = StockTrackingScreen();
+
+  static const visaIntro = VisaIntroScreen();
+  static const licenseIntro = LicenseIntroScreen();
 }

@@ -578,6 +578,7 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.visaHome,
     page: () => RoutesConfig.visaHome,
+    binding: VisaBinding(),
   ),
   GetPage(
     name: BaseRoute.visaDetail,
@@ -588,22 +589,82 @@ List<GetPage> routesHandler = [
           : (args is String ? args : '');
       return VisaDetailScreen(caseNo: caseNo);
     },
+    binding: VisaBinding(),
   ),
   GetPage(
     name: BaseRoute.visaList,
     page: () => RoutesConfig.visaList,
+    binding: VisaBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.visaIntro,
+    page: () => RoutesConfig.visaIntro,
+    binding: VisaBinding(),
   ),
 
   // Stock Trading Routes
   GetPage(
     name: BaseRoute.stockHome,
     page: () => RoutesConfig.stockHome,
+    binding: StockBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.stockIntro,
+    page: () => RoutesConfig.stockIntro,
+    binding: StockBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.stockOrder,
+    page: () => RoutesConfig.stockOrder,
+    binding: StockBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.stockConfirm,
+    page: () => RoutesConfig.stockConfirm,
+    binding: StockBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.stockTracking,
+    page: () => RoutesConfig.stockTracking,
+    binding: StockBinding(),
   ),
 
   // Loan & Credit Routes
   GetPage(
     name: BaseRoute.loanHome,
     page: () => RoutesConfig.loanHome,
+    binding: LoanBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.loanDetail,
+    page: () {
+      final args = Get.arguments;
+      final caseId = args is Map
+          ? int.tryParse('${args['caseId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return LoanDetailScreen(caseId: caseId ?? 0);
+    },
+    binding: LoanBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.loanIntro,
+    page: () => RoutesConfig.loanIntro,
+    binding: LoanBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.loanApplication,
+    page: () => RoutesConfig.loanApplication,
+    binding: LoanBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.loanConfirm,
+    page: () => RoutesConfig.loanConfirm,
+    binding: LoanBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.loanTracking,
+    page: () => RoutesConfig.loanTracking,
+    binding: LoanBinding(),
   ),
 
   // Car Rental Routes
@@ -616,6 +677,38 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.guaranteeHome,
     page: () => RoutesConfig.guaranteeHome,
+    binding: GuaranteeBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.guaranteeDetail,
+    page: () {
+      final args = Get.arguments;
+      final caseId = args is Map
+          ? int.tryParse('${args['caseId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return GuaranteeDetailScreen(caseId: caseId ?? 0);
+    },
+    binding: GuaranteeBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.guaranteeIntro,
+    page: () => RoutesConfig.guaranteeIntro,
+    binding: GuaranteeBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.guaranteeApplication,
+    page: () => RoutesConfig.guaranteeApplication,
+    binding: GuaranteeBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.guaranteeConfirm,
+    page: () => RoutesConfig.guaranteeConfirm,
+    binding: GuaranteeBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.guaranteeTracking,
+    page: () => RoutesConfig.guaranteeTracking,
+    binding: GuaranteeBinding(),
   ),
 
   GetPage(
@@ -629,40 +722,26 @@ List<GetPage> routesHandler = [
     },
   ),
 
-  GetPage(
-    name: BaseRoute.guaranteeDetail,
-    page: () {
-      final args = Get.arguments;
-      final caseId = args is Map
-          ? int.tryParse('${args['caseId'] ?? args['id'] ?? ''}')
-          : (args is int ? args : null);
-      return GuaranteeDetailScreen(caseId: caseId ?? 0);
-    },
-  ),
-
   // Remittance Track Routes
   GetPage(
     name: BaseRoute.remittanceTrack,
     page: () => RoutesConfig.remittanceTrack,
-  ),
-  GetPage(
-    name: BaseRoute.loanDetail,
-    page: () {
-      final args = Get.arguments;
-      final caseId = args is Map
-          ? int.tryParse('${args['caseId'] ?? args['id'] ?? ''}')
-          : (args is int ? args : null);
-      return LoanDetailScreen(caseId: caseId ?? 0);
-    },
   ),
 
   // License Store Routes
   GetPage(
     name: BaseRoute.licenseStore,
     page: () => RoutesConfig.licenseStore,
+    binding: LicenseBinding(),
   ),
   GetPage(
     name: BaseRoute.licenseMyLicenses,
     page: () => RoutesConfig.licenseMyLicenses,
+    binding: LicenseBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.licenseIntro,
+    page: () => RoutesConfig.licenseIntro,
+    binding: LicenseBinding(),
   ),
 ];
