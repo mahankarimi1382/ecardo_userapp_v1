@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -13,6 +14,7 @@ import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/kyc_rejected_model.dart';
 
 class SignUpStatusController extends GetxController {
   // P-4 pattern: null-safe localization (mirrors app_update_controller).
@@ -28,6 +30,7 @@ class SignUpStatusController extends GetxController {
   final RxBool isKycLoading = false.obs;
   final RxList<UserKycData> userKycList = <UserKycData>[].obs;
   final Rx<UserModel> userModel = UserModel().obs;
+  final Rx<KycRejectedData?> rejectedKycData = Rx<KycRejectedData?>(null);
 
   // Verification Type
   final RxString typeName = "".obs;
@@ -68,6 +71,9 @@ class SignUpStatusController extends GetxController {
       );
       if (response.status == Status.completed) {
         userModel.value = UserModel.fromJson(response.data!);
+        if (userModel.value.data?.kyc == 3) {
+          await fetchRejectedKycData();
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchUser() error: $e');
@@ -77,6 +83,20 @@ class SignUpStatusController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchRejectedKycData() async {
+    try {
+      final response = await Get.find<NetworkService>().get(
+        endpoint: ApiPath.kycRejectedEndpoint,
+      );
+      if (response.status == Status.completed && response.data != null) {
+        final model = KycRejectedModel.fromJson(response.data!);
+        rejectedKycData.value = model.data;
+      }
+    } catch (e) {
+      debugPrint('⚠️ fetchRejectedKycData error: $e');
     }
   }
 
@@ -107,21 +127,30 @@ class SignUpStatusController extends GetxController {
         'fcm_token': savedFcmToken ?? '',
       };
 
-      final response = await Get.find<NetworkService>().post(
-        endpoint: ApiPath.getSetupFcm,
-        data: requestBody,
+      // BUG-02 (P0): Fire-and-forget non-blocking FCM setup call.
+      // A failed /setup-fcm endpoint response (e.g. timeout, active VPN, or network blip)
+      // must NEVER trap or prevent the user from reaching the main navigation dashboard.
+      unawaited(
+        Get.find<NetworkService>()
+            .post(
+              endpoint: ApiPath.getSetupFcm,
+              data: requestBody,
+            )
+            .catchError((e) {
+              debugPrint('⚠️ Non-blocking FCM token registration notice: $e');
+              return ApiResponse(status: Status.error);
+            }),
       );
-
-      if (response.status == Status.completed) {
-        Get.offAllNamed(
-          BaseRoute.navigation,
-          arguments: {
-            "bonus": Get.find<SettingsService>().getSetting("referral_bonus"),
-          },
-        );
-      }
+    } catch (e) {
+      debugPrint('⚠️ postFcmNotification device info error: $e');
     } finally {
       isFcmTokenLoading.value = false;
+      Get.offAllNamed(
+        BaseRoute.navigation,
+        arguments: {
+          "bonus": Get.find<SettingsService>().getSetting("referral_bonus"),
+        },
+      );
     }
   }
 
