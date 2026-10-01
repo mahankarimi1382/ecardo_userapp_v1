@@ -25,6 +25,10 @@ class VisaController extends GetxController {
   final RxBool isSubmitting = false.obs;
   final RxBool isPaying = false.obs;
 
+  // Service health / API availability state
+  final RxBool isServiceUnavailable = false.obs;
+  final RxnString errorMessage = RxnString();
+
   // Document upload tracking
   final RxMap<String, File> pickedFiles = <String, File>{}.obs;
   final RxMap<String, bool> uploadProgress = <String, bool>{}.obs;
@@ -71,11 +75,17 @@ class VisaController extends GetxController {
   /// Load catalog list from API
   Future<void> loadCatalog() async {
     isLoadingCatalog.value = true;
+    isServiceUnavailable.value = false;
+    errorMessage.value = null;
     try {
       final items = await _service.getCatalog();
       catalogList.assignAll(items);
+      if (items.isEmpty) {
+        isServiceUnavailable.value = true;
+      }
     } catch (e) {
-      ToastHelper().showErrorToast('Failed to load visa catalog: $e');
+      isServiceUnavailable.value = true;
+      errorMessage.value = e.toString();
     } finally {
       isLoadingCatalog.value = false;
     }
