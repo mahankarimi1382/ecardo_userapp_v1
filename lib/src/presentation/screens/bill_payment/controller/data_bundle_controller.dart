@@ -137,8 +137,16 @@ class DataBundleController extends GetxController {
     if (isSubmitLoading.isTrue) return;
     isSubmitLoading.value = true;
     try {
+      final currentService = serviceData.value;
+      if (currentService == null || currentService.id == null) {
+        ToastHelper().showErrorToast(
+          localization?.dataBundleServiceRequired ?? 'Service is required',
+        );
+        isSubmitLoading.value = false;
+        return;
+      }
       final Map<String, dynamic> requestBody = {
-        "service_id": serviceData.value!.id.toString(),
+        "service_id": currentService.id.toString(),
         "amount": amountText.value,
         "data": [
           dynamicFieldControllers.map(
