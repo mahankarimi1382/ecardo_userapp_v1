@@ -14,6 +14,10 @@ class LicenseController extends GetxController {
   final RxBool isLoadingCatalog = false.obs;
   final RxString selectedCategory = 'all'.obs;
 
+  // Backend connection status
+  final RxBool hasBackendError = false.obs;
+  final RxBool isServiceAvailable = true.obs;
+
   final Rx<LicenseProductItem?> currentProduct = Rx<LicenseProductItem?>(null);
   final RxBool isLoadingProduct = false.obs;
 
@@ -51,6 +55,7 @@ class LicenseController extends GetxController {
   Future<void> fetchCatalog({String? category, String? search}) async {
     try {
       isLoadingCatalog.value = true;
+      hasBackendError.value = false;
       String ep = '/user/licenses/catalog';
       final qp = <String>[];
       if (category != null && category != 'all') qp.add('category=$category');
@@ -64,12 +69,20 @@ class LicenseController extends GetxController {
       if (res.status == Status.completed && res.data != null) {
         final list = res.data!['data']?['products'] as List? ?? [];
         products.value = list.map((item) => LicenseProductItem.fromJson(item)).toList();
+        if (products.isEmpty) {
+          hasBackendError.value = true;
+          isServiceAvailable.value = false;
+        } else {
+          isServiceAvailable.value = true;
+        }
+      } else {
+        hasBackendError.value = true;
+        isServiceAvailable.value = false;
       }
-    } catch (e) {
-      ToastHelper().showErrorToast(l10nPickAuto(
-        en: 'Failed to load license catalog.',
-        fa: 'خطا در بارگذاری کاتالوگ لایسنس‌ها.',
-      ));
+    } catch (_) {
+      hasBackendError.value = true;
+      isServiceAvailable.value = false;
+      products.clear();
     } finally {
       isLoadingCatalog.value = false;
     }

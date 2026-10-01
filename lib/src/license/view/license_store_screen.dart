@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/financial_service_unavailable_banner.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../controller/license_controller.dart';
 import '../model/license_models.dart';
+import 'license_intro_screen.dart';
 import 'license_detail_screen.dart';
 import 'license_my_licenses_screen.dart';
 
@@ -84,6 +86,77 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
       ),
       body: Column(
         children: [
+          Obx(() {
+            if (controller.hasBackendError.value || controller.products.isEmpty) {
+              return FinancialServiceUnavailableBanner(
+                serviceNameFa: 'فروشگاه لایسنس‌های نرم‌افزار',
+                serviceNameEn: 'Software License Store',
+                serviceNameAr: 'متجر التراخيص الرقمية',
+                serviceNameZh: '数字软件授权商城',
+                isCompact: true,
+                onRetry: () => controller.fetchCatalog(category: controller.selectedCategory.value),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Get.to(() => const LicenseIntroScreen()),
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: AppColors.lightBorder),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.info_outline_rounded, size: 16.sp, color: AppColors.lightPrimary),
+                          SizedBox(width: 6.w),
+                          Text(
+                            l10nPick(context, fa: 'راهنمای لایسنس‌ها', en: 'Licenses Guide', ar: 'دليل التراخيص', zh: '授权指南'),
+                            style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Get.to(() => const LicenseMyLicensesScreen()),
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: AppColors.lightBorder),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.vpn_key_rounded, size: 16.sp, color: const Color(0xFF0D9488)),
+                          SizedBox(width: 6.w),
+                          Text(
+                            l10nPick(context, fa: 'صندوق لایسنس‌های من', en: 'My Vault', ar: 'خزينة تراخيصي', zh: '我的授权库'),
+                            style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           _buildCategoryChips(),
           Expanded(
             child: Obx(() {
