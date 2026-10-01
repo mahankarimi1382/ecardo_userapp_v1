@@ -13,15 +13,7 @@ class RemittanceDetailsScreen extends StatefulWidget {
 }
 
 class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
-  // M-2 — Deep-link safety: this route has no GetPage binding, so opening it
-  // directly (push notification / external link) used to crash with
-  // `"RemittanceController" not found`. Reuse the flow controller when it is
-  // already registered (normal navigation from the history list, which also
-  // pre-selects the record), otherwise register it locally — fetchDetails()
-  // below loads everything this screen needs, so a fresh controller works
-  // for direct navigation too.
-  // TODO(lead): add a RemittanceBinding to /remittance_details_route (and the
-  // other remittance routes) in routes_handler.dart as the single DI source.
+  // BUG-09: RemittanceBinding in routes_handler.dart is the single DI source.
   final RemittanceController controller =
       Get.isRegistered<RemittanceController>()
           ? Get.find<RemittanceController>()

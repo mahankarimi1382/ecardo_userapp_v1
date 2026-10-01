@@ -14,14 +14,7 @@ class RemittanceHistoryScreen extends StatefulWidget {
 }
 
 class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
-  // M-1 — guarded find-or-put: reuse the flow controller already registered
-  // by remittance_screen (same instance the details screen reads), or
-  // register it locally when this route is opened directly. There is no
-  // GetPage binding for /remittance_history_route, so registration must
-  // stay view-side for now.
-  // TODO(lead): introduce a RemittanceBinding in routes_handler.dart as the
-  // single DI source for /remittance_route, /remittance_history_route and
-  // /remittance_details_route (shared RemittanceController).
+  // BUG-09: RemittanceBinding is now registered for all remittance routes.
   final RemittanceController controller = Get.isRegistered<RemittanceController>()
       ? Get.find<RemittanceController>()
       : Get.put(RemittanceController());

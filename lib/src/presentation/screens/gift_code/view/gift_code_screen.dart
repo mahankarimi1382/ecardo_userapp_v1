@@ -24,14 +24,14 @@ class GiftCodeScreen extends StatefulWidget {
 }
 
 class _GiftCodeScreenState extends State<GiftCodeScreen> {
-  final GiftCodeController controller = Get.put(GiftCodeController());
-  final GiftRedeemController redeemController = Get.put(GiftRedeemController());
-  final GiftHistoryController giftHistoryController = Get.put(
-    GiftHistoryController(),
-  );
-  final CreateGiftController createGiftController = Get.put(
-    CreateGiftController(),
-  );
+  // BUG-09: Use Get.find since all 4 bindings are registered in routes_handler.dart
+  // avoiding duplicate controller instantiation on screen rebuilds.
+  final GiftCodeController controller = Get.find<GiftCodeController>();
+  final GiftRedeemController redeemController = Get.find<GiftRedeemController>();
+  final GiftHistoryController giftHistoryController =
+      Get.find<GiftHistoryController>();
+  final CreateGiftController createGiftController =
+      Get.find<CreateGiftController>();
   final HomeController homeController = Get.find();
 
   @override

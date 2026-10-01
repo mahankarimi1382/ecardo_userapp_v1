@@ -19,14 +19,7 @@ class RemittanceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // M-1 — Get.put here is the de-facto registration for the whole
-    // remittance flow: no GetPage binding exists for /remittance_route, so
-    // the view is the only DI source. Guarded find-or-put keeps that role
-    // while avoiding a throwaway controller construction on every rebuild
-    // and guaranteeing the details/history screens always share this
-    // instance.
-    // TODO(lead): introduce a RemittanceBinding in routes_handler.dart so
-    // the binding (not the view) owns registration for the remittance routes.
+    // BUG-09: RemittanceBinding in routes_handler.dart now owns registration.
     final controller = Get.isRegistered<RemittanceController>()
         ? Get.find<RemittanceController>()
         : Get.put(RemittanceController());
