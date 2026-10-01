@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/presentation/screens/travel/hotels/hotel_search_
 import 'package:ecardo_user/src/presentation/screens/travel/services/catalog_service_screens.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/extra_service_registry.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/quick_service_screens.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/taxi/taxi_search_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/trains/train_screens.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/visa/visa_screens.dart';
 import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
@@ -107,7 +108,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () => taxiRequestScreen(localization),
+        pageBuilder: () => const TaxiSearchScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceTour,
