@@ -1,10 +1,15 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
@@ -271,34 +276,126 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   }
 
   Future<void> _pickDocument(String docKey) async {
-    // v57: استفاده از image_picker برای انتخاب فایل واقعی
-    // v56 BUG-K003: استفاده از image_picker برای انتخاب فایل واقعی
+    final localization = AppLocalizations.of(context);
+    final String? source = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AppColors.lightSurface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 16.h),
+                decoration: BoxDecoration(
+                  color: AppColors.lightBorder,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Text(
+                l10nPickAuto(
+                  en: 'Select Upload Source',
+                  fa: 'انتخاب نحوه بارگذاری مدرک',
+                ),
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              ListTile(
+                leading: const Icon(Icons.camera_alt_outlined, color: AppColors.lightPrimary),
+                title: Text(
+                  l10nPickAuto(en: 'Take a Photo (Camera)', fa: 'عکس‌برداری با دوربین'),
+                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+                ),
+                onTap: () => Navigator.pop(ctx, 'camera'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library_outlined, color: AppColors.lightPrimary),
+                title: Text(
+                  l10nPickAuto(en: 'Choose from Gallery', fa: 'انتخاب تصویر از گالری'),
+                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+                ),
+                onTap: () => Navigator.pop(ctx, 'gallery'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined, color: AppColors.lightPrimary),
+                title: Text(
+                  l10nPickAuto(en: 'Choose PDF Document', fa: 'انتخاب سند با فرمت PDF'),
+                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+                ),
+                onTap: () => Navigator.pop(ctx, 'pdf'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (source == null) return;
+
     try {
-      final XFile? picked = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-        maxWidth: 1920,
-        maxHeight: 1080,
-      );
-      if (picked != null) {
+      String? filePath;
+      if (source == 'camera') {
+        final XFile? photo = await _picker.pickImage(
+          source: ImageSource.camera,
+          imageQuality: 85,
+          maxWidth: 1920,
+          maxHeight: 1080,
+        );
+        filePath = photo?.path;
+      } else if (source == 'gallery') {
+        final XFile? picked = await _picker.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 85,
+          maxWidth: 1920,
+          maxHeight: 1080,
+        );
+        filePath = picked?.path;
+      } else if (source == 'pdf') {
+        final FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+        if (result != null && result.files.single.path != null) {
+          filePath = result.files.single.path;
+        }
+      }
+
+      if (filePath != null && filePath.isNotEmpty) {
+        final file = File(filePath);
+        if (UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'File size must not exceed 20MB',
+              fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
+            ),
+          );
+          return;
+        }
         setState(() {
-          _documents[docKey] = picked.path;
+          _documents[docKey] = filePath!;
         });
       }
     } catch (e) {
-      // اگر image_picker در دسترس نبود، از file_picker استفاده کنیم
-      debugPrint('image_picker error: $e');
-      // v1.0.24: localized failure toast.
+      debugPrint('pickDocument error: $e');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)?.pickDocumentFailed ??
-            'Failed to pick document. Please try again.',
+        localization?.pickDocumentFailed ??
+            l10nPickAuto(en: 'Failed to pick document. Please try again.', fa: 'انتخاب مدرک ناموفق بود. لطفاً دوباره تلاش کنید.'),
       );
     }
   }
 
   Future<void> _submit() async {
-    // v56 BUG-K003: تبدیل File به multipart upload
-    // _documents is already Map<String, String>
+    // BUG-04: تبدیل File به multipart upload
     final success = await controller.submitDocuments(documents: _documents, targetLevel: widget.targetLevel);
     if (success) {
       Get.offAllNamed(BaseRoute.navigation);
@@ -333,17 +430,51 @@ class _ReviewItem extends StatelessWidget {
   const _ReviewItem({required this.label, required this.fileName, required this.isUploaded});
 
   @override
-  Widget build(BuildContext context) => Container(
-    margin: EdgeInsets.only(bottom: 8.h),
-    padding: EdgeInsets.all(12.w),
-    decoration: BoxDecoration(color: AppColors.lightSurface, borderRadius: BorderRadius.circular(12), border: Border.all(color: isUploaded ? AppColors.success : AppColors.error)),
-    child: Row(children: [
-      Icon(isUploaded ? Icons.check_circle : Icons.error, color: isUploaded ? AppColors.success : AppColors.error, size: 20.sp),
-      SizedBox(width: 10.w),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
-        Text(fileName, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
-      ])),
-    ]),
-  );
+  Widget build(BuildContext context) {
+    final isPdf = fileName.toLowerCase().endsWith('.pdf');
+    final icon = !isUploaded
+        ? Icons.error
+        : (isPdf ? Icons.picture_as_pdf_rounded : Icons.check_circle);
+    final iconColor = isUploaded
+        ? (isPdf ? AppColors.lightPrimary : AppColors.success)
+        : AppColors.error;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 8.h),
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isUploaded ? AppColors.success : AppColors.error),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 20.sp),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.lightTextPrimary,
+                  ),
+                ),
+                Text(
+                  fileName,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
