@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/kyc_rejected_model.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 
 class KycLevelController extends GetxController {
@@ -19,6 +20,7 @@ class KycLevelController extends GetxController {
   final RxList<KycLevel> levels = <KycLevel>[].obs;
   final Rxn<KycStatus> status = Rxn<KycStatus>();
   final Rxn<KycBadge> badge = Rxn<KycBadge>();
+  final Rx<KycRejectedData?> rejectionData = Rx<KycRejectedData?>(null);
 
   @override
   void onInit() { super.onInit(); fetchStatus(); }
@@ -51,7 +53,13 @@ class KycLevelController extends GetxController {
       final response = await _networkService.get(endpoint: ApiPath.kycLevelStatusEndpoint);
       if (response.status == Status.completed) {
         final data = response.data?['data'] as Map<String, dynamic>?;
-        if (data != null) { status.value = KycStatus.fromJson(data); badge.value = status.value?.badge; }
+        if (data != null) {
+          status.value = KycStatus.fromJson(data);
+          badge.value = status.value?.badge;
+          if (status.value?.isRejected == true) {
+            await fetchRejectionData();
+          }
+        }
       }
     } catch (e) {
       debugPrint('❌ fetchStatus() error: $e');
@@ -59,6 +67,18 @@ class KycLevelController extends GetxController {
       isLoading.value = false;
     }
     await fetchLevels();
+  }
+
+  Future<void> fetchRejectionData() async {
+    try {
+      final response = await _networkService.get(endpoint: ApiPath.kycRejectedEndpoint);
+      if (response.status == Status.completed && response.data != null) {
+        final model = KycRejectedModel.fromJson(response.data!);
+        rejectionData.value = model.data;
+      }
+    } catch (e) {
+      debugPrint('❌ fetchRejectionData() error: $e');
+    }
   }
 
   /// S-019 — submit KYC documents as a real multipart upload.

@@ -100,6 +100,52 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
 
         return Column(
           children: [
+            // BUG-05: Show rejection reason from /user/kyc/rejected-data if previous submission was rejected
+            if (controller.rejectionData.value?.message != null &&
+                controller.rejectionData.value!.message!.trim().isNotEmpty)
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: AppColors.error.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.error_outline, color: AppColors.error),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10nPickAuto(
+                              en: 'Previous Submission Rejected',
+                              fa: 'ارسال قبلی رد شده است',
+                            ),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.error,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            controller.rejectionData.value!.message!,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
             // Progress indicator
             if (hasDocs)
               Container(
