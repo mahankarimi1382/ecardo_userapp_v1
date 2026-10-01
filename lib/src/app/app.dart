@@ -53,29 +53,31 @@ class _EcardoUserState extends State<EcardoUser> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        // Reactive locale + theme (settings apply without restart).
-        return Obx(() {
-          final lts = Get.isRegistered<LocaleThemeService>()
-              ? Get.find<LocaleThemeService>()
-              : null;
-          final appLocale = lts?.locale.value ?? _locale;
-          final appTheme = lts?.themeMode.value ?? ThemeMode.system;
-          return GetMaterialApp(
+        final lts = Get.isRegistered<LocaleThemeService>()
+            ? Get.find<LocaleThemeService>()
+            : null;
+        final initialLocale = lts?.locale.value ?? _locale;
+        final initialTheme = lts?.themeMode.value ?? ThemeMode.system;
+
+        // BUG-01 (P0): Removed outer Obx wrapping GetMaterialApp.
+        // Rebuilding GetMaterialApp on locale switch caused a full widget-tree
+        // rebuild race condition, tearing down active controllers and causing
+        // release-mode crashes. Locale is now smoothly updated in-place via
+        // Get.updateLocale without recreating the root Navigator/MaterialApp.
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: AppStrings.appName,
-          themeMode: appTheme,
+          themeMode: initialTheme,
           theme: LightTheme().lightTheme(context),
           darkTheme: DarkTheme().darkTheme(context),
           getPages: routesHandler,
-          // WAVE-1: session layer live — 401 single-flight logout, VPN banner,
-          // 30-min idle timeout (services were dead code until now).
           initialBinding: InitialBinding(),
           initialRoute: BaseRoute.root,
           unknownRoute: GetPage(
             name: '/not-found',
             page: () => const NotFoundScreen(),
           ),
-          locale: appLocale,
+          locale: initialLocale,
           fallbackLocale: const Locale('en'),
           localizationsDelegates: const [
             AppLocalizations.delegate,
@@ -83,8 +85,6 @@ class _EcardoUserState extends State<EcardoUser> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          // phase2-fix: ru/tr removed until translations are real (they
-          // shipped 89% untranslated English). ARB files stay in lib/l10n.
           supportedLocales: const [
             Locale('en'),
             Locale("ar"),
@@ -155,7 +155,6 @@ class _EcardoUserState extends State<EcardoUser> {
             );
           },
         );
-        });
       },
     );
   }

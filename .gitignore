@@ -61,3 +61,8 @@ app.*.map.json
 /android/*.jks
 /secrets/
 
+# Local tools & audit outputs
+arena-audit-out/
+graphify-out/
+
+

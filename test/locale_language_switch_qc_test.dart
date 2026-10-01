@@ -19,8 +19,13 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 /// The route table is a minimal stand-in: the real SplashBinding (network,
 /// plugins, FCM, biometrics) must never run inside a unit test. A `/` route is
 /// registered anyway so that a regression that navigates there is detected.
+class _ProbeController extends GetxController {
+  final RxInt counter = 0.obs;
+  void increment() => counter.value++;
+}
+
 class _Probe extends StatefulWidget {
-  const _Probe({required this.name});
+  const _Probe({super.key, required this.name});
 
   final String name;
   static final List<String> built = [];
@@ -30,14 +35,21 @@ class _Probe extends StatefulWidget {
 }
 
 class _ProbeState extends State<_Probe> {
+  late final _ProbeController controller;
+
   @override
   void initState() {
     super.initState();
     _Probe.built.add(widget.name);
+    controller = Get.isRegistered<_ProbeController>()
+        ? Get.find<_ProbeController>()
+        : Get.put(_ProbeController());
   }
 
   @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
+  Widget build(BuildContext context) {
+    return Obx(() => Text('${widget.name}: ${controller.counter.value}'));
+  }
 }
 
 void main() {
@@ -62,36 +74,34 @@ void main() {
       LocaleThemeService(),
       permanent: true,
     );
-    // Mirrors lib/src/app/app.dart: a reactive GetMaterialApp driven by
-    // LocaleThemeService.locale.
+    // Mirrors lib/src/app/app.dart: GetMaterialApp without outer Obx,
+    // locale updated in-place via Get.updateLocale.
     await tester.pumpWidget(
-      Obx(
-        () => GetMaterialApp(
-          locale: service.locale.value,
-          fallbackLocale: const Locale('en'),
-          supportedLocales: const [
-            Locale('en'),
-            Locale('ar'),
-            Locale('fa'),
-            Locale('zh'),
-          ],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          getPages: [
-            GetPage(
-              name: BaseRoute.root,
-              page: () => const _Probe(name: 'splash'),
-            ),
-            GetPage(
-              name: startRoute,
-              page: () => _Probe(key: startKey, name: 'start'),
-            ),
-          ],
-          initialRoute: startRoute,
-        ),
+      GetMaterialApp(
+        locale: service.locale.value,
+        fallbackLocale: const Locale('en'),
+        supportedLocales: const [
+          Locale('en'),
+          Locale('ar'),
+          Locale('fa'),
+          Locale('zh'),
+        ],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        getPages: [
+          GetPage(
+            name: BaseRoute.root,
+            page: () => const _Probe(name: 'splash'),
+          ),
+          GetPage(
+            name: startRoute,
+            page: () => _Probe(key: startKey, name: 'start'),
+          ),
+        ],
+        initialRoute: startRoute,
       ),
     );
     await tester.pumpAndSettle();
