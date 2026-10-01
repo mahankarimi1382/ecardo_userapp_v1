@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/rental_controller.dart';
 import '../models/rental_models.dart';
+import 'rental_voucher_screen.dart';
 
 /// جزئیات رزرو رنت خودرو — Car-Rental-Service-Flow.md
 /// مدیریت کامل چرخه: مدارک راننده → پرداخت کرایه و قفل ودیعه → تأیید میزبان →
@@ -302,6 +303,23 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10nPick(context, en: 'Rental Booking', fa: 'جزئیات اجاره خودرو')),
+        actions: [
+          Obx(() {
+            final b = controller.selectedBooking.value;
+            if (b == null) return const SizedBox.shrink();
+            return IconButton(
+              tooltip: l10nPick(
+                context,
+                en: 'View Voucher',
+                fa: 'مشاهده ووچر دیجیتال',
+                ar: 'عرض القسيمة',
+                zh: '查看凭证',
+              ),
+              icon: const Icon(Icons.confirmation_number_outlined, color: AppColors.lightPrimary),
+              onPressed: () => Get.to(() => RentalVoucherScreen(booking: b)),
+            );
+          }),
+        ],
       ),
       body: Obx(() {
         final b = controller.selectedBooking.value;
