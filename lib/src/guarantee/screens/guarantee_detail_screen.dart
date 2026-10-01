@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+
 import '../controllers/guarantee_controller.dart';
 import '../models/guarantee_models.dart';
 
@@ -19,11 +21,14 @@ class GuaranteeDetailScreen extends StatefulWidget {
 }
 
 class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
-  final GuaranteeController controller = Get.find<GuaranteeController>();
+  late final GuaranteeController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<GuaranteeController>()
+        ? Get.find<GuaranteeController>()
+        : Get.put(GuaranteeController());
     final id = widget.caseId > 0 ? widget.caseId : (Get.arguments is int ? Get.arguments as int : 0);
     if (id > 0) {
       controller.fetchCase(id);
@@ -201,8 +206,20 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10nPick(context, en: 'Guarantee Case', fa: 'پرونده ضمانت‌نامه')),
+      backgroundColor: AppColors.lightBackground,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.h),
+        child: SafeArea(
+          child: CommonAppBar(
+            title: l10nPick(
+              context,
+              en: 'Guarantee Case',
+              fa: 'پرونده ضمانت‌نامه',
+              ar: 'ملف خطاب الضمان',
+              zh: '保函案件详情',
+            ),
+          ),
+        ),
       ),
       body: Obx(() {
         final c = controller.selectedCase.value;
