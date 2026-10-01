@@ -47,7 +47,92 @@ class _TourDetailScreenState extends State<TourDetailScreen>
         final tour = controller.selectedTour.value;
         if (tour == null) {
           return Center(
-            child: Text(l10nPick(context, en: 'Tour details not found', fa: 'اطلاعات تور یافت نشد')),
+            child: Padding(
+              padding: EdgeInsetsDirectional.all(24.r),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(16.r),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.cloud_off_rounded,
+                      color: Colors.orange,
+                      size: 48,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Tour Details Temporarily Unavailable',
+                      fa: 'جزئیات تور موقتاً در دسترس نیست',
+                      ar: 'تفاصيل الرحلة غير متوفرة مؤقتاً',
+                      zh: '旅游路线详情暂时不可用',
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w800,
+                      color: TravelTheme.ink,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'The tours service is undergoing backend partner integration. Please retry shortly.',
+                      fa: 'سرویس اطلاعات تور در حال به‌روزرسانی با درگاه تأمین‌کننده است.',
+                      ar: 'خوادم تفاصيل الجولة قيد التحديث. يرجى المحاولة لاحقاً.',
+                      zh: '路线详情接口正在联调中，请稍后重试。',
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: TravelTheme.muted,
+                      fontSize: 12.sp,
+                      height: 1.5,
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () => Get.back(),
+                        child: Text(
+                          l10nPick(
+                            context,
+                            en: 'Go Back',
+                            fa: 'بازگشت',
+                            ar: 'رجوع',
+                            zh: '返回',
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(backgroundColor: TravelTheme.blue),
+                        onPressed: () => controller.loadTourDetail(widget.tourId),
+                        icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 16),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Retry',
+                            fa: 'تلاش مجدد',
+                            ar: 'إعادة المحاولة',
+                            zh: '重试',
+                          ),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           );
         }
 
@@ -92,10 +177,10 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                           ),
                         ),
                       ),
-                      Positioned(
+                      PositionedDirectional(
                         bottom: 16.h,
-                        left: 16.w,
-                        right: 16.w,
+                        start: 16.w,
+                        end: 16.w,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

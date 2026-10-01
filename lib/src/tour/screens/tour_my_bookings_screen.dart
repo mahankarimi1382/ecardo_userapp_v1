@@ -107,8 +107,26 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
                       Icon(Icons.confirmation_number_outlined, size: 64.r, color: TravelTheme.muted),
                       SizedBox(height: 12.h),
                       Text(
-                        l10nPick(context, en: 'No bookings found', fa: 'رزروی در این بخش یافت نشد'),
+                        l10nPick(
+                          context,
+                          en: 'No bookings found',
+                          fa: 'رزروی در این بخش یافت نشد',
+                          ar: 'لم يتم العثور على أي حجوزات',
+                          zh: '未找到预订记录',
+                        ),
                         style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Your booked tours will appear here after payment confirmation.',
+                          fa: 'رزروهای قطعی شما پس از پرداخت در این بخش نمایش داده می‌شوند.',
+                          ar: 'ستظهر حجوزاتك المؤكدة هنا بعد إتمام الدفع.',
+                          zh: '支付确认后，您的旅游预订将显示在此处。',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 11.5.sp, color: TravelTheme.muted),
                       ),
                     ],
                   ),

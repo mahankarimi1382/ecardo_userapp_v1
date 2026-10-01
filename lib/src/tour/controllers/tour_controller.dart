@@ -31,6 +31,10 @@ class TourController extends GetxController {
   final RxBool isLoadingBookings = false.obs;
   final RxString selectedBookingFilter = ''.obs;
 
+  // Service health / API availability state
+  final RxBool isServiceUnavailable = false.obs;
+  final RxnString errorMessage = RxnString();
+
   @override
   void onInit() {
     super.onInit();
@@ -41,14 +45,22 @@ class TourController extends GetxController {
   Future<void> loadTours({bool refresh = false}) async {
     if (isLoadingTours.value && !refresh) return;
     isLoadingTours.value = true;
+    isServiceUnavailable.value = false;
+    errorMessage.value = null;
     try {
       final list = await _service.getTours(
         query: searchQuery.value.isEmpty ? null : searchQuery.value,
         category: selectedCategory.value.isEmpty ? null : selectedCategory.value,
       );
       tours.assignAll(list);
-    } catch (_) {
-      // Graceful fallback
+      // If list is empty and user wasn't filtering by query/category,
+      // it indicates backend /user/tours endpoint is not responding.
+      if (list.isEmpty && searchQuery.value.isEmpty && selectedCategory.value.isEmpty) {
+        isServiceUnavailable.value = true;
+      }
+    } catch (e) {
+      isServiceUnavailable.value = true;
+      errorMessage.value = e.toString();
     } finally {
       isLoadingTours.value = false;
     }
@@ -57,10 +69,17 @@ class TourController extends GetxController {
   /// Load single tour details
   Future<void> loadTourDetail(int id) async {
     isLoadingDetail.value = true;
+    isServiceUnavailable.value = false;
+    errorMessage.value = null;
     try {
       final detail = await _service.getTourDetail(id);
       selectedTour.value = detail;
-    } catch (_) {
+      if (detail == null) {
+        isServiceUnavailable.value = true;
+      }
+    } catch (e) {
+      isServiceUnavailable.value = true;
+      errorMessage.value = e.toString();
     } finally {
       isLoadingDetail.value = false;
     }
