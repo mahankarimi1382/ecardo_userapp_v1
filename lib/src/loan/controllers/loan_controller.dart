@@ -1,12 +1,14 @@
+import 'dart:math' as math;
 import 'package:get/get.dart';
 
 import '../models/loan_models.dart';
 import '../services/loan_service.dart';
 
-/// GetX controller for the Loan & Credit service (Loan-Service-Flow.md).
-/// حالت‌ها از سمت سرور می‌آیند — کلاینت فقط نمایش می‌دهد (قاعده ۱ سند).
+/// GetX controller for the Loan & Credit service.
+/// Provides reactive state for products, user applications, calculations,
+/// and backend availability detection.
 class LoanController extends GetxController {
-  final LoanApiService _api = Get.find<LoanApiService>();
+  late final LoanApiService _api;
 
   final products = <LoanProductModel>[].obs;
   final myCases = <LoanCaseModel>[].obs;
@@ -17,26 +19,115 @@ class LoanController extends GetxController {
   final isLoadingDetail = false.obs;
   final isSubmitting = false.obs;
 
-  // Form state
+  // Backend connection status
+  final hasBackendError = false.obs;
+  final isServiceAvailable = true.obs;
+
+  // Form state for new loan application
   final selectedProduct = Rxn<LoanProductModel>();
   final selectedTenure = 0.obs;
   final amountInput = ''.obs;
+  final purposeInput = ''.obs;
+  final documentedIncomeInput = ''.obs;
+  final collateralTypeInput = 'CASH'.obs;
+  final guarantorNationalIdInput = ''.obs;
+  final termsAccepted = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _api = Get.isRegistered<LoanApiService>()
+        ? Get.find<LoanApiService>()
+        : Get.put(LoanApiService());
+  }
+
+  /// Reset application form fields
+  void resetForm() {
+    amountInput.value = '';
+    purposeInput.value = '';
+    documentedIncomeInput.value = '';
+    collateralTypeInput.value = 'CASH';
+    guarantorNationalIdInput.value = '';
+    termsAccepted.value = false;
+    if (products.isNotEmpty && selectedProduct.value == null) {
+      selectProduct(products.first);
+    }
+  }
+
+  /// Select a loan product
+  void selectProduct(LoanProductModel product) {
+    selectedProduct.value = product;
+    if (product.tenureOptions.isNotEmpty) {
+      selectedTenure.value = product.tenureOptions.first;
+    }
+  }
+
+  /// Calculate estimated monthly installment using standard amortization formula:
+  /// EMI = [P x R x (1+R)^N] / [(1+R)^N - 1]
+  double calculateMonthlyInstallment({
+    required double principal,
+    required double annualInterestRatePct,
+    required int tenureMonths,
+  }) {
+    if (principal <= 0 || tenureMonths <= 0) return 0.0;
+    if (annualInterestRatePct <= 0) return principal / tenureMonths;
+
+    final monthlyRate = (annualInterestRatePct / 100.0) / 12.0;
+    final factor = math.pow(1.0 + monthlyRate, tenureMonths).toDouble();
+    if (factor <= 1.0) return principal / tenureMonths;
+
+    return (principal * monthlyRate * factor) / (factor - 1.0);
+  }
+
+  /// Total repayment amount based on estimated monthly installment
+  double calculateTotalRepayment({
+    required double principal,
+    required double annualInterestRatePct,
+    required int tenureMonths,
+  }) {
+    final emi = calculateMonthlyInstallment(
+      principal: principal,
+      annualInterestRatePct: annualInterestRatePct,
+      tenureMonths: tenureMonths,
+    );
+    return emi * tenureMonths;
+  }
 
   /// Fetch product catalog
   Future<void> fetchProducts() async {
     try {
       isLoadingProducts.value = true;
-      products.value = await _api.getProducts();
+      hasBackendError.value = false;
+      final result = await _api.getProducts();
+      products.value = result;
+
+      // If backend returned empty list or failed, mark status
+      if (result.isEmpty) {
+        hasBackendError.value = true;
+        isServiceAvailable.value = false;
+      } else {
+        isServiceAvailable.value = true;
+        if (selectedProduct.value == null) {
+          selectProduct(result.first);
+        }
+      }
+    } catch (_) {
+      hasBackendError.value = true;
+      isServiceAvailable.value = false;
+      products.clear();
     } finally {
       isLoadingProducts.value = false;
     }
   }
 
-  /// Fetch my cases
+  /// Fetch user's loan cases
   Future<void> fetchMyCases() async {
     try {
       isLoadingCases.value = true;
-      myCases.value = await _api.getMyCases();
+      final result = await _api.getMyCases();
+      myCases.value = result;
+    } catch (_) {
+      myCases.clear();
     } finally {
       isLoadingCases.value = false;
     }
@@ -47,37 +138,53 @@ class LoanController extends GetxController {
     try {
       isLoadingDetail.value = true;
       selectedCase.value = await _api.getCase(id);
+    } catch (_) {
+      selectedCase.value = null;
     } finally {
       isLoadingDetail.value = false;
     }
   }
 
-  /// Apply for loan — returns error code/message on failure (قانون توقف)
+  /// Apply for loan — returns error message on failure or null on success
   Future<String?> applyForLoan() async {
     final product = selectedProduct.value;
-    if (product == null) return 'ERR_PRECONDITION: محصولی انتخاب نشده است';
+    if (product == null) {
+      return 'ERR_PRECONDITION: لطفاً یک محصول تسهیلاتی انتخاب کنید.';
+    }
+
     final amount = double.tryParse(amountInput.value) ?? 0;
+    if (amount <= 0) {
+      return 'ERR_VALIDATION: مبلغ درخواستی نامعتبر است.';
+    }
     if (amount < product.minAmount || amount > product.maxAmount) {
-      return 'ERR_LIMIT_EXCEEDED: مبلغ خارج از بازه مجاز محصول است';
+      return 'ERR_LIMIT_EXCEEDED: مبلغ خارج از سقف مجاز این طرح است (${product.minAmount.toInt()} تا ${product.maxAmount.toInt()}).';
     }
     if (selectedTenure.value <= 0) {
-      return 'ERR_PRECONDITION: مدت بازپرداخت انتخاب نشده است';
+      return 'ERR_PRECONDITION: مدت بازپرداخت را مشخص کنید.';
+    }
+    if (!termsAccepted.value) {
+      return 'ERR_CONSENT: تأیید شرایط و قوانین دریافت تسهیلات الزامی است.';
     }
 
     try {
       isSubmitting.value = true;
+      final income = double.tryParse(documentedIncomeInput.value);
       final result = await _api.apply(
         productId: product.id,
         requestedAmount: amount,
         tenureMonths: selectedTenure.value,
+        purpose: purposeInput.value.isEmpty ? null : purposeInput.value,
+        documentedIncome: income,
       );
+
       if (result == null) {
-        return 'ERR_NETWORK: خطا در ثبت درخواست';
+        // If backend returned null/404, notify gracefully
+        return 'ERR_BACKEND_UNAVAILABLE: درگاه ثبت تسهیلات بانکی در حال حاضر در دسترس نیست. لطفاً بعداً تلاش فرمایید.';
       }
       await fetchMyCases();
       return null;
     } catch (e) {
-      return e.toString();
+      return 'ERR_EXCEPTION: ${e.toString()}';
     } finally {
       isSubmitting.value = false;
     }
