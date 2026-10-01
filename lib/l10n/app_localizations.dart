@@ -223,13 +223,13 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to bank of al barkat'**
+  /// **'Welcome to eCardo'**
   String get welcomeTitle;
 
   /// No description provided for @welcomeDescription.
   ///
   /// In en, this message translates to:
-  /// **'bank of al barkat Empowers you with Multi-Wallet Management, Instant Swaps, and Secure Transactions.'**
+  /// **'eCardo Empowers you with Multi-Wallet Management, Instant Swaps, and Secure Transactions.'**
   String get welcomeDescription;
 
   /// No description provided for @welcomeSignIn.
@@ -943,7 +943,7 @@ abstract class AppLocalizations {
   /// No description provided for @signUpStatusSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'A Quick 4-Step Process to Keep Your bank of al barkat Account Secure'**
+  /// **'A Quick 4-Step Process to Keep Your eCardo Account Secure'**
   String get signUpStatusSubtitle;
 
   /// No description provided for @signUpStatusStep.
@@ -5545,7 +5545,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareReceiptBody.
   ///
   /// In en, this message translates to:
-  /// **'My bank of al barkat transaction receipt'**
+  /// **'My eCardo transaction receipt'**
   String get shareReceiptBody;
 
   /// No description provided for @shareReceiptFailed.
@@ -10939,13 +10939,13 @@ abstract class AppLocalizations {
   /// No description provided for @comment_travel.
   ///
   /// In en, this message translates to:
-  /// **'==== bank of al barkat Travel ===='**
+  /// **'==== eCardo Travel ===='**
   String get comment_travel;
 
   /// No description provided for @travelTitle.
   ///
   /// In en, this message translates to:
-  /// **'bank of al barkat Travel'**
+  /// **'eCardo Travel'**
   String get travelTitle;
 
   /// No description provided for @travelHeroEyebrow.
@@ -10993,13 +10993,13 @@ abstract class AppLocalizations {
   /// No description provided for @travelMainWallet.
   ///
   /// In en, this message translates to:
-  /// **'Main bank of al barkat wallet'**
+  /// **'Main eCardo wallet'**
   String get travelMainWallet;
 
   /// No description provided for @travelWalletSharedDescription.
   ///
   /// In en, this message translates to:
-  /// **'The same secure wallet you use across bank of al barkat'**
+  /// **'The same secure wallet you use across eCardo'**
   String get travelWalletSharedDescription;
 
   /// No description provided for @travelHotelSearch.
@@ -11119,7 +11119,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelHotelDescription.
   ///
   /// In en, this message translates to:
-  /// **'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the bank of al barkat Travel API.'**
+  /// **'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the eCardo Travel API.'**
   String get travelHotelDescription;
 
   /// No description provided for @travelPolicies.
@@ -11305,7 +11305,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelPassengerFromProfile.
   ///
   /// In en, this message translates to:
-  /// **'Details are shared from your bank of al barkat profile'**
+  /// **'Details are shared from your eCardo profile'**
   String get travelPassengerFromProfile;
 
   /// No description provided for @travelFareDetails.
@@ -11347,7 +11347,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelEsimIntroDescription.
   ///
   /// In en, this message translates to:
-  /// **'Choose a digital data package, pay from your main bank of al barkat wallet and activate it without replacing your physical SIM.'**
+  /// **'Choose a digital data package, pay from your main eCardo wallet and activate it without replacing your physical SIM.'**
   String get travelEsimIntroDescription;
 
   /// No description provided for @travelEsimInstantTitle.
@@ -11431,7 +11431,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelBackendConfirmedPrice.
   ///
   /// In en, this message translates to:
-  /// **'Price confirmed by bank of al barkat Travel'**
+  /// **'Price confirmed by eCardo Travel'**
   String get travelBackendConfirmedPrice;
 
   /// No description provided for @travelPaymentMethod.
@@ -11623,7 +11623,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelHotelPendingConfirmationDescription.
   ///
   /// In en, this message translates to:
-  /// **'Payment was received. bank of al barkat Travel is confirming the hotel with the authorized supplier before issuing your voucher.'**
+  /// **'Payment was received. eCardo Travel is confirming the hotel with the authorized supplier before issuing your voucher.'**
   String get travelHotelPendingConfirmationDescription;
 
   /// No description provided for @travelPaidAmount.
@@ -11641,7 +11641,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelActivationInstructions.
   ///
   /// In en, this message translates to:
-  /// **'Open your device cellular settings, add an eSIM and use the secure installation details returned by the bank of al barkat backend.'**
+  /// **'Open your device cellular settings, add an eSIM and use the secure installation details returned by the eCardo backend.'**
   String get travelActivationInstructions;
 
   /// No description provided for @travelViewMyBookings.
@@ -11881,7 +11881,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelAccountHolder.
   ///
   /// In en, this message translates to:
-  /// **'bank of al barkat member'**
+  /// **'eCardo member'**
   String get travelAccountHolder;
 
   /// No description provided for @travelMemberDescription.
@@ -12019,7 +12019,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelMockAirlineOne.
   ///
   /// In en, this message translates to:
-  /// **'bank of al barkat Air'**
+  /// **'eCardo Air'**
   String get travelMockAirlineOne;
 
   /// No description provided for @travelMockAirlineTwo.
@@ -12595,7 +12595,7 @@ abstract class AppLocalizations {
   /// No description provided for @travelPaymentReceivedDescription.
   ///
   /// In en, this message translates to:
-  /// **'Payment was received. bank of al barkat Travel is completing supplier confirmation before issuing the final document.'**
+  /// **'Payment was received. eCardo Travel is completing supplier confirmation before issuing the final document.'**
   String get travelPaymentReceivedDescription;
 
   /// No description provided for @travelSearchFailedDescription.
@@ -13555,7 +13555,7 @@ abstract class AppLocalizations {
   /// No description provided for @biometricReason.
   ///
   /// In en, this message translates to:
-  /// **'Authenticate to sign in to bank of al barkat'**
+  /// **'Authenticate to sign in to eCardo'**
   String get biometricReason;
 
   /// No description provided for @biometricGenericError.
@@ -14707,13 +14707,13 @@ abstract class AppLocalizations {
   /// No description provided for @updateNotificationBody.
   ///
   /// In en, this message translates to:
-  /// **'bank of al barkat v{version} is available. Tap to update.'**
+  /// **'eCardo v{version} is available. Tap to update.'**
   String updateNotificationBody(String version);
 
   /// No description provided for @updateNotificationBodyGeneric.
   ///
   /// In en, this message translates to:
-  /// **'A new version of bank of al barkat is available. Tap to update.'**
+  /// **'A new version of eCardo is available. Tap to update.'**
   String get updateNotificationBodyGeneric;
 
   /// No description provided for @updateDialogBody.
@@ -14791,7 +14791,7 @@ abstract class AppLocalizations {
   /// No description provided for @updateCheckingBody.
   ///
   /// In en, this message translates to:
-  /// **'Contacting bank of al barkat server for the latest version.'**
+  /// **'Contacting eCardo server for the latest version.'**
   String get updateCheckingBody;
 
   /// No description provided for @updateUpToDateScreenTitle.
@@ -14803,7 +14803,7 @@ abstract class AppLocalizations {
   /// No description provided for @updateUpToDateScreenBody.
   ///
   /// In en, this message translates to:
-  /// **'bank of al barkat v{version} is the latest version available.'**
+  /// **'eCardo v{version} is the latest version available.'**
   String updateUpToDateScreenBody(String version);
 
   /// No description provided for @updateDoneButton.

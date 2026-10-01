@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// AppColors — central color palette for the bank of al barkat app.
+/// AppColors — central color palette for the eCardo app.
 /// Based on NUVO Palette (Dark / Neutral / Soft Blue / Warm Metallic).
 class AppColors {
   // ------------------ NUVO PALETTE SPEC ------------------

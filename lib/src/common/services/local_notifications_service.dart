@@ -5,9 +5,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationChannels {
   static const String primaryId = 'ecardo_default';
-  static const String primaryName = 'bank of al barkat';
+  static const String primaryName = 'eCardo';
   static const String primaryDescription =
-      'bank of al barkat account, transaction and update notifications';
+      'eCardo account, transaction and update notifications';
 
   static const String financialId = 'ecardo_financial';
   static const String financialName = 'تراکنش‌های مالی';
