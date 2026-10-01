@@ -29,7 +29,10 @@ class VirtualCardDetailsController extends GetxController {
       showCvv.value = false;
     });
   }
-  final localization = AppLocalizations.of(Get.context!);
+  // BUG-07 (P-4 pattern): resolve per call — the constructor-time capture
+  // froze the locale at controller creation and crashed when context was null.
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
 
   // Virtual Card Details Model
   final Rx<VirtualCardDetailsModel> virtualCardDetailsModel =
@@ -84,7 +87,9 @@ class VirtualCardDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchVirtualCardDetails() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Failed to load card details',
+      );
     } finally {
       isLoading.value = false;
     }
@@ -108,7 +113,9 @@ class VirtualCardDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchVirtualCardDetailsBsiCardProvider() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Failed to load card provider details',
+      );
     } finally {
       isLoading.value = false;
     }
@@ -143,7 +150,9 @@ class VirtualCardDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ cardUpdateStatus() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Failed to update card status',
+      );
     } finally {
       isUpdateCardStatusLoading.value = false;
     }
@@ -175,7 +184,9 @@ class VirtualCardDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ cardBalanceTopUp() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Failed to top up card balance',
+      );
     } finally {
       isCardBalanceTopUpLoading.value = false;
     }
@@ -216,7 +227,7 @@ class VirtualCardDetailsController extends GetxController {
     final amount = int.tryParse(amountController.text.replaceAll(',', ''));
     if (amount == null || amount <= 0) {
       ToastHelper().showErrorToast(
-        localization!.cardDetailsAmountGreaterThanZero,
+        localization?.cardDetailsAmountGreaterThanZero ?? 'Amount must be greater than zero',
       );
       return;
     }
@@ -296,7 +307,9 @@ class VirtualCardDetailsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ cardBalanceTopUpFromContract() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Failed to complete card top up',
+      );
     } finally {
       isCardBalanceTopUpLoading.value = false;
     }
@@ -401,32 +414,36 @@ class VirtualCardDetailsController extends GetxController {
 
     // Validate Amount
     if (amountController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.cardDetailsEnterAmount);
+      ToastHelper().showErrorToast(
+        localization?.cardDetailsEnterAmount ?? 'Please enter amount',
+      );
       return false;
     }
 
     final amount = double.tryParse(amountController.text) ?? 0.0;
     if (amount <= 0) {
       ToastHelper().showErrorToast(
-        localization!.cardDetailsAmountGreaterThanZero,
+        localization?.cardDetailsAmountGreaterThanZero ?? 'Amount must be greater than zero',
       );
       return false;
     }
 
     if (minimumTopup > 0 && amount < minimumTopup) {
       ToastHelper().showErrorToast(
-        localization!.cardDetailsAmountMinimumLimit(
-          minimumTopup.toStringAsFixed(decimals),
-        ),
+        localization?.cardDetailsAmountMinimumLimit(
+              minimumTopup.toStringAsFixed(decimals),
+            ) ??
+            'Minimum top up is ${minimumTopup.toStringAsFixed(decimals)}',
       );
       return false;
     }
 
     if (maximumTopup > 0 && amount > maximumTopup) {
       ToastHelper().showErrorToast(
-        localization!.cardDetailsAmountMaximumLimit(
-          maximumTopup.toStringAsFixed(decimals),
-        ),
+        localization?.cardDetailsAmountMaximumLimit(
+              maximumTopup.toStringAsFixed(decimals),
+            ) ??
+            'Maximum top up is ${maximumTopup.toStringAsFixed(decimals)}',
       );
       return false;
     }
@@ -439,10 +456,11 @@ class VirtualCardDetailsController extends GetxController {
         0.0;
     if (amount > walletBalance) {
       ToastHelper().showErrorToast(
-        localization!.exchangeValidationInsufficientBalance(
-          walletBalance.toStringAsFixed(decimals),
-          settingsService.getSetting("site_currency") ?? 'USD',
-        ),
+        localization?.exchangeValidationInsufficientBalance(
+              walletBalance.toStringAsFixed(decimals),
+              settingsService.getSetting("site_currency") ?? 'USD',
+            ) ??
+            'Insufficient balance',
       );
       return false;
     }
