@@ -6,11 +6,16 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/mock_travel_data.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/service_form_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/travel_service_request.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_widgets.dart';
+
+import 'train_confirmation_screen.dart';
+
+export 'train_confirmation_screen.dart';
 
 /// Train module — mirrors the flights skeleton (search → results → details →
 /// passengers) on the deterministic demo catalog. Submissions become local
@@ -254,10 +259,47 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
               ],
             ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 16.h),
+          Container(
+            padding: EdgeInsetsDirectional.all(12.r),
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline_rounded, color: TravelTheme.blue, size: 20),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Text(
+                    l10nPick(
+                      context,
+                      en: 'Direct booking on Raja, Fadak, Safir and Noor rail networks.',
+                      fa: 'رزرو مستقیم قطارهای رجا، فدک، سفیر و نورالرضا با صدور آنی بلیط.',
+                      ar: 'حجز مباشر لقطارات السكك الحديدية مع إصدار فوري للتذاكر.',
+                      zh: '直接预订干线铁路客运，即时生成电子乘车凭证。',
+                    ),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: TravelTheme.ink,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 18.h),
           CommonButton(
             width: double.infinity,
-            text: localization.travelSearchFlights,
+            text: l10nPick(
+              context,
+              en: 'Search Trains',
+              fa: 'جستجوی قطارها',
+              ar: 'البحث عن القطارات',
+              zh: '搜索火车',
+            ),
             backgroundColor: TravelTheme.green,
             onPressed: () {
               final trips = generateTrainTrips(
@@ -842,7 +884,29 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
     );
     await TravelServiceRequestStore.add(request);
     if (!mounted) return;
-    Get.off(() => TravelServiceRequestSuccessScreen(request: request));
+    final passengerMaps = passengers
+        .map((p) => {
+              'name': p.name,
+              'national_code': p.nationalCode,
+              'gender': p.gender,
+            })
+        .toList();
+    Get.off(
+      () => TrainConfirmationScreen(
+        reference: request.reference,
+        origin: widget.origin,
+        destination: widget.destination,
+        departureDate: widget.departureDate,
+        trainName: widget.trip.trainName,
+        trainNumber: widget.trip.trainNumber,
+        operatorName: widget.trip.operator,
+        departureTime: widget.trip.departLabel,
+        arrivalTime: widget.trip.arriveLabel,
+        trainClass: trainClassLabel(_selectedClass, localization),
+        totalPrice: _totalPrice,
+        passengers: passengerMaps,
+      ),
+    );
   }
 
   @override
