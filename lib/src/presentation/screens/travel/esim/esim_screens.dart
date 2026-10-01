@@ -5,11 +5,15 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
+import 'esim_detail_screen.dart';
+
+export 'esim_detail_screen.dart';
 
 class EsimIntroScreen extends StatelessWidget {
   const EsimIntroScreen({super.key});
@@ -153,10 +157,48 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
   final destinationController = TextEditingController();
   String searchedDestination = '';
 
+  static const List<Map<String, String>> _popularDestinations = [
+    {'code': 'TR', 'flag': '🇹🇷', 'name_fa': 'ترکیه', 'name_en': 'Turkey'},
+    {'code': 'AE', 'flag': '🇦🇪', 'name_fa': 'امارات', 'name_en': 'UAE'},
+    {'code': 'GE', 'flag': '🇬🇪', 'name_fa': 'گرجستان', 'name_en': 'Georgia'},
+    {'code': 'TH', 'flag': '🇹🇭', 'name_fa': 'تایلند', 'name_en': 'Thailand'},
+    {'code': 'DE', 'flag': '🇩🇪', 'name_fa': 'آلمان', 'name_en': 'Germany'},
+    {'code': 'FR', 'flag': '🇫🇷', 'name_fa': 'فرانسه', 'name_en': 'France'},
+    {'code': 'CN', 'flag': '🇨🇳', 'name_fa': 'چین', 'name_en': 'China'},
+  ];
+
   @override
   void dispose() {
     destinationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _searchPackages(String code) async {
+    final controller = ensureTravelController();
+    destinationController.text = code;
+    final succeeded = await controller.loadEsimPackages(code);
+    if (!mounted) return;
+    if (succeeded) {
+      setState(() => searchedDestination = code);
+    } else {
+      showTravelMessage(
+        context,
+        title: l10nPick(
+          context,
+          en: 'eSIM Packages',
+          fa: 'بسته‌های سیم‌کارت',
+          ar: 'باقات eSIM',
+          zh: 'eSIM 套餐',
+        ),
+        message: l10nPick(
+          context,
+          en: 'Service temporarily unavailable. Please retry shortly.',
+          fa: 'سرویس استعلام سیم‌کارت موقتاً در دسترس نیست. لطفاً مجدداً تلاش کنید.',
+          ar: 'الخدمة غير متوفرة مؤقتاً. يرجى إعادة المحاولة لاحقاً.',
+          zh: 'eSIM 服务暂时不可用，请稍后重试。',
+        ),
+      );
+    }
   }
 
   @override
@@ -173,7 +215,7 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
         () => controller.isLoading.value && controller.esimPackages.isEmpty
             ? const CommonLoading()
             : ListView(
-                padding: EdgeInsets.all(20.r),
+                padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 24.h),
                 children: [
                   CommonTextInputField(
                     controller: destinationController,
@@ -187,6 +229,65 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                     ),
                   ),
                   SizedBox(height: 10.h),
+
+                  // Quick Popular Destination Chips
+                  SizedBox(
+                    height: 36.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _popularDestinations.length,
+                      separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                      itemBuilder: (context, index) {
+                        final item = _popularDestinations[index];
+                        final code = item['code']!;
+                        final isSelected = searchedDestination == code;
+                        return InkWell(
+                          onTap: () => _searchPackages(code),
+                          borderRadius: BorderRadius.circular(18.r),
+                          child: Container(
+                            padding: EdgeInsetsDirectional.symmetric(
+                              horizontal: 10.w,
+                              vertical: 6.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? TravelTheme.yellow
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(18.r),
+                              border: Border.all(
+                                color: isSelected
+                                    ? TravelTheme.ink
+                                    : TravelTheme.border,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(item['flag'] ?? '', style: TextStyle(fontSize: 14.sp)),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  l10nPick(
+                                    context,
+                                    en: item['name_en']!,
+                                    fa: item['name_fa']!,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w900
+                                        : FontWeight.w600,
+                                    color: TravelTheme.ink,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+
                   TravelCard(
                     color: TravelTheme.yellow.withValues(alpha: .1),
                     child: Row(
@@ -217,7 +318,7 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                     textColor: TravelTheme.ink,
                     backgroundColor: TravelTheme.yellow,
                     isLoading: controller.isLoading.value,
-                    onPressed: () async {
+                    onPressed: () {
                       final destination = destinationController.text
                           .trim()
                           .toUpperCase();
@@ -229,20 +330,7 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                         );
                         return;
                       }
-                      final succeeded = await controller.loadEsimPackages(
-                        destination,
-                      );
-                      if (!context.mounted) return;
-                      if (succeeded) {
-                        setState(() => searchedDestination = destination);
-                      }
-                      if (!succeeded) {
-                        showTravelMessage(
-                          context,
-                          title: localization.travelEsimPackages,
-                          message: localization.allControllerLoadError,
-                        );
-                      }
+                      _searchPackages(destination);
                     },
                   ),
                   SizedBox(height: 20.h),
@@ -254,14 +342,78 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                               '${controller.esimPackages.length}',
                   ),
                   SizedBox(height: 10.h),
-                  if (searchedDestination.isNotEmpty &&
+                  if (controller.searchError.value != null) ...[
+                    Container(
+                      padding: EdgeInsetsDirectional.all(16.r),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withValues(alpha: 0.08),
+                        borderRadius: TravelTheme.radius,
+                        border: Border.all(
+                          color: Colors.orange.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          const Icon(Icons.cloud_off_rounded, color: Colors.orange, size: 36),
+                          SizedBox(height: 8.h),
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'eSIM Service Temporarily Unavailable',
+                              fa: 'سرویس خرید آنلاین سیم‌کارت موقتاً در دسترس نیست',
+                              ar: 'خدمة باقات eSIM غير متوفرة مؤقتاً',
+                              zh: 'eSIM 服务暂时不可用',
+                            ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'Backend travel partner API is undergoing scheduled maintenance.',
+                              fa: 'ارتباط با ارائه‌دهنده بین‌المللی سیم‌کارت در حال به‌روزرسانی است.',
+                              ar: 'يجري تحديث خوادم باقات eSIM مع مزود الخدمة.',
+                              zh: '国际 eSIM 供应商正在进行系统维护。',
+                            ),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: TravelTheme.muted,
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          TextButton.icon(
+                            onPressed: () {
+                              if (searchedDestination.isNotEmpty) {
+                                _searchPackages(searchedDestination);
+                              }
+                            },
+                            icon: const Icon(Icons.refresh_rounded, size: 16),
+                            label: Text(
+                              l10nPick(
+                                context,
+                                en: 'Retry Connection',
+                                fa: 'تلاش مجدد',
+                                ar: 'إعادة المحاولة',
+                                zh: '重试连接',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                  ] else if (searchedDestination.isNotEmpty &&
                       controller.esimPackages.isEmpty)
                     TravelEmptyState(
                       message: localization.travelNoEsimPackages,
                     ),
                   ...controller.esimPackages.map(
                     (package) => Padding(
-                      padding: EdgeInsets.only(bottom: 14.h),
+                      padding: EdgeInsetsDirectional.only(bottom: 14.h),
                       child: _PackageCard(package: package),
                     ),
                   ),
@@ -283,19 +435,10 @@ class _PackageCard extends StatelessWidget {
     final controller = ensureTravelController();
     final canPurchase = controller.canPurchase(TravelProductType.esim);
     return TravelCard(
-      onTap: canPurchase
-          ? () {
-              controller.selectedEsim.value = package;
-              Get.to(
-                () => TravelCheckoutScreen(
-                  type: TravelProductType.esim,
-                  productId: package.id,
-                  title: package.destinationCode,
-                  total: package.total,
-                ),
-              );
-            }
-          : null,
+      onTap: () {
+        controller.selectedEsim.value = package;
+        Get.to(() => EsimDetailScreen(package: package));
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -410,19 +553,10 @@ class _PackageCard extends StatelessWidget {
                   backgroundColor: canPurchase
                       ? TravelTheme.yellow
                       : TravelTheme.muted,
-                  onPressed: canPurchase
-                      ? () {
-                          controller.selectedEsim.value = package;
-                          Get.to(
-                            () => TravelCheckoutScreen(
-                              type: TravelProductType.esim,
-                              productId: package.id,
-                              title: package.destinationCode,
-                              total: package.total,
-                            ),
-                          );
-                        }
-                      : null,
+                  onPressed: () {
+                    controller.selectedEsim.value = package;
+                    Get.to(() => EsimDetailScreen(package: package));
+                  },
                 ),
               ),
             ],
