@@ -18,6 +18,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_two.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/sign_up_status_controller.dart';
@@ -72,15 +73,16 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
   bool get allStepsCompleted {
     final personalInfoCompleted =
         controller.userModel.value.data?.boardingSteps?.personalInfo == true;
-    final idVerificationCompleted =
-        controller.userModel.value.data?.boardingSteps?.idVerification == false;
-    final isKycVerification = controller.userModel.value.data?.kyc == 2;
+    final kyc = controller.userModel.value.data?.kyc;
+    // BUG-03 (P0): Accept both approved (1) and pending review (2) states.
+    // The previous code checked `kyc == 2` strictly, causing verified users
+    // (kyc == 1) to fail `allStepsCompleted` and get stuck with missing dashboard button.
+    final isKycValid = kyc == 1 || kyc == 2;
 
     return getEmailVerificationStatus() &&
         getPasswordSetupStatus() &&
         personalInfoCompleted &&
-        idVerificationCompleted &&
-        isKycVerification;
+        isKycValid;
   }
 
   // Get current status - server boarding_steps is primary source of truth
@@ -113,11 +115,14 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
     final idVerification =
         controller.userModel.value.data?.boardingSteps?.idVerification;
     final kycVerification = controller.userModel.value.data?.kyc;
-    return (idVerification == false && kycVerification == 2)
-        ? localizations.signUpStatusInReview
-        : (idVerification == false && kycVerification == 3)
-        ? localizations.signUpStatusRejected
-        : null;
+    if (kycVerification == 1) {
+      return l10nPickAuto(en: 'Verified', fa: 'تأیید شده');
+    } else if (idVerification == false && kycVerification == 2) {
+      return localizations.signUpStatusInReview;
+    } else if (idVerification == false && kycVerification == 3) {
+      return localizations.signUpStatusRejected;
+    }
+    return null;
   }
 
   // Next Step
@@ -313,24 +318,27 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
                     Padding(
                       padding: EdgeInsetsDirectional.symmetric(horizontal: 30),
                       child: Text(
-                        (controller.userModel.value.data?.rejectionReason !=
-                                    null &&
-                                controller.userModel.value.data?.rejectionReason
-                                        ?.trim()
-                                        .isNotEmpty ==
-                                    true)
-                            ? controller
-                                      .userModel
-                                      .value
-                                      .data!
-                                      .rejectionReason ??
-                                  ""
-                            : localizations.signUpStatusNoReason,
+                        (controller.rejectedKycData.value?.message != null &&
+                                controller.rejectedKycData.value!.message!.trim().isNotEmpty)
+                            ? controller.rejectedKycData.value!.message!
+                            : (controller.userModel.value.data?.rejectionReason !=
+                                        null &&
+                                    controller.userModel.value.data?.rejectionReason
+                                            ?.trim()
+                                            .isNotEmpty ==
+                                        true)
+                                ? controller
+                                          .userModel
+                                          .value
+                                          .data!
+                                          .rejectionReason ??
+                                      ""
+                                : localizations.signUpStatusNoReason,
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           letterSpacing: 0,
                           fontSize: 13,
-                          color: AppColors.lightTextTertiary,
+                          color: AppColors.error,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -352,6 +360,7 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
       final boardingSteps = userData?.boardingSteps;
       final isCompleted = boardingSteps?.completed ?? false;
       final isPersonalInfo = boardingSteps?.personalInfo ?? false;
+      final isApproved = controller.userModel.value.data?.kyc == 1;
       final isReview = controller.userModel.value.data?.kyc == 2;
       final isRejected = controller.userModel.value.data?.kyc == 3;
 
@@ -359,7 +368,7 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
         padding: EdgeInsetsDirectional.symmetric(horizontal: 18),
         child: Column(
           children: [
-            if (!allStepsCompleted && !isCompleted) ...[
+            if (!allStepsCompleted && !isCompleted && !isApproved) ...[
               Obx(
                 () => CommonButton(
                   onPressed: _handleNextStep,
@@ -373,9 +382,9 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
             ],
 
             // Unblock user: allow them to proceed to dashboard when all steps are submitted
-            // or when review is pending, so they are never trapped on this screen.
-            if (isCompleted || allStepsCompleted || isReview) ...[
-              if (!isCompleted) SizedBox(height: 12.h),
+            // or when review is pending or approved, so they are never trapped on this screen.
+            if (isCompleted || allStepsCompleted || isReview || isApproved) ...[
+              if (!isCompleted && !isApproved) SizedBox(height: 12.h),
               CommonButton(
                 onPressed: () => controller.postFcmNotification(),
                 width: double.infinity,
@@ -383,7 +392,7 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
               ),
             ],
 
-            if (isPersonalInfo && !(isReview || isRejected || isCompleted)) ...[
+            if (isPersonalInfo && !(isReview || isRejected || isCompleted || isApproved)) ...[
               SizedBox(height: 15.h),
               CommonIconButton(
                 backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.04),
