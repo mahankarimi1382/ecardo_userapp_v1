@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, HttpClient, X509Certificate;
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/common/services/session_manager.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/config/ssl_pinning_config.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
@@ -90,6 +92,24 @@ class NetworkService extends getx.GetxService {
     _dio.options.connectTimeout = const Duration(seconds: 15);
     _dio.options.receiveTimeout = const Duration(seconds: 30);
     _dio.options.sendTimeout = const Duration(seconds: 30);
+
+    // BUG-10 (P2): Runtime SSL Certificate / SPKI pinning for ecardo domains.
+    if (!kIsWeb) {
+      _dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          final client = HttpClient();
+          client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+            return SslPinningConfig.validateCertificate(cert.der, host);
+          };
+          return client;
+        },
+        validateCertificate: (cert, host, port) {
+          if (cert == null) return true;
+          return SslPinningConfig.validateCertificate(cert.der, host);
+        },
+      );
+    }
+
     _dio.interceptors.clear();
     _setupInterceptors();
   }
@@ -102,6 +122,24 @@ class NetworkService extends getx.GetxService {
     _globalDio.options.connectTimeout = const Duration(seconds: 15);
     _globalDio.options.receiveTimeout = const Duration(seconds: 30);
     _globalDio.options.sendTimeout = const Duration(seconds: 30);
+
+    // BUG-10 (P2): Runtime SSL Certificate / SPKI pinning for global dio.
+    if (!kIsWeb) {
+      _globalDio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          final client = HttpClient();
+          client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+            return SslPinningConfig.validateCertificate(cert.der, host);
+          };
+          return client;
+        },
+        validateCertificate: (cert, host, port) {
+          if (cert == null) return true;
+          return SslPinningConfig.validateCertificate(cert.der, host);
+        },
+      );
+    }
+
     _globalDio.interceptors.clear();
   }
 
