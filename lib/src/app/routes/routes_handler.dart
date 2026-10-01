@@ -490,6 +490,7 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.dynamicPassword,
     page: () => RoutesConfig.dynamicPassword,
+    binding: DynamicPasswordBinding(),
   ),
 
   // Remittance Routes (v1.0.4+5)

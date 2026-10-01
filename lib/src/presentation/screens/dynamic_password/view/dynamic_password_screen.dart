@@ -19,19 +19,26 @@ class DynamicPasswordScreen extends StatefulWidget {
 }
 
 class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
-  // M-2 (PAYMENT-FIX): this route has no binding of its own, so a direct /
-  // deep navigation used to crash on `Get.find<HomeController>()`. Look the
-  // controller up only when it is actually registered; otherwise the account
-  // number stays empty and OTP generation fails with the localized
-  // "user not found" error (fail-closed, no crash).
-  final HomeController? _homeController = Get.isRegistered<HomeController>()
-      ? Get.find<HomeController>()
-      : null;
-
   String? _otpCode;
   int _secondsRemaining = 0;
   Timer? _timer;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ensureUserData();
+  }
+
+  Future<void> _ensureUserData() async {
+    final home = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>()
+        : Get.put<HomeController>(HomeController());
+    if (home.userModel.value.data?.accountNumber == null ||
+        home.userModel.value.data!.accountNumber!.isEmpty) {
+      await home.loadData();
+    }
+  }
 
   @override
   void dispose() {
@@ -47,13 +54,19 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
     _timer?.cancel();
 
     try {
-      final accountNumber =
-          _homeController?.userModel.value.data?.accountNumber ?? '';
+      final home = Get.isRegistered<HomeController>()
+          ? Get.find<HomeController>()
+          : Get.put<HomeController>(HomeController());
+      if (home.userModel.value.data?.accountNumber == null ||
+          home.userModel.value.data!.accountNumber!.isEmpty) {
+        await home.loadData();
+      }
+      final accountNumber = home.userModel.value.data?.accountNumber ?? '';
 
       if (accountNumber.isEmpty) {
-        // v1.0.24: localized instead of hardcoded Persian strings.
+        final loc = Get.context == null ? null : AppLocalizations.of(Get.context!);
         ToastHelper().showErrorToast(
-          AppLocalizations.of(Get.context!)!.dynamicPasswordUserNotFound,
+          loc?.dynamicPasswordUserNotFound ?? 'Account number not found',
         );
         setState(() => _isLoading = false);
         return;
