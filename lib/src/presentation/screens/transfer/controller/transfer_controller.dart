@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/money_math_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -132,9 +133,10 @@ class TransferController extends GetxController {
 
     if (userChargeType == "percentage") {
       final percent = double.tryParse(userChargeStr) ?? 0.0;
-      calculatedCharge = amount * percent / 100;
+      // BUG-11 (P2): Safe monetary calculation without binary floating-point drift.
+      calculatedCharge = MoneyMathHelper.calculatePercentCharge(amount, percent);
       charge.value = calculatedCharge;
-      totalAmount.value = amount + calculatedCharge;
+      totalAmount.value = MoneyMathHelper.add(amount, calculatedCharge);
     } else {
       await getChargeConverter();
     }
