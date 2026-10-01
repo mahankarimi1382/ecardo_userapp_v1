@@ -169,10 +169,7 @@ class BaseRoute {
   static const String tourHome = "/tour_home_route";
   static const String tourDetail = "/tour_detail_route";
   static const String tourMatch = "/tour_match_route";
-  static const String tourBook = "/tour_book_route";
-  static const String tourPayment = "/tour_payment_route";
   static const String tourMyBookings = "/tour_my_bookings_route";
-  static const String tourVoucher = "/tour_voucher_route";
 
   // Escrow (معامله امانی)
   static const String escrowHome = "/escrow_home_route";
