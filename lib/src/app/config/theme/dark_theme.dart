@@ -41,6 +41,24 @@ class DarkTheme {
       snackBarTheme: const SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: AppColors.darkGray,
+        contentTextStyle: TextStyle(
+          color: AppColors.warmWhite,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      dialogTheme: const DialogThemeData(
+        backgroundColor: AppColors.darkGray,
+        titleTextStyle: TextStyle(
+          color: AppColors.warmWhite,
+          fontWeight: FontWeight.w700,
+          fontSize: 18,
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: brand.withValues(alpha: 0.15),
+        selectedColor: brand,
+        labelStyle: const TextStyle(color: AppColors.warmWhite),
+        side: BorderSide(color: AppColors.lightWarmGray.withValues(alpha: 0.3)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

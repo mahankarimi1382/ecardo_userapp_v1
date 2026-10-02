@@ -59,10 +59,13 @@ class CommonAppBar extends StatelessWidget {
               child: IconButton(
                 visualDensity: VisualDensity.compact,
                 onPressed: () => _handleBack(context),
-                icon: Image.asset(
-                  PngAssets.arrowLeftCommonIcon,
-                  width: 25.w,
-                  color: AppColors.black,
+                icon: Transform.scale(
+                  scaleX: Directionality.of(context) == TextDirection.rtl ? -1 : 1,
+                  child: Image.asset(
+                    PngAssets.arrowLeftCommonIcon,
+                    width: 25.w,
+                    color: AppColors.black,
+                  ),
                 ),
               ),
             ),

@@ -190,7 +190,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 children: CATEGORIES.map((c) => Padding(
-                  padding: EdgeInsets.only(left: 8.w),
+                  padding: EdgeInsetsDirectional.only(end: 8.w),
                   child: ChoiceChip(
                     label: Text(_categoryLabel(context, c)),
                     selected: controller.selectedCategory.value == c,

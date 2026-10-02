@@ -93,6 +93,17 @@ class _EcardoUserState extends State<EcardoUser> {
           ],
           builder: (context, widget) {
             Widget body = widget ?? const SizedBox.shrink();
+            // UI Defensive hardening: clamp system font scaling (max 1.3) to prevent fixed-height layout breaks
+            final mediaQuery = MediaQuery.of(context);
+            final clampedTextScaler = mediaQuery.textScaler.clamp(
+              minScaleFactor: 0.85,
+              maxScaleFactor: 1.3,
+            );
+            body = MediaQuery(
+              data: mediaQuery.copyWith(textScaler: clampedTextScaler),
+              child: body,
+            );
+
             // App lock overlay (PIN / biometric gate)
             // Touch tracking for idle session timeout.
             body = Listener(

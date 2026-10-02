@@ -45,15 +45,15 @@ class FinancialServiceUnavailableBanner extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       padding: EdgeInsets.all(isCompact ? 12.r : 16.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFBEB), // Soft warm amber
+        color: AppColors.warningContainer,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
+          color: AppColors.warning.withValues(alpha: 0.4),
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFF59E0B).withValues(alpha: 0.08),
+            color: AppColors.warning.withValues(alpha: 0.08),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -65,12 +65,12 @@ class FinancialServiceUnavailableBanner extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.r),
             decoration: BoxDecoration(
-              color: const Color(0xFFFEF3C7),
+              color: AppColors.warning.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.cloud_sync_rounded,
-              color: const Color(0xFFD97706),
+              color: AppColors.warning,
               size: 22.sp,
             ),
           ),

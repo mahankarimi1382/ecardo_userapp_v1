@@ -37,7 +37,8 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  final localization = AppLocalizations.of(Get.context!)!;
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
   final WebViewController _controller = WebViewController();
   bool _isLoading = true;
   bool _redirectProcessed = false;
@@ -188,12 +189,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
     if (success) {
       Get.back(result: {'success': true, 'data': data});
       ToastHelper().showSuccessToast(
-        localization.webViewScreenPaymentSuccessful,
+        localization?.webViewScreenPaymentSuccessful ?? 'Payment completed successfully',
       );
     } else {
       Get.back(result: {'success': false, 'data': data});
       ToastHelper().showErrorToast(
-        message ?? localization.webViewScreenPaymentFailed,
+        message ?? localization?.webViewScreenPaymentFailed ?? 'Payment was not completed',
       );
     }
   }
@@ -206,7 +207,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         if (!didPop) {
           Get.back();
           ToastHelper().showErrorToast(
-            localization.webViewScreenPaymentCancelled,
+            localization?.webViewScreenPaymentCancelled ?? 'Payment cancelled',
           );
         }
       },

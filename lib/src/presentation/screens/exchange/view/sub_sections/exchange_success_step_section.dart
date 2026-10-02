@@ -383,7 +383,7 @@ class _SuccessRow extends StatelessWidget {
           else if (amount != null && decimals != null)
             Expanded(
               child: Align(
-                alignment: Alignment.centerRight,
+                alignment: AlignmentDirectional.centerEnd,
                 child: MoneyDisplayText(
                   amount: amount!,
                   decimals: decimals!,
