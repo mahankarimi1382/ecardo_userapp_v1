@@ -1,0 +1,125 @@
+import 'package:flutter/material.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/widgets/multi_currency_flip_card.dart';
+
+/// Smooth horizontal PageView carousel with 3D scaling and parallax depth for multi-currency cards.
+class WalletCardCarousel extends StatefulWidget {
+  final List<Wallets> wallets;
+  final ValueChanged<int>? onPageChanged;
+  final Function(Wallets wallet)? onCardTap;
+
+  const WalletCardCarousel({
+    super.key,
+    required this.wallets,
+    this.onPageChanged,
+    this.onCardTap,
+  });
+
+  @override
+  State<WalletCardCarousel> createState() => _WalletCardCarouselState();
+}
+
+class _WalletCardCarouselState extends State<WalletCardCarousel> {
+  late final PageController _pageController;
+  double _currentPage = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.88)
+      ..addListener(() {
+        if (mounted) {
+          setState(() {
+            _currentPage = _pageController.page ?? 0.0;
+          });
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.wallets.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    if (widget.wallets.length == 1) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: MultiCurrencyFlipCard(
+          wallet: widget.wallets.first,
+          width: double.infinity,
+          height: 196,
+          onTap: widget.onCardTap != null
+              ? () => widget.onCardTap!(widget.wallets.first)
+              : null,
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 204,
+          child: PageView.builder(
+            controller: _pageController,
+            physics: const BouncingScrollPhysics(),
+            itemCount: widget.wallets.length,
+            onPageChanged: widget.onPageChanged,
+            itemBuilder: (context, index) {
+              final wallet = widget.wallets[index];
+              // Compute scale and translation based on distance from current page
+              final difference = (index - _currentPage).abs();
+              final scale = (1.0 - (difference * 0.08)).clamp(0.90, 1.0);
+              final opacity = (1.0 - (difference * 0.2)).clamp(0.7, 1.0);
+
+              return Transform.scale(
+                scale: scale,
+                child: Opacity(
+                  opacity: opacity,
+                  child: Center(
+                    child: MultiCurrencyFlipCard(
+                      wallet: wallet,
+                      width: MediaQuery.of(context).size.width * 0.86,
+                      height: 196,
+                      onTap: widget.onCardTap != null
+                          ? () => widget.onCardTap!(wallet)
+                          : null,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Dynamic Page Dots Indicator
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(widget.wallets.length, (index) {
+            final isSelected = (_currentPage.round() == index);
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              width: isSelected ? 22 : 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.lightPrimary
+                    : AppColors.lightTextTertiary.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(3),
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+}

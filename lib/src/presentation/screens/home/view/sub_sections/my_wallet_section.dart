@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/widgets/wallet_card_carousel.dart';
 import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
 import 'package:ecardo_user/src/helper/responsive.dart';
 
@@ -41,10 +42,8 @@ class MyWalletSection extends StatelessWidget {
           SizedBox(height: Responsive.sectionGap(context) / 2),
           if (wallets.isEmpty)
             EmptyView.wallets(onCta: () => Get.toNamed(BaseRoute.wallets))
-          else if (showSingleWalletOnly)
-            _buildSingleCardView(context, wallets)
           else
-            _buildHorizontalScrollView(context, wallets),
+            WalletCardCarousel(wallets: wallets),
         ],
       );
     });

@@ -9,7 +9,9 @@ import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/currency_sparkline_chart.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/rate_lock_countdown_timer.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
 /// Step 1 — Review. Shows the locked-at-confirmation rate, a soft banner
@@ -63,34 +65,131 @@ class ExchangeReviewStepSection extends StatelessWidget {
                   letterSpacing: 0,
                 ),
               ),
-              const SizedBox(height: 8),
-              // Locked-rate chip
+              const SizedBox(height: 12),
+              // Locked-rate section card with countdown timer & 24h trend sparkline
               Container(
-                padding: const EdgeInsetsDirectional.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
+                width: double.infinity,
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: AppColors.lightPrimaryContainer
-                      .withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.lock_outline_rounded,
-                      size: 14,
-                      color: AppColors.lightPrimary,
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.lightTextPrimary.withValues(alpha: 0.08),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.lightShadow.withValues(alpha: 0.04),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${loc.exchangeReviewRateLockedAt}: 1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.lightPrimary,
-                        letterSpacing: 0,
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.lightPrimaryContainer
+                                .withValues(alpha: 0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.lock_rounded,
+                            size: 16,
+                            color: AppColors.lightPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                loc.exchangeReviewRateLockedAt,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.lightTextTertiary,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                '1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.lightTextPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        RateLockCountdownTimer(
+                          key: ValueKey(
+                            'rate_lock_${controller.exchangeReviewRate.value}_$isStale',
+                          ),
+                          duration: const Duration(seconds: 60),
+                          size: 34,
+                          isExpired: isStale,
+                          onExpired: () {
+                            controller.isReviewRateStale.value = true;
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    // 24h currency rate trend sparkline chart
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.lightBackground.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                '24h Trend',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.lightTextTertiary,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                              if (controller.liveChangePercent.value != null)
+                                Text(
+                                  '${controller.liveChangePercent.value! >= 0 ? '+' : ''}${controller.liveChangePercent.value!.toStringAsFixed(2)}%',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    color: controller.liveChangePercent.value! >= 0
+                                        ? AppColors.success
+                                        : AppColors.error,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          CurrencySparklineChart(
+                            changePercent: controller.liveChangePercent.value,
+                            baseRate: controller.exchangeReviewRate.value > 0
+                                ? controller.exchangeReviewRate.value
+                                : controller.currentRate.value,
+                            height: 38,
+                          ),
+                        ],
                       ),
                     ),
                   ],

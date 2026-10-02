@@ -5,6 +5,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
@@ -167,31 +168,20 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           const SizedBox(height: 16),
           // Quick percent chips
           Obx(() {
-            if (controller.fromWallet.value == null) return const SizedBox();
+            final from = controller.fromWallet.value;
+            if (from == null) return const SizedBox();
+            final balance = double.tryParse(from.balance ?? '0') ?? 0.0;
             return Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-              child: Row(
-                children: [
-                  _QuickChip(
-                    label: loc.exchangeQuickPercent25,
-                    onTap: () => controller.setAmountPercent(0.25),
-                  ),
-                  const SizedBox(width: 8),
-                  _QuickChip(
-                    label: loc.exchangeQuickPercent50,
-                    onTap: () => controller.setAmountPercent(0.50),
-                  ),
-                  const SizedBox(width: 8),
-                  _QuickChip(
-                    label: loc.exchangeQuickPercent75,
-                    onTap: () => controller.setAmountPercent(0.75),
-                  ),
-                  const SizedBox(width: 8),
-                  _QuickChip(
-                    label: loc.exchangeQuickMax,
-                    onTap: () => controller.setAmountPercent(1.0),
-                  ),
-                ],
+              child: QuickAmountSelector(
+                textController: controller.amountController,
+                availableBalance: balance,
+                isCrypto: from.isCrypto == true,
+                currencyCode: from.code,
+                maxLabel: loc.exchangeQuickMax,
+                onAmountChanged: (amount) {
+                  controller.onAmountChanged(controller.amountController.text);
+                },
               ),
             );
           }),
@@ -284,49 +274,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
       );
     }
     return '';
-  }
-}
-
-class _QuickChip extends StatelessWidget {
-  const _QuickChip({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            HapticFeedback.selectionClick();
-            onTap();
-          },
-          child: Container(
-            height: 34,
-            decoration: BoxDecoration(
-              color: AppColors.lightPrimary.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: AppColors.lightPrimary.withValues(alpha: 0.15),
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: AppColors.lightPrimary,
-                letterSpacing: 0,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 

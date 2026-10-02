@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/route_return.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/receipt/digital_receipt_ticket.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
 
 /// Step 2 — Success. Renders an animated checkmark (draw-in via custom
-/// painter — no Lottie, no confetti), a summary card with the same
-/// typographic system used elsewhere, and two buttons: Share Receipt
-/// (uses share_plus) and Back to Wallet.
+/// painter — no Lottie, no confetti), a digital receipt ticket (with
+/// ticket clipper notches, perforated dashed line, barcode, QR code,
+/// and high-resolution PNG & PDF export actions), and navigation buttons
+/// ("Exchange again" and "Back to wallet").
 class ExchangeSuccessStepSection extends StatefulWidget {
   const ExchangeSuccessStepSection({super.key});
 
@@ -86,22 +86,9 @@ class _ExchangeSuccessStepSectionState
                         letterSpacing: 0,
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 28),
                     _buildSummaryCard(loc),
-                    const SizedBox(height: 32),
-                    // Share Receipt
-                    CommonButton(
-                      onPressed: _shareReceipt,
-                      width: double.infinity,
-                      text: loc.exchangeSuccessShareReceipt,
-                      backgroundColor:
-                          AppColors.lightPrimary.withValues(alpha: 0.06),
-                      borderColor:
-                          AppColors.lightPrimary.withValues(alpha: 0.60),
-                      borderWidth: 2,
-                      textColor: AppColors.lightPrimary,
-                    ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 20),
                     // Exchange again
                     CommonButton(
                       onPressed: () {
@@ -136,19 +123,15 @@ class _ExchangeSuccessStepSectionState
   }
 
   Widget _buildSummaryCard(AppLocalizations loc) {
-    final tx = controller.successExchangeData.value!;
-    final bool isCrypto = tx["transaction"]["is_crypto"] == true;
+    final tx = controller.successExchangeData.value;
+    if (tx == null || tx["transaction"] is! Map) {
+      return const SizedBox.shrink();
+    }
+    final t = Map<String, dynamic>.from(tx["transaction"] as Map);
+    final bool isCrypto = t["is_crypto"] == true;
 
-    // v1.0.23+23 (E-6) — Compute decimals SEPARATELY for each currency
-    // involved in the row, instead of using a single `decimals` value
-    // derived from `receive_currency` for all rows. The previous code
-    // applied the receive-currency's decimal count to pay-currency rows
-    // (Amount, Pay Amount, Charge, Final Amount) — which is wrong when
-    // the two currencies have different decimal conventions (e.g. USD
-    // with 2 decimals vs. BTC with 8 decimals).
-    final payCurrencyCode = tx["transaction"]["pay_currency"]?.toString() ?? '';
-    final receiveCurrencyCode =
-        tx["transaction"]["receive_currency"]?.toString() ?? '';
+    final payCurrencyCode = t["pay_currency"]?.toString() ?? '';
+    final receiveCurrencyCode = t["receive_currency"]?.toString() ?? '';
     final siteCurrency = settingsService.getSetting("site_currency") ?? "";
     final siteCurrencyDecimals =
         settingsService.getSetting("site_currency_decimals") ?? "2";
@@ -157,7 +140,7 @@ class _ExchangeSuccessStepSectionState
       currencyCode: payCurrencyCode,
       siteCurrencyCode: siteCurrency,
       siteCurrencyDecimals: siteCurrencyDecimals,
-      isCrypto: isCrypto, // pay side's crypto-ness (rare; usually fiat)
+      isCrypto: isCrypto,
     );
     final receiveDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: receiveCurrencyCode,
@@ -166,248 +149,88 @@ class _ExchangeSuccessStepSectionState
       isCrypto: isCrypto,
     );
 
-    // v1.0.23+23 (E-6) — Format `created_at` as a human-readable date
-    // instead of showing the raw ISO 8601 string. We use a locale-aware
-    // DateFormat so the format matches the user's language.
-    //
-    // The backend typically returns ISO 8601 like "2026-08-20T14:32:11Z"
-    // or "2026-08-20 14:32:11". DateTime.tryParse handles both forms.
-    final createdStr = tx["transaction"]["created_at"]?.toString() ?? '';
+    final createdStr = t["created_at"]?.toString() ?? '';
     final dt = DateTime.tryParse(createdStr);
     String formattedDate;
     if (dt != null) {
       try {
-        // Use a short, locale-aware pattern: yyyy-MM-dd HH:mm
         formattedDate = DateFormat('yyyy-MM-dd HH:mm').format(dt);
       } catch (_) {
-        // Fall back to the raw string if DateFormat throws (shouldn't,
-        // but be defensive — never show a blank date on a success screen).
         formattedDate = createdStr;
       }
     } else {
       formattedDate = createdStr;
     }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.lightTextPrimary.withValues(alpha: 0.06),
-        ),
+    final payAmount = double.tryParse(t["pay_amount"]?.toString() ?? '') ?? 0.0;
+    final convertedAmount = double.tryParse(t["amount"]?.toString() ?? '') ?? 0.0;
+    final charge = double.tryParse(t["charge"]?.toString() ?? '') ?? 0.0;
+    final finalAmount = double.tryParse(t["final_amount"]?.toString() ?? '') ?? 0.0;
+    final tnx = t["tnx"]?.toString() ?? '';
+
+    // Calculate approximate exchange rate if available
+    String? exchangeRateText;
+    if (payAmount > 0 && convertedAmount > 0) {
+      final rate = convertedAmount / payAmount;
+      exchangeRateText = '1 $payCurrencyCode ≈ ${rate.toStringAsFixed(4)} $receiveCurrencyCode';
+    }
+
+    final extraRows = <ReceiptRowData>[
+      ReceiptRowData(
+        label: loc.exchangeSuccessPayAmount,
+        amount: payAmount,
+        decimals: payDecimals,
+        currencyCode: payCurrencyCode,
       ),
-      child: Column(
-        children: [
-          // v1.0.23+23 (E-6) — Each row now uses the decimal count that
-          // matches ITS currency, not the receive currency's count.
-          _SuccessRow(
-            title: loc.exchangeSuccessAmount,
-            amount:
-                double.tryParse(controller.amountController.text) ?? 0.0,
-            decimals: payDecimals,
-            currencyCode: payCurrencyCode,
-          ),
-          _divider(),
-          _SuccessRow(
-            title: loc.exchangeSuccessTransactionId,
-            text: tx["transaction"]["tnx"]?.toString() ?? '',
-            copyable: true,
-          ),
-          _divider(),
-          _SuccessRow(
-            title: loc.exchangeSuccessPayAmount,
-            amount: double.tryParse(
-              tx["transaction"]["pay_amount"].toString(),
-            ) ?? 0.0,
-            decimals: payDecimals,
-            currencyCode: payCurrencyCode,
-          ),
-          _divider(),
-          _SuccessRow(
-            title: loc.exchangeSuccessConvertedAmount,
-            amount: double.tryParse(
-              tx["transaction"]["amount"].toString(),
-            ) ?? 0.0,
-            decimals: receiveDecimals,
-            currencyCode: receiveCurrencyCode,
-          ),
-          _divider(),
-          _SuccessRow(
-            title: loc.exchangeSuccessCharge,
-            amount: double.tryParse(
-              tx["transaction"]["charge"].toString(),
-            ) ?? 0.0,
-            decimals: payDecimals,
-            currencyCode: payCurrencyCode,
-            amountColor: AppColors.warning,
-          ),
-          _divider(),
-          // v1.0.23+23 (E-6) — Formatted date instead of raw ISO.
-          _SuccessRow(
-            title: loc.exchangeSuccessDate,
-            text: formattedDate,
-          ),
-          _divider(),
-          _SuccessRow(
-            title: loc.exchangeSuccessFinalAmount,
-            amount: double.tryParse(
-              tx["transaction"]["final_amount"].toString(),
-            ) ?? 0.0,
-            decimals: payDecimals,
-            currencyCode: payCurrencyCode,
-            emphasize: true,
-          ),
-        ],
+      ReceiptRowData(
+        label: loc.exchangeSuccessConvertedAmount,
+        amount: convertedAmount,
+        decimals: receiveDecimals,
+        currencyCode: receiveCurrencyCode,
+        isHighlighted: true,
       ),
-    );
-  }
-
-  Widget _divider() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Divider(
-          height: 0,
-          color: AppColors.black.withValues(alpha: 0.06),
-        ),
-      );
-
-  void _shareReceipt() {
-    HapticFeedback.selectionClick();
-    final tx = controller.successExchangeData.value!;
-    final t = tx["transaction"];
-    // v1.0.23+23 (E-6) — Format the date in the shared receipt too, so
-    // the recipient sees a readable date instead of an ISO string.
-    final createdStr = t["created_at"]?.toString() ?? '';
-    final dt = DateTime.tryParse(createdStr);
-    final formattedDate = dt != null
-        ? DateFormat('yyyy-MM-dd HH:mm').format(dt)
-        : createdStr;
-    final text = StringBuffer()
-      ..writeln('eCardo — Exchange Receipt')
-      ..writeln('========================')
-      ..writeln('Tx ID:        ${t["tnx"]}')
-      ..writeln('Date:         $formattedDate')
-      ..writeln(
-          'Amount:       ${t["pay_amount"]} ${t["pay_currency"]}')
-      ..writeln(
-          'Converted:    ${t["amount"]} ${t["receive_currency"]}')
-      ..writeln('Charge:       ${t["charge"]} ${t["pay_currency"]}')
-      ..writeln(
-          'Final:        ${t["final_amount"]} ${t["pay_currency"]}')
-      ..writeln('========================');
-    SharePlus.instance.share(
-      ShareParams(text: text.toString(), subject: 'eCardo Exchange Receipt'),
-    );
-  }
-}
-
-class _SuccessRow extends StatelessWidget {
-  const _SuccessRow({
-    required this.title,
-    this.text,
-    this.amount,
-    this.decimals,
-    this.currencyCode,
-    this.amountColor,
-    this.emphasize = false,
-    this.copyable = false,
-  });
-
-  final String title;
-  final String? text;
-  final double? amount;
-  final int? decimals;
-  final String? currencyCode;
-  final Color? amountColor;
-  final bool emphasize;
-  final bool copyable;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 13,
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
-                letterSpacing: 0,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          if (text != null)
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: Text(
-                      text!,
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontWeight: emphasize ? FontWeight.w900 : FontWeight.w700,
-                        fontSize: emphasize ? 16 : 14,
-                        color: AppColors.lightTextPrimary,
-                        letterSpacing: 0,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  if (copyable) ...[
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.selectionClick();
-                        Clipboard.setData(
-                          ClipboardData(text: text ?? ''),
-                        );
-                      },
-                      child: Icon(
-                        Icons.copy_rounded,
-                        size: 14,
-                        color: AppColors.lightTextTertiary,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            )
-          else if (amount != null && decimals != null)
-            Expanded(
-              child: Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: MoneyDisplayText(
-                  amount: amount!,
-                  decimals: decimals!,
-                  currencyCode: currencyCode,
-                  integerColor: amountColor ?? AppColors.lightTextPrimary,
-                  decimalColor: (amountColor ?? AppColors.lightTextPrimary)
-                      .withValues(alpha: 0.55),
-                  integerStyle: TextStyle(
-                    fontWeight: emphasize ? FontWeight.w900 : FontWeight.w700,
-                    fontSize: emphasize ? 18 : 15,
-                    color: amountColor ?? AppColors.lightTextPrimary,
-                  ),
-                  decimalStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: emphasize ? 14 : 12,
-                    color: (amountColor ?? AppColors.lightTextPrimary)
-                        .withValues(alpha: 0.55),
-                  ),
-                  textAlign: TextAlign.end,
-                ),
-              ),
-            ),
-        ],
+      ReceiptRowData(
+        label: loc.exchangeSuccessFinalAmount,
+        amount: finalAmount,
+        decimals: payDecimals,
+        currencyCode: payCurrencyCode,
       ),
+    ];
+
+    final qrPayload = {
+      'iss': 'eCardo',
+      'type': 'exchange',
+      'tnx': tnx,
+      'pay_amount': payAmount,
+      'pay_currency': payCurrencyCode,
+      'amount': convertedAmount,
+      'receive_currency': receiveCurrencyCode,
+      'charge': charge,
+      'final_amount': finalAmount,
+      'created_at': createdStr,
+      'status': 'success',
+    };
+
+    return DigitalReceiptTicket(
+      title: loc.exchangeSuccessTitle,
+      status: ReceiptStatus.success,
+      transactionId: tnx,
+      dateTime: dt,
+      formattedDateTime: formattedDate,
+      primaryAmount: convertedAmount,
+      primaryCurrency: receiveCurrencyCode,
+      primaryDecimals: receiveDecimals,
+      fee: charge > 0 ? charge : null,
+      feeCurrency: payCurrencyCode,
+      feeDecimals: payDecimals,
+      fromAccount: payCurrencyCode.isNotEmpty ? '$payCurrencyCode Wallet' : null,
+      toAccount: receiveCurrencyCode.isNotEmpty ? '$receiveCurrencyCode Wallet' : null,
+      exchangeRate: exchangeRateText,
+      extraRows: extraRows,
+      qrPayload: qrPayload,
+      showBarcode: true,
+      showQrCode: true,
+      showActions: true,
     );
   }
 }
@@ -442,36 +265,41 @@ class _CheckPainter extends CustomPainter {
       ringPaint,
     );
 
-    // Check draws in over the last 50% of the animation.
-    if (animation.value > 0.5) {
-      // 0..1 across the second half of the parent animation.
-      final checkProgress =
-          ((animation.value - 0.5) / 0.5).clamp(0.0, 1.0);
+    // Checkmark progress: 0 → 1 over the remaining 40% of the animation.
+    if (animation.value > 0.6) {
+      final checkProgress = ((animation.value - 0.6) / 0.4).clamp(0.0, 1.0);
+
+      // Checkmark geometry centered in the circle.
+      final p1 = Offset(center.dx - radius * 0.35, center.dy);
+      final p2 = Offset(center.dx - radius * 0.05, center.dy + radius * 0.30);
+      final p3 = Offset(center.dx + radius * 0.40, center.dy - radius * 0.25);
+
       final checkPaint = Paint()
         ..color = AppColors.success
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 4
+        ..strokeWidth = 3.5
         ..strokeCap = StrokeCap.round
         ..strokeJoin = StrokeJoin.round;
 
-      final p1 = Offset(center.dx - radius * 0.4, center.dy + radius * 0.05);
-      final p2 = Offset(center.dx - radius * 0.10, center.dy + radius * 0.35);
-      final p3 = Offset(center.dx + radius * 0.45, center.dy - radius * 0.30);
+      final path = Path();
+      path.moveTo(p1.dx, p1.dy);
 
-      // First segment: p1 → p2, occupies 0..0.5 of checkProgress.
-      final seg1T = (checkProgress / 0.5).clamp(0.0, 1.0);
-      final seg1End = Offset.lerp(p1, p2, seg1T)!;
-      canvas.drawLine(p1, seg1End, checkPaint);
+      // First segment: p1 → p2 (first 40% of check animation).
+      final seg1Progress = (checkProgress / 0.4).clamp(0.0, 1.0);
+      final currentP2 = Offset.lerp(p1, p2, seg1Progress)!;
+      path.lineTo(currentP2.dx, currentP2.dy);
 
-      // Second segment: p2 → p3, occupies 0.5..1.0 of checkProgress.
-      if (checkProgress > 0.5) {
-        final seg2T = ((checkProgress - 0.5) / 0.5).clamp(0.0, 1.0);
-        final seg2End = Offset.lerp(p2, p3, seg2T)!;
-        canvas.drawLine(p2, seg2End, checkPaint);
+      // Second segment: p2 → p3 (remaining 60% of check animation).
+      if (checkProgress > 0.4) {
+        final seg2Progress = ((checkProgress - 0.4) / 0.6).clamp(0.0, 1.0);
+        final currentP3 = Offset.lerp(p2, p3, seg2Progress)!;
+        path.lineTo(currentP3.dx, currentP3.dy);
       }
+
+      canvas.drawPath(path, checkPaint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(_CheckPainter oldDelegate) => true;
 }
