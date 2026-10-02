@@ -53,7 +53,9 @@ class TravelApiRepository implements TravelRepository {
             TravelServiceConfig(
               type: TravelProductType.hotel,
               displayName: 'Hotels',
-              icon: 'hotel',
+              description: 'Hotels and accommodations',
+              iconKey: 'hotel',
+              accentColor: '#1E88E5',
               dataMode: 'live',
               capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
               searchFields: [],
@@ -69,7 +71,9 @@ class TravelApiRepository implements TravelRepository {
             TravelServiceConfig(
               type: TravelProductType.flight,
               displayName: 'Flights',
-              icon: 'flight',
+              description: 'Flight tickets worldwide',
+              iconKey: 'flight',
+              accentColor: '#4338CA',
               dataMode: 'live',
               capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
               searchFields: [],
@@ -78,7 +82,9 @@ class TravelApiRepository implements TravelRepository {
             TravelServiceConfig(
               type: TravelProductType.esim,
               displayName: 'eSIM',
-              icon: 'sim',
+              description: 'International eSIM cards',
+              iconKey: 'sim',
+              accentColor: '#059669',
               dataMode: 'live',
               capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
               searchFields: [],
@@ -197,7 +203,7 @@ class TravelApiRepository implements TravelRepository {
             createdAt: DateTime.now().subtract(const Duration(days: 7)),
             details: {
               'esim_iccid': '8990012345678901234',
-              'esim_activation_code': 'LPA:1$smdp.io$DEMO-CODE-2026',
+              'esim_activation_code': r'LPA:1$smdp.io$DEMO-CODE-2026',
             },
           ),
         ];

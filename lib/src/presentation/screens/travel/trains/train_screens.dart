@@ -886,7 +886,7 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
     if (!mounted) return;
     final passengerMaps = passengers
         .map((p) => {
-              'name': p.name,
+              'name': p.fullName,
               'national_code': p.nationalCode,
               'gender': p.gender,
             })
@@ -901,7 +901,7 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
         trainNumber: widget.trip.trainNumber,
         operatorName: widget.trip.operator,
         departureTime: widget.trip.departLabel,
-        arrivalTime: widget.trip.arriveLabel,
+        arrivalTime: widget.trip.arrivalLabel,
         trainClass: trainClassLabel(_selectedClass, localization),
         totalPrice: _totalPrice,
         passengers: passengerMaps,

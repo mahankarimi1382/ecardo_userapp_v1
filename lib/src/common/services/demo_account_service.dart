@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 import 'package:ecardo_user/src/presentation/screens/home/model/dashboard_model.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_cards_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/controller/wallets_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
 /// Comprehensive Demo & Test Account Service
@@ -29,6 +30,9 @@ class DemoAccountService extends GetxService {
   final RxBool isDemoMode = false.obs;
   // Admin-controlled kill-switch: if disabled by admin, the demo button is completely hidden from the UI!
   final RxBool isDemoAllowedByAdmin = true.obs;
+  bool get isDemoBlockedByAdmin => !isDemoAllowedByAdmin.value;
+  set isDemoBlockedByAdmin(bool val) => isDemoAllowedByAdmin.value = !val;
+
   final RxInt demoKycStatus = 1.obs; // 1: Verified, 2: Pending, 3: Rejected, 0: Unverified
   final RxString demoRejectReason =
       'تصویر کارت ملی ارسالی مخدوش یا ناخوانا می‌باشد. لطفاً تصویر باکیفیت‌تری بارگذاری فرمایید.'.obs;
@@ -44,6 +48,20 @@ class DemoAccountService extends GetxService {
     super.onInit();
     _initDemoEntities();
     _loadPersistedDemoState();
+    checkAdminKillSwitch();
+  }
+
+  /// Checks server settings / remote status to see if demo mode is allowed by admin
+  Future<void> checkAdminKillSwitch() async {
+    try {
+      if (Get.isRegistered<SettingsService>()) {
+        final setting = Get.find<SettingsService>().getSetting('demo_account_enabled');
+        if (setting == '0' || setting == 'false') {
+          isDemoAllowedByAdmin.value = false;
+          return;
+        }
+      }
+    } catch (_) {}
   }
 
   Future<void> _loadPersistedDemoState() async {
@@ -286,6 +304,15 @@ class DemoAccountService extends GetxService {
 
   /// Activate full Demo Mode and bypass authentication
   Future<void> activateDemoMode() async {
+    if (!isDemoAllowedByAdmin.value) {
+      Get.snackbar(
+        'Demo Disabled',
+        'Demo mode is currently disabled by system administrator.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
     isDemoMode.value = true;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_prefDemoActiveKey, true);
@@ -311,6 +338,11 @@ class DemoAccountService extends GetxService {
       homeCtrl.dashboardModel.value = demoDashboardModel.value;
       homeCtrl.isLoading.value = false;
       homeCtrl.loadError.value = '';
+    }
+
+    // Push into WalletsController if registered
+    if (Get.isRegistered<WalletsController>()) {
+      Get.find<WalletsController>().walletsList.assignAll(demoWallets);
     }
 
     // Trigger reactive state updates

@@ -6,6 +6,7 @@ export '../../guarantee/bindings/guarantee_binding.dart';
 export '../../stock/bindings/stock_binding.dart';
 export '../../visa/bindings/visa_binding.dart';
 export '../../license/binding/license_binding.dart';
+export '../../common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_ads/controller/my_ads_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_order/controller/my_order_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/bill_payment_history_controller.dart';
