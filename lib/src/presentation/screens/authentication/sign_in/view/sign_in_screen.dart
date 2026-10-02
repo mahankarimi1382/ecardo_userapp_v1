@@ -167,7 +167,18 @@ class _SignInScreenState extends State<SignInScreen>
                     ),
                     child: Column(
                       children: [
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 18.h),
+                        // Quick Demo & Test Mode Entry Card (Prominently above inputs for 1-tap evaluator access)
+                        Obx(() {
+                          if (Get.isRegistered<DemoAccountService>() &&
+                              !DemoAccountService.to.isDemoAllowedByAdmin.value) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsetsDirectional.only(bottom: 16.h),
+                            child: const _DemoAccountSignInButton(),
+                          );
+                        }),
                         AutofillGroup(
                           child: Column(
                             children: [
@@ -407,17 +418,6 @@ class _SignInScreenState extends State<SignInScreen>
                             ),
                           ),
                         ),
-                        // Demo & Test Mode Entry Button (completely hidden when disabled by Admin kill-switch)
-                        Obx(() {
-                          if (Get.isRegistered<DemoAccountService>() &&
-                              !DemoAccountService.to.isDemoAllowedByAdmin.value) {
-                            return const SizedBox.shrink();
-                          }
-                          return Padding(
-                            padding: EdgeInsets.only(top: 14.h),
-                            child: const _DemoAccountSignInButton(),
-                          );
-                        }),
                         SizedBox(height: 20.h),
                         Wrap(
                           children: [

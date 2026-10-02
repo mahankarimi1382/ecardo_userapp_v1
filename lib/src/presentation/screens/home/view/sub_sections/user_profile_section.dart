@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
@@ -73,9 +74,61 @@ class UserProfileSection extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 18.h),
-                  // UID pill — the whole pill is tappable (copies), with an
-                  // explicit copy affordance on the trailing edge.
-                  _UidPill(accountNumber: user?.accountNumber ?? ""),
+                  // UID pill & Demo Mode Indicator
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _UidPill(accountNumber: user?.accountNumber ?? ""),
+                      Obx(() {
+                        if (Get.isRegistered<DemoAccountService>() &&
+                            DemoAccountService.to.isDemoMode.value) {
+                          return InkWell(
+                            onTap: () => DemoAccountService.to
+                                .showTesterControlBottomSheet(context),
+                            borderRadius: BorderRadius.circular(16.r),
+                            child: Container(
+                              margin: EdgeInsetsDirectional.only(start: 10.w),
+                              padding: EdgeInsetsDirectional.symmetric(
+                                horizontal: 10.w,
+                                vertical: 6.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.shade300,
+                                borderRadius: BorderRadius.circular(16.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        Colors.black.withValues(alpha: 0.15),
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.biotech_rounded,
+                                    size: 15,
+                                    color: Colors.black87,
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    'DEMO MODE',
+                                    style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      }),
+                    ],
+                  ),
                 ],
               ),
             ),

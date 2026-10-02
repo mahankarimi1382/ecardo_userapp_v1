@@ -251,6 +251,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       () => Get.toNamed(BaseRoute.idVerification),
                     ),
                 ]),
+                _group(
+                  l10nPick(
+                    context,
+                    en: 'Demo & Testing Lab',
+                    fa: 'آزمایشگاه تست و دمو (QA Lab)',
+                    ar: 'مختبر الحساب التجريبي',
+                    zh: '演示与测试实验室',
+                  ),
+                  [
+                    _navTile(
+                      Icons.biotech_rounded,
+                      l10nPick(
+                        context,
+                        en: 'Tester Control Panel',
+                        fa: 'تنظیمات اکانت تست (کنترل‌پنل دمو)',
+                        ar: 'لوحة تحكم الحساب التجريبي',
+                        zh: '测试与演示控制台',
+                      ),
+                      l10nPick(
+                        context,
+                        en: 'Switch KYC levels, recharge wallets, and test mock flows',
+                        fa: 'تغییر آنی وضعیت KYC، شارژ مجدد کیف پول‌ها و ریست تست',
+                        ar: 'تعديل KYC وشحن المحافظ وتجربة الخدمات',
+                        zh: '切换KYC级别、重置多币种钱包、管理模拟数据',
+                      ),
+                      () {
+                        if (Get.isRegistered<DemoAccountService>()) {
+                          DemoAccountService.to.showTesterControlBottomSheet(context);
+                        }
+                      },
+                    ),
+                  ],
+                ),
                 _group(l10nPick(context, en: 'Security', fa: 'امنیت', ar: 'الأمان', zh: '安全'), [
                   _navTile(
                     Icons.lock_outline,

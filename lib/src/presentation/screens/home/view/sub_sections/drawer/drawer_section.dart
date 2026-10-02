@@ -7,7 +7,9 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/svg/svg_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -209,6 +211,93 @@ class DrawerSection extends StatelessWidget {
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
                       itemCount: navigationItemList.length,
+                    ),
+                  ),
+                  // Demo & Tester Control Panel Tile
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0F172A),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Get.back(); // close drawer
+                          if (Get.isRegistered<DemoAccountService>()) {
+                            DemoAccountService.to.showTesterControlBottomSheet(context);
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF38BDF8).withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.biotech_rounded,
+                                  color: Color(0xFF38BDF8),
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      l10nPick(
+                                        context,
+                                        en: 'Tester Control Panel',
+                                        fa: 'تنظیمات اکانت تست (دمو)',
+                                        ar: 'لوحة تحكم الحساب التجريبي',
+                                        zh: '测试与演示控制台',
+                                      ),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      l10nPick(
+                                        context,
+                                        en: 'Switch KYC & Recharge Wallets',
+                                        fa: 'سوییچ KYC و شارژ کیف‌پول‌ها',
+                                        ar: 'تعديل KYC وشحن الأرصدة',
+                                        zh: '一键KYC与充值测试',
+                                      ),
+                                      style: const TextStyle(
+                                        color: Color(0xFF94A3B8),
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(
+                                Icons.chevron_right_rounded,
+                                color: Color(0xFF38BDF8),
+                                size: 18,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
