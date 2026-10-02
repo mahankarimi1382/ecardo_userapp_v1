@@ -12,6 +12,7 @@ import 'package:get/get.dart' as getx hide Response;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/common/services/session_manager.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -560,6 +561,19 @@ class NetworkService extends getx.GetxService {
     required String endpoint,
     bool isForeground = true,
   }) async {
+    // Demo Mode Smart Response
+    if (getx.Get.isRegistered<DemoAccountService>() &&
+        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
+        endpoint: endpoint,
+        method: 'GET',
+      );
+      if (mock != null) {
+        _log('⚡ [DEMO MOCK] Instant response for GET $endpoint');
+        return ApiResponse.completed(mock);
+      }
+    }
+
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📥 GET Request URL: $url');
 
@@ -570,9 +584,32 @@ class NetworkService extends getx.GetxService {
       );
       return _handleResponse(response, "GET");
     } on DioException catch (e) {
+      // Demo Mode Smart Fallback on network errors or 404
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'GET',
+          statusCode: e.response?.statusCode,
+        );
+        if (fallback != null) {
+          _log('🛡️ [DEMO FALLBACK] Handled network error for GET $endpoint');
+          return ApiResponse.completed(fallback);
+        }
+      }
       return _handleDioException(e, "GET");
     } catch (e) {
       _log('GET Exception: ${e.toString()}', icon: '❌');
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'GET',
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
       ToastHelper().showErrorToast(
         // P-4: null-safe localization + English fallback (was `localization!`).
         localization?.networkErrorGeneric ??
@@ -588,6 +625,20 @@ class NetworkService extends getx.GetxService {
     String? idempotencyKey,
     bool isForeground = true,
   }) async {
+    // Demo Mode Smart Response
+    if (getx.Get.isRegistered<DemoAccountService>() &&
+        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
+        endpoint: endpoint,
+        method: 'POST',
+        data: data,
+      );
+      if (mock != null) {
+        _log('⚡ [DEMO MOCK] Instant response for POST $endpoint');
+        return ApiResponse.completed(mock);
+      }
+    }
+
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 POST Request URL: $url');
 
@@ -614,6 +665,21 @@ class NetworkService extends getx.GetxService {
 
       return _handleResponse(response, "POST");
     } on DioException catch (e) {
+      // Demo Mode Smart Fallback
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'POST',
+          data: data,
+          statusCode: e.response?.statusCode,
+        );
+        if (fallback != null) {
+          _log('🛡️ [DEMO FALLBACK] Handled network error for POST $endpoint');
+          return ApiResponse.completed(fallback);
+        }
+      }
+
       // Queue non-financial POSTs when offline.
       if ((e.type == DioExceptionType.connectionError ||
               e.type == DioExceptionType.connectionTimeout) &&
@@ -632,6 +698,17 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "POST");
     } catch (e) {
       _log('POST Exception: ${e.toString()}', icon: '❌');
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'POST',
+          data: data,
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
       ToastHelper().showErrorToast(
         localization?.networkErrorGeneric ??
             'An unexpected error occurred. Please try again.',
@@ -664,6 +741,17 @@ class NetworkService extends getx.GetxService {
     required FormData data,
     bool isForeground = true,
   }) async {
+    // Demo Mode Upload Bypass
+    if (getx.Get.isRegistered<DemoAccountService>() &&
+        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      _log('⚡ [DEMO MOCK] Instant success for multipart upload to $endpoint');
+      return ApiResponse.completed({
+        'status': 'success',
+        'message': 'File uploaded successfully (Demo Mode)',
+        'data': {'file_url': 'https://ecardo.ir/demo/uploaded_doc.jpg'},
+      });
+    }
+
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 POST (multipart) Request URL: $url');
     _log('📦 POST (multipart) Fields: ${data.fields.length}, Files: ${data.files.length}');
@@ -687,9 +775,25 @@ class NetworkService extends getx.GetxService {
       );
       return _handleResponse(response, "POST (multipart)");
     } on DioException catch (e) {
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        return ApiResponse.completed({
+          'status': 'success',
+          'message': 'File upload simulated (Demo Mode)',
+          'data': {'file_url': 'https://ecardo.ir/demo/uploaded_doc.jpg'},
+        });
+      }
       return _handleDioException(e, "POST (multipart)");
     } catch (e) {
       _log('POST (multipart) Exception: ${e.toString()}', icon: '❌');
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        return ApiResponse.completed({
+          'status': 'success',
+          'message': 'File upload simulated (Demo Mode)',
+          'data': {'file_url': 'https://ecardo.ir/demo/uploaded_doc.jpg'},
+        });
+      }
       ToastHelper().showErrorToast(
         // P-4: null-safe localization + English fallback (was `localization!`).
         localization?.networkErrorGeneric ??
@@ -704,6 +808,20 @@ class NetworkService extends getx.GetxService {
     Map<String, dynamic>? data,
     bool isForeground = true,
   }) async {
+    // Demo Mode Smart Response
+    if (getx.Get.isRegistered<DemoAccountService>() &&
+        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
+        endpoint: endpoint,
+        method: 'PUT',
+        data: data,
+      );
+      if (mock != null) {
+        _log('⚡ [DEMO MOCK] Instant response for PUT $endpoint');
+        return ApiResponse.completed(mock);
+      }
+    }
+
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 PUT Request URL: $url');
 
@@ -722,9 +840,32 @@ class NetworkService extends getx.GetxService {
 
       return _handleResponse(response, "PUT");
     } on DioException catch (e) {
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'PUT',
+          data: data,
+          statusCode: e.response?.statusCode,
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
       return _handleDioException(e, "PUT");
     } catch (e) {
       _log('PUT Exception: ${e.toString()}', icon: '❌');
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'PUT',
+          data: data,
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
       ToastHelper().showErrorToast(
         // P-4: null-safe localization + English fallback (was `localization!`).
         localization?.networkErrorGeneric ??
@@ -742,6 +883,19 @@ class NetworkService extends getx.GetxService {
     Map<String, dynamic>? data,
     bool isForeground = true,
   }) async {
+    // Demo Mode Smart Response
+    if (getx.Get.isRegistered<DemoAccountService>() &&
+        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
+        endpoint: endpoint,
+        method: 'PATCH',
+        data: data,
+      );
+      if (mock != null) {
+        return ApiResponse.completed(mock);
+      }
+    }
+
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 PATCH Request URL: $url');
 
@@ -760,9 +914,32 @@ class NetworkService extends getx.GetxService {
 
       return _handleResponse(response, "PATCH");
     } on DioException catch (e) {
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'PATCH',
+          data: data,
+          statusCode: e.response?.statusCode,
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
       return _handleDioException(e, "PATCH");
     } catch (e) {
       _log('PATCH Exception: ${e.toString()}', icon: '❌');
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'PATCH',
+          data: data,
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
       ToastHelper().showErrorToast(
         localization?.networkErrorGeneric ??
             'An unexpected error occurred. Please try again.',
@@ -776,6 +953,19 @@ class NetworkService extends getx.GetxService {
     Map<String, dynamic>? data,
     bool isForeground = true,
   }) async {
+    // Demo Mode Smart Response
+    if (getx.Get.isRegistered<DemoAccountService>() &&
+        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
+        endpoint: endpoint,
+        method: 'DELETE',
+        data: data,
+      );
+      if (mock != null) {
+        return ApiResponse.completed(mock);
+      }
+    }
+
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('🗑️ DELETE Request URL: $url');
 
@@ -794,8 +984,40 @@ class NetworkService extends getx.GetxService {
 
       return _handleResponse(response, "DELETE");
     } on DioException catch (e) {
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'DELETE',
+          data: data,
+          statusCode: e.response?.statusCode,
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
       return _handleDioException(e, "DELETE");
     } catch (e) {
+      _log('DELETE Exception: ${e.toString()}', icon: '❌');
+      if (getx.Get.isRegistered<DemoAccountService>() &&
+          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+        final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
+          endpoint: endpoint,
+          method: 'DELETE',
+          data: data,
+        );
+        if (fallback != null) {
+          return ApiResponse.completed(fallback);
+        }
+      }
+      ToastHelper().showErrorToast(
+        // P-4: null-safe localization + English fallback (was `localization!`).
+        localization?.networkErrorGeneric ??
+            'An unexpected error occurred. Please try again.',
+      );
+      return ApiResponse.error(e.toString());
+    }
+  }
       _log('DELETE Exception: ${e.toString()}', icon: '❌');
       ToastHelper().showErrorToast(
         // P-4: null-safe localization + English fallback (was `localization!`).

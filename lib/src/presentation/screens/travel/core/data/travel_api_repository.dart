@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 
 import '../models/travel_models.dart';
@@ -27,20 +28,67 @@ class TravelApiRepository implements TravelRepository {
 
   @override
   Future<TravelBootstrap> getBootstrap() async {
-    final response = await _client.get<Map<String, dynamic>>(
-      '/travel/bootstrap',
-      queryParameters: {'locale': _locale},
-      options: _localeOptions(),
-    );
-    final data = _map(response.data?['data']);
-    final services = _listOfMaps(
-      data['services'],
-    ).map(_mapService).whereType<TravelServiceConfig>().toList();
-    return TravelBootstrap(
-      currency: data['currency']?.toString() ?? 'IRR',
-      locale: data['locale']?.toString() ?? 'en',
-      services: services,
-    );
+    try {
+      final response = await _client.get<Map<String, dynamic>>(
+        '/travel/bootstrap',
+        queryParameters: {'locale': _locale},
+        options: _localeOptions(),
+      );
+      final data = _map(response.data?['data']);
+      final services = _listOfMaps(
+        data['services'],
+      ).map(_mapService).whereType<TravelServiceConfig>().toList();
+      return TravelBootstrap(
+        currency: data['currency']?.toString() ?? 'IRR',
+        locale: data['locale']?.toString() ?? 'en',
+        services: services,
+      );
+    } catch (_) {
+      if (Get.isRegistered<DemoAccountService>() &&
+          Get.find<DemoAccountService>().isDemoMode.value) {
+        return TravelBootstrap(
+          currency: 'USD',
+          locale: _locale,
+          services: [
+            TravelServiceConfig(
+              type: TravelProductType.hotel,
+              displayName: 'Hotels',
+              icon: 'hotel',
+              dataMode: 'live',
+              capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+              searchFields: [],
+              presentation: {
+                'home_hero': [
+                  {
+                    'title': 'هتل‌ها و اقامتگاه‌های لوکس سراسر جهان',
+                    'subtitle': 'تضمین بهترین قیمت و صدور آنی ووچر',
+                  }
+                ],
+              },
+            ),
+            TravelServiceConfig(
+              type: TravelProductType.flight,
+              displayName: 'Flights',
+              icon: 'flight',
+              dataMode: 'live',
+              capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+              searchFields: [],
+              presentation: {},
+            ),
+            TravelServiceConfig(
+              type: TravelProductType.esim,
+              displayName: 'eSIM',
+              icon: 'sim',
+              dataMode: 'live',
+              capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+              searchFields: [],
+              presentation: {},
+            ),
+          ],
+        );
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -96,10 +144,66 @@ class TravelApiRepository implements TravelRepository {
 
   @override
   Future<List<TravelOrder>> getOrders() async {
-    final response = await _authorizedGet('/orders');
-    return _dataList(
-      response.data,
-    ).map(_mapOrder).where((order) => order.id.isNotEmpty).toList();
+    try {
+      final response = await _authorizedGet('/orders');
+      return _dataList(
+        response.data,
+      ).map(_mapOrder).where((order) => order.id.isNotEmpty).toList();
+    } catch (_) {
+      if (Get.isRegistered<DemoAccountService>() &&
+          Get.find<DemoAccountService>().isDemoMode.value) {
+        return [
+          TravelOrder(
+            id: 'ord-demo-hotel-1',
+            type: TravelProductType.hotel,
+            titleKey: 'هتل اسپیناس پالاس تهران (Espinas Palace Hotel)',
+            reference: 'BK-HOTEL-2026-9912',
+            total: const TravelMoney(amount: 450, currency: 'USD'),
+            status: TravelOrderStatus.issued,
+            rawStatus: 'issued',
+            createdAt: DateTime.now().subtract(const Duration(days: 2)),
+            details: {
+              'room': 'Deluxe King Suite (دید کوهستان)',
+              'check_in': '2026-10-10',
+              'check_out': '2026-10-13',
+              'voucher_number': 'VCH-ESP-991240',
+            },
+          ),
+          TravelOrder(
+            id: 'ord-demo-flight-2',
+            type: TravelProductType.flight,
+            titleKey: 'پرواز تهران ➔ استانبول (Mahan Air W5-115)',
+            reference: 'BK-FLIGHT-2026-4410',
+            total: const TravelMoney(amount: 280, currency: 'USD'),
+            status: TravelOrderStatus.issued,
+            rawStatus: 'issued',
+            createdAt: DateTime.now().subtract(const Duration(days: 5)),
+            details: {
+              'airline': 'Mahan Air',
+              'flight_number': 'W5-115',
+              'origin': 'IKA',
+              'destination': 'IST',
+              'departure': '2026-10-15 08:30',
+            },
+          ),
+          TravelOrder(
+            id: 'ord-demo-esim-3',
+            type: TravelProductType.esim,
+            titleKey: 'سیم‌کارت بین‌المللی ترکیه ۱۰ گیگابایت',
+            reference: 'ESIM-TR-998821',
+            total: const TravelMoney(amount: 24, currency: 'USD'),
+            status: TravelOrderStatus.issued,
+            rawStatus: 'active',
+            createdAt: DateTime.now().subtract(const Duration(days: 7)),
+            details: {
+              'esim_iccid': '8990012345678901234',
+              'esim_activation_code': 'LPA:1$smdp.io$DEMO-CODE-2026',
+            },
+          ),
+        ];
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -424,6 +528,13 @@ class TravelApiRepository implements TravelRepository {
   }
 
   Future<String> _ensureTravelAccessToken() async {
+    if (Get.isRegistered<DemoAccountService>() &&
+        Get.find<DemoAccountService>().isDemoMode.value) {
+      _travelAccessToken = 'demo_travel_token_2026';
+      _travelAccessTokenExpiresAt =
+          DateTime.now().add(const Duration(days: 30));
+      return _travelAccessToken!;
+    }
     if (_travelAccessToken?.isNotEmpty == true &&
         _travelAccessTokenExpiresAt?.isAfter(
               DateTime.now().add(const Duration(seconds: 30)),

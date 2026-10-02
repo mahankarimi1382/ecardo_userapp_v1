@@ -17,6 +17,7 @@ import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/common/services/client_error_reporter.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
@@ -131,6 +132,7 @@ Future<void> _initializeServices() async {
     permanent: true,
   );
   Get.put<TokenService>(TokenService());
+  Get.put<DemoAccountService>(DemoAccountService(), permanent: true);
   Get.put(NetworkService());
   Get.put<PermissionFlowService>(PermissionFlowService(), permanent: true);
   Get.put<NotificationHistoryService>(NotificationHistoryService(), permanent: true);

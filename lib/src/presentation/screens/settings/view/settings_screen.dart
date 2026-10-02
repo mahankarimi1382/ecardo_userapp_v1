@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
@@ -578,6 +579,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ]),
+                if (Get.isRegistered<DemoAccountService>())
+                  Obx(() {
+                    final demo = DemoAccountService.to;
+                    if (!demo.isDemoMode.value) return const SizedBox.shrink();
+                    return _group(l10nPick(context, en: 'Demo & QA Testing Panel', fa: 'کنترل پنل تست و دمو (QA)', ar: 'لوحة اختبار الحساب التجريبي', zh: '演示与测试控制台'), [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.verified_user, color: AppColors.success),
+                        title: Text(l10nPick(context, en: 'Simulated KYC Level', fa: 'سطح شبیه‌سازی احراز هویت', ar: 'مستوى التحقق التجريبي', zh: '模拟KYC级别')),
+                        subtitle: Text(switch (demo.demoKycStatus.value) {
+                          1 => l10nPick(context, en: 'Level 1: Verified (Active)', fa: 'سطح ۱: تأییدشده (کامل)', ar: 'مستوى 1: موثق', zh: '已认证'),
+                          2 => l10nPick(context, en: 'Level 2: In Review (Pending)', fa: 'در حال بررسی مدارک', ar: 'قيد المراجعة', zh: '审核中'),
+                          3 => l10nPick(context, en: 'Level 3: Rejected with reason', fa: 'رد شده با دلیل نقص مدارک', ar: 'مرفوض مع السبب', zh: '已拒绝'),
+                          _ => l10nPick(context, en: 'Unverified (Guest)', fa: 'احرازنشده', ar: 'غير موثق', zh: '未认证'),
+                        }),
+                        trailing: const Icon(Icons.swap_horiz_rounded),
+                        onTap: () {
+                          final current = demo.demoKycStatus.value;
+                          final next = (current + 1) % 4;
+                          demo.setKycStatus(next);
+                        },
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.exit_to_app, color: AppColors.error),
+                        title: Text(l10nPick(context, en: 'Exit Demo Mode', fa: 'خروج از حالت دمو و بازگشت به لاگین', ar: 'الخروج من الوضع التجريبي', zh: '退出演示模式')),
+                        onTap: () => demo.deactivateDemoMode(),
+                      ),
+                    ]);
+                  }),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
                   onPressed: _confirmLogout,

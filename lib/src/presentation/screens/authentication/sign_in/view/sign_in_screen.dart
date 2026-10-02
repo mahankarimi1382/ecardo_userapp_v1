@@ -1,4 +1,5 @@
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'dart:io';
 import 'dart:ui';
 
@@ -406,6 +407,17 @@ class _SignInScreenState extends State<SignInScreen>
                             ),
                           ),
                         ),
+                        // Demo & Test Mode Entry Button (completely hidden when disabled by Admin kill-switch)
+                        Obx(() {
+                          if (Get.isRegistered<DemoAccountService>() &&
+                              !DemoAccountService.to.isDemoAllowedByAdmin.value) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(top: 14.h),
+                            child: const _DemoAccountSignInButton(),
+                          );
+                        }),
                         SizedBox(height: 20.h),
                         Wrap(
                           children: [
@@ -659,6 +671,96 @@ class _LanguagePickerButton extends StatelessWidget {
                   },
                 ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DemoAccountSignInButton extends StatelessWidget {
+  const _DemoAccountSignInButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF6366F1).withValues(alpha: 0.12),
+            const Color(0xFF8B5CF6).withValues(alpha: 0.08),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: const Color(0xFF6366F1).withValues(alpha: 0.35),
+          width: 1.2.w,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16.r),
+          onTap: () async {
+            if (Get.isRegistered<DemoAccountService>()) {
+              await DemoAccountService.to.activateDemoMode();
+            }
+          },
+          child: Padding(
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(6.r),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6366F1).withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.play_circle_fill_rounded,
+                    size: 20,
+                    color: Color(0xFF6366F1),
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Quick Live Demo (Test Account)',
+                          fa: 'ورود سریع با اکانت تست (حالت دمو زنده)',
+                          ar: 'تجربة حية سريعة (حساب تجريبي)',
+                          zh: '一键体验 (实时演示账户)',
+                        ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13.sp,
+                          color: const Color(0xFF4F46E5),
+                        ),
+                      ),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Zero-network interactive test of all 24 services',
+                          fa: 'تست زنده و تعاملی کلیه ۲۴ سرویس با بالانس فعال',
+                          ar: 'اختبار تفاعلي فوري لجميع الخدمات الـ24',
+                          zh: '免网络直接交互测试全部24项服务与余额',
+                        ),
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
