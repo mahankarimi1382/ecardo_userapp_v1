@@ -26,6 +26,7 @@ class LoanController extends GetxController {
   // Form state for new loan application
   final selectedProduct = Rxn<LoanProductModel>();
   final selectedTenure = 0.obs;
+  final graceMonthsInput = 0.obs;
   final amountInput = ''.obs;
   final purposeInput = ''.obs;
   final documentedIncomeInput = ''.obs;
@@ -48,6 +49,7 @@ class LoanController extends GetxController {
     documentedIncomeInput.value = '';
     collateralTypeInput.value = 'CASH';
     guarantorNationalIdInput.value = '';
+    graceMonthsInput.value = 0;
     termsAccepted.value = false;
     if (products.isNotEmpty && selectedProduct.value == null) {
       selectProduct(products.first);
@@ -64,33 +66,47 @@ class LoanController extends GetxController {
 
   /// Calculate estimated monthly installment using standard amortization formula:
   /// EMI = [P x R x (1+R)^N] / [(1+R)^N - 1]
+  /// Grace period interest-only months are accounted for by amortizing principal over
+  /// the remaining amortizing months (tenure - grace).
   double calculateMonthlyInstallment({
     required double principal,
     required double annualInterestRatePct,
     required int tenureMonths,
+    int gracePeriodMonths = 0,
   }) {
     if (principal <= 0 || tenureMonths <= 0) return 0.0;
-    if (annualInterestRatePct <= 0) return principal / tenureMonths;
+    final graceMonths = gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1));
+    final amortizingMonths = math.max(1, tenureMonths - graceMonths);
+
+    if (annualInterestRatePct <= 0) return principal / amortizingMonths;
 
     final monthlyRate = (annualInterestRatePct / 100.0) / 12.0;
-    final factor = math.pow(1.0 + monthlyRate, tenureMonths).toDouble();
-    if (factor <= 1.0) return principal / tenureMonths;
+    final factor = math.pow(1.0 + monthlyRate, amortizingMonths).toDouble();
+    if (factor <= 1.0) return principal / amortizingMonths;
 
     return (principal * monthlyRate * factor) / (factor - 1.0);
   }
 
-  /// Total repayment amount based on estimated monthly installment
+  /// Total repayment amount including grace period interest payments and principal amortization
   double calculateTotalRepayment({
     required double principal,
     required double annualInterestRatePct,
     required int tenureMonths,
+    int gracePeriodMonths = 0,
   }) {
+    if (principal <= 0 || tenureMonths <= 0) return 0.0;
+    final graceMonths = gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1));
+    final monthlyRate = (annualInterestRatePct / 100.0) / 12.0;
+    final graceInterest = graceMonths * (principal * monthlyRate);
+
     final emi = calculateMonthlyInstallment(
       principal: principal,
       annualInterestRatePct: annualInterestRatePct,
       tenureMonths: tenureMonths,
+      gracePeriodMonths: graceMonths,
     );
-    return emi * tenureMonths;
+    final amortizingMonths = math.max(1, tenureMonths - graceMonths);
+    return principal + graceInterest + math.max(0.0, (emi * amortizingMonths) - principal);
   }
 
   /// Fetch product catalog

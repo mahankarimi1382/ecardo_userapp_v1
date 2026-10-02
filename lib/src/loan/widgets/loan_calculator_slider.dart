@@ -95,11 +95,13 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
   double get _monthlyRate => (widget.annualInterestRate / 100.0) / 12.0;
 
+  int get _effectiveGraceMonths => _graceMonths.clamp(0, math.max(0, _months - 1));
+
   /// Standard EMI during regular amortizing period
   double get _monthlyPayment {
     final p = _amount;
     final r = _monthlyRate;
-    final m = math.max(1, _months - _graceMonths);
+    final m = math.max(1, _months - _effectiveGraceMonths);
     if (p <= 0 || m <= 0) return 0.0;
     if (r <= 0) return p / m;
 
@@ -111,14 +113,14 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
   /// Interest-only installment during grace period
   double get _graceMonthlyPayment {
-    if (_graceMonths <= 0) return 0.0;
+    if (_effectiveGraceMonths <= 0) return 0.0;
     return _amount * _monthlyRate;
   }
 
   /// Total interest for entire loan duration
   double get _totalInterest {
-    final graceInterest = _graceMonths * _graceMonthlyPayment;
-    final amortizingMonths = math.max(1, _months - _graceMonths);
+    final graceInterest = _effectiveGraceMonths * _graceMonthlyPayment;
+    final amortizingMonths = math.max(1, _months - _effectiveGraceMonths);
     final amortizingTotal = amortizingMonths * _monthlyPayment;
     return math.max(0.0, (graceInterest + amortizingTotal) - _amount);
   }

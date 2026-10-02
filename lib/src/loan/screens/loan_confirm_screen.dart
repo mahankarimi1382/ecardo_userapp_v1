@@ -105,14 +105,21 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
   Widget build(BuildContext context) {
     final amount = double.tryParse(controller.amountInput.value) ?? 0;
     final tenure = controller.selectedTenure.value > 0 ? controller.selectedTenure.value : 12;
+    final grace = controller.graceMonthsInput.value;
     final rate = controller.selectedProduct.value?.baseRateAnnual ?? 18.0;
 
     final emi = controller.calculateMonthlyInstallment(
       principal: amount,
       annualInterestRatePct: rate,
       tenureMonths: tenure,
+      gracePeriodMonths: grace,
     );
-    final total = emi * tenure;
+    final total = controller.calculateTotalRepayment(
+      principal: amount,
+      annualInterestRatePct: rate,
+      tenureMonths: tenure,
+      gracePeriodMonths: grace,
+    );
 
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
@@ -195,6 +202,15 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                     labelEn: 'Tenure',
                     value: '$tenure ' + l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月'),
                   ),
+                  if (grace > 0) ...[
+                    const Divider(height: 20),
+                    _buildSummaryRow(
+                      context,
+                      labelFa: 'دوره تنفس',
+                      labelEn: 'Grace Period',
+                      value: '$grace ' + l10nPick(context, fa: 'ماه (فقط پرداخت سود)', en: 'Months (Interest only)', ar: 'شهر (فائدة فقط)', zh: '个月（仅还利息）'),
+                    ),
+                  ],
                   const Divider(height: 20),
                   _buildSummaryRow(
                     context,

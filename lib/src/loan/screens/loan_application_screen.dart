@@ -105,6 +105,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     controller.documentedIncomeInput.value = _incomeController.text.trim();
     controller.collateralTypeInput.value = _collateralType;
     controller.guarantorNationalIdInput.value = _guarantorController.text.trim();
+    controller.graceMonthsInput.value = _calculatedGraceMonths;
 
     Get.to(() => const LoanConfirmScreen());
   }

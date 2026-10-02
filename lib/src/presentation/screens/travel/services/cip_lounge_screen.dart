@@ -673,34 +673,29 @@ class _CipLoungeReservationScreenState
     }
 
     final airport = _airportData[_selectedAirport]!;
-    final offer = TravelOffer(
-      id: 'cip_${DateTime.now().millisecondsSinceEpoch}',
-      type: 'service',
-      title: 'Airport CIP Lounge (${airport['name']})',
-      subtitle: '$_flightType — Flight $flightNumber',
-      price: _totalPrice,
-      currency: 'USD',
-      departureDate: _flightDate,
-      provider: 'eCardo Airport CIP Concierge',
-      status: 'active',
-      metadata: {
-        'airport_code': _selectedAirport,
-        'airport_name': airport['name'],
-        'flight_number': flightNumber,
-        'flight_type': _flightType,
-        'flight_date': DateFormat('yyyy-MM-dd').format(_flightDate),
-        'flight_time': _flightTime.format(context),
-        'adults': _adultsCount,
-        'children': _childrenCount,
-        'wheelchair': _needWheelchair,
-        'pet_care': _needPetCare,
-      },
+    final bookingDetails = TravelBookingDetails(
+      route: '${airport['name']} ($_flightType)',
+      dateTime: DateFormat('yyyy-MM-dd HH:mm').format(
+        DateTime(
+          _flightDate.year,
+          _flightDate.month,
+          _flightDate.day,
+          _flightTime.hour,
+          _flightTime.minute,
+        ),
+      ),
+      guestsCount: _adultsCount + _childrenCount,
+      notes: 'Flight $flightNumber, Wheelchair: $_needWheelchair, Pet: $_needPetCare',
+      reference: 'CIP-${DateTime.now().millisecondsSinceEpoch}',
     );
 
     Get.to(
       () => TravelCheckoutScreen(
-        offer: offer,
-        initialStep: TravelCheckoutStep.review,
+        type: TravelProductType.flight,
+        productId: 'cip_${DateTime.now().millisecondsSinceEpoch}',
+        title: 'Airport CIP Lounge (${airport['name']})',
+        total: TravelMoney(amount: _totalPrice, currency: 'USD'),
+        bookingDetails: bookingDetails,
       ),
     );
   }

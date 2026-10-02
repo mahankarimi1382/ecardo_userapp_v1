@@ -128,9 +128,9 @@ void main() {
             home: Scaffold(
               body: SingleChildScrollView(
                 child: GuaranteeCollateralCard(
-                  requiredAmount: 50000000.0,
+                  guaranteeAmount: 50000000.0,
                   currency: 'IRR',
-                  onCollateralChanged: (type, covered) {},
+                  onCollateralTypeChanged: (type) {},
                 ),
               ),
             ),

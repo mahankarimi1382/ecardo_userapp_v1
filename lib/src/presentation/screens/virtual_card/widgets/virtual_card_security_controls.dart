@@ -273,9 +273,9 @@ class CardFreezeOverlay extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                CupertinoSwitch(
+                Switch.adaptive(
                   value: isFrozen,
-                  activeTrackColor: AppColors.mutedBlue,
+                  activeColor: AppColors.mutedBlue,
                   onChanged: _handleToggle,
                 ),
               ],
