@@ -26,14 +26,6 @@ class GenericCardProvider extends StatelessWidget {
         SizedBox(height: 20.h),
         _UniversalVirtualCard(card: card, controller: controller),
         SizedBox(height: 20.h),
-        DynamicCvv2Card(
-          initialCvv: card.cvc,
-        ),
-        SizedBox(height: 20.h),
-        CardSpendingLimitsCard(
-          currency: card.currency,
-        ),
-        SizedBox(height: 20.h),
         _UniversalCardDetails(card: card, controller: controller),
         SizedBox(height: 30.h),
       ],
