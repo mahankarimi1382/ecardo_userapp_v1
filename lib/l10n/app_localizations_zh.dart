@@ -68,10 +68,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get comment_welcome => '==== Welcome Screen ====';
 
   @override
-  String get welcomeTitle => '欢迎使用 bank of al barkat';
+  String get welcomeTitle => '欢迎使用 eCardo';
 
   @override
-  String get welcomeDescription => 'bank of al barkat 提供多钱包管理、即时兑换和安全交易功能。';
+  String get welcomeDescription => 'eCardo 提供多钱包管理、即时兑换和安全交易功能。';
 
   @override
   String get welcomeSignIn => '登录';
@@ -433,7 +433,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get signUpStatusTitle => '您的当前状态';
 
   @override
-  String get signUpStatusSubtitle => '只需 4 步，保障您的 bank of al barkat 账户安全';
+  String get signUpStatusSubtitle => '只需 4 步，保障您的 eCardo 账户安全';
 
   @override
   String get signUpStatusStep => '步骤';
@@ -2787,7 +2787,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shareReceipt => '分享回执';
 
   @override
-  String get shareReceiptBody => '我的 bank of al barkat 交易回执';
+  String get shareReceiptBody => '我的 eCardo 交易回执';
 
   @override
   String get shareReceiptFailed => '无法分享回执。';
@@ -5666,10 +5666,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get filterMyOrder => '筛选我的订单';
 
   @override
-  String get comment_travel => '==== bank of al barkat Travel ====';
+  String get comment_travel => '==== eCardo Travel ====';
 
   @override
-  String get travelTitle => 'bank of al barkat 旅行';
+  String get travelTitle => 'eCardo 旅行';
 
   @override
   String get travelHeroEyebrow => '更美好的旅行体验';
@@ -5693,11 +5693,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelViewAll => '查看全部';
 
   @override
-  String get travelMainWallet => 'bank of al barkat 主钱包';
+  String get travelMainWallet => 'eCardo 主钱包';
 
   @override
   String get travelWalletSharedDescription =>
-      '与您在 bank of al barkat 全站使用的同一个安全钱包';
+      '与您在 eCardo 全站使用的同一个安全钱包';
 
   @override
   String get travelHotelSearch => '酒店搜索';
@@ -5758,7 +5758,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelHotelDescription =>
-      '舒适客房、贴心服务，便捷通往主要景点的高品质城市住宿。最终房型内容与政策将由 bank of al barkat Travel API 提供。';
+      '舒适客房、贴心服务，便捷通往主要景点的高品质城市住宿。最终房型内容与政策将由 eCardo Travel API 提供。';
 
   @override
   String get travelPolicies => '政策';
@@ -5852,7 +5852,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelPrimaryPassenger => '主要乘客';
 
   @override
-  String get travelPassengerFromProfile => '详细信息来自您的 bank of al barkat 个人资料';
+  String get travelPassengerFromProfile => '详细信息来自您的 eCardo 个人资料';
 
   @override
   String get travelFareDetails => '票价明细';
@@ -5874,7 +5874,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelEsimIntroDescription =>
-      '选择数字流量套餐，用 bank of al barkat 主钱包支付，无需更换实体 SIM 卡即可激活。';
+      '选择数字流量套餐，用 eCardo 主钱包支付，无需更换实体 SIM 卡即可激活。';
 
   @override
   String get travelEsimInstantTitle => '即时交付';
@@ -5918,7 +5918,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelWalletCheckout => '钱包结账';
 
   @override
-  String get travelBackendConfirmedPrice => '由 bank of al barkat Travel 确认的价格';
+  String get travelBackendConfirmedPrice => '由 eCardo Travel 确认的价格';
 
   @override
   String get travelPaymentMethod => '支付方式';
@@ -6015,7 +6015,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelHotelPendingConfirmationDescription =>
-      '付款已收到。bank of al barkat Travel 正在向授权供应商确认酒店，随后为您出票。';
+      '付款已收到。eCardo Travel 正在向授权供应商确认酒店，随后为您出票。';
 
   @override
   String get travelPaidAmount => '已付金额';
@@ -6025,7 +6025,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelActivationInstructions =>
-      '打开设备的蜂窝网络设置，添加 eSIM，并使用 bank of al barkat 后端返回的安全安装信息。';
+      '打开设备的蜂窝网络设置，添加 eSIM，并使用 eCardo 后端返回的安全安装信息。';
 
   @override
   String get travelViewMyBookings => '查看我的预订';
@@ -6145,7 +6145,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelAccount => '旅行账户';
 
   @override
-  String get travelAccountHolder => 'bank of al barkat 会员';
+  String get travelAccountHolder => 'eCardo 会员';
 
   @override
   String get travelMemberDescription => '共享的个人资料、钱包和旅客信息';
@@ -6214,7 +6214,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMockFlightTehranIstanbul => '德黑兰飞往伊斯坦布尔';
 
   @override
-  String get travelMockAirlineOne => 'bank of al barkat Air';
+  String get travelMockAirlineOne => 'eCardo Air';
 
   @override
   String get travelMockAirlineTwo => 'Atlas Airways';
@@ -6505,7 +6505,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelPaymentReceivedDescription =>
-      '付款已收到。bank of al barkat Travel 正在完成供应商确认，随后出具最终单据。';
+      '付款已收到。eCardo Travel 正在完成供应商确认，随后出具最终单据。';
 
   @override
   String get travelSearchFailedDescription => '搜索未完成。如可用，仍会显示之前的结果；您可以修改搜索后重试。';
@@ -7000,7 +7000,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get biometricMaxAttempts => '生物识别尝试次数已达上限，请使用密码登录';
 
   @override
-  String get biometricReason => '进行身份验证以登录 bank of al barkat';
+  String get biometricReason => '进行身份验证以登录 eCardo';
 
   @override
   String get biometricGenericError => '生物识别认证失败';
@@ -7615,11 +7615,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String updateNotificationBody(String version) {
-    return 'bank of al barkat v$version 已可用。点按即可更新。';
+    return 'eCardo v$version 已可用。点按即可更新。';
   }
 
   @override
-  String get updateNotificationBodyGeneric => 'bank of al barkat 新版本可用。点按即可更新。';
+  String get updateNotificationBodyGeneric => 'eCardo 新版本可用。点按即可更新。';
 
   @override
   String get updateDialogBody => '应用有新版本可用，请更新以继续。';
@@ -7662,14 +7662,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updateCheckingTitle => '正在检查更新…';
 
   @override
-  String get updateCheckingBody => '正在联系 bank of al barkat 服务器获取最新版本。';
+  String get updateCheckingBody => '正在联系 eCardo 服务器获取最新版本。';
 
   @override
   String get updateUpToDateScreenTitle => '您已是最新版本！';
 
   @override
   String updateUpToDateScreenBody(String version) {
-    return 'bank of al barkat v$version 是最新的可用版本。';
+    return 'eCardo v$version 是最新的可用版本。';
   }
 
   @override
