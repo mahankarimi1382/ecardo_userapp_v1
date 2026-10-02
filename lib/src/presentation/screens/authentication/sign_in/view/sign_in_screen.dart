@@ -82,11 +82,6 @@ class _SignInScreenState extends State<SignInScreen>
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        PositionedDirectional(
-                          top: 12.h,
-                          end: 18.w,
-                          child: const _LanguagePickerButton(),
-                        ),
                         Positioned.fill(
                           child: ImageFiltered(
                             imageFilter: ImageFilter.blur(
@@ -136,6 +131,11 @@ class _SignInScreenState extends State<SignInScreen>
                               ),
                             ),
                           ],
+                        ),
+                        PositionedDirectional(
+                          top: 12.h,
+                          end: 18.w,
+                          child: const _LanguagePickerButton(),
                         ),
                       ],
                     ),
