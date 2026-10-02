@@ -242,7 +242,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w800,
-                            color: TravelTheme.ink,
+                            color: AppColors.lightTextPrimary,
                           ),
                         ),
                         SizedBox(height: 8.h),
@@ -256,7 +256,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           ),
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: TravelTheme.muted,
+                            color: AppColors.lightTextSecondary,
                             fontSize: 11.5.sp,
                             height: 1.5,
                           ),
@@ -283,7 +283,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                               ar: 'إعادة المحاولة',
                               zh: '重试连接',
                             ),
-                            style: const TextStyle(color: Colors.white, fontSize: 12.sp),
+                            style: TextStyle(color: Colors.white, fontSize: 12.sp),
                           ),
                         ),
                       ],

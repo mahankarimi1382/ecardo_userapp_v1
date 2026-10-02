@@ -380,7 +380,7 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                     item: item,
                     onTap: () {
                       controller.selectCatalog(item);
-                      Get.to(() => const VisaRequirementsScreen());
+                      Get.to(() => VisaRequirementsScreen(item: item));
                     },
                   );
                 },
@@ -433,6 +433,105 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class VisaCatalogCard extends StatelessWidget {
+  final VisaCatalogItem item;
+  final VoidCallback onTap;
+
+  const VisaCatalogCard({super.key, required this.item, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return VisaCard(
+      onTap: onTap,
+      padding: EdgeInsets.all(16.r),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          VisaCountryFlag(flagUrl: item.countryFlag, size: 48),
+          SizedBox(width: 14.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.countryName,
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF0F172A),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF1F5F9),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        '${item.processingDaysMin}-${item.processingDaysMax} ${l10nPick(context, en: 'days', fa: 'روزه')}',
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: const Color(0xFF475569),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  item.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: const Color(0xFF64748B),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${l10nPick(context, en: 'From', fa: 'شروع از')}: \$${item.totalFee.toStringAsFixed(0)}',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFF7445FF),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          l10nPick(context, en: 'Details', fa: 'مشاهده شرایط'),
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF7445FF),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          size: 18,
+                          color: Color(0xFF7445FF),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

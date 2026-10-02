@@ -32,7 +32,7 @@ class RentalVoucherScreen extends StatelessWidget {
   String _generateQrSvg() {
     final barcode = Barcode.qrCode();
     return barcode.toSvg(
-      'CAR-RENTAL-${booking.bookingNo}-${booking.car.title}-${booking.status}',
+      'CAR-RENTAL-${booking.bookingNo}-${booking.car?.title ?? ''}-${booking.status}',
       width: 140,
       height: 140,
     );
@@ -208,7 +208,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         const Icon(Icons.directions_car_rounded, color: AppColors.lightPrimary, size: 24),
                         SizedBox(width: 8.w),
                         Text(
-                          car.title,
+                          car?.title ?? '—',
                           style: TextStyle(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w900,
@@ -243,14 +243,14 @@ class RentalVoucherScreen extends StatelessWidget {
                       child: _RentalFact(
                         icon: Icons.category_rounded,
                         label: l10nPick(context, en: 'Category', fa: 'کلاس', ar: 'الفئة', zh: '类别'),
-                        value: car.category,
+                        value: car?.category ?? '—',
                       ),
                     ),
                     Expanded(
                       child: _RentalFact(
                         icon: Icons.settings_rounded,
                         label: l10nPick(context, en: 'Transmission', fa: 'گیربکس', ar: 'ناقل الحركة', zh: '变速箱'),
-                        value: car.transmission,
+                        value: car?.transmission ?? '—',
                       ),
                     ),
                     Expanded(
@@ -277,7 +277,7 @@ class RentalVoucherScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            booking.pickupAt.isNotEmpty ? booking.pickupAt.split('T').first : '—',
+                            booking.pickupAt != null ? booking.pickupAt!.toIso8601String().split('T').first : '—',
                             style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
                           ),
                         ],
@@ -294,7 +294,7 @@ class RentalVoucherScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            booking.returnAt.isNotEmpty ? booking.returnAt.split('T').first : '—',
+                            booking.returnAt != null ? booking.returnAt!.toIso8601String().split('T').first : '—',
                             style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
                           ),
                         ],
@@ -327,7 +327,7 @@ class RentalVoucherScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 12.sp, color: TravelTheme.muted),
                     ),
                     Text(
-                      '${car.depositAmount}',
+                      car != null ? '${car.depositAmount}' : '—',
                       style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: Colors.blueGrey),
                     ),
                   ],

@@ -1018,15 +1018,6 @@ class NetworkService extends getx.GetxService {
       return ApiResponse.error(e.toString());
     }
   }
-      _log('DELETE Exception: ${e.toString()}', icon: '❌');
-      ToastHelper().showErrorToast(
-        // P-4: null-safe localization + English fallback (was `localization!`).
-        localization?.networkErrorGeneric ??
-            'An unexpected error occurred. Please try again.',
-      );
-      return ApiResponse.error(e.toString());
-    }
-  }
 
   // ------------------------------ GLOBAL API ------------------------------ //
 

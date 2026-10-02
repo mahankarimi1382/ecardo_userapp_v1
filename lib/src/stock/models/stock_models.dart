@@ -32,6 +32,9 @@ class StockSymbolModel {
     return ((lastPrice - prevClose) / prevClose) * 100;
   }
 
+  String get name => nameFa.isNotEmpty ? nameFa : nameEn;
+  double get dailyChangePct => changePercent;
+
   factory StockSymbolModel.fromJson(Map<String, dynamic> json) {
     return StockSymbolModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
@@ -75,6 +78,8 @@ class StockMarketModel {
     this.symbols = const [],
   });
 
+  String get name => nameFa.isNotEmpty ? nameFa : nameEn;
+
   factory StockMarketModel.fromJson(Map<String, dynamic> json) {
     final symsRaw = json['symbols'] as List?;
     return StockMarketModel(
@@ -110,6 +115,19 @@ class StockTradingAccountModel {
     this.status = 'ACTIVE',
     this.balances = const [],
   });
+
+  String get accountNumber => accountNo;
+  String get riskTier => riskProfile;
+  double get totalPortfolioValueUsd {
+    if (balances.isEmpty) return 0.0;
+    for (final b in balances) {
+      if (b['currency'] == 'USD') {
+        return (b['amount'] is num) ? (b['amount'] as num).toDouble() : 0.0;
+      }
+    }
+    final first = balances.first;
+    return (first['amount'] is num) ? (first['amount'] as num).toDouble() : 0.0;
+  }
 
   factory StockTradingAccountModel.fromJson(Map<String, dynamic> json) {
     final balancesRaw = json['balances'] as List?;
@@ -162,6 +180,10 @@ class StockOrderModel {
     this.settlementDays = 2,
     this.createdAt,
   });
+
+  double get price => avgExecPrice > 0 ? avgExecPrice : limitPrice;
+  double get totalAmount => payAmount;
+  String get currency => payCurrency;
 
   factory StockOrderModel.fromJson(Map<String, dynamic> json) {
     return StockOrderModel(

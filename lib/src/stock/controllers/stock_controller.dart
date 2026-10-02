@@ -171,15 +171,18 @@ class StockController extends GetxController {
         // Backend didn't return order (e.g. 404 endpoint)
         // Store locally in orders tracking list so user sees their pending order
         final pendingOrder = StockOrderModel(
-          id: DateTime.now().millisecondsSinceEpoch,
           orderNo: 'ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
-          symbolId: selectedSymbol.value!.id,
           ticker: selectedSymbol.value!.ticker,
+          nameFa: selectedSymbol.value!.nameFa,
           side: orderSide.value,
+          type: orderType.value,
           qty: quantity.value,
-          price: selectedSymbol.value!.lastPrice,
-          totalAmount: calculatedPayAmount.value,
-          currency: payCurrency.value,
+          limitPrice: selectedSymbol.value!.lastPrice,
+          marketCurrency: payCurrency.value,
+          payCurrency: payCurrency.value,
+          payAmount: calculatedPayAmount.value,
+          executedFxRate: 1.0,
+          avgExecPrice: selectedSymbol.value!.lastPrice,
           status: 'PENDING_BROKER',
           createdAt: DateTime.now(),
         );
