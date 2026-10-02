@@ -1063,6 +1063,19 @@ class NetworkService extends getx.GetxService {
     required String endpoint,
     bool isForeground = true,
   }) async {
+    // Demo Mode Smart Response
+    if (getx.Get.isRegistered<DemoAccountService>() &&
+        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
+        endpoint: endpoint,
+        method: 'GET',
+      );
+      if (mock != null) {
+        _log('⚡ [DEMO MOCK] Instant response for Global GET $endpoint');
+        return ApiResponse.completed(mock);
+      }
+    }
+
     try {
       String url = '$baseUrl$endpoint';
       _log('Global GET Request URL: $url', icon: '✅');

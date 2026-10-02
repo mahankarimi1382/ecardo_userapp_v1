@@ -602,6 +602,80 @@ class DemoAccountService extends GetxService {
       };
     }
 
+    // Transactions History
+    if (cleanEndpoint == '/user/transactions') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'transactions': [
+            {
+              'id': 1,
+              'description': 'شارژ آنلاین کیف پول تتر',
+              'tnx': 'TNX-USDT-991240',
+              'is_plus': true,
+              'type': 'deposit',
+              'amount': '1,000.00',
+              'charge': '0.00',
+              'final_amount': '1,000.00',
+              'status': 'completed',
+              'created_at': '2026-10-01 11:20:00',
+              'trx_currency': 'USDT',
+              'trx_currency_symbol': '₮',
+              'trx_currency_code': 'USDT',
+            },
+            {
+              'id': 2,
+              'description': 'صدور کارت مجازی مسترکارت',
+              'tnx': 'TNX-CRD-882104',
+              'is_plus': false,
+              'type': 'virtual_card',
+              'amount': '50.00',
+              'charge': '0.00',
+              'final_amount': '50.00',
+              'status': 'completed',
+              'created_at': '2026-09-29 16:45:00',
+              'trx_currency': 'USD',
+              'trx_currency_symbol': '\$',
+              'trx_currency_code': 'USD',
+            },
+            {
+              'id': 3,
+              'description': 'تبدیل یورو به دلار آمریکا',
+              'tnx': 'TNX-EXC-774102',
+              'is_plus': true,
+              'type': 'exchange',
+              'amount': '250.00',
+              'charge': '1.20',
+              'final_amount': '248.80',
+              'status': 'completed',
+              'created_at': '2026-09-28 09:12:00',
+              'trx_currency': 'USD',
+              'trx_currency_symbol': '\$',
+              'trx_currency_code': 'USD',
+            },
+          ],
+        },
+      };
+    }
+
+    // App Settings
+    if (cleanEndpoint == '/get-settings' || cleanEndpoint == '/get-settings-v2') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': [
+          {'name': 'site_title', 'value': 'eCardo'},
+          {'name': 'currency', 'value': 'USD'},
+          {'name': 'kyc_verification', 'value': '1'},
+          {'name': 'fa_verification', 'value': '1'},
+          {'name': 'user_ticket', 'value': '1'},
+          {'name': 'account_creation', 'value': '1'},
+          {'name': 'language_switcher', 'value': '1'},
+        ],
+      };
+    }
+
     // Virtual Cards
     if (cleanEndpoint == '/user/cards' || cleanEndpoint == '/epay/cards') {
       return {
