@@ -196,12 +196,14 @@ void main() {
           designSize: const Size(375, 812),
           builder: (context, child) => MaterialApp(
             home: Scaffold(
-              body: EsimDataUsageGauge(
-                totalDataGb: 10.0,
-                usedDataGb: 6.4,
-                daysRemaining: 14,
-                countryOrRegion: 'Turkey & Europe',
-                onTopUpTap: () => topUpTapped = true,
+              body: SingleChildScrollView(
+                child: EsimDataUsageGauge(
+                  totalDataGb: 10.0,
+                  usedDataGb: 6.4,
+                  daysRemaining: 14,
+                  countryOrRegion: 'Turkey & Europe',
+                  onTopUpTap: () => topUpTapped = true,
+                ),
               ),
             ),
           ),
@@ -231,11 +233,13 @@ void main() {
           designSize: const Size(375, 812),
           builder: (context, child) => const MaterialApp(
             home: Scaffold(
-              body: EsimDataUsageGauge(
-                totalDataGb: 10.0,
-                usedDataGb: 9.2, // 0.8 GB remaining = 8% (<15%)
-                daysRemaining: 5,
-                countryOrRegion: 'Global',
+              body: SingleChildScrollView(
+                child: EsimDataUsageGauge(
+                  totalDataGb: 10.0,
+                  usedDataGb: 9.2, // 0.8 GB remaining = 8% (<15%)
+                  daysRemaining: 5,
+                  countryOrRegion: 'Global',
+                ),
               ),
             ),
           ),
