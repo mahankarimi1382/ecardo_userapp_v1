@@ -331,12 +331,15 @@ class _CipLoungeReservationScreenState
               color: isSelected ? TravelTheme.primary : TravelTheme.textSecondary,
             ),
             SizedBox(width: 8.w),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected ? TravelTheme.primary : TravelTheme.textPrimary,
+            Flexible(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                  color: isSelected ? TravelTheme.primary : TravelTheme.textPrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -484,26 +487,28 @@ class _CipLoungeReservationScreenState
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w700,
-                color: TravelTheme.textPrimary,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  color: TravelTheme.textPrimary,
+                ),
               ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: TravelTheme.textSecondary,
+              SizedBox(height: 2.h),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: TravelTheme.textSecondary,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Row(
           children: [
@@ -579,31 +584,34 @@ class _CipLoungeReservationScreenState
   }
 
   Widget _buildSpecialAssistanceCard() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: TravelTheme.surface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: TravelTheme.border),
-      ),
-      child: Column(
-        children: [
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text('Wheelchair / Mobility Assistance', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
-            value: _needWheelchair,
-            activeColor: TravelTheme.primary,
-            onChanged: (val) => setState(() => _needWheelchair = val ?? false),
-          ),
-          Divider(height: 1, color: TravelTheme.border),
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text('Pet Travel Reception Assistance', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
-            value: _needPetCare,
-            activeColor: TravelTheme.primary,
-            onChanged: (val) => setState(() => _needPetCare = val ?? false),
-          ),
-        ],
+    return Material(
+      color: TravelTheme.surface,
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: TravelTheme.border),
+        ),
+        child: Column(
+          children: [
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text('Wheelchair / Mobility Assistance', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
+              value: _needWheelchair,
+              activeColor: TravelTheme.primary,
+              onChanged: (val) => setState(() => _needWheelchair = val ?? false),
+            ),
+            Divider(height: 1, color: TravelTheme.border),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text('Pet Travel Reception Assistance', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
+              value: _needPetCare,
+              activeColor: TravelTheme.primary,
+              onChanged: (val) => setState(() => _needPetCare = val ?? false),
+            ),
+          ],
+        ),
       ),
     );
   }

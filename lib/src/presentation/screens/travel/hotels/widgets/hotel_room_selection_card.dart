@@ -290,6 +290,8 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.w700,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2.h),
                             Text(

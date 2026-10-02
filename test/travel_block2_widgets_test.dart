@@ -47,6 +47,7 @@ void main() {
 
       // Tap to add 1 adult
       final addIcons = find.byIcon(Icons.add_circle_outline_rounded);
+      await tester.ensureVisible(addIcons.first);
       await tester.tap(addIcons.first);
       await tester.pump();
 
