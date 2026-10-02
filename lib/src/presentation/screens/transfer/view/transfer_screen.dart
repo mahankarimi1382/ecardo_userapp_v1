@@ -50,7 +50,8 @@ class _TransferScreenState extends State<TransferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    final localization = AppLocalizations.of(context);
+    if (localization == null) return const SizedBox.shrink();
 
     return PopScope(
       canPop: homeController.selectedIndex.value != 1,

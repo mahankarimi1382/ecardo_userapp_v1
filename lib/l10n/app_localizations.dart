@@ -71,8 +71,16 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  static AppLocalizations of(BuildContext context) {
+    final instance = Localizations.of<AppLocalizations>(context, AppLocalizations);
+    if (instance != null) return instance;
+    try {
+      final locale = Localizations.maybeLocaleOf(context);
+      if (locale != null) {
+        return lookupAppLocalizations(locale);
+      }
+    } catch (_) {}
+    return AppLocalizationsEn();
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =

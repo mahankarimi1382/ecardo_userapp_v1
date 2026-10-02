@@ -28,20 +28,27 @@ class VirtualCardScreen extends StatefulWidget {
 }
 
 class _VirtualCardScreenState extends State<VirtualCardScreen> {
-  final VirtualCardController controller = Get.find();
+  late final VirtualCardController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<VirtualCardController>()
+        ? Get.find<VirtualCardController>()
+        : Get.put(VirtualCardController());
     controller.syncCardBackgroundImageFromSettings();
     controller.fetchVirtualCards();
     // WAVE-REVIEW: PayCardo (ePay) cards — USDT-funded, USD-spending.
-    Get.put(EpayCardController()).fetchEpayCards();
+    if (!Get.isRegistered<EpayCardController>()) {
+      Get.put(EpayCardController());
+    }
+    Get.find<EpayCardController>().fetchEpayCards();
   }
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    final localization = AppLocalizations.of(context);
+    if (localization == null) return const SizedBox.shrink();
 
     return Scaffold(
       appBar: CommonDefaultAppBar(),

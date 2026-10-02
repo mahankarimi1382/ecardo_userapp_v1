@@ -84,6 +84,7 @@ List<GetPage> routesHandler = [
     bindings: [
       HomeBinding(),
       TransferBinding(),
+      VirtualCardBinding(),
       GiftCodeBinding(),
       CreateGiftBinding(),
       GiftRedeemBinding(),
