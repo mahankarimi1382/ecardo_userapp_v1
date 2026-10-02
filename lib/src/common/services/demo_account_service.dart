@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/app_event_bus.dart';
+import 'package:ecardo_user/src/common/services/connectivity_watch_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
@@ -342,6 +343,11 @@ class DemoAccountService extends GetxService {
     // Push into WalletsController if registered
     if (Get.isRegistered<WalletsController>()) {
       Get.find<WalletsController>().walletsList.assignAll(demoWallets);
+    }
+
+    // Clear any offline lock on entry
+    if (Get.isRegistered<ConnectivityWatchService>()) {
+      Get.find<ConnectivityWatchService>().isOffline.value = false;
     }
 
     // Trigger reactive state updates

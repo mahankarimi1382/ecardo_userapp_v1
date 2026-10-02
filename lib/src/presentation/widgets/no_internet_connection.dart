@@ -8,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -50,6 +51,10 @@ class _NoInternetConnectionState extends State<NoInternetConnection> {
   Future<void> _manualRetry() async {
     setState(() => _retrying = true);
     try {
+      if (Get.isRegistered<DemoAccountService>() && DemoAccountService.to.isDemoMode.value) {
+        Get.offAllNamed(BaseRoute.navigation);
+        return;
+      }
       final results = await Connectivity().checkConnectivity();
       final online = results.any((r) => r != ConnectivityResult.none);
       if (online) {
