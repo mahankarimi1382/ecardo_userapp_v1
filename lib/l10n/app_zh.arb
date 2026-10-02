@@ -2832,5 +2832,6 @@
     }
   },
   "travelContactPhone": "联系手机",
-  "travelVisaCountry": "国家"
+  "travelVisaCountry": "国家",
+  "travelQuickCipTitle": "机场CIP和VIP贵宾厅"
 }

@@ -841,7 +841,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                       widget.onTopUpPressed!();
                     } else {
                       try {
-                        Get.toNamed(Routes.addMoneyScreen);
+                        Get.toNamed(BaseRoute.addMoney);
                       } catch (_) {}
                     }
                   },

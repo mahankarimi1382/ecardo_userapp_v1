@@ -2833,5 +2833,6 @@
   "travelAliPayDescription": "پرداخت بین‌المللی با AliPay",
   "travelMirPayDescription": "پرداخت روسی با MirPay",
   "travelContactPhone": "موبایل تماس",
-  "travelVisaCountry": "کشور"
+  "travelVisaCountry": "کشور",
+  "travelQuickCipTitle": "سالن فرودگاهی CIP و VIP"
 }

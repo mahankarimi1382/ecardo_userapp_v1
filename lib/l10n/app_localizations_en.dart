@@ -6043,8 +6043,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get travelWalletCheckout => 'Wallet checkout';
 
   @override
-  String get travelBackendConfirmedPrice =>
-      'Price confirmed by eCardo Travel';
+  String get travelBackendConfirmedPrice => 'Price confirmed by eCardo Travel';
 
   @override
   String get travelPaymentMethod => 'Payment method';
@@ -7785,7 +7784,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kycSubmitWizardTapToUpload => 'Tap to upload';
 
   @override
-  String get kycSubmitWizardFileFormat => 'Format: JPG, PNG, PDF — max 5MB';
+  String get kycSubmitWizardFileFormat => 'Format: JPG, PNG, PDF — max 20MB';
 
   @override
   String get kycSubmitWizardReviewTitle => 'Review & submit';
@@ -8666,4 +8665,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get travelVisaCountry => 'Country';
+
+  @override
+  String get travelQuickCipTitle => 'Airport CIP & VIP Lounge';
 }

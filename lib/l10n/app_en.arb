@@ -2972,5 +2972,6 @@
   "travelAliPayDescription": "International payments with AliPay",
   "travelMirPayDescription": "Russian payments with MirPay",
   "travelContactPhone": "Contact mobile",
-  "travelVisaCountry": "Country"
+  "travelVisaCountry": "Country",
+  "travelQuickCipTitle": "Airport CIP & VIP Lounge"
 }

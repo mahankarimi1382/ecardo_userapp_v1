@@ -163,7 +163,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
       return widget.quickAmounts!;
     }
     if (widget.currency == 'USD') {
-      return [1000, 5000, 10000, 25000, 50000]
+      return [1000.0, 5000.0, 10000.0, 25000.0, 50000.0]
           .where((a) => a >= widget.minAmount && a <= widget.maxAmount)
           .toList();
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
+// intl exports its own TextDirection (RTL/LTR constants) which shadows
+// dart:ui's — hide it so `TextDirection.rtl` resolves to the engine type.
+import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import '../../shared/travel_theme.dart';

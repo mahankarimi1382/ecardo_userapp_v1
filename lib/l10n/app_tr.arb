@@ -2832,5 +2832,6 @@
     }
   },
   "travelContactPhone": "İletişim cep telefonu",
-  "travelVisaCountry": "Ülke"
+  "travelVisaCountry": "Ülke",
+  "travelQuickCipTitle": "Havalimanı CIP ve VIP Salonu"
 }

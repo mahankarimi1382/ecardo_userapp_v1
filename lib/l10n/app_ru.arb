@@ -2832,5 +2832,6 @@
     }
   },
   "travelContactPhone": "Контактный мобильный",
-  "travelVisaCountry": "Страна"
+  "travelVisaCountry": "Страна",
+  "travelQuickCipTitle": "Аэропортовый зал CIP и VIP"
 }

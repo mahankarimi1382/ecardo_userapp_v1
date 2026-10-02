@@ -6005,8 +6005,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get travelWalletCheckout => 'الدفع بالمحفظة';
 
   @override
-  String get travelBackendConfirmedPrice =>
-      'السعر مؤكد من eCardo Travel';
+  String get travelBackendConfirmedPrice => 'السعر مؤكد من eCardo Travel';
 
   @override
   String get travelPaymentMethod => 'طريقة الدفع';
@@ -7136,8 +7135,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم استنفاد محاولات البصمة. يرجى تسجيل الدخول بكلمة المرور';
 
   @override
-  String get biometricReason =>
-      'قم بالمصادقة لتسجيل الدخول إلى eCardo';
+  String get biometricReason => 'قم بالمصادقة لتسجيل الدخول إلى eCardo';
 
   @override
   String get biometricGenericError => 'فشلت المصادقة الحيوية';
@@ -7743,7 +7741,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get kycSubmitWizardFileFormat =>
-      'الصيغة: JPG، PNG، PDF — بحد أقصى 5 ميغابايت';
+      'الصيغة: JPG، PNG، PDF — بحد أقصى 20 ميغابايت';
 
   @override
   String get kycSubmitWizardReviewTitle => 'المراجعة والإرسال';
@@ -8615,4 +8613,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get travelVisaCountry => 'الدولة';
+
+  @override
+  String get travelQuickCipTitle => 'صالة CIP و VIP بالمطار';
 }

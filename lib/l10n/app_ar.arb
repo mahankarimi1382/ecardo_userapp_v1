@@ -2833,5 +2833,6 @@
     }
   },
   "travelContactPhone": "هاتف التواصل",
-  "travelVisaCountry": "الدولة"
+  "travelVisaCountry": "الدولة",
+  "travelQuickCipTitle": "صالة CIP و VIP بالمطار"
 }

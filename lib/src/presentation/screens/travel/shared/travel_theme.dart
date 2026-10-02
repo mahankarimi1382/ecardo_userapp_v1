@@ -12,6 +12,13 @@ class TravelTheme {
   static const warning = Color(0xFFF2994A);
   static const red = Color(0xFFC62828);
 
+  // Semantic aliases used by the service screens (CIP lounge et al.) so
+  // they can stay on the shared theme instead of hard-coding colors.
+  static const Color textPrimary = ink;
+  static const Color textSecondary = muted;
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color primary = purple;
+
   static BorderRadius get radius => BorderRadius.circular(24);
 
   static List<BoxShadow> get shadow => [

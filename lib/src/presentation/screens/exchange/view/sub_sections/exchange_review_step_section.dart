@@ -110,7 +110,9 @@ class ExchangeReviewStepSection extends StatelessWidget {
                             children: [
                               Text(
                                 loc.exchangeReviewRateLockedAt,
-                                style: const TextStyle(
+                                // AppColors.lightTextTertiary is a
+                                // non-const static — no const TextStyle here.
+                                style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.lightTextTertiary,
@@ -159,7 +161,7 @@ class ExchangeReviewStepSection extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                              Text(
                                 '24h Trend',
                                 style: TextStyle(
                                   fontSize: 10,

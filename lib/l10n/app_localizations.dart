@@ -71,16 +71,8 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations of(BuildContext context) {
-    final instance = Localizations.of<AppLocalizations>(context, AppLocalizations);
-    if (instance != null) return instance;
-    try {
-      final locale = Localizations.maybeLocaleOf(context);
-      if (locale != null) {
-        return lookupAppLocalizations(locale);
-      }
-    } catch (_) {}
-    return AppLocalizationsEn();
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -14661,7 +14653,7 @@ abstract class AppLocalizations {
   /// No description provided for @kycSubmitWizardFileFormat.
   ///
   /// In en, this message translates to:
-  /// **'Format: JPG, PNG, PDF — max 5MB'**
+  /// **'Format: JPG, PNG, PDF — max 20MB'**
   String get kycSubmitWizardFileFormat;
 
   /// No description provided for @kycSubmitWizardReviewTitle.
@@ -16307,6 +16299,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Country'**
   String get travelVisaCountry;
+
+  /// No description provided for @travelQuickCipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Airport CIP & VIP Lounge'**
+  String get travelQuickCipTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -6056,8 +6056,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get travelWalletCheckout => 'پرداخت از کیف پول';
 
   @override
-  String get travelBackendConfirmedPrice =>
-      'قیمت تأییدشده توسط eCardo Travel';
+  String get travelBackendConfirmedPrice => 'قیمت تأییدشده توسط eCardo Travel';
 
   @override
   String get travelPaymentMethod => 'روش پرداخت';
@@ -7192,8 +7191,7 @@ class AppLocalizationsFa extends AppLocalizations {
       'حداکثر تلاش‌های بیومتریک انجام شد. لطفاً با رمز عبور وارد شوید';
 
   @override
-  String get biometricReason =>
-      'برای ورود به eCardo، هویت خود را تأیید کنید';
+  String get biometricReason => 'برای ورود به eCardo، هویت خود را تأیید کنید';
 
   @override
   String get biometricGenericError => 'احراز هویت بیومتریک ناموفق بود';
@@ -7799,7 +7797,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get kycSubmitWizardFileFormat =>
-      'فرمت: JPG، PNG، PDF — حداکثر ۵ مگابایت';
+      'فرمت: JPG، PNG، PDF — حداکثر ۲۰ مگابایت';
 
   @override
   String get kycSubmitWizardReviewTitle => 'بررسی و ارسال';
@@ -7881,8 +7879,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get updateCheckingTitle => 'بررسی به‌روزرسانی…';
 
   @override
-  String get updateCheckingBody =>
-      'در حال دریافت آخرین نسخه از سرور eCardo.';
+  String get updateCheckingBody => 'در حال دریافت آخرین نسخه از سرور eCardo.';
 
   @override
   String get updateUpToDateScreenTitle => 'شما به‌روز هستید!';
@@ -8673,4 +8670,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get travelVisaCountry => 'کشور';
+
+  @override
+  String get travelQuickCipTitle => 'سالن فرودگاهی CIP و VIP';
 }

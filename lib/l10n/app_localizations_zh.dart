@@ -5696,8 +5696,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get travelMainWallet => 'eCardo 主钱包';
 
   @override
-  String get travelWalletSharedDescription =>
-      '与您在 eCardo 全站使用的同一个安全钱包';
+  String get travelWalletSharedDescription => '与您在 eCardo 全站使用的同一个安全钱包';
 
   @override
   String get travelHotelSearch => '酒店搜索';
@@ -7585,7 +7584,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get kycSubmitWizardTapToUpload => '点击上传';
 
   @override
-  String get kycSubmitWizardFileFormat => '格式：JPG、PNG、PDF — 最大 5MB';
+  String get kycSubmitWizardFileFormat => '格式：JPG、PNG、PDF — 最大 20MB';
 
   @override
   String get kycSubmitWizardReviewTitle => '检查并提交';
@@ -8437,4 +8436,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get travelVisaCountry => '国家';
+
+  @override
+  String get travelQuickCipTitle => '机场CIP和VIP贵宾厅';
 }

@@ -417,8 +417,6 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                             ar: 'افتراضي',
                             zh: '默认',
                           ),
-                          tr: 'Varsayılan',
-                          ru: 'По умолчанию',
                           style: TextStyle(
                             color: theme.accentColor,
                             fontSize: 9,

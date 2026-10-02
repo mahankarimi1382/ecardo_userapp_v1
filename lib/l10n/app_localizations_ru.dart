@@ -6041,8 +6041,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelWalletCheckout => 'Wallet checkout';
 
   @override
-  String get travelBackendConfirmedPrice =>
-      'Price confirmed by eCardo Travel';
+  String get travelBackendConfirmedPrice => 'Price confirmed by eCardo Travel';
 
   @override
   String get travelPaymentMethod => 'Payment method';
@@ -7175,8 +7174,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Достигнут лимит биометрических попыток. Войдите с паролем';
 
   @override
-  String get biometricReason =>
-      'Пройдите аутентификацию для входа в eCardo';
+  String get biometricReason => 'Пройдите аутентификацию для входа в eCardo';
 
   @override
   String get biometricGenericError =>
@@ -7793,7 +7791,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get kycSubmitWizardFileFormat =>
-      'Формат: JPG, PNG, PDF — не более 5 МБ';
+      'Формат: JPG, PNG, PDF — не более 20 МБ';
 
   @override
   String get kycSubmitWizardReviewTitle => 'Проверка и отправка';
@@ -8674,4 +8672,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get travelVisaCountry => 'Страна';
+
+  @override
+  String get travelQuickCipTitle => 'Аэропортовый зал CIP и VIP';
 }
