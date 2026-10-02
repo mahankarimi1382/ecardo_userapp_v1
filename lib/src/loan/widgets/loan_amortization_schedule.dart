@@ -75,7 +75,7 @@ class InstallmentItem {
 
     final baseDate = startDate ?? DateTime.now().add(const Duration(days: 30));
     final monthlyRate = (annualInterestRatePct / 100.0) / 12.0;
-    final graceMonths = gracePeriodMonths.clamp(0, tenureMonths - 1);
+    final graceMonths = gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1)).toInt();
     final amortizingMonths = math.max(1, tenureMonths - graceMonths);
 
     // Standard EMI for amortizing period

@@ -95,7 +95,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
   double get _monthlyRate => (widget.annualInterestRate / 100.0) / 12.0;
 
-  int get _effectiveGraceMonths => _graceMonths.clamp(0, math.max(0, _months - 1));
+  int get _effectiveGraceMonths => _graceMonths.clamp(0, math.max(0, _months - 1)).toInt();
 
   /// Standard EMI during regular amortizing period
   double get _monthlyPayment {
