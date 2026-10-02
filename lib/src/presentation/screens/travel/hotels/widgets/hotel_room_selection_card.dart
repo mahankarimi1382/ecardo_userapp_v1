@@ -251,34 +251,38 @@ class HotelRoomSelectionCard extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(
-                                  travelMoney(
-                                    context,
-                                    TravelMoney(
-                                      amount: pricePerNight,
-                                      currency: currency,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    travelMoney(
+                                      context,
+                                      TravelMoney(
+                                        amount: pricePerNight,
+                                        currency: currency,
+                                      ),
+                                    ),
+                                    style: TextStyle(
+                                      color: TravelTheme.purple,
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w900,
                                     ),
                                   ),
-                                  style: TextStyle(
-                                    color: TravelTheme.purple,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w900,
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    isRtl ? '/ هر شب' : '/ night',
+                                    style: TextStyle(
+                                      color: TravelTheme.muted,
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 4.w),
-                                Text(
-                                  isRtl ? '/ هر شب' : '/ night',
-                                  style: TextStyle(
-                                    color: TravelTheme.muted,
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             SizedBox(height: 3.h),
                             Text(

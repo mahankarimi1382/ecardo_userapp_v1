@@ -318,7 +318,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             crossAxisCount: 2,
             crossAxisSpacing: 10.w,
             mainAxisSpacing: 10.h,
-            mainAxisExtent: 64.h,
+            mainAxisExtent: 76.h,
           ),
           itemBuilder: (context, index) {
             final amenity = displayedAmenities[index];
@@ -395,7 +395,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
 
   Widget _buildAmenityTile(HotelAmenityItem amenity, bool isRtl) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14.r),
@@ -415,8 +415,8 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
         children: [
           // Circular Icon Container with subtle brand accent
           Container(
-            width: 38.r,
-            height: 38.r,
+            width: 36.r,
+            height: 36.r,
             decoration: BoxDecoration(
               color: TravelTheme.purple.withValues(alpha: 0.08),
               shape: BoxShape.circle,
@@ -424,7 +424,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             child: Center(
               child: Icon(
                 amenity.icon,
-                size: 20.sp,
+                size: 18.sp,
                 color: TravelTheme.purple,
               ),
             ),
@@ -435,14 +435,15 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   amenity.localizedLabel(isRtl),
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.5.sp,
                     fontWeight: FontWeight.w700,
                     color: TravelTheme.ink,
-                    height: 1.2,
+                    height: 1.15,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -451,7 +452,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                 Text(
                   amenity.localizedTag(isRtl),
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: 9.5.sp,
                     fontWeight: FontWeight.w600,
                     color: TravelTheme.muted,
                   ),
