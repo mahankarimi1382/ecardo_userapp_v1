@@ -341,6 +341,9 @@ class EsimDataUsageGauge extends StatelessWidget {
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ),
