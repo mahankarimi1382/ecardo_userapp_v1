@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 
 /// UpgradeRequiredScreen — صفحه‌ی "ارتقا مورد نیاز" به‌جای خطای خام
@@ -298,8 +299,13 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
 
               CommonButton(
                 width: double.infinity,
-                text: localization?.kycUpgradeButtonForLevel(_requiredLevel ?? 2) ??
-                    'Start verification',
+                text: l10nPick(
+                  context,
+                  en: 'Upgrade to Level ${_requiredLevel ?? 2}',
+                  fa: 'ارتقا به سطح ${_requiredLevel ?? 2}',
+                  ar: 'الترقية إلى المستوى ${_requiredLevel ?? 2}',
+                  zh: '升级至级别 ${_requiredLevel ?? 2}',
+                ),
                 onPressed: () {
                   Get.toNamed(
                     BaseRoute.kycSubmitWizard,
