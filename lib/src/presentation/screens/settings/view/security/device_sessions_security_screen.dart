@@ -307,8 +307,9 @@ class _DeviceSessionsSecurityScreenState
     try {
       final supported = await _bio.isSupported();
       final enabled = await _bio.isEnabled();
-      final lockMin = _settings?.getAppLockMinutes() ?? 0;
-      final pinSet = (_settings?.getAppPin() ?? '').isNotEmpty;
+      final lockMin = _settings != null ? await _settings!.getAppLockMinutes() : 0;
+      final pin = _settings != null ? await _settings!.getAppPin() : '';
+      final pinSet = pin.isNotEmpty;
 
       if (mounted) {
         setState(() {
