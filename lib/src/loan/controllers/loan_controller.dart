@@ -75,7 +75,8 @@ class LoanController extends GetxController {
     int gracePeriodMonths = 0,
   }) {
     if (principal <= 0 || tenureMonths <= 0) return 0.0;
-    final graceMonths = gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1));
+    final graceMonths =
+        gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1)).toInt();
     final amortizingMonths = math.max(1, tenureMonths - graceMonths);
 
     if (annualInterestRatePct <= 0) return principal / amortizingMonths;
@@ -95,7 +96,10 @@ class LoanController extends GetxController {
     int gracePeriodMonths = 0,
   }) {
     if (principal <= 0 || tenureMonths <= 0) return 0.0;
-    final graceMonths = gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1));
+    // `int.clamp` is declared on `num`, so it returns `num`, not `int`.
+    // Without this the value fails to satisfy the `int` parameter below.
+    final graceMonths =
+        gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1)).toInt();
     final monthlyRate = (annualInterestRatePct / 100.0) / 12.0;
     final graceInterest = graceMonths * (principal * monthlyRate);
 
