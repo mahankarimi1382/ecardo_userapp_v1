@@ -28,6 +28,7 @@ class GuaranteeController extends GetxController {
   final currencyInput = 'IRR'.obs;
   final validityMonthsInput = 12.obs;
   final contractRefInput = ''.obs;
+  final collateralTypeInput = 'CASH_DEPOSIT'.obs;
   final selectedBankOfferId = RxnInt();
   final termsAccepted = false.obs;
 

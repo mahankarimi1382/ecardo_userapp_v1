@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/loan_controller.dart';
 import '../models/loan_models.dart';
+import '../widgets/loan_amortization_schedule.dart';
 
 /// Screen displaying complete details for a single loan application,
 /// including timeline, collateral status, repayment schedule, and action buttons.
@@ -284,46 +285,78 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
               ),
             ],
 
-            // Installment Schedule
-            if (c.installments.isNotEmpty) ...[
-              SizedBox(height: 16.h),
-              Container(
-                padding: EdgeInsets.all(16.r),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: AppColors.lightBorder),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          l10nPick(context, fa: 'جدول اقساط و بازپرداخت', en: 'Repayment Schedule', ar: 'جدول الأقساط', zh: '还款计划表'),
-                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp),
-                        ),
-                        if (c.status == 'ACTIVE')
-                          TextButton(
-                            onPressed: () => _confirm(
-                              l10nPick(context, fa: 'تسویه زودهنگام', en: 'Early Repayment', ar: 'السداد المبكر', zh: '提前结清'),
-                              l10nPick(context, fa: 'آیا مایل به پرداخت یکجای اصل باقیمانده با معافیت از سود آینده هستید؟', en: 'Pay remaining principal with future interest waived?', ar: 'سداد كامل المبلغ المتبقي مع الإعفاء من الفوائد؟', zh: '一次性结清剩余本金并减免后续利息？'),
-                              () => controller.earlyRepayment(c.id),
-                            ),
-                            child: Text(
-                              l10nPick(context, fa: 'تسویه پیش از موعد', en: 'Early Payoff', ar: 'تسوية مبكرة', zh: '提前结清'),
-                              style: TextStyle(fontSize: 11.sp, color: const Color(0xFF059669), fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const Divider(height: 16),
-                    ...c.installments.map((inst) => _installmentRow(context, c.id, inst)),
-                  ],
-                ),
+            // Repayment Tracker & Amortization Schedule
+            SizedBox(height: 16.h),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18.r),
+                border: Border.all(color: AppColors.lightBorder),
               ),
-            ],
+              padding: EdgeInsets.all(14.r),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.timeline_rounded, color: AppColors.lightPrimary, size: 20.sp),
+                          SizedBox(width: 8.w),
+                          Text(
+                            l10nPick(
+                              context,
+                              fa: 'ردیاب بازپرداخت و جدول استهلاک',
+                              en: 'Repayment Tracker & Schedule',
+                              ar: 'متابعة السداد وجدول الاستهلاك',
+                              zh: '还款进度跟踪与分摊明细',
+                            ),
+                            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5.sp),
+                          ),
+                        ],
+                      ),
+                      if (c.status == 'ACTIVE')
+                        TextButton.icon(
+                          icon: Icon(Icons.bolt_rounded, size: 16.sp, color: const Color(0xFF059669)),
+                          onPressed: () => _confirm(
+                            l10nPick(context, fa: 'تسویه زودهنگام', en: 'Early Repayment', ar: 'السداد المبكر', zh: '提前结清'),
+                            l10nPick(context, fa: 'آیا مایل به پرداخت یکجای اصل باقیمانده با معافیت از سود آینده هستید؟', en: 'Pay remaining principal with future interest waived?', ar: 'سداد كامل المبلغ المتبقي مع الإعفاء من الفوائد؟', zh: '一次性结清剩余本金并减免后续利息？'),
+                            () => controller.earlyRepayment(c.id),
+                          ),
+                          label: Text(
+                            l10nPick(context, fa: 'تسویه پیش از موعد', en: 'Early Payoff', ar: 'تسوية مبكرة', zh: '提前结清'),
+                            style: TextStyle(fontSize: 11.sp, color: const Color(0xFF059669), fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  LoanAmortizationSchedule(
+                    installments: c.installments.isNotEmpty
+                        ? InstallmentItem.fromLoanInstallments(c.installments, totalLoanPrincipal: c.requestedAmount)
+                        : InstallmentItem.generateSchedule(
+                            principal: c.requestedAmount > 0 ? c.requestedAmount : (c.offer?.offeredAmount ?? 50000000),
+                            annualInterestRatePct: c.offer?.ratePct ?? c.product?.interestRatePct ?? 18.0,
+                            tenureMonths: c.tenureMonths > 0 ? c.tenureMonths : 12,
+                          ),
+                    totalPrincipal: c.requestedAmount > 0 ? c.requestedAmount : c.offer?.offeredAmount,
+                    currency: 'IRR',
+                    showHeader: true,
+                    isCompactInitially: true,
+                    onPayInstallment: (item) {
+                      if (item.id != null) {
+                        _confirm(
+                          l10nPick(context, fa: 'پرداخت قسط', en: 'Pay Installment', ar: 'سداد القسط', zh: '支付分期'),
+                          l10nPick(context, fa: 'مبلغ قسط از موجودی کیف پول شما کسر شود؟', en: 'Deduct installment from wallet balance?', ar: 'خصم القسط من المحفظة؟', zh: '从钱包余额中扣缴此期还款？'),
+                          () => controller.payInstallment(c.id, item.id!),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
 
             // Cancel application option
             if (['DRAFT', 'OFFERED', 'AWAITING_COLLATERAL', 'AWAITING_SIGNING'].contains(c.status)) ...[
@@ -346,68 +379,6 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
           ],
         );
       }),
-    );
-  }
-
-  Widget _installmentRow(BuildContext context, int caseId, LoanInstallmentModel inst) {
-    final isPaid = inst.isPaid;
-    final isOverdue = inst.isOverdue;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                isPaid
-                    ? Icons.check_circle_rounded
-                    : (isOverdue ? Icons.error_rounded : Icons.pending_rounded),
-                size: 18.sp,
-                color: isPaid
-                    ? const Color(0xFF059669)
-                    : (isOverdue ? const Color(0xFFDC2626) : Colors.grey),
-              ),
-              SizedBox(width: 8.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${l10nPick(context, fa: 'قسط', en: 'Inst.', ar: 'قسط', zh: '期')} ${inst.installmentNo}',
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
-                  ),
-                  Text(
-                    '${inst.amount.toInt()} ریال',
-                    style: TextStyle(fontSize: 10.5.sp, color: AppColors.lightTextSecondary),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          if (!isPaid)
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isOverdue ? const Color(0xFFDC2626) : AppColors.lightPrimary,
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-              ),
-              onPressed: () => _confirm(
-                l10nPick(context, fa: 'پرداخت قسط', en: 'Pay Installment', ar: 'سداد القسط', zh: '支付分期'),
-                l10nPick(context, fa: 'مبلغ قسط از موجودی کیف پول شما کسر شود؟', en: 'Deduct installment from wallet balance?', ar: 'خصم القسط من المحفظة؟', zh: '从钱包余额中扣缴此期还款？'),
-                () => controller.payInstallment(caseId, inst.id),
-              ),
-              child: Text(
-                l10nPick(context, fa: 'پرداخت قسط', en: 'Pay', ar: 'سداد', zh: '支付'),
-                style: TextStyle(fontSize: 11.sp, color: Colors.white),
-              ),
-            )
-          else
-            Text(
-              l10nPick(context, fa: 'پرداخت‌شده', en: 'Paid', ar: 'مسدد', zh: '已支付'),
-              style: TextStyle(fontSize: 11.sp, color: const Color(0xFF059669), fontWeight: FontWeight.w700),
-            ),
-        ],
-      ),
     );
   }
 }

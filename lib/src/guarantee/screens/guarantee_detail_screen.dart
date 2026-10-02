@@ -8,6 +8,8 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 
 import '../controllers/guarantee_controller.dart';
 import '../models/guarantee_models.dart';
+import '../widgets/guarantee_certificate_widget.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 /// جزئیات پرونده ضمانت‌نامه و اعتبار اسنادی — Bank-Guarantee-Service-Flow.md
 /// مدیریت چرخه: تکمیل پرونده و مدارک → بررسی کارشناس/بانک → تودیع وجه التزام (اسکرو پلتفرم) →
@@ -33,6 +35,17 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
     if (id > 0) {
       controller.fetchCase(id);
     }
+  }
+
+  String? _resolveApplicantName() {
+    try {
+      if (Get.isRegistered<HomeController>()) {
+        final u = Get.find<HomeController>().userModel.value.data;
+        final name = [u?.firstName, u?.lastName].where((s) => s != null && s.isNotEmpty).join(' ');
+        if (name.isNotEmpty) return name;
+      }
+    } catch (_) {}
+    return null;
   }
 
   String _statusFa(String status) {
@@ -382,39 +395,45 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
               ),
             ],
 
-            // گام ۶: سند صادر شد (فعال)
-            if (c.status == 'ISSUED' && c.issued != null) ...[
+            // گام ۶: گواهی رسمی دیجیتال ضمانت‌نامه بانکی (Official Bank Guarantee Certificate with Vector QR & PDF)
+            if (c.issued != null || {'ISSUED', 'CLAIMED', 'EXPIRED', 'RELEASED'}.contains(c.status)) ...[
+              SizedBox(height: 12.h),
+              GuaranteeCertificateWidget.fromCase(
+                c,
+                applicantName: _resolveApplicantName(),
+              ),
+            ] else ...[
               SizedBox(height: 12.h),
               Card(
-                color: Colors.teal.shade50,
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(l10nPick(context, en: 'Official Bank Instrument Issued', fa: 'سند رسمی بانک صادر شد (فعال)'),
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp, color: Colors.teal.shade900)),
-                    SizedBox(height: 6.h),
-                    Text(l10nPick(context,
-                      en: 'Bank Ref: ${c.issued!.bankRef}',
-                      fa: 'شناسه مرجع بانک: ${c.issued!.bankRef}'),
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11.sp)),
-                    if (c.issued!.expiryDate != null)
-                      Text(l10nPick(context,
-                        en: 'Valid until: ${c.issued!.expiryDate!.toLocal().toString().split(' ').first}',
-                        fa: 'تاریخ سررسید اعتبار: ${c.issued!.expiryDate!.toLocal().toString().split(' ').first}'),
-                        style: TextStyle(fontSize: 11.sp)),
-                    SizedBox(height: 10.h),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-                      icon: const Icon(Icons.download, color: Colors.white),
-                      label: Text(l10nPick(context, en: 'Download Official PDF', fa: 'دریافت سند رسمی ضمانت‌نامه (PDF)'),
-                        style: const TextStyle(color: Colors.white)),
-                      onPressed: () {
-                        Get.snackbar(l10nPick(context, en: 'Download', fa: 'دانلود سند'),
-                          l10nPick(context, en: 'Downloading official bank document...', fa: 'در حال دریافت نسخه الکترونیکی سند رسمی بانک...'),
-                          backgroundColor: Colors.teal, colorText: Colors.white);
-                      },
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.r),
+                  side: const BorderSide(color: AppColors.lightBorder),
+                ),
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    leading: const Icon(Icons.verified_outlined, color: Color(0xFF0D9488)),
+                    title: Text(
+                      l10nPick(
+                        context,
+                        fa: 'پیش‌نمایش گواهی دیجیتال ضمانت‌نامه (سپام)',
+                        en: 'Digital Guarantee Certificate Preview',
+                        ar: 'معاينة شهادة الضمان الرقمية',
+                        zh: '数字保函电子凭单预审预览',
+                      ),
+                      style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
                     ),
-                  ]),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+                        child: GuaranteeCertificateWidget.fromCase(
+                          c,
+                          applicantName: _resolveApplicantName(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

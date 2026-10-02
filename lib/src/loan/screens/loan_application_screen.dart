@@ -8,6 +8,8 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/loan_controller.dart';
 import '../models/loan_models.dart';
+import '../widgets/loan_calculator_slider.dart';
+import '../widgets/loan_amortization_schedule.dart';
 import 'loan_confirm_screen.dart';
 
 /// Form screen for submitting a loan request with rigorous input validation.
@@ -31,11 +33,58 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
 
   String _collateralType = 'CASH';
 
+  double _calculatedAmount = 50000000.0;
+  int _calculatedTenure = 12;
+  int _calculatedGraceMonths = 0;
+  double _calculatedMonthlyPayment = 0.0;
+  bool _isSchedulePreviewExpanded = true;
+
   @override
   void initState() {
     super.initState();
-    if (controller.amountInput.value.isNotEmpty) {
-      _amountController.text = controller.amountInput.value;
+    final parsed = double.tryParse(controller.amountInput.value);
+    if (parsed != null && parsed > 0) {
+      _calculatedAmount = parsed;
+      _amountController.text = parsed.toInt().toString();
+    } else {
+      _calculatedAmount = 50000000.0;
+      _amountController.text = '50000000';
+      controller.amountInput.value = '50000000';
+    }
+
+    if (controller.selectedTenure.value > 0) {
+      _calculatedTenure = controller.selectedTenure.value;
+    } else {
+      _calculatedTenure = 12;
+      controller.selectedTenure.value = 12;
+    }
+  }
+
+  void _onSliderPlanChanged(double amount, int months, int graceMonths, double monthlyPayment) {
+    setState(() {
+      _calculatedAmount = amount;
+      _calculatedTenure = months;
+      _calculatedGraceMonths = graceMonths;
+      _calculatedMonthlyPayment = monthlyPayment;
+      _amountController.text = amount.toInt().toString();
+      controller.amountInput.value = amount.toInt().toString();
+      controller.selectedTenure.value = months;
+    });
+  }
+
+  void _onAmountFieldChanged(String val) {
+    final parsed = double.tryParse(val.replaceAll(',', '').trim());
+    if (parsed != null && parsed > 0) {
+      final p = controller.selectedProduct.value;
+      final minA = p?.minAmount ?? 5000000.0;
+      final maxA = p?.maxAmount ?? 500000000.0;
+      final clamped = parsed.clamp(minA, maxA);
+      if (clamped != _calculatedAmount) {
+        setState(() {
+          _calculatedAmount = clamped;
+          controller.amountInput.value = parsed.toInt().toString();
+        });
+      }
     }
   }
 
@@ -167,14 +216,104 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
 
             SizedBox(height: 16.h),
 
-            // Requested Amount
+            // Interactive Loan Calculator Slider
+            Obx(() {
+              final p = controller.selectedProduct.value;
+              final minAmt = p != null && p.minAmount > 0 ? p.minAmount : 5000000.0;
+              final maxAmt = p != null && p.maxAmount > 0 ? p.maxAmount : 500000000.0;
+              final rate = p?.baseRateAnnual ?? 18.0;
+              final termOpts = p != null && p.tenureOptions.isNotEmpty ? p.tenureOptions : [3, 6, 12, 18, 24, 36];
+
+              return LoanCalculatorSlider(
+                initialAmount: _calculatedAmount,
+                initialMonths: _calculatedTenure,
+                initialGraceMonths: _calculatedGraceMonths,
+                minAmount: minAmt,
+                maxAmount: maxAmt,
+                annualInterestRate: rate,
+                termOptions: termOpts,
+                currency: 'IRR',
+                onPlanChanged: _onSliderPlanChanged,
+              );
+            }),
+
+            SizedBox(height: 14.h),
+
+            // Quick Amortization Schedule Preview
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: AppColors.lightBorder),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                    borderRadius: BorderRadius.circular(16.r),
+                    onTap: () => setState(() => _isSchedulePreviewExpanded = !_isSchedulePreviewExpanded),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_month_outlined, size: 18.sp, color: AppColors.lightPrimary),
+                              SizedBox(width: 8.w),
+                              Text(
+                                l10nPick(
+                                  context,
+                                  fa: 'پیش‌نمایش جدول استهلاک اقساط',
+                                  en: 'Amortization Schedule Preview',
+                                  ar: 'معاينة جدول استهلاك الأقساط',
+                                  zh: '还款与摊销计划表预览',
+                                ),
+                                style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800),
+                              ),
+                            ],
+                          ),
+                          Icon(
+                            _isSchedulePreviewExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                            color: AppColors.lightTextSecondary,
+                            size: 20.sp,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (_isSchedulePreviewExpanded) ...[
+                    const Divider(height: 1, color: AppColors.lightBorder),
+                    Padding(
+                      padding: EdgeInsets.all(12.r),
+                      child: LoanAmortizationSchedule(
+                        installments: InstallmentItem.generateSchedule(
+                          principal: _calculatedAmount,
+                          annualInterestRatePct: controller.selectedProduct.value?.baseRateAnnual ?? 18.0,
+                          tenureMonths: _calculatedTenure,
+                          gracePeriodMonths: _calculatedGraceMonths,
+                        ),
+                        totalPrincipal: _calculatedAmount,
+                        currency: 'IRR',
+                        showHeader: true,
+                        isCompactInitially: true,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+
+            SizedBox(height: 16.h),
+
+            // Requested Amount (Manual fine-tuning input)
             Text(
               l10nPick(
                 context,
-                fa: 'مبلغ درخواستی تسهیلات (ریال / واحد)',
-                en: 'Requested Amount',
-                ar: 'المبلغ المطلوب',
-                zh: '申请融资金额',
+                fa: 'مبلغ دقیق درخواستی (ریال - تنظیم دستی)',
+                en: 'Requested Amount (Manual input)',
+                ar: 'المبلغ المطلوب (إدخال يدوي)',
+                zh: '申请融资金额（手动微调）',
               ),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
             ),
@@ -182,6 +321,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
             TextFormField(
               controller: _amountController,
               keyboardType: TextInputType.number,
+              onChanged: _onAmountFieldChanged,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -220,45 +360,6 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 return null;
               },
             ),
-
-            SizedBox(height: 16.h),
-
-            // Tenure selector
-            Text(
-              l10nPick(
-                context,
-                fa: 'مدت بازپرداخت اقساط',
-                en: 'Repayment Tenure',
-                ar: 'مدة السداد',
-                zh: '还款期限',
-              ),
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
-            ),
-            SizedBox(height: 8.h),
-            Obx(() {
-              final activeTenure = controller.selectedTenure.value;
-              final options = controller.selectedProduct.value?.tenureOptions ?? [6, 12, 18, 24, 36];
-              return Wrap(
-                spacing: 8.w,
-                children: options.map((m) {
-                  final isSelected = activeTenure == m;
-                  return ChoiceChip(
-                    label: Text(
-                      '$m ' + l10nPick(context, fa: 'ماهه', en: 'mo', ar: 'شهر', zh: '月'),
-                      style: TextStyle(
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                        color: isSelected ? Colors.white : AppColors.lightTextPrimary,
-                      ),
-                    ),
-                    selected: isSelected,
-                    selectedColor: AppColors.lightPrimary,
-                    onSelected: (val) {
-                      if (val) controller.selectedTenure.value = m;
-                    },
-                  );
-                }).toList(),
-              );
-            }),
 
             SizedBox(height: 16.h),
 

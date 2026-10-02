@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/guarantee_controller.dart';
 import '../models/guarantee_models.dart';
+import '../widgets/guarantee_collateral_card.dart';
 import 'guarantee_confirm_screen.dart';
 
 /// Form screen for creating a new bank guarantee or LC case.
@@ -31,6 +32,11 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
 
   String _currency = 'IRR';
   int _validityMonths = 12;
+  GuaranteeCollateralType _selectedCollateralType = GuaranteeCollateralType.cash;
+
+  void _onAmountChanged() {
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -38,10 +44,12 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
     if (controller.amountInput.value.isNotEmpty) {
       _amountController.text = controller.amountInput.value;
     }
+    _amountController.addListener(_onAmountChanged);
   }
 
   @override
   void dispose() {
+    _amountController.removeListener(_onAmountChanged);
     _beneficiaryController.dispose();
     _beneficiaryIdController.dispose();
     _amountController.dispose();
@@ -58,6 +66,7 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
     controller.currencyInput.value = _currency;
     controller.validityMonthsInput.value = _validityMonths;
     controller.contractRefInput.value = _contractRefController.text.trim();
+    controller.collateralTypeInput.value = _selectedCollateralType.id;
 
     Get.to(() => const GuaranteeConfirmScreen());
   }
@@ -373,6 +382,26 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                 ),
               ),
             ),
+
+            SizedBox(height: 16.h),
+
+            // Guarantee Collateral Selection & Deposit Card
+            Obx(() {
+              final currentInstrument = controller.selectedInstrument.value;
+              final marginPct = currentInstrument?.marginPct ?? 10.0;
+              final parsedAmt = double.tryParse(_amountController.text.replaceAll(',', '').trim()) ?? 0.0;
+
+              return GuaranteeCollateralCard(
+                guaranteeAmount: parsedAmt,
+                marginPct: marginPct,
+                currency: _currency,
+                initialType: _selectedCollateralType,
+                onCollateralTypeChanged: (type) {
+                  setState(() => _selectedCollateralType = type);
+                  controller.collateralTypeInput.value = type.id;
+                },
+              );
+            }),
 
             SizedBox(height: 20.h),
           ],
