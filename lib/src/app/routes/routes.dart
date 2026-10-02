@@ -74,6 +74,7 @@ class BaseRoute {
   static const String profileSettings = "/profile_settings_route";
   static const String permissionsSettings = "/permissions_settings_route";
   static const String privacyPolicy = "/privacy_policy_route";
+  static const String deviceSessionsSecurity = "/device_sessions_security_route";
 
   static const String changePassword = "/change_password_route";
 

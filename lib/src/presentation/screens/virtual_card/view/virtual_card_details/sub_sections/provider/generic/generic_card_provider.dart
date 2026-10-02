@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/widgets/virtual_card_security_controls.dart';
 
 class GenericCardProvider extends StatelessWidget {
   const GenericCardProvider({super.key});
@@ -18,11 +19,21 @@ class GenericCardProvider extends StatelessWidget {
     final card = controller.virtualCardDetailsModel.value.data;
     if (card == null) return const SizedBox.shrink();
 
+    controller.syncFreezeState(card);
+
     return Column(
       children: [
-        SizedBox(height: 30.h),
+        SizedBox(height: 20.h),
         _UniversalVirtualCard(card: card, controller: controller),
-        SizedBox(height: 30.h),
+        SizedBox(height: 20.h),
+        DynamicCvv2Card(
+          initialCvv: card.cvc,
+        ),
+        SizedBox(height: 20.h),
+        CardSpendingLimitsCard(
+          currency: card.currency,
+        ),
+        SizedBox(height: 20.h),
         _UniversalCardDetails(card: card, controller: controller),
         SizedBox(height: 30.h),
       ],
@@ -61,40 +72,51 @@ class _UniversalVirtualCard extends StatelessWidget {
         card.expirationYear != null;
     final showCvc = card.display?.showCvc == true && card.cvc != null;
 
-    return Obx(
-      () => CommonVirtualCardView(
-        title: card.display?.title ?? card.cardHolder?.name ?? 'Virtual Card',
-        value: maskedNumber.isEmpty
-            ? '$balance ${card.currency ?? ''}'
-            : controller.showAccountNumber.value && canReveal
-            ? _formatNumber(rawNumber)
-            : maskedNumber,
-        firstLabel: showExpiry
-            ? card.display?.expiryLabel ?? 'Expiry'
-            : card.display?.balanceLabel ?? 'Balance',
-        firstValue: showExpiry
-            ? '${card.expirationMonth}/${_shortYear(card.expirationYear)}'
-            : '$balance ${card.currency ?? ''}',
-        secondLabel: showCvc
-            ? card.display?.cvcLabel ?? 'CVC'
-            : card.display?.currencyLabel ?? 'Currency',
-        secondValue: showCvc ? card.cvc! : card.currency ?? '',
-        status: _status(card),
-        canReveal: canReveal,
-        isRevealed: controller.showAccountNumber.value,
-        onReveal: canReveal
-            ? () {
-                controller.showAccountNumber.value =
-                    !controller.showAccountNumber.value;
-              }
-            : null,
-        backgroundImage: card.display?.backgroundImage,
-        brandImage: card.display?.brandImage,
-        network: card.display?.network,
-        primaryColor: card.display?.primaryColor,
-        secondaryColor: card.display?.secondaryColor,
-      ),
-    );
+    return Obx(() {
+      final isFrozen = controller.isCardFrozen.value;
+      final currentStatus = isFrozen ? 'frozen' : _status(card);
+
+      return CardFreezeOverlay(
+        isFrozen: isFrozen,
+        onToggleFreeze: (val) {
+          controller.toggleCardFreeze(
+            cardId: card.cardId ?? card.id.toString(),
+          );
+        },
+        child: CommonVirtualCardView(
+          title: card.display?.title ?? card.cardHolder?.name ?? 'Virtual Card',
+          value: maskedNumber.isEmpty
+              ? '$balance ${card.currency ?? ''}'
+              : controller.showAccountNumber.value && canReveal
+              ? _formatNumber(rawNumber)
+              : maskedNumber,
+          firstLabel: showExpiry
+              ? card.display?.expiryLabel ?? 'Expiry'
+              : card.display?.balanceLabel ?? 'Balance',
+          firstValue: showExpiry
+              ? '${card.expirationMonth}/${_shortYear(card.expirationYear)}'
+              : '$balance ${card.currency ?? ''}',
+          secondLabel: showCvc
+              ? card.display?.cvcLabel ?? 'CVC'
+              : card.display?.currencyLabel ?? 'Currency',
+          secondValue: showCvc ? card.cvc! : card.currency ?? '',
+          status: currentStatus,
+          canReveal: canReveal && !isFrozen,
+          isRevealed: controller.showAccountNumber.value,
+          onReveal: canReveal && !isFrozen
+              ? () {
+                  controller.showAccountNumber.value =
+                      !controller.showAccountNumber.value;
+                }
+              : null,
+          backgroundImage: card.display?.backgroundImage,
+          brandImage: card.display?.brandImage,
+          network: card.display?.network,
+          primaryColor: card.display?.primaryColor,
+          secondaryColor: card.display?.secondaryColor,
+        ),
+      );
+    });
   }
 
   static String _formatNumber(String value) {
@@ -241,26 +263,35 @@ class _UniversalCardDetails extends StatelessWidget {
             ),
           ],
           SizedBox(height: 22.h),
-          _DetailRow(label: 'Status', value: _humanize(status)),
+          Obx(() {
+            final isFrozen = controller.isCardFrozen.value;
+            final currentStatus = isFrozen ? 'frozen' : _status(card);
+            return _DetailRow(label: 'Status', value: _humanize(currentStatus));
+          }),
           if (canChangeStatus) ...[
             SizedBox(height: 20.h),
             Obx(
-              () => CommonButton(
-                backgroundColor: status.toLowerCase() == 'active'
-                    ? AppColors.error
-                    : AppColors.lightPrimary,
-                text: status.toLowerCase() == 'active'
-                    ? localization.cardDetailsStatusButtonInactive
-                    : localization.cardDetailsStatusButtonActive,
-                height: 40,
-                borderRadius: 10,
-                fontSize: 14,
-                onPressed: () =>
-                    controller.cardUpdateStatus(
-                      cardId: card.cardId ?? card.id.toString(),
-                    ),
-                isLoading: controller.isUpdateCardStatusLoading.value,
-              ),
+              () {
+                final isFrozen = controller.isCardFrozen.value;
+                final currentStatus = isFrozen ? 'frozen' : _status(card);
+                final isActive = currentStatus.toLowerCase() == 'active';
+                return CommonButton(
+                  backgroundColor: isActive
+                      ? AppColors.error
+                      : AppColors.lightPrimary,
+                  text: isActive
+                      ? localization.cardDetailsStatusButtonInactive
+                      : localization.cardDetailsStatusButtonActive,
+                  height: 40,
+                  borderRadius: 10,
+                  fontSize: 14,
+                  onPressed: () =>
+                      controller.toggleCardFreeze(
+                        cardId: card.cardId ?? card.id.toString(),
+                      ),
+                  isLoading: controller.isUpdateCardStatusLoading.value,
+                );
+              },
             ),
           ],
         ],

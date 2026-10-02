@@ -14,6 +14,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/security/device_sessions_security_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/transaction_pin/transaction_pin_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -318,6 +319,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     l10nPick(context, en: 'For web / pro-pay pages only', fa: 'فقط برای صفحه پرداخت وب', ar: 'لصفحات الدفع على الويب فقط', zh: '仅用于网页支付'),
                     () => Get.toNamed(BaseRoute.dynamicPassword),
                   ),
+                  _navTile(
+                    Icons.devices_other_rounded,
+                    l10nPick(
+                      context,
+                      en: 'Devices & Active Sessions',
+                      fa: 'دستگاه‌ها و نشست‌های فعال',
+                      ar: 'الأجهزة والجلسات النشطة',
+                      zh: '设备与活动会话',
+                    ),
+                    l10nPick(
+                      context,
+                      en: 'Manage signed-in devices and terminate sessions',
+                      fa: 'مدیریت دستگاه‌های متصل، این دستگاه و خروج اضطراری',
+                      ar: 'إدارة الأجهزة المتصلة والجلسات النشطة',
+                      zh: '管理已登录设备与紧急会话终止',
+                    ),
+                    () => Get.toNamed(BaseRoute.deviceSessionsSecurity),
+                  ),
                   if (_bioSupported)
                     SwitchListTile.adaptive(
                       contentPadding: EdgeInsets.zero,
@@ -375,6 +394,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     subtitle: Text(l10nPick(context, en: 'Local device unlock only — not transfer PIN', fa: 'فقط باز کردن قفل اپ — نه رمز انتقال', ar: 'لفتح التطبيق فقط — ليس رمز التحويل', zh: '仅用于解锁应用，非转账密码')),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: _changePin,
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.devices_other_rounded),
+                    title: Text(l10nPick(
+                      context,
+                      en: 'Devices & Active Sessions',
+                      fa: 'دستگاه‌ها و نشست‌های فعال',
+                      ar: 'الأجهزة والجلسات النشطة',
+                      zh: '设备与活跃会话',
+                    )),
+                    subtitle: Text(l10nPick(
+                      context,
+                      en: 'Manage signed-in devices & security audit trail',
+                      fa: 'مدیریت نشست‌های فعال، موقعیت مکانی و خروج اضطراری',
+                      ar: 'إدارة الأجهزة المسجلة وسجل الأمان',
+                      zh: '管理已登录设备与安全日志',
+                    )),
+                    trailing: const Icon(Icons.chevron_left),
+                    onTap: () => Get.to(() => const DeviceSessionsSecurityScreen()),
                   ),
                 ]),
                 _group(l10nPick(context, en: 'Notifications', fa: 'اعلان‌ها', ar: 'الإشعارات', zh: '通知'), [

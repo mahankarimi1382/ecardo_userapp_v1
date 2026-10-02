@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/kyc_level/view/widgets/kyc_tier_upgrade_card.dart';
 
 /// UpgradeRequiredScreen — صفحه‌ی "ارتقا مورد نیاز" به‌جای خطای خام
 ///
@@ -295,84 +296,22 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
               ],
               SizedBox(height: 24.h),
 
-              // Level comparison
-              if (hasResolvedLevel) ...[
-                Container(
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.lightBackground,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _LevelInfo(
-                        label: localization?.kycUpgradeCurrentLevel ??
-                            'Your level',
-                        // v1.0.90: the old `_currentLevel ?? 1` told a
-                        // level-0 (never-verified) user their level was 1,
-                        // which contradicts the server's current_level=0 and
-                        // the "0 = Unverified" level row. Show the real value
-                        // and only fall back to 0, the honest unknown.
-                        level: _currentLevel ?? 0,
-                        color: AppColors.warning,
-                        chipText: localization?.kycUpgradeLevelChip(
-                              _currentLevel ?? 0,
-                            ) ??
-                            'Level ${_currentLevel ?? 0}',
-                      ),
-                      Container(
-                          width: 1,
-                          height: 40,
-                          color: AppColors.lightBorder),
-                      _LevelInfo(
-                        label: localization?.kycUpgradeRequiredLevel ??
-                            'Required level',
-                        level: _requiredLevel!,
-                        color: AppColors.lightPrimary,
-                        chipText: localization?.kycUpgradeLevelChip(
-                              _requiredLevel!,
-                            ) ??
-                            'Level $_requiredLevel',
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 32.h),
-              ] else
-                SizedBox(height: 32.h),
-
-              // CTA button
-              SizedBox(
-                width: double.infinity,
-                height: 50.h,
-                child: ElevatedButton(
-                  // v1.0.90: one clean navigation straight to the (unguarded)
-                  // KYC submission route. The previous
-                  // `Get.offAllNamed(navigation)` + 300ms-delayed
-                  // `Get.toNamed(idVerification)` both depended on a guarded
-                  // screen and raced with the home screen's own request.
-                  onPressed: () => Get.offAllNamed(BaseRoute.idVerification),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.lightPrimary,
-                    foregroundColor: AppColors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    localization?.kycUpgradeStartVerification ??
-                        'Start verification',
-                    style: TextStyle(
-                        fontSize: 16.sp, fontWeight: FontWeight.w700),
-                  ),
-                ),
+              // Pillar 2 (Block 4): KYC Tier Comparison & Upgrade Card
+              KycTierUpgradeCard(
+                currentTier: _currentLevel,
+                initialSelectedTier: _requiredLevel ?? 2,
+                onUpgradeTap: (targetTier) {
+                  Get.toNamed(
+                    BaseRoute.kycSubmitWizard,
+                    arguments: {'target_level': targetTier},
+                  );
+                },
               ),
+              SizedBox(height: 16.h),
 
               // Secondary button — only when a non-app-wide screen exists to
               // return to. See _isAppWideBlock.
               if (!_isAppWideBlock) ...[
-                SizedBox(height: 12.h),
                 TextButton(
                   onPressed: () => Get.back(),
                   child: Text(
@@ -444,43 +383,5 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
     if (value is num) return value.toInt();
     if (value is String) return int.tryParse(value);
     return null;
-  }
-}
-
-class _LevelInfo extends StatelessWidget {
-  final String label;
-  final int level;
-  final Color color;
-  final String chipText;
-
-  const _LevelInfo({
-    required this.label,
-    required this.level,
-    required this.color,
-    required this.chipText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(label,
-            style: TextStyle(
-                fontSize: 11.sp, color: AppColors.lightTextSecondary)),
-        SizedBox(height: 4.h),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Text(
-            chipText,
-            style: TextStyle(
-                fontSize: 16.sp, fontWeight: FontWeight.w700, color: color),
-          ),
-        ),
-      ],
-    );
   }
 }

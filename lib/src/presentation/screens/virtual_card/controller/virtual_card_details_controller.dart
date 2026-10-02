@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -19,6 +20,36 @@ class VirtualCardDetailsController extends GetxController {
   final RxBool isCardBalanceTopUpLoading = false.obs;
   final RxBool isUpdateCardStatusLoading = false.obs;
   final RxBool showAccountNumber = false.obs;
+
+  // Pillar 1 Block 4: Freeze card state & quick toggle
+  final RxBool isCardFrozen = false.obs;
+
+  void syncFreezeState(VirtualCardDetailsData? card) {
+    if (card == null) return;
+    final statusStr = (card.lifecycleStatus ??
+            card.virtualStatus ??
+            card.status ??
+            '')
+        .toLowerCase();
+    isCardFrozen.value = statusStr == 'frozen' ||
+        statusStr == 'inactive' ||
+        statusStr == 'blocked';
+  }
+
+  Future<void> toggleCardFreeze({required String cardId}) async {
+    isCardFrozen.value = !isCardFrozen.value;
+    HapticFeedback.mediumImpact();
+    ToastHelper().showSuccessToast(
+      isCardFrozen.value
+          ? 'Card frozen - all transactions blocked'
+          : 'Card unfrozen - active for transactions',
+    );
+    try {
+      await cardUpdateStatus(cardId: cardId);
+    } catch (e) {
+      debugPrint('toggleCardFreeze API sync error: $e');
+    }
+  }
 
   // phase1-fix (P0-10): CVV is masked by default and auto re-masks after
   // 10 seconds so the secret never stays on screen.
@@ -83,6 +114,7 @@ class VirtualCardDetailsController extends GetxController {
         virtualCardDetailsModel.value = VirtualCardDetailsModel.fromJson(
           response.data!,
         );
+        syncFreezeState(virtualCardDetailsModel.value.data);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchVirtualCardDetails() error: $e');

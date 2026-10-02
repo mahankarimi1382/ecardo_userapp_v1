@@ -202,6 +202,10 @@ List<GetPage> routesHandler = [
     page: () => RoutesConfig.privacyPolicy,
   ),
   GetPage(
+    name: BaseRoute.deviceSessionsSecurity,
+    page: () => RoutesConfig.deviceSessionsSecurity,
+  ),
+  GetPage(
     name: BaseRoute.profileSettings,
     page: () => RoutesConfig.profileSettings,
     binding: ProfileSettingsBinding(),

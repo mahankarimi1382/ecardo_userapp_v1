@@ -37,6 +37,20 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   final ImagePicker _picker = ImagePicker();
   int _currentStep = 0;
 
+  int get _targetLevel {
+    final args = Get.arguments;
+    if (args is Map && args['target_level'] != null) {
+      final raw = args['target_level'];
+      if (raw is int) return raw;
+      if (raw is num) return raw.toInt();
+      if (raw is String) {
+        final parsed = int.tryParse(raw);
+        if (parsed != null) return parsed;
+      }
+    }
+    return widget.targetLevel;
+  }
+
   void _handleBack() {
     if (_currentStep > 0) {
       setState(() => _currentStep--);
@@ -71,8 +85,8 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             onPressed: _handleBack,
           ),
           title: Text(
-          localization?.kycSubmitWizardTitleForLevel(widget.targetLevel) ??
-              'Verification — level ${widget.targetLevel}',
+          localization?.kycSubmitWizardTitleForLevel(_targetLevel) ??
+              'Verification — level $_targetLevel',
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
         ),
       ),
@@ -83,7 +97,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
 
         // پیدا کردن سطح هدف
         final targetLevel = controller.levels
-            .where((l) => l.level == widget.targetLevel)
+            .where((l) => l.level == _targetLevel)
             .firstOrNull;
 
         if (targetLevel == null) {
@@ -442,7 +456,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
 
   Future<void> _submit() async {
     // BUG-04: تبدیل File به multipart upload
-    final success = await controller.submitDocuments(documents: _documents, targetLevel: widget.targetLevel);
+    final success = await controller.submitDocuments(documents: _documents, targetLevel: _targetLevel);
     if (success) {
       Get.offAllNamed(BaseRoute.navigation);
     }

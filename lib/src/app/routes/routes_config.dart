@@ -27,6 +27,7 @@ import 'package:ecardo_user/src/license/view/license_my_licenses_screen.dart';
 import 'package:ecardo_user/src/license/view/license_intro_screen.dart';
 import '../../presentation/screens/app_update/view/app_update_screen.dart';
 import '../../presentation/screens/dynamic_password/view/dynamic_password_screen.dart';
+import '../../presentation/screens/settings/view/security/device_sessions_security_screen.dart';
 import '../../visa/screens/visa_catalog_screen.dart';
 import '../../visa/screens/visa_list_screen.dart';
 import '../../visa/screens/visa_intro_screen.dart';
@@ -256,6 +257,7 @@ class RoutesConfig {
   static const travelHistory = TravelHistoryScreen();
   static const travelAccount = TravelAccountScreen();
   static final dynamicPassword = const DynamicPasswordScreen();
+  static const deviceSessionsSecurity = DeviceSessionsSecurityScreen();
 
   // Remittance (v1.0.4+5)
   static const remittance = RemittanceScreen();
