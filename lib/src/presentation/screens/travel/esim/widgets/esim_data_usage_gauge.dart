@@ -276,42 +276,48 @@ class EsimDataUsageGauge extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsetsDirectional.only(bottom: 10.h),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Cellular signal icon with dynamic color
-                              Icon(
-                                Icons.signal_cellular_alt_rounded,
-                                size: 22.r,
-                                color: statusColor,
-                              ),
-                              SizedBox(height: 4.h),
-                              // Large legible remaining data
-                              Directionality(
-                                textDirection: TextDirection.ltr,
-                                child: Text(
-                                  _formatGb(remainingDataGb),
-                                  style: TextStyle(
-                                    fontSize: 27.sp,
-                                    fontWeight: FontWeight.w900,
-                                    color: TravelTheme.ink,
-                                    letterSpacing: -0.5,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Cellular signal icon with dynamic color
+                                Icon(
+                                  Icons.signal_cellular_alt_rounded,
+                                  size: 22.r,
+                                  color: statusColor,
+                                ),
+                                SizedBox(height: 4.h),
+                                // Large legible remaining data
+                                Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: Text(
+                                    _formatGb(remainingDataGb),
+                                    style: TextStyle(
+                                      fontSize: 27.sp,
+                                      fontWeight: FontWeight.w900,
+                                      color: TravelTheme.ink,
+                                      letterSpacing: -0.5,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: 2.h),
-                              // "Remaining of 10.0 GB"
-                              Directionality(
-                                textDirection: TextDirection.ltr,
-                                child: Text(
-                                  'Remaining of ${_formatGb(totalDataGb)}',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: TravelTheme.muted,
+                                SizedBox(height: 2.h),
+                                // "Remaining of 10.0 GB"
+                                Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: Text(
+                                    'Remaining of ${_formatGb(totalDataGb)}',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: TravelTheme.muted,
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
+                            ),
+                          ),
+                        ),
                               SizedBox(height: 6.h),
                               // Remaining percent pill
                               Container(
@@ -354,20 +360,24 @@ class EsimDataUsageGauge extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      l10nPick(
-                        context,
-                        en: 'Data Consumption',
-                        fa: 'میزان مصرف حجم',
-                        ar: 'استهلاك البيانات',
-                        zh: '流量消耗',
-                      ),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w800,
-                        color: TravelTheme.ink,
+                    Expanded(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Data Consumption',
+                          fa: 'میزان مصرف حجم',
+                          ar: 'استهلاك البيانات',
+                          zh: '流量消耗',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w800,
+                          color: TravelTheme.ink,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    SizedBox(width: 8.w),
                     Directionality(
                       textDirection: TextDirection.ltr,
                       child: Text(
