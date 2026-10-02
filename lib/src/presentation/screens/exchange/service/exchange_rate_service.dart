@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import 'exchange_rate_source.dart';
@@ -41,9 +42,14 @@ class ExchangeRateService extends GetxService {
   /// Consecutive failures before the soft-disconnect banner appears.
   static const int _maxConsecutiveFailures = 3;
 
+  /// Consecutive failures before automatic polling is paused to prevent
+  /// endless battery and CPU drain when offline or server is down.
+  static const int _maxFailuresBeforePause = 5;
+
   Timer? _timer;
   int _consecutiveFailures = 0;
   CachedRate? _cache;
+  bool _isRefreshing = false;
 
   /// The latest known rates (may be empty if no successful fetch has ever
   /// happened).
@@ -74,12 +80,10 @@ class ExchangeRateService extends GetxService {
     final before = _subscribedCodes.length;
     _subscribedCodes.addAll(codes.map((e) => e.toUpperCase()));
     final added = _subscribedCodes.length > before;
-    if (!_initialized) {
+    if (!_initialized || _timer == null || !_timer!.isActive) {
       _initialized = true;
-      // Fire immediately so the UI doesn't wait a full minute for the first
-      // data point.
+      _startTimer();
       unawaited(_refresh());
-      _timer = Timer.periodic(refreshInterval, (_) => _refresh());
     } else if (added) {
       // New currency code subscribed mid-session — fetch immediately so the
       // user doesn't see a placeholder for up to 60s.
@@ -87,14 +91,33 @@ class ExchangeRateService extends GetxService {
     }
   }
 
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(refreshInterval, (_) {
+      unawaited(_refresh());
+    });
+  }
+
+  /// Stops the polling timer and clears initialized state.
+  /// Safe to call multiple times or upon exiting the exchange flow.
+  void stop() {
+    _timer?.cancel();
+    _timer = null;
+    _initialized = false;
+  }
+
+  /// Clears all subscribed codes and immediately stops polling.
+  void clearSubscriptions() {
+    _subscribedCodes.clear();
+    stop();
+  }
+
   /// Removes codes that no longer interest the caller. The service keeps
   /// running as long as at least one code is subscribed.
   void unsubscribe(List<String> codes) {
     _subscribedCodes.removeAll(codes.map((e) => e.toUpperCase()));
     if (_subscribedCodes.isEmpty) {
-      _timer?.cancel();
-      _timer = null;
-      _initialized = false;
+      stop();
     }
   }
 
@@ -107,43 +130,74 @@ class ExchangeRateService extends GetxService {
   /// Force an immediate refresh (e.g. user pulled-to-refresh). Always
   /// returns silently — UI reads the reactive fields afterwards.
   Future<void> forceRefresh() async {
+    _consecutiveFailures = 0;
     await _refresh();
+    // If we have subscribers but timer was paused due to repeated errors, re-arm it:
+    if (_subscribedCodes.isNotEmpty && (_timer == null || !_timer!.isActive)) {
+      _startTimer();
+      _initialized = true;
+    }
   }
 
   Future<void> _refresh() async {
-    if (_subscribedCodes.isEmpty) return;
+    if (_isRefreshing || _subscribedCodes.isEmpty) return;
+    _isRefreshing = true;
 
-    final codes = _subscribedCodes.toList(growable: false);
-    final fresh = await _source.fetchRates(currencyCodes: codes);
+    try {
+      final codes = _subscribedCodes.toList(growable: false);
+      final fresh = await _source.fetchRates(currencyCodes: codes);
 
-    if (fresh.isEmpty) {
-      _consecutiveFailures += 1;
-      if (_consecutiveFailures >= _maxConsecutiveFailures) {
-        isDisconnected.value = true;
+      // Guard against subscriptions being cleared or service stopped while awaiting
+      if (_subscribedCodes.isEmpty) return;
+
+      if (fresh.isEmpty) {
+        _handleFailure();
+        return;
       }
-      if (_cache != null) {
-        isStale.value = _cache!.isStale(staleAfter: staleThreshold);
+
+      _consecutiveFailures = 0;
+      isDisconnected.value = false;
+      _cache = CachedRate(
+        rates: Map.unmodifiable(fresh),
+        fetchedAt: DateTime.now(),
+      );
+      rates.assignAll(fresh);
+      isStale.value = false;
+      lastUpdatedAt.value = _cache!.fetchedAt;
+    } catch (e, st) {
+      if (kDebugMode) {
+        debugPrint('ExchangeRateService._refresh error: $e\n$st');
       }
-      // Keep cached rates visible — UI falls back gracefully.
-      return;
+      _handleFailure();
+    } finally {
+      _isRefreshing = false;
     }
+  }
 
-    _consecutiveFailures = 0;
-    isDisconnected.value = false;
-    _cache = CachedRate(
-      rates: Map.unmodifiable(fresh),
-      fetchedAt: DateTime.now(),
-    );
-    rates.assignAll(fresh);
-    isStale.value = false;
-    lastUpdatedAt.value = _cache!.fetchedAt;
+  void _handleFailure() {
+    _consecutiveFailures += 1;
+    if (_consecutiveFailures >= _maxConsecutiveFailures) {
+      isDisconnected.value = true;
+    }
+    if (_cache != null) {
+      isStale.value = _cache!.isStale(staleAfter: staleThreshold);
+    }
+    // Guard against infinite polling loops during persistent network/server failure:
+    if (_consecutiveFailures >= _maxFailuresBeforePause) {
+      if (kDebugMode) {
+        debugPrint(
+          'ExchangeRateService: pausing polling timer after '
+          '$_consecutiveFailures consecutive failures.',
+        );
+      }
+      stop();
+    }
   }
 
   @override
   void onClose() {
-    _timer?.cancel();
-    _timer = null;
-    _subscribedCodes.clear();
+    clearSubscriptions();
+    _isRefreshing = false;
     super.onClose();
   }
 }

@@ -186,6 +186,8 @@ class ExchangeController extends GetxController {
     if (codes.isNotEmpty) {
       _rateService.unsubscribe(codes);
     }
+    // Ensure the service completely stops its periodic polling timer upon exit.
+    _rateService.clearSubscriptions();
 
     amountFocusNode.removeListener(_handleAmountFocusChange);
     amountFocusNode.dispose();

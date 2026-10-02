@@ -217,7 +217,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      return const Scaffold(
+        backgroundColor: AppColors.lightBackground,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
       appBar: AppBar(
@@ -489,6 +495,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       );
                       if (code != null && Get.isRegistered<LocaleThemeService>()) {
+                        await Future.delayed(const Duration(milliseconds: 50));
+                        if (!mounted) return;
                         await Get.find<LocaleThemeService>().setLanguage(code);
                       }
                     },

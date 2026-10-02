@@ -18,8 +18,11 @@ class WalletLiveRateService extends GetxService {
   final RxBool isLoading = false.obs;
   final RxnString lastError = RxnString();
   DateTime? _fetchedAt;
+  DateTime? _lastAttemptAt;
 
   static const _staleAfter = Duration(minutes: 5);
+  static const _retryCooldown = Duration(minutes: 1);
+  static const _minForceInterval = Duration(seconds: 10);
 
   Future<WalletLiveRateService> init() async {
     await refresh(force: true);
@@ -27,14 +30,38 @@ class WalletLiveRateService extends GetxService {
   }
 
   Future<void> refresh({bool force = false}) async {
-    if (!force &&
-        _fetchedAt != null &&
-        DateTime.now().difference(_fetchedAt!) < _staleAfter &&
-        ratesIrr.isNotEmpty) {
+    // 1. Guard against concurrent in-flight requests to prevent CPU & network thrashing
+    if (isLoading.value) return;
+
+    final now = DateTime.now();
+
+    // 2. Throttle forced refreshes (prevent pull-to-refresh spam)
+    if (force &&
+        _lastAttemptAt != null &&
+        now.difference(_lastAttemptAt!) < _minForceInterval) {
       return;
     }
+
+    // 3. Five-minute cache guard for normal refreshes:
+    // If rates were fetched within the last 5 minutes, skip.
+    if (!force &&
+        _fetchedAt != null &&
+        now.difference(_fetchedAt!) < _staleAfter) {
+      return;
+    }
+
+    // 4. Retry cooldown: prevent spamming network and CPU on every wallet load
+    // when offline or server is failing.
+    if (!force &&
+        _lastAttemptAt != null &&
+        now.difference(_lastAttemptAt!) < _retryCooldown) {
+      return;
+    }
+
     isLoading.value = true;
     lastError.value = null;
+    _lastAttemptAt = now;
+
     try {
       final map = await _source.fetchRates(
         currencyCodes: const [
@@ -60,6 +87,8 @@ class WalletLiveRateService extends GetxService {
           ratesIrr['USDT'] = ratesIrr['USDT_IRT']!;
         }
         _fetchedAt = DateTime.now();
+      } else {
+        lastError.value = 'Empty rates received';
       }
     } catch (e, st) {
       lastError.value = e.toString();

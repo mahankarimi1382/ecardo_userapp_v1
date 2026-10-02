@@ -10,6 +10,12 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 /// App lock with hashed PIN + auto-lock on resume.
+///
+/// PERFORMANCE & LIFECYCLE AUDIT NOTE:
+/// This service intentionally uses ZERO background timers or periodic loops.
+/// Inactivity/auto-lock is calculated passively on OS lifecycle transitions
+/// ([AppLifecycleState.paused] records timestamp; [AppLifecycleState.resumed]
+/// computes elapsed delta). This guarantees 0% CPU consumption in background.
 class AppLockService extends GetxService with WidgetsBindingObserver {
   static const _pinHashKey = 'app_lock_pin_hash';
   static const _pinSaltKey = 'app_lock_pin_salt';
@@ -23,19 +29,26 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   final RxBool locked = false.obs;
   final RxInt failedAttempts = 0.obs;
   DateTime? _pausedAt;
+  bool _isResuming = false;
 
   Future<AppLockService> init() async {
     WidgetsBinding.instance.addObserver(this);
     // Cold start: NEVER start locked automatically.
     locked.value = false;
-    final prefsFail = await _secure.read(key: _failedKey);
-    failedAttempts.value = int.tryParse(prefsFail ?? '0') ?? 0;
+    try {
+      final prefsFail = await _secure.read(key: _failedKey);
+      failedAttempts.value = int.tryParse(prefsFail ?? '0') ?? 0;
+    } catch (e) {
+      failedAttempts.value = 0;
+    }
     return this;
   }
 
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
+    _pausedAt = null;
+    _isResuming = false;
     super.onClose();
   }
 
@@ -50,22 +63,33 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   }
 
   Future<void> _onResumed() async {
-    final loginState = await SettingsService.getLoginCurrentState();
-    if (loginState == null || loginState.isEmpty) return;
-    if (!await hasPinSet()) return;
-    final timeout = await getAutoLockTimeout();
-    // 0 = Never auto-lock on resume
-    if (timeout == Duration.zero) return;
+    if (_isResuming) return;
+    _isResuming = true;
 
-    if (timeout.inMilliseconds < 0) {
-      // immediate: any backgrounding locks
-      await lock();
-      return;
-    }
-    final paused = _pausedAt;
-    if (paused == null) return;
-    if (DateTime.now().difference(paused) >= timeout) {
-      await lock();
+    try {
+      final loginState = await SettingsService.getLoginCurrentState();
+      if (loginState == null || loginState.isEmpty) return;
+      if (!await hasPinSet()) return;
+      final timeout = await getAutoLockTimeout();
+      // 0 = Never auto-lock on resume
+      if (timeout == Duration.zero) return;
+
+      if (timeout.inMilliseconds < 0) {
+        // immediate: any backgrounding locks
+        await lock();
+        return;
+      }
+      final paused = _pausedAt;
+      if (paused == null) return;
+      if (DateTime.now().difference(paused) >= timeout) {
+        await lock();
+      }
+    } catch (e, st) {
+      if (kDebugMode) {
+        debugPrint('AppLockService._onResumed error: $e\n$st');
+      }
+    } finally {
+      _isResuming = false;
     }
   }
 
@@ -91,27 +115,40 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   Future<bool> isLocked() async => locked.value;
 
   Future<void> lock() async {
-    final loginState = await SettingsService.getLoginCurrentState();
-    if (loginState == null || loginState.isEmpty) return;
-    if (!await hasPinSet()) return;
-    if (isPreAuthRoute(Get.currentRoute)) return;
-    locked.value = true;
+    try {
+      final loginState = await SettingsService.getLoginCurrentState();
+      if (loginState == null || loginState.isEmpty) return;
+      if (!await hasPinSet()) return;
+      if (isPreAuthRoute(Get.currentRoute)) return;
+      locked.value = true;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('AppLockService.lock error: $e');
+      }
+    }
   }
 
   Future<bool> unlock(String pin) async {
-    final ok = await verifyPin(pin);
-    if (ok) {
-      locked.value = false;
-      failedAttempts.value = 0;
-      await _secure.write(key: _failedKey, value: '0');
-      return true;
+    try {
+      final ok = await verifyPin(pin);
+      if (ok) {
+        locked.value = false;
+        failedAttempts.value = 0;
+        await _secure.write(key: _failedKey, value: '0');
+        return true;
+      }
+      failedAttempts.value++;
+      await _secure.write(
+        key: _failedKey,
+        value: '${failedAttempts.value}',
+      );
+      return false;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('AppLockService.unlock error: $e');
+      }
+      return false;
     }
-    failedAttempts.value++;
-    await _secure.write(
-      key: _failedKey,
-      value: '${failedAttempts.value}',
-    );
-    return false;
   }
 
   Future<void> setPin(String pin) async {
@@ -125,21 +162,41 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   }
 
   Future<bool> hasPinSet() async {
-    final h = await _secure.read(key: _pinHashKey);
-    return h != null && h.isNotEmpty;
+    try {
+      final h = await _secure.read(key: _pinHashKey);
+      return h != null && h.isNotEmpty;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('AppLockService.hasPinSet error: $e');
+      }
+      return false;
+    }
   }
 
   Future<bool> verifyPin(String pin) async {
-    final salt = await _secure.read(key: _pinSaltKey);
-    final hash = await _secure.read(key: _pinHashKey);
-    if (salt == null || hash == null) return false;
-    return _hash(pin, salt) == hash;
+    try {
+      final salt = await _secure.read(key: _pinSaltKey);
+      final hash = await _secure.read(key: _pinHashKey);
+      if (salt == null || hash == null) return false;
+      return _hash(pin, salt) == hash;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('AppLockService.verifyPin error: $e');
+      }
+      return false;
+    }
   }
 
   Future<void> clearPin() async {
-    await _secure.delete(key: _pinHashKey);
-    await _secure.delete(key: _pinSaltKey);
-    await _secure.delete(key: _failedKey);
+    try {
+      await _secure.delete(key: _pinHashKey);
+      await _secure.delete(key: _pinSaltKey);
+      await _secure.delete(key: _failedKey);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('AppLockService.clearPin error: $e');
+      }
+    }
     locked.value = false;
     failedAttempts.value = 0;
   }

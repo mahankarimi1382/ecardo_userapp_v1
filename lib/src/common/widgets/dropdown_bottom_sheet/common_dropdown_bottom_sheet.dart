@@ -258,7 +258,6 @@ class _CommonDropdownBottomSheetState extends State<CommonDropdownBottomSheet> {
                 highlightColor: AppColors.transparent,
                 onTap: () {
                   toggleWalletSelection(item);
-                  Get.back();
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -322,26 +321,44 @@ class _CommonDropdownBottomSheetState extends State<CommonDropdownBottomSheet> {
   }
 
   void toggleWalletSelection(String item) {
-    if (widget.selectedItem == item) {
+    final bool isDeselect = widget.selectedItem == item;
+    dynamic valueToEmit;
+
+    if (isDeselect) {
       widget.textController.clear();
-      if (widget.isUnselectedValue == true) {
-        widget.onValueUnSelected?.call();
-      } else {
-        widget.onValueSelected?.call("");
-      }
+      valueToEmit = "";
     } else {
       widget.textController.text = item;
       if (widget.selectedValue != null) {
-        int originalIndex = widget.dropdownItems.indexOf(item);
+        final int originalIndex = widget.dropdownItems.indexOf(item);
         if (originalIndex != -1 &&
             originalIndex < widget.selectedValue!.length) {
-          widget.onValueSelected?.call(widget.selectedValue![originalIndex]);
+          valueToEmit = widget.selectedValue![originalIndex];
         } else {
-          widget.onValueSelected?.call(item);
+          valueToEmit = item;
         }
       } else {
-        widget.onValueSelected?.call(item);
+        valueToEmit = item;
       }
+    }
+
+    // 1. Close bottom sheet / dialog FIRST before triggering selection callback
+    // to prevent orphaned overlays in memory when callback triggers language or route changes.
+    if (Get.isBottomSheetOpen == true || Get.isDialogOpen == true) {
+      Get.back();
+    } else if (mounted && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+
+    // 2. Invoke callback after dialog has been dismissed
+    if (isDeselect) {
+      if (widget.isUnselectedValue == true) {
+        widget.onValueUnSelected?.call();
+      } else {
+        widget.onValueSelected?.call(valueToEmit);
+      }
+    } else {
+      widget.onValueSelected?.call(valueToEmit);
     }
   }
 

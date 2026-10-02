@@ -50,7 +50,15 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final localization = AppLocalizations.of(context)!;
+      final localization = AppLocalizations.of(context);
+      if (localization == null) {
+        return const Scaffold(
+          backgroundColor: AppColors.lightBackground,
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
 
       final settings = Get.find<SettingsService>();
       bool isUserTransferEnabled = settings.getSetting("user_transfer") == "1";

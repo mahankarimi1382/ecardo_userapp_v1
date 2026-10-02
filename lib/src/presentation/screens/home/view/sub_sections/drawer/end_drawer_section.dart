@@ -25,7 +25,8 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    final localization = AppLocalizations.of(context);
+    if (localization == null) return const SizedBox.shrink();
 
     return SafeArea(
       bottom: false,
@@ -175,7 +176,7 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                       CommonDropdownBottomSheet(
                                         notFoundText: localization
                                             .endDrawerLanguageNotFound,
-                                        onValueSelected: (value) async {
+                                        onValueSelected: (value) {
                                           // v1.0.24: items are NATIVE display
                                           // names — map back to the locale
                                           // code before switching.
@@ -189,9 +190,22 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                                     const MapEntry('en', ''),
                                               )
                                               .key;
-                                          await homeController.changeLanguage(
-                                            code,
-                                          );
+
+                                          // 1. Definitively close bottom sheet and drawer first
+                                          if (Get.isBottomSheetOpen == true) {
+                                            Get.back();
+                                          }
+                                          Get.back();
+
+                                          // 2. Schedule changeLanguage with a frame delay so that
+                                          // the drawer close transition finishes before the LTR <-> RTL
+                                          // layout rebuild animation executes.
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            homeController.changeLanguage(
+                                              code,
+                                            );
+                                          });
                                         },
                                         selectedValue: HomeController
                                             .languageNativeNames.values
@@ -305,7 +319,8 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
   }
 
   Widget _buildSignOutSection() {
-    final localization = AppLocalizations.of(context)!;
+    final localization = AppLocalizations.of(context);
+    if (localization == null) return const SizedBox.shrink();
 
     return Padding(
       padding: EdgeInsetsDirectional.only(

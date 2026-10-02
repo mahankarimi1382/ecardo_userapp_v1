@@ -19,7 +19,8 @@ class DrawerSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    final localization = AppLocalizations.of(context);
+    if (localization == null) return const SizedBox.shrink();
     final HomeController homeController = Get.find<HomeController>();
     final SettingsService settingsService = Get.find();
     final bool hasVirtualCard =
@@ -357,7 +358,8 @@ class _DrawerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    final localization = AppLocalizations.of(context);
+    if (localization == null) return const SizedBox.shrink();
     final settingsService = Get.find<SettingsService>();
 
     return Column(
@@ -539,7 +541,8 @@ class _KycLevelRequiredDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
+    final loc = AppLocalizations.of(context);
+    if (loc == null) return const SizedBox.shrink();
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
