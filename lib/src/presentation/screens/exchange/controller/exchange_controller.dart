@@ -898,6 +898,16 @@ class ExchangeController extends GetxController {
   Future<void> exchangeWallet({String? passcode}) async {
     // v1.0.24: guard against double submission while a request is in flight.
     if (isExchangeWalletLoading.isTrue) return;
+
+    // Defense-in-depth: Reject submission if the review rate is currently marked stale.
+    if (isReviewRateStale.isTrue) {
+      ToastHelper().showWarningToast(
+        localizationOrNull?.exchangeReviewRateStaleBanner ??
+            'Rate has changed. Please confirm the updated rate before proceeding.',
+      );
+      return;
+    }
+
     isExchangeWalletLoading.value = true;
 
     // v1.0.23+23 (E-3) — Send rate + total + charge to the backend so the

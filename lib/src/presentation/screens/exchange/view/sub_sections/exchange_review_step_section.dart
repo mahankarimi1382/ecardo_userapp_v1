@@ -206,7 +206,11 @@ class ExchangeReviewStepSection extends StatelessWidget {
                     ? _StaleRateBanner(
                         key: const ValueKey('stale_banner'),
                         message: loc.exchangeReviewRateStaleBanner,
-                        onAcknowledge: controller.acknowledgeRateChange,
+                        isLoading: controller.isExchangeConfigLoading.value,
+                        onAcknowledge: () async {
+                          if (controller.isExchangeConfigLoading.value) return;
+                          await controller.acknowledgeRateChange();
+                        },
                       )
                     : const SizedBox(
                         key: ValueKey('no_stale'),
@@ -504,10 +508,12 @@ class _StaleRateBanner extends StatelessWidget {
     super.key,
     required this.message,
     required this.onAcknowledge,
+    this.isLoading = false,
   });
 
   final String message;
   final VoidCallback onAcknowledge;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -543,7 +549,7 @@ class _StaleRateBanner extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: onAcknowledge,
+            onTap: isLoading ? null : onAcknowledge,
             child: Container(
               padding: const EdgeInsetsDirectional.symmetric(
                 horizontal: 10,
@@ -553,15 +559,24 @@ class _StaleRateBanner extends StatelessWidget {
                 color: AppColors.warning,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Text(
-                'OK',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.white,
-                  letterSpacing: 0.5,
-                ),
-              ),
+              child: isLoading
+                  ? const SizedBox(
+                      width: 12,
+                      height: 12,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.white,
+                      ),
+                    )
+                  : Text(
+                      'OK',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.white,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
             ),
           ),
         ],

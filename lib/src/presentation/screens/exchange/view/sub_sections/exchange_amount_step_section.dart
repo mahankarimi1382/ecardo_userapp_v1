@@ -172,7 +172,7 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
             if (from == null) return const SizedBox();
             final balance = double.tryParse(from.balance ?? '0') ?? 0.0;
             final fee = controller.charge.value;
-            final maxSpendable = (balance - fee > 0) ? (balance - fee) : balance;
+            final maxSpendable = (balance - fee > 0) ? (balance - fee) : 0.0;
             return Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
               child: QuickAmountSelector(
@@ -182,6 +182,13 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
                 isCrypto: from.isCrypto == true,
                 currencyCode: from.code,
                 maxLabel: loc.exchangeQuickMax,
+                labelBuilder: (percent) {
+                  if ((percent - 0.25).abs() < 1e-4) return loc.exchangeQuickPercent25;
+                  if ((percent - 0.50).abs() < 1e-4) return loc.exchangeQuickPercent50;
+                  if ((percent - 0.75).abs() < 1e-4) return loc.exchangeQuickPercent75;
+                  if ((percent - 1.0).abs() < 1e-4) return loc.exchangeQuickMax;
+                  return '${(percent * 100).round()}%';
+                },
                 onAmountChanged: (amount) {
                   controller.onAmountChanged(controller.amountController.text);
                 },

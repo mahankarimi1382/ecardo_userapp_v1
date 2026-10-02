@@ -40,10 +40,12 @@ String l10nPickAuto({
   required String en,
   required String fa,
   String? ar,
+  String? tr,
+  String? ru,
   String? zh,
 }) {
   final ctx = Get.context;
   if (ctx == null) return en;
-  return l10nPick(ctx, en: en, fa: fa, ar: ar, zh: zh);
+  return l10nPick(ctx, en: en, fa: fa, ar: ar, tr: tr, ru: ru, zh: zh);
 }
 

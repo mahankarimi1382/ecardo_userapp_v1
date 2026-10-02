@@ -145,7 +145,7 @@ jobs:
           fi
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             flutter build apk --release --obfuscate --split-debug-info=build/symbols \
-              --target-platform android-arm64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
+              --target-platform android-arm,android-arm64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
             test -f build/app/outputs/flutter-apk/app-release.apk
           else
             # Debug builds keep the default (unpinned) behaviour so local dev

@@ -999,7 +999,7 @@ class TravelApiRepository implements TravelRepository {
     if (value is List) return value.map(_localizedTree).toList();
     if (value is! Map) return value;
     final map = Map<String, dynamic>.from(value);
-    const localeKeys = {'en', 'fa', 'ar', 'ru', 'zh', 'zh-cn', 'zh_cn'};
+    const localeKeys = {'en', 'fa', 'ar', 'ru', 'tr', 'zh', 'zh-cn', 'zh_cn'};
     final normalizedKeys = map.keys.map((key) => key.toLowerCase()).toSet();
     if (normalizedKeys.isNotEmpty &&
         normalizedKeys.every(localeKeys.contains)) {

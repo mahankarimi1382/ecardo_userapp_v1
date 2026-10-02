@@ -158,7 +158,11 @@ class _QuickAmountSelectorState extends State<QuickAmountSelector> {
     final currentText = widget.textController.text.trim();
     if (currentText.isEmpty) return false;
 
-    final targetText = _formatAmount(widget.availableBalance * percent);
+    final isMax = (percent - 1.0).abs() < 1e-6;
+    final double targetAmount = (isMax && widget.maxSpendableAmount != null)
+        ? widget.maxSpendableAmount!
+        : (widget.availableBalance * percent);
+    final targetText = _formatAmount(targetAmount);
     return currentText == targetText;
   }
 
