@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 /// Watches network + VPN and routes the user to the offline screen / banners.
@@ -47,6 +48,10 @@ class ConnectivityWatchService extends GetxService with WidgetsBindingObserver {
     isVpn.value = vpn && !offline;
 
     if (offline) {
+      // In demo mode, zero-network interactive test is expected — never trap the user:
+      if (Get.isRegistered<DemoAccountService>() && DemoAccountService.to.isDemoMode.value) {
+        return;
+      }
       final route = Get.currentRoute;
       // Never trap the cold-start splash / welcome on a transient none result.
       if (route == BaseRoute.root ||

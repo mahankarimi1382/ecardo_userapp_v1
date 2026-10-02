@@ -74,34 +74,36 @@ void main() {
       LocaleThemeService(),
       permanent: true,
     );
-    // Mirrors lib/src/app/app.dart: GetMaterialApp without outer Obx,
-    // locale updated in-place via Get.updateLocale.
+    // Mirrors lib/src/app/app.dart: a reactive GetMaterialApp driven by
+    // LocaleThemeService.locale.
     await tester.pumpWidget(
-      GetMaterialApp(
-        locale: service.locale.value,
-        fallbackLocale: const Locale('en'),
-        supportedLocales: const [
-          Locale('en'),
-          Locale('ar'),
-          Locale('fa'),
-          Locale('zh'),
-        ],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        getPages: [
-          GetPage(
-            name: BaseRoute.root,
-            page: () => const _Probe(name: 'splash'),
-          ),
-          GetPage(
-            name: startRoute,
-            page: () => _Probe(key: startKey, name: 'start'),
-          ),
-        ],
-        initialRoute: startRoute,
+      Obx(
+        () => GetMaterialApp(
+          locale: service.locale.value,
+          fallbackLocale: const Locale('en'),
+          supportedLocales: const [
+            Locale('en'),
+            Locale('ar'),
+            Locale('fa'),
+            Locale('zh'),
+          ],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          getPages: [
+            GetPage(
+              name: BaseRoute.root,
+              page: () => const _Probe(name: 'splash'),
+            ),
+            GetPage(
+              name: startRoute,
+              page: () => _Probe(key: startKey, name: 'start'),
+            ),
+          ],
+          initialRoute: startRoute,
+        ),
       ),
     );
     await tester.pumpAndSettle();

@@ -53,35 +53,32 @@ class _EcardoUserState extends State<EcardoUser> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        final lts = Get.isRegistered<LocaleThemeService>()
-            ? Get.find<LocaleThemeService>()
-            : null;
-        final initialLocale = lts?.locale.value ?? _locale;
-        final initialTheme = lts?.themeMode.value ?? ThemeMode.system;
+        // Reactive locale + theme (settings apply in place without restart or splash replay).
+        return Obx(() {
+          final lts = Get.isRegistered<LocaleThemeService>()
+              ? Get.find<LocaleThemeService>()
+              : null;
+          final appLocale = lts?.locale.value ?? _locale;
+          final appTheme = lts?.themeMode.value ?? ThemeMode.system;
 
-        // BUG-01 (P0): Removed outer Obx wrapping GetMaterialApp.
-        // Rebuilding GetMaterialApp on locale switch caused a full widget-tree
-        // rebuild race condition, tearing down active controllers and causing
-        // release-mode crashes. Locale is now smoothly updated in-place via
-        // Get.updateLocale without recreating the root Navigator/MaterialApp.
-        return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: AppStrings.appName,
-          themeMode: initialTheme,
-          theme: LightTheme().lightTheme(context),
-          darkTheme: DarkTheme().darkTheme(context),
-          getPages: routesHandler,
-          initialBinding: InitialBinding(),
-          initialRoute: BaseRoute.root,
-          unknownRoute: GetPage(
-            name: '/not-found',
-            page: () => const NotFoundScreen(),
-          ),
-          locale: initialLocale,
-          fallbackLocale: const Locale('en'),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
+          return GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: AppStrings.appName,
+            themeMode: appTheme,
+            theme: LightTheme().lightTheme(context),
+            darkTheme: DarkTheme().darkTheme(context),
+            getPages: routesHandler,
+            initialBinding: InitialBinding(),
+            initialRoute: BaseRoute.root,
+            unknownRoute: GetPage(
+              name: '/not-found',
+              page: () => const NotFoundScreen(),
+            ),
+            locale: appLocale,
+            fallbackLocale: const Locale('en'),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
@@ -166,6 +163,7 @@ class _EcardoUserState extends State<EcardoUser> {
             );
           },
         );
+        });
       },
     );
   }
