@@ -759,6 +759,12 @@ class _DemoAccountSignInButton extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(width: 8.w),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14.r,
+                  color: const Color(0xFF6366F1),
+                ),
               ],
             ),
           ),
