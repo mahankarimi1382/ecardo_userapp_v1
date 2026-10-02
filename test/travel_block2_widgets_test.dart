@@ -77,24 +77,26 @@ void main() {
           designSize: const Size(375, 812),
           builder: (context, child) => MaterialApp(
             home: Scaffold(
-              body: StatefulBuilder(
-                builder: (context, setState) {
-                  return HotelRoomSelectionCard(
-                    room: testRoom,
-                    nights: 2,
-                    quantity: selectedQty,
-                    onQuantityChanged: (q) {
-                      setState(() {
-                        selectedQty = q;
-                      });
-                    },
-                    onSelect: () {
-                      setState(() {
-                        selectedQty = selectedQty > 0 ? 0 : 1;
-                      });
-                    },
-                  );
-                },
+              body: SingleChildScrollView(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return HotelRoomSelectionCard(
+                      room: testRoom,
+                      nights: 2,
+                      quantity: selectedQty,
+                      onQuantityChanged: (q) {
+                        setState(() {
+                          selectedQty = q;
+                        });
+                      },
+                      onSelect: () {
+                        setState(() {
+                          selectedQty = selectedQty > 0 ? 0 : 1;
+                        });
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ),

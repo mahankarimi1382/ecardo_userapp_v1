@@ -318,7 +318,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             crossAxisCount: 2,
             crossAxisSpacing: 10.w,
             mainAxisSpacing: 10.h,
-            mainAxisExtent: 76.h,
+            mainAxisExtent: 92.h,
           ),
           itemBuilder: (context, index) {
             final amenity = displayedAmenities[index];
@@ -395,7 +395,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
 
   Widget _buildAmenityTile(HotelAmenityItem amenity, bool isRtl) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14.r),
@@ -437,27 +437,31 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  amenity.localizedLabel(isRtl),
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    fontWeight: FontWeight.w700,
-                    color: TravelTheme.ink,
-                    height: 1.15,
+                Flexible(
+                  child: Text(
+                    amenity.localizedLabel(isRtl),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w700,
+                      color: TravelTheme.ink,
+                      height: 1.1,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 2.h),
-                Text(
-                  amenity.localizedTag(isRtl),
-                  style: TextStyle(
-                    fontSize: 9.5.sp,
-                    fontWeight: FontWeight.w600,
-                    color: TravelTheme.muted,
+                Flexible(
+                  child: Text(
+                    amenity.localizedTag(isRtl),
+                    style: TextStyle(
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.w600,
+                      color: TravelTheme.muted,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
