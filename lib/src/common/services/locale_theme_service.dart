@@ -36,23 +36,31 @@ class LocaleThemeService extends GetxService {
     final normalized = code.trim().toLowerCase();
     if (!supported.contains(normalized)) return;
 
-    // Persist first so the choice survives an app restart.
+    // 1. Safely close any active modal bottom-sheet or dialog to avoid orphaned render-tree crashes
+    if (Get.isBottomSheetOpen == true) {
+      Get.back();
+    }
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
+
+    // 2. Persist first so the choice survives an app restart.
     if (Get.isRegistered<SettingsService>()) {
       await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
         normalized,
       );
     }
 
-    // Apply the language to the RUNNING app in place. Do NOT call
-    // `Get.updateLocale` (it force-restarts the app/Navigator) and do NOT
-    // re-root to `/` (that is the SplashScreen): both replay the splash logo
-    // and loading. Setting `Get.locale` keeps GetX's RTL Directionality and
-    // translations in sync, and `locale.value` rebuilds the reactive
-    // GetMaterialApp in `app.dart` with the new locale while the active
-    // route stays exactly where it is.
+    // 3. Smooth in-place locale update without destroying the Navigator or route stack
     final nextLocale = Locale(normalized);
     Get.locale = nextLocale;
     locale.value = nextLocale;
+
+    try {
+      await Get.updateLocale(nextLocale);
+    } catch (e) {
+      debugPrint('⚠️ [LocaleThemeService] Get.updateLocale notice: $e');
+    }
   }
 
   Future<void> setThemeModePref(String mode) async {

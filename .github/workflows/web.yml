@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           flutter-version: '3.44.6'
           channel: 'stable'
@@ -79,7 +79,7 @@ jobs:
       # artifact service rejects uploads (account storage quota).
       - name: Upload artifacts
         continue-on-error: true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: web-build
           path: build/web/
@@ -88,6 +88,10 @@ jobs:
 
       # Deploy: push build to 'web-deploy' orphan branch
       - name: Deploy to web-deploy branch
+        env:
+          # SECURITY: kept in env so the token is not interpolated into the
+          # script text (an echoed command line would expose it in logs).
+          DEPLOY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd build/web
           git init
@@ -96,6 +100,6 @@ jobs:
           git checkout -b web-deploy
           git add -A
           git commit -m "web build $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/mahankarimi1382/ecardo_userapp_v1.git"
+          git remote add origin "https://x-access-token:${DEPLOY_TOKEN}@github.com/mahankarimi1382/ecardo_userapp_v1.git"
           git push origin web-deploy --force
           echo "Pushed to web-deploy branch"

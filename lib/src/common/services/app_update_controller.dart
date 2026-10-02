@@ -432,31 +432,40 @@ class AppUpdateController extends GetxController {
         }
       }
 
-      // ----- Integrity check (when server published sha256) -----
+      // ----- Integrity check -----
+      // SECURITY: this used to be skipped entirely whenever the server had
+      // published no digest, which is exactly the case an attacker controls
+      // (a stripped or hijacked /api/settings response). An unverified APK is
+      // then handed to the package installer, so a wrong digest now fails
+      // closed instead of installing whatever was downloaded.
       final expectedSha = (serverSha256.value.isNotEmpty
               ? serverSha256.value
               : (Get.find<SettingsService>().getSetting(config.settingKeySha256) ?? ''))
           .trim()
           .toLowerCase();
 
-      if (expectedSha.isNotEmpty) {
-        final file = File(filePath);
-        if (!await file.exists()) {
-          phase.value = AppUpdatePhase.error;
-          errorMessage.value = 'Downloaded update file is missing.';
-          return;
-        }
-        final digest = await sha256.bind(file.openRead()).first;
-        final actual = digest.toString().toLowerCase();
-        if (actual != expectedSha) {
-          try {
-            await file.delete();
-          } catch (_) {}
-          phase.value = AppUpdatePhase.error;
-          errorMessage.value =
-              'Update file integrity check failed. Please try again.';
-          return;
-        }
+      if (expectedSha.isEmpty) {
+        phase.value = AppUpdatePhase.error;
+        errorMessage.value =
+            'Update is missing a security checksum. Please try again later.';
+        return;
+      }
+
+      final file = File(filePath);
+      if (!await file.exists()) {
+        phase.value = AppUpdatePhase.error;
+        errorMessage.value = 'Downloaded update file is missing.';
+        return;
+      }
+      final digest = await sha256.bind(file.openRead()).first;
+      final actual = digest.toString().toLowerCase();
+      if (actual != expectedSha) {
+        try {
+          await file.delete();
+        } catch (_) {}
+        phase.value = AppUpdatePhase.error;
+        errorMessage.value = 'Update file integrity check failed. Please try again.';
+        return;
       }
 
       // ----- Hand off to system installer with explicit APK MIME type -----

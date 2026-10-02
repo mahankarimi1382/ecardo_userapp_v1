@@ -139,13 +139,11 @@ android {
                 "proguard-rules.pro"
             )
 
-            // v1.0.38 (APK size): release ships real-device ABIs only —
-            // x86_64 is an emulator/Chromebook architecture and adds
-            // ~20MB of engine + AOT payload to every published APK.
-            // Ship arm64 only (matches CI --target-platform android-arm64).
+            // Release ships real-device mobile ABIs (both 64-bit and 32-bit ARM)
+            // to support 100% of physical Android devices without crashing.
             ndk {
                 abiFilters.clear()
-                abiFilters += listOf("arm64-v8a")
+                abiFilters += listOf("armeabi-v7a", "arm64-v8a")
             }
         }
         debug {

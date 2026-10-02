@@ -67,6 +67,13 @@ void _installGlobalErrorHandlers() {
     debugPrint('❌ FlutterError: ${details.exception}');
     ClientErrorReporter.instance.reportFlutterError(details);
   };
+  // Catch any unhandled asynchronous exceptions across the Dart isolate
+  // and prevent abrupt application termination / crashes on physical devices.
+  PlatformDispatcher.instance.onError = (error, stack) {
+    debugPrint('🛡️ [Protected Unhandled Async Error]: $error');
+    ClientErrorReporter.instance.reportBuildError(error, stack);
+    return true; // Handled safely — prevents engine crash
+  };
   ErrorWidget.builder = (details) {
     debugPrint('❌ Widget build error: ${details.exception}');
     ClientErrorReporter.instance.reportBuildError(
@@ -166,6 +173,10 @@ Future<void> _initializePushServices() async {
 }
 
 void _configureUI() {
+  // Memory guard: cap in-memory image cache to 60MB to prevent Android GC pressure and phone freezing
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 60 * 1024 * 1024;
+  PaintingBinding.instance.imageCache.maximumSize = 100;
+
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.dark,

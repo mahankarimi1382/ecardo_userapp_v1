@@ -53,32 +53,30 @@ class _EcardoUserState extends State<EcardoUser> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        // Reactive locale + theme (settings apply in place without restart or splash replay).
-        return Obx(() {
-          final lts = Get.isRegistered<LocaleThemeService>()
-              ? Get.find<LocaleThemeService>()
-              : null;
-          final appLocale = lts?.locale.value ?? _locale;
-          final appTheme = lts?.themeMode.value ?? ThemeMode.system;
+        final lts = Get.isRegistered<LocaleThemeService>()
+            ? Get.find<LocaleThemeService>()
+            : null;
+        final appLocale = lts?.locale.value ?? _locale;
+        final appTheme = lts?.themeMode.value ?? ThemeMode.system;
 
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: AppStrings.appName,
-            themeMode: appTheme,
-            theme: LightTheme().lightTheme(context),
-            darkTheme: DarkTheme().darkTheme(context),
-            getPages: routesHandler,
-            initialBinding: InitialBinding(),
-            initialRoute: BaseRoute.root,
-            unknownRoute: GetPage(
-              name: '/not-found',
-              page: () => const NotFoundScreen(),
-            ),
-            locale: appLocale,
-            fallbackLocale: const Locale('en'),
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: AppStrings.appName,
+          themeMode: appTheme,
+          theme: LightTheme().lightTheme(context),
+          darkTheme: DarkTheme().darkTheme(context),
+          getPages: routesHandler,
+          initialBinding: InitialBinding(),
+          initialRoute: BaseRoute.root,
+          unknownRoute: GetPage(
+            name: '/not-found',
+            page: () => const NotFoundScreen(),
+          ),
+          locale: appLocale,
+          fallbackLocale: const Locale('en'),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
@@ -163,7 +161,6 @@ class _EcardoUserState extends State<EcardoUser> {
             );
           },
         );
-        });
       },
     );
   }

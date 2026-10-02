@@ -52,6 +52,7 @@ class _EmailScreenState extends State<EmailScreen> {
                           imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                           child: Image.asset(
                             PngAssets.splashFrame,
+                            cacheWidth: 400,
                             fit: BoxFit.cover,
                           ),
                         ),

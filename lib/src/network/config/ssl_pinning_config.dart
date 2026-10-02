@@ -2,10 +2,23 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 
-/// SSL Pinning configuration and runtime SPKI fingerprint verification.
+/// SSL Pinning configuration and runtime certificate fingerprint verification.
 ///
-/// NOTE: The pins below are placeholders. Production SHA-256 SPKI pins
-/// for ecardo.ir and trip.ecardo.ir should be added here once deployed.
+/// SECURITY (v1.0.126): the previous version short-circuited to `true`
+/// whenever the pin list still held placeholders. That made pinning a no-op:
+/// any CA the device trusted could mint a certificate for ecardo.ir and pass.
+///
+/// The pin is the SHA-256 of the full leaf certificate DER, because
+/// X509Certificate exposes no SPKI accessor — extracting the public key would
+/// mean hand-parsing the certificate in Dart. The trade-off: re-issuing the
+/// server certificate invalidates the pin, so an app release must ship before
+/// the cert changes. [expectedCertificateHashes] accepts a backup pin for that
+/// window.
+///
+/// Two fixes landed here:
+///   1. Pin via build-time --dart-define instead of a checked-in placeholder.
+///   2. A pinned host with NO configured pin now fails CLOSED instead of
+///      silently allowing every certificate.
 class SslPinningConfig {
   /// Whether SSL pinning enforcement is active.
   static const bool isPinningEnabled = true;
@@ -16,17 +29,36 @@ class SslPinningConfig {
     'trip.ecardo.ir',
   ];
 
-  /// SHA-256 fingerprints of the expected server certificates / public keys.
-  /// Format: lowercase hex string without colons or base64 SHA-256.
-  /// Run: openssl s_client -connect ecardo.ir:443 | openssl x509 -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | openssl enc -base64
-  static const List<String> expectedSpkiHashes = [
-    // Placeholder - replace with actual production certificate SHA-256 hashes
-    'PLACEHOLDER_SPKI_PIN_ECARDO_IR',
-  ];
+  /// SHA-256 certificate pins, base64, supplied at build time.
+  ///
+  /// CI publishes the current pin into the build with:
+  ///   flutter build apk --dart-define=ECARDO_CERT_PIN=<pin>
+  ///
+  /// Compute a pin with (must match the runtime digest exactly):
+  ///   openssl s_client -connect ecardo.ir:443 -servername ecardo.ir </dev/null 2>/dev/null \
+  ///     | openssl x509 -outform der \
+  ///     | openssl dgst -sha256 -binary | openssl enc -base64
+  ///
+  /// Keep one BACKUP pin alongside the current one: rotating the certificate
+  /// before the release is live bricks every installed app.
+  static Map<String, List<String>> get expectedCertificateHashes {
+    const current = String.fromEnvironment('ECARDO_CERT_PIN');
+    const backup = String.fromEnvironment('ECARDO_CERT_PIN_BACKUP');
+    if (current.isEmpty && backup.isEmpty) {
+      return const {};
+    }
+    final pins = [
+      if (current.isNotEmpty) current.trim(),
+      if (backup.isNotEmpty) backup.trim(),
+    ];
+    return {for (final host in pinnedHosts) host: pins};
+  }
 
-  /// Validates the certificate against pinned hashes.
-  /// If the certificate matches or if only placeholders exist, returns true.
-  /// If actual pinning fails, logs a security warning and returns false.
+  /// Validates the certificate against the pins for [host].
+  ///
+  /// Fails CLOSED: a pinned host with no configured pin is rejected. That is
+  /// deliberate — an unconfigured pin means the build supplied none, and
+  /// accepting the connection there is the hole this class existed to close.
   static bool validateCertificate(
     List<int>? certDer,
     String host,
@@ -35,34 +67,39 @@ class SslPinningConfig {
       return true;
     }
 
-    if (!pinnedHosts.any((h) => host == h || host.endsWith('.$h'))) {
-      return true; // Not a pinned host
+    final isPinnedHost =
+        pinnedHosts.any((h) => host == h || host.endsWith('.$h'));
+    if (!isPinnedHost) {
+      return true; // Not a pinned host — system trust store decides.
     }
 
-    // If only placeholder pins are configured, log notice and permit
-    if (expectedSpkiHashes.isEmpty ||
-        expectedSpkiHashes.every((p) => p.startsWith('PLACEHOLDER_'))) {
-      if (kDebugMode) {
-        debugPrint('🔒 SSL Pinning: using placeholder configuration for $host (pass-through)');
-      }
-      return true;
+    final pins = expectedCertificateHashes[host] ?? const <String>[];
+    if (pins.isEmpty) {
+      debugPrint(
+        '🚨 [SECURITY] No certificate pin configured for $host — REJECTED.\n'
+        '   Build with --dart-define=ECARDO_CERT_PIN=<base64 sha256 of cert DER>.',
+      );
+      return false;
     }
 
-    final digest = sha256.convert(certDer);
-    final certSha256Hex = digest.toString().toLowerCase();
-    final certSha256Base64 = base64Encode(digest.bytes);
-
-    final isMatched = expectedSpkiHashes.any((pin) {
-      final cleanPin = pin.trim().toLowerCase();
-      return cleanPin == certSha256Hex || pin.trim() == certSha256Base64;
-    });
+    final actual = base64Encode(sha256.convert(certDer).bytes);
+    final isMatched = pins.any((pin) => _constantTimeEquals(pin, actual));
 
     if (!isMatched) {
-      debugPrint('🚨 [SECURITY WARNING] SSL Pinning verification failed for host: $host');
-      debugPrint('🚨 Certificate fingerprint did not match any pinned SPKI hash.');
+      debugPrint('🚨 [SECURITY WARNING] Certificate pin mismatch for host: $host');
       return false;
     }
 
     return true;
+  }
+
+  /// Comparison that does not short-circuit on the first differing character.
+  static bool _constantTimeEquals(String a, String b) {
+    if (a.length != b.length) return false;
+    var diff = 0;
+    for (var i = 0; i < a.length; i++) {
+      diff |= a.codeUnitAt(i) ^ b.codeUnitAt(i);
+    }
+    return diff == 0;
   }
 }

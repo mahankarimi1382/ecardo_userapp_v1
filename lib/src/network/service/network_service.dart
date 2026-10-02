@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show Platform, HttpClient, X509Certificate;
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -94,16 +94,14 @@ class NetworkService extends getx.GetxService {
     _dio.options.receiveTimeout = const Duration(seconds: 30);
     _dio.options.sendTimeout = const Duration(seconds: 30);
 
-    // BUG-10 (P2): Runtime SSL Certificate / SPKI pinning for ecardo domains.
+    // BUG-10 (P2): Runtime TLS certificate pinning for ecardo domains.
+    // SECURITY: badCertificateCallback was removed here. It is the callback
+    // for chains the platform REJECTED, so returning the pinning result from
+    // it accepted untrusted certificates outright. Dio's validateCertificate
+    // runs after the platform has already accepted the chain, which is the
+    // correct place for a pin check.
     if (!kIsWeb) {
       _dio.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          final client = HttpClient();
-          client.badCertificateCallback = (X509Certificate cert, String host, int port) {
-            return SslPinningConfig.validateCertificate(cert.der, host);
-          };
-          return client;
-        },
         validateCertificate: (cert, host, port) {
           if (cert == null) return true;
           return SslPinningConfig.validateCertificate(cert.der, host);
@@ -124,16 +122,10 @@ class NetworkService extends getx.GetxService {
     _globalDio.options.receiveTimeout = const Duration(seconds: 30);
     _globalDio.options.sendTimeout = const Duration(seconds: 30);
 
-    // BUG-10 (P2): Runtime SSL Certificate / SPKI pinning for global dio.
+    // BUG-10 (P2): Runtime TLS certificate pinning for global dio.
+    // SECURITY: see the note in _configureHttpClient — no badCertificateCallback.
     if (!kIsWeb) {
       _globalDio.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          final client = HttpClient();
-          client.badCertificateCallback = (X509Certificate cert, String host, int port) {
-            return SslPinningConfig.validateCertificate(cert.der, host);
-          };
-          return client;
-        },
         validateCertificate: (cert, host, port) {
           if (cert == null) return true;
           return SslPinningConfig.validateCertificate(cert.der, host);

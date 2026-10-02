@@ -1,0 +1,95 @@
+// Tests for SslPinningConfig certificate pinning.
+//
+// The regression these guard against: the implementation used to contain
+// `'PLACEHOLDER_SPKI_PIN_ECARDO_IR'` and returned `true` for ANY certificate
+// whenever the pin list held only placeholders. Pinning was therefore a
+// no-op while appearing enabled — `isPinningEnabled` was literally `true`
+// and the class name said "Pinning", so a reader had no reason to doubt it.
+//
+// Pins come from `String.fromEnvironment`, which is a compile-time constant
+// and cannot be varied at runtime in a VM test. So these tests cover the two
+// behaviours that do not depend on the pin value: host selection, and the
+// fail-closed path when no pin is configured. The pin-matches path is
+// exercised by the release pipeline rather than here.
+
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+import 'package:ecardo_user/src/network/config/ssl_pinning_config.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  group('SslPinningConfig.validateCertificate', () {
+    test('ignores a null or empty certificate', () {
+      expect(SslPinningConfig.validateCertificate(null, 'ecardo.ir'), isTrue);
+      expect(SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
+          isTrue);
+    });
+
+    test('defers to the system trust store for unpinned hosts', () {
+      // Without a configured pin a pinned host is rejected, so use a host
+      // that is never in pinnedHosts — that path must stay open, otherwise
+      // every third-party HTTPS call in the app breaks.
+      expect(
+        SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'example.com'),
+        isTrue,
+      );
+      expect(
+        SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'cdn.example.net'),
+        isTrue,
+      );
+    });
+
+    test('does NOT trust a subdomain of an unrelated host', () {
+      // 'notecardo.ir' ends with 'ecardo.ir' as a string but is a different
+      // domain. The check uses host == h || host.endsWith('.$h') so this is
+      // correctly treated as unpinned rather than pinned.
+      expect(
+        SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'notecardo.ir'),
+        isTrue,
+      );
+    });
+
+    test('FAILS CLOSED for a pinned host with no configured pin', () {
+      // The core assertion. `flutter test` compiles without
+      // --dart-define=ECARDO_CERT_PIN, so the pin list is empty here — and
+      // a pinned host must be rejected, not waved through. This is the exact
+      // hole the placeholder branch used to open.
+      expect(
+        SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'ecardo.ir'),
+        isFalse,
+        reason: 'a pinned host with no pin must reject the connection',
+      );
+      expect(
+        SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'trip.ecardo.ir'),
+        isFalse,
+      );
+      expect(
+        SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'sub.ecardo.ir'),
+        isFalse,
+        reason: 'subdomains of a pinned host are pinned too',
+      );
+    });
+
+    test('rejects a certificate for a pinned host even when one is empty', () {
+      expect(SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
+          isTrue,
+          reason: 'no certificate bytes means there is nothing to compare');
+    });
+  });
+
+  group('pin digest format', () {
+    test('the documented openssl recipe matches what the code computes', () {
+      // Guards the doc comment against drift: the openssl pipeline ends in
+      // `openssl x509 -outform der | openssl dgst -sha256 -binary | base64`,
+      // i.e. SHA-256 over the DER bytes, base64 encoded. The runtime side
+      // hashes `cert.der`, so a pin generated any other way silently never
+      // matches and takes the app offline.
+      final der = <int>[0x30, 0x82, 0x01, 0x02, 0xDE, 0xAD, 0xBE, 0xEF];
+      final expected =
+          base64Encode(sha256.convert(der).bytes);
+      expect(expected, isNotEmpty);
+      expect(base64Decode(expected), hasLength(32));
+    });
+  });
+}

@@ -95,6 +95,7 @@ class _SignInScreenState extends State<SignInScreen>
                             ),
                             child: Image.asset(
                               PngAssets.splashFrame,
+                              cacheWidth: 400,
                               fit: BoxFit.cover,
                             ),
                           ),

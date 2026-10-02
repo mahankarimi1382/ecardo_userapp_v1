@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # GitHub Actions supply-chain: a compromised or re-pointed tag is the
+  # highest-severity risk in this repo because the release jobs hold the
+  # Android signing key. Keep these current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - ci
+      - security
+    group: github-actions
+
+  # Dart/Flutter dependencies. Updates to the SDK constraint and to
+  # firebase_* / local_auth are the ones worth reviewing closely — they touch
+  # notification delivery and the credential-storage backend respectively.
+  - package-ecosystem: pub
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+    open-pull-requests-limit: 5
+
+  # Android toolchain / manifest / gradle.
+  - package-ecosystem: gradle
+    directory: /android
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - android
