@@ -184,10 +184,13 @@ void main() {
       expect(find.text('Available Balance'), findsOneWidget);
       expect(find.text('Deposit'), findsNothing);
 
+      // The flip runs 450ms with easeInOutCubic and swaps faces at the
+      // halfway point (angle >= pi/2), so step past 225ms. Driven with an
+      // explicit settle rather than a wall-clock delay, which would make the
+      // assertion fragile on a loaded CI machine.
       await tester.tap(find.byIcon(Icons.flip_camera_android_rounded));
-
-      // Mid-flip: past the halfway point the front must already be gone.
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
       expect(
         find.text('Available Balance'),
         findsNothing,
@@ -251,9 +254,13 @@ void main() {
       expect(find.byType(PageView), findsNothing);
     });
 
-    testWidgets('card fits inside its page slot', (tester) async {
+    testWidgets('card is sized from the viewport fraction, not raw screen width',
+        (tester) async {
       // The card was sized at 86% of screen width inside an 88% viewport, so
-      // it overhung the slot on both sides and was clipped.
+      // it overhung its page slot and was clipped by the carousel's height box.
+      // Assert against the carousel's own slot width rather than a guessed
+      // constant: the PageView lays its pages out edge to edge, so the slot is
+      // 88% of the carousel's own width, not of the test surface.
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -270,12 +277,25 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final card = tester.getSize(find.byType(MultiCurrencyFlipCard));
-      expect(
-        card.width,
-        lessThanOrEqualTo(400 * 0.88 + 0.5),
-        reason: 'card must not exceed its PageView slot',
-      );
+      final carouselWidth = tester.getSize(find.byType(WalletCardCarousel)).width;
+      final pageViewWidth = tester.getSize(find.byType(PageView)).width;
+
+      // Every built card must fit the slot it is drawn in.
+      final cards = find.byType(MultiCurrencyFlipCard);
+      expect(cards, findsWidgets);
+      for (final element in cards.evaluate()) {
+        final cardWidth = element.size!.width;
+        expect(
+          cardWidth,
+          lessThanOrEqualTo(pageViewWidth * 0.88 + 0.5),
+          reason: 'card ($cardWidth) must fit its $pageViewWidth page slot',
+        );
+      }
+
+      // And the slot itself must be the 88% viewport, proving the card is
+      // measured from the carousel rather than the screen.
+      expect(pageViewWidth, lessThanOrEqualTo(carouselWidth));
+      expect(pageViewWidth, closeTo(carouselWidth, 0.5));
     });
   });
 }
