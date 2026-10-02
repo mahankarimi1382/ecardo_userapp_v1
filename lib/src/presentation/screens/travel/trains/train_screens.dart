@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/mock_travel_data.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/service_form_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/travel_service_request.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/shared/seat_selection_map.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_widgets.dart';
 
@@ -814,6 +816,7 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
   late final List<_PassengerForm> _passengers;
   final _phoneController = TextEditingController();
   String _selectedClass = 'economy';
+  List<SeatItem> _selectedSeats = const [];
 
   @override
   void initState() {
@@ -840,8 +843,12 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
     orElse: () => widget.trip.classes.first,
   );
 
+  int get _seatExtraTotal =>
+      _selectedSeats.fold(0, (sum, s) => sum + s.extraPrice.toInt());
+
   int get _totalPrice =>
-      _selectedOption.price * (widget.adultCount + widget.childCount);
+      (_selectedOption.price * (widget.adultCount + widget.childCount)) +
+      _seatExtraTotal;
 
   Future<void> _submit() async {
     final localization = AppLocalizations.of(context)!;
@@ -863,6 +870,14 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
       ),
       localization.travelContactPhone: _phoneController.text.trim(),
     };
+    if (_selectedSeats.isNotEmpty) {
+      details[l10nPick(
+        context,
+        en: 'Selected Seats',
+        fa: 'صندلی‌های انتخابی',
+        ar: 'المقاعد المختارة',
+      )] = _selectedSeats.map((s) => s.code).join(', ');
+    }
     passengers.asMap().forEach((index, passenger) {
       passenger.toDetails().forEach((key, value) {
         details['${localization.travelTrainPassengerLabel} '
@@ -884,13 +899,16 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
     );
     await TravelServiceRequestStore.add(request);
     if (!mounted) return;
-    final passengerMaps = passengers
-        .map((p) => {
-              'name': p.fullName,
-              'national_code': p.nationalCode,
-              'gender': p.gender,
-            })
-        .toList();
+    final passengerMaps = passengers.asMap().entries.map((entry) {
+      final index = entry.key;
+      final p = entry.value;
+      return {
+        'name': p.fullName,
+        'national_code': p.nationalCode,
+        'gender': p.gender,
+        if (index < _selectedSeats.length) 'seat': _selectedSeats[index].code,
+      };
+    }).toList();
     Get.off(
       () => TrainConfirmationScreen(
         reference: request.reference,
@@ -966,6 +984,31 @@ class _TrainBookingScreenState extends State<TrainBookingScreen> {
                   ),
                 ],
               ),
+            ),
+            SizedBox(height: 14.h),
+            _TrainSeatSelectionCard(
+              selectedSeats: _selectedSeats,
+              passengerCount: widget.adultCount + widget.childCount,
+              onTap: () async {
+                final cabin = _selectedClass == 'vip'
+                    ? SeatCabinClass.business
+                    : SeatCabinClass.economy;
+                final totalSeats = widget.adultCount + widget.childCount;
+                final result = await showSeatSelectionBottomSheet(
+                  context,
+                  vehicleType: SeatVehicleType.train,
+                  initialCabinClass: cabin,
+                  maxSelectedSeats: totalSeats > 0 ? totalSeats : 1,
+                  initiallySelectedSeatIds:
+                      _selectedSeats.map((s) => s.id).toList(),
+                  title: '${widget.trip.operator} ${widget.trip.trainNumber}',
+                  subtitle: '${widget.origin} → ${widget.destination}',
+                  currency: localization.travelMockCurrency,
+                );
+                if (result != null && mounted) {
+                  setState(() => _selectedSeats = result);
+                }
+              },
             ),
             SizedBox(height: 18.h),
             ..._passengers.asMap().entries.map(
@@ -1117,3 +1160,193 @@ class _PassengerForm {
     nationalCodeController.dispose();
   }
 }
+
+class _TrainSeatSelectionCard extends StatelessWidget {
+  final List<SeatItem> selectedSeats;
+  final int passengerCount;
+  final VoidCallback onTap;
+
+  const _TrainSeatSelectionCard({
+    required this.selectedSeats,
+    required this.passengerCount,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
+    if (selectedSeats.isEmpty) {
+      return TravelCard(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              width: 44.r,
+              height: 44.r,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE8F5EE),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.airline_seat_recline_normal_rounded,
+                color: TravelTheme.green,
+              ),
+            ),
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Select Seats',
+                      fa: 'انتخاب صندلی',
+                      ar: 'اختيار المقاعد',
+                    ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13.5.sp,
+                      color: TravelTheme.ink,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Choose preferred seats in the train carriage',
+                      fa: 'انتخاب صندلی مورد نظر در واگن قطار',
+                      ar: 'اختر المقاعد المفضلة في عربة القطار',
+                    ),
+                    style: TextStyle(
+                      color: TravelTheme.muted,
+                      fontSize: 10.5.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
+              decoration: BoxDecoration(
+                color: TravelTheme.green,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                l10nPick(
+                  context,
+                  en: 'Select',
+                  fa: 'انتخاب',
+                  ar: 'اختيار',
+                ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11.5.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return TravelCard(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.airline_seat_recline_normal_rounded,
+                    color: TravelTheme.green,
+                    size: 18,
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Selected Seats (${selectedSeats.length}/$passengerCount)',
+                      fa: 'صندلی‌های انتخابی (${selectedSeats.length}/$passengerCount)',
+                      ar: 'المقاعد المختارة (${selectedSeats.length}/$passengerCount)',
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+              TextButton.icon(
+                onPressed: onTap,
+                icon: const Icon(Icons.edit_outlined, size: 14),
+                label: Text(
+                  l10nPick(context, en: 'Change', fa: 'تغییر', ar: 'تغيير'),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: TravelTheme.green,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 6.h,
+            children: selectedSeats.map((seat) {
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE8F5EE),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: TravelTheme.green.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      seat.isPremium
+                          ? Icons.star_rounded
+                          : Icons.airline_seat_recline_normal_rounded,
+                      size: 13.r,
+                      color: seat.isPremium
+                          ? const Color(0xFFD4AF37)
+                          : TravelTheme.green,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '${seat.code} (${seat.type.localizedLabel(isRtl)})',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 11.sp,
+                        color: TravelTheme.ink,
+                      ),
+                    ),
+                    if (seat.extraPrice > 0) ...[
+                      SizedBox(width: 4.w),
+                      Text(
+                        '+${seat.extraPrice.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: TravelTheme.green,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

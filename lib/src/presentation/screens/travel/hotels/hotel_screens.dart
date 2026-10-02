@@ -12,6 +12,9 @@ import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'hotel_filter_screen.dart';
 import 'hotel_search_components.dart';
+import 'widgets/cancellation_policy_timeline.dart';
+import 'widgets/hotel_amenities_grid.dart';
+import 'widgets/hotel_room_selection_card.dart';
 
 class HotelSearchScreen extends StatefulWidget {
   const HotelSearchScreen({super.key});
@@ -1619,7 +1622,6 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
   final GlobalKey _rulesKey = GlobalKey();
   final GlobalKey _reviewsKey = GlobalKey();
   final Map<String, int> _roomQuantities = {};
-  bool _showAllAmenities = false;
   bool _showAllDescription = false;
   bool _showSectionNavigation = false;
 
@@ -1920,6 +1922,12 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                 ],
                 message: localization.travelHotelDetailsGuidance,
               ),
+              SizedBox(height: 18.h),
+              CancellationPolicyTimelineCard(
+                checkInDate: bookingDetails.checkInDate,
+                customPolicySummary:
+                    _providerCancellationSummary(context, product),
+              ),
               if (description.isNotEmpty) ...[
                 SizedBox(height: 26.h),
                 TravelSectionHeader(title: localization.travelAboutHotel),
@@ -1943,34 +1951,11 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                   ),
                 ),
               ],
-              if (amenities.isNotEmpty) ...[
-                SizedBox(height: 24.h),
-                SizedBox(key: _featuresKey),
-                TravelSectionHeader(title: localization.travelIncluded),
-                SizedBox(height: 10.h),
-                Wrap(
-                  spacing: 8.w,
-                  runSpacing: 8.h,
-                  children: (_showAllAmenities ? amenities : amenities.take(8))
-                      .map((item) => Chip(label: Text(item)))
-                      .toList(),
-                ),
-                if (amenities.length > 8)
-                  TextButton.icon(
-                    onPressed: () =>
-                        setState(() => _showAllAmenities = !_showAllAmenities),
-                    icon: Icon(
-                      _showAllAmenities
-                          ? Icons.keyboard_arrow_up_rounded
-                          : Icons.keyboard_arrow_down_rounded,
-                    ),
-                    label: Text(
-                      _showAllAmenities
-                          ? AppLocalizations.of(context)!.hotel_show_less
-                          : AppLocalizations.of(context)!.hotel_show_more_2,
-                    ),
-                  ),
-              ],
+              SizedBox(height: 24.h),
+              SizedBox(key: _featuresKey),
+              TravelSectionHeader(title: localization.travelIncluded),
+              SizedBox(height: 12.h),
+              HotelAmenitiesGrid(amenities: amenities),
               if (rooms.isNotEmpty) ...[
                 SizedBox(height: 24.h),
                 SizedBox(key: _roomsKey),
@@ -2012,23 +1997,34 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 12.h),
                 ...rooms.map(
-                  (room) => Padding(
-                    padding: EdgeInsets.only(bottom: 12.h),
-                    child: _ProviderRoomCard(
-                      room: room,
-                      enabled: controller.canPurchase(TravelProductType.hotel),
-                      nights: nights,
-                      quantity:
-                          _roomQuantities[room['room_id']?.toString() ?? ''] ??
-                          0,
-                      onQuantityChanged: (quantity) => setState(() {
-                        final id = room['room_id']?.toString() ?? '';
-                        if (id.isNotEmpty) _roomQuantities[id] = quantity;
-                      }),
-                    ),
-                  ),
+                  (room) {
+                    final roomId = room['room_id']?.toString() ?? '';
+                    final qty = _roomQuantities[roomId] ?? 0;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 14.h),
+                      child: HotelRoomSelectionCard(
+                        room: room,
+                        enabled: controller.canPurchase(TravelProductType.hotel),
+                        nights: nights,
+                        quantity: qty,
+                        onQuantityChanged: (quantity) => setState(() {
+                          if (roomId.isNotEmpty) {
+                            _roomQuantities[roomId] = quantity;
+                          }
+                        }),
+                        onSelect: () => setState(() {
+                          if (roomId.isNotEmpty) {
+                            _roomQuantities[roomId] = qty > 0 ? 0 : 1;
+                          }
+                        }),
+                        onTapDetails: () => Get.to(
+                          () => _RoomDetailsScreen(room: room, nights: nights),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
               if (reviews.isNotEmpty) ...[
@@ -2051,11 +2047,17 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                     ..remove('longitude'),
                 ),
               ],
+              SizedBox(height: 24.h),
+              SizedBox(key: _rulesKey),
+              TravelSectionHeader(title: localization.travelPolicies),
+              SizedBox(height: 10.h),
+              CancellationPolicyTimelineCard(
+                checkInDate: bookingDetails.checkInDate,
+                customPolicySummary:
+                    _providerCancellationSummary(context, product),
+              ),
               if (offer.policies.isNotEmpty) ...[
-                SizedBox(height: 24.h),
-                SizedBox(key: _rulesKey),
-                TravelSectionHeader(title: localization.travelPolicies),
-                SizedBox(height: 10.h),
+                SizedBox(height: 12.h),
                 _ProviderMapCard(values: offer.policies),
               ],
               if (controller.hotelOffers.any(

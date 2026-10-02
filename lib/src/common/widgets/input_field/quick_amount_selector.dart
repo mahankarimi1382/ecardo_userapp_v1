@@ -15,6 +15,7 @@ class QuickAmountSelector extends StatefulWidget {
     required this.textController,
     required this.availableBalance,
     required this.isCrypto,
+    this.maxSpendableAmount,
     this.onAmountChanged,
     this.percentages = const [0.25, 0.50, 0.75, 1.0],
     this.currencyCode,
@@ -30,6 +31,10 @@ class QuickAmountSelector extends StatefulWidget {
 
   /// Total available balance in the selected wallet.
   final double availableBalance;
+
+  /// Optional maximum spendable amount (after deducting fees). When set,
+  /// tapping the 100% / Max chip uses this value to prevent overdraft.
+  final double? maxSpendableAmount;
 
   /// Whether the selected asset is a cryptocurrency (requires 8 decimal precision).
   final bool isCrypto;
@@ -120,7 +125,13 @@ class _QuickAmountSelectorState extends State<QuickAmountSelector> {
 
     HapticFeedback.selectionClick();
 
-    final rawAmount = widget.availableBalance * percent;
+    final isMax = (percent - 1.0).abs() < 1e-6;
+    final double rawAmount;
+    if (isMax && widget.maxSpendableAmount != null) {
+      rawAmount = widget.maxSpendableAmount!;
+    } else {
+      rawAmount = widget.availableBalance * percent;
+    }
     final formatted = _formatAmount(rawAmount);
 
     widget.textController.text = formatted;

@@ -3,11 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/models/travel_models.dart';
+import '../shared/seat_selection_map.dart';
 import '../shared/travel_suggestion_picker.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
@@ -1471,8 +1474,15 @@ class _FlightTime extends StatelessWidget {
   }
 }
 
-class FlightDetailsScreen extends StatelessWidget {
+class FlightDetailsScreen extends StatefulWidget {
   const FlightDetailsScreen({super.key});
+
+  @override
+  State<FlightDetailsScreen> createState() => _FlightDetailsScreenState();
+}
+
+class _FlightDetailsScreenState extends State<FlightDetailsScreen> {
+  List<SeatItem> selectedSeats = const [];
 
   @override
   Widget build(BuildContext context) {
@@ -1492,7 +1502,7 @@ class FlightDetailsScreen extends StatelessWidget {
     final needsReturnSelection =
         search?.isRoundTrip == true && outboundOffer == null;
     final currentTotal = _flightTotal(offer, bookingDetails);
-    final total = outboundOffer == null
+    final baseTotal = outboundOffer == null
         ? currentTotal
         : TravelMoney(
             amount:
@@ -1500,6 +1510,11 @@ class FlightDetailsScreen extends StatelessWidget {
                 currentTotal.amount,
             currency: currentTotal.currency,
           );
+    final seatExtraFee = selectedSeats.fold(0.0, (sum, s) => sum + s.extraPrice);
+    final total = TravelMoney(
+      amount: baseTotal.amount + seatExtraFee,
+      currency: baseTotal.currency,
+    );
     final departure = _flightDateTime(offer, 'departure');
     final arrival = _flightDateTime(offer, 'arrival');
     final segments = _flightMaps(offer.product['segments']);
@@ -1542,6 +1557,9 @@ class FlightDetailsScreen extends StatelessWidget {
                       total: total,
                       bookingDetails: bookingDetails.copyWith(
                         returnOfferId: outboundOffer == null ? '' : offer.id,
+                        specialRequests: selectedSeats.isNotEmpty
+                            ? 'Selected Seats: ${selectedSeats.map((s) => s.code).join(', ')}'
+                            : bookingDetails.specialRequests,
                       ),
                     ),
                   ),
@@ -1683,6 +1701,43 @@ class FlightDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 22.h),
+          TravelSectionHeader(
+            title: l10nPick(
+              context,
+              en: 'Seat Selection',
+              fa: 'انتخاب صندلی',
+              ar: 'اختيار المقاعد',
+            ),
+          ),
+          SizedBox(height: 10.h),
+          _FlightSeatSelectionCard(
+            selectedSeats: selectedSeats,
+            passengerCount: (bookingDetails.adultCount + bookingDetails.childCount) > 0
+                ? (bookingDetails.adultCount + bookingDetails.childCount)
+                : 1,
+            onTap: () async {
+              final cabin = (_flightValue(offer, 'cabin_class').toLowerCase() == 'business')
+                  ? SeatCabinClass.business
+                  : SeatCabinClass.economy;
+              final maxSeats = (bookingDetails.adultCount + bookingDetails.childCount) > 0
+                  ? (bookingDetails.adultCount + bookingDetails.childCount)
+                  : 1;
+              final result = await showSeatSelectionBottomSheet(
+                context,
+                vehicleType: SeatVehicleType.aircraft,
+                initialCabinClass: cabin,
+                maxSelectedSeats: maxSeats,
+                initiallySelectedSeatIds: selectedSeats.map((s) => s.id).toList(),
+                title: '${_flightValue(offer, 'airline_name')} ${_flightValue(offer, 'flight_number')}',
+                subtitle: '${_flightValue(offer, 'origin')} → ${_flightValue(offer, 'destination')}',
+                currency: offer.total.currency,
+              );
+              if (result != null && mounted) {
+                setState(() => selectedSeats = result);
+              }
+            },
+          ),
+          SizedBox(height: 22.h),
           TravelSectionHeader(title: localization.travelFareDetails),
           SizedBox(height: 10.h),
           TravelCard(
@@ -1695,6 +1750,21 @@ class FlightDetailsScreen extends StatelessWidget {
                   _FareRow(
                     label: component.$1,
                     value: travelMoney(context, component.$2),
+                  ),
+                  const Divider(),
+                ],
+                if (seatExtraFee > 0) ...[
+                  _FareRow(
+                    label: l10nPick(
+                      context,
+                      en: 'Seat Selection (${selectedSeats.map((s) => s.code).join(', ')})',
+                      fa: 'هزینه انتخاب صندلی (${selectedSeats.map((s) => s.code).join(', ')})',
+                      ar: 'رسوم اختيار المقاعد (${selectedSeats.map((s) => s.code).join(', ')})',
+                    ),
+                    value: travelMoney(
+                      context,
+                      TravelMoney(amount: seatExtraFee, currency: total.currency),
+                    ),
                   ),
                   const Divider(),
                 ],
@@ -2023,3 +2093,190 @@ String _flightDisplayValue(dynamic value) {
   }
   return value?.toString() ?? '';
 }
+
+class _FlightSeatSelectionCard extends StatelessWidget {
+  final List<SeatItem> selectedSeats;
+  final int passengerCount;
+  final VoidCallback onTap;
+
+  const _FlightSeatSelectionCard({
+    required this.selectedSeats,
+    required this.passengerCount,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
+    if (selectedSeats.isEmpty) {
+      return TravelCard(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              width: 44.r,
+              height: 44.r,
+              decoration: const BoxDecoration(
+                color: Color(0xFFEAF3FF),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.airline_seat_recline_extra_rounded,
+                color: TravelTheme.blue,
+              ),
+            ),
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Select Seats',
+                      fa: 'انتخاب صندلی',
+                      ar: 'اختيار المقاعد',
+                    ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13.5.sp,
+                      color: TravelTheme.ink,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Choose preferred window, aisle, or extra legroom seats',
+                      fa: 'انتخاب صندلی کنار پنجره، راهرو یا فضای پای بیشتر',
+                      ar: 'اختر مقاعدك المفضلة بجوار النافذة أو الممر أو مساحة إضافية للأرجل',
+                    ),
+                    style: TextStyle(
+                      color: TravelTheme.muted,
+                      fontSize: 10.5.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
+              decoration: BoxDecoration(
+                color: TravelTheme.blue,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                l10nPick(
+                  context,
+                  en: 'Select',
+                  fa: 'انتخاب',
+                  ar: 'اختيار',
+                ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11.5.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return TravelCard(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.airline_seat_recline_normal_rounded,
+                    color: TravelTheme.blue,
+                    size: 18,
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Selected Seats (${selectedSeats.length}/$passengerCount)',
+                      fa: 'صندلی‌های انتخابی (${selectedSeats.length}/$passengerCount)',
+                      ar: 'المقاعد المختارة (${selectedSeats.length}/$passengerCount)',
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+              TextButton.icon(
+                onPressed: onTap,
+                icon: const Icon(Icons.edit_outlined, size: 14),
+                label: Text(
+                  l10nPick(context, en: 'Change', fa: 'تغییر', ar: 'تغيير'),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 6.h,
+            children: selectedSeats.map((seat) {
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  color: AppColors.lightPrimaryContainer.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: AppColors.mutedBlue.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      seat.isPremium
+                          ? Icons.star_rounded
+                          : Icons.airline_seat_recline_normal_rounded,
+                      size: 13.r,
+                      color: seat.isPremium
+                          ? const Color(0xFFD4AF37)
+                          : AppColors.lightPrimary,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '${seat.code} (${seat.type.localizedLabel(isRtl)})',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 11.sp,
+                        color: AppColors.lightPrimary,
+                      ),
+                    ),
+                    if (seat.extraPrice > 0) ...[
+                      SizedBox(width: 4.w),
+                      Text(
+                        '+${seat.extraPrice.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: TravelTheme.green,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

@@ -171,11 +171,14 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
             final from = controller.fromWallet.value;
             if (from == null) return const SizedBox();
             final balance = double.tryParse(from.balance ?? '0') ?? 0.0;
+            final fee = controller.charge.value;
+            final maxSpendable = (balance - fee > 0) ? (balance - fee) : balance;
             return Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
               child: QuickAmountSelector(
                 textController: controller.amountController,
                 availableBalance: balance,
+                maxSpendableAmount: maxSpendable,
                 isCrypto: from.isCrypto == true,
                 currencyCode: from.code,
                 maxLabel: loc.exchangeQuickMax,

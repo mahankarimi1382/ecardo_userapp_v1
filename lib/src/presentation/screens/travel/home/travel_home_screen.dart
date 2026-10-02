@@ -20,6 +20,7 @@ import '../taxi/taxi_search_screen.dart';
 import '../trains/train_screens.dart';
 import 'package:ecardo_user/src/rental/screens/rental_home_screen.dart';
 import 'package:ecardo_user/src/visa/screens/visa_catalog_screen.dart';
+import '../services/cip_lounge_screen.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 
@@ -415,6 +416,80 @@ class _Services extends StatelessWidget {
               ),
             ),
           ],
+        ),
+        SizedBox(height: 12.h),
+        // VIP CIP & Airport Lounge Banner
+        InkWell(
+          borderRadius: BorderRadius.circular(14.r),
+          onTap: () => Get.to(() => const CipLoungeReservationScreen()),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+              ),
+              borderRadius: BorderRadius.circular(14.r),
+              border: Border.all(
+                color: const Color(0xFFD4AF37).withValues(alpha: 0.4),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD4AF37).withValues(alpha: 0.18),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.airline_seat_recline_extra_rounded,
+                    color: Color(0xFFD4AF37),
+                    size: 20,
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Airport CIP & VIP Lounge',
+                          fa: 'تشریفات فرودگاهی و لانژ CIP',
+                          ar: 'خدمات كبار الشخصيات بالمطار (CIP)',
+                          zh: '机场贵宾室 (CIP)',
+                        ),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Fast-track passport, private transfer & dining buffet',
+                          fa: 'گیت اختصاصی، ترانسفر پای پرواز و بوفه پذیرایی',
+                          ar: 'مسار سريع، نقل خاص وبوفيه مفتوح',
+                          zh: '专属安检通道、摆渡专车与自助餐饮',
+                        ),
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: const Color(0xFFD4AF37),
+                  size: 14.sp,
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );

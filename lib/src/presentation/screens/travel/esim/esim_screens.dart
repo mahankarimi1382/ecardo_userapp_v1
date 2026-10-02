@@ -12,8 +12,12 @@ import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'esim_detail_screen.dart';
+import 'widgets/esim_activation_card.dart';
+import 'widgets/esim_data_usage_gauge.dart';
 
 export 'esim_detail_screen.dart';
+export 'widgets/esim_activation_card.dart';
+export 'widgets/esim_data_usage_gauge.dart';
 
 class EsimIntroScreen extends StatelessWidget {
   const EsimIntroScreen({super.key});
@@ -217,6 +221,122 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
             : ListView(
                 padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 24.h),
                 children: [
+                  // Active eSIM Data Consumption Gauge
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(bottom: 16.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8.r,
+                                  height: 8.r,
+                                  decoration: const BoxDecoration(
+                                    color: TravelTheme.green,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  l10nPick(
+                                    context,
+                                    en: 'My Active eSIM',
+                                    fa: 'سیم‌کارت فعال من',
+                                    ar: 'شريحتي النشطة',
+                                    zh: '我的活跃 eSIM',
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w900,
+                                    color: TravelTheme.ink,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            InkWell(
+                              onTap: () {
+                                final activePkg = controller.esimPackages.isNotEmpty
+                                    ? controller.esimPackages.first
+                                    : const TravelEsimPackage(
+                                        id: 'active-esim-1',
+                                        destinationCode: 'Turkey & Europe',
+                                        dataLabel: '10.0 GB',
+                                        validityDays: 14,
+                                        total: TravelMoney(
+                                          amount: 1900,
+                                          currency: 'USD',
+                                        ),
+                                      );
+                                Get.to(
+                                  () => EsimDetailScreen(
+                                    package: activePkg,
+                                    isActive: true,
+                                  ),
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(8.r),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 4.h,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      l10nPick(
+                                        context,
+                                        en: 'View QR & Setup',
+                                        fa: 'مشاهده بارکد و فعال‌سازی',
+                                        ar: 'عرض الرمز والإعدادات',
+                                        zh: '查看二维码与设置',
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 11.5.sp,
+                                        fontWeight: FontWeight.w800,
+                                        color: TravelTheme.blue,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 11,
+                                      color: TravelTheme.blue,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.h),
+                        EsimDataUsageGauge(
+                          totalDataGb: 10.0,
+                          usedDataGb: 6.4,
+                          daysRemaining: 14,
+                          countryOrRegion: 'Turkey & Europe',
+                          planName:
+                              'Active eSIM · 10.0 GB High-Speed Roaming',
+                          onTopUpTap: () {
+                            if (controller.esimPackages.isNotEmpty) {
+                              Get.to(
+                                () => EsimDetailScreen(
+                                  package: controller.esimPackages.first,
+                                  isActive: true,
+                                ),
+                              );
+                            } else {
+                              _searchPackages('TR');
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
                   CommonTextInputField(
                     controller: destinationController,
                     hintText:

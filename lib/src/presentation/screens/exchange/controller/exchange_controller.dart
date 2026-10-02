@@ -296,11 +296,13 @@ class ExchangeController extends GetxController {
 
   /// Triggered when the user taps "Confirm" on the Review step and the
   /// rate-staleness banner is showing. Re-locks the rate to the current
-  /// live value and re-enables confirm.
-  void acknowledgeRateChange() {
+  /// live value, re-fetches config & latest converter rate, recalculates
+  /// charges/totals, and re-enables confirm.
+  Future<void> acknowledgeRateChange() async {
     _lockedReviewRate = currentRate.value;
     _reviewEnteredAt = DateTime.now();
     isReviewRateStale.value = false;
+    await fetchExchangeConfig();
   }
 
   void _startReviewStaleWatcher() {

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
@@ -106,7 +107,6 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
-  bool _isBackVisible = false;
 
   @override
   void initState() {
@@ -115,16 +115,13 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
       vsync: this,
       duration: const Duration(milliseconds: 450),
     );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
-    )..addListener(() {
-        final isBack = _animation.value >= 0.5;
-        if (isBack != _isBackVisible) {
-          setState(() {
-            _isBackVisible = isBack;
-          });
-        }
-      });
+    // The face swap is derived from the angle inside the AnimatedBuilder
+    // instead of a setState listener. A listener here fired a second rebuild
+    // on every frame of the flip, on top of the AnimatedBuilder's own.
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOutCubic,
+    );
   }
 
   @override
@@ -190,7 +187,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
       child: Container(
         width: widget.width,
         height: widget.height,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
@@ -208,9 +205,11 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
         ),
         child: Stack(
           children: [
-            // Background artistic watermark curves
-            Positioned(
-              right: -30,
+            // Background artistic watermark curves. Directional so the
+            // oversized currency code leans into the trailing edge instead
+            // of colliding with the balance in RTL.
+            PositionedDirectional(
+              end: -30,
               bottom: -40,
               child: Opacity(
                 opacity: 0.06,
@@ -329,7 +328,13 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Available Balance',
+                            l10nPick(
+                              context,
+                              en: 'Available Balance',
+                              fa: 'موجودی در دسترس',
+                              ar: 'الرصيد المتاح',
+                              zh: '可用余额',
+                            ),
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.65),
                               fontSize: 11,
@@ -338,7 +343,9 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                           ),
                           const SizedBox(height: 2),
                           FittedBox(
-                            alignment: Alignment.centerLeft,
+                            alignment: AlignmentDirectional.centerStart.resolve(
+                              Directionality.of(context),
+                            ),
                             fit: BoxFit.scaleDown,
                             child: Row(
                               children: [
@@ -351,7 +358,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                                     letterSpacing: -0.5,
                                   ),
                                 ),
-                                const SizedBox(width: 6),
+                                // Directional gap: the symbol trails the
+                                // amount in LTR but leads it in RTL, where a
+                                // fixed SizedBox pushed it to the wrong side.
+                                SizedBox(width: 6),
                                 Text(
                                   symbol.isNotEmpty ? symbol : code,
                                   style: TextStyle(
@@ -392,7 +402,13 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                           border: Border.all(color: theme.accentColor.withValues(alpha: 0.4), width: 0.6),
                         ),
                         child: Text(
-                          'DEFAULT',
+                          l10nPick(
+                            context,
+                            en: 'DEFAULT',
+                            fa: 'پیش‌فرض',
+                            ar: 'افتراضي',
+                            zh: '默认',
+                          ),
                           style: TextStyle(
                             color: theme.accentColor,
                             fontSize: 9,
@@ -478,7 +494,15 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                   onPressed: () {
                     HapticFeedback.lightImpact();
                     Clipboard.setData(ClipboardData(text: accountNo));
-                    ToastHelper().showSuccessToast('Account number copied');
+                    ToastHelper().showSuccessToast(
+                      l10nPick(
+                        context,
+                        en: 'Account number copied',
+                        fa: 'شماره حساب کپی شد',
+                        ar: 'تم نسخ رقم الحساب',
+                        zh: '已复制账号',
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(width: 4),
@@ -500,7 +524,13 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
               children: [
                 Expanded(
                   child: _buildActionBtn(
-                    label: 'Deposit',
+                    label: l10nPick(
+                      context,
+                      en: 'Deposit',
+                      fa: 'واریز',
+                      ar: 'إيداع',
+                      zh: '充值',
+                    ),
                     icon: Icons.add_circle_outline_rounded,
                     onTap: () {
                       Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id});
@@ -510,7 +540,13 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 const SizedBox(width: 8),
                 Expanded(
                   child: _buildActionBtn(
-                    label: 'Exchange',
+                    label: l10nPick(
+                      context,
+                      en: 'Exchange',
+                      fa: 'تبدیل',
+                      ar: 'تبادل',
+                      zh: '兑换',
+                    ),
                     icon: Icons.swap_horiz_rounded,
                     onTap: () {
                       Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id});
@@ -520,7 +556,13 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 const SizedBox(width: 8),
                 Expanded(
                   child: _buildActionBtn(
-                    label: 'Transfer',
+                    label: l10nPick(
+                      context,
+                      en: 'Transfer',
+                      fa: 'انتقال',
+                      ar: 'تحويل',
+                      zh: '转账',
+                    ),
                     icon: Icons.send_rounded,
                     onTap: () {
                       Get.toNamed(BaseRoute.transfer, arguments: {'wallet_id': widget.wallet.id});

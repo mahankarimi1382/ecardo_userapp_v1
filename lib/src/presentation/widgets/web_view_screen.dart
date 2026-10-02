@@ -84,17 +84,23 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   /// wallet-modules v1.0.122: carry the app's UI language into the hosted
   /// payment pages (pro-pay / gateway sandbox) so the confirm/cancel step is
-  /// localized too (server renders fa by default; en/fa/zh are supported).
+  /// localized too. Server supports fa, en, zh; international users (ar, tr, ru)
+  /// default to English rather than Persian.
   String _localizedPaymentUrl() {
-    final locale = Get.locale?.languageCode;
-    if (locale == null || !['en', 'fa', 'zh'].contains(locale)) {
-      return widget.paymentUrl;
-    }
     if (widget.paymentUrl.contains('lang=')) {
       return widget.paymentUrl;
     }
+    final locale = Get.locale?.languageCode;
+    final String targetLang;
+    if (locale == 'fa') {
+      targetLang = 'fa';
+    } else if (locale == 'zh') {
+      targetLang = 'zh';
+    } else {
+      targetLang = 'en';
+    }
     final separator = widget.paymentUrl.contains('?') ? '&' : '?';
-    return '${widget.paymentUrl}${separator}lang=$locale';
+    return '${widget.paymentUrl}${separator}lang=$targetLang';
   }
 
   /// Single decision point for the return URL. Authoritative source is the
