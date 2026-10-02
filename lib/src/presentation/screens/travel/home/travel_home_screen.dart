@@ -14,7 +14,12 @@ import '../core/models/travel_models.dart';
 import '../esim/esim_intro_screen.dart';
 import '../flights/flight_search_screen.dart';
 import '../hotels/hotel_search_screen.dart';
-import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import '../insurance/insurance_screens.dart';
+import '../sim/sim_topup_screen.dart';
+import '../taxi/taxi_search_screen.dart';
+import '../trains/train_screens.dart';
+import 'package:ecardo_user/src/rental/screens/rental_home_screen.dart';
+import 'package:ecardo_user/src/visa/screens/visa_catalog_screen.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 
@@ -270,42 +275,146 @@ class _Services extends StatelessWidget {
         .whereType<TravelServiceConfig>()
         .toList();
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
-        for (var index = 0; index < visibleServices.length; index++) ...[
-          Expanded(
-            child: _ServiceTile(
-              color: travelProductColor(visibleServices[index].type),
-              icon: travelProductIcon(visibleServices[index].type),
-              label: visibleServices[index].displayName,
-              foreground:
-                  visibleServices[index].type == TravelProductType.esim
-                  ? TravelTheme.ink
-                  : Colors.white,
-              onTap: () => _openService(visibleServices[index].type),
+        // Primary Row: Flights, Hotels, eSIM, Tours, Visa
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var index = 0; index < visibleServices.length; index++) ...[
+              Expanded(
+                child: _ServiceTile(
+                  color: travelProductColor(visibleServices[index].type),
+                  icon: travelProductIcon(visibleServices[index].type),
+                  label: visibleServices[index].displayName,
+                  foreground:
+                      visibleServices[index].type == TravelProductType.esim
+                      ? TravelTheme.ink
+                      : Colors.white,
+                  onTap: () => _openService(visibleServices[index].type),
+                ),
+              ),
+              SizedBox(width: 8.w),
+            ],
+            Expanded(
+              child: _ServiceTile(
+                color: const Color(0xFF9B51E0),
+                icon: Icons.tour_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Tours',
+                  fa: 'تور مسافرتی',
+                  ar: 'الجولات',
+                  zh: '旅游路线',
+                ),
+                foreground: Colors.white,
+                onTap: () => Get.to(() => const TourListScreen()),
+              ),
             ),
-          ),
-          SizedBox(width: 8.w),
-        ],
-        Expanded(
-          child: _ServiceTile(
-            color: const Color(0xFF9B51E0),
-            icon: Icons.tour_rounded,
-            label: l10nPick(context, en: 'Tours', fa: 'تور مسافرتی'),
-            foreground: Colors.white,
-            onTap: () => Get.to(() => const TourListScreen()),
-          ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: _ServiceTile(
+                color: const Color(0xFF6C5CE7),
+                icon: Icons.card_membership_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Visa',
+                  fa: 'خدمات ویزا',
+                  ar: 'التأشيرات',
+                  zh: '签证服务',
+                ),
+                foreground: Colors.white,
+                onTap: () => Get.to(() => const VisaCatalogScreen()),
+              ),
+            ),
+          ],
         ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: _ServiceTile(
-            color: const Color(0xFF6C5CE7),
-            icon: Icons.card_membership_rounded,
-            label: l10nPick(context, en: 'Visa', fa: 'خدمات ویزا'),
-            foreground: Colors.white,
-            onTap: () => Get.toNamed(BaseRoute.visaHome),
-          ),
+        SizedBox(height: 10.h),
+
+        // Secondary Row: Trains, Car Rental, Taxi, Insurance, SIM Top-Up
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _ServiceTile(
+                color: TravelTheme.green,
+                icon: Icons.train_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Train',
+                  fa: 'قطار',
+                  ar: 'القطار',
+                  zh: '火车票',
+                ),
+                foreground: Colors.white,
+                onTap: () => Get.to(() => const TrainSearchScreen()),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: _ServiceTile(
+                color: const Color(0xFF456A8C),
+                icon: Icons.directions_car_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Car Rental',
+                  fa: 'اجاره خودرو',
+                  ar: 'تأجير سيارات',
+                  zh: '租车自驾',
+                ),
+                foreground: Colors.white,
+                onTap: () => Get.to(() => const RentalHomeScreen()),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: _ServiceTile(
+                color: const Color(0xFF0D9488),
+                icon: Icons.local_taxi_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Taxi',
+                  fa: 'ترانسفر و تاکسی',
+                  ar: 'تاكسي وتوصيل',
+                  zh: '接送专车',
+                ),
+                foreground: Colors.white,
+                onTap: () => Get.to(() => const TaxiSearchScreen()),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: _ServiceTile(
+                color: const Color(0xFF2563EB),
+                icon: Icons.health_and_safety_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Insurance',
+                  fa: 'بیمه سفر',
+                  ar: 'تأمين السفر',
+                  zh: '旅游保险',
+                ),
+                foreground: Colors.white,
+                onTap: () => Get.to(() => const TravelInsuranceScreen()),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: _ServiceTile(
+                color: const Color(0xFFE60000),
+                icon: Icons.phone_android_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'SIM Top-Up',
+                  fa: 'شارژ سیم‌کارت',
+                  ar: 'شحن رصيد',
+                  zh: '话费充值',
+                ),
+                foreground: Colors.white,
+                onTap: () => Get.to(() => const SimTopUpScreen()),
+              ),
+            ),
+          ],
         ),
       ],
     );

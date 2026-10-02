@@ -5,7 +5,7 @@ import '../services/rental_service.dart';
 
 /// GetX controller for Car Rental service (Car-Rental-Service-Flow.md).
 class RentalController extends GetxController {
-  final RentalApiService _api = Get.find<RentalApiService>();
+  late final RentalApiService _api;
 
   final cars = <CarModel>[].obs;
   final myBookings = <RentalBookingModel>[].obs;
@@ -16,17 +16,38 @@ class RentalController extends GetxController {
   final isLoadingDetail = false.obs;
   final isSubmitting = false.obs;
 
+  // Service health / API availability state
+  final isServiceUnavailable = false.obs;
+  final errorMessage = RxnString();
+
   // Search state
   final selectedCategory = 'all'.obs;
   final searchQuery = ''.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    _api = Get.isRegistered<RentalApiService>()
+        ? Get.find<RentalApiService>()
+        : Get.put(RentalApiService());
+  }
+
   Future<void> fetchCars() async {
     try {
       isLoadingCars.value = true;
-      cars.value = await _api.getCars(
+      isServiceUnavailable.value = false;
+      errorMessage.value = null;
+      final result = await _api.getCars(
         category: selectedCategory.value == 'all' ? null : selectedCategory.value,
         q: searchQuery.value.isEmpty ? null : searchQuery.value,
       );
+      cars.value = result;
+      if (result.isEmpty && searchQuery.value.isEmpty && selectedCategory.value == 'all') {
+        isServiceUnavailable.value = true;
+      }
+    } catch (e) {
+      isServiceUnavailable.value = true;
+      errorMessage.value = e.toString();
     } finally {
       isLoadingCars.value = false;
     }

@@ -12,11 +12,16 @@ import 'package:ecardo_user/src/presentation/screens/travel/core/controller/trav
 import 'package:ecardo_user/src/presentation/screens/travel/esim/esim_intro_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/flights/flight_search_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/hotels/hotel_search_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/insurance/insurance_screens.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/catalog_service_screens.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/extra_service_registry.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/quick_service_screens.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/sim/sim_topup_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/taxi/taxi_search_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/trains/train_screens.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/visa/visa_screens.dart';
+import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
+import 'package:ecardo_user/src/visa/screens/visa_catalog_screen.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 
 /// Travel services card — same tile grid language as financial / business.
@@ -83,7 +88,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () => const VisaIntroScreen(),
+        pageBuilder: () => const VisaCatalogScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceTrain,
@@ -105,7 +110,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () => taxiRequestScreen(localization),
+        pageBuilder: () => const TaxiSearchScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceTour,
@@ -113,8 +118,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () =>
-            CatalogServiceScreen(config: extraServiceConfig('tour')),
+        pageBuilder: () => const TourListScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceBoat,
@@ -219,7 +223,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () => simTopUpRequestScreen(localization),
+        pageBuilder: () => const SimTopUpScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceInsurance,
@@ -227,8 +231,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () =>
-            CatalogServiceScreen(config: extraServiceConfig('insurance')),
+        pageBuilder: () => const TravelInsuranceScreen(),
       ),
     ];
   }

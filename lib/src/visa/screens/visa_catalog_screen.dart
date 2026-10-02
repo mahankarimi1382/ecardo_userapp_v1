@@ -231,6 +231,98 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                 );
               }
 
+              if (controller.isServiceUnavailable.value) {
+                return Container(
+                  margin: EdgeInsetsDirectional.only(top: 8.h),
+                  padding: EdgeInsetsDirectional.all(20.r),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(14.r),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.cloud_off_rounded,
+                          color: Colors.orange,
+                          size: 40,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Visa Service Temporarily Unavailable',
+                          fa: 'سرویس آنلاین ویزا موقتاً در دسترس نیست',
+                          ar: 'خدمة التأشيرات غير متوفرة مؤقتاً',
+                          zh: '在线签证申请服务暂不可用',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF1E293B),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'The visa catalog (/visa/catalog) is undergoing backend partner integration. Please retry shortly.',
+                          fa: 'ارتباط با سامانه مرکزی صدور روادید بین‌المللی در دست اتصال است. لطفاً بعداً تلاش فرمایید.',
+                          ar: 'خوادم التأشيرات الدولية قيد التحديث مع الجهات المعتمدة.',
+                          zh: '全球签证服务接口正在与合作伙伴联调中，请稍后重试。',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 11.5.sp,
+                          height: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF7445FF),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 20.w,
+                            vertical: 10.h,
+                          ),
+                        ),
+                        onPressed: controller.loadCatalog,
+                        icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 18),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Retry Connection',
+                            fa: 'تلاش مجدد',
+                            ar: 'إعادة المحاولة',
+                            zh: '重试连接',
+                          ),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               final items = controller.catalogList.where((it) {
                 if (_searchQuery.isEmpty) return true;
                 return it.countryName.toLowerCase().contains(_searchQuery) ||
@@ -253,10 +345,10 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                       Text(
                         l10nPick(
                           context,
-                          en: 'No visa packages found on server',
-                          fa: 'کاتالوگ ویزا در حال دریافت از سرور کنسولی است',
-                          ar: 'بانتظار مزامنة باقات التأشيرات',
-                          zh: '正在等待领事服务网关同步签证包',
+                          en: 'No visa packages found',
+                          fa: 'هیچ ویزایی با این مشخصات یافت نشد',
+                          ar: 'لم يتم العثور على أي باقات تأشيرة',
+                          zh: '未找到符合条件的签证项目',
                         ),
                         style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp),
                       ),

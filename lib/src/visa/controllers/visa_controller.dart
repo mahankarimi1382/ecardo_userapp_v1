@@ -25,9 +25,11 @@ class VisaController extends GetxController {
   final RxBool isSubmitting = false.obs;
   final RxBool isPaying = false.obs;
 
-  // Backend connection status
+  // Service health / API availability state
   final RxBool hasBackendError = false.obs;
   final RxBool isServiceAvailable = true.obs;
+  final RxBool isServiceUnavailable = false.obs;
+  final RxnString errorMessage = RxnString();
 
   // Document upload tracking
   final RxMap<String, File> pickedFiles = <String, File>{}.obs;
@@ -76,18 +78,26 @@ class VisaController extends GetxController {
   Future<void> loadCatalog() async {
     isLoadingCatalog.value = true;
     hasBackendError.value = false;
+    isServiceAvailable.value = true;
+    isServiceUnavailable.value = false;
+    errorMessage.value = null;
     try {
       final items = await _service.getCatalog();
       catalogList.assignAll(items);
       if (items.isEmpty) {
         hasBackendError.value = true;
         isServiceAvailable.value = false;
+        isServiceUnavailable.value = true;
       } else {
+        hasBackendError.value = false;
         isServiceAvailable.value = true;
+        isServiceUnavailable.value = false;
       }
-    } catch (_) {
+    } catch (e) {
       hasBackendError.value = true;
       isServiceAvailable.value = false;
+      isServiceUnavailable.value = true;
+      errorMessage.value = e.toString();
       catalogList.clear();
     } finally {
       isLoadingCatalog.value = false;

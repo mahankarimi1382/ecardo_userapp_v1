@@ -19,20 +19,66 @@ class TourListScreen extends StatelessWidget {
     final controller = Get.put(TourController());
 
     final categories = [
-      {'code': '', 'label_fa': 'همه تورها', 'label_en': 'All Tours'},
-      {'code': 'nature', 'label_fa': 'طبیعت‌گردی', 'label_en': 'Nature'},
-      {'code': 'cultural', 'label_fa': 'فرهنگی و تاریخی', 'label_en': 'Cultural'},
-      {'code': 'beach', 'label_fa': 'ساحلی و تفریحی', 'label_en': 'Beach'},
-      {'code': 'luxury', 'label_fa': 'لوکس و اختصاصی', 'label_en': 'Luxury'},
-      {'code': 'family', 'label_fa': 'خانوادگی', 'label_en': 'Family'},
+      {
+        'code': '',
+        'label_fa': 'همه تورها',
+        'label_en': 'All Tours',
+        'label_ar': 'جميع الرحلات',
+        'label_zh': '全部行程',
+      },
+      {
+        'code': 'nature',
+        'label_fa': 'طبیعت‌گردی',
+        'label_en': 'Nature',
+        'label_ar': 'طبيعة ومغامرات',
+        'label_zh': '自然风光',
+      },
+      {
+        'code': 'cultural',
+        'label_fa': 'فرهنگی و تاریخی',
+        'label_en': 'Cultural',
+        'label_ar': 'ثقافية وتاريخية',
+        'label_zh': '历史文化',
+      },
+      {
+        'code': 'beach',
+        'label_fa': 'ساحلی و تفریحی',
+        'label_en': 'Beach',
+        'label_ar': 'شاطئية وترفيهية',
+        'label_zh': '海滨度假',
+      },
+      {
+        'code': 'luxury',
+        'label_fa': 'لوکس و اختصاصی',
+        'label_en': 'Luxury',
+        'label_ar': 'فاخرة وخاصة',
+        'label_zh': '奢华定制',
+      },
+      {
+        'code': 'family',
+        'label_fa': 'خانوادگی',
+        'label_en': 'Family',
+        'label_ar': 'عائلية',
+        'label_zh': '家庭亲子',
+      },
     ];
 
     return Scaffold(
       backgroundColor: TravelTheme.background,
       appBar: AppBar(
         title: Text(
-          l10nPick(context, en: 'Tours & Travel Packages', fa: 'تورهای مسافرتی و پکیج‌ها'),
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800, color: TravelTheme.ink),
+          l10nPick(
+            context,
+            en: 'Tours & Travel Packages',
+            fa: 'تورهای مسافرتی و پکیج‌ها',
+            ar: 'الجولات السياحية والباقات',
+            zh: '旅游线路与度假套餐',
+          ),
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w800,
+            color: TravelTheme.ink,
+          ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -43,7 +89,13 @@ class TourListScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            tooltip: l10nPick(context, en: 'My Bookings', fa: 'رزروهای من'),
+            tooltip: l10nPick(
+              context,
+              en: 'My Bookings',
+              fa: 'رزروهای من',
+              ar: 'حجوزاتي',
+              zh: '我的预订',
+            ),
             icon: const Icon(Icons.confirmation_number_outlined, color: TravelTheme.blue),
             onPressed: () => Get.to(() => const TourMyBookingsScreen()),
           ),
@@ -53,7 +105,7 @@ class TourListScreen extends StatelessWidget {
         color: TravelTheme.blue,
         onRefresh: () => controller.loadTours(refresh: true),
         child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          padding: EdgeInsetsDirectional.fromSTEB(16.w, 12.h, 16.w, 24.h),
           children: [
             // Tour-Yar Quiz Banner
             _TourYarBanner(
@@ -71,7 +123,7 @@ class TourListScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: TravelTheme.shadow,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 14.w),
               child: Row(
                 children: [
                   const Icon(Icons.search_rounded, color: TravelTheme.muted),
@@ -83,6 +135,8 @@ class TourListScreen extends StatelessWidget {
                           context,
                           en: 'Search destination, city, or tour title...',
                           fa: 'جستجوی مقصد، شهر یا عنوان تور...',
+                          ar: 'البحث عن وجهة أو مدينة أو رحلة...',
+                          zh: '搜索目的地、城市或旅游路线...',
                         ),
                         hintStyle: TextStyle(fontSize: 12.sp, color: TravelTheme.muted),
                         border: InputBorder.none,
@@ -150,6 +204,92 @@ class TourListScreen extends StatelessWidget {
                 );
               }
 
+              if (controller.isServiceUnavailable.value) {
+                return Container(
+                  margin: EdgeInsetsDirectional.only(top: 10.h),
+                  padding: EdgeInsetsDirectional.all(20.r),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                    boxShadow: TravelTheme.shadow,
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(14.r),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.cloud_off_rounded,
+                          color: Colors.orange,
+                          size: 40,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Tours Service Temporarily Unavailable',
+                          fa: 'سرویس رزرو تور موقتاً در دسترس نیست',
+                          ar: 'خدمة حجز الجولات غير متوفرة مؤقتاً',
+                          zh: '旅游线路预订服务暂不可用',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w800,
+                          color: TravelTheme.ink,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'The tours catalog (/user/tours) is undergoing backend partner integration. Please retry shortly.',
+                          fa: 'سرویس جامع تورهای بین‌المللی در حال همگام‌سازی با درگاه‌های تأمین‌کننده است. لطفاً بعداً تلاش فرمایید.',
+                          ar: 'خوادم الجولات السياحية قيد التحديث مع الشركاء. يرجى المحاولة لاحقاً.',
+                          zh: '旅游线路服务接口正在与后台合作伙伴联调中，请稍后重试。',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: TravelTheme.muted,
+                          fontSize: 11.5.sp,
+                          height: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: TravelTheme.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 20.w,
+                            vertical: 10.h,
+                          ),
+                        ),
+                        onPressed: () => controller.loadTours(refresh: true),
+                        icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 18),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Retry Connection',
+                            fa: 'تلاش مجدد',
+                            ar: 'إعادة المحاولة',
+                            zh: '重试连接',
+                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               if (controller.tours.isEmpty) {
                 return Center(
                   child: Padding(
@@ -159,7 +299,13 @@ class TourListScreen extends StatelessWidget {
                         Icon(Icons.explore_off_outlined, size: 64.r, color: TravelTheme.muted),
                         SizedBox(height: 12.h),
                         Text(
-                          l10nPick(context, en: 'No tours found', fa: 'توری با این مشخصات یافت نشد'),
+                          l10nPick(
+                            context,
+                            en: 'No tours found',
+                            fa: 'توری با این مشخصات یافت نشد',
+                            ar: 'لم يتم العثور على جولات سياحية',
+                            zh: '未找到符合条件的旅游路线',
+                          ),
                           style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
                         ),
                       ],

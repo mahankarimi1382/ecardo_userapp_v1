@@ -7,6 +7,9 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/rental_controller.dart';
 import '../models/rental_models.dart';
+import 'rental_voucher_screen.dart';
+
+export 'rental_voucher_screen.dart';
 
 /// جست‌وجو و کاتالوگ خودرو + رزروهای من — Car-Rental-Service-Flow.md
 class RentalHomeScreen extends StatefulWidget {
@@ -188,7 +191,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               height: 40.h,
               child: Obx(() => ListView(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w),
                 children: CATEGORIES.map((c) => Padding(
                   padding: EdgeInsetsDirectional.only(end: 8.w),
                   child: ChoiceChip(
@@ -206,23 +209,116 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               if (controller.isLoadingCars.value) {
                 return const Center(child: CircularProgressIndicator());
               }
+
+              if (controller.isServiceUnavailable.value) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.all(24.r),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(14.r),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.cloud_off_rounded,
+                            color: Colors.orange,
+                            size: 40,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Car Rental Service Temporarily Unavailable',
+                            fa: 'سرویس رنت خودرو موقتاً در دسترس نیست',
+                            ar: 'خدمة تأجير السيارات غير متوفرة مؤقتاً',
+                            zh: '租车服务暂时不可用',
+                          ),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w800,
+                            color: TravelTheme.ink,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Car rental fleet endpoints (/rental/cars) are undergoing backend integration. Please retry shortly.',
+                            fa: 'ارتباط با سامانه مدیریت ناوگان خودرو (/rental/cars) در حال همگام‌سازی است. به زودی در دسترس خواهد بود.',
+                            ar: 'خوادم أسطول السيارات قيد التحديث مع المزودين.',
+                            zh: '租车车队接口正在与后台合作伙伴联调中，稍后恢复。',
+                          ),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: TravelTheme.muted,
+                            fontSize: 11.5.sp,
+                            height: 1.5,
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.lightPrimary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            padding: EdgeInsetsDirectional.symmetric(
+                              horizontal: 20.w,
+                              vertical: 10.h,
+                            ),
+                          ),
+                          onPressed: () => controller.fetchCars(),
+                          icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 18),
+                          label: Text(
+                            l10nPick(
+                              context,
+                              en: 'Retry Connection',
+                              fa: 'تلاش مجدد',
+                              ar: 'إعادة المحاولة',
+                              zh: '重试连接',
+                            ),
+                            style: const TextStyle(color: Colors.white, fontSize: 12.sp),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
               if (controller.cars.isEmpty) {
-                return Center(child: Text(l10nPick(context, en: 'No cars found', fa: 'خودرویی یافت نشد')));
+                return Center(
+                  child: Text(
+                    l10nPick(
+                      context,
+                      en: 'No cars found',
+                      fa: 'خودرویی در این کلاس یافت نشد',
+                      ar: 'لم يتم العثور على سيارات',
+                      zh: '未找到符合条件的车辆',
+                    ),
+                  ),
+                );
               }
               return ListView.builder(
-                padding: EdgeInsets.all(16.w),
+                padding: EdgeInsetsDirectional.all(16.w),
                 itemCount: controller.cars.length,
                 itemBuilder: (context, i) {
                   final car = controller.cars[i];
                   return Card(
-                    margin: EdgeInsets.only(bottom: 8.h),
+                    margin: EdgeInsetsDirectional.only(bottom: 8.h),
                     child: ListTile(
                       title: Text(car.title, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.sp)),
                       subtitle: Text(l10nPick(context,
                         en: '${_categoryLabel(context, car.category)} · ${car.dailyPrice}/day · Deposit ${car.depositAmount}',
                         fa: '${_categoryLabel(context, car.category)} · ${car.dailyPrice} روزانه · ودیعه ${car.depositAmount}')),
                       trailing: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
                         decoration: BoxDecoration(
                           color: car.isFleet ? Colors.green.withValues(alpha: 0.12) : Colors.orange.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(10.r),
