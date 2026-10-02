@@ -674,19 +674,10 @@ class _CipLoungeReservationScreenState
 
     final airport = _airportData[_selectedAirport]!;
     final bookingDetails = TravelBookingDetails(
-      route: '${airport['name']} ($_flightType)',
-      dateTime: DateFormat('yyyy-MM-dd HH:mm').format(
-        DateTime(
-          _flightDate.year,
-          _flightDate.month,
-          _flightDate.day,
-          _flightTime.hour,
-          _flightTime.minute,
-        ),
-      ),
-      guestsCount: _adultsCount + _childrenCount,
-      notes: 'Flight $flightNumber, Wheelchair: $_needWheelchair, Pet: $_needPetCare',
-      reference: 'CIP-${DateTime.now().millisecondsSinceEpoch}',
+      adultCount: _adultsCount,
+      childCount: _childrenCount,
+      cabinClass: 'VIP CIP Lounge',
+      specialRequests: 'Airport: ${airport['name']} ($_flightType), Flight: $flightNumber, Date: ${DateFormat('yyyy-MM-dd').format(_flightDate)} ${_flightTime.format(context)}, Wheelchair: $_needWheelchair, Pet: $_needPetCare',
     );
 
     Get.to(
