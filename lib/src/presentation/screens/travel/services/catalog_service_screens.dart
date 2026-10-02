@@ -186,7 +186,7 @@ class _CatalogItemCard extends StatelessWidget {
                       SizedBox(width: 10.w),
                     ],
                     Text(
-                      '${localization.travelStartingPrice}: ${formatMockAmount(item.price)} ${localization.travelMockCurrency} / $priceUnit',
+                      '${localization.travelStartingPrice}: ${formatMockAmount(item.price)} ${ensureTravelController().bootstrap.value?.currency ?? 'IRR'} / $priceUnit',
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w900,
@@ -219,8 +219,9 @@ class CatalogServiceDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final rows = config.detailRows?.call(item, localization) ?? const [];
+    final currency = ensureTravelController().bootstrap.value?.currency ?? 'IRR';
     final amountLabel =
-        '${formatMockAmount(item.price)} ${localization.travelMockCurrency} / '
+        '${formatMockAmount(item.price)} $currency / '
         '${config.priceUnit(localization)}';
     return TravelPage(
       title: config.title(localization),
@@ -305,7 +306,7 @@ class CatalogServiceDetailScreen extends StatelessWidget {
               children: [
                 _detailRow(
                   localization.travelStartingPrice,
-                  '${formatMockAmount(item.price)} ${localization.travelMockCurrency} / '
+                  '${formatMockAmount(item.price)} $currency / '
                   '${config.priceUnit(localization)}',
                 ),
                 if (item.rating.isNotEmpty) ...[
