@@ -138,7 +138,9 @@ void main() {
           designSize: const Size(375, 812),
           builder: (context, child) => const MaterialApp(
             home: Scaffold(
-              body: HotelAmenitiesGrid(),
+              body: SingleChildScrollView(
+                child: HotelAmenitiesGrid(),
+              ),
             ),
           ),
         ),

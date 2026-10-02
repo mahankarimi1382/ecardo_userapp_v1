@@ -430,40 +430,18 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             ),
           ),
           SizedBox(width: 8.w),
-          // Label and Category/Tag
+          // Amenity Label
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Text(
-                    amenity.localizedLabel(isRtl),
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w700,
-                      color: TravelTheme.ink,
-                      height: 1.1,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Flexible(
-                  child: Text(
-                    amenity.localizedTag(isRtl),
-                    style: TextStyle(
-                      fontSize: 9.sp,
-                      fontWeight: FontWeight.w600,
-                      color: TravelTheme.muted,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+            child: Text(
+              amenity.localizedLabel(isRtl),
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w700,
+                color: TravelTheme.ink,
+                height: 1.2,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
