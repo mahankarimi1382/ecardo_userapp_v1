@@ -53,13 +53,14 @@ class _EcardoUserState extends State<EcardoUser> {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        final lts = Get.isRegistered<LocaleThemeService>()
-            ? Get.find<LocaleThemeService>()
-            : null;
-        final appLocale = lts?.locale.value ?? _locale;
-        final appTheme = lts?.themeMode.value ?? ThemeMode.system;
+        return Obx(() {
+          final lts = Get.isRegistered<LocaleThemeService>()
+              ? Get.find<LocaleThemeService>()
+              : null;
+          final appLocale = lts?.locale.value ?? _locale;
+          final appTheme = lts?.themeMode.value ?? ThemeMode.system;
 
-        return GetMaterialApp(
+          return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: AppStrings.appName,
           themeMode: appTheme,
@@ -161,6 +162,7 @@ class _EcardoUserState extends State<EcardoUser> {
             );
           },
         );
+        });
       },
     );
   }

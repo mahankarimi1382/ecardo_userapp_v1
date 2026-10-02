@@ -191,11 +191,8 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                               )
                                               .key;
 
-                                          // 1. Definitively close bottom sheet and drawer first
-                                          if (Get.isBottomSheetOpen == true) {
-                                            Get.back();
-                                          }
-                                          Get.back();
+                                          // 1. Close drawer safely without risking pop of underlying route
+                                          homeController.closeEndDrawer();
 
                                           // 2. Schedule changeLanguage with a frame delay so that
                                           // the drawer close transition finishes before the LTR <-> RTL

@@ -43,21 +43,10 @@ class LocaleThemeService extends GetxService {
       );
     }
 
-    // 2. Update reactive values
+    // 2. Update reactive values — driven by Obx in app.dart without engine freeze
     final nextLocale = Locale(normalized);
     Get.locale = nextLocale;
     locale.value = nextLocale;
-
-    // 3. Schedule Get.updateLocale on the next frame so that any in-flight
-    // route dismiss animations (bottom sheet / dialog) finish completely
-    // without causing render pipeline deadlock or UI thread freeze.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      try {
-        Get.updateLocale(nextLocale);
-      } catch (e) {
-        debugPrint('⚠️ [LocaleThemeService] Get.updateLocale notice: $e');
-      }
-    });
   }
 
   Future<void> setThemeModePref(String mode) async {

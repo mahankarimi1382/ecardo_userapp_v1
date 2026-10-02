@@ -495,7 +495,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       );
                       if (code != null && Get.isRegistered<LocaleThemeService>()) {
-                        await Future.delayed(const Duration(milliseconds: 350));
                         if (!mounted) return;
                         await Get.find<LocaleThemeService>().setLanguage(code);
                       }

@@ -605,10 +605,10 @@ class _LanguagePickerButton extends StatelessWidget {
     );
   }
 
-  void _showLanguageModal(BuildContext context) {
+  Future<void> _showLanguageModal(BuildContext context) async {
     final currentCode = Localizations.localeOf(context).languageCode;
 
-    showModalBottomSheet<void>(
+    final selectedCode = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(
@@ -664,19 +664,17 @@ class _LanguagePickerButton extends StatelessWidget {
                           size: 20.sp,
                         )
                       : null,
-                  onTap: () async {
-                    Navigator.pop(ctx);
-                    await Future.delayed(const Duration(milliseconds: 350));
-                    if (Get.isRegistered<LocaleThemeService>()) {
-                      await Get.find<LocaleThemeService>().setLanguage(c);
-                    }
-                  },
+                  onTap: () => Navigator.pop(ctx, c),
                 ),
             ],
           ),
         ),
       ),
     );
+
+    if (selectedCode != null && Get.isRegistered<LocaleThemeService>()) {
+      await Get.find<LocaleThemeService>().setLanguage(selectedCode);
+    }
   }
 }
 

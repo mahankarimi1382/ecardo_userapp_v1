@@ -77,11 +77,23 @@ class HomeController extends GetxController {
   }
 
   void openEndDrawer() {
-    _scaffoldKey!.currentState!.openEndDrawer();
+    _scaffoldKey?.currentState?.openEndDrawer();
+  }
+
+  void closeEndDrawer() {
+    if (_scaffoldKey?.currentState?.isEndDrawerOpen ?? false) {
+      _scaffoldKey!.currentState!.closeEndDrawer();
+    }
   }
 
   void openDrawer() {
-    _scaffoldKey!.currentState!.openDrawer();
+    _scaffoldKey?.currentState?.openDrawer();
+  }
+
+  void closeDrawer() {
+    if (_scaffoldKey?.currentState?.isDrawerOpen ?? false) {
+      _scaffoldKey!.currentState!.closeDrawer();
+    }
   }
 
   StreamSubscription? _eventSubscription;
