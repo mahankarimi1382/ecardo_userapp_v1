@@ -666,6 +666,7 @@ class _LanguagePickerButton extends StatelessWidget {
                       : null,
                   onTap: () async {
                     Navigator.pop(ctx);
+                    await Future.delayed(const Duration(milliseconds: 350));
                     if (Get.isRegistered<LocaleThemeService>()) {
                       await Get.find<LocaleThemeService>().setLanguage(c);
                     }

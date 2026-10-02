@@ -472,7 +472,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     leading: const Icon(Icons.language),
                     title: Text(l10nPick(context, en: 'Language', fa: 'زبان', ar: 'اللغة', zh: '语言')),
                     subtitle: Text(LocaleThemeService.nativeName(
-                      Localizations.localeOf(context).languageCode,
+                      Localizations.localeOf(context)?.languageCode ?? 'en',
                     )),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () async {
@@ -485,7 +485,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               for (final c in LocaleThemeService.supported)
                                 ListTile(
                                   title: Text(LocaleThemeService.nativeName(c)),
-                                  trailing: Localizations.localeOf(context).languageCode == c
+                                  trailing: (Localizations.localeOf(context)?.languageCode ?? 'en') == c
                                       ? const Icon(Icons.check, color: AppColors.success)
                                       : null,
                                   onTap: () => Navigator.pop(ctx, c),
@@ -495,7 +495,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       );
                       if (code != null && Get.isRegistered<LocaleThemeService>()) {
-                        await Future.delayed(const Duration(milliseconds: 50));
+                        await Future.delayed(const Duration(milliseconds: 350));
                         if (!mounted) return;
                         await Get.find<LocaleThemeService>().setLanguage(code);
                       }

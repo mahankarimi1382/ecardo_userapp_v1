@@ -36,31 +36,28 @@ class LocaleThemeService extends GetxService {
     final normalized = code.trim().toLowerCase();
     if (!supported.contains(normalized)) return;
 
-    // 1. Safely close any active modal bottom-sheet or dialog to avoid orphaned render-tree crashes
-    if (Get.isBottomSheetOpen == true) {
-      Get.back();
-    }
-    if (Get.isDialogOpen == true) {
-      Get.back();
-    }
-
-    // 2. Persist first so the choice survives an app restart.
+    // 1. Persist first so the choice survives an app restart.
     if (Get.isRegistered<SettingsService>()) {
       await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
         normalized,
       );
     }
 
-    // 3. Smooth in-place locale update without destroying the Navigator or route stack
+    // 2. Update reactive values
     final nextLocale = Locale(normalized);
     Get.locale = nextLocale;
     locale.value = nextLocale;
 
-    try {
-      await Get.updateLocale(nextLocale);
-    } catch (e) {
-      debugPrint('⚠️ [LocaleThemeService] Get.updateLocale notice: $e');
-    }
+    // 3. Schedule Get.updateLocale on the next frame so that any in-flight
+    // route dismiss animations (bottom sheet / dialog) finish completely
+    // without causing render pipeline deadlock or UI thread freeze.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        Get.updateLocale(nextLocale);
+      } catch (e) {
+        debugPrint('⚠️ [LocaleThemeService] Get.updateLocale notice: $e');
+      }
+    });
   }
 
   Future<void> setThemeModePref(String mode) async {
