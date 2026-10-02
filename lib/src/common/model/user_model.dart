@@ -174,7 +174,13 @@ class BoardingSteps {
   bool? idVerification;
   bool? completed;
 
-  BoardingSteps({this.personalInfo, this.idVerification, this.completed});
+  BoardingSteps({
+    this.emailVerification,
+    this.passwordSetup,
+    this.personalInfo,
+    this.idVerification,
+    this.completed,
+  });
 
   BoardingSteps.fromJson(Map<String, dynamic> json) {
     emailVerification = json['email_verification'];

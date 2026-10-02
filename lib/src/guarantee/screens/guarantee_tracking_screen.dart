@@ -191,7 +191,7 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${c.instrument.name}',
+                '${c.instrument?.name ?? ''}',
                 style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
               ),
               Container(

@@ -125,9 +125,11 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-        final accountNumber =
-        _homeController?.userModel.value.data?.accountNumber ?? '';
-    if (_homeController == null || accountNumber.isEmpty) {
+    final home = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>()
+        : null;
+    final accountNumber = home?.userModel.value.data?.accountNumber ?? '';
+    if (home == null || accountNumber.isEmpty) {
       final code = Localizations.localeOf(context).languageCode;
       String title;
       String subtitle;

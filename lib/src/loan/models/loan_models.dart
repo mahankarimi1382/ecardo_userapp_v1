@@ -28,6 +28,8 @@ class LoanProductModel {
     required this.lateFeeCapPct,
   });
 
+  double get baseRateAnnual => interestRatePct;
+
   factory LoanProductModel.fromJson(Map<String, dynamic> json) {
     return LoanProductModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
@@ -163,6 +165,7 @@ class LoanInstallmentModel {
   bool get isPaid => status == 'PAID' || status == 'WAIVED';
   bool get isOverdue => status == 'OVERDUE';
   double get totalDue => amount + lateFeeAccrued - paidAmount;
+  int get installmentNo => seq;
 
   factory LoanInstallmentModel.fromJson(Map<String, dynamic> json) {
     return LoanInstallmentModel(

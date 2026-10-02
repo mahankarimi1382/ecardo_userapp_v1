@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';

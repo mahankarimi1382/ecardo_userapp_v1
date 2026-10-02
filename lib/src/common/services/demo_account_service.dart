@@ -219,8 +219,7 @@ class DemoAccountService extends GetxService {
       expirationYear: 2029,
       createdAt: '2026-02-10 14:00:00',
       cardHolder: CardHolder(
-        firstName: 'کاربر دمو',
-        lastName: 'تست کیفیت',
+        name: 'کاربر دمو',
         email: 'demo@ecardo.ir',
       ),
     ).obs;

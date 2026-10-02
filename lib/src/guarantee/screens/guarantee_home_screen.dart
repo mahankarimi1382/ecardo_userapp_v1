@@ -417,7 +417,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${c.instrument.name} (${c.beneficiaryName})',
+                    '${c.instrument?.name ?? ''} (${c.beneficiaryName})',
                     style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 2.h),

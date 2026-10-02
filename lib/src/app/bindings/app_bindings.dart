@@ -677,12 +677,3 @@ class DynamicPasswordBinding implements Bindings {
     }
   }
 }
-
-class RemittanceBinding implements Bindings {
-  @override
-  void dependencies() {
-    if (!Get.isRegistered<RemittanceController>()) {
-      Get.lazyPut<RemittanceController>(() => RemittanceController(), fenix: true);
-    }
-  }
-}
