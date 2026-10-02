@@ -7,6 +7,12 @@ import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 /// Full-screen PIN gate. Shown by [AppLockWrapper] when locked.
+///
+/// Mounted on demand per lock episode (v1.0.128), so the post-frame
+/// biometric attempt in [initState] runs exactly when the gate actually
+/// appears — no more invisible cold-start prompt colliding with the
+/// splash biometric gate, and the biometric offer is available on every
+/// real lock (not just once per process).
 class LockScreen extends StatefulWidget {
   const LockScreen({super.key});
 

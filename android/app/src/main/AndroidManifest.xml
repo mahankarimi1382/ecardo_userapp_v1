@@ -71,6 +71,17 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+        <!-- BUGFIX (black screen on resume): Impeller is the default Android
+             renderer on Flutter 3.44; on some low-end / 32-bit GPUs the
+             Vulkan/GL surface is not recreated after lock screen / task
+             switch, leaving the window background (#161614 = near-black)
+             visible forever with a dead-looking app. Opting out falls back
+             to the Skia renderer, which re-creates its surface reliably.
+             Remove only after device-matrix verification on Impeller. -->
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="false" />
+
         <!-- FCM default channel MUST match LocalNotificationsService.primaryId
              (ecardo_default). Legacy channel_id is still created at runtime. -->
         <meta-data

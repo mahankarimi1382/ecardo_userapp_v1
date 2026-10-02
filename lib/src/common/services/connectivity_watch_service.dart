@@ -52,22 +52,33 @@ class ConnectivityWatchService extends GetxService with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _connectivity.checkConnectivity().then((results) {
-        _handleConnectivityChange(results, immediate: false);
-      });
+      // BUGFIX (black screen on resume): never re-root the app from the
+      // resume path. Right after unlock, the radio often reports a
+      // transient `none` while mobile data wakes up; feeding that into the
+      // offline branch used to `Get.offAllNamed` the whole stack into
+      // no-internet → then splash → full reboot (near-black splash +
+      // biometric prompt = up to 30s of an app that looks frozen/black).
+      // Resume only refreshes the reactive flags; navigation is owned by
+      // the debounced `onConnectivityChanged` stream, which fires on real
+      // state changes only.
+      _connectivity.checkConnectivity().then(_updateFlags);
     }
+  }
+
+  /// Updates [isOffline]/[isVpn] without any navigation side effects.
+  void _updateFlags(List<ConnectivityResult> results) {
+    final offline = results.isEmpty ||
+        results.every((r) => r == ConnectivityResult.none);
+    isOffline.value = offline;
+    isVpn.value = results.contains(ConnectivityResult.vpn) && !offline;
   }
 
   void _handleConnectivityChange(
     List<ConnectivityResult> results, {
     bool immediate = false,
   }) {
-    final offline = results.isEmpty ||
-        results.every((r) => r == ConnectivityResult.none);
-    final vpn = results.contains(ConnectivityResult.vpn);
-
-    isOffline.value = offline;
-    isVpn.value = vpn && !offline;
+    _updateFlags(results);
+    final offline = isOffline.value;
 
     _debounceTimer?.cancel();
 

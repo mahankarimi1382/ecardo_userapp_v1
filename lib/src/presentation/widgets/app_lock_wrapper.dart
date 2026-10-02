@@ -5,80 +5,38 @@ import 'package:ecardo_user/src/presentation/screens/settings/view/lock_screen.d
 
 /// Overlays [LockScreen] on the entire app when [AppLockService.locked].
 ///
-/// باگ ۲ (v1.0.118): تبدیل به StatefulWidget برای حل مشکل black screen و
-/// freeze هنگام قفل/خروج از قفل:
-///   - از Visibility به‌جای Stack/conditional استفاده می‌شود تا Flutter
-///     widget tree را حفظ کند و از rebuild کامل جلوگیری شود.
-///   - یک delay کوچک (80ms) پیش از نمایش LockScreen اضافه شده تا اولین
-///     frame اپ رندر شود و صفحه سیاه نشود.
-///   - نمایش LockScreen با AnimatedSwitcher نرم‌تر است.
-class AppLockWrapper extends StatefulWidget {
+/// BUGFIX (v1.0.128 — black screen / freeze on lock & unlock):
+/// the previous version kept [LockScreen] permanently mounted inside a
+/// `Visibility(maintainState: true)` + AnimatedOpacity with a one-frame
+/// `_showLock` state lag and a post-frame setState. Consequences:
+///   1. LockScreen.initState (biometric attempt) fired invisibly at COLD
+///      START — colliding with SplashController's own biometric gate
+///      (local_auth `auth_in_progress`) and never firing again on real
+///      locks (the `_bioTried` latch was consumed at startup).
+///   2. The setState-lag dance re-entered Obx/setState during lifecycle
+///      transitions (exactly when the surface is being recreated).
+/// Now the lock gate is a pure function of the reactive `locked` value:
+/// LockScreen mounts on demand, exactly when locked, one frame later —
+/// and unmounts cleanly on unlock. The app child never rebuilds.
+class AppLockWrapper extends StatelessWidget {
   const AppLockWrapper({super.key, required this.child});
 
   final Widget child;
 
   @override
-  State<AppLockWrapper> createState() => _AppLockWrapperState();
-}
-
-class _AppLockWrapperState extends State<AppLockWrapper> {
-  bool _showLock = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // بعد از اولین frame اپ را بررسی می‌کنیم تا black-screen اولیه رخ ندهد
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _syncLockState();
-    });
-  }
-
-  void _syncLockState() {
-    if (!Get.isRegistered<AppLockService>()) return;
-    final locked = Get.find<AppLockService>().locked.value;
-    final currentRoute = Get.currentRoute;
-    final shouldShow = locked && !AppLockService.isPreAuthRoute(currentRoute);
-    if (mounted && _showLock != shouldShow) {
-      setState(() => _showLock = shouldShow);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (!Get.isRegistered<AppLockService>()) return widget.child;
+    if (!Get.isRegistered<AppLockService>()) return child;
 
     return Obx(() {
       final locked = Get.find<AppLockService>().locked.value;
-      final currentRoute = Get.currentRoute;
-      final shouldShow = locked && !AppLockService.isPreAuthRoute(currentRoute);
-
-      // Delay اول: بعد از هر تغییر وضعیت، state را با تأخیر کوچک sync کن
-      // تا Flutter فرصت رندر frame اول را داشته باشد (جلوگیری از black screen)
-      if (shouldShow != _showLock) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted && shouldShow != _showLock) {
-            setState(() => _showLock = shouldShow);
-          }
-        });
-      }
+      final shouldShow =
+          locked && !AppLockService.isPreAuthRoute(Get.currentRoute);
 
       return Stack(
         fit: StackFit.expand,
         children: [
-          widget.child,
-          // از Visibility استفاده می‌کنیم تا LockScreen همیشه در tree باشد
-          // و freeze از rebuild کامل جلوگیری شود
-          Visibility(
-            visible: _showLock,
-            maintainState: true,
-            maintainAnimation: true,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 150),
-              opacity: _showLock ? 1.0 : 0.0,
-              child: const LockScreen(),
-            ),
-          ),
+          child,
+          if (shouldShow) const LockScreen(),
         ],
       );
     });
