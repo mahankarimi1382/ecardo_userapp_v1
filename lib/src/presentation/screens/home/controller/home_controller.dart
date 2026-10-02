@@ -1,4 +1,5 @@
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
@@ -10,6 +11,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
@@ -82,11 +84,32 @@ class HomeController extends GetxController {
     _scaffoldKey!.currentState!.openDrawer();
   }
 
+  StreamSubscription? _eventSubscription;
+
   @override
   void onInit() {
     super.onInit();
     loadData();
     loadBiometricStatus();
+    _listenToAppEvents();
+  }
+
+  void _listenToAppEvents() {
+    _eventSubscription = AppEventBus.on<AppEvent>().listen((event) {
+      if (event is BalanceChangedEvent ||
+          event is WalletListChangedEvent ||
+          event is ProfileUpdatedEvent ||
+          event is KycStatusChangedEvent) {
+        debugPrint('⚡ [HomeController] auto-syncing dashboard on ${event.runtimeType}');
+        loadData();
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    _eventSubscription?.cancel();
+    super.onClose();
   }
 
   Future<void> loadData() async {

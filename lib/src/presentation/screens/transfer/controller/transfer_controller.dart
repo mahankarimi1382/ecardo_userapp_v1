@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/beneficiary_model.dart';
 import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/money_math_helper.dart';
@@ -277,6 +278,7 @@ class TransferController extends GetxController {
         ToastHelper().showSuccessToast(response.data!["message"]);
         successTransferData.value = response.data!['data'];
         currentStep.value = 2;
+        AppEventBus.emit(BalanceChangedEvent(sourceModule: 'transfer'));
       }
     } catch (e, stackTrace) {
       debugPrint('❌ transferAmount() error: $e');

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -168,6 +169,7 @@ class AirtimeController extends GetxController {
         // now visible instead of a silent reset.
         lastBillPaymentResult.value = response.data;
         currentStep.value = 2;
+        AppEventBus.emit(BalanceChangedEvent(sourceModule: 'airtime'));
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitPayBill() error: $e');

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -954,6 +955,7 @@ class ExchangeController extends GetxController {
           );
         }
         currentStep.value = 2;
+        AppEventBus.emit(BalanceChangedEvent(sourceModule: 'exchange'));
       }
     } catch (e, stackTrace) {
       debugPrint('❌ exchangeWallet() error: $e');
