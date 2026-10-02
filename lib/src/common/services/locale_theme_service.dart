@@ -4,7 +4,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 /// Reactive locale + theme so settings changes apply without app restart.
 class LocaleThemeService extends GetxService {
-  static const supported = ['fa', 'en', 'ar', 'zh'];
+  static const supported = ['fa', 'en', 'ar', 'zh', 'tr', 'ru'];
 
   final Rx<Locale> locale = const Locale('en').obs;
   final Rx<ThemeMode> themeMode = ThemeMode.system.obs;
@@ -67,6 +67,8 @@ class LocaleThemeService extends GetxService {
         'fa' => 'فارسی',
         'ar' => 'العربية',
         'zh' => '中文',
+        'tr' => 'Türkçe',
+        'ru' => 'Русский',
         _ => 'English',
       };
 }

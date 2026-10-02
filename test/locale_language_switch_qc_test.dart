@@ -86,6 +86,8 @@ void main() {
             Locale('ar'),
             Locale('fa'),
             Locale('zh'),
+            Locale('tr'),
+            Locale('ru'),
           ],
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,

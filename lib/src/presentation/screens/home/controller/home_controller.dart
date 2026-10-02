@@ -70,6 +70,8 @@ class HomeController extends GetxController {
     'fa': 'فارسی',
     'zh': '中文',
     'ar': 'العربية',
+    'tr': 'Türkçe',
+    'ru': 'Русский',
   };
 
   void setScaffoldKey(GlobalKey<ScaffoldState> key) {
