@@ -314,39 +314,33 @@ class EsimDataUsageGauge extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                SizedBox(height: 6.h),
+                                // Remaining percent pill
+                                Container(
+                                  padding: EdgeInsetsDirectional.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 3.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: statusColor.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Text(
+                                      '$remainingPercent% Available',
+                                      style: TextStyle(
+                                        fontSize: 11.sp,
+                                        fontWeight: FontWeight.w800,
+                                        color: statusColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
-                              SizedBox(height: 6.h),
-                              // Remaining percent pill
-                              Container(
-                                padding: EdgeInsetsDirectional.symmetric(
-                                  horizontal: 10.w,
-                                  vertical: 3.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: statusColor.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(12.r),
-                                ),
-                                child: Directionality(
-                                  textDirection: TextDirection.ltr,
-                                  child: Text(
-                                    '$remainingPercent% Available',
-                                    style: TextStyle(
-                                      fontSize: 11.sp,
-                                      fontWeight: FontWeight.w800,
-                                      color: statusColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
                 },
               ),
             ),
