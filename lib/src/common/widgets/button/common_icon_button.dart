@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/helper/app_haptics.dart';
 
 class CommonIconButton extends StatelessWidget {
   final double? width;
@@ -69,7 +70,14 @@ class CommonIconButton extends StatelessWidget {
     );
 
     return GestureDetector(
-      onTap: isLoading == true ? null : onPressed,
+      onTap: isLoading == true
+          ? null
+          : (onPressed == null
+              ? null
+              : () {
+                  AppHaptics.light();
+                  onPressed!();
+                }),
       child: Container(
         width: width?.w,
         height: height?.h,
