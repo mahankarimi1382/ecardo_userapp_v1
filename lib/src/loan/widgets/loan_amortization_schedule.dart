@@ -177,6 +177,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
   }
 
   String _formatAmount(double val) {
+    if (widget.currency == 'USD') {
+      return val.toStringAsFixed(2);
+    }
     final rounded = val.round();
     return rounded.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),

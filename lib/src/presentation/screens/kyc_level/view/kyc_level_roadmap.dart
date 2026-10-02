@@ -7,7 +7,6 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_labels.dart';
-import 'package:ecardo_user/src/presentation/screens/kyc_level/view/widgets/kyc_tier_upgrade_card.dart';
 
 /// KycLevelRoadmap — نمایش بصری سطوح KYC به‌صورت کارت‌های افقی
 ///
@@ -41,23 +40,18 @@ class KycLevelRoadmap extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Pillar 2 (Block 4): KYC Tier Comparison & Upgrade Card
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
-            child: KycTierUpgradeCard(
-              onUpgradeTap: (targetTier) {
-                if (onLevelTap != null) {
-                  onLevelTap!();
-                } else {
-                  Get.toNamed(
-                    BaseRoute.kycSubmitWizard,
-                    arguments: {'target_level': targetTier},
-                  );
-                }
-              },
+            child: Text(
+              localization?.kycRoadmapTitle ?? 'سطوح احراز هویت',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+                color: AppColors.lightTextPrimary,
+              ),
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 12.h),
 
           // عنوان
           Padding(

@@ -9,7 +9,7 @@ import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
-import 'package:ecardo_user/src/presentation/screens/kyc_level/view/widgets/kyc_tier_upgrade_card.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 
 /// UpgradeRequiredScreen — صفحه‌ی "ارتقا مورد نیاز" به‌جای خطای خام
 ///
@@ -296,14 +296,14 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
               ],
               SizedBox(height: 24.h),
 
-              // Pillar 2 (Block 4): KYC Tier Comparison & Upgrade Card
-              KycTierUpgradeCard(
-                currentTier: _currentLevel,
-                initialSelectedTier: _requiredLevel ?? 2,
-                onUpgradeTap: (targetTier) {
+              CommonButton(
+                width: double.infinity,
+                text: localization?.kycUpgradeButtonForLevel(_requiredLevel ?? 2) ??
+                    'Start verification',
+                onPressed: () {
                   Get.toNamed(
                     BaseRoute.kycSubmitWizard,
-                    arguments: {'target_level': targetTier},
+                    arguments: {'target_level': _requiredLevel ?? 2},
                   );
                 },
               ),
