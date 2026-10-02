@@ -139,6 +139,15 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
     }
   }
 
+  /// `Icons.send_rounded` points along the reading direction in LTR but
+  /// against it in RTL, and Material does not auto-mirror it. Directional
+  /// glyphs only — passing an already-symmetric icon through this is a no-op
+  /// in LTR but would wrongly flip it in RTL, so it is opt-in per call site.
+  Widget _mirrorInRtl(IconData icon) => Transform.flip(
+        flipX: Directionality.of(context) == TextDirection.rtl,
+        child: Icon(icon, color: Colors.white, size: 13),
+      );
+
   @override
   Widget build(BuildContext context) {
     final currencyCode = widget.wallet.code ?? 'USD';
@@ -334,6 +343,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                               fa: 'موجودی در دسترس',
                               ar: 'الرصيد المتاح',
                               zh: '可用余额',
+                              tr: 'Kullanılabilir Bakiye',
+                              ru: 'Доступный баланс',
                             ),
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.65),
@@ -358,10 +369,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                                     letterSpacing: -0.5,
                                   ),
                                 ),
-                                // Directional gap: the symbol trails the
-                                // amount in LTR but leads it in RTL, where a
-                                // fixed SizedBox pushed it to the wrong side.
-                                SizedBox(width: 6),
+                                const SizedBox(width: 6),
                                 Text(
                                   symbol.isNotEmpty ? symbol : code,
                                   style: TextStyle(
@@ -409,6 +417,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                             ar: 'افتراضي',
                             zh: '默认',
                           ),
+                          tr: 'Varsayılan',
+                          ru: 'По умолчанию',
                           style: TextStyle(
                             color: theme.accentColor,
                             fontSize: 9,
@@ -461,14 +471,16 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
           const SizedBox(height: 12),
           // Signature and Account Details
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
+            padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 18, 0),
             child: Row(
               children: [
                 Expanded(
                   child: Container(
                     height: 28,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                    alignment: AlignmentDirectional.centerStart.resolve(
+                      Directionality.of(context),
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(4),
@@ -490,6 +502,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  // Mirrors automatically under RTL: the icon points away
+                  // from the account number it copies.
                   icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 16),
                   onPressed: () {
                     HapticFeedback.lightImpact();
@@ -501,6 +515,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                         fa: 'شماره حساب کپی شد',
                         ar: 'تم نسخ رقم الحساب',
                         zh: '已复制账号',
+                        tr: 'Hesap numarası kopyalandı',
+                        ru: 'Номер счёта скопирован',
                       ),
                     );
                   },
@@ -512,6 +528,15 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                   icon: const Icon(Icons.flip_to_front_rounded, color: Colors.white, size: 18),
                   onPressed: _flipCard,
+                  tooltip: l10nPick(
+                    context,
+                    en: 'Show card front',
+                    fa: 'نمایش روی کارت',
+                    ar: 'إظهار وجه البطاقة',
+                    zh: '显示卡正面',
+                    tr: 'Kartın ön yüzünü göster',
+                    ru: 'Показать лицевую сторону',
+                  ),
                 ),
               ],
             ),
@@ -519,7 +544,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
           const Spacer(),
           // Quick Action Shortcut Buttons
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 14, 12),
             child: Row(
               children: [
                 Expanded(
@@ -530,8 +555,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       fa: 'واریز',
                       ar: 'إيداع',
                       zh: '充值',
+                      tr: 'Yatır',
+                      ru: 'Пополнить',
                     ),
-                    icon: Icons.add_circle_outline_rounded,
+                    icon: Icon(Icons.add_circle_outline_rounded, color: Colors.white, size: 13),
                     onTap: () {
                       Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id});
                     },
@@ -546,8 +573,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       fa: 'تبدیل',
                       ar: 'تبادل',
                       zh: '兑换',
+                      tr: 'Takas',
+                      ru: 'Обмен',
                     ),
-                    icon: Icons.swap_horiz_rounded,
+                    icon: Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 13),
                     onTap: () {
                       Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id});
                     },
@@ -562,8 +591,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       fa: 'انتقال',
                       ar: 'تحويل',
                       zh: '转账',
+                      tr: 'Transfer',
+                      ru: 'Перевод',
                     ),
-                    icon: Icons.send_rounded,
+                    icon: _mirrorInRtl(Icons.send_rounded),
                     onTap: () {
                       Get.toNamed(BaseRoute.transfer, arguments: {'wallet_id': widget.wallet.id});
                     },
@@ -579,7 +610,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
 
   Widget _buildActionBtn({
     required String label,
-    required IconData icon,
+    required Widget icon,
     required VoidCallback onTap,
   }) {
     return Material(
@@ -600,7 +631,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white, size: 13),
+              icon,
               const SizedBox(width: 4),
               Text(
                 label,

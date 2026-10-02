@@ -24,10 +24,14 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
   late final PageController _pageController;
   double _currentPage = 0.0;
 
+  /// Fraction of the screen one card slot occupies. The card is sized from
+  /// the same value so it fills its slot exactly.
+  static const double _kViewportFraction = 0.88;
+
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.88)
+    _pageController = PageController(viewportFraction: _kViewportFraction)
       ..addListener(() {
         if (mounted) {
           setState(() {
@@ -51,7 +55,7 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
 
     if (widget.wallets.length == 1) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
+        padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 18, 0),
         child: MultiCurrencyFlipCard(
           wallet: widget.wallets.first,
           width: double.infinity,
@@ -87,7 +91,7 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
                   child: Center(
                     child: MultiCurrencyFlipCard(
                       wallet: wallet,
-                      width: MediaQuery.of(context).size.width * 0.86,
+                      width: MediaQuery.of(context).size.width * _kViewportFraction,
                       height: 196,
                       onTap: widget.onCardTap != null
                           ? () => widget.onCardTap!(wallet)
@@ -108,6 +112,9 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               margin: const EdgeInsets.symmetric(horizontal: 3),
+              // Dots are ordered LTR regardless of reading direction, so a
+              // directional margin would flip the gap order under RTL for no
+              // reason — kept symmetric on purpose.
               width: isSelected ? 22 : 6,
               height: 6,
               decoration: BoxDecoration(
