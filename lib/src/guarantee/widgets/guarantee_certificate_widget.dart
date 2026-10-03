@@ -94,6 +94,14 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     return 'https://verify.ecardo.ir/guarantee?ref=$encodedRef&ben=$encodedBen&amt=$amount&cur=$currency&st=$status';
   }
 
+  /// A checksum over the fields shown, so a reader can detect an edit or a
+  /// transcription slip.
+  ///
+  /// It is NOT a signature. It is an unkeyed SHA-256 over data the holder
+  /// already has, so anyone can recompute it after changing the amount — it
+  /// proves nothing about who issued the document. Presenting it as an
+  /// authenticity signal overstates it; it is labelled as a checksum
+  /// wherever it appears.
   String get _cryptographicFingerprint {
     final raw = '$referenceNumber|$beneficiaryName|$amount|$currency|${issueDate.toIso8601String()}|$issuingEntity';
     final bytes = utf8.encode(raw);
@@ -254,13 +262,23 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                             ),
                             pw.SizedBox(height: 4),
                             pw.Text(
-                              'DIGITAL LETTER OF GUARANTEE (SEPAM COMPLIANT)',
+                              'DIGITAL LETTER OF GUARANTEE',
                               style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey700),
                             ),
                             pw.SizedBox(height: 2),
+                            // The previous text here read "Governing Rules:
+                            // URDG 758 / Central Bank Directives", asserting a
+                            // regulatory framework this app has no standing
+                            // under. A user submitting this to a bank relies on
+                            // that claim, so it states the actual scope instead.
                             pw.Text(
-                              'Governing Rules: URDG 758 / Central Bank Directives',
-                              style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey600),
+                              'Issued by eCardo for record purposes. Not a '
+                              'negotiable instrument under URDG 758 unless '
+                              'countersigned by the issuing bank.',
+                              style: const pw.TextStyle(
+                                fontSize: 8,
+                                color: PdfColors.grey600,
+                              ),
                             ),
                           ],
                         ),
@@ -421,8 +439,21 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
                         pw.Text(
-                          'Digitally Signed & Sealed by eCardo Banking Partner (HSM RSA-4096)',
-                          style: const pw.TextStyle(fontSize: 7, color: PdfColors.grey600),
+                          // Was: "Digitally Signed & Sealed by eCardo
+                          // Banking Partner (HSM RSA-4096)". No private key
+                          // exists anywhere in this codebase, so that line
+                          // asserted a cryptographic signature on a document
+                          // users hand to banks and customs authorities. It is
+                          // now labelled as what it actually is: a checksum
+                          // the reader can recompute, plus a reference to
+                          // check against the issuing bank's system.
+                          'Unsigned summary — verify against the issuing '
+                          'bank record. Bank issuance requires the bank '
+                          'seal and countersignature.',
+                          style: const pw.TextStyle(
+                            fontSize: 7,
+                            color: PdfColors.grey600,
+                          ),
                         ),
                         pw.Text(
                           'Page 1 of 1',
@@ -910,8 +941,11 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               Text(
                                 l10nPick(
                                   context,
-                                  fa: 'جهت اعتبارسنجی آنی، QR کد را با دوربین تلفن همراه یا بارکدخوان اسکن نمایید.',
-                                  en: 'Scan the QR code to verify validity directly on verify.ecardo.ir',
+                                  fa: 'این گواهی خلاصهٔ اطلاعات است و به‌تنهایی اعتبار قانونی ندارد. برای استناد رسمی، اصلِ دارای مهر و امضای بانک صادرکننده لازم است.',
+                                  en: 'This is an informational summary and is not '
+                                      'independently valid on its own. For official '
+                                      'use, the bank-sealed and countersigned '
+                                      'original is required.',
                                 ),
                                 style: TextStyle(
                                   fontSize: 9.5.sp,
@@ -921,7 +955,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               ),
                               SizedBox(height: 6.h),
                               Text(
-                                _cryptographicFingerprint,
+                                'Checksum: ${_cryptographicFingerprint}',
                                 style: TextStyle(
                                   fontSize: 8.5.sp,
                                   fontFamily: 'monospace',
