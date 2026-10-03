@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/controller/country_controller.dart';
 import 'package:ecardo_user/src/common/model/country_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -149,13 +150,20 @@ class PersonalInfoController extends GetxController {
         final countryModel = CountryModel.fromJson(response.data!);
         countryList.clear();
         countryList.value = countryModel.data ?? [];
-        final findCountry = countryList.firstWhere(
-          (item) => item.code == countryCode.value,
-        );
-        country.value = findCountry.name ?? "";
-        countryController.text = findCountry.name ?? "";
-        countryCode.value = findCountry.code ?? "";
-        countryDialCode.value = findCountry.dialCode ?? "";
+        final findCountry = countryList.firstWhereOrNull(
+              (item) => item.code == countryCode.value,
+            ) ??
+            countryList.firstWhereOrNull(
+              (item) => item.code == 'IR',
+            ) ??
+            countryList.firstOrNull;
+
+        if (findCountry != null) {
+          country.value = findCountry.name ?? "";
+          countryController.text = findCountry.name ?? "";
+          countryCode.value = findCountry.code ?? "";
+          countryDialCode.value = findCountry.dialCode ?? "";
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCountries() error: $e');
@@ -183,7 +191,26 @@ class PersonalInfoController extends GetxController {
         requestBody["phone"] = phoneNoController.text;
       }
 
-      if (countryController.text.isNotEmpty) {
+      if (countryController.text.isNotEmpty ||
+          countryCode.value.isNotEmpty ||
+          country.value.isNotEmpty) {
+        if (countryDialCode.value.isEmpty || countryCode.value.isEmpty) {
+          final list = countryList.isNotEmpty
+              ? countryList
+              : (Get.isRegistered<CountryController>()
+                  ? Get.find<CountryController>().countryList
+                  : <CountryData>[]);
+          final matched = list.firstWhereOrNull(
+            (item) =>
+                (countryCode.value.isNotEmpty && item.code == countryCode.value) ||
+                (countryController.text.isNotEmpty && item.name == countryController.text) ||
+                (country.value.isNotEmpty && item.name == country.value),
+          );
+          if (matched != null) {
+            if (countryCode.value.isEmpty) countryCode.value = matched.code ?? "";
+            if (countryDialCode.value.isEmpty) countryDialCode.value = matched.dialCode ?? "";
+          }
+        }
         requestBody["country"] = "$countryDialCode:${countryCode.value}";
       }
 

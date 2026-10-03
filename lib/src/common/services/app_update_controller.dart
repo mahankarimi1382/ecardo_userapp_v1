@@ -285,6 +285,7 @@ class AppUpdateController extends GetxController {
   /// Manual check triggered by the user from the settings screen.
   Future<void> checkForUpdate({
     bool showSnackbarWhenUpToDate = true,
+    bool manual = true,
   }) async {
     if (phase.value == AppUpdatePhase.checking ||
         phase.value == AppUpdatePhase.downloading) {

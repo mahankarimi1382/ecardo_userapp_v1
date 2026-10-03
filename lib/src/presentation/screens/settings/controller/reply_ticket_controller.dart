@@ -119,6 +119,6 @@ class ReplyTicketController extends GetxController {
   // Clear Form
   void clearForm() {
     messageController.clear();
-    controller.attachedImages.clear();
+    controller.clearImages();
   }
 }

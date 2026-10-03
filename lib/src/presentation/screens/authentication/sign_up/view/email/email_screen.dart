@@ -23,11 +23,14 @@ class EmailScreen extends StatefulWidget {
 }
 
 class _EmailScreenState extends State<EmailScreen> {
-  final EmailController controller = Get.find();
+  late final EmailController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<EmailController>()
+        ? Get.find<EmailController>()
+        : Get.put(EmailController());
     controller.clearSignUpStatus();
   }
 

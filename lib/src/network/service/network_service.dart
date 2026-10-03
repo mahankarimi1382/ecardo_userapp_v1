@@ -534,12 +534,17 @@ class NetworkService extends getx.GetxService {
       _log('✅ Register Response: <received, token not logged>');
       _log('⏱️ Register Time: ${stopwatch.elapsedMilliseconds}ms');
 
-      if (response.statusCode == 200) {
-        String accessToken = response.data["data"]['token'];
-        await _tokenService.saveAccessToken(accessToken);
-        _setupInterceptors();
-        _log('🔑 Token Saved Successfully');
-        return ApiResponse.completed(response.data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> responseData = response.data is Map
+            ? Map<String, dynamic>.from(response.data as Map)
+            : <String, dynamic>{};
+        final accessToken = responseData["data"]?['token'];
+        if (accessToken is String && accessToken.isNotEmpty) {
+          await _tokenService.saveAccessToken(accessToken);
+          _setupInterceptors();
+          _log('🔑 Token Saved Successfully');
+        }
+        return ApiResponse.completed(responseData);
       }
 
       return ApiResponse.error('Register failed.');
@@ -1169,7 +1174,9 @@ class NetworkService extends getx.GetxService {
     switch (response.statusCode) {
       case 200:
       case 201:
-        final jsonData = response.data as Map<String, dynamic>;
+        final jsonData = response.data is Map
+            ? Map<String, dynamic>.from(response.data as Map)
+            : <String, dynamic>{};
         _log('$requestType Response: $jsonData', icon: '✅');
         return ApiResponse.completed(jsonData);
       default:

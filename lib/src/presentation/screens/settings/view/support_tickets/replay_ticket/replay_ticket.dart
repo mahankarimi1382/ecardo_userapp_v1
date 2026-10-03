@@ -67,8 +67,11 @@ class _ReplayTicketState extends State<ReplayTicket> {
   }
 
   Future<void> _sendMessage() async {
-    if (controller.messageController.text.isNotEmpty) {
+    if (controller.messageController.text.trim().isNotEmpty) {
       await controller.submitReplayTicket(ticketUid: widget.ticketUid);
+      controller.messageController.clear();
+      controller.controller.clearImages();
+      await controller.fetchTicketMessage(ticketUid: widget.ticketUid);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToBottom();
@@ -97,7 +100,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                 SizedBox(height: 16),
                 CommonAppBar(
                   title:
-                      "#${controller.ticketMessageModel.value.data!.ticket!.uuid!}",
+                      "#${controller.ticketMessageModel.value.data?.ticket?.uuid ?? widget.ticketUid}",
                   rightSideWidget:
                       (!TicketStatusHelper.isClosed(
                         isClosed: controller
@@ -161,7 +164,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                               if (ticket != null)
                                 _buildMessageBubble(
                                   context,
-                                  isMe: false,
+                                  isMe: true,
                                   name: ticket.user?.name ?? "",
                                   email: ticket.user?.email ?? "",
                                   message: ticket.message ?? "",
@@ -172,7 +175,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                               ...messages.map((item) {
                                 return _buildMessageBubble(
                                   context,
-                                  isMe: item.isAdmin ?? false,
+                                  isMe: !(item.isAdmin ?? false),
                                   name: item.user?.name ?? "",
                                   email: item.user?.email ?? "",
                                   message: item.message ?? "",
@@ -246,99 +249,18 @@ class _ReplayTicketState extends State<ReplayTicket> {
   }) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: isMe
-            ? MainAxisAlignment.start
-            : MainAxisAlignment.end,
+        mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (isMe) ...[
+            const Flexible(flex: 1, child: SizedBox()),
             Flexible(
               flex: 8,
               child: Container(
-                padding: EdgeInsetsDirectional.symmetric(
-                  horizontal: 14,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  color: AppColors.lightBackground,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(shape: BoxShape.circle),
-                          clipBehavior: Clip.hardEdge,
-                          child: Image.network(
-                            personAvatar,
-                            width: 35,
-                            height: 35,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                PngAssets.profileImage,
-                                width: 35,
-                                height: 35,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                name,
-                                style: TextStyle(
-                                  letterSpacing: 0,
-
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.lightTextPrimary,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                email,
-                                style: TextStyle(
-                                  letterSpacing: 0,
-
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.lightTextTertiary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    _buildMessageContent(
-                      message: message,
-                      attachments: attachments,
-                      isMe: isMe,
-                      messageDate: messageDate,
-                      firstMessageDate: firstMessageDate,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Flexible(flex: 1, child: SizedBox()),
-          ] else ...[
-            Flexible(flex: 1, child: SizedBox()),
-            Flexible(
-              flex: 8,
-              child: Container(
-                padding: EdgeInsetsDirectional.symmetric(
+                padding: const EdgeInsetsDirectional.symmetric(
                   horizontal: 14,
                   vertical: 10,
                 ),
@@ -355,12 +277,106 @@ class _ReplayTicketState extends State<ReplayTicket> {
                 ),
               ),
             ),
+          ] else ...[
+            Flexible(
+              flex: 8,
+              child: Container(
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: AppColors.lightBackground,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: personAvatar.isNotEmpty
+                              ? Image.network(
+                                  personAvatar,
+                                  width: 35,
+                                  height: 35,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      PngAssets.profileImage,
+                                      width: 35,
+                                      height: 35,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                )
+                              : Image.asset(
+                                  PngAssets.profileImage,
+                                  width: 35,
+                                  height: 35,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name.isNotEmpty
+                                    ? name
+                                    : l10nPick(
+                                        context,
+                                        en: 'Support',
+                                        fa: 'پشتیبانی',
+                                      ),
+                                style: const TextStyle(
+                                  letterSpacing: 0,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.lightTextPrimary,
+                                ),
+                              ),
+                              if (email.isNotEmpty) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  email,
+                                  style: TextStyle(
+                                    letterSpacing: 0,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.lightTextTertiary,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    _buildMessageContent(
+                      message: message,
+                      attachments: attachments,
+                      isMe: isMe,
+                      messageDate: messageDate,
+                      firstMessageDate: firstMessageDate,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Flexible(flex: 1, child: SizedBox()),
           ],
         ],
       ),
     );
   }
-
   Widget _buildMessageContent({
     required String message,
     required List<Attachments> attachments,
@@ -368,6 +384,26 @@ class _ReplayTicketState extends State<ReplayTicket> {
     String? messageDate,
     String? firstMessageDate,
   }) {
+    final textColor = isMe
+        ? AppColors.white
+        : AppColors.lightTextPrimary.withValues(alpha: 0.80);
+    final secondaryTextColor = isMe
+        ? AppColors.white.withValues(alpha: 0.80)
+        : AppColors.lightTextPrimary.withValues(alpha: 0.60);
+
+    String? formattedDate = messageDate;
+    if ((formattedDate == null || formattedDate.isEmpty) &&
+        firstMessageDate != null &&
+        firstMessageDate.isNotEmpty) {
+      try {
+        formattedDate = intl.DateFormat(
+          "dd MMM, yyyy hh:mm a",
+        ).format(DateTime.parse(firstMessageDate));
+      } catch (e) {
+        formattedDate = firstMessageDate;
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -375,30 +411,24 @@ class _ReplayTicketState extends State<ReplayTicket> {
           message,
           style: TextStyle(
             letterSpacing: 0,
-
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: isMe
-                ? AppColors.lightTextPrimary.withValues(alpha: 0.80)
-                : AppColors.white,
+            color: textColor,
           ),
         ),
         if (attachments.isNotEmpty) ...[
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             localization.replayTicketAttachmentsLabel,
             style: TextStyle(
               letterSpacing: 0,
-
               overflow: TextOverflow.ellipsis,
               fontWeight: FontWeight.w900,
               fontSize: 13,
-              color: isMe
-                  ? AppColors.lightTextPrimary.withValues(alpha: 0.80)
-                  : AppColors.white,
+              color: textColor,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           ...attachments.map((attachment) {
             final fileName = _extractFileName(attachment.url ?? '');
             final attachmentUrl = attachment.url ?? '';
@@ -409,10 +439,10 @@ class _ReplayTicketState extends State<ReplayTicket> {
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOutQuart,
                     height: 400,
-                    margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+                    margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      borderRadius: BorderRadiusDirectional.only(
+                      borderRadius: const BorderRadiusDirectional.only(
                         topStart: Radius.circular(20),
                         topEnd: Radius.circular(20),
                       ),
@@ -421,14 +451,14 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           color: AppColors.black.withValues(alpha: 0.06),
                           blurRadius: 40,
                           spreadRadius: 0,
-                          offset: Offset(0, 0),
+                          offset: const Offset(0, 0),
                         ),
                       ],
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Container(
                           width: 45,
                           height: 6,
@@ -439,7 +469,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Padding(
                           padding: const EdgeInsetsDirectional.symmetric(
                             horizontal: 18,
@@ -449,7 +479,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                             children: [
                               Text(
                                 localization.replayTicketAttachmentPreviewTitle,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   letterSpacing: 0,
                                   fontWeight: FontWeight.w900,
                                   fontSize: 20,
@@ -482,9 +512,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Container(
-                          margin: EdgeInsetsDirectional.symmetric(
+                          margin: const EdgeInsetsDirectional.symmetric(
                             horizontal: 18,
                           ),
                           width: double.infinity,
@@ -501,7 +531,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Expanded(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
@@ -510,15 +540,14 @@ class _ReplayTicketState extends State<ReplayTicket> {
                               fit: BoxFit.contain,
                               loadingBuilder: (ctx, child, progress) {
                                 if (progress == null) return child;
-                                return CommonLoading();
+                                return const CommonLoading();
                               },
                               errorBuilder: (context, error, stackTrace) {
                                 return Center(
                                   child: Text(
                                     localization.replayTicketAttachmentError,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       letterSpacing: 0,
-
                                       fontWeight: FontWeight.w900,
                                       fontSize: 18,
                                       color: AppColors.error,
@@ -529,7 +558,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 50),
+                        const SizedBox(height: 50),
                       ],
                     ),
                   ),
@@ -543,24 +572,17 @@ class _ReplayTicketState extends State<ReplayTicket> {
                       PngAssets.albumCommonIcon,
                       width: 15,
                       height: 15,
-                      color: isMe
-                          ? AppColors.lightTextPrimary.withValues(alpha: 0.80)
-                          : AppColors.white,
+                      color: textColor,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         fileName,
                         style: TextStyle(
                           letterSpacing: 0,
-
                           fontWeight: FontWeight.w700,
                           fontSize: 12,
-                          color: isMe
-                              ? AppColors.lightTextPrimary.withValues(
-                                  alpha: 0.80,
-                                )
-                              : AppColors.white,
+                          color: textColor,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -572,27 +594,23 @@ class _ReplayTicketState extends State<ReplayTicket> {
             );
           }),
         ],
-        SizedBox(height: 10),
-        Align(
-          alignment: !isMe
-              ? AlignmentDirectional.centerEnd
-              : AlignmentDirectional.centerStart,
-          child: Text(
-            messageDate ??
-                intl.DateFormat(
-                  "dd MMM, yyyy hh:mm a",
-                ).format(DateTime.parse(firstMessageDate!)),
-            style: TextStyle(
-              letterSpacing: 0,
-
-              fontWeight: FontWeight.w700,
-              fontSize: 11,
-              color: isMe
-                  ? AppColors.lightTextPrimary.withValues(alpha: 0.60)
-                  : AppColors.white,
+        if (formattedDate != null && formattedDate.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          Align(
+            alignment: isMe
+                ? AlignmentDirectional.centerEnd
+                : AlignmentDirectional.centerStart,
+            child: Text(
+              formattedDate,
+              style: TextStyle(
+                letterSpacing: 0,
+                fontWeight: FontWeight.w700,
+                fontSize: 11,
+                color: secondaryTextColor,
+              ),
             ),
           ),
-        ),
+        ],
       ],
     );
   }

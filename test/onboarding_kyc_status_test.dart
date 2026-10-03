@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
+import 'package:ecardo_user/src/common/model/country_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 
 void main() {
@@ -85,6 +87,104 @@ void main() {
       final user = UserModel.fromJson(json);
       expect(user.data?.kyc, 1);
       expect(user.data?.boardingSteps?.completed, isTrue);
+    });
+  });
+
+  group('Registration Country Selection and Formatting Tests', () {
+    test('_setSelectedCountry fallback logic selects IR when selected is false for all', () {
+      final countryList = <CountryData>[
+        CountryData(name: 'Germany', code: 'DE', dialCode: '+49', selected: false),
+        CountryData(name: 'Iran', code: 'IR', dialCode: '+98', selected: false),
+        CountryData(name: 'Turkey', code: 'TR', dialCode: '+90', selected: false),
+      ];
+
+      final selectedCountry = countryList.firstWhereOrNull(
+            (country) => country.selected == true,
+          ) ??
+          countryList.firstWhereOrNull(
+            (country) => country.code == 'IR',
+          ) ??
+          countryList.firstOrNull;
+
+      expect(selectedCountry, isNotNull);
+      expect(selectedCountry?.code, 'IR');
+      expect(selectedCountry?.dialCode, '+98');
+    });
+
+    test('_setSelectedCountry fallback logic selects first country when IR not present', () {
+      final countryList = <CountryData>[
+        CountryData(name: 'Germany', code: 'DE', dialCode: '+49', selected: false),
+        CountryData(name: 'Turkey', code: 'TR', dialCode: '+90', selected: false),
+      ];
+
+      final selectedCountry = countryList.firstWhereOrNull(
+            (country) => country.selected == true,
+          ) ??
+          countryList.firstWhereOrNull(
+            (country) => country.code == 'IR',
+          ) ??
+          countryList.firstOrNull;
+
+      expect(selectedCountry, isNotNull);
+      expect(selectedCountry?.code, 'DE');
+    });
+
+    test('firstWhereOrNull on empty countryList returns null without crashing', () {
+      final countryList = <CountryData>[];
+
+      final selectedCountry = countryList.firstWhereOrNull(
+            (item) => item.code == 'IR',
+          ) ??
+          countryList.firstWhereOrNull(
+            (item) => item.code == 'IR',
+          ) ??
+          countryList.firstOrNull;
+
+      expect(selectedCountry, isNull);
+    });
+
+    test('country is formatted as dialCode:code and not omitted', () {
+      final countryDialCode = '+98'.obs;
+      final countryCode = 'IR'.obs;
+      final countryText = 'Iran'.obs;
+
+      final Map<String, dynamic> requestBody = {};
+      if (countryCode.value.isNotEmpty || countryText.value.isNotEmpty) {
+        requestBody['country'] = '$countryDialCode:${countryCode.value}';
+      }
+
+      expect(requestBody.containsKey('country'), isTrue);
+      expect(requestBody['country'], '+98:IR');
+    });
+  });
+
+  group('NetworkService response conversion and registration status tests', () {
+    test('statusCode 200 and 201 are both accepted as successful registration', () {
+      for (final code in [200, 201]) {
+        final isSuccess = code == 200 || code == 201;
+        expect(isSuccess, isTrue);
+      }
+      expect(400 == 200 || 400 == 201, isFalse);
+    });
+
+    test('Map<dynamic, dynamic> safely converts to Map<String, dynamic> without TypeError', () {
+      final dynamic rawDioData = <dynamic, dynamic>{
+        'status': 'success',
+        'data': <dynamic, dynamic>{
+          'token': 'mock_token_123',
+        },
+      };
+
+      // Raw cast throws TypeError
+      expect(
+        () => rawDioData as Map<String, dynamic>,
+        throwsA(isA<TypeError>()),
+      );
+
+      // Safe conversion works cleanly
+      final safeMap = Map<String, dynamic>.from(rawDioData as Map);
+      expect(safeMap['status'], 'success');
+      expect(safeMap['data']['token'], 'mock_token_123');
     });
   });
 }

@@ -91,21 +91,24 @@ import '../../presentation/screens/withdraw/controller/withdraw_history_controll
 class SplashBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SplashController>(() => SplashController());
+    Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
   }
 }
 
 class SignInBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SignInController>(() => SignInController());
+    Get.lazyPut<SignInController>(() => SignInController(), fenix: true);
   }
 }
 
 class TwoFactorAuthBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TwoFactorAuthController>(() => TwoFactorAuthController());
+    Get.lazyPut<TwoFactorAuthController>(
+      () => TwoFactorAuthController(),
+      fenix: true,
+    );
   }
 }
 
@@ -120,21 +123,27 @@ class EmailOtpLoginBinding implements Bindings {
 class EmailBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<EmailController>(() => EmailController());
+    Get.lazyPut<EmailController>(() => EmailController(), fenix: true);
   }
 }
 
 class VerifyEmailBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<VerifyEmailController>(() => VerifyEmailController());
+    Get.lazyPut<VerifyEmailController>(
+      () => VerifyEmailController(),
+      fenix: true,
+    );
   }
 }
 
 class ForgotPasswordBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ForgotPasswordController>(() => ForgotPasswordController());
+    Get.lazyPut<ForgotPasswordController>(
+      () => ForgotPasswordController(),
+      fenix: true,
+    );
   }
 }
 
@@ -143,6 +152,7 @@ class ForgotPasswordPinVerificationBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<ForgotPasswordPinVerificationController>(
       () => ForgotPasswordPinVerificationController(),
+      fenix: true,
     );
   }
 }
@@ -150,112 +160,136 @@ class ForgotPasswordPinVerificationBinding implements Bindings {
 class ResetPasswordBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ResetPasswordController>(() => ResetPasswordController());
+    Get.lazyPut<ResetPasswordController>(
+      () => ResetPasswordController(),
+      fenix: true,
+    );
   }
 }
 
 class HomeBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HomeController>(() => HomeController());
+    Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
   }
 }
 
 class RegisterFieldsBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<RegisterFieldsController>(() => RegisterFieldsController());
+    Get.lazyPut<RegisterFieldsController>(
+      () => RegisterFieldsController(),
+      fenix: true,
+    );
   }
 }
 
 class CountryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CountryController>(() => CountryController());
+    Get.lazyPut<CountryController>(() => CountryController(), fenix: true);
   }
 }
 
 class WalletsBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<WalletsController>(() => WalletsController());
+    Get.lazyPut<WalletsController>(() => WalletsController(), fenix: true);
   }
 }
 
 class CreateNewWalletBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CreateNewWalletController>(() => CreateNewWalletController());
+    Get.lazyPut<CreateNewWalletController>(
+      () => CreateNewWalletController(),
+      fenix: true,
+    );
   }
 }
 
 class TransactionsBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TransactionsController>(() => TransactionsController());
+    Get.lazyPut<TransactionsController>(
+      () => TransactionsController(),
+      fenix: true,
+    );
   }
 }
 
 class QrCodeBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<QrCodeController>(() => QrCodeController());
+    Get.lazyPut<QrCodeController>(() => QrCodeController(), fenix: true);
   }
 }
 
 class AddMoneyBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AddMoneyController>(() => AddMoneyController());
+    Get.lazyPut<AddMoneyController>(() => AddMoneyController(), fenix: true);
   }
 }
 
 class MakePaymentBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<MakePaymentController>(() => MakePaymentController());
+    Get.lazyPut<MakePaymentController>(
+      () => MakePaymentController(),
+      fenix: true,
+    );
   }
 }
 
 class RequestMoneyBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<RequestMoneyController>(() => RequestMoneyController());
+    Get.lazyPut<RequestMoneyController>(
+      () => RequestMoneyController(),
+      fenix: true,
+    );
   }
 }
 
 class ReceivedRequestMoneyBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ReceivedRequestController>(() => ReceivedRequestController());
+    Get.lazyPut<ReceivedRequestController>(
+      () => ReceivedRequestController(),
+      fenix: true,
+    );
   }
 }
 
 class CashOutBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CashOutController>(() => CashOutController());
+    Get.lazyPut<CashOutController>(() => CashOutController(), fenix: true);
   }
 }
 
 class WithdrawBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<WithdrawController>(() => WithdrawController());
+    Get.lazyPut<WithdrawController>(() => WithdrawController(), fenix: true);
   }
 }
 
 class WithdrawAccountBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<WithdrawAccountController>(() => WithdrawAccountController());
+    Get.lazyPut<WithdrawAccountController>(
+      () => WithdrawAccountController(),
+      fenix: true,
+    );
   }
 }
 
 class TransferBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TransferController>(() => TransferController());
+    Get.lazyPut<TransferController>(() => TransferController(), fenix: true);
   }
 }
 
@@ -264,6 +298,7 @@ class CreateWithdrawAccountBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<CreateWithdrawAccountController>(
       () => CreateWithdrawAccountController(),
+      fenix: true,
     );
   }
 }
@@ -273,6 +308,7 @@ class EditWithdrawAccountBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<EditWithdrawAccountController>(
       () => EditWithdrawAccountController(),
+      fenix: true,
     );
   }
 }
@@ -280,28 +316,37 @@ class EditWithdrawAccountBinding implements Bindings {
 class GiftCodeBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<GiftCodeController>(() => GiftCodeController());
+    Get.lazyPut<GiftCodeController>(() => GiftCodeController(), fenix: true);
   }
 }
 
 class GiftRedeemBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<GiftRedeemController>(() => GiftRedeemController());
+    Get.lazyPut<GiftRedeemController>(
+      () => GiftRedeemController(),
+      fenix: true,
+    );
   }
 }
 
 class CreateGiftBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CreateGiftController>(() => CreateGiftController());
+    Get.lazyPut<CreateGiftController>(
+      () => CreateGiftController(),
+      fenix: true,
+    );
   }
 }
 
 class GiftHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<GiftHistoryController>(() => GiftHistoryController());
+    Get.lazyPut<GiftHistoryController>(
+      () => GiftHistoryController(),
+      fenix: true,
+    );
   }
 }
 
@@ -314,30 +359,39 @@ class ExchangeBinding implements Bindings {
     if (!Get.isRegistered<ExchangeRateService>()) {
       Get.put<ExchangeRateService>(ExchangeRateService(), permanent: false);
     }
-    Get.lazyPut<ExchangeController>(() => ExchangeController());
+    Get.lazyPut<ExchangeController>(() => ExchangeController(), fenix: true);
   }
 }
 
 class ProfileSettingsBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ProfileSettingsController>(() => ProfileSettingsController());
+    Get.lazyPut<ProfileSettingsController>(
+      () => ProfileSettingsController(),
+      fenix: true,
+    );
   }
 }
 
 class ChangePasswordBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ChangePasswordController>(() => ChangePasswordController());
+    Get.lazyPut<ChangePasswordController>(
+      () => ChangePasswordController(),
+      fenix: true,
+    );
   }
 }
 
 class IDVerificationBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<IdVerificationController>(() => IdVerificationController());
+    Get.lazyPut<IdVerificationController>(
+      () => IdVerificationController(),
+      fenix: true,
+    );
     if (!Get.isRegistered<KycLevelController>()) {
-      Get.lazyPut<KycLevelController>(() => KycLevelController());
+      Get.lazyPut<KycLevelController>(() => KycLevelController(), fenix: true);
     }
   }
 }
@@ -345,14 +399,17 @@ class IDVerificationBinding implements Bindings {
 class KycHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<KycHistoryController>(() => KycHistoryController());
+    Get.lazyPut<KycHistoryController>(
+      () => KycHistoryController(),
+      fenix: true,
+    );
   }
 }
 
 class ReferralBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ReferralController>(() => ReferralController());
+    Get.lazyPut<ReferralController>(() => ReferralController(), fenix: true);
   }
 }
 
@@ -361,6 +418,7 @@ class TwoFactorAuthenticationBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<TwoFactorAuthenticationController>(
       () => TwoFactorAuthenticationController(),
+      fenix: true,
     );
   }
 }
@@ -368,56 +426,80 @@ class TwoFactorAuthenticationBinding implements Bindings {
 class NotificationBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<NotificationController>(() => NotificationController());
+    Get.lazyPut<NotificationController>(
+      () => NotificationController(),
+      fenix: true,
+    );
   }
 }
 
 class SupportTicketBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SupportTicketController>(() => SupportTicketController());
+    Get.lazyPut<SupportTicketController>(
+      () => SupportTicketController(),
+      fenix: true,
+    );
   }
 }
 
 class AddNewTicketBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AddNewTicketController>(() => AddNewTicketController());
+    Get.lazyPut<AddNewTicketController>(
+      () => AddNewTicketController(),
+      fenix: true,
+    );
   }
 }
 
 class ReplyTicketBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ReplyTicketController>(() => ReplyTicketController());
+    Get.lazyPut<ReplyTicketController>(
+      () => ReplyTicketController(),
+      fenix: true,
+    );
   }
 }
 
 class ReferredFriendsBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ReferredFriendsController>(() => ReferredFriendsController());
+    Get.lazyPut<ReferredFriendsController>(
+      () => ReferredFriendsController(),
+      fenix: true,
+    );
   }
 }
 
 class ReferralTreeBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ReferralTreeController>(() => ReferralTreeController());
+    Get.lazyPut<ReferralTreeController>(
+      () => ReferralTreeController(),
+      fenix: true,
+    );
   }
 }
 
 class SetUpPasswordBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SetUpPasswordController>(() => SetUpPasswordController());
+    Get.lazyPut<SetUpPasswordController>(
+      () => SetUpPasswordController(),
+      fenix: true,
+    );
   }
 }
 
 class PersonalInfoBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<PersonalInfoController>(() => PersonalInfoController());
+    Get.lazyPut<PersonalInfoController>(
+      () => PersonalInfoController(),
+      fenix: true,
+    );
   }
 }
 
@@ -426,6 +508,7 @@ class AuthIdVerificationBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<AuthIdVerificationController>(
       () => AuthIdVerificationController(),
+      fenix: true,
     );
   }
 }
@@ -433,21 +516,30 @@ class AuthIdVerificationBinding implements Bindings {
 class SignUpStatusBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SignUpStatusController>(() => SignUpStatusController());
+    Get.lazyPut<SignUpStatusController>(
+      () => SignUpStatusController(),
+      fenix: true,
+    );
   }
 }
 
 class WalletDetailsBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<WalletDetailsController>(() => WalletDetailsController());
+    Get.lazyPut<WalletDetailsController>(
+      () => WalletDetailsController(),
+      fenix: true,
+    );
   }
 }
 
 class AddMoneyHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AddMoneyHistoryController>(() => AddMoneyHistoryController());
+    Get.lazyPut<AddMoneyHistoryController>(
+      () => AddMoneyHistoryController(),
+      fenix: true,
+    );
   }
 }
 
@@ -456,6 +548,7 @@ class MakePaymentHistoryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<MakePaymentHistoryController>(
       () => MakePaymentHistoryController(),
+      fenix: true,
     );
   }
 }
@@ -463,7 +556,10 @@ class MakePaymentHistoryBinding implements Bindings {
 class TransferHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TransferHistoryController>(() => TransferHistoryController());
+    Get.lazyPut<TransferHistoryController>(
+      () => TransferHistoryController(),
+      fenix: true,
+    );
   }
 }
 
@@ -472,6 +568,7 @@ class TransferReceivedHistoryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<TransferReceivedHistoryController>(
       () => TransferReceivedHistoryController(),
+      fenix: true,
     );
   }
 }
@@ -479,21 +576,30 @@ class TransferReceivedHistoryBinding implements Bindings {
 class CashOutHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CashOutHistoryController>(() => CashOutHistoryController());
+    Get.lazyPut<CashOutHistoryController>(
+      () => CashOutHistoryController(),
+      fenix: true,
+    );
   }
 }
 
 class WithdrawHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<WithdrawHistoryController>(() => WithdrawHistoryController());
+    Get.lazyPut<WithdrawHistoryController>(
+      () => WithdrawHistoryController(),
+      fenix: true,
+    );
   }
 }
 
 class ExchangeHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ExchangeHistoryController>(() => ExchangeHistoryController());
+    Get.lazyPut<ExchangeHistoryController>(
+      () => ExchangeHistoryController(),
+      fenix: true,
+    );
   }
 }
 
@@ -502,6 +608,7 @@ class RequestMoneyHistoryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<RequestMoneyHistoryController>(
       () => RequestMoneyHistoryController(),
+      fenix: true,
     );
   }
 }
@@ -511,6 +618,7 @@ class GiftRedeemHistoryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<GiftRedeemHistoryController>(
       () => GiftRedeemHistoryController(),
+      fenix: true,
     );
   }
 }
@@ -520,6 +628,7 @@ class CreateBeneficiaryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<CreateBeneficiaryController>(
       () => CreateBeneficiaryController(),
+      fenix: true,
     );
   }
 }
@@ -529,6 +638,7 @@ class UpdateBeneficiaryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<UpdateBeneficiaryController>(
       () => UpdateBeneficiaryController(),
+      fenix: true,
     );
   }
 }
@@ -536,49 +646,58 @@ class UpdateBeneficiaryBinding implements Bindings {
 class AirtimeBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AirtimeController>(() => AirtimeController());
+    Get.lazyPut<AirtimeController>(() => AirtimeController(), fenix: true);
   }
 }
 
 class ElectricityBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ElectricityController>(() => ElectricityController());
+    Get.lazyPut<ElectricityController>(
+      () => ElectricityController(),
+      fenix: true,
+    );
   }
 }
 
 class InternetBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<InternetController>(() => InternetController());
+    Get.lazyPut<InternetController>(() => InternetController(), fenix: true);
   }
 }
 
 class DataBundleBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DataBundleController>(() => DataBundleController());
+    Get.lazyPut<DataBundleController>(
+      () => DataBundleController(),
+      fenix: true,
+    );
   }
 }
 
 class CableBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CableController>(() => CableController());
+    Get.lazyPut<CableController>(() => CableController(), fenix: true);
   }
 }
 
 class TollBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TollController>(() => TollController());
+    Get.lazyPut<TollController>(() => TollController(), fenix: true);
   }
 }
 
 class VirtualCardBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<VirtualCardController>(() => VirtualCardController());
+    Get.lazyPut<VirtualCardController>(
+      () => VirtualCardController(),
+      fenix: true,
+    );
   }
 }
 
@@ -587,6 +706,7 @@ class CreateNewCardBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<CreateVirtualCardController>(
       () => CreateVirtualCardController(),
+      fenix: true,
     );
   }
 }
@@ -596,6 +716,7 @@ class VirtualCardDetailsBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<VirtualCardDetailsController>(
       () => VirtualCardDetailsController(),
+      fenix: true,
     );
   }
 }
@@ -605,6 +726,7 @@ class BillPaymentHistoryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<BillPaymentHistoryController>(
       () => BillPaymentHistoryController(),
+      fenix: true,
     );
   }
 }
@@ -614,6 +736,7 @@ class VirtualCardTransactionBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<VirtualCardTransactionController>(
       () => VirtualCardTransactionController(),
+      fenix: true,
     );
   }
 }
@@ -621,21 +744,27 @@ class VirtualCardTransactionBinding implements Bindings {
 class PaymentLinksBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<PaymentLinksController>(() => PaymentLinksController());
+    Get.lazyPut<PaymentLinksController>(
+      () => PaymentLinksController(),
+      fenix: true,
+    );
   }
 }
 
 class GiftCardBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<GiftCardController>(() => GiftCardController());
+    Get.lazyPut<GiftCardController>(() => GiftCardController(), fenix: true);
   }
 }
 
 class GiftCardHistoryBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<GiftCardHistoryController>(() => GiftCardHistoryController());
+    Get.lazyPut<GiftCardHistoryController>(
+      () => GiftCardHistoryController(),
+      fenix: true,
+    );
   }
 }
 
@@ -664,7 +793,7 @@ class P2pBinding implements Bindings {
 class TravelBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TravelController>(() => TravelController());
+    Get.lazyPut<TravelController>(() => TravelController(), fenix: true);
   }
 }
 

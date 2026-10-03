@@ -62,39 +62,45 @@ class CommonAppBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.only(start: 10.w),
-              child: Tooltip(
-                message: l10nPick(context, en: 'Back', fa: 'بازگشت'),
-                child: IconButton(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () => _handleBack(context),
-                  icon: Transform.scale(
-                    scaleX: Directionality.of(context) == TextDirection.rtl
-                        ? -1
-                        : 1,
-                    child: Image.asset(
-                      PngAssets.arrowLeftCommonIcon,
-                      width: 25.w,
-                      color: primaryTextColor,
+        Expanded(
+          child: Row(
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: 10.w),
+                child: Tooltip(
+                  message: l10nPick(context, en: 'Back', fa: 'بازگشت'),
+                  child: IconButton(
+                    visualDensity: VisualDensity.compact,
+                    onPressed: () => _handleBack(context),
+                    icon: Transform.scale(
+                      scaleX: Directionality.of(context) == TextDirection.rtl
+                          ? -1
+                          : 1,
+                      child: Image.asset(
+                        PngAssets.arrowLeftCommonIcon,
+                        width: 25.w,
+                        color: primaryTextColor,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(width: 5.w),
-            Text(
-              title,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: fontWeight,
-                fontSize: 16.sp,
-                color: primaryTextColor,
+              SizedBox(width: 5.w),
+              Expanded(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    letterSpacing: 0,
+                    fontWeight: fontWeight,
+                    fontSize: 16.sp,
+                    color: primaryTextColor,
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         ?rightSideWidget,
         if (rightSideWidget == null &&

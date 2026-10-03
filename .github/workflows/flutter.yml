@@ -182,7 +182,7 @@ jobs:
             PIN_ARGS="$PIN_ARGS --dart-define=ECARDO_CERT_PIN_BACKUP=$CERT_PIN_BACKUP"
           fi
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/symbols \
+            flutter build apk --release --split-per-abi \
               --target-platform android-arm,android-arm64,android-x64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
             if [ -f build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ]; then
               cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/app-release.apk
@@ -471,7 +471,7 @@ jobs:
           if [ -n "$CERT_PIN_BACKUP" ]; then
             PIN_ARGS="$PIN_ARGS --dart-define=ECARDO_CERT_PIN_BACKUP=$CERT_PIN_BACKUP"
           fi
-          flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/symbols \
+          flutter build apk --release --split-per-abi \
             --target-platform android-arm,android-arm64,android-x64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
           if [ -f build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ]; then
             cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/app-release.apk

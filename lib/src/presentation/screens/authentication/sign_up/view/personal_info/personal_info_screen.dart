@@ -28,14 +28,22 @@ class PersonalInfoScreen extends StatefulWidget {
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final bool isPersonalInfoEdit =
       Get.arguments?["is_personal_info_edit"] ?? false;
-  final PersonalInfoController controller = Get.find();
-  final CountryController countryController = Get.find<CountryController>();
-  final RegisterFieldsController registerFieldsController =
-      Get.find<RegisterFieldsController>();
+  late final PersonalInfoController controller;
+  late final CountryController countryController;
+  late final RegisterFieldsController registerFieldsController;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<PersonalInfoController>()
+        ? Get.find<PersonalInfoController>()
+        : Get.put(PersonalInfoController());
+    countryController = Get.isRegistered<CountryController>()
+        ? Get.find<CountryController>()
+        : Get.put(CountryController());
+    registerFieldsController = Get.isRegistered<RegisterFieldsController>()
+        ? Get.find<RegisterFieldsController>()
+        : Get.put(RegisterFieldsController());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isPersonalInfoEdit == true) {
         loadPersonalData();
@@ -77,8 +85,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
   void _setSelectedCountry() {
     final selectedCountry = countryController.countryList.firstWhereOrNull(
-      (country) => country.selected == true,
-    );
+          (country) => country.selected == true,
+        ) ??
+        countryController.countryList.firstWhereOrNull(
+          (country) => country.code == 'IR',
+        ) ??
+        countryController.countryList.firstOrNull;
 
     if (selectedCountry != null) {
       controller.countryController.text = selectedCountry.name ?? "";

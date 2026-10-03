@@ -23,12 +23,15 @@ class VerifyEmailScreen extends StatefulWidget {
 }
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
-  final VerifyEmailController controller = Get.find();
+  late final VerifyEmailController controller;
   String? email;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<VerifyEmailController>()
+        ? Get.find<VerifyEmailController>()
+        : Get.put(VerifyEmailController());
     loadSavedEmail();
   }
 

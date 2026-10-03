@@ -63,6 +63,12 @@ class MultipleImagePickerController extends GetxController {
     }
   }
 
+  void clearImages() {
+    attachedImages.clear();
+    currentEditingId.value = -1;
+    update();
+  }
+
   bool hasImage(int attachmentId) {
     return attachedImages.containsKey(attachmentId);
   }
