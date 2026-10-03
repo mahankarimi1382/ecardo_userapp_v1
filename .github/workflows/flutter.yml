@@ -120,15 +120,19 @@ jobs:
           CERT_PIN_BACKUP: ${{ secrets.ECARDO_CERT_PIN_BACKUP }}
         run: |
           if [ -z "$CERT_PIN" ] && [ -z "$CERT_PIN_BACKUP" ]; then
-            echo "❌ Neither ECARDO_CERT_PIN nor ECARDO_CERT_PIN_BACKUP is set."
-            echo "   A release built without a pin is rejected at runtime by"
-            echo "   SslPinningConfig (fail-closed), so it would ship an app that"
-            echo "   cannot talk to ecardo.ir. Set at least one secret."
-            exit 1
+            if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+              echo "❌ Neither ECARDO_CERT_PIN nor ECARDO_CERT_PIN_BACKUP is set."
+              echo "   A release built without a pin is rejected at runtime by"
+              echo "   SslPinningConfig (fail-closed), so it would ship an app that"
+              echo "   cannot talk to ecardo.ir. Set at least one secret."
+              exit 1
+            else
+              echo "⚠️ Non-tag build; TLS cert pin not required for debug."
+            fi
           fi
           echo "pin=${CERT_PIN}" >> "$GITHUB_OUTPUT"
           echo "pin_backup=${CERT_PIN_BACKUP}" >> "$GITHUB_OUTPUT"
-          echo "✅ certificate pin(s) present for release build"
+          echo "✅ certificate pin(s) processed"
 
       - name: Build APK
         env:
@@ -146,6 +150,9 @@ jobs:
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/symbols \
               --target-platform android-arm,android-arm64,android-x64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
+            if [ -f build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ]; then
+              cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/app-release.apk
+            fi
             test -f build/app/outputs/flutter-apk/app-release.apk
           else
             # Debug builds keep the default (unpinned) behaviour so local dev
@@ -199,6 +206,12 @@ jobs:
             gh release create "$TAG" --title "v${VERSION}" \
               --notes "Auto-published from ${GITHUB_REF_NAME} (${GITHUB_SHA::7})." --target main
           gh release upload "$TAG" "$STAGED" --clobber
+          for f in build/app/outputs/flutter-apk/app-*-release.apk; do
+            [ -f "$f" ] || continue
+            abi=$(basename "$f" | sed -e 's/app-//' -e 's/-release.apk//')
+            cp "$f" "ecardo_user_v${VERSION}_${abi}.apk"
+            gh release upload "$TAG" "ecardo_user_v${VERSION}_${abi}.apk" --clobber
+          done
 
       - name: Mirror APK to public releases repo
         if: startsWith(github.ref, 'refs/tags/v')
@@ -426,6 +439,9 @@ jobs:
           fi
           flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/symbols \
             --target-platform android-arm,android-arm64,android-x64 --tree-shake-icons $PIN_ARGS 2>&1 | tee build_log.txt
+          if [ -f build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ]; then
+            cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/app-release.apk
+          fi
           test -f build/app/outputs/flutter-apk/app-release.apk
           ls -lh build/app/outputs/flutter-apk/*.apk
 
