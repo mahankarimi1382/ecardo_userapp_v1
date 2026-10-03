@@ -109,6 +109,13 @@ class TravelApiRepository implements TravelRepository {
     String query = '',
     int limit = 20,
   }) async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      return const [
+        TravelSuggestion(id: '1', value: 'IKA', title: 'فرودگاه بین‌المللی امام خمینی تهران', subtitle: 'IKA, Tehran, Iran', kind: 'airport'),
+        TravelSuggestion(id: '2', value: 'IST', title: 'فرودگاه استانبول', subtitle: 'IST, Istanbul, Turkey', kind: 'airport'),
+        TravelSuggestion(id: '3', value: 'DXB', title: 'فرودگاه بین‌المللی دبی', subtitle: 'DXB, Dubai, UAE', kind: 'airport'),
+      ];
+    }
     // No special case for eSIM any more. It used to short-circuit to an empty
     // list here, which hid the real reason: the service 404'd this endpoint for
     // eSIM. The service now answers every advertised service with a
