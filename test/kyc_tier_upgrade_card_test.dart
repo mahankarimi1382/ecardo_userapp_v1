@@ -84,8 +84,10 @@ void main() {
 
     // The card is taller than the test viewport inside the harness
     // SingleChildScrollView — bring the button on-screen or the tap misses.
+    // Fixed pumps (no pumpAndSettle: the card runs a repeating animation).
     await tester.ensureVisible(upgradeButton);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     await tester.tap(upgradeButton);
     await tester.pump();
 
