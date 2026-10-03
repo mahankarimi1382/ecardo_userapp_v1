@@ -391,16 +391,25 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      accountNo,
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.75),
-                        fontSize: 12,
-                        fontFamily: 'monospace',
-                        letterSpacing: 1.5,
-                        fontWeight: FontWeight.w600,
+                    // Flexible, not fixed: a monospace account number plus the
+                    // badge together exceed the card width on a 320pt card and
+                    // overflowed the Row.
+                    Flexible(
+                      child: Text(
+                        accountNo,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.75),
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                          letterSpacing: 1.5,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
+                    if (widget.wallet.isDefault == true)
+                      const SizedBox(width: 8),
                     if (widget.wallet.isDefault == true)
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
@@ -415,6 +424,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                             en: 'DEFAULT',
                             fa: 'پیش‌فرض',
                             ar: 'افتراضي',
+                            tr: 'Varsayılan',
+                            ru: 'По умолчанию',
                             zh: '默认',
                           ),
                           style: TextStyle(
@@ -437,7 +448,6 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
 
   Widget _buildBack(CurrencyCardTheme theme) {
     final accountNo = widget.wallet.accountNo ?? '0000 0000 0000 0000';
-    final code = widget.wallet.code ?? '';
 
     return Container(
       width: widget.width,
@@ -485,6 +495,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                     ),
                     child: Text(
                       accountNo,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                       style: const TextStyle(
                         color: Colors.black87,
                         fontSize: 10,
@@ -628,15 +640,24 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               icon,
               const SizedBox(width: 4),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
+              // Flexible: Turkish ("Yatır") and Russian ("Пополнить") are much
+              // longer than "Deposit"/"Vault" and overflowed the third of a
+              // 3-up button row on a 320pt card.
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
