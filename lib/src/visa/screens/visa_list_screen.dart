@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../app/constants/app_colors.dart';
 import '../../helper/l10n_pick.dart';
 import '../controllers/visa_controller.dart';
 import '../models/visa_models.dart';
@@ -29,27 +30,27 @@ class _VisaListScreenState extends State<VisaListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
-          l10nPick(context, en: 'My Visa Applications', fa: 'درخواست‌های ویزای من'),
+          l10nPick(context, en: 'My Visa Applications', fa: 'ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â '),
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: const Color(0xFF1E293B),
+            color: AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFF1E293B), size: 18),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.lightTextPrimary, size: 18),
           onPressed: () => Get.back(),
         ),
       ),
       body: RefreshIndicator(
         onRefresh: _controller.loadUserRequests,
-        color: const Color(0xFF7445FF),
+        color: AppColors.lightSecondary,
         child: Column(
           children: [
             // Status Filter Tabs
@@ -59,11 +60,11 @@ class _VisaListScreenState extends State<VisaListScreen> {
               child: Obx(() {
                 final current = _controller.selectedFilterStatus.value;
                 final filters = [
-                  {'id': 'ALL', 'label': l10nPick(context, en: 'All', fa: 'همه')},
-                  {'id': 'UNDER_REVIEW', 'label': l10nPick(context, en: 'Reviewing', fa: 'در حال بررسی')},
-                  {'id': 'AWAITING_PAYMENT', 'label': l10nPick(context, en: 'Payment', fa: 'منتظر پرداخت')},
-                  {'id': 'APPROVED', 'label': l10nPick(context, en: 'Approved', fa: 'صادرشده')},
-                  {'id': 'REJECTED', 'label': l10nPick(context, en: 'Rejected', fa: 'ردشده')},
+                  {'id': 'ALL', 'label': l10nPick(context, en: 'All', fa: 'Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â¡')},
+                  {'id': 'UNDER_REVIEW', 'label': l10nPick(context, en: 'Reviewing', fa: 'ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â± ÃƒËœÃ‚Â­ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â±ÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™')},
+                  {'id': 'AWAITING_PAYMENT', 'label': l10nPick(context, en: 'Payment', fa: 'Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¸ÃƒËœÃ‚Â± Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ÃƒËœÃ‚Â®ÃƒËœÃ‚Âª')},
+                  {'id': 'APPROVED', 'label': l10nPick(context, en: 'Approved', fa: 'ÃƒËœÃ‚ÂµÃƒËœÃ‚Â§ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡')},
+                  {'id': 'REJECTED', 'label': l10nPick(context, en: 'Rejected', fa: 'ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡')},
                 ];
 
                 return ListView.separated(
@@ -83,7 +84,7 @@ class _VisaListScreenState extends State<VisaListScreen> {
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFF7445FF) : const Color(0xFFF1F5F9),
+                          color: isSelected ? AppColors.lightSecondary : AppColors.lightBackground,
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Center(
@@ -92,7 +93,7 @@ class _VisaListScreenState extends State<VisaListScreen> {
                             style: TextStyle(
                               fontSize: 11.5.sp,
                               fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                              color: isSelected ? Colors.white : const Color(0xFF475569),
+                              color: isSelected ? Colors.white : AppColors.lightTextSecondary,
                             ),
                           ),
                         ),
@@ -123,30 +124,30 @@ class _VisaListScreenState extends State<VisaListScreen> {
                           Icon(Icons.assignment_outlined, size: 64.r, color: Colors.grey[400]),
                           SizedBox(height: 12.h),
                           Text(
-                            l10nPick(context, en: 'No visa applications found', fa: 'هیچ درخواست ویزایی یافت نشد'),
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: const Color(0xFF334155)),
+                            l10nPick(context, en: 'No visa applications found', fa: 'Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ€ºÃ…â€™ÃƒÅ¡Ã¢â‚¬Â  ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ€ºÃ…â€™ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Âª Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯'),
+                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextSecondary),
                           ),
                           SizedBox(height: 6.h),
                           Text(
                             l10nPick(
                               context,
                               en: 'Apply for your destination visa and track the status in real time.',
-                              fa: 'کشور مقصد خود را انتخاب کرده و درخواست ویزای آنلاین ثبت فرمایید.',
+                              fa: 'ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚ÂµÃƒËœÃ‚Â¯ ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯ ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚ÂªÃƒËœÃ‚Â®ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨ ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¢Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚Â«ÃƒËœÃ‚Â¨ÃƒËœÃ‚Âª Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â±Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯.',
                             ),
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 11.5.sp, color: const Color(0xFF64748B)),
+                            style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightTextSecondary),
                           ),
                           SizedBox(height: 20.h),
                           ElevatedButton.icon(
                             onPressed: () => Get.back(),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF7445FF),
+                              backgroundColor: AppColors.lightSecondary,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                             ),
                             icon: const Icon(Icons.add, color: Colors.white, size: 18),
                             label: Text(
-                              l10nPick(context, en: 'New Application', fa: 'ثبت درخواست جدید'),
+                              l10nPick(context, en: 'New Application', fa: 'ÃƒËœÃ‚Â«ÃƒËœÃ‚Â¨ÃƒËœÃ‚Âª ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯'),
                               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: Colors.white),
                             ),
                           ),
@@ -233,7 +234,7 @@ class _VisaRequestCard extends StatelessWidget {
                     textDirection: TextDirection.ltr,
                     child: Text(
                       request.caseNo,
-                      style: TextStyle(fontSize: 11.sp, color: const Color(0xFF64748B)),
+                      style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
                     ),
                   ),
                 ],
@@ -246,17 +247,17 @@ class _VisaRequestCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w900,
-                      color: const Color(0xFF7445FF),
+                      color: AppColors.lightSecondary,
                     ),
                   ),
                   SizedBox(height: 2.h),
                   Row(
                     children: [
                       Text(
-                        l10nPick(context, en: 'Track', fa: 'پیگیری'),
-                        style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: const Color(0xFF7445FF)),
+                        l10nPick(context, en: 'Track', fa: 'Ãƒâ„¢Ã‚Â¾Ãƒâ€ºÃ…â€™ÃƒÅ¡Ã‚Â¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™'),
+                        style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: AppColors.lightSecondary),
                       ),
-                      const Icon(Icons.chevron_right_rounded, size: 16, color: Color(0xFF7445FF)),
+                      const Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.lightSecondary),
                     ],
                   ),
                 ],

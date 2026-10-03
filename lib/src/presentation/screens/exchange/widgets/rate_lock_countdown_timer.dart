@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 /// A circular or linear countdown timer showing remaining rate-lock duration.
 ///
@@ -89,10 +90,7 @@ class _RateLockCountdownTimerState extends State<RateLockCountdownTimer>
     );
 
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.14).animate(
-      CurvedAnimation(
-        parent: _pulseController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
     _countdownController.addListener(_onCountdownTick);
@@ -148,7 +146,10 @@ class _RateLockCountdownTimerState extends State<RateLockCountdownTimer>
 
     if (widget.startTime != null) {
       final elapsed = DateTime.now().difference(widget.startTime!);
-      final elapsedMs = elapsed.inMilliseconds.clamp(0, widget.duration.inMilliseconds);
+      final elapsedMs = elapsed.inMilliseconds.clamp(
+        0,
+        widget.duration.inMilliseconds,
+      );
       final initialProgress = elapsedMs / widget.duration.inMilliseconds;
       _countdownController.value = initialProgress;
     } else {
@@ -194,12 +195,16 @@ class _RateLockCountdownTimerState extends State<RateLockCountdownTimer>
 
     if (widget.startTime != null) {
       final elapsed = DateTime.now().difference(widget.startTime!);
-      final remainingMs = widget.duration.inMilliseconds - elapsed.inMilliseconds;
+      final remainingMs =
+          widget.duration.inMilliseconds - elapsed.inMilliseconds;
       if (remainingMs <= 0) return 0;
       return (remainingMs / 1000).ceil();
     }
 
-    final double remainingFraction = (1.0 - _countdownController.value).clamp(0.0, 1.0);
+    final double remainingFraction = (1.0 - _countdownController.value).clamp(
+      0.0,
+      1.0,
+    );
     return (widget.duration.inSeconds * remainingFraction).ceil();
   }
 
@@ -221,30 +226,76 @@ class _RateLockCountdownTimerState extends State<RateLockCountdownTimer>
     }
   }
 
+  /// Non-colour carrier of the countdown state. Colour alone is not a
+  /// sufficient signal for deuteranopia, so each state also gets its own
+  /// icon and word.
+  IconData _getStateIcon(int remainingSeconds) {
+    if (widget.isExpired || remainingSeconds <= 0) {
+      return Icons.error_outline_rounded;
+    }
+    if (remainingSeconds <= 10) {
+      return Icons.priority_high_rounded;
+    }
+    if (remainingSeconds <= 20) {
+      return Icons.watch_later_rounded;
+    }
+    return Icons.lock_clock_rounded;
+  }
+
+  /// Short state word shown next to the seconds so the countdown stays
+  /// readable with no colour perception at all.
+  String _getStateLabel(BuildContext context, int remainingSeconds) {
+    if (widget.isExpired || remainingSeconds <= 0) {
+      return l10nPick(context, en: 'expired', fa: 'منقضی');
+    }
+    if (remainingSeconds <= 10) {
+      return l10nPick(context, en: 'expiring', fa: 'در حال انقضا');
+    }
+    if (remainingSeconds <= 20) {
+      return l10nPick(context, en: 'ending', fa: 'رو به پایان');
+    }
+    return l10nPick(context, en: 'locked', fa: 'قفل‌شده');
+  }
+
+  /// Spoken label for screen readers — states the seconds and the phase in
+  /// one string so the meaning survives without colour or sight.
+  String _getSemanticLabel(BuildContext context, int remainingSeconds) {
+    final state = _getStateLabel(context, remainingSeconds);
+    final seconds = l10nPick(
+      context,
+      en: '$remainingSeconds seconds remaining',
+      fa: '$remainingSeconds ثانیه باقی مانده',
+    );
+    return '$seconds — $state';
+  }
+
   @override
   Widget build(BuildContext context) {
     final int remainingSeconds = _getRemainingSeconds();
     final double progress = _getProgress();
     final Color activeColor = _getCurrentColor(remainingSeconds);
-    final bool isPulsing = remainingSeconds < 10 && remainingSeconds > 0 && !widget.isExpired;
+    final bool isPulsing =
+        remainingSeconds < 10 && remainingSeconds > 0 && !widget.isExpired;
 
     final Widget timerWidget = widget.isLinear
         ? _buildLinearTimer(progress, activeColor, remainingSeconds)
         : _buildCircularTimer(progress, activeColor, remainingSeconds);
 
     if (isPulsing) {
-      return Transform.scale(
-        scale: _pulseAnimation.value,
-        child: timerWidget,
-      );
+      return Transform.scale(scale: _pulseAnimation.value, child: timerWidget);
     }
 
     return timerWidget;
   }
 
-  Widget _buildCircularTimer(double progress, Color color, int remainingSeconds) {
+  Widget _buildCircularTimer(
+    double progress,
+    Color color,
+    int remainingSeconds,
+  ) {
+    final fontSize = (widget.size * 0.32).clamp(9.0, 14.0);
     final defaultStyle = TextStyle(
-      fontSize: (widget.size * 0.32).clamp(9.0, 14.0),
+      fontSize: fontSize,
       fontWeight: FontWeight.w800,
       color: color,
       letterSpacing: -0.2,
@@ -265,10 +316,40 @@ class _RateLockCountdownTimerState extends State<RateLockCountdownTimer>
             ),
           ),
           if (widget.showText)
-            Text(
-              '${remainingSeconds}s',
-              style: widget.textStyle ?? defaultStyle,
-              textAlign: TextAlign.center,
+            Semantics(
+              label: _getSemanticLabel(context, remainingSeconds),
+              excludeSemantics: true,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                // Icon + seconds + state word: the countdown carries its
+                // meaning in shape and text, not only in hue.
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _getStateIcon(remainingSeconds),
+                      size: fontSize * 0.9,
+                      color: color,
+                    ),
+                    Text(
+                      '${remainingSeconds}s',
+                      style: widget.textStyle ?? defaultStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      _getStateLabel(context, remainingSeconds),
+                      style: TextStyle(
+                        fontSize: (fontSize * 0.6).clamp(7.0, 9.0),
+                        fontWeight: FontWeight.w700,
+                        color: color,
+                        height: 1.0,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+              ),
             ),
         ],
       ),
@@ -276,56 +357,99 @@ class _RateLockCountdownTimerState extends State<RateLockCountdownTimer>
   }
 
   Widget _buildLinearTimer(double progress, Color color, int remainingSeconds) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (widget.showText)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${remainingSeconds}s',
-                  style: widget.textStyle ??
-                      TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
+    return Semantics(
+      label: _getSemanticLabel(context, remainingSeconds),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (widget.showText)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // State icon — a second, non-colour channel for the
+                      // locked / ending / expiring / expired phase.
+                      Icon(
+                        _getStateIcon(remainingSeconds),
+                        size: 14,
                         color: color,
                       ),
-                ),
-                if (widget.onRefresh != null && (remainingSeconds < 10 || widget.isExpired))
-                  GestureDetector(
-                    onTap: widget.onRefresh,
-                    child: Icon(
-                      Icons.refresh_rounded,
-                      size: 14,
-                      color: color,
-                    ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${remainingSeconds}s',
+                        style:
+                            widget.textStyle ??
+                            TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: color,
+                            ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _getStateLabel(context, remainingSeconds),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: color,
+                        ),
+                      ),
+                    ],
                   ),
-              ],
+                  if (widget.onRefresh != null &&
+                      (remainingSeconds < 10 || widget.isExpired))
+                    // 44x44 transparent hit area around the 14px icon —
+                    // the icon stays small, the target meets the minimum.
+                    SizedBox(
+                      width: 44,
+                      height: 44,
+                      child: Tooltip(
+                        message: l10nPick(
+                          context,
+                          en: 'Lock rate again',
+                          fa: 'قفل مجدد نرخ',
+                        ),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: widget.onRefresh,
+                          child: Center(
+                            child: Icon(
+                              Icons.refresh_rounded,
+                              size: 14,
+                              color: color,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-        Container(
-          height: widget.strokeWidth,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.16),
-            borderRadius: BorderRadius.circular(widget.strokeWidth / 2),
-          ),
-          alignment: Alignment.centerLeft,
-          child: FractionallySizedBox(
-            widthFactor: progress,
-            child: Container(
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(widget.strokeWidth / 2),
+          Container(
+            height: widget.strokeWidth,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(widget.strokeWidth / 2),
+            ),
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: progress,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(widget.strokeWidth / 2),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

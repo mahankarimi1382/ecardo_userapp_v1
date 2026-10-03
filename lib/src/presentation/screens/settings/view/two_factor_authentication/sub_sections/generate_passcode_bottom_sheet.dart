@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class GeneratePasscodeBottomSheet extends StatefulWidget {
   const GeneratePasscodeBottomSheet({super.key});
@@ -23,9 +24,9 @@ class _GeneratePasscodeBottomSheetState
   final TwoFactorAuthenticationController controller = Get.find();
 
   List<TextInputFormatter> get _digitLimit => [
-        FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(PasscodeHelper.maxDigits),
-      ];
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(PasscodeHelper.maxDigits),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +79,22 @@ class _GeneratePasscodeBottomSheetState
                     ),
                   ),
                   GestureDetector(
+                    behavior: HitTestBehavior.opaque,
                     onTap: () => Get.back(),
-                    child: Image.asset(
-                      PngAssets.closeCommonIcon,
-                      width: 28,
-                      color: AppColors.lightTextPrimary,
+                    child: Tooltip(
+                      message: l10nPick(context, en: 'Close', fa: 'بستن'),
+                      child: SizedBox(
+                        // 44x44 hit area around the 28px asset.
+                        width: 44,
+                        height: 44,
+                        child: Center(
+                          child: Image.asset(
+                            PngAssets.closeCommonIcon,
+                            width: 28,
+                            color: AppColors.lightTextPrimary,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

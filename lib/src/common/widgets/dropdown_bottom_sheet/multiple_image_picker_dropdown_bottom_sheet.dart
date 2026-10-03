@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/multiple_image_picker_controller.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class MultipleImagePickerDropdownBottomSheet extends StatelessWidget {
   final int attachmentId;
@@ -28,167 +29,178 @@ class MultipleImagePickerDropdownBottomSheet extends StatelessWidget {
         height: AppSpacing.bottomSafe(context, 250),
         margin: const EdgeInsets.symmetric(horizontal: 18),
         decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
-            blurRadius: 40,
-            spreadRadius: 0,
-            offset: Offset(0, 0),
+          color: AppColors.white,
+          borderRadius: BorderRadiusDirectional.only(
+            topStart: Radius.circular(20),
+            topEnd: Radius.circular(20),
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Column(
-            children: [
-              SizedBox(height: 12),
-              Container(
-                width: 45,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.06),
+              blurRadius: 40,
+              spreadRadius: 0,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Column(
+              children: [
+                SizedBox(height: 12),
+                Container(
+                  width: 45,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
-              ),
-              SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      localization.multipleImagePickerDropdownTitle,
-                      style: TextStyle(
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 20,
-                        color: AppColors.lightTextPrimary,
+                SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        localization.multipleImagePickerDropdownTitle,
+                        style: TextStyle(
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
+                          color: AppColors.lightTextPrimary,
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Image.asset(
-                        PngAssets.closeCommonIcon,
-                        width: 28,
-                        color: AppColors.lightTextPrimary,
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Get.back(),
+                        child: Tooltip(
+                          message: l10nPick(context, en: 'Close', fa: 'بستن'),
+                          child: SizedBox(
+                            // 44x44 hit area around the 28px asset.
+                            width: 44,
+                            height: 44,
+                            child: Center(
+                              child: Image.asset(
+                                PngAssets.closeCommonIcon,
+                                width: 28,
+                                color: AppColors.lightTextPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 12),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 18),
-                width: double.infinity,
-                height: 1,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.white,
-                      AppColors.lightTextPrimary.withValues(alpha: 0.1),
-                      AppColors.white,
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  multipleImagePickerController.pickImageFromCamera(
-                    attachmentId,
-                  );
-                  Get.back();
-                },
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        border: Border.all(
+                SizedBox(height: 12),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 18),
+                  width: double.infinity,
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.white,
+                        AppColors.lightTextPrimary.withValues(alpha: 0.1),
+                        AppColors.white,
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    multipleImagePickerController.pickImageFromCamera(
+                      attachmentId,
+                    );
+                    Get.back();
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.lightTextPrimary.withValues(
+                              alpha: 0.2,
+                            ),
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Image.asset(
+                          PngAssets.cameraCommonIconTwo,
+                          width: 30,
+                          height: 30,
                           color: AppColors.lightTextPrimary.withValues(
-                            alpha: 0.2,
+                            alpha: 0.7,
                           ),
                         ),
-                        borderRadius: BorderRadius.circular(50),
                       ),
-                      child: Image.asset(
-                        PngAssets.cameraCommonIconTwo,
-                        width: 30,
-                        height: 30,
-                        color: AppColors.lightTextPrimary.withValues(
-                          alpha: 0.7,
+                      const SizedBox(height: 5),
+                      Text(
+                        localization.multipleImagePickerDropdownCamera,
+                        style: TextStyle(
+                          letterSpacing: 0,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.lightTextPrimary,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      localization.multipleImagePickerDropdownCamera,
-                      style: TextStyle(
-                        letterSpacing: 0,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.lightTextPrimary,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  multipleImagePickerController.pickImageFromGallery(
-                    attachmentId,
-                  );
-                  Get.back();
-                },
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        border: Border.all(
+                GestureDetector(
+                  onTap: () {
+                    multipleImagePickerController.pickImageFromGallery(
+                      attachmentId,
+                    );
+                    Get.back();
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.lightTextPrimary.withValues(
+                              alpha: 0.2,
+                            ),
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Image.asset(
+                          PngAssets.galleryCommonIcon,
+                          width: 30,
+                          height: 30,
                           color: AppColors.lightTextPrimary.withValues(
-                            alpha: 0.2,
+                            alpha: 0.7,
                           ),
                         ),
-                        borderRadius: BorderRadius.circular(50),
                       ),
-                      child: Image.asset(
-                        PngAssets.galleryCommonIcon,
-                        width: 30,
-                        height: 30,
-                        color: AppColors.lightTextPrimary.withValues(
-                          alpha: 0.7,
+                      const SizedBox(height: 5),
+                      Text(
+                        localization.multipleImagePickerDropdownGallery,
+                        style: TextStyle(
+                          letterSpacing: 0,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.lightTextPrimary,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      localization.multipleImagePickerDropdownGallery,
-                      style: TextStyle(
-                        letterSpacing: 0,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.lightTextPrimary,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

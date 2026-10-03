@@ -64,10 +64,10 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
           child: CommonAppBar(
             title: l10nPick(
               context,
-              fa: 'فرم ثبت سفارش سهام بین‌الملل',
+              fa: 'ÙØ±Ù… Ø«Ø¨Øª Ø³ÙØ§Ø±Ø´ Ø³Ù‡Ø§Ù… Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„',
               en: 'International Stock Order',
-              ar: 'أمر تداول الأسهم العالمية',
-              zh: '国际股票下单表单',
+              ar: 'Ø£Ù…Ø± ØªØ¯Ø§ÙˆÙ„ Ø§Ù„Ø£Ø³Ù‡Ù… Ø§Ù„Ø¹Ø§Ù„Ù…ÙŠØ©',
+              zh: 'å›½é™…è‚¡ç¥¨ä¸‹å•è¡¨å•',
             ),
           ),
         ),
@@ -79,10 +79,10 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             width: double.infinity,
             text: l10nPick(
               context,
-              fa: 'پیش‌نمایش و بررسی نهایی معامله',
+              fa: 'Ù¾ÛŒØ´â€ŒÙ†Ù…Ø§ÛŒØ´ Ùˆ Ø¨Ø±Ø±Ø³ÛŒ Ù†Ù‡Ø§ÛŒÛŒ Ù…Ø¹Ø§Ù…Ù„Ù‡',
               en: 'Review & Verify Order',
-              ar: 'معاينة ومراجعة الأمر',
-              zh: '订单预审与核验',
+              ar: 'Ù…Ø¹Ø§ÙŠÙ†Ø© ÙˆÙ…Ø±Ø§Ø¬Ø¹Ø© Ø§Ù„Ø£Ù…Ø±',
+              zh: 'è®¢å•é¢„å®¡ä¸Žæ ¸éªŒ',
             ),
             backgroundColor: AppColors.lightPrimary,
             onPressed: _onProceed,
@@ -96,7 +96,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
           children: [
             // Market Selector
             Text(
-              l10nPick(context, fa: 'بازار بورس بین‌الملل', en: 'Exchange Market', ar: 'السوق المالي', zh: '交易所市场'),
+              l10nPick(context, fa: 'Ø¨Ø§Ø²Ø§Ø± Ø¨ÙˆØ±Ø³ Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„', en: 'Exchange Market', ar: 'Ø§Ù„Ø³ÙˆÙ‚ Ø§Ù„Ù…Ø§Ù„ÙŠ', zh: 'äº¤æ˜“æ‰€å¸‚åœº'),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 8.h),
@@ -115,7 +115,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                       Icon(Icons.language_rounded, color: AppColors.mainSoftBlue, size: 22.sp),
                       SizedBox(width: 10.w),
                       Text(
-                        l10nPick(context, fa: 'بورس نزدک و نیویورک (NASDAQ / NYSE)', en: 'US Equities (NASDAQ / NYSE)'),
+                        l10nPick(context, fa: 'Ø¨ÙˆØ±Ø³ Ù†Ø²Ø¯Ú© Ùˆ Ù†ÛŒÙˆÛŒÙˆØ±Ú© (NASDAQ / NYSE)', en: 'US Equities (NASDAQ / NYSE)'),
                         style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
                       ),
                     ],
@@ -150,7 +150,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
 
             // Symbol Picker
             Text(
-              l10nPick(context, fa: 'انتخاب نماد سهام', en: 'Stock Symbol', ar: 'رمز السهم', zh: '股票标的'),
+              l10nPick(context, fa: 'Ø§Ù†ØªØ®Ø§Ø¨ Ù†Ù…Ø§Ø¯ Ø³Ù‡Ø§Ù…', en: 'Stock Symbol', ar: 'Ø±Ù…Ø² Ø§Ù„Ø³Ù‡Ù…', zh: 'è‚¡ç¥¨æ ‡çš„'),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 8.h),
@@ -172,16 +172,16 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('AAPL (Apple Inc.)', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp)),
-                          Text('آخرین قیمت: \$182.50', style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
+                          Text('Ø¢Ø®Ø±ÛŒÙ† Ù‚ÛŒÙ…Øª: \$182.50', style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
                         ],
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF059669).withValues(alpha: 0.12),
+                          color: AppColors.success.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
-                        child: Text('+1.45%', style: TextStyle(color: const Color(0xFF059669), fontWeight: FontWeight.w800, fontSize: 11.sp)),
+                        child: Text('+1.45%', style: TextStyle(color: AppColors.success, fontWeight: FontWeight.w800, fontSize: 11.sp)),
                       ),
                     ],
                   ),
@@ -215,7 +215,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
 
             // Side Selector: BUY / SELL
             Text(
-              l10nPick(context, fa: 'جهت معامله', en: 'Order Side', ar: 'نوع العملية', zh: '交易方向'),
+              l10nPick(context, fa: 'Ø¬Ù‡Øª Ù…Ø¹Ø§Ù…Ù„Ù‡', en: 'Order Side', ar: 'Ù†ÙˆØ¹ Ø§Ù„Ø¹Ù…Ù„ÙŠØ©', zh: 'äº¤æ˜“æ–¹å‘'),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 8.h),
@@ -226,10 +226,10 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isBuy ? const Color(0xFF059669) : Colors.white,
+                        backgroundColor: isBuy ? AppColors.success : AppColors.lightSurface,
                         foregroundColor: isBuy ? Colors.white : Colors.black87,
                         side: BorderSide(
-                          color: isBuy ? const Color(0xFF059669) : AppColors.lightBorder,
+                          color: isBuy ? AppColors.success : AppColors.lightBorder,
                           width: 1.5,
                         ),
                         padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -237,7 +237,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                       ),
                       icon: const Icon(Icons.arrow_upward_rounded, size: 18),
                       label: Text(
-                        l10nPick(context, fa: 'خرید (BUY)', en: 'BUY', ar: 'شراء', zh: '买入'),
+                        l10nPick(context, fa: 'Ø®Ø±ÛŒØ¯ (BUY)', en: 'BUY', ar: 'Ø´Ø±Ø§Ø¡', zh: 'ä¹°å…¥'),
                         style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp),
                       ),
                       onPressed: () {
@@ -250,10 +250,10 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: !isBuy ? const Color(0xFFDC2626) : Colors.white,
+                        backgroundColor: !isBuy ? AppColors.error : AppColors.lightSurface,
                         foregroundColor: !isBuy ? Colors.white : Colors.black87,
                         side: BorderSide(
-                          color: !isBuy ? const Color(0xFFDC2626) : AppColors.lightBorder,
+                          color: !isBuy ? AppColors.error : AppColors.lightBorder,
                           width: 1.5,
                         ),
                         padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -261,7 +261,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                       ),
                       icon: const Icon(Icons.arrow_downward_rounded, size: 18),
                       label: Text(
-                        l10nPick(context, fa: 'فروش (SELL)', en: 'SELL', ar: 'بيع', zh: '卖出'),
+                        l10nPick(context, fa: 'ÙØ±ÙˆØ´ (SELL)', en: 'SELL', ar: 'Ø¨ÙŠØ¹', zh: 'å–å‡º'),
                         style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp),
                       ),
                       onPressed: () {
@@ -278,7 +278,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
 
             // Quantity
             Text(
-              l10nPick(context, fa: 'تعداد سهم (حجم)', en: 'Quantity (Shares)', ar: 'عدد الأسهم', zh: '委托股数'),
+              l10nPick(context, fa: 'ØªØ¹Ø¯Ø§Ø¯ Ø³Ù‡Ù… (Ø­Ø¬Ù…)', en: 'Quantity (Shares)', ar: 'Ø¹Ø¯Ø¯ Ø§Ù„Ø£Ø³Ù‡Ù…', zh: 'å§”æ‰˜è‚¡æ•°'),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 8.h),
@@ -302,11 +302,11 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               },
               validator: (val) {
                 if (val == null || val.trim().isEmpty) {
-                  return l10nPick(context, fa: 'وارد کردن تعداد سهم الزامی است', en: 'Quantity is required');
+                  return l10nPick(context, fa: 'ÙˆØ§Ø±Ø¯ Ú©Ø±Ø¯Ù† ØªØ¹Ø¯Ø§Ø¯ Ø³Ù‡Ù… Ø§Ù„Ø²Ø§Ù…ÛŒ Ø§Ø³Øª', en: 'Quantity is required');
                 }
                 final numVal = double.tryParse(val.trim());
                 if (numVal == null || numVal <= 0) {
-                  return l10nPick(context, fa: 'تعداد سهم باید بزرگتر از صفر باشد', en: 'Must be greater than 0');
+                  return l10nPick(context, fa: 'ØªØ¹Ø¯Ø§Ø¯ Ø³Ù‡Ù… Ø¨Ø§ÛŒØ¯ Ø¨Ø²Ø±Ú¯ØªØ± Ø§Ø² ØµÙØ± Ø¨Ø§Ø´Ø¯', en: 'Must be greater than 0');
                 }
                 return null;
               },
@@ -316,7 +316,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
 
             // Order Type: MARKET vs LIMIT
             Text(
-              l10nPick(context, fa: 'نوع سفارش معامله', en: 'Order Type', ar: 'نوع الأمر', zh: '订单类型'),
+              l10nPick(context, fa: 'Ù†ÙˆØ¹ Ø³ÙØ§Ø±Ø´ Ù…Ø¹Ø§Ù…Ù„Ù‡', en: 'Order Type', ar: 'Ù†ÙˆØ¹ Ø§Ù„Ø£Ù…Ø±', zh: 'è®¢å•ç±»åž‹'),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 8.h),
@@ -325,7 +325,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               return Row(
                 children: [
                   ChoiceChip(
-                    label: Text(l10nPick(context, fa: 'قیمت لحظه‌ای بازار (Market)', en: 'Market Order')),
+                    label: Text(l10nPick(context, fa: 'Ù‚ÛŒÙ…Øª Ù„Ø­Ø¸Ù‡â€ŒØ§ÛŒ Ø¨Ø§Ø²Ø§Ø± (Market)', en: 'Market Order')),
                     selected: isMarket,
                     selectedColor: AppColors.lightPrimary,
                     labelStyle: TextStyle(
@@ -341,7 +341,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                   ),
                   SizedBox(width: 8.w),
                   ChoiceChip(
-                    label: Text(l10nPick(context, fa: 'قیمت معین (Limit)', en: 'Limit Order')),
+                    label: Text(l10nPick(context, fa: 'Ù‚ÛŒÙ…Øª Ù…Ø¹ÛŒÙ† (Limit)', en: 'Limit Order')),
                     selected: !isMarket,
                     selectedColor: AppColors.lightPrimary,
                     labelStyle: TextStyle(
@@ -367,7 +367,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 children: [
                   SizedBox(height: 12.h),
                   Text(
-                    l10nPick(context, fa: 'قیمت حد معامله (USD / ارز پایه بازار)', en: 'Limit Price (Base Currency)'),
+                    l10nPick(context, fa: 'Ù‚ÛŒÙ…Øª Ø­Ø¯ Ù…Ø¹Ø§Ù…Ù„Ù‡ (USD / Ø§Ø±Ø² Ù¾Ø§ÛŒÙ‡ Ø¨Ø§Ø²Ø§Ø±)', en: 'Limit Price (Base Currency)'),
                     style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
                   ),
                   SizedBox(height: 8.h),
@@ -377,7 +377,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      hintText: 'مثال: 180.00',
+                      hintText: 'Ù…Ø«Ø§Ù„: 180.00',
                       prefixIcon: const Icon(Icons.price_change_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14.r),
@@ -391,11 +391,11 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                     validator: (val) {
                       if (controller.orderType.value == 'LIMIT') {
                         if (val == null || val.trim().isEmpty) {
-                          return l10nPick(context, fa: 'قیمت حد الزامی است', en: 'Limit price is required');
+                          return l10nPick(context, fa: 'Ù‚ÛŒÙ…Øª Ø­Ø¯ Ø§Ù„Ø²Ø§Ù…ÛŒ Ø§Ø³Øª', en: 'Limit price is required');
                         }
                         final numVal = double.tryParse(val.trim());
                         if (numVal == null || numVal <= 0) {
-                          return l10nPick(context, fa: 'قیمت حد نامعتبر است', en: 'Invalid limit price');
+                          return l10nPick(context, fa: 'Ù‚ÛŒÙ…Øª Ø­Ø¯ Ù†Ø§Ù…Ø¹ØªØ¨Ø± Ø§Ø³Øª', en: 'Invalid limit price');
                         }
                       }
                       return null;
@@ -409,7 +409,7 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
 
             // Pay Currency
             Text(
-              l10nPick(context, fa: 'ارز پرداخت و تسویه کیف پول', en: 'Settlement Currency', ar: 'عملة التسوية', zh: '结算币种'),
+              l10nPick(context, fa: 'Ø§Ø±Ø² Ù¾Ø±Ø¯Ø§Ø®Øª Ùˆ ØªØ³ÙˆÛŒÙ‡ Ú©ÛŒÙ Ù¾ÙˆÙ„', en: 'Settlement Currency', ar: 'Ø¹Ù…Ù„Ø© Ø§Ù„ØªØ³ÙˆÙŠØ©', zh: 'ç»“ç®—å¸ç§'),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 8.h),
@@ -426,9 +426,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'IRR', child: Text('ریال ایران (IRR)')),
-                  DropdownMenuItem(value: 'USDT', child: Text('تتر والت (USDT)')),
-                  DropdownMenuItem(value: 'USD', child: Text('دلار (USD)')),
+                  DropdownMenuItem(value: 'IRR', child: Text('Ø±ÛŒØ§Ù„ Ø§ÛŒØ±Ø§Ù† (IRR)')),
+                  DropdownMenuItem(value: 'USDT', child: Text('ØªØªØ± ÙˆØ§Ù„Øª (USDT)')),
+                  DropdownMenuItem(value: 'USD', child: Text('Ø¯Ù„Ø§Ø± (USD)')),
                 ],
                 onChanged: (val) {
                   if (val != null) {
@@ -450,9 +450,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               return Container(
                 padding: EdgeInsets.all(14.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF0FDF4), // Soft green
+                  color: AppColors.successContainer,
                   borderRadius: BorderRadius.circular(14.r),
-                  border: Border.all(color: const Color(0xFF86EFAC)),
+                  border: Border.all(color: AppColors.success),
                 ),
                 child: Column(
                   children: [
@@ -460,12 +460,12 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          l10nPick(context, fa: 'مبلغ کل برآوردی تسویه:', en: 'Estimated Settlement:'),
-                          style: TextStyle(fontSize: 12.sp, color: const Color(0xFF166534)),
+                          l10nPick(context, fa: 'Ù…Ø¨Ù„Øº Ú©Ù„ Ø¨Ø±Ø¢ÙˆØ±Ø¯ÛŒ ØªØ³ÙˆÛŒÙ‡:', en: 'Estimated Settlement:'),
+                          style: TextStyle(fontSize: 12.sp, color: AppColors.success),
                         ),
                         Text(
                           '${payAmt.toStringAsFixed(curr == 'IRR' ? 0 : 2)} $curr',
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: const Color(0xFF15803D)),
+                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: AppColors.success),
                         ),
                       ],
                     ),
@@ -475,12 +475,12 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            l10nPick(context, fa: 'نرخ تسویه ارزی:', en: 'FX Conversion Rate:'),
-                            style: TextStyle(fontSize: 11.sp, color: const Color(0xFF166534)),
+                            l10nPick(context, fa: 'Ù†Ø±Ø® ØªØ³ÙˆÛŒÙ‡ Ø§Ø±Ø²ÛŒ:', en: 'FX Conversion Rate:'),
+                            style: TextStyle(fontSize: 11.sp, color: AppColors.success),
                           ),
                           Text(
                             '1 USD = $rate $curr',
-                            style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: const Color(0xFF166534)),
+                            style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: AppColors.success),
                           ),
                         ],
                       ),

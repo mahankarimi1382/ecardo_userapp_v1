@@ -76,7 +76,30 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final tertiaryTextColor =
+        isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final fieldTextStyle = TextStyle(
+      fontSize: 16,
+      color: primaryTextColor,
+      letterSpacing: 0,
+      height: 1.1,
+      fontWeight: FontWeight.w600,
+    );
+    final readOnlyTextStyle = TextStyle(
+      fontSize: 16,
+      color: tertiaryTextColor,
+      letterSpacing: 0,
+      height: 1.1,
+      fontWeight: FontWeight.w600,
+    );
+
     return Scaffold(
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Stack(
         children: [
@@ -104,14 +127,18 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         width: 100,
                         height: 100,
                         decoration: BoxDecoration(
+                          color: isDark ? AppColors.darkSurface : AppColors.white,
                           borderRadius: BorderRadius.circular(100),
                           border: !hasSelectedImage && !hasAvatarPath
                               ? Border.all(
-                                  color: AppColors.black.withValues(
-                                    alpha: 0.10,
-                                  ),
+                                  color: isDark
+                                      ? AppColors.lightWarmGray
+                                          .withValues(alpha: 0.20)
+                                      : AppColors.black.withValues(
+                                          alpha: 0.10,
+                                        ),
                                 )
-                              : Border.fromBorderSide(BorderSide.none),
+                              : const Border.fromBorderSide(BorderSide.none),
                           image: hasSelectedImage
                               ? DecorationImage(
                                   image: FileImage(
@@ -134,7 +161,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 40,
-                                    color: AppColors.lightPrimary,
+                                    color: isDark
+                                        ? AppColors.mainSoftBlue
+                                        : AppColors.lightPrimary,
                                     letterSpacing: 0,
                                   ),
                                 ),
@@ -155,12 +184,20 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         height: 32,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
-                          color: AppColors.white,
+                          color: isDark ? AppColors.darkGray : AppColors.white,
+                          border: Border.all(
+                            color: isDark
+                                ? AppColors.lightWarmGray.withValues(alpha: 0.25)
+                                : AppColors.lightBorder,
+                            width: 1,
+                          ),
                         ),
                         child: SvgPicture.asset(
                           SvgAssets.commonCameraIcon,
                           colorFilter: ColorFilter.mode(
-                            AppColors.lightPrimary,
+                            isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.lightPrimary,
                             BlendMode.srcIn,
                           ),
                         ),
@@ -180,11 +217,20 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     top: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: cardBg,
                     borderRadius: BorderRadiusDirectional.only(
                       topStart: Radius.circular(30),
                       topEnd: Radius.circular(30),
                     ),
+                    border: isDark
+                        ? Border(
+                            top: BorderSide(
+                              color: AppColors.lightWarmGray
+                                  .withValues(alpha: 0.12),
+                              width: 1,
+                            ),
+                          )
+                        : null,
                   ),
                   child: Obx(() {
                     if (controller.isLoading.value) {
@@ -200,13 +246,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: fieldTextStyle,
                                 focusNode: controller.firstNameFocusNode,
                                 isFocused: controller.isFirstNameFocused.value,
                                 backgroundColor: AppColors.transparent,
@@ -222,13 +262,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: fieldTextStyle,
                                 focusNode: controller.lastNameFocusNode,
                                 isFocused: controller.isLastNameFocused.value,
                                 backgroundColor: AppColors.transparent,
@@ -244,13 +278,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: readOnlyTextStyle,
                                 focusNode: controller.userNameFocusNode,
                                 isFocused: controller.isUserNameFocused.value,
                                 backgroundColor: AppColors.transparent,
@@ -267,13 +295,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: fieldTextStyle,
                                 focusNode: controller.genderFocusNode,
                                 isFocused: controller.isGenderFocused.value,
                                 backgroundColor: AppColors.transparent,
@@ -314,7 +336,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 hintText:
                                     localization.profileSettingsSelectGender,
                                 controller: controller.genderController,
-                                suffixIconColor: AppColors.lightTextTertiary,
+                                suffixIconColor: tertiaryTextColor,
                                 readOnly: true,
                               ),
                             ),
@@ -332,8 +354,10 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 suffixIcon: ColorFiltered(
                                   colorFilter: ColorFilter.mode(
                                     controller.isDateOfBirthFocused.value
-                                        ? AppColors.lightPrimary
-                                        : AppColors.lightTextTertiary,
+                                        ? (isDark
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.lightPrimary)
+                                        : tertiaryTextColor,
                                     BlendMode.srcIn,
                                   ),
                                   child: Image.asset(
@@ -364,13 +388,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: readOnlyTextStyle,
                                 focusNode: controller.emailAddressFocusNode,
                                 isFocused:
                                     controller.isEmailAddressFocused.value,
@@ -388,13 +406,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: fieldTextStyle,
                                 focusNode: controller.phoneFocusNode,
                                 isFocused: controller.isPhoneFocused.value,
                                 backgroundColor: AppColors.transparent,
@@ -410,13 +422,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: fieldTextStyle,
                                 focusNode: controller.countryFocusNode,
                                 isFocused: controller.isCountryFocused.value,
                                 backgroundColor: AppColors.transparent,
@@ -470,7 +476,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 hintText:
                                     localization.profileSettingsSelectCountry,
                                 controller: controller.countryController,
-                                suffixIconColor: AppColors.lightTextTertiary,
+                                suffixIconColor: tertiaryTextColor,
                                 readOnly: true,
                               ),
                             ),
@@ -489,9 +495,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 textStyle: TextStyle(
                                   fontSize: 16,
                                   color: hasCountry
-                                      ? AppColors.lightTextTertiary
-                                      : AppColors.lightTextTertiary
-                                          .withValues(alpha: 0.4),
+                                      ? primaryTextColor
+                                      : tertiaryTextColor.withValues(alpha: 0.4),
                                   letterSpacing: 0,
                                   height: 1.1,
                                   fontWeight: FontWeight.w600,
@@ -563,9 +568,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                       ),
                                 controller: controller.cityController,
                                 suffixIconColor: hasCountry
-                                    ? AppColors.lightTextTertiary
-                                    : AppColors.lightTextTertiary
-                                        .withValues(alpha: 0.3),
+                                    ? tertiaryTextColor
+                                    : tertiaryTextColor.withValues(alpha: 0.3),
                               );
                             }),
                           ),
@@ -575,13 +579,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: fieldTextStyle,
                                 focusNode: controller.zipCodeFocusNode,
                                 isFocused: controller.isZipCodeFocused.value,
                                 backgroundColor: AppColors.transparent,
@@ -598,13 +596,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: readOnlyTextStyle,
                                 focusNode: controller.joiningDateFocusNode,
                                 isFocused:
                                     controller.isJoiningDateFocused.value,
@@ -622,13 +614,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             isLabelRequired: false,
                             dynamicField: Obx(
                               () => CommonTextInputField(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.lightTextTertiary,
-                                  letterSpacing: 0,
-                                  height: 1.1,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                textStyle: fieldTextStyle,
                                 maxLine: 4,
                                 focusNode: controller.addressFocusNode,
                                 isFocused: controller.isAddressFocused.value,

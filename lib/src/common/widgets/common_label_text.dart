@@ -14,6 +14,9 @@ class CommonLabelText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? AppColors.warmWhite : AppColors.lightTextPrimary;
+
     return Text.rich(
       TextSpan(
         text: text,
@@ -21,7 +24,7 @@ class CommonLabelText extends StatelessWidget {
           letterSpacing: 0,
           fontSize: 14.sp,
           fontWeight: FontWeight.w900,
-          color: AppColors.lightTextPrimary,
+          color: textColor,
         ),
         children: isRequired
             ? [

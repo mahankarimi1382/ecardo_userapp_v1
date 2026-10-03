@@ -40,21 +40,21 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
 
   String _statusLabel(BuildContext context, String status) {
     switch (status) {
-      case 'PENDING_BROKER': return l10nPick(context, fa: 'در صف کارگزاری', en: 'Pending Broker', ar: 'قيد الإرسال', zh: '券商排队中');
-      case 'EXECUTED': return l10nPick(context, fa: 'اجرا شد', en: 'Executed', ar: 'تم التنفيذ', zh: '已成交');
-      case 'PARTIALLY_FILLED': return l10nPick(context, fa: 'اجرای جزئی', en: 'Partial Fill', ar: 'تنفيذ جزئي', zh: '部分成交');
-      case 'CANCELLED': return l10nPick(context, fa: 'لغوشده', en: 'Cancelled', ar: 'ملغي', zh: '已撤单');
-      case 'REJECTED': return l10nPick(context, fa: 'رد شد', en: 'Rejected', ar: 'مرفوض', zh: '已废单');
+      case 'PENDING_BROKER': return l10nPick(context, fa: 'Ø¯Ø± ØµÙ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ', en: 'Pending Broker', ar: 'Ù‚ÙŠØ¯ Ø§Ù„Ø¥Ø±Ø³Ø§Ù„', zh: 'åˆ¸å•†æŽ’é˜Ÿä¸­');
+      case 'EXECUTED': return l10nPick(context, fa: 'Ø§Ø¬Ø±Ø§ Ø´Ø¯', en: 'Executed', ar: 'ØªÙ… Ø§Ù„ØªÙ†ÙÙŠØ°', zh: 'å·²æˆäº¤');
+      case 'PARTIALLY_FILLED': return l10nPick(context, fa: 'Ø§Ø¬Ø±Ø§ÛŒ Ø¬Ø²Ø¦ÛŒ', en: 'Partial Fill', ar: 'ØªÙ†ÙÙŠØ° Ø¬Ø²Ø¦ÙŠ', zh: 'éƒ¨åˆ†æˆäº¤');
+      case 'CANCELLED': return l10nPick(context, fa: 'Ù„ØºÙˆØ´Ø¯Ù‡', en: 'Cancelled', ar: 'Ù…Ù„ØºÙŠ', zh: 'å·²æ’¤å•');
+      case 'REJECTED': return l10nPick(context, fa: 'Ø±Ø¯ Ø´Ø¯', en: 'Rejected', ar: 'Ù…Ø±ÙÙˆØ¶', zh: 'å·²åºŸå•');
       default: return status;
     }
   }
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'EXECUTED': return const Color(0xFF059669);
-      case 'PARTIALLY_FILLED': return const Color(0xFF0D9488);
-      case 'PENDING_BROKER': return const Color(0xFFD97706);
-      case 'REJECTED': return const Color(0xFFDC2626);
+      case 'EXECUTED': return AppColors.success;
+      case 'PARTIALLY_FILLED': return AppColors.success;
+      case 'PENDING_BROKER': return AppColors.warning;
+      case 'REJECTED': return AppColors.error;
       default: return Colors.grey;
     }
   }
@@ -69,10 +69,10 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
           child: CommonAppBar(
             title: l10nPick(
               context,
-              fa: 'پیگیری سفارش‌ها و دارایی‌های سهام',
+              fa: 'Ù¾ÛŒÚ¯ÛŒØ±ÛŒ Ø³ÙØ§Ø±Ø´â€ŒÙ‡Ø§ Ùˆ Ø¯Ø§Ø±Ø§ÛŒÛŒâ€ŒÙ‡Ø§ÛŒ Ø³Ù‡Ø§Ù…',
               en: 'Stock Orders & Portfolio',
-              ar: 'متابعة أوامر ومحفظة الأسهم',
-              zh: '股票委托与持仓管理',
+              ar: 'Ù…ØªØ§Ø¨Ø¹Ø© Ø£ÙˆØ§Ù…Ø± ÙˆÙ…Ø­ÙØ¸Ø© Ø§Ù„Ø£Ø³Ù‡Ù…',
+              zh: 'è‚¡ç¥¨å§”æ‰˜ä¸ŽæŒä»“ç®¡ç†',
             ),
           ),
         ),
@@ -81,10 +81,10 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
         children: [
           // Banner
           FinancialServiceUnavailableBanner(
-            serviceNameFa: 'بورس و کارگزاری بین‌الملل',
+            serviceNameFa: 'Ø¨ÙˆØ±Ø³ Ùˆ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„',
             serviceNameEn: 'Stock Brokerage',
-            serviceNameAr: 'الأسهم والوساطة الدولية',
-            serviceNameZh: '国际证券经纪',
+            serviceNameAr: 'Ø§Ù„Ø£Ø³Ù‡Ù… ÙˆØ§Ù„ÙˆØ³Ø§Ø·Ø© Ø§Ù„Ø¯ÙˆÙ„ÙŠØ©',
+            serviceNameZh: 'å›½é™…è¯åˆ¸ç»çºª',
             isCompact: true,
             onRetry: controller.loadDashboard,
           ),
@@ -99,8 +99,8 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
               unselectedLabelColor: AppColors.lightTextSecondary,
               labelStyle: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800),
               tabs: [
-                Tab(text: l10nPick(context, fa: 'سفارش‌های من', en: 'My Orders', ar: 'أوامري', zh: '委托明细')),
-                Tab(text: l10nPick(context, fa: 'سبد دارایی (پورتفوی)', en: 'Portfolio', ar: 'المحفظة', zh: '持仓概览')),
+                Tab(text: l10nPick(context, fa: 'Ø³ÙØ§Ø±Ø´â€ŒÙ‡Ø§ÛŒ Ù…Ù†', en: 'My Orders', ar: 'Ø£ÙˆØ§Ù…Ø±ÙŠ', zh: 'å§”æ‰˜æ˜Žç»†')),
+                Tab(text: l10nPick(context, fa: 'Ø³Ø¨Ø¯ Ø¯Ø§Ø±Ø§ÛŒÛŒ (Ù¾ÙˆØ±ØªÙÙˆÛŒ)', en: 'Portfolio', ar: 'Ø§Ù„Ù…Ø­ÙØ¸Ø©', zh: 'æŒä»“æ¦‚è§ˆ')),
               ],
             ),
           ),
@@ -116,9 +116,9 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                     return _buildEmptyState(
                       context,
                       icon: Icons.history_rounded,
-                      titleFa: 'هیچ سفارش سهامی ثبت نشده است',
+                      titleFa: 'Ù‡ÛŒÚ† Ø³ÙØ§Ø±Ø´ Ø³Ù‡Ø§Ù…ÛŒ Ø«Ø¨Øª Ù†Ø´Ø¯Ù‡ Ø§Ø³Øª',
                       titleEn: 'No stock orders recorded',
-                      descFa: 'سفارش‌های خرید و فروش سهام بین‌المللی شما پس از ثبت در این بخش پیگیری می‌شوند.',
+                      descFa: 'Ø³ÙØ§Ø±Ø´â€ŒÙ‡Ø§ÛŒ Ø®Ø±ÛŒØ¯ Ùˆ ÙØ±ÙˆØ´ Ø³Ù‡Ø§Ù… Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„ÛŒ Ø´Ù…Ø§ Ù¾Ø³ Ø§Ø² Ø«Ø¨Øª Ø¯Ø± Ø§ÛŒÙ† Ø¨Ø®Ø´ Ù¾ÛŒÚ¯ÛŒØ±ÛŒ Ù…ÛŒâ€ŒØ´ÙˆÙ†Ø¯.',
                       descEn: 'Your buy and sell stock orders will appear here once placed.',
                     );
                   }
@@ -145,7 +145,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                         padding: EdgeInsets.all(16.r),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [Color(0xFF161614), Color(0xFF263238)],
+                            colors: [AppColors.deepBlack, AppColors.darkGray],
                           ),
                           borderRadius: BorderRadius.circular(16.r),
                         ),
@@ -153,7 +153,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10nPick(context, fa: 'ارزش کل دارایی سهام (USD)', en: 'Total Stock Valuation (USD)'),
+                              l10nPick(context, fa: 'Ø§Ø±Ø²Ø´ Ú©Ù„ Ø¯Ø§Ø±Ø§ÛŒÛŒ Ø³Ù‡Ø§Ù… (USD)', en: 'Total Stock Valuation (USD)'),
                               style: TextStyle(fontSize: 11.5.sp, color: Colors.white70),
                             ),
                             SizedBox(height: 4.h),
@@ -166,13 +166,13 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '${l10nPick(context, fa: 'حساب کارگزاری', en: 'Broker Acc')}: ${acc?.accountNumber ?? 'STK-PENDING'}',
+                                  '${l10nPick(context, fa: 'Ø­Ø³Ø§Ø¨ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ', en: 'Broker Acc')}: ${acc?.accountNumber ?? 'STK-PENDING'}',
                                   style: TextStyle(fontSize: 11.sp, color: Colors.white60),
                                 ),
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF0D9488),
+                                    color: AppColors.lightSecondary,
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
                                   child: Text(
@@ -189,16 +189,16 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                       SizedBox(height: 16.h),
 
                       Text(
-                        l10nPick(context, fa: 'سهام تحت تملک', en: 'Holdings', ar: 'الأسهم المملوكة', zh: '持仓列表'),
+                        l10nPick(context, fa: 'Ø³Ù‡Ø§Ù… ØªØ­Øª ØªÙ…Ù„Ú©', en: 'Holdings', ar: 'Ø§Ù„Ø£Ø³Ù‡Ù… Ø§Ù„Ù…Ù…Ù„ÙˆÙƒØ©', zh: 'æŒä»“åˆ—è¡¨'),
                         style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
                       ),
                       SizedBox(height: 8.h),
                       _buildEmptyState(
                         context,
                         icon: Icons.pie_chart_outline_rounded,
-                        titleFa: 'سبد دارایی در حال حاضر خالی است',
+                        titleFa: 'Ø³Ø¨Ø¯ Ø¯Ø§Ø±Ø§ÛŒÛŒ Ø¯Ø± Ø­Ø§Ù„ Ø­Ø§Ø¶Ø± Ø®Ø§Ù„ÛŒ Ø§Ø³Øª',
                         titleEn: 'Your stock portfolio is currently empty',
-                        descFa: 'پس از اجرای اولین سفارش خرید، سهام به حساب معاملاتی شما اضافه خواهد شد.',
+                        descFa: 'Ù¾Ø³ Ø§Ø² Ø§Ø¬Ø±Ø§ÛŒ Ø§ÙˆÙ„ÛŒÙ† Ø³ÙØ§Ø±Ø´ Ø®Ø±ÛŒØ¯ØŒ Ø³Ù‡Ø§Ù… Ø¨Ù‡ Ø­Ø³Ø§Ø¨ Ù…Ø¹Ø§Ù…Ù„Ø§ØªÛŒ Ø´Ù…Ø§ Ø§Ø¶Ø§ÙÙ‡ Ø®ÙˆØ§Ù‡Ø¯ Ø´Ø¯.',
                         descEn: 'Shares will reflect in your account once purchase orders execute.',
                       ),
                     ],
@@ -236,8 +236,8 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     decoration: BoxDecoration(
                       color: isBuy
-                          ? const Color(0xFF059669).withValues(alpha: 0.12)
-                          : const Color(0xFFDC2626).withValues(alpha: 0.12),
+                          ? AppColors.success.withValues(alpha: 0.12)
+                          : AppColors.error.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
@@ -245,7 +245,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w900,
-                        color: isBuy ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                        color: isBuy ? AppColors.success : AppColors.error,
                       ),
                     ),
                   ),
@@ -272,7 +272,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
           ),
           SizedBox(height: 6.h),
           Text(
-            '${l10nPick(context, fa: 'شماره سفارش', en: 'Order No.', ar: 'رقم الأمر', zh: '订单号')}: ${ord.orderNo}',
+            '${l10nPick(context, fa: 'Ø´Ù…Ø§Ø±Ù‡ Ø³ÙØ§Ø±Ø´', en: 'Order No.', ar: 'Ø±Ù‚Ù… Ø§Ù„Ø£Ù…Ø±', zh: 'è®¢å•å·')}: ${ord.orderNo}',
             style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
           ),
           const Divider(height: 16),
@@ -280,7 +280,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${ord.qty} ${l10nPick(context, fa: 'سهم با قیمت', en: 'Shares at', ar: 'سهم بسعر', zh: '股 @')} \$${ord.price}',
+                '${ord.qty} ${l10nPick(context, fa: 'Ø³Ù‡Ù… Ø¨Ø§ Ù‚ÛŒÙ…Øª', en: 'Shares at', ar: 'Ø³Ù‡Ù… Ø¨Ø³Ø¹Ø±', zh: 'è‚¡ @')} \$${ord.price}',
                 style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
               ),
               Text(
@@ -327,7 +327,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
           SizedBox(height: 18.h),
           CommonButton(
             height: 40,
-            text: l10nPick(context, fa: 'ثبت سفارش سهام جدید', en: 'Place New Stock Order'),
+            text: l10nPick(context, fa: 'Ø«Ø¨Øª Ø³ÙØ§Ø±Ø´ Ø³Ù‡Ø§Ù… Ø¬Ø¯ÛŒØ¯', en: 'Place New Stock Order'),
             backgroundColor: AppColors.lightPrimary,
             onPressed: () => Get.to(() => const StockOrderScreen()),
           ),

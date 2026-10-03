@@ -14,9 +14,15 @@ class CommonDefaultAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final defaultBg =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+
     return AppBar(
-      backgroundColor: backgroundColor ?? AppColors.lightBackground,
-      surfaceTintColor: surfaceTintColor ?? AppColors.lightBackground,
+      backgroundColor:
+          backgroundColor ?? theme.appBarTheme.backgroundColor ?? defaultBg,
+      surfaceTintColor: surfaceTintColor ?? Colors.transparent,
     );
   }
 

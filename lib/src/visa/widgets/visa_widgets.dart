@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../app/constants/app_colors.dart';
 import '../../helper/l10n_pick.dart';
 
 class VisaCard extends StatelessWidget {
@@ -26,12 +27,12 @@ class VisaCard extends StatelessWidget {
       margin: margin,
       padding: padding ?? EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: color ?? Colors.white,
+        color: color ?? AppColors.lightSurface,
         borderRadius: BorderRadius.circular(20.r),
-        border: border ?? Border.all(color: const Color(0xFFE5E7EB), width: 1),
+        border: border ?? Border.all(color: AppColors.lightBorder, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: AppColors.lightShadow,
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -73,50 +74,50 @@ class VisaStatusBadge extends StatelessWidget {
 
     switch (status.toUpperCase()) {
       case 'APPROVED':
-        bg = const Color(0xFFE8F8F0);
-        fg = const Color(0xFF0F9D58);
+        bg = AppColors.successContainer;
+        fg = AppColors.success;
         label = l10nPick(context, en: 'Approved', fa: 'صادر شد');
         break;
       case 'DELIVERED':
-        bg = const Color(0xFFE8F8F0);
-        fg = const Color(0xFF0F9D58);
+        bg = AppColors.successContainer;
+        fg = AppColors.success;
         label = l10nPick(context, en: 'Delivered', fa: 'تحویل‌شده');
         break;
       case 'UNDER_REVIEW':
       case 'IN_PROCESS':
-        bg = const Color(0xFFEAF3FF);
-        fg = const Color(0xFF1A73E8);
+        bg = AppColors.infoContainer;
+        fg = AppColors.lightSecondary;
         label = l10nPick(context, en: 'Under Review', fa: 'در حال بررسی');
         break;
       case 'SUBMITTED_TO_AUTHORITY':
-        bg = const Color(0xFFF3E8FF);
-        fg = const Color(0xFF7E22CE);
+        bg = AppColors.infoContainer;
+        fg = AppColors.lightSecondary;
         label = l10nPick(context, en: 'At Embassy', fa: 'نزد سفارت / مرجع');
         break;
       case 'AWAITING_DOCUMENTS':
       case 'COMPLEMENT_REQUIRED':
-        bg = const Color(0xFFFFF7ED);
-        fg = const Color(0xFFEA580C);
+        bg = AppColors.warningContainer;
+        fg = AppColors.warning;
         label = l10nPick(context, en: 'Needs Docs', fa: 'نیاز به مدرک');
         break;
       case 'AWAITING_PAYMENT':
-        bg = const Color(0xFFFDF4FF);
-        fg = const Color(0xFFC026D3);
+        bg = AppColors.warningContainer;
+        fg = AppColors.warning;
         label = l10nPick(context, en: 'Awaiting Payment', fa: 'در انتظار پرداخت');
         break;
       case 'REJECTED':
-        bg = const Color(0xFFFEE2E2);
-        fg = const Color(0xFFDC2626);
+        bg = AppColors.errorContainer;
+        fg = AppColors.error;
         label = l10nPick(context, en: 'Rejected', fa: 'رد شد');
         break;
       case 'CANCELLED':
-        bg = const Color(0xFFF3F4F6);
-        fg = const Color(0xFF6B7280);
+        bg = AppColors.lightBackground;
+        fg = AppColors.lightTextSecondary;
         label = l10nPick(context, en: 'Cancelled', fa: 'لغو شد');
         break;
       default:
-        bg = const Color(0xFFF3F4F6);
-        fg = const Color(0xFF4B5563);
+        bg = AppColors.lightBackground;
+        fg = AppColors.lightTextSecondary;
         label = status;
     }
 
@@ -155,10 +156,10 @@ class VisaCountryFlag extends StatelessWidget {
         width: size.r,
         height: size.r,
         decoration: const BoxDecoration(
-          color: Color(0xFFE5E7EB),
+          color: AppColors.lightBackground,
           shape: BoxShape.circle,
         ),
-        child: Icon(Icons.public, size: (size * 0.6).r, color: Colors.grey),
+        child: Icon(Icons.public, size: (size * 0.6).r, color: AppColors.lightTextSecondary),
       );
     }
 
@@ -172,8 +173,8 @@ class VisaCountryFlag extends StatelessWidget {
         errorBuilder: (_, _, _) => Container(
           width: size.r,
           height: size.r,
-          color: const Color(0xFFE5E7EB),
-          child: Icon(Icons.flag, size: (size * 0.6).r, color: Colors.grey),
+          color: AppColors.lightBackground,
+          child: Icon(Icons.flag, size: (size * 0.6).r, color: AppColors.lightTextSecondary),
         ),
       ),
     );
@@ -223,7 +224,7 @@ class VisaTimelineWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 10.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
+        color: AppColors.lightBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
@@ -237,10 +238,10 @@ class VisaTimelineWidget extends StatelessWidget {
           Widget icon;
 
           if (isDone) {
-            circleColor = const Color(0xFF10B981);
+            circleColor = AppColors.success;
             icon = const Icon(Icons.check, color: Colors.white, size: 14);
           } else if (isCurrent) {
-            circleColor = const Color(0xFF7445FF);
+            circleColor = AppColors.lightSecondary;
             icon = Text(
               '$stepNum',
               style: TextStyle(
@@ -250,7 +251,7 @@ class VisaTimelineWidget extends StatelessWidget {
               ),
             );
           } else {
-            circleColor = const Color(0xFFD1D5DB);
+            circleColor = AppColors.lightDivider;
             icon = Text(
               '$stepNum',
               style: TextStyle(
@@ -278,8 +279,8 @@ class VisaTimelineWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 9.5.sp,
                     color: isCurrent
-                        ? const Color(0xFF7445FF)
-                        : (isDone ? Colors.black87 : Colors.grey),
+                        ? AppColors.lightSecondary
+                        : (isDone ? AppColors.lightTextPrimary : AppColors.lightTextSecondary),
                     fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w500,
                   ),
                 ),

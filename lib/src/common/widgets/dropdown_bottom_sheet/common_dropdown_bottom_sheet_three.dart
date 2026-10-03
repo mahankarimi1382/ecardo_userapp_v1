@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class CommonDropdownBottomSheetThree<T> extends StatefulWidget {
   final double bottomSheetHeight;
@@ -111,123 +112,132 @@ class _CommonDropdownBottomSheetThreeState<T>
           ],
         ),
         child: Column(
-        children: [
-          SizedBox(height: 12),
-          Container(
-            width: 45,
-            height: 6,
-            decoration: BoxDecoration(
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          if (widget.isShowTitle == true) ...[
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.title!,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20,
-                      color: AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: Image.asset(
-                      PngAssets.closeCommonIcon,
-                      width: 28,
-                      color: AppColors.lightTextPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          children: [
             SizedBox(height: 12),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 18),
-              width: double.infinity,
-              height: 1,
+              width: 45,
+              height: 6,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.white,
-                    AppColors.lightTextPrimary.withValues(alpha: 0.1),
-                    AppColors.white,
+                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+            if (widget.isShowTitle == true) ...[
+              SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.title!,
+                      style: TextStyle(
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20,
+                        color: AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Get.back(),
+                      child: Tooltip(
+                        message: l10nPick(context, en: 'Close', fa: 'بستن'),
+                        child: SizedBox(
+                          // 44x44 hit area around the 28px asset.
+                          width: 44,
+                          height: 44,
+                          child: Center(
+                            child: Image.asset(
+                              PngAssets.closeCommonIcon,
+                              width: 28,
+                              color: AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
-          if (widget.showSearch) ...[
-            Container(
-              margin: EdgeInsetsDirectional.only(
-                start: 18,
-                end: 18,
-                top: 20,
+              SizedBox(height: 12),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 18),
+                width: double.infinity,
+                height: 1,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.white,
+                      AppColors.lightTextPrimary.withValues(alpha: 0.1),
+                      AppColors.white,
+                    ],
+                  ),
+                ),
               ),
-              height: 52,
-              child: TextField(
-                controller: _searchController,
-                onChanged: _filterItems,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  filled: true,
-                  fillColor: AppColors.transparent,
-                  hintText:
-                      widget.searchHint ??
-                      localization.commonDropdownThreeSearchHint,
-                  hintStyle: TextStyle(
-                    color: AppColors.lightTextTertiary,
-                    fontWeight: FontWeight.w500,
+            ],
+            if (widget.showSearch) ...[
+              Container(
+                margin: EdgeInsetsDirectional.only(start: 18, end: 18, top: 20),
+                height: 52,
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: _filterItems,
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    filled: true,
+                    fillColor: AppColors.transparent,
+                    hintText:
+                        widget.searchHint ??
+                        localization.commonDropdownThreeSearchHint,
+                    hintStyle: TextStyle(
+                      color: AppColors.lightTextTertiary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                      letterSpacing: 0,
+                      height: 1.1,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: _getBorderRadius(context),
+                      borderSide: BorderSide(color: borderColor, width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: _getBorderRadius(context),
+                      borderSide: BorderSide(color: borderColor, width: 1.5),
+                    ),
+                    suffixIcon: Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        start: 6,
+                        top: 14,
+                        bottom: 14,
+                      ),
+                      child: Image(
+                        image: AssetImage(PngAssets.searchCommonIcon),
+                        color: AppColors.lightTextPrimary.withValues(
+                          alpha: 0.44,
+                        ),
+                      ),
+                    ),
+                  ),
+                  style: TextStyle(
                     fontSize: 16,
+                    color: AppColors.lightTextPrimary,
                     letterSpacing: 0,
                     height: 1.1,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: _getBorderRadius(context),
-                    borderSide: BorderSide(color: borderColor, width: 1.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: _getBorderRadius(context),
-                    borderSide: BorderSide(color: borderColor, width: 1.5),
-                  ),
-                  suffixIcon: Padding(
-                    padding: EdgeInsetsDirectional.only(
-                      start: 6,
-                      top: 14,
-                      bottom: 14,
-                    ),
-                    child: Image(
-                      image: AssetImage(PngAssets.searchCommonIcon),
-                      color: AppColors.lightTextPrimary.withValues(alpha: 0.44),
-                    ),
-                  ),
-                ),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.lightTextPrimary,
-                  letterSpacing: 0,
-                  height: 1.1,
                 ),
               ),
-            ),
+            ],
+            _filteredItems.isEmpty
+                ? Expanded(
+                    child: _buildEmptyState(notFoundText: widget.notFoundText),
+                  )
+                : _buildItemsList(),
           ],
-          _filteredItems.isEmpty
-              ? Expanded(
-                  child: _buildEmptyState(notFoundText: widget.notFoundText),
-                )
-              : _buildItemsList(),
-        ],
+        ),
       ),
-    ),
     );
   }
 

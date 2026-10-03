@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 
 /// KycTierUpgradeCard — Pillar 2 of Block 4 (Cards & Security)
 ///
@@ -252,7 +250,6 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
     bool isPending,
     bool isRejected,
   ) {
-    final loc = AppLocalizations.of(context);
     final statusLabel = isPending
         ? l10nPick(
             context,
@@ -426,7 +423,6 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
     double remaining,
     double progressFraction,
   ) {
-    final loc = AppLocalizations.of(context);
     final percentInt = (progressFraction * 100).toInt();
 
     // Progress color transitions from tier primary to warning/error if high usage

@@ -28,25 +28,61 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   String _greeting(BuildContext context) {
     final h = DateTime.now().hour;
     if (h >= 5 && h < 12) {
-      return l10nPick(context,
-          en: 'Good morning', fa: 'صبح بخیر', ar: 'صباح الخير', zh: '早上好', tr: 'Günaydın', ru: 'Доброе утро');
+      return l10nPick(
+        context,
+        en: 'Good morning',
+        fa: 'صبح بخیر',
+        ar: 'صباح الخير',
+        zh: '早上好',
+        tr: 'Günaydın',
+        ru: 'Доброе утро',
+      );
     }
     if (h >= 12 && h < 17) {
-      return l10nPick(context,
-          en: 'Good afternoon', fa: 'عصر بخیر', ar: 'مساء الخير', zh: '下午好', tr: 'İyi günler', ru: 'Добрый день');
+      return l10nPick(
+        context,
+        en: 'Good afternoon',
+        fa: 'عصر بخیر',
+        ar: 'مساء الخير',
+        zh: '下午好',
+        tr: 'İyi günler',
+        ru: 'Добрый день',
+      );
     }
     if (h >= 17 && h < 22) {
-      return l10nPick(context,
-          en: 'Good evening', fa: 'شب بخیر', ar: 'مساء الخير', zh: '晚上好', tr: 'İyi akşamlar', ru: 'Добрый вечер');
+      return l10nPick(
+        context,
+        en: 'Good evening',
+        fa: 'شب بخیر',
+        ar: 'مساء الخير',
+        zh: '晚上好',
+        tr: 'İyi akşamlar',
+        ru: 'Добрый вечер',
+      );
     }
-    return l10nPick(context,
-        en: 'Welcome back', fa: 'خوش برگشتی', ar: 'أهلاً بعودتك', zh: '欢迎回来', tr: 'Tekrar hoş geldiniz', ru: 'С возвращением');
+    return l10nPick(
+      context,
+      en: 'Welcome back',
+      fa: 'خوش برگشتی',
+      ar: 'أهلاً بعودتك',
+      zh: '欢迎回来',
+      tr: 'Tekrar hoş geldiniz',
+      ru: 'С возвращением',
+    );
   }
 
   String _firstName(BuildContext context, HomeController home) {
     final full = home.dashboardModel.value.data?.user?.userName ?? '';
     if (full.trim().isEmpty) {
-      return l10nPick(context, en: 'User', fa: 'کاربر', ar: 'مستخدم', zh: '用户', tr: 'Kullanıcı', ru: 'Пользователь');
+      return l10nPick(
+        context,
+        en: 'User',
+        fa: 'کاربر',
+        ar: 'مستخدم',
+        zh: '用户',
+        tr: 'Kullanıcı',
+        ru: 'Пользователь',
+      );
     }
     return full.trim().split(RegExp(r'\s+')).first;
   }
@@ -102,9 +138,16 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                           behavior: HitTestBehavior.opaque,
                           onTap: () => Get.toNamed(BaseRoute.profileSettings),
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                            constraints: const BoxConstraints(
+                              minWidth: 44,
+                              minHeight: 44,
+                            ),
                             child: Center(
-                              child: _Avatar(path: avatarPath, initial: initial, size: 40),
+                              child: _Avatar(
+                                path: avatarPath,
+                                initial: initial,
+                                size: 40,
+                              ),
                             ),
                           ),
                         ),
@@ -141,7 +184,9 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: AppColors.white.withValues(alpha: 0.75),
+                                  color: AppColors.white.withValues(
+                                    alpha: 0.75,
+                                  ),
                                   fontSize: 11,
                                   height: 1.15,
                                 ),
@@ -238,22 +283,25 @@ class _NotifBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      visualDensity: VisualDensity.compact,
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-      onPressed: () => Get.toNamed(BaseRoute.notifications),
-      icon: Badge(
-        isLabelVisible: unread > 0,
-        label: Text(
-          unread > 99 ? '99+' : '$unread',
-          style: const TextStyle(fontSize: 10, color: Colors.white),
-        ),
-        backgroundColor: AppColors.error,
-        child: const Icon(
-          Icons.notifications_none_rounded,
-          color: AppColors.white,
-          size: 22,
+    return Tooltip(
+      message: l10nPick(context, en: 'Notifications', fa: 'اعلان‌ها'),
+      child: IconButton(
+        visualDensity: VisualDensity.compact,
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+        onPressed: () => Get.toNamed(BaseRoute.notifications),
+        icon: Badge(
+          isLabelVisible: unread > 0,
+          label: Text(
+            unread > 99 ? '99+' : '$unread',
+            style: const TextStyle(fontSize: 10, color: Colors.white),
+          ),
+          backgroundColor: AppColors.error,
+          child: const Icon(
+            Icons.notifications_none_rounded,
+            color: AppColors.white,
+            size: 22,
+          ),
         ),
       ),
     );

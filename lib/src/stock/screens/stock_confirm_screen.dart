@@ -23,10 +23,10 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
   void _handleConfirm() async {
     if (!controller.riskAcknowledged.value) {
       Get.snackbar(
-        l10nPick(context, fa: 'خطا', en: 'Error'),
+        l10nPick(context, fa: 'Ø®Ø·Ø§', en: 'Error'),
         l10nPick(
           context,
-          fa: 'لطفاً ابتدا بیانیه پذیرش ریسک معاملات بین‌المللی را تأیید فرمایید.',
+          fa: 'Ù„Ø·ÙØ§Ù‹ Ø§Ø¨ØªØ¯Ø§ Ø¨ÛŒØ§Ù†ÛŒÙ‡ Ù¾Ø°ÛŒØ±Ø´ Ø±ÛŒØ³Ú© Ù…Ø¹Ø§Ù…Ù„Ø§Øª Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„ÛŒ Ø±Ø§ ØªØ£ÛŒÛŒØ¯ ÙØ±Ù…Ø§ÛŒÛŒØ¯.',
           en: 'Please accept the risk disclosure statement to proceed.',
         ),
         backgroundColor: AppColors.error,
@@ -45,16 +45,16 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           title: Row(
             children: [
-              Icon(Icons.candlestick_chart_rounded, color: const Color(0xFFF59E0B), size: 24.sp),
+              Icon(Icons.candlestick_chart_rounded, color: AppColors.warning, size: 24.sp),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
                   l10nPick(
                     context,
-                    fa: 'وضعیت کارگزاری بین‌الملل',
+                    fa: 'ÙˆØ¶Ø¹ÛŒØª Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„',
                     en: 'Brokerage Gateway Status',
-                    ar: 'حالة بوابة الوساطة الدولية',
-                    zh: '国际券商网关状态',
+                    ar: 'Ø­Ø§Ù„Ø© Ø¨ÙˆØ§Ø¨Ø© Ø§Ù„ÙˆØ³Ø§Ø·Ø© Ø§Ù„Ø¯ÙˆÙ„ÙŠØ©',
+                    zh: 'å›½é™…åˆ¸å•†ç½‘å…³çŠ¶æ€',
                   ),
                   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
                 ),
@@ -64,10 +64,10 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
           content: Text(
             l10nPick(
               context,
-              fa: 'ارتباط برخط با کارگزاری بین‌المللی در حال توسعه و اتصال نهایی است (کد اندپوینت: /stock/orders). سفارش شما در صف آزمایشی با موفقیت اعتبارسنجی شد و با راه‌اندازی سرور به هسته معاملات ارسال می‌شود.',
+              fa: 'Ø§Ø±ØªØ¨Ø§Ø· Ø¨Ø±Ø®Ø· Ø¨Ø§ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„ÛŒ Ø¯Ø± Ø­Ø§Ù„ ØªÙˆØ³Ø¹Ù‡ Ùˆ Ø§ØªØµØ§Ù„ Ù†Ù‡Ø§ÛŒÛŒ Ø§Ø³Øª (Ú©Ø¯ Ø§Ù†Ø¯Ù¾ÙˆÛŒÙ†Øª: /stock/orders). Ø³ÙØ§Ø±Ø´ Ø´Ù…Ø§ Ø¯Ø± ØµÙ Ø¢Ø²Ù…Ø§ÛŒØ´ÛŒ Ø¨Ø§ Ù…ÙˆÙÙ‚ÛŒØª Ø§Ø¹ØªØ¨Ø§Ø±Ø³Ù†Ø¬ÛŒ Ø´Ø¯ Ùˆ Ø¨Ø§ Ø±Ø§Ù‡â€ŒØ§Ù†Ø¯Ø§Ø²ÛŒ Ø³Ø±ÙˆØ± Ø¨Ù‡ Ù‡Ø³ØªÙ‡ Ù…Ø¹Ø§Ù…Ù„Ø§Øª Ø§Ø±Ø³Ø§Ù„ Ù…ÛŒâ€ŒØ´ÙˆØ¯.',
               en: 'The direct broker integration is undergoing scheduled upgrade (/stock/orders). Your order parameters have been validated locally.',
-              ar: 'الربط المباشر مع شركة الوساطة قيد الترقية والتجهيز.',
-              zh: '国际券商撮合网关正在系统升级中（接口 /stock/orders）。您的委托指令已在本地成功完成风控校验。',
+              ar: 'Ø§Ù„Ø±Ø¨Ø· Ø§Ù„Ù…Ø¨Ø§Ø´Ø± Ù…Ø¹ Ø´Ø±ÙƒØ© Ø§Ù„ÙˆØ³Ø§Ø·Ø© Ù‚ÙŠØ¯ Ø§Ù„ØªØ±Ù‚ÙŠØ© ÙˆØ§Ù„ØªØ¬Ù‡ÙŠØ².',
+              zh: 'å›½é™…åˆ¸å•†æ’®åˆç½‘å…³æ­£åœ¨ç³»ç»Ÿå‡çº§ä¸­ï¼ˆæŽ¥å£ /stock/ordersï¼‰ã€‚æ‚¨çš„å§”æ‰˜æŒ‡ä»¤å·²åœ¨æœ¬åœ°æˆåŠŸå®Œæˆé£ŽæŽ§æ ¡éªŒã€‚',
             ),
             style: TextStyle(fontSize: 12.sp, height: 1.6),
           ),
@@ -84,10 +84,10 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
               child: Text(
                 l10nPick(
                   context,
-                  fa: 'مشاهده کارتابل سفارش‌ها',
+                  fa: 'Ù…Ø´Ø§Ù‡Ø¯Ù‡ Ú©Ø§Ø±ØªØ§Ø¨Ù„ Ø³ÙØ§Ø±Ø´â€ŒÙ‡Ø§',
                   en: 'View Order Portfolio',
-                  ar: 'عرض سجل الأوامر',
-                  zh: '查看委托与持仓',
+                  ar: 'Ø¹Ø±Ø¶ Ø³Ø¬Ù„ Ø§Ù„Ø£ÙˆØ§Ù…Ø±',
+                  zh: 'æŸ¥çœ‹å§”æ‰˜ä¸ŽæŒä»“',
                 ),
                 style: const TextStyle(color: Colors.white),
               ),
@@ -117,10 +117,10 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
           child: CommonAppBar(
             title: l10nPick(
               context,
-              fa: 'تأیید نهایی سفارش سهام',
+              fa: 'ØªØ£ÛŒÛŒØ¯ Ù†Ù‡Ø§ÛŒÛŒ Ø³ÙØ§Ø±Ø´ Ø³Ù‡Ø§Ù…',
               en: 'Confirm Stock Order',
-              ar: 'تأكيد أمر السهم',
-              zh: '确认委托下单',
+              ar: 'ØªØ£ÙƒÙŠØ¯ Ø£Ù…Ø± Ø§Ù„Ø³Ù‡Ù…',
+              zh: 'ç¡®è®¤å§”æ‰˜ä¸‹å•',
             ),
           ),
         ),
@@ -133,9 +133,9 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
               width: double.infinity,
               isLoading: controller.isOrderLoading.value,
               text: isBuy
-                  ? l10nPick(context, fa: 'تأیید و ارسال سفارش خرید', en: 'Confirm Buy Order', ar: 'تأكيد الشراء', zh: '确认买入委托')
-                  : l10nPick(context, fa: 'تأیید و ارسال سفارش فروش', en: 'Confirm Sell Order', ar: 'تأكيد البيع', zh: '确认卖出委托'),
-              backgroundColor: isBuy ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                  ? l10nPick(context, fa: 'ØªØ£ÛŒÛŒØ¯ Ùˆ Ø§Ø±Ø³Ø§Ù„ Ø³ÙØ§Ø±Ø´ Ø®Ø±ÛŒØ¯', en: 'Confirm Buy Order', ar: 'ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ø´Ø±Ø§Ø¡', zh: 'ç¡®è®¤ä¹°å…¥å§”æ‰˜')
+                  : l10nPick(context, fa: 'ØªØ£ÛŒÛŒØ¯ Ùˆ Ø§Ø±Ø³Ø§Ù„ Ø³ÙØ§Ø±Ø´ ÙØ±ÙˆØ´', en: 'Confirm Sell Order', ar: 'ØªØ£ÙƒÙŠØ¯ Ø§Ù„Ø¨ÙŠØ¹', zh: 'ç¡®è®¤å–å‡ºå§”æ‰˜'),
+              backgroundColor: isBuy ? AppColors.success : AppColors.error,
               onPressed: _handleConfirm,
             ),
           ),
@@ -158,7 +158,7 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                 children: [
                   _buildRow(
                     context,
-                    labelFa: 'نماد و شرکت',
+                    labelFa: 'Ù†Ù…Ø§Ø¯ Ùˆ Ø´Ø±Ú©Øª',
                     labelEn: 'Stock / Ticker',
                     value: sym != null ? '${sym.ticker} (${sym.name})' : 'AAPL',
                     isBold: true,
@@ -166,23 +166,23 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                   const Divider(height: 20),
                   _buildRow(
                     context,
-                    labelFa: 'نوع و جهت معامله',
+                    labelFa: 'Ù†ÙˆØ¹ Ùˆ Ø¬Ù‡Øª Ù…Ø¹Ø§Ù…Ù„Ù‡',
                     labelEn: 'Side & Type',
-                    value: '${isBuy ? 'خرید (BUY)' : 'فروش (SELL)'} · $orderType',
-                    valueColor: isBuy ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                    value: '${isBuy ? 'Ø®Ø±ÛŒØ¯ (BUY)' : 'ÙØ±ÙˆØ´ (SELL)'} Â· $orderType',
+                    valueColor: isBuy ? AppColors.success : AppColors.error,
                     isBold: true,
                   ),
                   const Divider(height: 20),
                   _buildRow(
                     context,
-                    labelFa: 'حجم معامله (تعداد سهم)',
+                    labelFa: 'Ø­Ø¬Ù… Ù…Ø¹Ø§Ù…Ù„Ù‡ (ØªØ¹Ø¯Ø§Ø¯ Ø³Ù‡Ù…)',
                     labelEn: 'Quantity',
-                    value: '$qty سهم',
+                    value: '$qty Ø³Ù‡Ù…',
                   ),
                   const Divider(height: 20),
                   _buildRow(
                     context,
-                    labelFa: 'قیمت پایه سهم',
+                    labelFa: 'Ù‚ÛŒÙ…Øª Ù¾Ø§ÛŒÙ‡ Ø³Ù‡Ù…',
                     labelEn: 'Base Share Price',
                     value: '\$${sym?.lastPrice ?? 180.0}',
                   ),
@@ -190,7 +190,7 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                     const Divider(height: 20),
                     _buildRow(
                       context,
-                      labelFa: 'قیمت سقف/کف معین (Limit)',
+                      labelFa: 'Ù‚ÛŒÙ…Øª Ø³Ù‚Ù/Ú©Ù Ù…Ø¹ÛŒÙ† (Limit)',
                       labelEn: 'Limit Price',
                       value: '\$${controller.limitPriceInput.value}',
                       isBold: true,
@@ -199,7 +199,7 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                   const Divider(height: 20),
                   _buildRow(
                     context,
-                    labelFa: 'ارز و مبلغ تسویه نهایی',
+                    labelFa: 'Ø§Ø±Ø² Ùˆ Ù…Ø¨Ù„Øº ØªØ³ÙˆÛŒÙ‡ Ù†Ù‡Ø§ÛŒÛŒ',
                     labelEn: 'Total Settlement',
                     value: '${totalPay.toStringAsFixed(payCurrency == 'IRR' ? 0 : 2)} $payCurrency',
                     valueColor: AppColors.lightPrimary,
@@ -208,9 +208,9 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                   const Divider(height: 20),
                   _buildRow(
                     context,
-                    labelFa: 'کارمزد کارگزاری و بورس',
+                    labelFa: 'Ú©Ø§Ø±Ù…Ø²Ø¯ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ Ùˆ Ø¨ÙˆØ±Ø³',
                     labelEn: 'Brokerage & Clearing Fee',
-                    value: '0.15% (معاف در ماه اول)',
+                    value: '0.15% (Ù…Ø¹Ø§Ù Ø¯Ø± Ù…Ø§Ù‡ Ø§ÙˆÙ„)',
                   ),
                 ],
               ),
@@ -247,10 +247,10 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                           child: Text(
                             l10nPick(
                               context,
-                              fa: 'اینجانب از ریسک نوسانات بازار سهام بین‌الملل، تغییرات نرخ برابری ارز و ریسک تاخیر احتمالی در ساعات بسته بودن بازار آگاهی کامل داشته و مسئولیت تصمیم‌گیری سرمایه‌گذاری را می‌پذیرم.',
+                              fa: 'Ø§ÛŒÙ†Ø¬Ø§Ù†Ø¨ Ø§Ø² Ø±ÛŒØ³Ú© Ù†ÙˆØ³Ø§Ù†Ø§Øª Ø¨Ø§Ø²Ø§Ø± Ø³Ù‡Ø§Ù… Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„ØŒ ØªØºÛŒÛŒØ±Ø§Øª Ù†Ø±Ø® Ø¨Ø±Ø§Ø¨Ø±ÛŒ Ø§Ø±Ø² Ùˆ Ø±ÛŒØ³Ú© ØªØ§Ø®ÛŒØ± Ø§Ø­ØªÙ…Ø§Ù„ÛŒ Ø¯Ø± Ø³Ø§Ø¹Ø§Øª Ø¨Ø³ØªÙ‡ Ø¨ÙˆØ¯Ù† Ø¨Ø§Ø²Ø§Ø± Ø¢Ú¯Ø§Ù‡ÛŒ Ú©Ø§Ù…Ù„ Ø¯Ø§Ø´ØªÙ‡ Ùˆ Ù…Ø³Ø¦ÙˆÙ„ÛŒØª ØªØµÙ…ÛŒÙ…â€ŒÚ¯ÛŒØ±ÛŒ Ø³Ø±Ù…Ø§ÛŒÙ‡â€ŒÚ¯Ø°Ø§Ø±ÛŒ Ø±Ø§ Ù…ÛŒâ€ŒÙ¾Ø°ÛŒØ±Ù….',
                               en: 'I understand the volatility of international stock markets, FX conversion risks, and potential after-hours settlement queues, and accept full investment responsibility.',
-                              ar: 'أقر بمعرفتي التامة بمخاطر تداول الأسهم العالمية وتقلبات أسعار الصرف وأتحمل مسؤولية قراري.',
-                              zh: '本人完全知晓国际股票市场波动风险、汇率折算风险及非交易时段挂单规则，并自主承担投资损益。',
+                              ar: 'Ø£Ù‚Ø± Ø¨Ù…Ø¹Ø±ÙØªÙŠ Ø§Ù„ØªØ§Ù…Ø© Ø¨Ù…Ø®Ø§Ø·Ø± ØªØ¯Ø§ÙˆÙ„ Ø§Ù„Ø£Ø³Ù‡Ù… Ø§Ù„Ø¹Ø§Ù„Ù…ÙŠØ© ÙˆØªÙ‚Ù„Ø¨Ø§Øª Ø£Ø³Ø¹Ø§Ø± Ø§Ù„ØµØ±Ù ÙˆØ£ØªØ­Ù…Ù„ Ù…Ø³Ø¤ÙˆÙ„ÙŠØ© Ù‚Ø±Ø§Ø±ÙŠ.',
+                              zh: 'æœ¬äººå®Œå…¨çŸ¥æ™“å›½é™…è‚¡ç¥¨å¸‚åœºæ³¢åŠ¨é£Žé™©ã€æ±‡çŽ‡æŠ˜ç®—é£Žé™©åŠéžäº¤æ˜“æ—¶æ®µæŒ‚å•è§„åˆ™ï¼Œå¹¶è‡ªä¸»æ‰¿æ‹…æŠ•èµ„æŸç›Šã€‚',
                             ),
                             style: TextStyle(
                               fontSize: 11.5.sp,

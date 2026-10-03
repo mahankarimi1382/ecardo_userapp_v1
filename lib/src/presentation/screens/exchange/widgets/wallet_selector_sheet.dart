@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 /// Replacement for [CommonDropdownWalletBottomSheet] inside the exchange
 /// module. Splits the list into two groups — fiat and crypto — with explicit
@@ -105,11 +106,22 @@ class _WalletSelectorSheetState extends State<WalletSelectorSheet> {
                   ),
                 ),
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () => Get.back(),
-                  child: Image.asset(
-                    PngAssets.closeCommonIcon,
-                    width: 28,
-                    color: AppColors.lightTextPrimary,
+                  child: Tooltip(
+                    message: l10nPick(context, en: 'Close', fa: 'بستن'),
+                    child: SizedBox(
+                      // 44x44 hit area around the 28px asset.
+                      width: 44,
+                      height: 44,
+                      child: Center(
+                        child: Image.asset(
+                          PngAssets.closeCommonIcon,
+                          width: 28,
+                          color: AppColors.lightTextPrimary,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -145,8 +157,7 @@ class _WalletSelectorSheetState extends State<WalletSelectorSheet> {
                 children: [
                   if (fiat.isNotEmpty) ...[
                     _SectionHeader(
-                      label: widget.fiatHeader ??
-                          loc.exchangeWalletSectionFiat,
+                      label: widget.fiatHeader ?? loc.exchangeWalletSectionFiat,
                     ),
                     const SizedBox(height: 10),
                     ...fiat.map(
@@ -160,7 +171,8 @@ class _WalletSelectorSheetState extends State<WalletSelectorSheet> {
                   ],
                   if (crypto.isNotEmpty) ...[
                     _SectionHeader(
-                      label: widget.cryptoHeader ??
+                      label:
+                          widget.cryptoHeader ??
                           loc.exchangeWalletSectionCrypto,
                     ),
                     const SizedBox(height: 10),
@@ -287,19 +299,14 @@ class _WalletRow extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             color: AppColors.lightTextTertiary,
                             letterSpacing: 0,
-                            fontFeatures: const [
-                              FontFeature.tabularFigures(),
-                            ],
+                            fontFeatures: const [FontFeature.tabularFigures()],
                           ),
                         ),
                       ],
                     ),
                   ),
                   if (isSelected)
-                    Image.asset(
-                      PngAssets.commonDropdownTickIcon,
-                      width: 20,
-                    ),
+                    Image.asset(PngAssets.commonDropdownTickIcon, width: 20),
                 ],
               ),
             ),
@@ -349,9 +356,7 @@ class _WalletAvatar extends StatelessWidget {
       child: Container(
         width: 38,
         height: 38,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
         child: wallet.icon != null && wallet.icon!.isNotEmpty
             ? Image.network(
                 wallet.icon!,

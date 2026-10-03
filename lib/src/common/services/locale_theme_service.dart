@@ -60,7 +60,8 @@ class LocaleThemeService extends GetxService {
 
   ThemeMode _parseTheme(String mode) => switch (mode) {
         'dark' => ThemeMode.dark,
-        _ => ThemeMode.light,
+        'light' => ThemeMode.light,
+        _ => ThemeMode.system,
       };
 
   static String nativeName(String code) => switch (code) {

@@ -1013,6 +1013,24 @@ class NetworkService extends getx.GetxService {
     Map<String, dynamic>? data,
     bool isForeground = true,
   }) async {
+    // Demo Mode Smart Response
+    if (_demoInterceptionAllowed) {
+      final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
+        endpoint: endpoint,
+        method: 'POST',
+        data: data,
+      );
+      if (mock != null) {
+        _log('⚡ [DEMO MOCK] Instant response for Global POST $endpoint');
+        return ApiResponse.completed(mock);
+      }
+      return ApiResponse.completed({
+        'status': 'success',
+        'message': 'Demo Mode simulated response',
+        'data': {'id': DateTime.now().millisecondsSinceEpoch, 'status': 'completed'},
+      });
+    }
+
     try {
       String url = '$baseUrl$endpoint';
       _log('Global POST Request URL: $url', icon: '✅');

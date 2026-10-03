@@ -17,6 +17,7 @@ import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_fil
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/reply_ticket_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/model/ticket_message_model.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class ReplayTicket extends StatefulWidget {
   final String ticketUid;
@@ -99,19 +100,19 @@ class _ReplayTicketState extends State<ReplayTicket> {
                       "#${controller.ticketMessageModel.value.data!.ticket!.uuid!}",
                   rightSideWidget:
                       (!TicketStatusHelper.isClosed(
-                            isClosed: controller
-                                .ticketMessageModel
-                                .value
-                                .data
-                                ?.ticket
-                                ?.isClosed,
-                            status: controller
-                                .ticketMessageModel
-                                .value
-                                .data
-                                ?.ticket
-                                ?.status,
-                          ))
+                        isClosed: controller
+                            .ticketMessageModel
+                            .value
+                            .data
+                            ?.ticket
+                            ?.isClosed,
+                        status: controller
+                            .ticketMessageModel
+                            .value
+                            .data
+                            ?.ticket
+                            ?.status,
+                      ))
                       ? Padding(
                           padding: const EdgeInsetsDirectional.only(end: 18),
                           child: CommonButton(
@@ -195,15 +196,14 @@ class _ReplayTicketState extends State<ReplayTicket> {
                       .data
                       ?.ticket
                       ?.canReply,
-                  status: controller
-                      .ticketMessageModel
-                      .value
-                      .data
-                      ?.ticket
-                      ?.status,
+                  status:
+                      controller.ticketMessageModel.value.data?.ticket?.status,
                 ))
                   Container(
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 18, vertical: 30),
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 18,
+                      vertical: 30,
+                    ),
                     color: AppColors.white,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,7 +257,10 @@ class _ReplayTicketState extends State<ReplayTicket> {
             Flexible(
               flex: 8,
               child: Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 14, vertical: 10),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   color: AppColors.lightBackground,
@@ -335,7 +338,10 @@ class _ReplayTicketState extends State<ReplayTicket> {
             Flexible(
               flex: 8,
               child: Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 14, vertical: 10),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.lightPrimary,
                   borderRadius: BorderRadius.circular(14),
@@ -435,7 +441,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                         ),
                         SizedBox(height: 16),
                         Padding(
-                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 18,
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -449,11 +457,26 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                 ),
                               ),
                               GestureDetector(
+                                behavior: HitTestBehavior.opaque,
                                 onTap: () => Get.back(),
-                                child: Image.asset(
-                                  PngAssets.closeCommonIcon,
-                                  width: 28,
-                                  color: AppColors.lightTextPrimary,
+                                child: Tooltip(
+                                  message: l10nPick(
+                                    context,
+                                    en: 'Close',
+                                    fa: 'بستن',
+                                  ),
+                                  child: SizedBox(
+                                    // 44x44 hit area around the 28px asset.
+                                    width: 44,
+                                    height: 44,
+                                    child: Center(
+                                      child: Image.asset(
+                                        PngAssets.closeCommonIcon,
+                                        width: 28,
+                                        color: AppColors.lightTextPrimary,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -461,7 +484,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                         ),
                         SizedBox(height: 12),
                         Container(
-                          margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+                          margin: EdgeInsetsDirectional.symmetric(
+                            horizontal: 18,
+                          ),
                           width: double.infinity,
                           height: 1,
                           decoration: BoxDecoration(

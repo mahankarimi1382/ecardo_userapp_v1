@@ -75,9 +75,14 @@ class CommonTextInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final Color borderColor = isFocused
-        ? AppColors.lightPrimary.withValues(alpha: 0.60)
-        : AppColors.lightTextPrimary.withValues(alpha: 0.2);
+        ? (isDark
+            ? AppColors.mainSoftBlue
+            : AppColors.lightPrimary.withValues(alpha: 0.60))
+        : (isDark
+            ? AppColors.lightWarmGray.withValues(alpha: 0.25)
+            : AppColors.lightTextPrimary.withValues(alpha: 0.2));
 
     return TextFormField(
       controller: controller,
@@ -94,7 +99,7 @@ class CommonTextInputField extends StatelessWidget {
           textStyle ??
           TextStyle(
             fontSize: 15.sp,
-            color: AppColors.lightTextPrimary,
+            color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
             letterSpacing: 0,
             height: 1.1,
             fontWeight: FontWeight.w600,
@@ -114,7 +119,7 @@ class CommonTextInputField extends StatelessWidget {
         hintStyle:
             hintStyle ??
             TextStyle(
-              color: AppColors.lightTextTertiary,
+              color: isDark ? AppColors.softGray : AppColors.lightTextTertiary,
               fontWeight: FontWeight.w600,
               fontSize: 15.sp,
               letterSpacing: 0,

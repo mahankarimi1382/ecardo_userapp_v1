@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class CommonDropdownWalletBottomSheet extends StatefulWidget {
   final double bottomSheetHeight;
@@ -55,64 +56,75 @@ class _CommonDropdownWalletBottomSheetState
           ],
         ),
         child: Column(
-        children: [
-          SizedBox(height: 12),
-          Container(
-            width: 40,
-            height: 6,
-            decoration: BoxDecoration(
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(30),
+          children: [
+            SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 6,
+              decoration: BoxDecoration(
+                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(30),
+              ),
             ),
-          ),
-          SizedBox(height: 16),
+            SizedBox(height: 16),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  localization.commonDropdownWalletTitle,
-                  style: TextStyle(
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20,
-                    color: AppColors.lightTextPrimary,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    localization.commonDropdownWalletTitle,
+                    style: TextStyle(
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
+                      color: AppColors.lightTextPrimary,
+                    ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () => Get.back(),
-                  child: Image.asset(
-                    PngAssets.closeCommonIcon,
-                    width: 28,
-                    color: AppColors.lightTextPrimary,
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Get.back(),
+                    child: Tooltip(
+                      message: l10nPick(context, en: 'Close', fa: 'بستن'),
+                      child: SizedBox(
+                        // 44x44 hit area around the 28px asset.
+                        width: 44,
+                        height: 44,
+                        child: Center(
+                          child: Image.asset(
+                            PngAssets.closeCommonIcon,
+                            width: 28,
+                            color: AppColors.lightTextPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 18),
-            width: double.infinity,
-            height: 1,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.white,
-                  AppColors.lightTextPrimary.withValues(alpha: 0.1),
-                  AppColors.white,
                 ],
               ),
             ),
-          ),
-          widget.dropdownItems.isEmpty
-              ? _buildEmptyState(notFoundText: widget.notFoundText)
-              : _buildItemsList(),
-        ],
+            SizedBox(height: 12),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 18),
+              width: double.infinity,
+              height: 1,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.white,
+                    AppColors.lightTextPrimary.withValues(alpha: 0.1),
+                    AppColors.white,
+                  ],
+                ),
+              ),
+            ),
+            widget.dropdownItems.isEmpty
+                ? _buildEmptyState(notFoundText: widget.notFoundText)
+                : _buildItemsList(),
+          ],
+        ),
       ),
-    ),
     );
   }
 

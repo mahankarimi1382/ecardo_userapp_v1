@@ -30,7 +30,7 @@ class StockHomeScreen extends StatelessWidget {
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
         title: Text(
-          l10nPick(context, fa: 'پرسشنامه ارزیابی ریسک', en: 'Risk Assessment Quiz', ar: 'استبيان تقييم المخاطر', zh: '风险评估问卷'),
+          l10nPick(context, fa: 'Ù¾Ø±Ø³Ø´Ù†Ø§Ù…Ù‡ Ø§Ø±Ø²ÛŒØ§Ø¨ÛŒ Ø±ÛŒØ³Ú©', en: 'Risk Assessment Quiz', ar: 'Ø§Ø³ØªØ¨ÙŠØ§Ù† ØªÙ‚ÙŠÙŠÙ… Ø§Ù„Ù…Ø®Ø§Ø·Ø±', zh: 'é£Žé™©è¯„ä¼°é—®å·'),
           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
         ),
         content: Column(
@@ -40,23 +40,23 @@ class StockHomeScreen extends StatelessWidget {
             Text(
               l10nPick(
                 context,
-                fa: 'بر اساس الزامات امتثال و کارگزاری، ارزیابی سطح ریسک برای تعیین ابزارها و هشدارهای معاملاتی ضروری است.',
+                fa: 'Ø¨Ø± Ø§Ø³Ø§Ø³ Ø§Ù„Ø²Ø§Ù…Ø§Øª Ø§Ù…ØªØ«Ø§Ù„ Ùˆ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒØŒ Ø§Ø±Ø²ÛŒØ§Ø¨ÛŒ Ø³Ø·Ø­ Ø±ÛŒØ³Ú© Ø¨Ø±Ø§ÛŒ ØªØ¹ÛŒÛŒÙ† Ø§Ø¨Ø²Ø§Ø±Ù‡Ø§ Ùˆ Ù‡Ø´Ø¯Ø§Ø±Ù‡Ø§ÛŒ Ù…Ø¹Ø§Ù…Ù„Ø§ØªÛŒ Ø¶Ø±ÙˆØ±ÛŒ Ø§Ø³Øª.',
                 en: 'Mandatory compliance assessment to classify your investor risk profile.',
-                ar: 'تقييم الامتثال الإلزامي لتصنيف مستوى المخاطر الاستثمارية.',
-                zh: '合规性投资者风险承受能力评估，用以匹配交易标的与风险警示。',
+                ar: 'ØªÙ‚ÙŠÙŠÙ… Ø§Ù„Ø§Ù…ØªØ«Ø§Ù„ Ø§Ù„Ø¥Ù„Ø²Ø§Ù…ÙŠ Ù„ØªØµÙ†ÙŠÙ Ù…Ø³ØªÙˆÙ‰ Ø§Ù„Ù…Ø®Ø§Ø·Ø± Ø§Ù„Ø§Ø³ØªØ«Ù…Ø§Ø±ÙŠØ©.',
+                zh: 'åˆè§„æ€§æŠ•èµ„è€…é£Žé™©æ‰¿å—èƒ½åŠ›è¯„ä¼°ï¼Œç”¨ä»¥åŒ¹é…äº¤æ˜“æ ‡çš„ä¸Žé£Žé™©è­¦ç¤ºã€‚',
               ),
               style: TextStyle(fontSize: 11.5.sp, color: Colors.grey.shade600, height: 1.5),
             ),
             SizedBox(height: 12.h),
-            Text('• هدف سرمایه‌گذاری: رشد تدریجی ثروت (Capital Growth)', style: TextStyle(fontSize: 11.sp)),
-            Text('• افق زمانی: بیش از ۳ سال (بلندمدت Long Term)', style: TextStyle(fontSize: 11.sp)),
-            Text('• تحمل نوسان: متوسط (حفظ دارایی در افت ۲۰٪)', style: TextStyle(fontSize: 11.sp)),
+            Text('â€¢ Ù‡Ø¯Ù Ø³Ø±Ù…Ø§ÛŒÙ‡â€ŒÚ¯Ø°Ø§Ø±ÛŒ: Ø±Ø´Ø¯ ØªØ¯Ø±ÛŒØ¬ÛŒ Ø«Ø±ÙˆØª (Capital Growth)', style: TextStyle(fontSize: 11.sp)),
+            Text('â€¢ Ø§ÙÙ‚ Ø²Ù…Ø§Ù†ÛŒ: Ø¨ÛŒØ´ Ø§Ø² Û³ Ø³Ø§Ù„ (Ø¨Ù„Ù†Ø¯Ù…Ø¯Øª Long Term)', style: TextStyle(fontSize: 11.sp)),
+            Text('â€¢ ØªØ­Ù…Ù„ Ù†ÙˆØ³Ø§Ù†: Ù…ØªÙˆØ³Ø· (Ø­ÙØ¸ Ø¯Ø§Ø±Ø§ÛŒÛŒ Ø¯Ø± Ø§ÙØª Û²Û°Ùª)', style: TextStyle(fontSize: 11.sp)),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text(l10nPick(context, fa: 'انصراف', en: 'Cancel', ar: 'إلغاء', zh: '取消')),
+            child: Text(l10nPick(context, fa: 'Ø§Ù†ØµØ±Ø§Ù', en: 'Cancel', ar: 'Ø¥Ù„ØºØ§Ø¡', zh: 'å–æ¶ˆ')),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary),
@@ -64,14 +64,14 @@ class StockHomeScreen extends StatelessWidget {
               Get.back();
               await controller.submitRiskQuiz(answers);
               Get.snackbar(
-                l10nPick(context, fa: 'ثبت شد', en: 'Updated', ar: 'تم التحديث', zh: '已更新'),
-                l10nPick(context, fa: 'پروفایل ریسک شما با موفقیت ثبت شد.', en: 'Risk profile updated.', ar: 'تم حفظ الملف.', zh: '风险画像已更新。'),
-                backgroundColor: const Color(0xFF059669),
+                l10nPick(context, fa: 'Ø«Ø¨Øª Ø´Ø¯', en: 'Updated', ar: 'ØªÙ… Ø§Ù„ØªØ­Ø¯ÙŠØ«', zh: 'å·²æ›´æ–°'),
+                l10nPick(context, fa: 'Ù¾Ø±ÙˆÙØ§ÛŒÙ„ Ø±ÛŒØ³Ú© Ø´Ù…Ø§ Ø¨Ø§ Ù…ÙˆÙÙ‚ÛŒØª Ø«Ø¨Øª Ø´Ø¯.', en: 'Risk profile updated.', ar: 'ØªÙ… Ø­ÙØ¸ Ø§Ù„Ù…Ù„Ù.', zh: 'é£Žé™©ç”»åƒå·²æ›´æ–°ã€‚'),
+                backgroundColor: AppColors.success,
                 colorText: Colors.white,
               );
             },
             child: Text(
-              l10nPick(context, fa: 'تأیید و ثبت پروفایل', en: 'Confirm', ar: 'تأكيد', zh: '确认提交'),
+              l10nPick(context, fa: 'ØªØ£ÛŒÛŒØ¯ Ùˆ Ø«Ø¨Øª Ù¾Ø±ÙˆÙØ§ÛŒÙ„', en: 'Confirm', ar: 'ØªØ£ÙƒÙŠØ¯', zh: 'ç¡®è®¤æäº¤'),
               style: const TextStyle(color: Colors.white),
             ),
           ),
@@ -94,16 +94,16 @@ class StockHomeScreen extends StatelessWidget {
           child: CommonAppBar(
             title: l10nPick(
               context,
-              fa: 'بورس و سهام بین‌الملل',
+              fa: 'Ø¨ÙˆØ±Ø³ Ùˆ Ø³Ù‡Ø§Ù… Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„',
               en: 'Global Stock Trading',
-              ar: 'تداول الأسهم الدولية',
-              zh: '全球证券交易',
+              ar: 'ØªØ¯Ø§ÙˆÙ„ Ø§Ù„Ø£Ø³Ù‡Ù… Ø§Ù„Ø¯ÙˆÙ„ÙŠØ©',
+              zh: 'å…¨çƒè¯åˆ¸äº¤æ˜“',
             ),
             rightSideWidget: Padding(
               padding: EdgeInsetsDirectional.only(end: 16.w),
               child: IconButton(
                 icon: const Icon(Icons.history_rounded),
-                tooltip: l10nPick(context, fa: 'پیگیری سفارش‌ها', en: 'Tracking', ar: 'المتابعة', zh: '订单追踪'),
+                tooltip: l10nPick(context, fa: 'Ù¾ÛŒÚ¯ÛŒØ±ÛŒ Ø³ÙØ§Ø±Ø´â€ŒÙ‡Ø§', en: 'Tracking', ar: 'Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø©', zh: 'è®¢å•è¿½è¸ª'),
                 onPressed: () => Get.to(() => const StockTrackingScreen()),
               ),
             ),
@@ -123,10 +123,10 @@ class StockHomeScreen extends StatelessWidget {
               // Notice banner if backend is unavailable / markets empty
               if (controller.hasBackendError.value || controller.markets.isEmpty)
                 FinancialServiceUnavailableBanner(
-                  serviceNameFa: 'بورس‌های بین‌الملل و کارگزاری',
+                  serviceNameFa: 'Ø¨ÙˆØ±Ø³â€ŒÙ‡Ø§ÛŒ Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„ Ùˆ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ',
                   serviceNameEn: 'International Brokerage & Stocks',
-                  serviceNameAr: 'الأسهم والوساطة الدولية',
-                  serviceNameZh: '国际证券撮合',
+                  serviceNameAr: 'Ø§Ù„Ø£Ø³Ù‡Ù… ÙˆØ§Ù„ÙˆØ³Ø§Ø·Ø© Ø§Ù„Ø¯ÙˆÙ„ÙŠØ©',
+                  serviceNameZh: 'å›½é™…è¯åˆ¸æ’®åˆ',
                   onRetry: controller.loadDashboard,
                 ),
 
@@ -139,7 +139,7 @@ class StockHomeScreen extends StatelessWidget {
                     child: _buildActionTile(
                       context,
                       icon: Icons.info_outline_rounded,
-                      titleFa: 'راهنما و بازارها',
+                      titleFa: 'Ø±Ø§Ù‡Ù†Ù…Ø§ Ùˆ Ø¨Ø§Ø²Ø§Ø±Ù‡Ø§',
                       titleEn: 'Markets Guide',
                       color: AppColors.mainSoftBlue,
                       onTap: () => Get.to(() => const StockIntroScreen()),
@@ -150,9 +150,9 @@ class StockHomeScreen extends StatelessWidget {
                     child: _buildActionTile(
                       context,
                       icon: Icons.candlestick_chart_rounded,
-                      titleFa: 'ثبت سفارش سهام',
+                      titleFa: 'Ø«Ø¨Øª Ø³ÙØ§Ø±Ø´ Ø³Ù‡Ø§Ù…',
                       titleEn: 'Place Order',
-                      color: const Color(0xFF059669),
+                      color: AppColors.success,
                       onTap: () => Get.to(() => const StockOrderScreen()),
                     ),
                   ),
@@ -161,9 +161,9 @@ class StockHomeScreen extends StatelessWidget {
                     child: _buildActionTile(
                       context,
                       icon: Icons.pie_chart_rounded,
-                      titleFa: 'سبد دارایی و سفارشات',
+                      titleFa: 'Ø³Ø¨Ø¯ Ø¯Ø§Ø±Ø§ÛŒÛŒ Ùˆ Ø³ÙØ§Ø±Ø´Ø§Øª',
                       titleEn: 'My Portfolio',
-                      color: const Color(0xFF2563EB),
+                      color: AppColors.lightSecondary,
                       onTap: () => Get.to(() => const StockTrackingScreen()),
                     ),
                   ),
@@ -185,10 +185,10 @@ class StockHomeScreen extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(8.r),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                        color: AppColors.warning.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.shield_rounded, color: const Color(0xFFD97706), size: 20.sp),
+                      child: Icon(Icons.shield_rounded, color: AppColors.warning, size: 20.sp),
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
@@ -196,11 +196,11 @@ class StockHomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10nPick(context, fa: 'سطح ریسک معاملاتی: متوسط (تأییدشده)', en: 'Risk Profile: Moderate'),
+                            l10nPick(context, fa: 'Ø³Ø·Ø­ Ø±ÛŒØ³Ú© Ù…Ø¹Ø§Ù…Ù„Ø§ØªÛŒ: Ù…ØªÙˆØ³Ø· (ØªØ£ÛŒÛŒØ¯Ø´Ø¯Ù‡)', en: 'Risk Profile: Moderate'),
                             style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
                           ),
                           Text(
-                            l10nPick(context, fa: 'مطابق استانداردهای امتثال مالی بین‌المللی', en: 'Compliant with investor protection rules'),
+                            l10nPick(context, fa: 'Ù…Ø·Ø§Ø¨Ù‚ Ø§Ø³ØªØ§Ù†Ø¯Ø§Ø±Ø¯Ù‡Ø§ÛŒ Ø§Ù…ØªØ«Ø§Ù„ Ù…Ø§Ù„ÛŒ Ø¨ÛŒÙ†â€ŒØ§Ù„Ù…Ù„Ù„ÛŒ', en: 'Compliant with investor protection rules'),
                             style: TextStyle(fontSize: 10.5.sp, color: AppColors.lightTextSecondary),
                           ),
                         ],
@@ -209,7 +209,7 @@ class StockHomeScreen extends StatelessWidget {
                     TextButton(
                       onPressed: () => _showRiskQuiz(context, controller),
                       child: Text(
-                        l10nPick(context, fa: 'پرسشنامه', en: 'Quiz', ar: 'الاستبيان', zh: '测验'),
+                        l10nPick(context, fa: 'Ù¾Ø±Ø³Ø´Ù†Ø§Ù…Ù‡', en: 'Quiz', ar: 'Ø§Ù„Ø§Ø³ØªØ¨ÙŠØ§Ù†', zh: 'æµ‹éªŒ'),
                         style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700),
                       ),
                     ),
@@ -226,17 +226,17 @@ class StockHomeScreen extends StatelessWidget {
                   Text(
                     l10nPick(
                       context,
-                      fa: 'نمادهای محبوب بورس آمریکا و اروپا',
+                      fa: 'Ù†Ù…Ø§Ø¯Ù‡Ø§ÛŒ Ù…Ø­Ø¨ÙˆØ¨ Ø¨ÙˆØ±Ø³ Ø¢Ù…Ø±ÛŒÚ©Ø§ Ùˆ Ø§Ø±ÙˆÙ¾Ø§',
                       en: 'Trending Global Stocks',
-                      ar: 'الأسهم العالمية الشائعة',
-                      zh: '全球热门股票标的',
+                      ar: 'Ø§Ù„Ø£Ø³Ù‡Ù… Ø§Ù„Ø¹Ø§Ù„Ù…ÙŠØ© Ø§Ù„Ø´Ø§Ø¦Ø¹Ø©',
+                      zh: 'å…¨çƒçƒ­é—¨è‚¡ç¥¨æ ‡çš„',
                     ),
                     style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
                   ),
                   TextButton(
                     onPressed: () => Get.to(() => const StockOrderScreen()),
                     child: Text(
-                      l10nPick(context, fa: 'ثبت سفارش', en: 'Order Desk', ar: 'التداول', zh: '交易台'),
+                      l10nPick(context, fa: 'Ø«Ø¨Øª Ø³ÙØ§Ø±Ø´', en: 'Order Desk', ar: 'Ø§Ù„ØªØ¯Ø§ÙˆÙ„', zh: 'äº¤æ˜“å°'),
                       style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightPrimary),
                     ),
                   ),
@@ -259,10 +259,10 @@ class StockHomeScreen extends StatelessWidget {
                       Text(
                         l10nPick(
                           context,
-                          fa: 'نرخ‌های زنده بازار در حال اتصال به کارگزاری است',
+                          fa: 'Ù†Ø±Ø®â€ŒÙ‡Ø§ÛŒ Ø²Ù†Ø¯Ù‡ Ø¨Ø§Ø²Ø§Ø± Ø¯Ø± Ø­Ø§Ù„ Ø§ØªØµØ§Ù„ Ø¨Ù‡ Ú©Ø§Ø±Ú¯Ø²Ø§Ø±ÛŒ Ø§Ø³Øª',
                           en: 'Live quotes awaiting broker feed connection',
-                          ar: 'بانتظار مزامنة الأسعار المباشرة',
-                          zh: '正在等待券商行情源建立连接',
+                          ar: 'Ø¨Ø§Ù†ØªØ¸Ø§Ø± Ù…Ø²Ø§Ù…Ù†Ø© Ø§Ù„Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ù…Ø¨Ø§Ø´Ø±Ø©',
+                          zh: 'æ­£åœ¨ç­‰å¾…åˆ¸å•†è¡Œæƒ…æºå»ºç«‹è¿žæŽ¥',
                         ),
                         style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
                       ),
@@ -270,10 +270,10 @@ class StockHomeScreen extends StatelessWidget {
                       Text(
                         l10nPick(
                           context,
-                          fa: 'سفارش‌های آزمایشی را می‌توانید از طریق بخش ثبت سفارش بررسی نمایید.',
+                          fa: 'Ø³ÙØ§Ø±Ø´â€ŒÙ‡Ø§ÛŒ Ø¢Ø²Ù…Ø§ÛŒØ´ÛŒ Ø±Ø§ Ù…ÛŒâ€ŒØªÙˆØ§Ù†ÛŒØ¯ Ø§Ø² Ø·Ø±ÛŒÙ‚ Ø¨Ø®Ø´ Ø«Ø¨Øª Ø³ÙØ§Ø±Ø´ Ø¨Ø±Ø±Ø³ÛŒ Ù†Ù…Ø§ÛŒÛŒØ¯.',
                           en: 'You can test simulated orders via the order desk.',
-                          ar: 'يمكنك تجربة الأوامر عبر نافذة التداول.',
-                          zh: '您可以在下单终端体验模拟买卖流程。',
+                          ar: 'ÙŠÙ…ÙƒÙ†Ùƒ ØªØ¬Ø±Ø¨Ø© Ø§Ù„Ø£ÙˆØ§Ù…Ø± Ø¹Ø¨Ø± Ù†Ø§ÙØ°Ø© Ø§Ù„ØªØ¯Ø§ÙˆÙ„.',
+                          zh: 'æ‚¨å¯ä»¥åœ¨ä¸‹å•ç»ˆç«¯ä½“éªŒæ¨¡æ‹Ÿä¹°å–æµç¨‹ã€‚',
                         ),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
@@ -377,8 +377,8 @@ class StockHomeScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             decoration: BoxDecoration(
               color: isPos
-                  ? const Color(0xFF059669).withValues(alpha: 0.12)
-                  : const Color(0xFFDC2626).withValues(alpha: 0.12),
+                  ? AppColors.success.withValues(alpha: 0.12)
+                  : AppColors.error.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Text(
@@ -386,7 +386,7 @@ class StockHomeScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w800,
-                color: isPos ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                color: isPos ? AppColors.success : AppColors.error,
               ),
             ),
           ),
@@ -402,7 +402,7 @@ class StockHomeScreen extends StatelessWidget {
               Get.to(() => const StockOrderScreen());
             },
             child: Text(
-              l10nPick(context, fa: 'معامله', en: 'Trade', ar: 'تداول', zh: '交易'),
+              l10nPick(context, fa: 'Ù…Ø¹Ø§Ù…Ù„Ù‡', en: 'Trade', ar: 'ØªØ¯Ø§ÙˆÙ„', zh: 'äº¤æ˜“'),
               style: TextStyle(fontSize: 11.5.sp, color: Colors.white, fontWeight: FontWeight.w700),
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 /// Session-dismissible warning when offline queue flush failed.
 /// Only on primary shells: navigation/home, profile, settings-like routes.
@@ -90,14 +91,25 @@ class _OfflineQueueBannerState extends State<OfflineQueueBanner> {
                     ),
                   ),
                 ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () =>
-                      setState(() => _dismissedThisSession = true),
-                  icon: const Icon(
-                    Icons.close,
-                    size: 18,
-                    color: Color(0xFF92400E),
+                Tooltip(
+                  message: l10nPick(
+                    context,
+                    en: 'Dismiss pending requests',
+                    fa: 'بستن درخواست‌های در انتظار',
+                  ),
+                  child: IconButton(
+                    visualDensity: VisualDensity.compact,
+                    constraints: const BoxConstraints(
+                      minWidth: 44,
+                      minHeight: 44,
+                    ),
+                    onPressed: () =>
+                        setState(() => _dismissedThisSession = true),
+                    icon: const Icon(
+                      Icons.close,
+                      size: 18,
+                      color: Color(0xFF92400E),
+                    ),
                   ),
                 ),
               ],

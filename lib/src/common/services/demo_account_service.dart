@@ -61,15 +61,37 @@ class DemoAccountService extends GetxService {
   }
 
   /// [isDemoInterceptionPermitted] resolved against live app state — the single place
-  /// that composes the three inputs. Every interception site calls this (directly or via
-  /// `NetworkService._demoInterceptionAllowed`) instead of re-testing `isRegistered &&
-  /// isDemoMode` inline, so there is no second, ungated copy of the rule.
+  /// that composes the inputs. Every interception site calls this (directly or via
+  /// `NetworkService._demoInterceptionAllowed`).
   static bool get isDemoInterceptionAllowedNow => isDemoInterceptionPermitted(
     isDebugBuild: isDemoAvailableInThisBuild,
     isServiceRegistered: Get.isRegistered<DemoAccountService>(),
     isDemoModeActive: Get.isRegistered<DemoAccountService>() &&
         Get.find<DemoAccountService>().isDemoMode.value,
   );
+
+  /// Normalizes any endpoint variant (e.g. '/api/user/dashboard', 'https://ecardo.ir/api/app-version',
+  /// 'get-settings-v2?cb=123') to canonical path like '/user/dashboard', '/app-version', '/get-settings-v2'.
+  static String normalizeEndpoint(String endpoint) {
+    var path = endpoint.split('?').first.trim();
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      final uri = Uri.tryParse(path);
+      if (uri != null) {
+        path = uri.path;
+      }
+    }
+    if (path.startsWith('/api/')) {
+      path = path.substring(4);
+    } else if (path.startsWith('api/')) {
+      path = path.substring(3);
+    } else if (path == '/api' || path == 'api') {
+      path = '/';
+    }
+    if (!path.startsWith('/')) {
+      path = '/$path';
+    }
+    return path;
+  }
 
   final RxInt demoKycStatus = 1.obs; // 1: Verified, 2: Pending, 3: Rejected, 0: Unverified
   final RxString demoRejectReason =
@@ -553,7 +575,7 @@ class DemoAccountService extends GetxService {
     String method,
     Map<String, dynamic>? data,
   ) {
-    final cleanEndpoint = endpoint.split('?').first;
+    final cleanEndpoint = normalizeEndpoint(endpoint);
 
     // User Profile
     if (cleanEndpoint == '/auth/user/get' || cleanEndpoint == '/user/profile') {
@@ -707,10 +729,25 @@ class DemoAccountService extends GetxService {
       };
     }
 
+    // App Version
+    if (cleanEndpoint == '/app-version') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'version': '1.0.0',
+          'update_url': '',
+          'force_update': false,
+          'sha256': '',
+          'notes': 'Demo Mode active - latest version.',
+        },
+      };
+    }
+
     // App Settings
     if (cleanEndpoint == '/get-settings' || cleanEndpoint == '/get-settings-v2') {
       return {
-        'status': 'success',
+        'status': true,
         'message': 'Success',
         'data': [
           {'name': 'site_title', 'value': 'eCardo'},
@@ -720,7 +757,451 @@ class DemoAccountService extends GetxService {
           {'name': 'user_ticket', 'value': '1'},
           {'name': 'account_creation', 'value': '1'},
           {'name': 'language_switcher', 'value': '1'},
+          {'name': 'app_version', 'value': '1.0.0'},
+          {'name': 'app_update_link', 'value': 'https://ecardo.ir/download/app.apk'},
+          {'name': 'app_force_update', 'value': '0'},
+          {'name': 'app_apk_sha256', 'value': ''},
+          {'name': 'demo_account_enabled', 'value': '1'},
+          {'name': 'app_lock', 'value': '0'},
+          {'name': 'default_currency', 'value': 'USD'},
+          {'name': 'default_currency_symbol', 'value': '\$'},
+          {'name': 'app_name', 'value': 'eCardo'},
         ],
+      };
+    }
+
+    // Currencies
+    if (cleanEndpoint == '/get-currencies') {
+      return {
+        'status': true,
+        'message': 'Success',
+        'data': [
+          {
+            'id': 1,
+            'name': 'US Dollar',
+            'code': 'USD',
+            'type': 'FIAT',
+            'symbol': '\$',
+            'icon': '',
+            'conversion_rate': '1.0',
+            'status': '1',
+            'full_name': 'US Dollar (USD)',
+          },
+          {
+            'id': 2,
+            'name': 'Euro',
+            'code': 'EUR',
+            'type': 'FIAT',
+            'symbol': '€',
+            'icon': '',
+            'conversion_rate': '1.08',
+            'status': '1',
+            'full_name': 'Euro (EUR)',
+          },
+          {
+            'id': 3,
+            'name': 'Tether USD',
+            'code': 'USDT',
+            'type': 'CRYPTO',
+            'symbol': '₮',
+            'icon': '',
+            'conversion_rate': '1.0',
+            'status': '1',
+            'full_name': 'Tether USD (USDT)',
+          },
+          {
+            'id': 4,
+            'name': 'Iranian Rial',
+            'code': 'IRR',
+            'type': 'FIAT',
+            'symbol': 'ریال',
+            'icon': '',
+            'conversion_rate': '0.0000015',
+            'status': '1',
+            'full_name': 'Iranian Rial (IRR)',
+          },
+          {
+            'id': 5,
+            'name': 'UAE Dirham',
+            'code': 'AED',
+            'type': 'FIAT',
+            'symbol': 'د.إ',
+            'icon': '',
+            'conversion_rate': '0.27',
+            'status': '1',
+            'full_name': 'UAE Dirham (AED)',
+          },
+          {
+            'id': 6,
+            'name': 'British Pound',
+            'code': 'GBP',
+            'type': 'FIAT',
+            'symbol': '£',
+            'icon': '',
+            'conversion_rate': '1.27',
+            'status': '1',
+            'full_name': 'British Pound (GBP)',
+          },
+          {
+            'id': 7,
+            'name': 'Turkish Lira',
+            'code': 'TRY',
+            'type': 'FIAT',
+            'symbol': '₺',
+            'icon': '',
+            'conversion_rate': '0.029',
+            'status': '1',
+            'full_name': 'Turkish Lira (TRY)',
+          },
+        ],
+      };
+    }
+
+    // Countries
+    if (cleanEndpoint == '/get-countries') {
+      return {
+        'status': true,
+        'message': 'Success',
+        'data': [
+          {'name': 'Iran', 'dial_code': '+98', 'code': 'IR', 'flag': '🇮🇷', 'selected': true},
+          {'name': 'United States', 'dial_code': '+1', 'code': 'US', 'flag': '🇺🇸', 'selected': false},
+          {'name': 'United Arab Emirates', 'dial_code': '+971', 'code': 'AE', 'flag': '🇦🇪', 'selected': false},
+          {'name': 'Germany', 'dial_code': '+49', 'code': 'DE', 'flag': '🇩🇪', 'selected': false},
+          {'name': 'United Kingdom', 'dial_code': '+44', 'code': 'GB', 'flag': '🇬🇧', 'selected': false},
+          {'name': 'Turkey', 'dial_code': '+90', 'code': 'TR', 'flag': '🇹🇷', 'selected': false},
+        ],
+      };
+    }
+
+    // Languages
+    if (cleanEndpoint == '/get-languages') {
+      return {
+        'status': true,
+        'message': 'Success',
+        'data': [
+          {'id': 1, 'name': 'فارسی', 'locale': 'fa', 'is_rtl': true, 'is_default': true, 'status': true},
+          {'id': 2, 'name': 'English', 'locale': 'en', 'is_rtl': false, 'is_default': false, 'status': true},
+          {'id': 3, 'name': 'العربية', 'locale': 'ar', 'is_rtl': true, 'is_default': false, 'status': true},
+          {'id': 4, 'name': 'Русский', 'locale': 'ru', 'is_rtl': false, 'is_default': false, 'status': true},
+          {'id': 5, 'name': 'Türkçe', 'locale': 'tr', 'is_rtl': false, 'is_default': false, 'status': true},
+          {'id': 6, 'name': '中文', 'locale': 'zh', 'is_rtl': false, 'is_default': false, 'status': true},
+        ],
+      };
+    }
+
+    // Notifications
+    if (cleanEndpoint == '/get-notifications') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'unread_count': 1,
+          'notifications': [
+            {
+              'id': 1,
+              'title': 'به ایکاردو خوش آمدید',
+              'message': 'حساب کاربری آزمایشی با موفقیت فعال شد. موجودی و تمامی امکانات در دسترس است.',
+              'type': 'system',
+              'is_read': false,
+              'created_at': '2026-10-01 10:00:00',
+            },
+          ],
+        },
+      };
+    }
+
+    if (cleanEndpoint == '/mark-as-read-notification') {
+      return {
+        'status': 'success',
+        'message': 'Notifications marked as read',
+        'data': <String, dynamic>{},
+      };
+    }
+
+    // QR Code
+    if (cleanEndpoint == '/user/qrcode') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'qr_code': 'https://ecardo.ir/qr/demo_tester',
+          'account_number': 'EC-99204812',
+        },
+      };
+    }
+
+    // Beneficiaries
+    if (cleanEndpoint == '/user/beneficiaries') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {'beneficiaries': <dynamic>[]},
+      };
+    }
+
+    // Passcode status
+    if (cleanEndpoint == '/user/passcode/status' || cleanEndpoint == '/user/passcode') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'has_passcode': true,
+          'is_active': true,
+        },
+      };
+    }
+
+    // KYC Level
+    if (cleanEndpoint == '/user/kyc-level/levels' ||
+        cleanEndpoint == '/user/kyc-level/badge' ||
+        cleanEndpoint == '/user/kyc-level/status') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'current_level': 3,
+          'status': 'approved',
+          'badge': 'Gold Verified',
+          'levels': [
+            {'level': 1, 'name': 'Tier 1 - Basic', 'status': 'completed'},
+            {'level': 2, 'name': 'Tier 2 - Verified', 'status': 'completed'},
+            {'level': 3, 'name': 'Tier 3 - Premium VIP', 'status': 'completed'},
+          ],
+        },
+      };
+    }
+
+    // Referral Info
+    if (cleanEndpoint == '/user/referral/info' ||
+        cleanEndpoint == '/user/referral/direct' ||
+        cleanEndpoint == '/user/referral/tree') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'referral_code': 'ECAR-DEMO-VIP',
+          'bonus': '50.00',
+          'count': 5,
+          'link': 'https://ecardo.ir/register?ref=ECAR-DEMO-VIP',
+        },
+      };
+    }
+
+    // Add Money
+    if (cleanEndpoint == '/user/add-money') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'gateways': [
+            {'id': 1, 'name': 'USDT (TRC-20)', 'currency': 'USDT', 'type': 'crypto'},
+            {'id': 2, 'name': 'درگاه بانکی شتاب', 'currency': 'IRR', 'type': 'fiat'},
+            {'id': 3, 'name': 'Visa / MasterCard Gateway', 'currency': 'USD', 'type': 'fiat'},
+          ],
+        },
+      };
+    }
+
+    // Payment Settings & History
+    if (cleanEndpoint == '/user/payment/settings' || cleanEndpoint == '/user/payment/history') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'daily_limit': '5000.00',
+          'monthly_limit': '50000.00',
+          'history': <dynamic>[],
+        },
+      };
+    }
+
+    // Transfer Config & History
+    if (cleanEndpoint == '/user/transfer/config' || cleanEndpoint == '/user/transfer/history') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'charge_percentage': '0.5',
+          'min_amount': '1.0',
+          'max_amount': '10000.0',
+          'history': <dynamic>[],
+        },
+      };
+    }
+
+    // Exchange Config & History
+    if (cleanEndpoint == '/user/exchange/config' || cleanEndpoint == '/user/exchange/history') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'charge_percentage': '0.2',
+          'min_amount': '5.0',
+          'max_amount': '50000.0',
+          'history': <dynamic>[],
+        },
+      };
+    }
+
+    // Cash Out Config & History
+    if (cleanEndpoint == '/user/cashout/config' || cleanEndpoint == '/user/cashout/history') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'charge_percentage': '1.0',
+          'min_amount': '10.0',
+          'max_amount': '5000.0',
+          'history': <dynamic>[],
+        },
+      };
+    }
+
+    // Gift Config & History
+    if (cleanEndpoint == '/user/gifts/config' ||
+        cleanEndpoint == '/user/gifts/history' ||
+        cleanEndpoint == '/user/gifts/redeem/history') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'charge_percentage': '0.0',
+          'min_amount': '1.0',
+          'max_amount': '1000.0',
+          'history': <dynamic>[],
+        },
+      };
+    }
+
+    // Withdraw Accounts & Methods
+    if (cleanEndpoint == '/user/withdraw-accounts' ||
+        cleanEndpoint == '/user/withdraw-accounts/methods/list') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'accounts': <dynamic>[],
+          'methods': [
+            {'id': 1, 'name': 'USDT TRC20 Wallet', 'currency': 'USDT'},
+            {'id': 2, 'name': 'شماره شبا بانکی (IBAN)', 'currency': 'IRR'},
+            {'id': 3, 'name': 'International Bank Wire (SWIFT)', 'currency': 'USD'},
+          ],
+        },
+      };
+    }
+
+    // Card Products & Holders
+    if (cleanEndpoint == '/user/card-products' ||
+        cleanEndpoint == '/user/card-orders' ||
+        cleanEndpoint == '/user/cardholders' ||
+        cleanEndpoint == '/get-card-providers') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'card_products': [
+            {
+              'id': 1,
+              'name': 'MasterCard Virtual Platinum',
+              'type': 'MasterCard',
+              'currency': 'USD',
+              'price': '10.00',
+              'min_load': '10.00',
+              'max_load': '5000.00',
+              'status': 'active',
+            }
+          ],
+          'cardholders': [
+            {'id': 1, 'name': 'کاربر دمو', 'email': 'demo@ecardo.ir'}
+          ],
+          'providers': [
+            {'id': 1, 'name': 'MasterCard / Ecardo Pay', 'code': 'mastercard'}
+          ],
+          'card_orders': <dynamic>[],
+        },
+      };
+    }
+
+    // Support Tickets
+    if (cleanEndpoint == '/user/ticket') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {'tickets': <dynamic>[]},
+      };
+    }
+
+    // Bill Payments
+    if (cleanEndpoint == '/user/pay-bill/services' ||
+        cleanEndpoint == '/user/pay-bill/history' ||
+        cleanEndpoint == '/get-bill-countries') {
+      return {
+        'status': true,
+        'message': 'Success',
+        'data': {
+          'services': <dynamic>[],
+          'history': <dynamic>[],
+          'countries': [
+            {'name': 'Iran', 'code': 'IR', 'dial_code': '+98'},
+            {'name': 'Turkey', 'code': 'TR', 'dial_code': '+90'},
+          ],
+        },
+      };
+    }
+
+    // P2P Trading
+    if (cleanEndpoint == '/user/p2p/marketplace' ||
+        cleanEndpoint == '/user/p2p/payment-accounts' ||
+        cleanEndpoint == '/user/p2p/payment-methods' ||
+        cleanEndpoint == '/user/p2p/ads' ||
+        cleanEndpoint == '/user/p2p/orders') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'ads': <dynamic>[],
+          'orders': <dynamic>[],
+          'payment_accounts': <dynamic>[],
+          'payment_methods': <dynamic>[],
+        },
+      };
+    }
+
+    // Remittance
+    if (cleanEndpoint == '/user/remittance/methods' ||
+        cleanEndpoint == '/user/remittance/history' ||
+        cleanEndpoint == '/user/remittance/quote') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'methods': <dynamic>[],
+          'remittances': <dynamic>[],
+        },
+      };
+    }
+
+    // Gift Cards
+    if (cleanEndpoint == '/user/gift-cards/products' ||
+        cleanEndpoint == '/user/gift-cards/categories' ||
+        cleanEndpoint == '/user/gift-cards/purchased-history') {
+      return {
+        'status': 'success',
+        'message': 'Success',
+        'data': {
+          'products': <dynamic>[],
+          'categories': <dynamic>[],
+          'purchases': <dynamic>[],
+        },
+      };
+    }
+
+    // Auth Token Refresh
+    if (cleanEndpoint == '/auth/user/refresh') {
+      return {
+        'status': 'success',
+        'message': 'Token refreshed',
+        'data': {'token': _demoBearerToken},
       };
     }
 
@@ -1146,7 +1627,7 @@ class DemoAccountService extends GetxService {
     }
 
     // Default catch-all for successful demo actions
-    if (method == 'POST' || method == 'PUT') {
+    if (method == 'POST' || method == 'PUT' || method == 'PATCH' || method == 'DELETE') {
       return {
         'status': 'success',
         'message': 'Operation completed successfully (Demo Mode)',
@@ -1154,7 +1635,19 @@ class DemoAccountService extends GetxService {
       };
     }
 
-    return null;
+    if (method == 'GET') {
+      return {
+        'status': 'success',
+        'message': 'Demo Mode active',
+        'data': <String, dynamic>{},
+      };
+    }
+
+    return {
+      'status': 'success',
+      'message': 'Operation simulated (Demo Mode)',
+      'data': <String, dynamic>{},
+    };
   }
 
   static Map<String, dynamic> _buildDemoLoanCase() {

@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_review_step_section.dart';
@@ -70,20 +71,30 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                       Obx(
                         () => CommonAppBar(
                           title: localizations.exchangeTitle,
-                          rightSideWidget:
-                              controller.currentStep.value == 0
-                                  ? Padding(
-                                      padding: const EdgeInsetsDirectional.only(
-                                        end: 8,
+                          rightSideWidget: controller.currentStep.value == 0
+                              ? Padding(
+                                  padding: const EdgeInsetsDirectional.only(
+                                    end: 8,
+                                  ),
+                                  child: Tooltip(
+                                    message: l10nPick(
+                                      context,
+                                      en: 'Exchange history',
+                                      fa: 'تاریخچه تبدیل',
+                                    ),
+                                    child: IconButton(
+                                      visualDensity: VisualDensity.compact,
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(
+                                        minWidth: 44,
+                                        minHeight: 44,
                                       ),
-                                      child: IconButton(
-                                        visualDensity: VisualDensity.compact,
-                                        padding: EdgeInsets.zero,
-                                        onPressed: _showHistoryMenu,
-                                        icon: const Icon(Icons.more_vert),
-                                      ),
-                                    )
-                                  : null,
+                                      onPressed: _showHistoryMenu,
+                                      icon: const Icon(Icons.more_vert),
+                                    ),
+                                  ),
+                                )
+                              : null,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -225,4 +236,3 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
     );
   }
 }
-

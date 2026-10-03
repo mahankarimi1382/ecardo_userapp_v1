@@ -1,18 +1,22 @@
+import 'dart:async' show Timer;
 import 'dart:io' show File;
 import 'dart:ui' as ui show ImageByteFormat;
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
 import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
+import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_icon.dart';
 
 class RecentTransactionDetails extends StatefulWidget {
   final Transactions transaction;
@@ -29,16 +33,28 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
   /// branded PNG and opens the system share sheet.
   final GlobalKey _receiptKey = GlobalKey();
   bool _sharing = false;
+  bool _copiedTnx = false;
+  Timer? _copyTimer;
+
+  @override
+  void dispose() {
+    _copyTimer?.cancel();
+    super.dispose();
+  }
 
   Color _getStatusColor(String? status) {
     // M-4 pattern: backend status casing is not guaranteed — compare on a
-    // normalized form. "approved" is accepted alongside "success" because
-    // KYC-style responses use it.
+    // normalized form. "approved" and "completed" are accepted alongside "success".
     switch ((status ?? '').trim().toLowerCase()) {
       case 'success':
       case 'approved':
+      case 'completed':
+      case 'complete':
+      case '1':
         return AppColors.success;
       case 'pending':
+      case 'processing':
+      case '2':
         return AppColors.warning;
       default:
         return AppColors.error;
@@ -130,18 +146,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                           transaction.trxCurrencyCode,
                           transaction.trxCurrencySymbol,
                         ),
-                        _buildDetailRow(
-                          label: localization.transactionDetailsTransactionId,
-                          value: Text(
-                            transaction.tnx ?? "",
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontSize: 16,
-                              color: AppColors.lightTextPrimary,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ),
+                        _buildTransactionIdRow(transaction.tnx),
                         _buildDetailRow(
                           label: localization.transactionDetailsMethod,
                           value: Text(
@@ -272,16 +277,116 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontSize: 16,
-              color: AppColors.lightTextTertiary,
-              fontWeight: FontWeight.w700,
+          Flexible(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                letterSpacing: 0,
+                fontSize: 15,
+                color: AppColors.lightTextTertiary,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-          Flexible(child: value),
+          const SizedBox(width: 8),
+          Flexible(
+            flex: 3,
+            child: Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: value,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionIdRow(String? tnx) {
+    final localization = AppLocalizations.of(context)!;
+    final tnxText = (tnx ?? '').trim();
+
+    return _buildDetailRow(
+      label: localization.transactionDetailsTransactionId,
+      value: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(
+              tnxText.isNotEmpty ? tnxText : '—',
+              textDirection: TextDirection.ltr,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                letterSpacing: 0.5,
+                fontSize: 15,
+                fontFamily: 'monospace',
+                color: AppColors.lightTextPrimary,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          if (tnxText.isNotEmpty) ...[
+            const SizedBox(width: 6),
+            Material(
+              color: Colors.transparent,
+              child: Tooltip(
+                message: l10nPick(
+                  context,
+                  en: 'Copy Transaction ID',
+                  fa: 'کپی شناسه تراکنش',
+                  ar: 'نسخ معرف المعاملة',
+                  tr: 'İşlem numarasını kopyala',
+                  ru: 'Скопировать ID транзакции',
+                  zh: '复制交易号',
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Clipboard.setData(ClipboardData(text: tnxText));
+                    setState(() => _copiedTnx = true);
+                    ToastHelper().showSuccessToast(
+                      l10nPick(
+                        context,
+                        en: 'Transaction ID copied',
+                        fa: 'شناسه تراکنش کپی شد',
+                        ar: 'تم نسخ معرف المعاملة',
+                        tr: 'İşlem numarası kopyalandı',
+                        ru: 'ID транзакции скопирован',
+                        zh: '已复制交易号',
+                      ),
+                    );
+                    _copyTimer?.cancel();
+                    _copyTimer = Timer(const Duration(seconds: 2), () {
+                      if (mounted) setState(() => _copiedTnx = false);
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: _copiedTnx
+                          ? AppColors.success.withValues(alpha: 0.12)
+                          : AppColors.lightTextPrimary.withValues(alpha: 0.07),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: _copiedTnx
+                            ? AppColors.success.withValues(alpha: 0.35)
+                            : AppColors.lightTextPrimary.withValues(alpha: 0.12),
+                        width: 0.6,
+                      ),
+                    ),
+                    child: Icon(
+                      _copiedTnx ? Icons.check_rounded : Icons.copy_rounded,
+                      size: 14,
+                      color: _copiedTnx
+                          ? AppColors.success
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -289,22 +394,54 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
 
   Widget _buildStatusChip(String? status) {
     final statusColor = _getStatusColor(status);
+    final localization = AppLocalizations.of(context)!;
+    final localizedLabel =
+        StatusLabelHelper.localize(localization, status ?? "");
+
+    IconData statusIcon;
+    switch ((status ?? '').trim().toLowerCase()) {
+      case 'success':
+      case 'approved':
+      case 'completed':
+      case 'complete':
+      case '1':
+        statusIcon = Icons.check_circle_rounded;
+        break;
+      case 'pending':
+      case 'processing':
+      case '2':
+        statusIcon = Icons.access_time_filled_rounded;
+        break;
+      default:
+        statusIcon = Icons.cancel_rounded;
+        break;
+    }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: statusColor.withValues(alpha: 0.2)),
-        color: statusColor.withValues(alpha: 0.05),
-      ),
-      child: Text(
-        StatusLabelHelper.localize(AppLocalizations.of(Get.context!)!, status ?? ""),
-        style: TextStyle(
-          fontWeight: FontWeight.w900,
-          letterSpacing: 0,
-          fontSize: 13,
-          color: statusColor,
+        border: Border.all(
+          color: statusColor.withValues(alpha: 0.25),
+          width: 0.8,
         ),
+        color: statusColor.withValues(alpha: 0.08),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(statusIcon, color: statusColor, size: 13),
+          const SizedBox(width: 4),
+          Text(
+            localizedLabel,
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0,
+              fontSize: 12.5,
+              color: statusColor,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -386,13 +523,18 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
               letterSpacing: 0.5,
             ),
           ),
-          const Spacer(),
-          Text(
-            AppLocalizations.of(context)!.transactionsPopupReceiptTitle,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              AppLocalizations.of(context)!.transactionsPopupReceiptTitle,
+              textAlign: TextAlign.end,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.9),
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -442,29 +584,109 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     }
   }
 
+  Widget _buildCategoryBadge(String? type) {
+    final categoryName = (type ?? '').trim();
+    if (categoryName.isEmpty) return const SizedBox.shrink();
+
+    final iconPath = TransactionDynamicIcon.getTransactionIcon(type);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.lightPrimary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: AppColors.lightPrimary.withValues(alpha: 0.18),
+          width: 0.8,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            iconPath,
+            width: 17,
+            height: 17,
+            errorBuilder: (_, _, _) => const Icon(
+              Icons.receipt_long_rounded,
+              size: 17,
+              color: AppColors.lightPrimary,
+            ),
+          ),
+          const SizedBox(width: 7),
+          Text(
+            categoryName,
+            style: const TextStyle(
+              fontSize: 13.5,
+              fontWeight: FontWeight.w800,
+              color: AppColors.lightPrimary,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatTimestamp(BuildContext context, String? rawCreatedAt) {
+    if (rawCreatedAt == null || rawCreatedAt.trim().isEmpty) return '';
+
+    final locale = Localizations.localeOf(context).languageCode;
+    final parsed = JalaliDateHelper.tryParse(rawCreatedAt);
+    if (parsed == null) return rawCreatedAt;
+
+    if (locale == 'fa' || locale == 'ar') {
+      return JalaliDateHelper.format(rawCreatedAt);
+    }
+
+    try {
+      final localDt = parsed.isUtc ? parsed.toLocal() : parsed;
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final itemDay = DateTime(localDt.year, localDt.month, localDt.day);
+      final diff = today.difference(itemDay).inDays;
+      final timeStr = DateFormat('HH:mm').format(localDt);
+
+      if (diff == 0) {
+        final todayWord = l10nPick(
+          context,
+          en: 'Today',
+          fa: 'امروز',
+          ar: 'اليوم',
+          tr: 'Bugün',
+          ru: 'Сегодня',
+          zh: '今天',
+        );
+        return '$todayWord, $timeStr';
+      } else if (diff == 1) {
+        final yestWord = l10nPick(
+          context,
+          en: 'Yesterday',
+          fa: 'دیروز',
+          ar: 'أمس',
+          tr: 'Dün',
+          ru: 'Вчера',
+          zh: '昨天',
+        );
+        return '$yestWord, $timeStr';
+      }
+
+      return DateFormat('d MMM yyyy, HH:mm').format(localDt);
+    } catch (_) {
+      return JalaliDateHelper.format(rawCreatedAt);
+    }
+  }
+
   Widget _buildTransactionInfo() {
     final transaction = widget.transaction;
-    final jalali = JalaliDateHelper.format(transaction.createdAt);
-    final date = jalali;
-    final time = '';
+    final formattedDate = _formatTimestamp(context, transaction.createdAt);
 
     // v1.0.36 (RECEIPT-SHARE): centered hero layout — the amount is the
     // protagonist of the receipt image, exactly like premium wallet apps.
     return Column(
       children: [
-        Text(
-          transaction.type ?? "",
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 0,
-            color: AppColors.lightTextTertiary,
-          ),
-        ),
-        const SizedBox(height: 10),
+        _buildCategoryBadge(transaction.type),
+        const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -501,16 +723,36 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          (date.isEmpty && time.isEmpty) ? "" : "$date · $time",
-          style: TextStyle(
-            letterSpacing: 0,
-            fontSize: 12,
-            color: AppColors.lightTextTertiary,
-            fontWeight: FontWeight.w700,
+        if (formattedDate.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3.5),
+            decoration: BoxDecoration(
+              color: AppColors.lightTextPrimary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.access_time_rounded,
+                  size: 13,
+                  color: AppColors.lightTextTertiary,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  formattedDate,
+                  style: TextStyle(
+                    letterSpacing: 0,
+                    fontSize: 12,
+                    color: AppColors.lightTextTertiary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
