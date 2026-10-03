@@ -11,6 +11,17 @@ import 'package:ecardo_user/src/presentation/screens/travel/services/cip_lounge_
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  // EsimActivationCard is laid out by ScreenUtil against a 375x812 design
+  // size. flutter_test's default 800x600 surface scales every .w/.sp by
+  // 800/375 = 2.13x, which overflows the iOS/Android tab row and pushes the
+  // tabs off-screen. Pump at the design size instead (same trick as
+  // dashboard_services_qc_test).
+  void phoneSurface(WidgetTester tester) {
+    tester.view.physicalSize = const Size(750, 1624);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+  }
+
   group('CipLoungeReservationScreen', () {
     testWidgets('renders CIP Lounge Reservation Screen with airport and pricing', (tester) async {
       await tester.pumpWidget(
@@ -254,6 +265,8 @@ void main() {
 
   group('EsimActivationCard', () {
     testWidgets('renders QR code, SM-DP+ address, activation code, and installation steps', (tester) async {
+      phoneSurface(tester);
+
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -289,11 +302,18 @@ void main() {
       // Default is iOS steps
       expect(find.text('1. Open Cellular Settings'), findsOneWidget);
 
-      // Switch to Android
-      await tester.tap(find.text('Android'));
+      // The card is taller than the viewport, so the platform tabs sit
+      // off-screen at the default 800x600 test surface. Scroll it into view
+      // before tapping or the tap lands outside the render tree.
+      final androidTab = find.text('Android');
+      await tester.ensureVisible(androidTab);
+      await tester.pumpAndSettle();
+      await tester.tap(androidTab);
       await tester.pumpAndSettle();
 
       expect(find.text('1. Open SIM Manager'), findsOneWidget);
+      // The iOS step list must be gone, not stacked under the Android one.
+      expect(find.text('1. Open Cellular Settings'), findsNothing);
     });
   });
 }

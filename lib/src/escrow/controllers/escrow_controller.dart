@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../models/escrow_models.dart';
 import '../services/escrow_service.dart';
 

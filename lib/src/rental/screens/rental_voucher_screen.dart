@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';

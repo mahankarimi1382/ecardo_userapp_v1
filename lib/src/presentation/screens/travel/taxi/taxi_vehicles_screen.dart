@@ -11,7 +11,6 @@ import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'taxi_controller.dart';
 import 'taxi_detail_screen.dart';
-import 'taxi_models.dart';
 
 class TaxiVehiclesScreen extends StatelessWidget {
   const TaxiVehiclesScreen({super.key});

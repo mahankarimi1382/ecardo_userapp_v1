@@ -90,105 +90,131 @@ class CardFreezeOverlay extends StatelessWidget {
                         horizontal: 16.w,
                         vertical: 14.h,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Lock & Snowflake Frost Badge
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
+                      // The card underneath sets the size of this surface, and
+                      // it is usually shorter than badge + banner plus the
+                      // overlay padding. Laying the content out at its natural
+                      // height keeps the badge at the top and the banner at the
+                      // bottom on a normal card; the scroll view keeps both
+                      // reachable on a short one, where a rigid Column would
+                      // either overflow or clip the banner.
+                      child: SingleChildScrollView(
+                        physics: const ClampingScrollPhysics(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Lock & Snowflake Frost Badge
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                  vertical: 6.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.deepBlack.withValues(
+                                    alpha: 0.82,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(
+                                    color: AppColors.mainSoftBlue.withValues(
+                                      alpha: 0.8,
+                                    ),
+                                    width: 1.2.w,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.mainSoftBlue.withValues(
+                                        alpha: 0.4,
+                                      ),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.ac_unit_rounded,
+                                      color: AppColors.mainSoftBlue,
+                                      size: 15.sp,
+                                    ),
+                                    SizedBox(width: 6.w),
+                                    Icon(
+                                      Icons.lock_rounded,
+                                      color: Colors.white,
+                                      size: 13.sp,
+                                    ),
+                                    SizedBox(width: 6.w),
+                                    // The glyphs keep their size and only the
+                                    // words flex, so the badge can never be
+                                    // wider than the card it is stamped on.
+                                    Flexible(
+                                      child: Text(
+                                        'Card is Frozen',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: 11.5.sp,
+                                          fontWeight: FontWeight.w800,
+                                          letterSpacing: 0.5.w,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            // Frozen Banner: "Card is currently frozen - all transactions blocked"
+                            Container(
+                              width: double.infinity,
                               padding: EdgeInsets.symmetric(
-                                horizontal: 14.w,
-                                vertical: 6.h,
+                                horizontal: 12.w,
+                                vertical: 9.h,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.deepBlack
-                                    .withValues(alpha: 0.82),
-                                borderRadius: BorderRadius.circular(20.r),
-                                border: Border.all(
-                                  color: AppColors.mainSoftBlue
-                                      .withValues(alpha: 0.8),
-                                  width: 1.2.w,
+                                color: AppColors.deepBlack.withValues(
+                                  alpha: 0.88,
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.mainSoftBlue
-                                        .withValues(alpha: 0.4),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 2),
+                                borderRadius: BorderRadius.circular(12.r),
+                                border: Border.all(
+                                  color: AppColors.mainSoftBlue.withValues(
+                                    alpha: 0.65,
                                   ),
-                                ],
+                                  width: 1.w,
+                                ),
                               ),
                               child: Row(
-                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
-                                    Icons.ac_unit_rounded,
+                                    Icons.shield_rounded,
                                     color: AppColors.mainSoftBlue,
-                                    size: 15.sp,
+                                    size: 18.sp,
                                   ),
-                                  SizedBox(width: 6.w),
-                                  Icon(
-                                    Icons.lock_rounded,
-                                    color: Colors.white,
-                                    size: 13.sp,
-                                  ),
-                                  SizedBox(width: 6.w),
-                                  Text(
-                                    'Card is Frozen',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11.5.sp,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 0.5.w,
+                                  SizedBox(width: 8.w),
+                                  Expanded(
+                                    child: Text(
+                                      'Card is currently frozen - all transactions blocked',
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11.5.sp,
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.25,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-
-                          // Frozen Banner: "Card is currently frozen - all transactions blocked"
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 9.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.deepBlack
-                                  .withValues(alpha: 0.88),
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(
-                                color: AppColors.mainSoftBlue
-                                    .withValues(alpha: 0.65),
-                                width: 1.w,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.shield_rounded,
-                                  color: AppColors.mainSoftBlue,
-                                  size: 18.sp,
-                                ),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Text(
-                                    'Card is currently frozen - all transactions blocked',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11.5.sp,
-                                      fontWeight: FontWeight.w700,
-                                      height: 1.25,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -234,12 +260,8 @@ class CardFreezeOverlay extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    isFrozen
-                        ? Icons.ac_unit_rounded
-                        : Icons.lock_open_rounded,
-                    color: isFrozen
-                        ? AppColors.deepBlack
-                        : AppColors.softGray,
+                    isFrozen ? Icons.ac_unit_rounded : Icons.lock_open_rounded,
+                    color: isFrozen ? AppColors.deepBlack : AppColors.softGray,
                     size: 19.sp,
                   ),
                 ),
@@ -248,12 +270,15 @@ class CardFreezeOverlay extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // This row is the action control, so it names what the tap will do.
-// Repeating the banner's status ("Card is Frozen") here showed the
-// same sentence twice on one card and left the user with no idea
-// whether the switch freezes or unfreezes.
+                      // This row is the action control, so it names what the
+                      // tap will do. Repeating the banner's status
+                      // ("Card is Frozen") here showed the same sentence twice
+                      // on one card and left the user with no idea whether the
+                      // switch freezes or unfreezes.
                       Text(
                         isFrozen ? 'Unfreeze Card' : 'Freeze Virtual Card',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w700,
@@ -267,6 +292,8 @@ class CardFreezeOverlay extends StatelessWidget {
                         isFrozen
                             ? 'Toggle off to unfreeze and resume transactions'
                             : 'Temporarily lock your card against any charges',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11.5.sp,
                           fontWeight: FontWeight.w500,

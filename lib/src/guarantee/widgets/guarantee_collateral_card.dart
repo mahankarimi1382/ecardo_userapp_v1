@@ -801,28 +801,32 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                 size: 22.sp,
               ),
               SizedBox(width: 8.w),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
-                decoration: BoxDecoration(
-                  color: AppColors.warning,
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Text(
-                  l10nPick(
-                    context,
-                    fa: 'کسری موجودی - شارژ الزامی است',
-                    en: 'Top-Up Required',
-                    ar: 'شحن الرصيد مطلوب',
-                    zh: '余额不足需充值',
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning,
+                    borderRadius: BorderRadius.circular(6.r),
                   ),
-                  style: TextStyle(
-                    fontSize: 9.5.sp,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                  child: Text(
+                    l10nPick(
+                      context,
+                      fa: 'کسری موجودی - شارژ الزامی است',
+                      en: 'Top-Up Required',
+                      ar: 'شحن الرصيد مطلوب',
+                      zh: '余额不足需充值',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 9.5.sp,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-              const Spacer(),
+              SizedBox(width: 8.w),
               if (widget.onTopUpPressed != null || Get.isRegistered<HomeController>())
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(

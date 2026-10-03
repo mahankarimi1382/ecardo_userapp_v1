@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';
 import '../controllers/tour_controller.dart';
-import '../models/tour_model.dart';
 import 'tour_detail_screen.dart';
 
 class TourMatchScreen extends StatefulWidget {

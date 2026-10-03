@@ -4,12 +4,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/mock_travel_data.dart';
-import 'package:ecardo_user/src/presentation/screens/travel/services/service_form_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/travel_service_request.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/seat_selection_map.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';

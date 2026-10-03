@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';

@@ -79,8 +79,21 @@ void main() {
     );
     await tester.pump();
 
-    final upgradeButton = find.textContaining('Upgrade to Tier 2');
+    // Scope to the ElevatedButton so the tap hits the interactive CTA, not
+    // the header/tab text that also contains "Upgrade to Tier 2".
+    final upgradeButton = find.ancestor(
+      of: find.textContaining('Upgrade to Tier 2'),
+      matching: find.byType(ElevatedButton),
+    );
     expect(upgradeButton, findsOneWidget);
+
+    // The card is taller than the 600px test surface, so the CTA starts
+    // off-screen and must be scrolled into view before it can be tapped.
+    // Use a bounded pump, not pumpAndSettle: the tier badge has a continuous
+    // glow animation, so the tree never settles.
+    await tester.ensureVisible(upgradeButton);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     await tester.tap(upgradeButton);
     await tester.pump();

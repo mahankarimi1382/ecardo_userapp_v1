@@ -9,7 +9,6 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import '../controller/license_controller.dart';
 import '../model/license_models.dart';
-import 'license_payment_screen.dart';
 
 class LicenseMyLicensesScreen extends StatefulWidget {
   const LicenseMyLicensesScreen({super.key});

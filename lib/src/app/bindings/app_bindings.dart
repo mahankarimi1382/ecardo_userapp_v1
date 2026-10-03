@@ -15,7 +15,6 @@ import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_c
 import 'package:ecardo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/virtual_card_transaction_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
 import '../../common/controller/country_controller.dart';
 import '../../common/controller/register_fields_controller.dart';

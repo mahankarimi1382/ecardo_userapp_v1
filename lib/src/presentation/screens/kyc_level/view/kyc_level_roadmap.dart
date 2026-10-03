@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_labels.dart';

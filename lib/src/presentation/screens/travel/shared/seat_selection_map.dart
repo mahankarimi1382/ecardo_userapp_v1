@@ -6,7 +6,6 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import 'travel_theme.dart';
-import 'travel_widgets.dart';
 
 // ---------------------------------------------------------------------------
 // Enums & Models

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/currency_sparkline_chart.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/rate_lock_countdown_timer.dart';

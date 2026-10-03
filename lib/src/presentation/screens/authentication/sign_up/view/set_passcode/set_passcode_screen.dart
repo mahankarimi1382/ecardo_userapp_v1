@@ -4,13 +4,11 @@ import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';

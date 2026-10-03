@@ -21,9 +21,21 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('CardFreezeOverlay', () {
+    // The overlay is laid out by ScreenUtil against a 375x812 design size.
+    // flutter_test's default 800x600 surface makes ScreenUtil scale every
+    // .w/.sp by 800/375 = 2.13x while the child's 300x180 box stays put,
+    // which overflows the frosted banner and the lock badge. Pump at the
+    // design size instead (same trick as dashboard_services_qc_test).
+    void phoneSurface(WidgetTester tester) {
+      tester.view.physicalSize = const Size(750, 1624);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+    }
+
     testWidgets('renders the frozen banner and reports the toggle',
         (tester) async {
       bool freezeToggled = false;
+      phoneSurface(tester);
 
       await tester.pumpWidget(
         ScreenUtilInit(
@@ -44,7 +56,21 @@ void main() {
         ),
       );
 
+      // The status belongs on the card itself: the frosted badge says it, and
+      // the banner spells out the consequence.
       expect(find.text('Card is Frozen'), findsOneWidget);
+      expect(
+        find.text('Card is currently frozen - all transactions blocked'),
+        findsOneWidget,
+      );
+
+      // The switch next to the card is an ACTION, so it names the action. It
+      // must not repeat the status a second time on the same screen.
+      expect(find.text('Unfreeze Card'), findsOneWidget);
+      expect(find.text('Card is Frozen'), findsNWidgets(1));
+
+      // No layout overflow at the design size.
+      expect(tester.takeException(), isNull);
 
       // The control must hand the requested state back to the caller, which
       // is what issues the card-status request.
@@ -57,6 +83,8 @@ void main() {
 
     testWidgets('does not show the frozen banner when the card is active',
         (tester) async {
+      phoneSurface(tester);
+
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -77,6 +105,8 @@ void main() {
       );
 
       expect(find.text('Card is Frozen'), findsNothing);
+      expect(find.text('Freeze Virtual Card'), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
   });
 }

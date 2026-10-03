@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
-import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import '../models/visa_models.dart';
 

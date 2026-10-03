@@ -6,7 +6,6 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
-import '../controllers/stock_controller.dart';
 import 'stock_order_screen.dart';
 
 /// Screen introducing international stock trading markets, risk profile requirements,

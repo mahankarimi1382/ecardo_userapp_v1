@@ -7,7 +7,6 @@ import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../bookings/travel_checkout_screen.dart';
-import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';

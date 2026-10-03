@@ -530,6 +530,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
@@ -537,12 +538,17 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
               color: isSelected ? TravelTheme.ink : TravelTheme.muted,
             ),
             SizedBox(width: 6.w),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11.5.sp,
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                color: isSelected ? TravelTheme.ink : TravelTheme.muted,
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                  color: isSelected ? TravelTheme.ink : TravelTheme.muted,
+                ),
               ),
             ),
           ],

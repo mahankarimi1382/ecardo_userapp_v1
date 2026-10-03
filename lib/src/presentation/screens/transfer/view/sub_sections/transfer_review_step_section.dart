@@ -8,7 +8,6 @@ import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
-import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 

@@ -344,12 +344,16 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
               children: [
                 Row(
                   children: [
-                    Text(
-                      currentTierDef.title(context),
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
+                    Flexible(
+                      child: Text(
+                        currentTierDef.title(context),
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.lightTextPrimary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -446,44 +450,57 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.speed_rounded,
-                    size: 16.sp,
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.speed_rounded,
+                      size: 16.sp,
+                      color: currentTierDef.primaryColor,
+                    ),
+                    SizedBox(width: 6.w),
+                    Flexible(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Daily Transaction Limit',
+                          fa: 'سقف تراکنش روزانه',
+                          ar: 'الحد اليومي للمعاملات',
+                          zh: '每日交易限额',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.lightTextPrimary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Flexible(
+                child: Text(
+                  currentTierDef.isUnlimited
+                      ? l10nPick(
+                          context,
+                          en: 'Unlimited',
+                          fa: 'نامحدود',
+                          ar: 'غير محدود',
+                          zh: '无限制',
+                        )
+                      : '\$${_formatNumber(consumed)} / \$${_formatNumber(maxLimit)}',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w800,
                     color: currentTierDef.primaryColor,
                   ),
-                  SizedBox(width: 6.w),
-                  Text(
-                    l10nPick(
-                      context,
-                      en: 'Daily Transaction Limit',
-                      fa: 'سقف تراکنش روزانه',
-                      ar: 'الحد اليومي للمعاملات',
-                      zh: '每日交易限额',
-                    ),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.lightTextPrimary,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                currentTierDef.isUnlimited
-                    ? l10nPick(
-                        context,
-                        en: 'Unlimited',
-                        fa: 'نامحدود',
-                        ar: 'غير محدود',
-                        zh: '无限制',
-                      )
-                    : '\$${_formatNumber(consumed)} / \$${_formatNumber(maxLimit)}',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  color: currentTierDef.primaryColor,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
                 ),
               ),
             ],
@@ -534,29 +551,35 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                currentTierDef.isUnlimited
-                    ? l10nPick(
-                        context,
-                        en: 'No daily volume limit applies',
-                        fa: 'بدون محدودیت سقف تراکنش روزانه',
-                        ar: 'لا ينطبق حد أقصى للمعاملات اليومية',
-                        zh: '无每日交易额度限制',
-                      )
-                    : l10nPick(
-                        context,
-                        en: '\$${_formatNumber(remaining)} remaining today ($percentInt% used)',
-                        fa: '\$${_formatNumber(remaining)} باقی‌مانده امروز ($percentInt٪ مصرف شده)',
-                        ar: '\$${_formatNumber(remaining)} المتبقي اليوم ($percentInt% مستخدم)',
-                        zh: '今日剩余 \$${_formatNumber(remaining)} (已用 $percentInt%)',
-                      ),
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.lightTextSecondary,
+              Flexible(
+                child: Text(
+                  currentTierDef.isUnlimited
+                      ? l10nPick(
+                          context,
+                          en: 'No daily volume limit applies',
+                          fa: 'بدون محدودیت سقف تراکنش روزانه',
+                          ar: 'لا ينطبق حد أقصى للمعاملات اليومية',
+                          zh: '无每日交易额度限制',
+                        )
+                      : l10nPick(
+                          context,
+                          en: '\$${_formatNumber(remaining)} remaining today ($percentInt% used)',
+                          fa: '\$${_formatNumber(remaining)} باقی‌مانده امروز ($percentInt٪ مصرف شده)',
+                          ar: '\$${_formatNumber(remaining)} المتبقي اليوم ($percentInt% مستخدم)',
+                          zh: '今日剩余 \$${_formatNumber(remaining)} (已用 $percentInt%)',
+                        ),
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              SizedBox(width: 8.w),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.update_rounded,
@@ -588,20 +611,25 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l10nPick(
-                context,
-                en: 'Tier Comparison & Roadmap',
-                fa: 'مقایسه سطوح و مسیر ارتقا',
-                ar: 'مقارنة المستويات وخريطة الترقية',
-                zh: '等级对比与升级路线',
-              ),
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w800,
-                color: AppColors.lightTextPrimary,
+            Flexible(
+              child: Text(
+                l10nPick(
+                  context,
+                  en: 'Tier Comparison & Roadmap',
+                  fa: 'مقایسه سطوح و مسیر ارتقا',
+                  ar: 'مقارنة المستويات وخريطة الترقية',
+                  zh: '等级对比与升级路线',
+                ),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.lightTextPrimary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
+            SizedBox(width: 8.w),
             Text(
               l10nPick(
                 context,
@@ -1189,12 +1217,16 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
           children: [
             Icon(Icons.arrow_upward_rounded, size: 18.sp, color: Colors.white),
             SizedBox(width: 8.w),
-            Text(
-              buttonLabel,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
+            Flexible(
+              child: Text(
+                buttonLabel,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             SizedBox(width: 6.w),

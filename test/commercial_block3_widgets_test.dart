@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/commercial/screens/commercial_projects_screen.dart';
-import 'package:ecardo_user/src/commercial/widgets/commercial_document_checklist.dart';
 import 'package:ecardo_user/src/commercial/widgets/equity_project_card.dart';
 import 'package:ecardo_user/src/loan/widgets/loan_calculator_slider.dart';
 import 'package:ecardo_user/src/guarantee/widgets/guarantee_collateral_card.dart';
@@ -10,8 +10,21 @@ import 'package:ecardo_user/src/guarantee/widgets/guarantee_collateral_card.dart
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  // These widgets are laid out by ScreenUtil against a 375x812 design size.
+  // flutter_test's default 800x600 surface scales every .w/.sp by
+  // 800/375 = 2.13x, which overflows the equity-project rows and the
+  // document-checklist rows. Pump at the design size instead (same trick as
+  // dashboard_services_qc_test).
+  void phoneSurface(WidgetTester tester) {
+    tester.view.physicalSize = const Size(750, 1624);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+  }
+
   group('CommercialProjectsScreen', () {
     testWidgets('renders commercial projects screen with tabs and equity projects', (tester) async {
+      phoneSurface(tester);
+
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -31,9 +44,12 @@ void main() {
       // Verify equity projects rendered
       expect(find.textContaining('eCardo Regional Remittance Node'), findsOneWidget);
       expect(find.text('Invest Now'), findsWidgets);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('switches to Corporate KYC tab and displays document checklist', (tester) async {
+      phoneSurface(tester);
+
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -44,19 +60,24 @@ void main() {
       );
 
       // Tap on Corporate KYC tab
-      await tester.tap(find.text('Corporate KYC'));
+      final kycTab = find.text('Corporate KYC');
+      await tester.ensureVisible(kycTab);
+      await tester.pumpAndSettle();
+      await tester.tap(kycTab);
       await tester.pumpAndSettle();
 
       // Verify document checklist headers and items
       expect(find.text('Corporate KYC & Licensing Documents'), findsOneWidget);
       expect(find.textContaining('Official Commercial Gazette'), findsOneWidget);
       expect(find.textContaining('Board of Directors Resolution'), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
   });
 
   group('EquityProjectCard', () {
     testWidgets('computes funding progress ratio and handles invest click', (tester) async {
       bool investTapped = false;
+      phoneSurface(tester);
       const project = EquityProjectItem(
         id: 'test-1',
         title: 'Solar Energy Plant',
@@ -97,6 +118,8 @@ void main() {
 
   group('LoanCalculatorSlider', () {
     testWidgets('renders loan amount bounds, term options, and grace period options', (tester) async {
+      phoneSurface(tester);
+
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -121,10 +144,22 @@ void main() {
 
   group('GuaranteeCollateralCard', () {
     testWidgets('renders collateral types (Cash, Crypto, Promissory, Bank)', (tester) async {
+      // The collateral titles come from GuaranteeCollateralType.titleFa via
+      // l10nPick, which resolves against Localizations.localeOf(context).
+      // Without an explicit fa locale the host falls back to en and the card
+      // correctly renders the English titles — so this test has to pump a
+      // real Persian locale to exercise the Persian branch.
+      tester.view.physicalSize = const Size(750, 1624);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
           builder: (context, child) => MaterialApp(
+            locale: const Locale('fa'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
               body: SingleChildScrollView(
                 child: GuaranteeCollateralCard(
@@ -140,6 +175,10 @@ void main() {
 
       // Verify collateral type icons/text
       expect(find.textContaining('سپرده نقدی'), findsWidgets);
+      // The English title is the locale-fallback branch and must not render
+      // alongside the Persian one.
+      expect(find.text('Cash Deposit (Escrow)'), findsNothing);
+      expect(tester.takeException(), isNull);
     });
   });
 }

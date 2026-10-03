@@ -7,7 +7,6 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/rental_controller.dart';
 import '../models/rental_models.dart';
-import 'rental_voucher_screen.dart';
 
 export 'rental_voucher_screen.dart';
 

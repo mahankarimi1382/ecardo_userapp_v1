@@ -74,40 +74,52 @@ class EquityProjectCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Text(
-                    project.sector,
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.lightPrimary,
+                Flexible(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.lightPrimary.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Text(
+                      project.sector,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.lightPrimary,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.success.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.trending_up_rounded, color: AppColors.success, size: 14.sp),
-                      SizedBox(width: 4.w),
-                      Text(
-                        '${project.annualYieldPercent.toStringAsFixed(1)}% p.a.',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.success,
+                SizedBox(width: 8.w),
+                Flexible(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.trending_up_rounded, color: AppColors.success, size: 14.sp),
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            '${project.annualYieldPercent.toStringAsFixed(1)}% p.a.',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.success,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -134,12 +146,16 @@ class EquityProjectCard extends StatelessWidget {
                   children: [
                     Icon(Icons.location_on_outlined, size: 13.sp, color: AppColors.lightTextTertiary),
                     SizedBox(width: 4.w),
-                    Text(
-                      project.location,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: AppColors.lightTextTertiary,
-                        fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: Text(
+                        project.location,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: AppColors.lightTextTertiary,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -158,14 +174,19 @@ class EquityProjectCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '${project.progressPercent}% funded',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.lightPrimary,
+                    Flexible(
+                      child: Text(
+                        '${project.progressPercent}% funded',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.lightPrimary,
+                        ),
                       ),
                     ),
+                    SizedBox(width: 8.w),
                     Text(
                       '${project.daysLeft} days left',
                       style: TextStyle(
@@ -190,20 +211,30 @@ class EquityProjectCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Raised: ${project.currency} ${_formatCompact(project.raisedAmount)}',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextSecondary,
+                    Flexible(
+                      child: Text(
+                        'Raised: ${project.currency} ${_formatCompact(project.raisedAmount)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.lightTextSecondary,
+                        ),
                       ),
                     ),
-                    Text(
-                      'Target: ${project.currency} ${_formatCompact(project.targetAmount)}',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextSecondary,
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      child: Text(
+                        'Target: ${project.currency} ${_formatCompact(project.targetAmount)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.lightTextSecondary,
+                        ),
                       ),
                     ),
                   ],
@@ -221,33 +252,40 @@ class EquityProjectCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10nPick(
-                        context,
-                        en: 'Min. Ticket',
-                        fa: 'حداقل ورود',
-                        ar: 'الحد الأدنى',
-                        zh: '起投金额',
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Min. Ticket',
+                          fa: 'حداقل ورود',
+                          ar: 'الحد الأدنى',
+                          zh: '起投金额',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.lightTextTertiary,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: AppColors.lightTextTertiary,
-                        fontWeight: FontWeight.w600,
+                      Text(
+                        '${project.currency} ${_formatCompact(project.minInvestment)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.lightTextPrimary,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '${project.currency} ${_formatCompact(project.minInvestment)}',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                SizedBox(width: 12.w),
                 ElevatedButton(
                   onPressed: () {
                     HapticFeedback.selectionClick();

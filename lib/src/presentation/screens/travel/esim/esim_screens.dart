@@ -7,12 +7,10 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
-import '../bookings/travel_checkout_screen.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'esim_detail_screen.dart';
-import 'widgets/esim_activation_card.dart';
 import 'widgets/esim_data_usage_gauge.dart';
 
 export 'esim_detail_screen.dart';

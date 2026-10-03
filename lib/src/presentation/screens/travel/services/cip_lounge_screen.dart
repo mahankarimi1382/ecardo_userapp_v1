@@ -6,13 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
-import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
-import '../shared/travel_widgets.dart';
 
 class CipLoungeReservationScreen extends StatefulWidget {
   const CipLoungeReservationScreen({super.key});
