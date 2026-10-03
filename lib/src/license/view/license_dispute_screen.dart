@@ -142,7 +142,12 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
               style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: AppColors.lightTextPrimary),
             ),
             SizedBox(height: 10.h),
-            Column(
+            RadioGroup<String>(
+              groupValue: selectedReason,
+              onChanged: (val) {
+                if (val != null) setState(() => selectedReason = val);
+              },
+              child: Column(
               children: reasons.map((r) {
                 final isSelected = selectedReason == r['code'];
                 return Container(
@@ -157,7 +162,6 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                   ),
                   child: RadioListTile<String>(
                     value: r['code']!,
-                    groupValue: selectedReason,
                     activeColor: AppColors.lightPrimary,
                     title: Text(
                       l10nPick(context, en: r['en']!, fa: r['fa']!),
@@ -167,12 +171,10 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                         color: isSelected ? AppColors.lightPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
-                    onChanged: (val) {
-                      if (val != null) setState(() => selectedReason = val);
-                    },
                   ),
                 );
               }).toList(),
+            ),
             ),
             SizedBox(height: 16.h),
 

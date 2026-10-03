@@ -24,29 +24,29 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
     return oldDelegate.topInset != topInset;
   }
 
-  // WAVE-2: was hardcoded Persian — localized for en/fa/ar/zh.
+  // WAVE-2: was hardcoded Persian — localized for en/fa/ar/zh/tr/ru.
   String _greeting(BuildContext context) {
     final h = DateTime.now().hour;
     if (h >= 5 && h < 12) {
       return l10nPick(context,
-          en: 'Good morning', fa: 'صبح بخیر', ar: 'صباح الخير', zh: '早上好');
+          en: 'Good morning', fa: 'صبح بخیر', ar: 'صباح الخير', zh: '早上好', tr: 'Günaydın', ru: 'Доброе утро');
     }
     if (h >= 12 && h < 17) {
       return l10nPick(context,
-          en: 'Good afternoon', fa: 'عصر بخیر', ar: 'مساء الخير', zh: '下午好');
+          en: 'Good afternoon', fa: 'عصر بخیر', ar: 'مساء الخير', zh: '下午好', tr: 'İyi günler', ru: 'Добрый день');
     }
     if (h >= 17 && h < 22) {
       return l10nPick(context,
-          en: 'Good evening', fa: 'شب بخیر', ar: 'مساء الخير', zh: '晚上好');
+          en: 'Good evening', fa: 'شب بخیر', ar: 'مساء الخير', zh: '晚上好', tr: 'İyi akşamlar', ru: 'Добрый вечер');
     }
     return l10nPick(context,
-        en: 'Welcome back', fa: 'خوش برگشتی', ar: 'أهلاً بعودتك', zh: '欢迎回来');
+        en: 'Welcome back', fa: 'خوش برگشتی', ar: 'أهلاً بعودتك', zh: '欢迎回来', tr: 'Tekrar hoş geldiniz', ru: 'С возвращением');
   }
 
   String _firstName(BuildContext context, HomeController home) {
     final full = home.dashboardModel.value.data?.user?.userName ?? '';
     if (full.trim().isEmpty) {
-      return l10nPick(context, en: 'User', fa: 'کاربر', ar: 'مستخدم', zh: '用户');
+      return l10nPick(context, en: 'User', fa: 'کاربر', ar: 'مستخدم', zh: '用户', tr: 'Kullanıcı', ru: 'Пользователь');
     }
     return full.trim().split(RegExp(r'\s+')).first;
   }
@@ -99,8 +99,14 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                     child: Row(
                       children: [
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque,
                           onTap: () => Get.toNamed(BaseRoute.profileSettings),
-                          child: _Avatar(path: avatarPath, initial: initial, size: 40),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                            child: Center(
+                              child: _Avatar(path: avatarPath, initial: initial, size: 40),
+                            ),
+                          ),
                         ),
                         const SizedBox(width: AppSpacing.cardGap),
                         Expanded(
@@ -129,6 +135,8 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                                   fa: '👋 خوش برگشتی',
                                   ar: '👋 أهلاً بعودتك',
                                   zh: '👋 欢迎回来',
+                                  tr: '👋 Tekrar hoş geldiniz',
+                                  ru: '👋 С возвращением',
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -233,7 +241,7 @@ class _NotifBtn extends StatelessWidget {
     return IconButton(
       visualDensity: VisualDensity.compact,
       padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
       onPressed: () => Get.toNamed(BaseRoute.notifications),
       icon: Badge(
         isLabelVisible: unread > 0,

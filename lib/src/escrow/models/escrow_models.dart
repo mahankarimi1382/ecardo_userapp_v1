@@ -75,7 +75,7 @@ class EscrowDisputeModel {
   factory EscrowDisputeModel.fromJson(Map<String, dynamic> json) {
     return EscrowDisputeModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
-      caseNumber: json['case_number']?.toString() ?? ('DSP-' + json['id'].toString()),
+      caseNumber: json['case_number']?.toString() ?? 'DSP-${json['id']}',
       type: json['type']?.toString() ?? 'مغایرت کالا',
       description: json['description']?.toString() ?? '',
       status: json['status']?.toString() ?? 'OPEN',
@@ -165,7 +165,7 @@ class EscrowOrderModel {
   factory EscrowOrderModel.fromJson(Map<String, dynamic> json) {
     return EscrowOrderModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
-      contractNo: json['contract_no']?.toString() ?? ('ESC-' + json['id'].toString()),
+      contractNo: json['contract_no']?.toString() ?? 'ESC-${json['id']}',
       creatorRole: json['creator_role']?.toString() ?? 'BUYER',
       buyer: json['buyer'] is Map ? EscrowPartyModel.fromJson(Map<String, dynamic>.from(json['buyer'])) : null,
       seller: json['seller'] is Map ? EscrowPartyModel.fromJson(Map<String, dynamic>.from(json['seller'])) : null,

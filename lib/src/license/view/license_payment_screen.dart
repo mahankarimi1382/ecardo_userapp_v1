@@ -196,27 +196,37 @@ class _LicensePaymentScreenState extends State<LicensePaymentScreen> {
                       ),
                       SizedBox(height: 12.h),
 
-                      _buildRouteOption(
-                        id: 'WALLET',
-                        icon: Icons.account_balance_wallet_outlined,
-                        title: l10nPick(context, en: 'Pay from Wallet (Instant)', fa: 'پرداخت از کیف پول داخلی (تحویل آنی)'),
-                        subtitle: l10nPick(context, en: 'Deduct from internal USD/Crypto wallet with zero network fees.', fa: 'کسر مستقیم از موجودی کیف‌پول بدون کارمزد شبکه.'),
-                      ),
-                      SizedBox(height: 10.h),
+                      RadioGroup<String>(
+                        groupValue: selectedRoute,
+                        onChanged: (val) {
+                          if (val != null) setState(() => selectedRoute = val);
+                        },
+                        child: Column(
+                          children: [
+                            _buildRouteOption(
+                              id: 'WALLET',
+                              icon: Icons.account_balance_wallet_outlined,
+                              title: l10nPick(context, en: 'Pay from Wallet (Instant)', fa: 'پرداخت از کیف پول داخلی (تحویل آنی)'),
+                              subtitle: l10nPick(context, en: 'Deduct from internal USD/Crypto wallet with zero network fees.', fa: 'کسر مستقیم از موجودی کیف‌پول بدون کارمزد شبکه.'),
+                            ),
+                            SizedBox(height: 10.h),
 
-                      _buildRouteOption(
-                        id: 'ONCHAIN',
-                        icon: Icons.currency_bitcoin_rounded,
-                        title: l10nPick(context, en: 'Pay with Crypto (On-Chain)', fa: 'پرداخت با رمزارز (انتقال آن‌چین)'),
-                        subtitle: l10nPick(context, en: 'Transfer USDT TRC20/ERC20 from an external exchange or wallet.', fa: 'انتقال رمزارز تتر از صرافی یا کیف‌پول خارجی.'),
-                      ),
-                      SizedBox(height: 10.h),
+                            _buildRouteOption(
+                              id: 'ONCHAIN',
+                              icon: Icons.currency_bitcoin_rounded,
+                              title: l10nPick(context, en: 'Pay with Crypto (On-Chain)', fa: 'پرداخت با رمزارز (انتقال آن‌چین)'),
+                              subtitle: l10nPick(context, en: 'Transfer USDT TRC20/ERC20 from an external exchange or wallet.', fa: 'انتقال رمزارز تتر از صرافی یا کیف‌پول خارجی.'),
+                            ),
+                            SizedBox(height: 10.h),
 
-                      _buildRouteOption(
-                        id: 'FIAT',
-                        icon: Icons.credit_card_rounded,
-                        title: l10nPick(context, en: 'Pay with Card (USD)', fa: 'پرداخت دلاری با کارت'),
-                        subtitle: l10nPick(context, en: 'International Visa/Mastercard payment gateway with 3DS.', fa: 'درگاه بین‌المللی ویزا و مسترکارت دلاری.'),
+                            _buildRouteOption(
+                              id: 'FIAT',
+                              icon: Icons.credit_card_rounded,
+                              title: l10nPick(context, en: 'Pay with Card (USD)', fa: 'پرداخت دلاری با کارت'),
+                              subtitle: l10nPick(context, en: 'International Visa/Mastercard payment gateway with 3DS.', fa: 'درگاه بین‌المللی ویزا و مسترکارت دلاری.'),
+                            ),
+                          ],
+                        ),
                       ),
 
                       // On-Chain Crypto Deposit Box
@@ -369,11 +379,7 @@ class _LicensePaymentScreenState extends State<LicensePaymentScreen> {
             ),
             Radio<String>(
               value: id,
-              groupValue: selectedRoute,
               activeColor: AppColors.lightPrimary,
-              onChanged: (val) {
-                if (val != null) setState(() => selectedRoute = val);
-              },
             ),
           ],
         ),

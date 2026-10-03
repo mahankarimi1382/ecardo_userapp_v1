@@ -163,7 +163,7 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           }),
           const SizedBox(height: 16),
           // UI-QC 1.0.47: hide inert Rate Alert until backend API exists.
-          // Widget retained at exchange/widgets/rate_alert_placeholder.dart.
+          // The Rate Alert widget was removed as dead code (no references).
           const SizedBox.shrink(),
           const SizedBox(height: 16),
           // Quick percent chips

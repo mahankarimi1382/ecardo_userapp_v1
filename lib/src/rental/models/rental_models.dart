@@ -1,4 +1,4 @@
-/// Car Rental Service models — Car-Rental-Service-Flow.md
+// Car Rental Service models — Car-Rental-Service-Flow.md
 
 class CarModel {
   final int id;

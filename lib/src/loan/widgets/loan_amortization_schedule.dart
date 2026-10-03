@@ -358,8 +358,7 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Text(
-                    '$_paidCount / $totalItems ' +
-                        l10nPick(context, fa: 'تسویه شده', en: 'paid', ar: 'مسدد', zh: '已付'),
+                    '$_paidCount / $totalItems ${l10nPick(context, fa: 'تسویه شده', en: 'paid', ar: 'مسدد', zh: '已付')}',
                     style: TextStyle(
                       fontSize: 10.5.sp,
                       fontWeight: FontWeight.w800,
@@ -487,14 +486,13 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                   SizedBox(width: 6.w),
                   Expanded(
                     child: Text(
-                      '$_overdueCount ' +
-                          l10nPick(
+                      '$_overdueCount ${l10nPick(
                             context,
                             fa: 'قسط معوق سررسید گذشته دارید. لطفاً جهت جلوگیری از جریمه تأخیر تسویه فرمایید.',
                             en: 'overdue installment(s). Please settle to prevent late fees.',
                             ar: 'قسط متأخر. يرجى السداد لتجنب الغرامات.',
                             zh: '笔分期已逾期。请及时还款以避免产生滞纳金。',
-                          ),
+                          )}',
                       style: TextStyle(
                         fontSize: 10.5.sp,
                         fontWeight: FontWeight.w700,
@@ -627,7 +625,7 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: items.length,
-      separatorBuilder: (_, __) => SizedBox(height: 8.h),
+      separatorBuilder: (_, _) => SizedBox(height: 8.h),
       itemBuilder: (ctx, index) {
         final item = items[index];
         return _buildInstallmentCard(context, item);

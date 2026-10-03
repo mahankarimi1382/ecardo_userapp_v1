@@ -283,7 +283,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         zh: '切换KYC级别、重置多币种钱包、管理模拟数据',
                       ),
                       () {
-                        if (Get.isRegistered<DemoAccountService>()) {
+                        if (DemoAccountService.isDemoAvailableInThisBuild &&
+                            Get.isRegistered<DemoAccountService>()) {
                           DemoAccountService.to.showTesterControlBottomSheet(context);
                         }
                       },
@@ -490,7 +491,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     leading: const Icon(Icons.language),
                     title: Text(l10nPick(context, en: 'Language', fa: 'زبان', ar: 'اللغة', zh: '语言')),
                     subtitle: Text(LocaleThemeService.nativeName(
-                      Localizations.localeOf(context)?.languageCode ?? 'en',
+                      Localizations.localeOf(context).languageCode,
                     )),
                     trailing: const Icon(Icons.chevron_left),
                     onTap: () async {
@@ -503,7 +504,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               for (final c in LocaleThemeService.supported)
                                 ListTile(
                                   title: Text(LocaleThemeService.nativeName(c)),
-                                  trailing: (Localizations.localeOf(context)?.languageCode ?? 'en') == c
+                                  trailing: Localizations.localeOf(context).languageCode == c
                                       ? const Icon(Icons.check, color: AppColors.success)
                                       : null,
                                   onTap: () => Navigator.pop(ctx, c),

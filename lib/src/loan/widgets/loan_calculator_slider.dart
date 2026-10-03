@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -134,7 +135,14 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
   String _formatAmount(double val) {
     if (widget.currency == 'USD') {
-      return val.toStringAsFixed(2);
+      final isWhole = (val - val.truncateToDouble()).abs() < 0.001;
+      final fixedStr = isWhole ? val.toStringAsFixed(0) : val.toStringAsFixed(2);
+      final parts = fixedStr.split('.');
+      final intPart = parts[0].replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (m) => '${m[1]},',
+      );
+      return parts.length > 1 ? '$intPart.${parts[1]}' : intPart;
     }
     final rounded = val.round();
     return rounded.toString().replaceAllMapped(
@@ -148,6 +156,45 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     return l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔');
   }
 
+  Widget _buildCurrencyBadge(BuildContext context) {
+    final isUsd = widget.currency.toUpperCase() == 'USD';
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: isUsd
+            ? const Color(0xFF10B981).withValues(alpha: 0.12)
+            : AppColors.lightPrimary.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(
+          color: isUsd
+              ? const Color(0xFF10B981).withValues(alpha: 0.3)
+              : AppColors.lightPrimary.withValues(alpha: 0.25),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isUsd ? Icons.attach_money_rounded : Icons.account_balance_wallet_outlined,
+            size: 13.sp,
+            color: isUsd ? const Color(0xFF059669) : AppColors.lightPrimary,
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            isUsd ? r'USD ($)' : 'IRR (${_currencyLabel(context)})',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w800,
+              color: isUsd ? const Color(0xFF059669) : AppColors.lightPrimary,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _quickChipLabel(BuildContext context, double amount) {
     if (widget.currency == 'USD') {
       if (amount >= 1000) {
@@ -158,7 +205,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     // Persian IRR representation
     if (amount >= 1000000) {
       final millions = (amount / 1000000).toInt();
-      return '$millions ' + l10nPick(context, fa: 'م', en: 'M', ar: 'م', zh: '百万');
+      return '$millions ${l10nPick(context, fa: 'م', en: 'M', ar: 'م', zh: '百万')}';
     }
     return _formatAmount(amount);
   }
@@ -218,21 +265,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                   color: AppColors.lightTextSecondary,
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                decoration: BoxDecoration(
-                  color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Text(
-                  _currencyLabel(context),
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.lightPrimary,
-                  ),
-                ),
-              ),
+              _buildCurrencyBadge(context),
             ],
           ),
           SizedBox(height: 6.h),
@@ -240,18 +273,25 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                _formatAmount(_amount),
-                style: TextStyle(
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.lightTextPrimary,
-                  letterSpacing: -0.5,
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    _formatAmount(_amount),
+                    style: TextStyle(
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.lightTextPrimary,
+                      letterSpacing: -0.5,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 6.w),
               Text(
-                _currencyLabel(context),
+                widget.currency == 'USD' ? 'USD' : _currencyLabel(context),
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
@@ -281,10 +321,14 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               divisions: effectiveDivisions,
               onChanged: (val) {
                 final stepped = (val / widget.stepAmount).round() * widget.stepAmount;
-                setState(() {
-                  _amount = stepped.clamp(widget.minAmount, widget.maxAmount);
-                });
-                _notifyChange();
+                final clamped = stepped.clamp(widget.minAmount, widget.maxAmount);
+                if (clamped != _amount) {
+                  HapticFeedback.selectionClick();
+                  setState(() {
+                    _amount = clamped;
+                  });
+                  _notifyChange();
+                }
               },
             ),
           ),
@@ -317,10 +361,11 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                 children: _effectiveQuickAmounts.map((q) {
                   final isSelected = (_amount - q).abs() < (widget.stepAmount / 2);
                   return Padding(
-                    padding: EdgeInsets.only(right: 6.w),
+                    padding: EdgeInsetsDirectional.only(end: 6.w),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10.r),
                       onTap: () {
+                        HapticFeedback.selectionClick();
                         setState(() {
                           _amount = q;
                         });
@@ -378,7 +423,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                 ),
               ),
               Text(
-                '$_months ' + l10nPick(context, fa: 'ماهه', en: 'months', ar: 'شهر', zh: '个月'),
+                '$_months ${l10nPick(context, fa: 'ماهه', en: 'months', ar: 'شهر', zh: '个月')}',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w800,
@@ -396,6 +441,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               return InkWell(
                 borderRadius: BorderRadius.circular(12.r),
                 onTap: () {
+                  HapticFeedback.selectionClick();
                   setState(() {
                     _months = m;
                     if (_graceMonths >= _months) {
@@ -425,7 +471,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                         : null,
                   ),
                   child: Text(
-                    '$m ' + l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月'),
+                    '$m ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}',
                     style: TextStyle(
                       fontSize: 11.5.sp,
                       fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
@@ -470,7 +516,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   child: Text(
-                    '$_graceMonths ' + l10nPick(context, fa: 'ماه تنفس', en: 'mo grace', ar: 'سماح', zh: '宽限'),
+                    '$_graceMonths ${l10nPick(context, fa: 'ماه تنفس', en: 'mo grace', ar: 'سماح', zh: '宽限')}',
                     style: TextStyle(
                       fontSize: 10.5.sp,
                       fontWeight: FontWeight.w800,
@@ -497,14 +543,18 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               final isSelected = _graceMonths == g;
               final label = g == 0
                   ? l10nPick(context, fa: 'بدون تنفس', en: 'None', ar: 'بدون', zh: '无')
-                  : '$g ' + l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月');
+                  : '$g ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}';
 
               return Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(left: g == widget.gracePeriodOptions.first ? 0 : 3.w, right: g == widget.gracePeriodOptions.last ? 0 : 3.w),
+                  padding: EdgeInsetsDirectional.only(
+                    start: g == widget.gracePeriodOptions.first ? 0 : 3.w,
+                    end: g == widget.gracePeriodOptions.last ? 0 : 3.w,
+                  ),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(10.r),
                     onTap: () {
+                      HapticFeedback.selectionClick();
                       setState(() {
                         _graceMonths = g;
                       });
@@ -594,7 +644,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                     Container(width: 1, height: 45.h, color: AppColors.lightBorder),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(right: 8.w),
+                        padding: EdgeInsetsDirectional.only(start: 8.w),
                         child: _buildMetricTile(
                           context,
                           title: l10nPick(
@@ -648,7 +698,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                     Container(width: 1, height: 45.h, color: AppColors.lightBorder),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(right: 8.w),
+                        padding: EdgeInsetsDirectional.only(start: 8.w),
                         child: _buildMetricTile(
                           context,
                           title: l10nPick(
@@ -674,35 +724,42 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                   ],
                 ),
 
-                // Grace period callout note
-                if (_graceMonths > 0) ...[
-                  SizedBox(height: 10.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFEF3C7).withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.4)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.info_outline, size: 14.sp, color: const Color(0xFFB45309)),
-                        SizedBox(width: 6.w),
-                        Expanded(
-                          child: Text(
-                            '${l10nPick(context, fa: 'قسط ماهیانه در دوره تنفس (فقط سود)', en: 'Grace monthly payment (interest only)', ar: 'قسط فترة السماح', zh: '宽限期月付（仅付利息）')}: ${_formatAmount(_graceMonthlyPayment)} ${_currencyLabel(context)}',
-                            style: TextStyle(
-                              fontSize: 10.5.sp,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF92400E),
+                // Grace period callout note (smooth animated height)
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeInOut,
+                  child: _graceMonths > 0
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 10.h),
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFEF3C7).withValues(alpha: 0.7),
+                              borderRadius: BorderRadius.circular(8.r),
+                              border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.4)),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.info_outline, size: 14.sp, color: const Color(0xFFB45309)),
+                                SizedBox(width: 6.w),
+                                Expanded(
+                                  child: Text(
+                                    '${l10nPick(context, fa: 'قسط ماهیانه در دوره تنفس (فقط سود)', en: 'Grace monthly payment (interest only)', ar: 'قسط فترة السماح', zh: '宽限期月付（仅付利息）')}: ${_formatAmount(_graceMonthlyPayment)} ${_currencyLabel(context)}',
+                                    style: TextStyle(
+                                      fontSize: 10.5.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF92400E),
+                                      fontFeatures: const [FontFeature.tabularFigures()],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
               ],
             ),
           ),
@@ -721,9 +778,12 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 11.sp,
             fontWeight: FontWeight.w600,
@@ -731,18 +791,26 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           ),
         ),
         SizedBox(height: 3.h),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: isEmphasized ? 14.sp : 13.sp,
-            fontWeight: isEmphasized ? FontWeight.w900 : FontWeight.w700,
-            color: accentColor ?? AppColors.lightTextPrimary,
-            letterSpacing: -0.3,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            value,
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: isEmphasized ? 14.sp : 13.sp,
+              fontWeight: isEmphasized ? FontWeight.w900 : FontWeight.w700,
+              color: accentColor ?? AppColors.lightTextPrimary,
+              letterSpacing: -0.3,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
           ),
         ),
         SizedBox(height: 2.h),
         Text(
           caption,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 9.5.sp,
             color: AppColors.lightTextSecondary.withValues(alpha: 0.8),

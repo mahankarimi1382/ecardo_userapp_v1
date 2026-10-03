@@ -252,7 +252,7 @@ class _SimTopUpScreenState extends State<SimTopUpScreen> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: popularOperators.length,
-                separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                separatorBuilder: (_, _) => SizedBox(width: 8.w),
                 itemBuilder: (context, index) {
                   final op = popularOperators[index];
                   final isSelected = _selectedOperator.id == op.id;

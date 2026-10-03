@@ -40,15 +40,26 @@ class SectionHeader extends StatelessWidget {
             ),
           ),
           if (isShowNavigateAction == true)
-            GestureDetector(
-              onTap: onTap,
-              child: Text(
-                localizations.sectionHeaderSeeAll,
-                style: TextStyle(
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
-                  color: AppColors.lightPrimary,
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(8),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  child: Container(
+                    alignment: AlignmentDirectional.centerEnd,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: Text(
+                      localizations.sectionHeaderSeeAll,
+                      style: const TextStyle(
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: AppColors.lightPrimary,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

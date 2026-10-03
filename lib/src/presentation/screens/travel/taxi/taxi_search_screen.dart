@@ -316,7 +316,7 @@ class TaxiSearchScreen extends StatelessWidget {
                 // Meet & Greet Switch
                 Obx(() => SwitchListTile.adaptive(
                   contentPadding: EdgeInsets.zero,
-                  activeColor: const Color(0xFF0D9488),
+                  activeTrackColor: const Color(0xFF0D9488),
                   title: Text(
                     l10nPick(
                       context,

@@ -306,7 +306,7 @@ class CardFreezeOverlay extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Switch.adaptive(
                   value: isFrozen,
-                  activeColor: AppColors.mutedBlue,
+                  activeTrackColor: AppColors.mutedBlue,
                   onChanged: _handleToggle,
                 ),
               ],

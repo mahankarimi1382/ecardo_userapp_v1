@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
@@ -54,15 +55,20 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
     }
 
     if (widget.wallets.length == 1) {
-      return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 18, 0),
-        child: MultiCurrencyFlipCard(
-          wallet: widget.wallets.first,
-          width: double.infinity,
-          height: 196,
-          onTap: widget.onCardTap != null
-              ? () => widget.onCardTap!(widget.wallets.first)
-              : null,
+      return Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 18, 0),
+            child: MultiCurrencyFlipCard(
+              wallet: widget.wallets.first,
+              width: double.infinity,
+              height: 196,
+              onTap: widget.onCardTap != null
+                  ? () => widget.onCardTap!(widget.wallets.first)
+                  : null,
+            ),
+          ),
         ),
       );
     }
@@ -91,7 +97,7 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
                   child: Center(
                     child: MultiCurrencyFlipCard(
                       wallet: wallet,
-                      width: MediaQuery.of(context).size.width * _kViewportFraction,
+                      width: min(MediaQuery.of(context).size.width * _kViewportFraction, 420.0),
                       height: 196,
                       onTap: widget.onCardTap != null
                           ? () => widget.onCardTap!(wallet)

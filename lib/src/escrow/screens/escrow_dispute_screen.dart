@@ -111,17 +111,24 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
             // Dispute Type
             Text(l10nPick(context, fa: 'علت و نوع اختلاف *', en: 'Dispute Type *'), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold)),
             SizedBox(height: 8.h),
-            ..._types.map((t) => RadioListTile<String>(
-                  value: t['key']!,
-                  groupValue: _disputeType,
-                  title: Text(t['label']!, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
-                  contentPadding: EdgeInsets.zero,
-                  activeColor: Colors.redAccent,
-                  dense: true,
-                  onChanged: (val) {
-                    if (val != null) setState(() => _disputeType = val);
-                  },
-                )),
+            RadioGroup<String>(
+              groupValue: _disputeType,
+              onChanged: (val) {
+                if (val != null) setState(() => _disputeType = val);
+              },
+              child: Column(
+                children: [
+                  for (final t in _types)
+                    RadioListTile<String>(
+                      value: t['key']!,
+                      title: Text(t['label']!, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
+                      contentPadding: EdgeInsets.zero,
+                      activeColor: Colors.redAccent,
+                      dense: true,
+                    ),
+                ],
+              ),
+            ),
             SizedBox(height: 16.h),
 
             // Description

@@ -111,52 +111,14 @@ class _EcardoUserState extends State<EcardoUser> {
               },
               child: body,
             );
-            // VPN soft guidance banner (does not block navigation).
-            if (Get.isRegistered<ConnectivityWatchService>()) {
-              body = Obx(() {
-                final vpn = Get.find<ConnectivityWatchService>().isVpn.value;
-                if (!vpn) return body;
-                final loc = AppLocalizations.of(context);
-                return Column(
-                  children: [
-                    Material(
-                      color: const Color(0xFFFFF3CD),
-                      child: SafeArea(
-                        bottom: false,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.vpn_lock_rounded, size: 18),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  loc?.vpnHintBanner ??
-                                      'VPN detected — turn it off for a more stable experience',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(child: body),
-                  ],
-                );
-              });
-            }
+
             return AppLockWrapper(
               child: Column(
                 children: [
                   const OfflineQueueBanner(),
-                  Expanded(child: body),
+                  Expanded(
+                    child: _VpnBannerWrapper(child: body),
+                  ),
                 ],
               ),
             );
@@ -165,5 +127,57 @@ class _EcardoUserState extends State<EcardoUser> {
         });
       },
     );
+  }
+}
+
+/// VPN soft guidance banner (does not block navigation)
+class _VpnBannerWrapper extends StatelessWidget {
+  final Widget child;
+
+  const _VpnBannerWrapper({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!Get.isRegistered<ConnectivityWatchService>()) {
+      return child;
+    }
+    return Obx(() {
+      final vpn = Get.find<ConnectivityWatchService>().isVpn.value;
+      if (!vpn) return child;
+      final loc = AppLocalizations.of(context);
+      return Column(
+        children: [
+          Material(
+            color: const Color(0xFFFFF3CD),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.vpn_lock_rounded, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        loc?.vpnHintBanner ??
+                            'VPN detected — turn it off for a more stable experience',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(child: child),
+        ],
+      );
+    });
   }
 }

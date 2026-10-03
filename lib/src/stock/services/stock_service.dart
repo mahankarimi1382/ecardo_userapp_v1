@@ -81,7 +81,7 @@ class StockService extends getx.GetxService {
         'side': side,
         'qty': qty,
         'type': type,
-        if (limitPrice != null) 'limit_price': limitPrice,
+        'limit_price': ?limitPrice,
         'pay_currency': payCurrency,
         'acknowledged_risk': acknowledgedRisk,
       },

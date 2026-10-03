@@ -65,8 +65,8 @@ class VisaService extends GetxService {
     final payload = {
       'catalog_id': catalogId,
       'applicant_info': applicantInfo,
-      if (travelDate != null) 'travel_date': travelDate,
-      if (returnDate != null) 'return_date': returnDate,
+      'travel_date': ?travelDate,
+      'return_date': ?returnDate,
     };
 
     final response = await _network.post(

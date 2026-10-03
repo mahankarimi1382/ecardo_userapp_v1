@@ -41,9 +41,19 @@ void main() {
       expect(find.text('Equity Projects'), findsOneWidget);
       expect(find.text('Corporate KYC'), findsOneWidget);
 
+      // Equity crowdfunding has not launched. The screen must announce this
+      // before any sample project is presented as an offer.
+      expect(find.text('Coming Soon'), findsOneWidget);
+      expect(find.text('Equity crowdfunding is not available yet'), findsOneWidget);
+      expect(find.textContaining('not a promise of return'), findsOneWidget);
+
       // Verify equity projects rendered
       expect(find.textContaining('eCardo Regional Remittance Node'), findsOneWidget);
-      expect(find.text('Invest Now'), findsWidgets);
+      expect(find.text('Preview'), findsWidgets);
+      // Sample yields must never appear as a bare, quotable figure.
+      expect(find.text('26.5% p.a.'), findsNothing);
+      expect(find.text('Illustrative — 26.5% p.a.'), findsOneWidget);
+      expect(find.text('Invest Now'), findsNothing);
       expect(tester.takeException(), isNull);
     });
 
@@ -106,10 +116,14 @@ void main() {
       );
 
       expect(project.progressPercent, 50);
-      expect(find.text('50% funded'), findsOneWidget);
-      expect(find.text('20.0% p.a.'), findsOneWidget);
+      expect(find.text('50% funded'), findsNothing);
+      expect(find.text('Sample progress'), findsOneWidget);
+      // "20.0% p.a." on its own was a live-looking yield promise for a project
+      // with no funding round. It now has to carry the illustrative prefix.
+      expect(find.text('20.0% p.a.'), findsNothing);
+      expect(find.text('Illustrative — 20.0% p.a.'), findsOneWidget);
 
-      await tester.tap(find.text('Invest Now'));
+      await tester.tap(find.text('Preview'));
       await tester.pump();
 
       expect(investTapped, true);

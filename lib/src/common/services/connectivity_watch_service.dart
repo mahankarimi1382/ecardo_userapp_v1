@@ -84,8 +84,7 @@ class ConnectivityWatchService extends GetxService with WidgetsBindingObserver {
 
     if (offline) {
       // In demo mode, zero-network interactive test is expected — never trap the user:
-      if (Get.isRegistered<DemoAccountService>() &&
-          DemoAccountService.to.isDemoMode.value) {
+      if (DemoAccountService.isDemoInterceptionAllowedNow) {
         return;
       }
       final route = Get.currentRoute;

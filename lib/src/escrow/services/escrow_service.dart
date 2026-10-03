@@ -104,7 +104,7 @@ class EscrowService extends getx.GetxService {
     final response = await _network.post(
       endpoint: '/user/escrow/$id/pay',
       data: {
-        if (walletId != null) 'wallet_id': walletId,
+        'wallet_id': ?walletId,
       },
     );
     if (response.status == Status.completed && response.data != null) {
@@ -145,8 +145,8 @@ class EscrowService extends getx.GetxService {
       data: {
         'shipping_carrier': carrier,
         'tracking_number': trackingNumber,
-        if (trackingUrl != null) 'tracking_url': trackingUrl,
-        if (shippingNotes != null) 'shipping_notes': shippingNotes,
+        'tracking_url': ?trackingUrl,
+        'shipping_notes': ?shippingNotes,
       },
     );
     if (response.status == Status.completed && response.data != null) {
@@ -208,7 +208,7 @@ class EscrowService extends getx.GetxService {
       data: {
         'type': type,
         'description': description,
-        if (evidenceFiles != null) 'evidence_files': evidenceFiles,
+        'evidence_files': ?evidenceFiles,
       },
     );
     if (response.status == Status.completed && response.data != null) {
@@ -226,7 +226,7 @@ class EscrowService extends getx.GetxService {
       endpoint: '/user/escrow/$id/rating',
       data: {
         'rating': rating,
-        if (comment != null) 'comment': comment,
+        'comment': ?comment,
       },
     );
     return response.status == Status.completed;

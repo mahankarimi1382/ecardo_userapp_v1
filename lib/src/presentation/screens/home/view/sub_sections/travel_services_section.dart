@@ -55,15 +55,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
     final travelOn = addons?.travel == true;
 
     return [
-      // Live modules — uniform tiles, no dashboard country picker.
-      ServiceTile(
-        title: localization.travelHotels,
-        iconData: Icons.hotel_rounded,
-        route: '',
-        available: travelOn,
-        beforeNavigate: _ensureTravelController,
-        pageBuilder: () => const HotelSearchScreen(),
-      ),
+      // Core travel services row — Flight, Hotel, eSIM, Taxi
       ServiceTile(
         title: localization.travelFlights,
         iconData: Icons.flight_rounded,
@@ -73,6 +65,14 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         pageBuilder: () => const FlightSearchScreen(),
       ),
       ServiceTile(
+        title: localization.travelHotels,
+        iconData: Icons.hotel_rounded,
+        route: '',
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => const HotelSearchScreen(),
+      ),
+      ServiceTile(
         title: localization.travelEsim,
         iconData: Icons.sim_card_rounded,
         route: '',
@@ -80,15 +80,15 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         beforeNavigate: _ensureTravelController,
         pageBuilder: () => const EsimIntroScreen(),
       ),
-      // Extra services — demo catalogs + internal request forms.
       ServiceTile(
-        title: localization.travelServiceVisa,
-        iconData: Icons.approval_rounded,
+        title: localization.travelServiceTaxi,
+        iconData: Icons.local_taxi_rounded,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () => const VisaCatalogScreen(),
+        pageBuilder: () => const TaxiSearchScreen(),
       ),
+      // Secondary travel services row — Train, Car Rental, Visa, Tour
       ServiceTile(
         title: localization.travelServiceTrain,
         iconData: Icons.train_rounded,
@@ -104,12 +104,12 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         available: true,
       ),
       ServiceTile(
-        title: localization.travelServiceTaxi,
-        iconData: Icons.local_taxi_rounded,
+        title: localization.travelServiceVisa,
+        iconData: Icons.approval_rounded,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () => const TaxiSearchScreen(),
+        pageBuilder: () => const VisaCatalogScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceTour,

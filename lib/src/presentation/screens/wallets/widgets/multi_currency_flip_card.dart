@@ -285,19 +285,35 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                     // Flip trigger button
                     Material(
                       color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
-                        onTap: _flipCard,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.14),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.flip_camera_android_rounded,
-                            color: Colors.white,
-                            size: 16,
+                      child: Tooltip(
+                        message: l10nPick(
+                          context,
+                          en: 'Flip card',
+                          fa: 'چرخاندن کارت',
+                          ar: 'قلب البطاقة',
+                          zh: '翻转卡片',
+                          tr: 'Kartı çevir',
+                          ru: 'Перевернуть карту',
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(22),
+                          onTap: _flipCard,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                            child: Center(
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.14),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.flip_camera_android_rounded,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -511,7 +527,16 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 // Copy Account Number button
                 IconButton(
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  tooltip: l10nPick(
+                    context,
+                    en: 'Copy account number',
+                    fa: 'کپی شماره حساب',
+                    ar: 'نسخ رقم الحساب',
+                    zh: '复制账号',
+                    tr: 'Hesap numarasını kopyala',
+                    ru: 'Скопировать номер счёта',
+                  ),
                   // Mirrors automatically under RTL: the icon points away
                   // from the account number it copies.
                   icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 16),
@@ -535,7 +560,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 // Flip back icon button
                 IconButton(
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                   icon: const Icon(Icons.flip_to_front_rounded, color: Colors.white, size: 18),
                   onPressed: _flipCard,
                   tooltip: l10nPick(
@@ -632,7 +657,9 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
           onTap();
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          constraints: const BoxConstraints(minHeight: 44),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(10),

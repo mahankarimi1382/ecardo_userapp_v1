@@ -126,7 +126,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                   return ListView.separated(
                     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                     itemCount: ordersList.length,
-                    separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                    separatorBuilder: (_, _) => SizedBox(height: 10.h),
                     itemBuilder: (context, i) {
                       final ord = ordersList[i];
                       return _buildOrderCard(context, ord);
@@ -280,7 +280,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${ord.qty} ' + l10nPick(context, fa: 'سهم با قیمت', en: 'Shares at', ar: 'سهم بسعر', zh: '股 @') + ' \$${ord.price}',
+                '${ord.qty} ${l10nPick(context, fa: 'سهم با قیمت', en: 'Shares at', ar: 'سهم بسعر', zh: '股 @')} \$${ord.price}',
                 style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
               ),
               Text(

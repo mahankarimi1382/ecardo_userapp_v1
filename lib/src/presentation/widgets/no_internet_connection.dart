@@ -51,7 +51,7 @@ class _NoInternetConnectionState extends State<NoInternetConnection> {
   Future<void> _manualRetry() async {
     setState(() => _retrying = true);
     try {
-      if (Get.isRegistered<DemoAccountService>() && DemoAccountService.to.isDemoMode.value) {
+      if (DemoAccountService.isDemoInterceptionAllowedNow) {
         Get.offAllNamed(BaseRoute.navigation);
         return;
       }

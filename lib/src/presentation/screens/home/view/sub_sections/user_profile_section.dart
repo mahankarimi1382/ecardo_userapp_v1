@@ -75,9 +75,11 @@ class UserProfileSection extends StatelessWidget {
                   SizedBox(height: 18.h),
                   // UID pill & Demo Mode Indicator
                   Row(
-                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _UidPill(accountNumber: user?.accountNumber ?? ""),
+                      Expanded(
+                        child: _UidPill(accountNumber: user?.accountNumber ?? ""),
+                      ),
                       Obx(() {
                         if (Get.isRegistered<DemoAccountService>() &&
                             DemoAccountService.to.isDemoMode.value) {
@@ -89,7 +91,7 @@ class UserProfileSection extends StatelessWidget {
                               margin: EdgeInsetsDirectional.only(start: 10.w),
                               padding: EdgeInsetsDirectional.symmetric(
                                 horizontal: 10.w,
-                                vertical: 6.h,
+                                vertical: 8.h,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.amber.shade300,
@@ -329,18 +331,22 @@ class _KycStatusBadge extends StatelessWidget {
     final level = data?.kycLevel;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => Get.toNamed(BaseRoute.idVerification),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 7.h),
-        decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: 0.16),
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-            color: AppColors.white.withValues(alpha: 0.38),
-            width: 1,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 7.h),
+          decoration: BoxDecoration(
+            color: AppColors.white.withValues(alpha: 0.16),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: AppColors.white.withValues(alpha: 0.38),
+              width: 1,
+            ),
           ),
-        ),
-        child: Row(
+          child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(_icon(level, data?.kyc ?? 0), color: Colors.white, size: 14.sp),
@@ -364,8 +370,9 @@ class _KycStatusBadge extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   IconData _icon(int? level, int legacyKyc) {
     if (level != null) {

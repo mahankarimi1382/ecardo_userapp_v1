@@ -62,7 +62,7 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 scrollDirection: Axis.horizontal,
                 itemCount: filters.length,
-                separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                separatorBuilder: (_, _) => SizedBox(width: 8.w),
                 itemBuilder: (context, index) {
                   final f = filters[index];
                   final isSelected = currentStatus == f['status'];
@@ -141,7 +141,7 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
                 child: ListView.separated(
                   padding: EdgeInsets.all(16.r),
                   itemCount: controller.myBookings.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 14.h),
+                  separatorBuilder: (_, _) => SizedBox(height: 14.h),
                   itemBuilder: (context, index) {
                     final booking = controller.myBookings[index];
                     return _BookingCard(

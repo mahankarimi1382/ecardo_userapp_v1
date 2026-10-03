@@ -429,7 +429,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    '${c.requestedAmount.toInt()} ' + l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔'),
+                    '${c.requestedAmount.toInt()} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                     style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightTextSecondary),
                   ),
                 ],

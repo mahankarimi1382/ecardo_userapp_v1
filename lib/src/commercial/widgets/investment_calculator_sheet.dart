@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -58,7 +57,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
   Widget build(BuildContext context) {
     final currency = widget.project.currency;
     final minAmount = widget.project.minInvestment;
-    final maxAmount = widget.project.targetAmount * 0.2; // Max 20% per single investor
+    // Illustrative slider ceiling. Not a regulatory per-investor cap — there is
+    // no funding round behind this project, so it must not read as a rule.
+    final maxAmount = widget.project.targetAmount * 0.2;
 
     return Container(
       decoration: BoxDecoration(
@@ -66,241 +67,335 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, MediaQuery.of(context).viewInsets.bottom + 24.h),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              width: 36.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: AppColors.lightBorder,
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          // Title & Project
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10nPick(
-                  context,
-                  en: 'Investment Calculator',
-                  fa: 'ماشین‌حساب سرمایه‌گذاری',
-                  ar: 'حاسبة الاستثمار',
-                  zh: '投资计算器',
-                ),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.lightTextPrimary,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                decoration: BoxDecoration(
-                  color: AppColors.success.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Text(
-                  '${widget.project.annualYieldPercent}% Yield',
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.success,
+              // Drag handle
+              Center(
+                child: Container(
+                  width: 36.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.lightBorder,
+                    borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            widget.project.title,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.lightTextTertiary,
-              fontWeight: FontWeight.w500,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(height: 20.h),
+              SizedBox(height: 16.h),
 
-          // Amount Selector Card
-          Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: AppColors.lightBackground.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.lightBorder),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
+              // Title & Project
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
                       l10nPick(
                         context,
-                        en: 'Investment Amount',
-                        fa: 'مبلغ سرمایه‌گذاری',
-                        ar: 'مبلغ الاستثمار',
-                        zh: '投资金额',
+                        en: 'Investment Calculator',
+                        fa: 'ماشین‌حساب سرمایه‌گذاری',
+                        ar: 'حاسبة الاستثمار',
+                        zh: '投资计算器',
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextSecondary,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.lightTextPrimary,
                       ),
                     ),
-                    Text(
-                      '$currency ${_formatNumber(_investAmount)}',
+                  ),
+                  SizedBox(width: 8.w),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      // Equity crowdfunding is not live: this is a sample
+                      // figure, never a quoted or expected return.
+                      '${l10nPick(context, en: 'Illustrative — ', fa: 'نمونه — ', ar: 'توضيحي — ', zh: '示例 — ')}${widget.project.annualYieldPercent}% Yield',
                       style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.lightPrimary,
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                widget.project.title,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.lightTextTertiary,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 20.h),
+
+              // Amount Selector Card
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: AppColors.lightBackground.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.lightBorder),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            l10nPick(
+                              context,
+                              en: 'Sample amount',
+                              fa: 'مبلغ نمونه',
+                              ar: 'مبلغ نموذجي',
+                              zh: '示例金额',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.lightTextSecondary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: Text(
+                              '$currency ${_formatNumber(_investAmount)}',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.lightPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: AppColors.lightPrimary,
+                        inactiveTrackColor: AppColors.lightBorder,
+                        thumbColor: AppColors.lightPrimary,
+                        trackHeight: 4.h,
+                      ),
+                      child: Slider(
+                        value: _investAmount.clamp(minAmount, maxAmount),
+                        min: minAmount,
+                        max: maxAmount,
+                        divisions: 40,
+                        onChanged: (val) {
+                          HapticFeedback.selectionClick();
+                          setState(() {
+                            _investAmount = val;
+                          });
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${l10nPick(context, en: 'Min', fa: 'حداقل', ar: 'الحد الأدنى', zh: '最小')}: $currency ${_formatNumber(minAmount)}',
+                            style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextTertiary),
+                          ),
+                          Text(
+                            '${l10nPick(context, en: 'Max', fa: 'حداکثر', ar: 'الحد الأقصى', zh: '最大')}: $currency ${_formatNumber(maxAmount)}',
+                            style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextTertiary),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10.h),
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: AppColors.lightPrimary,
-                    inactiveTrackColor: AppColors.lightBorder,
-                    thumbColor: AppColors.lightPrimary,
-                    trackHeight: 4.h,
-                  ),
-                  child: Slider(
-                    value: _investAmount.clamp(minAmount, maxAmount),
-                    min: minAmount,
-                    max: maxAmount,
-                    divisions: 40,
-                    onChanged: (val) {
-                      HapticFeedback.selectionClick();
-                      setState(() {
-                        _investAmount = val;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 16.h),
+              ),
+              SizedBox(height: 16.h),
 
-          // Projected Returns Breakdown
-          Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
+              // Projected Returns Breakdown
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'Sample monthly dividend',
+                              fa: 'سود ماهانه تخمینی (نمونه)',
+                              ar: 'العائد الشهري المتوقع (نموذجي)',
+                              zh: '示例月度分红',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: AppColors.lightTextTertiary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 3.h),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              '+$currency ${_formatNumber(_projectedMonthlyReturn)}',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.success,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(width: 1, height: 32.h, color: AppColors.lightBorder),
+                    SizedBox(width: 14.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'Sample annual return',
+                              fa: 'سود سالانه کل (نمونه)',
+                              ar: 'العائد السنوي المتوقع (نموذجي)',
+                              zh: '示例年度总回报',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: AppColors.lightTextTertiary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 3.h),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              '+$currency ${_formatNumber(_projectedAnnualReturn)}',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.success,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.h),
+
+              // Pre-registration notice — equity crowdfunding is not live, so
+              // this sheet may not read as an order screen.
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: AppColors.warning.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: AppColors.warning.withValues(alpha: 0.5)),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.info_outline_rounded, size: 18.sp, color: AppColors.warning),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
                         l10nPick(
                           context,
-                          en: 'Est. Monthly Dividend',
-                          fa: 'سود ماهانه تخمینی',
-                          ar: 'العائد الشهري المتوقع',
-                          zh: '预估月度分红',
+                          en: 'Coming soon — the figures below are an illustrative example only. No investment can be placed now; the button records your interest.',
+                          fa: 'به‌زودی — اعداد زیر صرفاً یک نمونه است. در حال حاضر امکان سرمایه‌گذاری وجود ندارد و دکمهٔ زیر فقط تمایل شما را ثبت می‌کند.',
+                          ar: 'قريباً — الأرقام أدناه نموذج توضيحي فقط. لا يمكن الاستثمار الآن؛ يسجّل الزر اهتمامك فقط.',
+                          zh: '即将上线 — 以下数字仅为示例。目前无法投资，按钮仅记录您的意向。',
                         ),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: AppColors.lightTextTertiary,
-                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: AppColors.lightTextSecondary,
                         ),
                       ),
-                      SizedBox(height: 3.h),
-                      Text(
-                        '+$currency ${_formatNumber(_projectedMonthlyReturn)}',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.success,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Container(width: 1, height: 32.h, color: AppColors.lightBorder),
-                SizedBox(width: 14.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'Est. Annual Return',
-                          fa: 'سود سالانه کل',
-                          ar: 'العائد السنوي المتوقع',
-                          zh: '预估年度总回报',
-                        ),
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: AppColors.lightTextTertiary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 3.h),
-                      Text(
-                        '+$currency ${_formatNumber(_projectedAnnualReturn)}',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.success,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.h),
+              ),
+              SizedBox(height: 16.h),
 
-          // Confirm Investment Button
-          CommonButton(
-            width: double.infinity,
-            text: l10nPick(
-              context,
-              en: 'Confirm & Invest with eCardo Wallet',
-              fa: 'تأیید و پرداخت از کیف‌پول ایکاردو',
-              ar: 'تأكيد والاستثمار عبر المحفظة',
-              zh: '确认并使用电子钱包投资',
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              ToastHelper().showSuccessToast(
-                l10nPick(
+              // Interest Button
+              CommonButton(
+                width: double.infinity,
+                text: l10nPick(
                   context,
-                  en: 'Investment order registered successfully',
-                  fa: 'سفارش سرمایه‌گذاری با موفقیت ثبت شد',
-                  ar: 'تم تسجيل طلب الاستثمار بنجاح',
-                  zh: '投资订单登记成功',
+                  en: 'Register My Interest',
+                  fa: 'ثبت تمایل',
+                  ar: 'تسجيل اهتمامي',
+                  zh: '登记我的意向',
                 ),
-              );
-              widget.onConfirmed?.call(_investAmount);
-            },
+                onPressed: () {
+                  Navigator.pop(context);
+                  // Truthful message: this records interest in this device's
+                  // session only. It is NOT an investment and NOT submitted
+                  // to any server — there is no crowdfunding API to submit to.
+                  ToastHelper().showSuccessToast(
+                    l10nPick(
+                      context,
+                      en: 'Interest recorded on this device only — no investment was made',
+                      fa: 'تمایل شما فقط روی همین دستگاه ثبت شد — هیچ سرمایه‌گذاری انجام نشد',
+                      ar: 'تم تسجيل اهتمامك على هذا الجهاز فقط — لم يتم إجراء أي استثمار',
+                      zh: '意向仅记录在本机 — 未进行任何投资',
+                    ),
+                  );
+                  widget.onConfirmed?.call(_investAmount);
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   String _formatNumber(double amount) {
+    if (amount >= 1000000000) {
+      return '${(amount / 1000000000).toStringAsFixed(1)}B';
+    }
     if (amount >= 1000000) {
       return '${(amount / 1000000).toStringAsFixed(1)}M';
     }

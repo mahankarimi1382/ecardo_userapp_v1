@@ -96,7 +96,7 @@ class RentalApiService extends getx.GetxService {
     final response = await _network.post(endpoint: '/rental/bookings/$bookingId/handover', data: {
       'phase': phase,
       'photos': {
-        'front': photos.length > 0 ? photos[0] : '',
+        'front': photos.isNotEmpty ? photos[0] : '',
         'rear': photos.length > 1 ? photos[1] : '',
         'right': photos.length > 2 ? photos[2] : '',
         'left': photos.length > 3 ? photos[3] : '',

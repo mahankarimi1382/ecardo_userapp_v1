@@ -169,10 +169,15 @@ class _SignInScreenState extends State<SignInScreen>
                     child: Column(
                       children: [
                         SizedBox(height: 18.h),
-                        // Quick Demo & Test Mode Entry Card (Prominently above inputs for 1-tap evaluator access)
+                        // Quick Demo & Test Mode Entry Card (Prominently above inputs for 1-tap evaluator access).
+                        // RELEASE SAFETY: rendered only where demo mode may exist at all — a debug
+                        // build with the service registered and the kill-switch open. Previously
+                        // this was hidden only when the service was REGISTERED *and* blocked, so
+                        // in profile/release (service not registered) the card still rendered.
                         Obx(() {
-                          if (Get.isRegistered<DemoAccountService>() &&
-                              !DemoAccountService.to.isDemoAllowedByAdmin.value) {
+                          if (!DemoAccountService.isDemoAvailableInThisBuild ||
+                              !Get.isRegistered<DemoAccountService>() ||
+                              DemoAccountService.to.isDemoBlockedByAdmin) {
                             return const SizedBox.shrink();
                           }
                           return Padding(

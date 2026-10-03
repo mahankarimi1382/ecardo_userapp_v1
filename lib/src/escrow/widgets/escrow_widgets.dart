@@ -126,7 +126,7 @@ class EscrowTimelineWidget extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: events.length,
-      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+      separatorBuilder: (_, _) => SizedBox(height: 12.h),
       itemBuilder: (ctx, i) {
         final ev = events[i];
         final isLast = i == events.length - 1;

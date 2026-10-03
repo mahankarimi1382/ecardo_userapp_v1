@@ -156,7 +156,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: documents.length,
-            separatorBuilder: (_, __) => Divider(
+            separatorBuilder: (_, _) => Divider(
               height: 16.h,
               color: AppColors.lightBorder.withValues(alpha: 0.5),
             ),
@@ -201,7 +201,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
                   ),
                   if (doc.isMandatory)
                     Container(
-                      margin: EdgeInsets.only(left: 4.w),
+                      margin: EdgeInsetsDirectional.only(start: 6.w),
                       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: AppColors.lightPrimary.withValues(alpha: 0.08),
@@ -229,7 +229,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
               if (doc.rejectionReason != null) ...[
                 SizedBox(height: 4.h),
                 Text(
-                  'Reason: ${doc.rejectionReason}',
+                  '${l10nPick(context, en: 'Reason', fa: 'علت', ar: 'السبب', zh: '原因')}: ${doc.rejectionReason}',
                   style: TextStyle(
                     fontSize: 10.sp,
                     color: AppColors.error,
@@ -240,7 +240,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
               if (doc.fileName != null) ...[
                 SizedBox(height: 4.h),
                 Text(
-                  'Uploaded: ${doc.fileName}',
+                  '${l10nPick(context, en: 'Uploaded', fa: 'بارگذاری شده', ar: 'تم الرفع', zh: '已上传')}: ${doc.fileName}',
                   style: TextStyle(
                     fontSize: 10.sp,
                     color: AppColors.success,
@@ -278,6 +278,8 @@ class CommercialDocumentChecklist extends StatelessWidget {
           ),
           child: Text(
             doc.status.label(context),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800),
           ),
         ),

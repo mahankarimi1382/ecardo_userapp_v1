@@ -143,7 +143,7 @@ class TourController extends GetxController {
         'children_count': childrenCount,
         'model': model,
         'tier': tier,
-        if (roomType != null) 'room_type': roomType,
+        'room_type': ?roomType,
       });
       activeBooking.value = booking;
       return booking;

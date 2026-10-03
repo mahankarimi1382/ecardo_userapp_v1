@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
@@ -21,6 +20,9 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
   late final TabController _tabController;
 
   final List<EquityProjectItem> _projects = const [
+    // SAMPLE DATA ONLY. Equity crowdfunding is not live and no API supplies
+    // these projects; every figure below is illustrative and must stay labelled
+    // as such in the UI.
     EquityProjectItem(
       id: 'eq-001',
       title: 'eCardo Regional Remittance Node & Payment Terminal Hub',
@@ -71,7 +73,9 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
         title: 'Official Commercial Gazette / Registration Certificate',
         description: 'Latest official company registration publication',
         isMandatory: true,
-        status: DocumentVerificationStatus.verified,
+        // No verification API backs this list, so nothing here may be shown
+        // as verified or under review.
+        status: DocumentVerificationStatus.required,
         fileName: 'Gazette_Publication_2026.pdf',
       ),
       CommercialDocumentItem(
@@ -79,7 +83,7 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
         title: 'Board of Directors Resolution & Signing Authority',
         description: 'Authorized signatory resolution signed by board',
         isMandatory: true,
-        status: DocumentVerificationStatus.underReview,
+        status: DocumentVerificationStatus.required,
         fileName: 'Board_Resolution_Signatures.pdf',
       ),
       CommercialDocumentItem(
@@ -133,6 +137,7 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
           unselectedLabelColor: AppColors.lightTextTertiary,
           indicatorColor: AppColors.lightPrimary,
           indicatorWeight: 3.h,
+          isScrollable: false,
           tabs: [
             Tab(
               text: l10nPick(
@@ -155,37 +160,126 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          // Tab 1: Equity & Crowdfunding Projects
-          ListView.builder(
-            padding: EdgeInsets.all(16.w),
-            itemCount: _projects.length,
-            itemBuilder: (context, index) {
-              final project = _projects[index];
-              return EquityProjectCard(
-                project: project,
-                onInvestTap: () {
-                  InvestmentCalculatorSheet.show(
-                    context,
-                    project: project,
-                  );
-                },
-              );
-            },
-          ),
-
-          // Tab 2: Commercial Document Checklist
-          SingleChildScrollView(
-            padding: EdgeInsets.all(16.w),
-            child: CommercialDocumentChecklist(
-              documents: _documents,
-              onUploadTap: (doc) {
-                setState(() {
-                  doc.status = DocumentVerificationStatus.underReview;
-                });
+      body: SafeArea(
+        top: false,
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            // Tab 1: Equity & Crowdfunding Projects
+            ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
+              itemCount: _projects.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) return const _EquityNotAvailableNotice();
+                final project = _projects[index - 1];
+                return EquityProjectCard(
+                  project: project,
+                  onInvestTap: () {
+                    InvestmentCalculatorSheet.show(
+                      context,
+                      project: project,
+                    );
+                  },
+                );
               },
+            ),
+
+            // Tab 2: Commercial Document Checklist
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
+              child: CommercialDocumentChecklist(
+                documents: _documents,
+                onUploadTap: (doc) {
+                  setState(() {
+                    doc.status = DocumentVerificationStatus.underReview;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Prominent notice that equity crowdfunding has not launched yet.
+///
+/// Without it the sample projects below read as live offerings with real
+/// yields and funding progress, which is not true — no API supplies them.
+class _EquityNotAvailableNotice extends StatelessWidget {
+  const _EquityNotAvailableNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: AppColors.warning.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.6), width: 1.2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: AppColors.warning,
+                  borderRadius: BorderRadius.circular(6.r),
+                ),
+                child: Text(
+                  l10nPick(
+                    context,
+                    en: 'Coming Soon',
+                    fa: 'به‌زودی',
+                    ar: 'قريباً',
+                    zh: '即将上线',
+                  ),
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  l10nPick(
+                    context,
+                    en: 'Equity crowdfunding is not available yet',
+                    fa: 'سرمایه‌گذاری جمعی (crowdfunding) هنوز فعال نیست',
+                    ar: 'التمويل الجماعي غير متاح بعد',
+                    zh: '股权众筹尚未开放',
+                  ),
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            l10nPick(
+              context,
+              en: 'The projects below are an illustrative example, not a live offering. The yields, amounts and progress shown are sample data and are not a promise of return. You can register your interest to be notified when investment opens.',
+              fa: 'پروژه‌های زیر صرفاً یک نمونهٔ نمایشی است، نه یک فرصت سرمایه‌گذاری فعال. سودها، مبالغ و درصد پیشرفت نمایش‌داده‌شده داده‌های نمونه هستند و تعهدی برای بازدهی وجود ندارد. می‌توانید تمایل خود را ثبت کنید تا پس از آغاز سرمایه‌گذاری به شما اطلاع داده شود.',
+              ar: 'المشاريع أدناه نموذج توضيحي وليست عرضاً حياً. العوائد والمبالغ والنسب المعروضة بيانات نموذجية وليست وعداً بعائد. يمكنك تسجيل اهتمامك ليتم إشعارك عند فتح الاستثمار.',
+              zh: '以下项目仅为示例，并非真实募集。所有收益率、金额和进度均为示例数据，不构成收益承诺。您可以登记意向，待投资开放后我们将通知您。',
+            ),
+            style: TextStyle(
+              fontSize: 11.sp,
+              height: 1.6,
+              color: AppColors.lightTextSecondary,
             ),
           ),
         ],

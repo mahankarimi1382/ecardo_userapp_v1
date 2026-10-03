@@ -25,7 +25,7 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
 
   double _calcAmount = 50000000; // 50M Tomans / units
   int _calcTenure = 12; // 12 months
-  double _calcRate = 18.0; // 18% annual
+  final double _calcRate = 18.0; // 18% annual
 
   @override
   Widget build(BuildContext context) {
@@ -194,8 +194,7 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                         style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
                       ),
                       Text(
-                        '${_calcAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ' +
-                            l10nPick(context, fa: 'واحد', en: 'Units', ar: 'وحدة', zh: '单位'),
+                        '${_calcAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'واحد', en: 'Units', ar: 'وحدة', zh: '单位')}',
                         style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
                       ),
                     ],
@@ -225,7 +224,7 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                         style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
                       ),
                       Text(
-                        '$_calcTenure ' + l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月'),
+                        '$_calcTenure ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
                         style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
                       ),
                     ],
@@ -258,8 +257,7 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                         style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        '${monthlyEmi.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ' +
-                            l10nPick(context, fa: 'واحد', en: 'Units', ar: 'وحدة', zh: '单位'),
+                        '${monthlyEmi.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'واحد', en: 'Units', ar: 'وحدة', zh: '单位')}',
                         style: TextStyle(
                           fontSize: 13.5.sp,
                           fontWeight: FontWeight.w900,
@@ -283,7 +281,7 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                         style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightTextSecondary),
                       ),
                       Text(
-                        '${totalRepayment.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}',
+                        totalRepayment.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},'),
                         style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
                       ),
                     ],

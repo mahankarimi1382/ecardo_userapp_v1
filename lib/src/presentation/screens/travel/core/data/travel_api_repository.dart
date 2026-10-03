@@ -44,8 +44,7 @@ class TravelApiRepository implements TravelRepository {
         services: services,
       );
     } catch (_) {
-      if (Get.isRegistered<DemoAccountService>() &&
-          Get.find<DemoAccountService>().isDemoMode.value) {
+      if (DemoAccountService.isDemoInterceptionAllowedNow) {
         return TravelBootstrap(
           currency: 'USD',
           locale: _locale,
@@ -156,8 +155,7 @@ class TravelApiRepository implements TravelRepository {
         response.data,
       ).map(_mapOrder).where((order) => order.id.isNotEmpty).toList();
     } catch (_) {
-      if (Get.isRegistered<DemoAccountService>() &&
-          Get.find<DemoAccountService>().isDemoMode.value) {
+      if (DemoAccountService.isDemoInterceptionAllowedNow) {
         return [
           TravelOrder(
             id: 'ord-demo-hotel-1',
@@ -534,8 +532,7 @@ class TravelApiRepository implements TravelRepository {
   }
 
   Future<String> _ensureTravelAccessToken() async {
-    if (Get.isRegistered<DemoAccountService>() &&
-        Get.find<DemoAccountService>().isDemoMode.value) {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
       _travelAccessToken = 'demo_travel_token_2026';
       _travelAccessTokenExpiresAt =
           DateTime.now().add(const Duration(days: 30));

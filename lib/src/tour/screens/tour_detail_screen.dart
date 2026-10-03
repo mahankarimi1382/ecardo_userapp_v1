@@ -162,7 +162,7 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                           ? Image.network(
                               tour.featuredImage!,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(color: Colors.blueGrey),
+                              errorBuilder: (_, _, _) => Container(color: Colors.blueGrey),
                             )
                           : Container(color: Colors.blueGrey),
                       DecoratedBox(
@@ -334,7 +334,7 @@ class _ItineraryTab extends StatelessWidget {
     return ListView.separated(
       padding: EdgeInsets.all(16.r),
       itemCount: itinerary.length,
-      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+      separatorBuilder: (_, _) => SizedBox(height: 12.h),
       itemBuilder: (context, index) {
         final day = itinerary[index];
         return Container(
@@ -414,7 +414,7 @@ class _HotelsTab extends StatelessWidget {
     return ListView.separated(
       padding: EdgeInsets.all(16.r),
       itemCount: hotels.length,
-      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+      separatorBuilder: (_, _) => SizedBox(height: 12.h),
       itemBuilder: (context, index) {
         final hotel = hotels[index];
         return Container(
@@ -500,7 +500,7 @@ class _ActivitiesTab extends StatelessWidget {
     return ListView.separated(
       padding: EdgeInsets.all(16.r),
       itemCount: activities.length,
-      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+      separatorBuilder: (_, _) => SizedBox(height: 12.h),
       itemBuilder: (context, index) {
         final act = activities[index];
         return Container(

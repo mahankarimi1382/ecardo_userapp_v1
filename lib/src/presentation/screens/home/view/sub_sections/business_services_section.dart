@@ -73,21 +73,37 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
         available: true,
       ),
       ServiceTile(
+        title: localization.businessServiceStocks,
+        iconData: Icons.trending_up_rounded,
+        route: BaseRoute.stockHome,
+        available: true,
+      ),
+      ServiceTile(
+        title: l10nPick(
+          context,
+          en: 'Equity Projects',
+          fa: 'سرمایه‌گذاری تجاری',
+          ar: 'المشاريع الاستثمارية',
+          zh: '股权投资项目',
+          ru: 'Инвест-проекты',
+          tr: 'Yatırım Projeleri',
+        ),
+        iconData: Icons.corporate_fare_rounded,
+        route: BaseRoute.commercialProjects,
+        available: true,
+      ),
+      ServiceTile(
         title: l10nPick(
           context,
           en: 'License Store',
           fa: 'فروشگاه لایسنس',
           ar: 'متجر التراخيص',
           zh: '许可证商店',
+          tr: 'Lisans Mağazası',
+          ru: 'Магазин лицензий',
         ),
         iconData: Icons.vpn_key_rounded,
         route: BaseRoute.licenseStore,
-        available: true,
-      ),
-      ServiceTile(
-        title: localization.businessServiceStocks,
-        iconData: Icons.trending_up_rounded,
-        route: BaseRoute.stockHome,
         available: true,
       ),
     ];

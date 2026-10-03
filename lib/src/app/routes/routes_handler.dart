@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/commercial/screens/commercial_projects_screen.dart';
 import 'package:ecardo_user/src/escrow/screens/escrow_detail_screen.dart';
 import 'package:ecardo_user/src/loan/screens/loan_detail_screen.dart';
 import 'package:ecardo_user/src/rental/screens/rental_detail_screen.dart';
@@ -748,5 +749,9 @@ List<GetPage> routesHandler = [
     name: BaseRoute.licenseIntro,
     page: () => RoutesConfig.licenseIntro,
     binding: LicenseBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.commercialProjects,
+    page: () => const CommercialProjectsScreen(),
   ),
 ];

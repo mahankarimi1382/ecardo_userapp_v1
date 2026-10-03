@@ -70,7 +70,7 @@ class _VisaListScreenState extends State<VisaListScreen> {
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   itemCount: filters.length,
-                  separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                  separatorBuilder: (_, _) => SizedBox(width: 8.w),
                   itemBuilder: (context, index) {
                     final f = filters[index];
                     final isSelected = current == f['id'];
@@ -159,7 +159,7 @@ class _VisaListScreenState extends State<VisaListScreen> {
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                   itemCount: list.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                  separatorBuilder: (_, _) => SizedBox(height: 12.h),
                   itemBuilder: (context, index) {
                     final req = list[index];
                     return _VisaRequestCard(

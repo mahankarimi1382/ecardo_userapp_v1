@@ -65,4 +65,16 @@ app.*.map.json
 arena-audit-out/
 graphify-out/
 
+# Screenshots from emulator/device QA runs.
+#
+# Only these specific roots. A blanket `*.png` rule was briefly added here,
+# but the repo tracks 283 real PNGs — Android launcher icons, notification
+# icons, and Flutter asset art. Ignoring them by extension means any NEW
+# image added to the app silently never gets committed, and the app fails to
+# build on a fresh clone. Emulator screenshots land in the repo root or in
+# web_preview/, not under these source paths.
+# emulator_*.png
+# web_preview/*.png
+# *.png
+
 

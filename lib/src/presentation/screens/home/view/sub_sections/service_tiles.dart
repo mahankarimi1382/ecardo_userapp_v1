@@ -178,7 +178,7 @@ class _PagedServiceTilesGridState extends State<PagedServiceTilesGrid> {
     if (pages.isEmpty) return const SizedBox.shrink();
 
     final rows = ((pages.first.length) / 4).ceil();
-    final double dynamicHeight = rows * 90.0;
+    final double dynamicHeight = rows * 82.0 + (rows - 1) * 8.0;
 
     return Column(
       children: [
@@ -196,8 +196,8 @@ class _PagedServiceTilesGridState extends State<PagedServiceTilesGrid> {
                 padding: EdgeInsets.zero,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1,
+                  mainAxisSpacing: 8,
+                  mainAxisExtent: 82,
                 ),
                 itemBuilder: (context, index) {
                   return ServiceTileView(resolved: pageItems[index]);
@@ -207,16 +207,16 @@ class _PagedServiceTilesGridState extends State<PagedServiceTilesGrid> {
           ),
         ),
         if (serviceCount > widget.itemsPerPage) ...[
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               pages.length,
               (index) => AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
-                margin: const EdgeInsets.symmetric(horizontal: 6),
+                margin: const EdgeInsets.symmetric(horizontal: 4),
                 height: 6,
-                width: _currentPage == index ? 16 : 6,
+                width: _currentPage == index ? 18 : 6,
                 decoration: BoxDecoration(
                   color: _currentPage == index
                       ? AppColors.lightPrimary
@@ -250,16 +250,17 @@ class ServiceTileView extends StatelessWidget {
         opacity: disabled ? 0.55 : 1,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Stack(
               clipBehavior: Clip.none,
               children: [
                 if (tile.iconData is IconData)
                   Container(
-                    width: 38,
-                    height: 38,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
-                      color: AppColors.lightPrimary.withValues(alpha: .10),
+                      color: AppColors.lightPrimary.withValues(alpha: .08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -271,7 +272,8 @@ class ServiceTileView extends StatelessWidget {
                 else
                   Image.asset(
                     tile.icon as String,
-                    width: 35,
+                    width: 36,
+                    height: 36,
                     color: disabled
                         ? AppColors.black.withValues(alpha: 0.30)
                         : null,
@@ -299,18 +301,21 @@ class ServiceTileView extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              tile.title,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 12,
-                color: const Color(0xFF2D2D2D).withValues(
-                  alpha: disabled ? 0.35 : 0.60,
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                tile.title,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.5,
+                  color: const Color(0xFF2D2D2D).withValues(
+                    alpha: disabled ? 0.35 : 0.70,
+                  ),
+                  fontWeight: FontWeight.w700,
                 ),
-                fontWeight: FontWeight.w700,
               ),
             ),
           ],

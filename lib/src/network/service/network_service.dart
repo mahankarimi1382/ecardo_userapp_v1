@@ -63,6 +63,19 @@ class NetworkService extends getx.GetxService {
     return AppLocalizations.of(ctx);
   }
 
+  // ------------------------- RELEASE SAFETY: DEMO GATE ------------------------- //
+  //
+  // Demo mode short-circuits the socket and returns fabricated balances. It is a
+  // debug-only tool, so EVERY interception site below (there are many, including the
+  // on-network-error fallback paths) must go through this one guard rather than
+  // re-testing `isRegistered && isDemoMode` inline.
+  //
+  // `kDebugMode` is a compile-time constant: false in profile and release builds, so
+  // in a shipped app this always returns false and no mock can ever be served — even
+  // if the service were registered by some future code path.
+  static bool get _demoInterceptionAllowed =>
+      DemoAccountService.isDemoInterceptionAllowedNow;
+
   // Lifecycle Methods
   @override
   void onInit() {
@@ -554,8 +567,7 @@ class NetworkService extends getx.GetxService {
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
-    if (getx.Get.isRegistered<DemoAccountService>() &&
-        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+    if (_demoInterceptionAllowed) {
       final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
         endpoint: endpoint,
         method: 'GET',
@@ -577,8 +589,7 @@ class NetworkService extends getx.GetxService {
       return _handleResponse(response, "GET");
     } on DioException catch (e) {
       // Demo Mode Smart Fallback on network errors or 404
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'GET',
@@ -592,8 +603,7 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "GET");
     } catch (e) {
       _log('GET Exception: ${e.toString()}', icon: '❌');
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'GET',
@@ -618,8 +628,7 @@ class NetworkService extends getx.GetxService {
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
-    if (getx.Get.isRegistered<DemoAccountService>() &&
-        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+    if (_demoInterceptionAllowed) {
       final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
         endpoint: endpoint,
         method: 'POST',
@@ -658,8 +667,7 @@ class NetworkService extends getx.GetxService {
       return _handleResponse(response, "POST");
     } on DioException catch (e) {
       // Demo Mode Smart Fallback
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'POST',
@@ -690,8 +698,7 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "POST");
     } catch (e) {
       _log('POST Exception: ${e.toString()}', icon: '❌');
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'POST',
@@ -734,8 +741,7 @@ class NetworkService extends getx.GetxService {
     bool isForeground = true,
   }) async {
     // Demo Mode Upload Bypass
-    if (getx.Get.isRegistered<DemoAccountService>() &&
-        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+    if (_demoInterceptionAllowed) {
       _log('⚡ [DEMO MOCK] Instant success for multipart upload to $endpoint');
       return ApiResponse.completed({
         'status': 'success',
@@ -767,8 +773,7 @@ class NetworkService extends getx.GetxService {
       );
       return _handleResponse(response, "POST (multipart)");
     } on DioException catch (e) {
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         return ApiResponse.completed({
           'status': 'success',
           'message': 'File upload simulated (Demo Mode)',
@@ -778,8 +783,7 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "POST (multipart)");
     } catch (e) {
       _log('POST (multipart) Exception: ${e.toString()}', icon: '❌');
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         return ApiResponse.completed({
           'status': 'success',
           'message': 'File upload simulated (Demo Mode)',
@@ -801,8 +805,7 @@ class NetworkService extends getx.GetxService {
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
-    if (getx.Get.isRegistered<DemoAccountService>() &&
-        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+    if (_demoInterceptionAllowed) {
       final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
         endpoint: endpoint,
         method: 'PUT',
@@ -832,8 +835,7 @@ class NetworkService extends getx.GetxService {
 
       return _handleResponse(response, "PUT");
     } on DioException catch (e) {
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'PUT',
@@ -847,8 +849,7 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "PUT");
     } catch (e) {
       _log('PUT Exception: ${e.toString()}', icon: '❌');
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'PUT',
@@ -876,8 +877,7 @@ class NetworkService extends getx.GetxService {
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
-    if (getx.Get.isRegistered<DemoAccountService>() &&
-        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+    if (_demoInterceptionAllowed) {
       final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
         endpoint: endpoint,
         method: 'PATCH',
@@ -906,8 +906,7 @@ class NetworkService extends getx.GetxService {
 
       return _handleResponse(response, "PATCH");
     } on DioException catch (e) {
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'PATCH',
@@ -921,8 +920,7 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "PATCH");
     } catch (e) {
       _log('PATCH Exception: ${e.toString()}', icon: '❌');
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'PATCH',
@@ -946,8 +944,7 @@ class NetworkService extends getx.GetxService {
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
-    if (getx.Get.isRegistered<DemoAccountService>() &&
-        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+    if (_demoInterceptionAllowed) {
       final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
         endpoint: endpoint,
         method: 'DELETE',
@@ -976,8 +973,7 @@ class NetworkService extends getx.GetxService {
 
       return _handleResponse(response, "DELETE");
     } on DioException catch (e) {
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'DELETE',
@@ -991,8 +987,7 @@ class NetworkService extends getx.GetxService {
       return _handleDioException(e, "DELETE");
     } catch (e) {
       _log('DELETE Exception: ${e.toString()}', icon: '❌');
-      if (getx.Get.isRegistered<DemoAccountService>() &&
-          getx.Get.find<DemoAccountService>().isDemoMode.value) {
+      if (_demoInterceptionAllowed) {
         final fallback = getx.Get.find<DemoAccountService>().handleDemoFallback(
           endpoint: endpoint,
           method: 'DELETE',
@@ -1056,8 +1051,7 @@ class NetworkService extends getx.GetxService {
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
-    if (getx.Get.isRegistered<DemoAccountService>() &&
-        getx.Get.find<DemoAccountService>().isDemoMode.value) {
+    if (_demoInterceptionAllowed) {
       final mock = getx.Get.find<DemoAccountService>().handleDemoRequest(
         endpoint: endpoint,
         method: 'GET',

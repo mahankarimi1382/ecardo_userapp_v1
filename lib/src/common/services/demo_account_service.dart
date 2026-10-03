@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -29,9 +30,46 @@ class DemoAccountService extends GetxService {
 
   final RxBool isDemoMode = false.obs;
   // Admin-controlled kill-switch: if disabled by admin, the demo button is completely hidden from the UI!
-  final RxBool isDemoAllowedByAdmin = true.obs;
+  //
+  // Defaults to `kDebugMode` (fail-closed where it matters). Demo mode fabricates
+  // balances, so it may only be opted into on a build where it is allowed to exist
+  // at all — debug. In profile/release the default is `false`, so a missing, stale or
+  // garbled server setting can never re-expose the demo entry point in a shipped build.
+  final RxBool isDemoAllowedByAdmin = isDemoAvailableInThisBuild.obs;
   bool get isDemoBlockedByAdmin => !isDemoAllowedByAdmin.value;
   set isDemoBlockedByAdmin(bool val) => isDemoAllowedByAdmin.value = !val;
+
+  /// RELEASE GATE — the single source of truth for "may demo mode run at all?".
+  ///
+  /// Demo mode fabricates balances and short-circuits the network layer, so it is a
+  /// debug-only tool. It is false in profile and release builds; those builds also
+  /// never register this service (see `_initializeServices` in `lib/main.dart`).
+  static bool get isDemoAvailableInThisBuild => kDebugMode;
+
+  /// Whether the network layer may intercept a request with a mock response.
+  /// Requires BOTH a debug build AND a registered, active demo session.
+  /// This is the guard every interception site must use — see
+  /// `NetworkService._demoInterceptionAllowed`.
+  static bool isDemoInterceptionPermitted({
+    required bool isDebugBuild,
+    required bool isServiceRegistered,
+    required bool isDemoModeActive,
+  }) {
+    if (!isDebugBuild) return false;
+    if (!isServiceRegistered) return false;
+    return isDemoModeActive;
+  }
+
+  /// [isDemoInterceptionPermitted] resolved against live app state — the single place
+  /// that composes the three inputs. Every interception site calls this (directly or via
+  /// `NetworkService._demoInterceptionAllowed`) instead of re-testing `isRegistered &&
+  /// isDemoMode` inline, so there is no second, ungated copy of the rule.
+  static bool get isDemoInterceptionAllowedNow => isDemoInterceptionPermitted(
+    isDebugBuild: isDemoAvailableInThisBuild,
+    isServiceRegistered: Get.isRegistered<DemoAccountService>(),
+    isDemoModeActive: Get.isRegistered<DemoAccountService>() &&
+        Get.find<DemoAccountService>().isDemoMode.value,
+  );
 
   final RxInt demoKycStatus = 1.obs; // 1: Verified, 2: Pending, 3: Rejected, 0: Unverified
   final RxString demoRejectReason =
@@ -51,7 +89,11 @@ class DemoAccountService extends GetxService {
     checkAdminKillSwitch();
   }
 
-  /// Checks server settings / remote status to see if demo mode is allowed by admin
+  /// Checks server settings / remote status to see if demo mode is allowed by admin.
+  /// Only ever DISABLES. Release safety comes from the initial value of
+  /// [isDemoAllowedByAdmin] (fail-closed via [isDemoAvailableInThisBuild]), so a
+  /// missing, stale or garbled setting cannot re-open the demo entry point in a
+  /// shipped build — while debug keeps working exactly as before.
   Future<void> checkAdminKillSwitch() async {
     try {
       if (Get.isRegistered<SettingsService>()) {
@@ -65,6 +107,10 @@ class DemoAccountService extends GetxService {
   }
 
   Future<void> _loadPersistedDemoState() async {
+    // RELEASE SAFETY: never resurrect a persisted demo session outside debug. The pref is
+    // written by [activateDemoMode]; on a shipped build it is ignored entirely (and the
+    // service is not even registered), so a stale `true` cannot leak fabricated balances.
+    if (!isDemoAvailableInThisBuild) return;
     try {
       final prefs = await SharedPreferences.getInstance();
       final active = prefs.getBool(_prefDemoActiveKey) ?? false;
@@ -303,6 +349,9 @@ class DemoAccountService extends GetxService {
 
   /// Activate full Demo Mode and bypass authentication
   Future<void> activateDemoMode() async {
+    // Defence in depth: even a registered service must refuse to activate on a
+    // build where demo mode is not allowed to exist.
+    if (!isDemoAvailableInThisBuild) return;
     if (!isDemoAllowedByAdmin.value) {
       Get.snackbar(
         'Demo Disabled',
@@ -485,7 +534,7 @@ class DemoAccountService extends GetxService {
     required String method,
     Map<String, dynamic>? data,
   }) {
-    if (!isDemoMode.value) return null;
+    if (!isDemoInterceptionAllowedNow) return null;
     return _dispatchDemoResponse(endpoint, method, data);
   }
 
@@ -495,7 +544,7 @@ class DemoAccountService extends GetxService {
     Map<String, dynamic>? data,
     int? statusCode,
   }) {
-    if (!isDemoMode.value) return null;
+    if (!isDemoInterceptionAllowedNow) return null;
     return _dispatchDemoResponse(endpoint, method, data);
   }
 

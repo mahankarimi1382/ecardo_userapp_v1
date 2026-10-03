@@ -191,7 +191,7 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                 child: ListView.separated(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   itemCount: controller.products.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                  separatorBuilder: (_, _) => SizedBox(height: 12.h),
                   itemBuilder: (context, index) {
                     final product = controller.products[index];
                     return _buildProductCard(context, product);
@@ -221,7 +221,7 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
-        separatorBuilder: (_, __) => SizedBox(width: 8.w),
+        separatorBuilder: (_, _) => SizedBox(width: 8.w),
         itemBuilder: (context, i) {
           final cat = categories[i];
           final isSelected = controller.selectedCategory.value == cat['key'];

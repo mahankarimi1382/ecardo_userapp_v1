@@ -260,8 +260,7 @@ class _LoanTrackingScreenState extends State<LoanTrackingScreen> {
                 style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
               ),
               Text(
-                '${c.requestedAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ' +
-                    l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔'),
+                '${c.requestedAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                 style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800),
               ),
             ],
@@ -275,7 +274,7 @@ class _LoanTrackingScreenState extends State<LoanTrackingScreen> {
                 style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
               ),
               Text(
-                '${c.tenureMonths} ' + l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月'),
+                '${c.tenureMonths} ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
                 style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
               ),
             ],

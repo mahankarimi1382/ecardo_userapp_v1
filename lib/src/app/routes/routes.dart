@@ -211,4 +211,5 @@ class BaseRoute {
 
   static const String visaIntro = "/visa_intro_route";
   static const String licenseIntro = "/license_intro_route";
+  static const String commercialProjects = "/commercial_projects_route";
 }

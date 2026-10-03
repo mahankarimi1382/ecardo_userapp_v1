@@ -42,7 +42,6 @@ class EsimDetailScreen extends StatefulWidget {
 }
 
 class _EsimDetailScreenState extends State<EsimDetailScreen> {
-  bool _compatibilityExpanded = false;
   late bool _showActiveMode;
 
   @override
@@ -1093,64 +1092,6 @@ class _SpecRow extends StatelessWidget {
             fontSize: 12.sp,
             fontWeight: FontWeight.w800,
             color: TravelTheme.ink,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _StepTile extends StatelessWidget {
-  final String number;
-  final String title;
-  final String subtitle;
-
-  const _StepTile({
-    required this.number,
-    required this.title,
-    required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CircleAvatar(
-          radius: 12.r,
-          backgroundColor: TravelTheme.yellow,
-          child: Text(
-            number,
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w900,
-              color: TravelTheme.ink,
-            ),
-          ),
-        ),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 12.5.sp,
-                  fontWeight: FontWeight.w800,
-                  color: TravelTheme.ink,
-                ),
-              ),
-              SizedBox(height: 3.h),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: TravelTheme.muted,
-                  height: 1.4,
-                ),
-              ),
-            ],
           ),
         ),
       ],

@@ -226,7 +226,7 @@ class _SplashScreenState extends State<SplashScreen>
                               child: Image.asset(
                                 PngAssets.appScreenIcon,
                                 fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => Icon(
+                                errorBuilder: (_, _, _) => Icon(
                                   Icons.account_balance_wallet_rounded,
                                   size: 56.sp,
                                   color: AppColors.white,

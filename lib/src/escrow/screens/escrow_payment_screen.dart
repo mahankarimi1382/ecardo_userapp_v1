@@ -93,24 +93,27 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
             ),
             SizedBox(height: 12.h),
 
-            // Wallet Radio
-            RadioListTile<String>(
-              value: 'wallet',
+            // Wallet / Gateway Radios
+            RadioGroup<String>(
               groupValue: _selectedMethod,
-              activeColor: AppColors.lightPrimary,
-              title: Text(l10nPick(context, fa: 'کیف پول eCardo (کسر مستقیم)', en: 'eCardo Wallet (Instant)')),
-              subtitle: Text(l10nPick(context, fa: 'پرداخت امن و بدون کارمزد بانکی', en: 'No gateway fees')),
-              onChanged: (v) => setState(() => _selectedMethod = v!),
-            ),
+              onChanged: (v) => setState(() => _selectedMethod = v ?? 'wallet'),
+              child: Column(
+                children: [
+                  RadioListTile<String>(
+                    value: 'wallet',
+                    activeColor: AppColors.lightPrimary,
+                    title: Text(l10nPick(context, fa: 'کیف پول eCardo (کسر مستقیم)', en: 'eCardo Wallet (Instant)')),
+                    subtitle: Text(l10nPick(context, fa: 'پرداخت امن و بدون کارمزد بانکی', en: 'No gateway fees')),
+                  ),
 
-            // Gateway Radio
-            RadioListTile<String>(
-              value: 'gateway',
-              groupValue: _selectedMethod,
-              activeColor: AppColors.lightPrimary,
-              title: Text(l10nPick(context, fa: 'درگاه پرداخت اینترنتی بانکی', en: 'Online Bank Gateway')),
-              subtitle: Text(l10nPick(context, fa: 'پرداخت با کلیه کارت‌های عضو شتاب', en: 'All debit/credit cards')),
-              onChanged: (v) => setState(() => _selectedMethod = v!),
+                  RadioListTile<String>(
+                    value: 'gateway',
+                    activeColor: AppColors.lightPrimary,
+                    title: Text(l10nPick(context, fa: 'درگاه پرداخت اینترنتی بانکی', en: 'Online Bank Gateway')),
+                    subtitle: Text(l10nPick(context, fa: 'پرداخت با کلیه کارت‌های عضو شتاب', en: 'All debit/credit cards')),
+                  ),
+                ],
+              ),
             ),
 
             const Spacer(),

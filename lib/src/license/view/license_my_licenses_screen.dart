@@ -117,7 +117,7 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
       child: ListView.separated(
         padding: EdgeInsets.all(16.r),
         itemCount: list.length,
-        separatorBuilder: (_, __) => SizedBox(height: 12.h),
+        separatorBuilder: (_, _) => SizedBox(height: 12.h),
         itemBuilder: (context, i) => _buildLicenseCard(context, list[i]),
       ),
     );

@@ -68,7 +68,7 @@ class EscrowListScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 itemCount: filterTabs.length,
-                separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                separatorBuilder: (_, _) => SizedBox(width: 8.w),
                 itemBuilder: (ctx, i) {
                   final tab = filterTabs[i];
                   return Obx(() {
@@ -142,7 +142,7 @@ class EscrowListScreen extends StatelessWidget {
                 child: ListView.separated(
                   padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 80.h),
                   itemCount: controller.orders.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                  separatorBuilder: (_, _) => SizedBox(height: 12.h),
                   itemBuilder: (ctx, idx) {
                     final deal = controller.orders[idx];
                     return _buildDealCard(context, deal);
@@ -170,7 +170,7 @@ class EscrowListScreen extends StatelessWidget {
           border: Border.all(color: Colors.grey.shade200),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),

@@ -91,13 +91,20 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               SizedBox(height: 12.h),
               Text(l10nPick(context, en: 'Insurance tier (required)', fa: 'سطح بیمه (اجباری)'),
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11.sp)),
-              ...car.insuranceTiers.map((t) => RadioListTile<String>(
-                dense: true,
-                value: t['tier'].toString(),
+              RadioGroup<String>(
                 groupValue: insuranceTier,
-                onChanged: (v) => setSheetState(() => insuranceTier = v!),
-                title: Text('${t['tier']} (+${t['extra_cost']})', style: TextStyle(fontSize: 11.sp)),
-              )),
+                onChanged: (v) => setSheetState(() => insuranceTier = v ?? insuranceTier),
+                child: Column(
+                  children: [
+                    for (final t in car.insuranceTiers)
+                      RadioListTile<String>(
+                        dense: true,
+                        value: t['tier'].toString(),
+                        title: Text('${t['tier']} (+${t['extra_cost']})', style: TextStyle(fontSize: 11.sp)),
+                      ),
+                  ],
+                ),
+              ),
               SizedBox(height: 12.h),
               Row(children: [
                 Expanded(child: ElevatedButton(

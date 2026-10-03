@@ -26,9 +26,9 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
   String _creatorRole = 'SELLER'; // SELLER or BUYER
   String _currency = 'IRR';
   String _feePayer = 'BUYER'; // BUYER, SELLER, 50_50
-  String _shippingPayer = 'BUYER';
+  final String _shippingPayer = 'BUYER';
   int _inspectionHours = 72;
-  DateTime _shipDeadline = DateTime.now().add(const Duration(days: 5));
+  final DateTime _shipDeadline = DateTime.now().add(const Duration(days: 5));
 
   @override
   void dispose() {
@@ -73,6 +73,7 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
     };
 
     final order = await controller.createDeal(payload);
+    if (!mounted) return;
     if (order != null) {
       Get.back(); // close form
       Get.to(() => EscrowDetailScreen(orderId: order.id));
@@ -118,7 +119,7 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                   child: ChoiceChip(
                     label: Text(l10nPick(context, fa: 'فروشنده / بازرگان', en: 'Seller')),
                     selected: _creatorRole == 'SELLER',
-                    selectedColor: AppColors.lightPrimary.withOpacity(0.2),
+                    selectedColor: AppColors.lightPrimary.withValues(alpha: 0.2),
                     onSelected: (v) => setState(() => _creatorRole = 'SELLER'),
                   ),
                 ),
@@ -127,7 +128,7 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                   child: ChoiceChip(
                     label: Text(l10nPick(context, fa: 'خریدار / تاجر', en: 'Buyer')),
                     selected: _creatorRole == 'BUYER',
-                    selectedColor: AppColors.lightPrimary.withOpacity(0.2),
+                    selectedColor: AppColors.lightPrimary.withValues(alpha: 0.2),
                     onSelected: (v) => setState(() => _creatorRole = 'BUYER'),
                   ),
                 ),
@@ -176,7 +177,7 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                 Expanded(
                   flex: 2,
                   child: DropdownButtonFormField<String>(
-                    value: _currency,
+                    initialValue: _currency,
                     decoration: InputDecoration(
                       labelText: l10nPick(context, fa: 'واحد ارز', en: 'Currency'),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(14.r)),
@@ -218,12 +219,16 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
               style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 6.h),
-            Row(
-              children: [
-                _buildRadio('BUYER', l10nPick(context, fa: 'خریدار', en: 'Buyer'), _feePayer, (v) => setState(() => _feePayer = v)),
-                _buildRadio('SELLER', l10nPick(context, fa: 'فروشنده', en: 'Seller'), _feePayer, (v) => setState(() => _feePayer = v)),
-                _buildRadio('50_50', l10nPick(context, fa: 'نصف-نصف', en: '50/50'), _feePayer, (v) => setState(() => _feePayer = v)),
-              ],
+            RadioGroup<String>(
+              groupValue: _feePayer,
+              onChanged: (v) => setState(() => _feePayer = v ?? 'BUYER'),
+              child: Row(
+                children: [
+                  _buildRadio('BUYER', l10nPick(context, fa: 'خریدار', en: 'Buyer')),
+                  _buildRadio('SELLER', l10nPick(context, fa: 'فروشنده', en: 'Seller')),
+                  _buildRadio('50_50', l10nPick(context, fa: 'نصف-نصف', en: '50/50')),
+                ],
+              ),
             ),
             SizedBox(height: 24.h),
 
@@ -272,15 +277,19 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
     );
   }
 
-  Widget _buildRadio(String value, String label, String group, Function(String) onChanged) {
+  Widget _buildRadio(String value, String label) {
     return Expanded(
       child: RadioListTile<String>(
         value: value,
-        groupValue: group,
-        title: Text(label, style: TextStyle(fontSize: 11.sp)),
+        activeColor: AppColors.lightPrimary,
+        title: Text(
+          label,
+          style: TextStyle(fontSize: 11.sp),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         contentPadding: EdgeInsets.zero,
         dense: true,
-        onChanged: (v) => onChanged(v!),
       ),
     );
   }

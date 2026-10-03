@@ -169,7 +169,7 @@ class VisaCountryFlag extends StatelessWidget {
         width: size.r,
         height: (size * 0.7).r,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => Container(
+        errorBuilder: (_, _, _) => Container(
           width: size.r,
           height: size.r,
           color: const Color(0xFFE5E7EB),

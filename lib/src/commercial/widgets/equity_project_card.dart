@@ -11,6 +11,9 @@ class EquityProjectItem {
   final String currency;
   final double targetAmount;
   final double raisedAmount;
+
+  /// Sample figure only. Equity crowdfunding is NOT live and no API supplies
+  /// this number — every surface that shows it must label it as illustrative.
   final double annualYieldPercent;
   final double minInvestment;
   final int daysLeft;
@@ -108,7 +111,7 @@ class EquityProjectCard extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Flexible(
                           child: Text(
-                            '${project.annualYieldPercent.toStringAsFixed(1)}% p.a.',
+                            '${l10nPick(context, en: 'Illustrative — ', fa: 'نمونه — ', ar: 'توضيحي — ', zh: '示例 — ')}${project.annualYieldPercent.toStringAsFixed(1)}% p.a.',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -134,6 +137,8 @@ class EquityProjectCard extends StatelessWidget {
               children: [
                 Text(
                   project.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
@@ -176,7 +181,15 @@ class EquityProjectCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        '${project.progressPercent}% funded',
+                        l10nPick(
+                          context,
+                          // No funding round exists behind this project, so a
+                          // "77% funded" bar would be a fabricated progress claim.
+                          en: 'Sample progress',
+                          fa: 'پیشرفت نمونه',
+                          ar: 'التقدم النموذجي',
+                          zh: '示例进度',
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -188,7 +201,16 @@ class EquityProjectCard extends StatelessWidget {
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      '${project.daysLeft} days left',
+                      // Sample value: there is no live funding round behind
+                      // this project, so a countdown would be a fabricated
+                      // urgency promise.
+                      l10nPick(
+                        context,
+                        en: 'Sample project',
+                        fa: 'پروژه نمونه',
+                        ar: 'مشروع نموذجي',
+                        zh: '示例项目',
+                      ),
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w600,
@@ -213,7 +235,7 @@ class EquityProjectCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        'Raised: ${project.currency} ${_formatCompact(project.raisedAmount)}',
+                        '${l10nPick(context, en: 'Sample raised', fa: 'نمونه جذب‌شده', ar: 'تم جمع نموذجي', zh: '示例已募集')}: ${project.currency} ${_formatCompact(project.raisedAmount)}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -226,7 +248,7 @@ class EquityProjectCard extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Flexible(
                       child: Text(
-                        'Target: ${project.currency} ${_formatCompact(project.targetAmount)}',
+                        '${l10nPick(context, en: 'Sample target', fa: 'نمونه هدف', ar: 'الهدف النموذجي', zh: '示例目标')}: ${project.currency} ${_formatCompact(project.targetAmount)}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.end,
@@ -259,10 +281,10 @@ class EquityProjectCard extends StatelessWidget {
                       Text(
                         l10nPick(
                           context,
-                          en: 'Min. Ticket',
-                          fa: 'حداقل ورود',
-                          ar: 'الحد الأدنى',
-                          zh: '起投金额',
+                          en: 'Sample min. ticket',
+                          fa: 'حداقل ورود نمونه',
+                          ar: 'الحد الأدنى النموذجي',
+                          zh: '示例起投金额',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -272,14 +294,18 @@ class EquityProjectCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Text(
-                        '${project.currency} ${_formatCompact(project.minInvestment)}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.lightTextPrimary,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          '${project.currency} ${_formatCompact(project.minInvestment)}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.lightTextPrimary,
+                          ),
                         ),
                       ),
                     ],
@@ -303,11 +329,14 @@ class EquityProjectCard extends StatelessWidget {
                   child: Text(
                     l10nPick(
                       context,
-                      en: 'Invest Now',
-                      fa: 'سرمایه‌گذاری',
-                      ar: 'استثمر الآن',
-                      zh: '立即投资',
+                      // Opens the illustrative calculator, not a live order.
+                      en: 'Preview',
+                      fa: 'پیش‌نمایش',
+                      ar: 'معاينة',
+                      zh: '预览',
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
                   ),
                 ),

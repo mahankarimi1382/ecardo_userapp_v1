@@ -329,7 +329,7 @@ class _NotificationsState extends State<Notifications>
                                                 .getNotificationIcon(
                                               n.type,
                                             ),
-                                            errorBuilder: (_, __, ___) =>
+                                            errorBuilder: (_, _, _) =>
                                                 const Icon(
                                               Icons.notifications_none,
                                               color: AppColors.lightPrimary,

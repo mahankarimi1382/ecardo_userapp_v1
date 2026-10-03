@@ -1625,7 +1625,7 @@ class _DeviceSessionsSecurityScreenState
                     ),
                   ),
                   value: _bioEnabled,
-                  activeColor: AppColors.lightPrimary,
+                  activeTrackColor: AppColors.lightPrimary,
                   onChanged: _toggleBio,
                 )
               else

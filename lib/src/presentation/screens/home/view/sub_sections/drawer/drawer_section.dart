@@ -234,7 +234,8 @@ class DrawerSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         onTap: () {
                           Get.back(); // close drawer
-                          if (Get.isRegistered<DemoAccountService>()) {
+                          if (DemoAccountService.isDemoAvailableInThisBuild &&
+                              Get.isRegistered<DemoAccountService>()) {
                             DemoAccountService.to.showTesterControlBottomSheet(context);
                           }
                         },

@@ -1,5 +1,5 @@
-/// Loan & Credit Service models — Loan-Service-Flow.md
-/// اپ: محصولات، پرونده، پیشنهاد، وثیقه، قسط، تایم‌لاین.
+// Loan & Credit Service models — Loan-Service-Flow.md
+// اپ: محصولات، پرونده، پیشنهاد، وثیقه، قسط، تایم‌لاین.
 
 class LoanProductModel {
   final int id;

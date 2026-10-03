@@ -157,7 +157,7 @@ class TourListScreen extends StatelessWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: categories.length,
-                separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                separatorBuilder: (_, _) => SizedBox(width: 8.w),
                 itemBuilder: (context, index) {
                   final cat = categories[index];
                   return Obx(() {
@@ -317,7 +317,7 @@ class TourListScreen extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.tours.length,
-                separatorBuilder: (_, __) => SizedBox(height: 14.h),
+                separatorBuilder: (_, _) => SizedBox(height: 14.h),
                 itemBuilder: (context, index) {
                   final tour = controller.tours[index];
                   return _TourCard(
@@ -452,7 +452,7 @@ class _TourCard extends StatelessWidget {
                       ? Image.network(
                           tour.featuredImage!,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => _ImagePlaceholder(tour: tour),
+                          errorBuilder: (_, _, _) => _ImagePlaceholder(tour: tour),
                         )
                       : _ImagePlaceholder(tour: tour),
                 ),

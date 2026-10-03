@@ -191,8 +191,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                     context,
                     labelFa: 'مبلغ درخواستی',
                     labelEn: 'Requested Amount',
-                    value: '${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ' +
-                        l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔'),
+                    value: '${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                     isBold: true,
                   ),
                   const Divider(height: 20),
@@ -200,7 +199,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                     context,
                     labelFa: 'مدت بازپرداخت',
                     labelEn: 'Tenure',
-                    value: '$tenure ' + l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月'),
+                    value: '$tenure ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
                   ),
                   if (grace > 0) ...[
                     const Divider(height: 20),
@@ -208,7 +207,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                       context,
                       labelFa: 'دوره تنفس',
                       labelEn: 'Grace Period',
-                      value: '$grace ' + l10nPick(context, fa: 'ماه (فقط پرداخت سود)', en: 'Months (Interest only)', ar: 'شهر (فائدة فقط)', zh: '个月（仅还利息）'),
+                      value: '$grace ${l10nPick(context, fa: 'ماه (فقط پرداخت سود)', en: 'Months (Interest only)', ar: 'شهر (فائدة فقط)', zh: '个月（仅还利息）')}',
                     ),
                   ],
                   const Divider(height: 20),
@@ -223,8 +222,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                     context,
                     labelFa: 'قسط ماهیانه تخمینی',
                     labelEn: 'Monthly Installment (EMI)',
-                    value: '${emi.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ' +
-                        l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔'),
+                    value: '${emi.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                     valueColor: const Color(0xFF059669),
                     isBold: true,
                   ),
@@ -233,8 +231,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                     context,
                     labelFa: 'مجموع بازپرداخت اصل و سود',
                     labelEn: 'Total Repayment',
-                    value: '${total.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ' +
-                        l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔'),
+                    value: '${total.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                   ),
                   const Divider(height: 20),
                   _buildSummaryRow(

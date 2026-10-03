@@ -1010,7 +1010,7 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                   child: Image.asset(
                     'assets/logos/app_icon.png',
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Center(
+                    errorBuilder: (_, _, _) => const Center(
                       child: Icon(
                         Icons.account_balance_wallet_rounded,
                         color: Colors.white,
