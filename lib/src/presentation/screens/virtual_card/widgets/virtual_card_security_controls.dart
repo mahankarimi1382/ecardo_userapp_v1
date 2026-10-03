@@ -248,8 +248,12 @@ class CardFreezeOverlay extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // This row is the action control, so it names what the tap will do.
+// Repeating the banner's status ("Card is Frozen") here showed the
+// same sentence twice on one card and left the user with no idea
+// whether the switch freezes or unfreezes.
                       Text(
-                        isFrozen ? 'Card is Frozen' : 'Freeze Virtual Card',
+                        isFrozen ? 'Unfreeze Card' : 'Freeze Virtual Card',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w700,
