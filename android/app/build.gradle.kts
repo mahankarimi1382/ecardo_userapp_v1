@@ -61,7 +61,7 @@ if (!keystoreProperties.containsKey("storeFile") &&
 android {
     namespace = "com.ecardo.user"
     compileSdk = 36
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -82,19 +82,31 @@ android {
     }
 
     // -----------------------------------------------------------------------
-    // ABI policy (v1.0.38 — APK size):
-    //   debug keeps every ABI so x86_64 emulators keep working.
-    //   release ships ONLY real-device ABIs (armeabi-v7a + arm64-v8a):
-    //   x86_64 exists solely for emulators/Chromebooks and costs ~20MB of
-    //   engine + AOT payload per release APK.
+    // ABI policy
+    //
+    // No abiFilters anywhere, for any build type.
+    //
+    // v1.0.38 added `debug { ndk { abiFilters ... } }` and
+    // `release { ndk { abiFilters ... } }` to control APK size. That cannot
+    // work with --split-per-abi: Gradle rejects any manual abiFilters once
+    // split filters exist —
+    //   "Conflicting configuration : 'armeabi-v7a,arm64-v8a,x86_64' in ndk
+    //    abiFilters cannot be present when splits abi filters are set"
+    // — and it only needs the declaration when the two halves disagree. Even
+    // without splits, abiFilters decides which native libs get packaged while
+    // the Flutter engine comes from --target-platform. v1.0.126 shipped
+    // armeabi-v7a here while CI built an arm64-only engine, so 32-bit devices
+    // installed an APK whose 32-bit slot had no libflutter.so and crashed on
+    // launch.
+    //
+    // The engine and the packaging are now driven together from the build
+    // command instead:
+    //   release: flutter build apk --release --split-per-abi \
+    //              --target-platform android-arm,android-arm64,android-x64
+    //   debug:   flutter build apk --debug \
+    //              --target-platform android-arm,android-arm64,android-x64
+    // CI (.github/workflows/flutter.yml) passes exactly these.
     // -----------------------------------------------------------------------
-    buildTypes {
-        getByName("debug") {
-            ndk {
-                abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
-            }
-        }
-    }
 
     // -----------------------------------------------------------------------
     // Signing configs
@@ -139,12 +151,28 @@ android {
                 "proguard-rules.pro"
             )
 
-            // Release ships real-device mobile ABIs (both 64-bit and 32-bit ARM)
-            // to support 100% of physical Android devices without crashing.
-            ndk {
-                abiFilters.clear()
-                abiFilters += listOf("armeabi-v7a", "arm64-v8a")
-            }
+            // No ndk.abiFilters here on purpose.
+            //
+            // v1.0.126 set `armeabi-v7a + arm64-v8a` while CI built the engine
+            // with --target-platform android-arm64, so the 32-bit slot shipped
+            // plugin .so files with no libflutter.so: the APK installed on a
+            // 32-bit device and crashed on launch.
+            //
+            // Declaring abiFilters cannot fix that on its own — it only decides
+            // which native libs get packaged, while the engine comes from
+            // --target-platform, and the two must agree. Gradle also rejects
+            // setting both: "--split-per-abi" already sets split filters, and
+            // a manual abiFilters alongside them fails configuration with
+            // "Conflicting configuration ... cannot be present when splits abi
+            // filters are set".
+            //
+            // So the split is driven entirely from the build command, which
+            // sets both halves together:
+            //   flutter build apk --release --split-per-abi \
+            //     --target-platform android-arm,android-arm64,android-x64
+            // CI (.github/workflows/flutter.yml) passes exactly that. Anyone
+            // building a single universal APK instead must pass the same
+            // --target-platform and drop --split-per-abi.
         }
         debug {
             isMinifyEnabled = false
