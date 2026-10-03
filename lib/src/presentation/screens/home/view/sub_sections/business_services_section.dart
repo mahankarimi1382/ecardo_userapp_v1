@@ -49,7 +49,7 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
         title: localization.drawerP2pTrading,
         icon: PngAssets.p2pTradingService,
         route: BaseRoute.p2pTrading,
-        available: addons?.p2pTrading == true,
+        available: true,
       ),
       // Escrow services — live module
       ServiceTile(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 
 /// WAVE-REVIEW: گزارش خطاهای رندر/استثناهای اپ به بک‌اند
 /// (`POST /api/client-error-report` → error_logs).
@@ -38,6 +39,7 @@ class ClientErrorReporter {
   set currentRoute(String value) => _currentRoute = value;
 
   bool _shouldSend() {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) return false;
     if (_sessionCount >= _maxReportsPerSession) return false;
     final last = _lastSentAt;
     if (last != null && DateTime.now().difference(last) < _minInterval) {

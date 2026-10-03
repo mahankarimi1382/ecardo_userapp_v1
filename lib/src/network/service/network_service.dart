@@ -576,6 +576,11 @@ class NetworkService extends getx.GetxService {
         _log('⚡ [DEMO MOCK] Instant response for GET $endpoint');
         return ApiResponse.completed(mock);
       }
+      return ApiResponse.completed({
+        'status': 'success',
+        'message': 'Demo Mode simulated response',
+        'data': <String, dynamic>{},
+      });
     }
 
     String url = '${_dio.options.baseUrl}$endpoint';
@@ -1078,6 +1083,11 @@ class NetworkService extends getx.GetxService {
         _log('⚡ [DEMO MOCK] Instant response for Global GET $endpoint');
         return ApiResponse.completed(mock);
       }
+      return ApiResponse.completed({
+        'status': 'success',
+        'message': 'Demo Mode simulated response',
+        'data': <String, dynamic>{},
+      });
     }
 
     try {

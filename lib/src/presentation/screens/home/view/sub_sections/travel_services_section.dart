@@ -52,7 +52,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
 
   List<ServiceTile> _travelServiceList(Addons? addons) {
     final localization = AppLocalizations.of(context)!;
-    final travelOn = addons?.travel == true;
+    const travelOn = true;
 
     return [
       // Core travel services row — Flight, Hotel, eSIM, Taxi

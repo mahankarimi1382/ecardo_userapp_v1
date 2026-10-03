@@ -44,20 +44,20 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         title: localization.otherServicesAddMoney,
         icon: PngAssets.addMoneyService,
         route: BaseRoute.addMoney,
-        available: settings.getSetting("user_deposit") == "1",
+        available: true,
       ),
       ServiceTile(
         title: localization.otherServicesCashOut,
         icon: PngAssets.cashOutService,
         route: BaseRoute.cashOut,
         feature: 'cashout',
-        available: settings.getSetting("agent_system") == "1",
+        available: true,
       ),
       ServiceTile(
         title: localization.otherServicesMakePayment,
         icon: PngAssets.makePaymentService,
         route: BaseRoute.makePayment,
-        available: settings.getSetting("merchant_system") == "1",
+        available: true,
       ),
       ServiceTile(
         title: localization.otherServicesTransactions,
@@ -81,7 +81,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         icon: PngAssets.giftService,
         route: BaseRoute.giftCode,
         feature: 'gift_send',
-        available: settings.getSetting("user_gift") == "1",
+        available: true,
       ),
       ServiceTile(
         title: localization.otherServicesWallets,
@@ -122,14 +122,14 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         icon: PngAssets.virtualCardService,
         route: BaseRoute.virtualCard,
         feature: 'paycardo',
-        available: addons?.virtualCards == true,
+        available: true,
       ),
       ServiceTile(
         title: localization.otherServicesGiftCards,
         icon: PngAssets.giftCardsService,
         route: BaseRoute.giftCard,
         feature: 'gift_redeem',
-        available: addons?.giftCards == true,
+        available: true,
       ),
     ];
   }

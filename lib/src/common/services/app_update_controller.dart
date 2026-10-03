@@ -34,6 +34,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 /// Phases the update flow can be in. Exposed so the UI can switch on a single

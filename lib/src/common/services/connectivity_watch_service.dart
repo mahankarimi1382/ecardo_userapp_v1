@@ -67,6 +67,12 @@ class ConnectivityWatchService extends GetxService with WidgetsBindingObserver {
 
   /// Updates [isOffline]/[isVpn] without any navigation side effects.
   void _updateFlags(List<ConnectivityResult> results) {
+    if (Get.isRegistered<DemoAccountService>() &&
+        DemoAccountService.to.isDemoMode.value) {
+      isOffline.value = false;
+      isVpn.value = false;
+      return;
+    }
     final offline = results.isEmpty ||
         results.every((r) => r == ConnectivityResult.none);
     isOffline.value = offline;

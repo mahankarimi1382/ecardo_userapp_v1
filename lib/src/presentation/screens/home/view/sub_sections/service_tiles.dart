@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
@@ -68,9 +69,18 @@ class ResolvedTile {
 
 /// Tiered feature check — fail-open when the KYC badge is not ready yet
 /// (fresh navigation frame); the server 403 contract is the enforcement
-/// anyway.
+/// anyway. In demo/test mode with approved KYC, all features are enabled.
 bool hasKycFeature(String? feature, KycBadge? badge) {
   if (feature == null) return true;
+  if (DemoAccountService.isDemoInterceptionAllowedNow) {
+    if (Get.isRegistered<DemoAccountService>()) {
+      final demo = Get.find<DemoAccountService>();
+      if (demo.demoKycStatus.value == 1) return true;
+      if (demo.demoKycStatus.value == 0) return false;
+    } else {
+      return true;
+    }
+  }
   if (badge == null) return true;
   return badge.hasFeature(feature);
 }

@@ -798,7 +798,6 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
     final isCurrent = def.level == currentTier;
     final isCompleted = def.level < currentTier;
     final isNext = def.level == currentTier + 1;
-    final isHigherLocked = def.level > currentTier + 1;
 
     // Status Banner text & color
     final statusText = isCurrent
