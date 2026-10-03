@@ -78,3 +78,6 @@ graphify-out/
 # *.png
 
 
+
+# Kotlin compiler scratch sessions from local Gradle builds
+android/.kotlin/
