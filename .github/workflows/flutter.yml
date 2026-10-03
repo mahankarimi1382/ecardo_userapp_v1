@@ -119,6 +119,10 @@ jobs:
           CERT_PIN: ${{ secrets.ECARDO_CERT_PIN }}
           CERT_PIN_BACKUP: ${{ secrets.ECARDO_CERT_PIN_BACKUP }}
         run: |
+          # Trim whitespace/newlines a UI paste may have introduced.
+          CERT_PIN="$(printf '%s' "$CERT_PIN" | tr -d '[:space:]')"
+          CERT_PIN_BACKUP="$(printf '%s' "$CERT_PIN_BACKUP" | tr -d '[:space:]')"
+
           if [ -z "$CERT_PIN" ] && [ -z "$CERT_PIN_BACKUP" ]; then
             if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
               echo "❌ Neither ECARDO_CERT_PIN nor ECARDO_CERT_PIN_BACKUP is set."
@@ -130,6 +134,36 @@ jobs:
               echo "⚠️ Non-tag build; TLS cert pin not required for debug."
             fi
           fi
+
+          # Release builds: a malformed or stale pin fails the build HERE
+          # instead of shipping an app that rejects every API call at
+          # runtime (SslPinningConfig is fail-closed).
+          if [[ "$GITHUB_REF" == refs/tags/v* ]] && { [ -n "$CERT_PIN" ] || [ -n "$CERT_PIN_BACKUP" ]; }; then
+            check_pin_format() {
+              local label="$1" value="$2"
+              [ -z "$value" ] && return 0
+              if ! printf '%s' "$value" | base64 -d 2>/dev/null | wc -c | grep -q '^32$'; then
+                echo "❌ $label is not a valid base64 SHA-256 cert pin (must decode to exactly 32 bytes)."
+                echo "   Recipe: openssl s_client -connect ecardo.ir:443 -servername ecardo.ir </dev/null 2>/dev/null \\"
+                echo "     | openssl x509 -outform der | openssl dgst -sha256 -binary | openssl enc -base64"
+                exit 1
+              fi
+            }
+            check_pin_format "ECARDO_CERT_PIN" "$CERT_PIN"
+            check_pin_format "ECARDO_CERT_PIN_BACKUP" "$CERT_PIN_BACKUP"
+
+            LIVE_PIN="$(echo | openssl s_client -connect ecardo.ir:443 -servername ecardo.ir 2>/dev/null \
+              | openssl x509 -outform der 2>/dev/null \
+              | openssl dgst -sha256 -binary | openssl enc -base64)"
+            if [ -n "$LIVE_PIN" ] && [ "$LIVE_PIN" != "$CERT_PIN" ] && [ "$LIVE_PIN" != "$CERT_PIN_BACKUP" ]; then
+              echo "❌ Neither configured pin matches the LIVE ecardo.ir certificate."
+              echo "   A release built now would reject every API call (fail-closed)."
+              echo "   The correct current pin (public certificate data): $LIVE_PIN"
+              exit 1
+            fi
+            echo "✅ configured pin matches the live ecardo.ir certificate"
+          fi
+
           echo "pin=${CERT_PIN}" >> "$GITHUB_OUTPUT"
           echo "pin_backup=${CERT_PIN_BACKUP}" >> "$GITHUB_OUTPUT"
           echo "✅ certificate pin(s) processed"
