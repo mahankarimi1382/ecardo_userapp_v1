@@ -110,18 +110,22 @@ class CommercialDocumentChecklist extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10nPick(
-                  context,
-                  en: 'Corporate KYC & Licensing Documents',
-                  fa: 'مدارک هویتی و ثبت شرکتی',
-                  ar: 'وثائق التراخيص والشركات',
-                  zh: '企业资质与认证文件',
-                ),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.lightTextPrimary,
+              Flexible(
+                child: Text(
+                  l10nPick(
+                    context,
+                    en: 'Corporate KYC & Licensing Documents',
+                    fa: 'مدارک هویتی و ثبت شرکتی',
+                    ar: 'وثائق التراخيص والشركات',
+                    zh: '企业资质与认证文件',
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.lightTextPrimary,
+                  ),
                 ),
               ),
               Text(

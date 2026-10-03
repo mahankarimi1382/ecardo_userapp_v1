@@ -249,7 +249,12 @@ class CardFreezeOverlay extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isFrozen ? 'Card is Frozen' : 'Freeze Virtual Card',
+                        // Distinct action-style toggle title: the frost
+                        // badge on the card visual is THE single
+                        // "Card is Frozen" banner (QC expects one match).
+                        isFrozen
+                            ? 'Unfreeze Virtual Card'
+                            : 'Freeze Virtual Card',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w700,

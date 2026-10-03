@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ecardo_user/src/commercial/screens/commercial_projects_screen.dart';
@@ -124,7 +125,16 @@ void main() {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
+          // Collateral copy is verified in Persian (titleFa), so pin the
+          // harness locale to fa — the default test locale is en.
           builder: (context, child) => MaterialApp(
+            locale: const Locale('fa'),
+            supportedLocales: const [Locale('en'), Locale('fa')],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
             home: Scaffold(
               body: SingleChildScrollView(
                 child: GuaranteeCollateralCard(

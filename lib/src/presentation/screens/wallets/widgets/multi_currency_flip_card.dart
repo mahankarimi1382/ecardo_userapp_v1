@@ -391,14 +391,18 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      accountNo,
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.75),
-                        fontSize: 12,
-                        fontFamily: 'monospace',
-                        letterSpacing: 1.5,
-                        fontWeight: FontWeight.w600,
+                    Flexible(
+                      child: Text(
+                        accountNo,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.75),
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                          letterSpacing: 1.5,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     if (widget.wallet.isDefault == true)
@@ -416,6 +420,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                             fa: 'پیش‌فرض',
                             ar: 'افتراضي',
                             zh: '默认',
+                            tr: 'Varsayılan',
+                            ru: 'По умолчанию',
                           ),
                           style: TextStyle(
                             color: theme.accentColor,
@@ -631,12 +637,16 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
             children: [
               icon,
               const SizedBox(width: 4),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
