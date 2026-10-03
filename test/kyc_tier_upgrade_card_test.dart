@@ -82,6 +82,10 @@ void main() {
     final upgradeButton = find.textContaining('Upgrade to Tier 2');
     expect(upgradeButton, findsOneWidget);
 
+    // The card is taller than the test viewport inside the harness
+    // SingleChildScrollView — bring the button on-screen or the tap misses.
+    await tester.ensureVisible(upgradeButton);
+    await tester.pumpAndSettle();
     await tester.tap(upgradeButton);
     await tester.pump();
 

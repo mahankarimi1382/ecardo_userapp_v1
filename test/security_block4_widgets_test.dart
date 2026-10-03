@@ -33,9 +33,11 @@ void main() {
               body: CardFreezeOverlay(
                 isFrozen: true,
                 onFreezeToggled: (val) => freezeToggled = val,
+                // Large enough for the frosted overlay content (badge +
+                // banner + toggle) at CI surface scale — 300x180 clipped it.
                 child: Container(
-                  width: 300,
-                  height: 180,
+                  width: 640,
+                  height: 560,
                   color: Colors.blue,
                 ),
               ),

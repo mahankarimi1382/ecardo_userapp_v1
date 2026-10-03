@@ -289,7 +289,10 @@ void main() {
       // Default is iOS steps
       expect(find.text('1. Open Cellular Settings'), findsOneWidget);
 
-      // Switch to Android
+      // Switch to Android (bring the tab on-screen first — the card is
+      // taller than the test viewport, and taps off-screen miss)
+      await tester.ensureVisible(find.text('Android'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Android'));
       await tester.pumpAndSettle();
 
