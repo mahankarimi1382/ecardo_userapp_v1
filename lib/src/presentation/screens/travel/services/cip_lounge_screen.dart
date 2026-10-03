@@ -77,7 +77,6 @@ class _CipLoungeReservationScreenState
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     final airportInfo = _airportData[_selectedAirport]!;
 
     return Scaffold(

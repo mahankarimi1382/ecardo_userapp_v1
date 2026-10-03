@@ -87,7 +87,6 @@ void main() {
     );
     expect(upgradeButton, findsOneWidget);
 
-<<<<<<< HEAD
     // The card is taller than the 600px test surface, so the CTA starts
     // off-screen and must be scrolled into view before it can be tapped.
     // Use a bounded pump, not pumpAndSettle: the tier badge has a continuous
@@ -96,14 +95,6 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-=======
-    // The card is taller than the test viewport inside the harness
-    // SingleChildScrollView — bring the button on-screen or the tap misses.
-    // Fixed pumps (no pumpAndSettle: the card runs a repeating animation).
-    await tester.ensureVisible(upgradeButton);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
->>>>>>> origin/main
     await tester.tap(upgradeButton);
     await tester.pump();
 

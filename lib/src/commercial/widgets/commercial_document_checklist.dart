@@ -110,11 +110,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-<<<<<<< HEAD
               Expanded(
-=======
-              Flexible(
->>>>>>> origin/main
                 child: Text(
                   l10nPick(
                     context,
@@ -123,11 +119,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
                     ar: 'وثائق التراخيص والشركات',
                     zh: '企业资质与认证文件',
                   ),
-<<<<<<< HEAD
                   maxLines: 2,
-=======
-                  maxLines: 1,
->>>>>>> origin/main
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14.sp,

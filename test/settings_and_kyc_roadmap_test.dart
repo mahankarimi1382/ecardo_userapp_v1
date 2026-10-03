@@ -3,27 +3,55 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/dark_theme.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
+import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_level_roadmap.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/settings_screen.dart';
 
+class _TestHomeController extends HomeController {
+  @override
+  // ignore: must_call_super
+  void onInit() {}
+}
+
+class _TestKycController extends KycLevelController {
+  @override
+  // ignore: must_call_super
+  void onInit() {}
+}
+
+class _TestBiometricAuthService extends BiometricAuthService {
+  @override
+  Future<bool> isSupported() async => false;
+  @override
+  Future<bool> isEnabled() async => false;
+  @override
+  Future<bool> canAuthenticate() async => false;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     Get.reset();
-    // Register mock/stub controllers and services needed by SettingsScreen
-    final homeController = Get.put(HomeController());
+    Get.put<TokenService>(TokenService());
+    Get.put<NetworkService>(NetworkService());
+    Get.put<SettingsService>(SettingsService());
+    Get.put<LocaleThemeService>(LocaleThemeService());
+    Get.put<BiometricAuthService>(_TestBiometricAuthService());
+    final homeController = Get.put<HomeController>(_TestHomeController());
     homeController.isSettingsInitialized.value = true;
-    Get.put(SettingsService());
-    Get.put(LocaleThemeService());
   });
 
   tearDown(() {
@@ -34,6 +62,9 @@ void main() {
     testWidgets(
         'All menu items have touch target height >= 44px and render modern icons',
         (tester) async {
+      tester.view.physicalSize = const Size(800, 5000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -49,7 +80,8 @@ void main() {
         ),
       );
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pump();
 
       // Verify key menu sections are present
       expect(find.text('Account'), findsOneWidget);
@@ -118,7 +150,7 @@ void main() {
   group('KycLevelRoadmap Tier Descriptions', () {
     testWidgets('Renders crystal clear descriptions and spec chips for each tier',
         (tester) async {
-      final kycController = Get.put(KycLevelController());
+      final kycController = Get.put<KycLevelController>(_TestKycController());
       kycController.levels.assignAll([
         KycLevel(
           level: 1,

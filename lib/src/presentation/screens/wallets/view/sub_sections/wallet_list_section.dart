@@ -20,44 +20,65 @@ class WalletListSection extends StatelessWidget {
     final WalletsController walletsController = Get.find<WalletsController>();
 
     if (walletsController.walletsList.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const NoDataFound(),
-            const SizedBox(height: 12),
-            Text(
-              localization.walletListEmptyTitle,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
             ),
-            const SizedBox(height: 4),
-            Text(
-              localization.walletListEmptySubtitle,
-              style: TextStyle(
-                fontSize: 13,
-                color: AppColors.lightTextSecondary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => Get.toNamed(BaseRoute.createNewWallet),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.lightPrimary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const NoDataFound(),
+                      const SizedBox(height: 12),
+                      Text(
+                        localization.walletListEmptyTitle,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        localization.walletListEmptySubtitle,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.lightTextSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => Get.toNamed(BaseRoute.createNewWallet),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.lightPrimary,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(localization.walletListEmptyCreate),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              child: Text(localization.walletListEmptyCreate),
             ),
-          ],
-        ),
+          );
+        },
       );
     }
 
     return ListView.separated(
-      padding: EdgeInsetsDirectional.fromSTEB(18, 30, 18, 30),
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
+      padding: const EdgeInsetsDirectional.fromSTEB(18, 30, 18, 30),
       itemBuilder: (context, index) {
         final Wallets item = walletsController.walletsList[index];
         final isDefault = index == 0;
@@ -73,7 +94,7 @@ class WalletListSection extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(24),
-                height: 190,
+                constraints: const BoxConstraints(minHeight: 190),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                   image: DecorationImage(
@@ -89,91 +110,113 @@ class WalletListSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        isDefault == true
-                            ? Image.asset(
-                                PngAssets.cryptocurrencyIcon,
-                                width: 40,
-                                height: 40,
-                              )
-                            : Container(
-                                padding: EdgeInsets.all(8),
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: AppColors.lightTextPrimary.withValues(
-                                    alpha: 0.20,
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        end: isDefault ? 0 : 36,
+                      ),
+                      child: Row(
+                        children: [
+                          isDefault == true
+                              ? Image.asset(
+                                  PngAssets.cryptocurrencyIcon,
+                                  width: 40,
+                                  height: 40,
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.all(8),
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.lightTextPrimary.withValues(
+                                      alpha: 0.20,
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
                                   ),
-                                  borderRadius: BorderRadius.circular(100),
+                                  child: (item.icon != null && item.icon!.isNotEmpty)
+                                      ? Image.network(
+                                          item.icon!,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Image.asset(
+                                              PngAssets.commonErrorIcon,
+                                              color: AppColors.error.withValues(
+                                                alpha: 0.7,
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : Image.asset(
+                                          PngAssets.cryptocurrencyIcon,
+                                          width: 24,
+                                          height: 24,
+                                        ),
                                 ),
-                                child: (item.icon != null && item.icon!.isNotEmpty)
-                                    ? Image.network(
-                                        item.icon!,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Image.asset(
-                                            PngAssets.commonErrorIcon,
-                                            color: AppColors.error.withValues(
-                                              alpha: 0.7,
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Image.asset(
-                                        PngAssets.cryptocurrencyIcon,
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                              ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        item.name ?? "",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          letterSpacing: 0,
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 20,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Transform.translate(
+                                      offset: const Offset(0, -4),
+                                      child: Image.asset(
+                                        PngAssets.commonInfoIcon,
+                                        width: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 Text(
-                                  item.name ?? "",
+                                  item.code ?? "",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     letterSpacing: 0,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
                                     color: AppColors.white,
-                                  ),
-                                ),
-                                SizedBox(width: 2),
-                                Transform.translate(
-                                  offset: Offset(0, -5),
-                                  child: Image.asset(
-                                    PngAssets.commonInfoIcon,
-                                    width: 12,
                                   ),
                                 ),
                               ],
                             ),
-                            Text(
-                              item.code ?? "",
-                              style: const TextStyle(
-                                letterSpacing: 0,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Text(
-                      item.isDefault == true
-                          ? "${item.symbol ?? ''}${item.formattedBalance ?? '0'}"
-                          : "${item.formattedBalance ?? '0'} ${item.code ?? ''}",
-                      style: const TextStyle(
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 22,
-                        color: AppColors.white,
+                          ),
+                        ],
                       ),
                     ),
+                    const SizedBox(height: 12),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerStart.resolve(
+                        Directionality.of(context),
+                      ),
+                      child: Text(
+                        item.isDefault == true
+                            ? "${item.symbol ?? ''}${item.formattedBalance ?? '0'}"
+                            : "${item.formattedBalance ?? '0'} ${item.code ?? ''}",
+                        textDirection: TextDirection.ltr,
+                        style: const TextStyle(
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         GestureDetector(
@@ -194,7 +237,7 @@ class WalletListSection extends StatelessWidget {
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 5,
                             ),
@@ -205,7 +248,7 @@ class WalletListSection extends StatelessWidget {
                             ),
                             child: Text(
                               localization.walletListSectionTopUpButton,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 13,
@@ -215,7 +258,7 @@ class WalletListSection extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
                             if (Get.find<SettingsService>().getSetting(
@@ -232,7 +275,7 @@ class WalletListSection extends StatelessWidget {
                           },
                           child: Container(
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 5,
                             ),
@@ -242,7 +285,7 @@ class WalletListSection extends StatelessWidget {
                             ),
                             child: Text(
                               localization.walletListSectionWithdrawButton,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 13,

@@ -147,6 +147,22 @@ class TravelApiRepository implements TravelRepository {
 
   @override
   Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      return const [
+        TravelOffer(
+          id: 'demo-hotel-offer-1',
+          type: TravelProductType.hotel,
+          titleKey: 'هتل اسپیناس پالاس تهران (Espinas Palace)',
+          subtitleKey: 'سعادت‌آباد، تهران',
+          badgeKey: '5 ستاره',
+          imageUrl: 'https://ecardo.ir/demo/hotel1.jpg',
+          total: TravelMoney(amount: 150, currency: 'USD'),
+          rating: 4.9,
+          featureKeys: ['صبحانه رایگان', 'استخر و سونا', 'اینترنت رایگان'],
+          metadata: {'stars': '5', 'location': 'سعادت‌آباد، تهران'},
+        ),
+      ];
+    }
     final offers = await _searchService('hotel', {
       'city': search.city,
       'check_in': _date(search.checkInDate),
@@ -163,6 +179,9 @@ class TravelApiRepository implements TravelRepository {
 
   @override
   Future<List<TravelOrder>> getOrders() async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      return _buildDemoOrders();
+    }
     try {
       final response = await _authorizedGet('/orders');
       return _dataList(
@@ -170,58 +189,62 @@ class TravelApiRepository implements TravelRepository {
       ).map(_mapOrder).where((order) => order.id.isNotEmpty).toList();
     } catch (_) {
       if (DemoAccountService.isDemoInterceptionAllowedNow) {
-        return [
-          TravelOrder(
-            id: 'ord-demo-hotel-1',
-            type: TravelProductType.hotel,
-            titleKey: 'هتل اسپیناس پالاس تهران (Espinas Palace Hotel)',
-            reference: 'BK-HOTEL-2026-9912',
-            total: const TravelMoney(amount: 450, currency: 'USD'),
-            status: TravelOrderStatus.issued,
-            rawStatus: 'issued',
-            createdAt: DateTime.now().subtract(const Duration(days: 2)),
-            details: {
-              'room': 'Deluxe King Suite (دید کوهستان)',
-              'check_in': '2026-10-10',
-              'check_out': '2026-10-13',
-              'voucher_number': 'VCH-ESP-991240',
-            },
-          ),
-          TravelOrder(
-            id: 'ord-demo-flight-2',
-            type: TravelProductType.flight,
-            titleKey: 'پرواز تهران ➔ استانبول (Mahan Air W5-115)',
-            reference: 'BK-FLIGHT-2026-4410',
-            total: const TravelMoney(amount: 280, currency: 'USD'),
-            status: TravelOrderStatus.issued,
-            rawStatus: 'issued',
-            createdAt: DateTime.now().subtract(const Duration(days: 5)),
-            details: {
-              'airline': 'Mahan Air',
-              'flight_number': 'W5-115',
-              'origin': 'IKA',
-              'destination': 'IST',
-              'departure': '2026-10-15 08:30',
-            },
-          ),
-          TravelOrder(
-            id: 'ord-demo-esim-3',
-            type: TravelProductType.esim,
-            titleKey: 'سیم‌کارت بین‌المللی ترکیه ۱۰ گیگابایت',
-            reference: 'ESIM-TR-998821',
-            total: const TravelMoney(amount: 24, currency: 'USD'),
-            status: TravelOrderStatus.issued,
-            rawStatus: 'active',
-            createdAt: DateTime.now().subtract(const Duration(days: 7)),
-            details: {
-              'esim_iccid': '8990012345678901234',
-              'esim_activation_code': r'LPA:1$smdp.io$DEMO-CODE-2026',
-            },
-          ),
-        ];
+        return _buildDemoOrders();
       }
       rethrow;
     }
+  }
+
+  List<TravelOrder> _buildDemoOrders() {
+    return [
+      TravelOrder(
+        id: 'ord-demo-hotel-1',
+        type: TravelProductType.hotel,
+        titleKey: 'هتل اسپیناس پالاس تهران (Espinas Palace Hotel)',
+        reference: 'BK-HOTEL-2026-9912',
+        total: const TravelMoney(amount: 450, currency: 'USD'),
+        status: TravelOrderStatus.issued,
+        rawStatus: 'issued',
+        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        details: {
+          'room': 'Deluxe King Suite (دید کوهستان)',
+          'check_in': '2026-10-10',
+          'check_out': '2026-10-13',
+          'voucher_number': 'VCH-ESP-991240',
+        },
+      ),
+      TravelOrder(
+        id: 'ord-demo-flight-2',
+        type: TravelProductType.flight,
+        titleKey: 'پرواز تهران ➔ استانبول (Mahan Air W5-115)',
+        reference: 'BK-FLIGHT-2026-4410',
+        total: const TravelMoney(amount: 280, currency: 'USD'),
+        status: TravelOrderStatus.issued,
+        rawStatus: 'issued',
+        createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        details: {
+          'airline': 'Mahan Air',
+          'flight_number': 'W5-115',
+          'origin': 'IKA',
+          'destination': 'IST',
+          'departure': '2026-10-15 08:30',
+        },
+      ),
+      TravelOrder(
+        id: 'ord-demo-esim-3',
+        type: TravelProductType.esim,
+        titleKey: 'سیم‌کارت بین‌المللی ترکیه ۱۰ گیگابایت',
+        reference: 'ESIM-TR-998821',
+        total: const TravelMoney(amount: 24, currency: 'USD'),
+        status: TravelOrderStatus.issued,
+        rawStatus: 'active',
+        createdAt: DateTime.now().subtract(const Duration(days: 7)),
+        details: {
+          'esim_iccid': '8990012345678901234',
+          'esim_activation_code': r'LPA:1$smdp.io$DEMO-CODE-2026',
+        },
+      ),
+    ];
   }
 
   @override

@@ -85,8 +85,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
     );
   }
 
-  Future<void> _copyToClipboard(
-    BuildContext context, {
+  Future<void> _copyToClipboard({
     required String text,
     required String key,
     required String label,
@@ -94,52 +93,51 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
     AppHaptics.light();
     await Clipboard.setData(ClipboardData(text: text));
 
-    if (mounted) {
-      setState(() => _recentlyCopiedKey = key);
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(
-                Icons.check_circle_rounded,
-                color: Colors.white,
-                size: 18,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Text(
-                  l10nPick(
-                    context,
-                    en: '$label copied to clipboard',
-                    fa: '$label در کلیپ‌بورد کپی شد',
-                    ar: 'تم نسخ $label إلى الحافظة',
-                    zh: '$label 已复制到剪贴板',
-                  ),
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
+    if (!mounted) return;
+    setState(() => _recentlyCopiedKey = key);
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Colors.white,
+              size: 18,
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Text(
+                l10nPick(
+                  context,
+                  en: '$label copied to clipboard',
+                  fa: '$label در کلیپ‌بورد کپی شد',
+                  ar: 'تم نسخ $label إلى الحافظة',
+                  zh: '$label 已复制到剪贴板',
+                ),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-            ],
-          ),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: TravelTheme.ink,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
+            ),
+          ],
         ),
-      );
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: TravelTheme.ink,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+      ),
+    );
 
-      // Revert checkmark icon after 2 seconds
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted && _recentlyCopiedKey == key) {
-          setState(() => _recentlyCopiedKey = null);
-        }
-      });
-    }
+    // Revert checkmark icon after 2 seconds
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted && _recentlyCopiedKey == key) {
+        setState(() => _recentlyCopiedKey = null);
+      }
+    });
   }
 
   void _showEnlargedQrDialog(BuildContext context) {
@@ -543,10 +541,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-<<<<<<< HEAD
                 textAlign: TextAlign.center,
-=======
->>>>>>> origin/main
                 style: TextStyle(
                   fontSize: 11.5.sp,
                   fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
@@ -621,7 +616,6 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
             borderRadius: BorderRadius.circular(10.r),
             child: InkWell(
               onTap: () => _copyToClipboard(
-                context,
                 text: value,
                 key: fieldKey,
                 label: label,
@@ -750,7 +744,6 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
               borderRadius: BorderRadius.circular(10.r),
               child: InkWell(
                 onTap: () => _copyToClipboard(
-                  context,
                   text: confValue,
                   key: 'conf',
                   label: 'Confirmation Code',

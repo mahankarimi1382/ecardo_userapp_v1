@@ -195,6 +195,22 @@ class AppUpdateController extends GetxController {
 
   /// Helper to fetch metadata directly from /api/app-version.
   Future<Map<String, dynamic>?> _fetchAppVersionApi() async {
+    // Instant Demo Mode short-circuit to avoid 12s timeout delay:
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      final mock = DemoAccountService.to.handleDemoRequest(
+        endpoint: config.appVersionEndpoint,
+        method: 'GET',
+      );
+      if (mock != null) {
+        final data = mock['data'];
+        if (data is Map<String, dynamic>) {
+          return data;
+        } else if (data is Map) {
+          return Map<String, dynamic>.from(data);
+        }
+      }
+    }
+
     try {
       final dio = Dio(
         BaseOptions(

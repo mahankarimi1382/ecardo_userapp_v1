@@ -227,9 +227,6 @@ class _FakeTravelRepository implements TravelRepository {
   Future<TravelBootstrap> getBootstrap() async => _bootstrap();
 
   @override
-  Future<List<TravelActivity>> getActivity() async => const [];
-
-  @override
   Future<List<TravelEsimPackage>> getEsimPackages(
     String destinationCode,
   ) async => const [];

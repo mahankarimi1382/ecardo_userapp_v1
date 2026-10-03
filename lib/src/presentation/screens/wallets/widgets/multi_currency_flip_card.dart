@@ -84,6 +84,49 @@ class CurrencyCardTheme {
   }
 }
 
+/// Custom painter for physical-looking EMV microchip contact pads
+class _EmvChipPainter extends CustomPainter {
+  const _EmvChipPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final stroke = Paint()
+      ..color = const Color(0x45000000)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.75;
+
+    final outerRRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      const Radius.circular(3),
+    );
+    canvas.drawRRect(outerRRect, stroke);
+
+    // Center divider
+    final midX = size.width * 0.44;
+    canvas.drawLine(Offset(midX, 0), Offset(midX, size.height), stroke);
+
+    // Horizontal contact boundaries
+    canvas.drawLine(
+      Offset(0, size.height * 0.36),
+      Offset(midX, size.height * 0.36),
+      stroke,
+    );
+    canvas.drawLine(
+      Offset(0, size.height * 0.68),
+      Offset(midX, size.height * 0.68),
+      stroke,
+    );
+    canvas.drawLine(
+      Offset(midX, size.height * 0.50),
+      Offset(size.width, size.height * 0.50),
+      stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 /// Interactive 3D flip card widget for multi-currency wallets.
 class MultiCurrencyFlipCard extends StatefulWidget {
   final Wallets wallet;
@@ -139,6 +182,59 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
     }
   }
 
+  void _copyAccountNo(String accountNo) {
+    HapticFeedback.lightImpact();
+    Clipboard.setData(ClipboardData(text: accountNo));
+    ToastHelper().showSuccessToast(
+      l10nPick(
+        context,
+        en: 'Account number copied',
+        fa: 'شماره حساب کپی شد',
+        ar: 'تم نسخ رقم الحساب',
+        zh: '已复制账号',
+        tr: 'Hesap numarası kopyalandı',
+        ru: 'Номер счёта скоپیрован',
+      ),
+    );
+  }
+
+  Widget _buildEmvChip() {
+    return Container(
+      width: 36,
+      height: 26,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5.5),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFFFDF7D),
+            Color(0xFFC79E3B),
+            Color(0xFFECCB68),
+            Color(0xFF9E7720),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.28),
+            blurRadius: 3,
+            offset: const Offset(0, 1.5),
+          ),
+        ],
+        border: Border.all(
+          color: const Color(0xFFFFF2AC),
+          width: 0.6,
+        ),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2.5),
+        child: CustomPaint(
+          painter: _EmvChipPainter(),
+        ),
+      ),
+    );
+  }
+
   /// `Icons.send_rounded` points along the reading direction in LTR but
   /// against it in RTL, and Material does not auto-mirror it. Directional
   /// glyphs only — passing an already-symmetric icon through this is a no-op
@@ -163,18 +259,43 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
       animation: _animation,
       builder: (context, child) {
         final angle = _animation.value * pi;
+        final shineOpacity =
+            (sin(_animation.value * pi) * 0.20).clamp(0.0, 0.20);
         return Transform(
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.0012)
             ..rotateY(angle),
           alignment: Alignment.center,
-          child: angle >= (pi / 2)
-              ? Transform(
-                  transform: Matrix4.identity()..rotateY(pi),
-                  alignment: Alignment.center,
-                  child: _buildBack(theme),
-                )
-              : _buildFront(theme),
+          child: Stack(
+            children: [
+              angle >= (pi / 2)
+                  ? Transform(
+                      transform: Matrix4.identity()..rotateY(pi),
+                      alignment: Alignment.center,
+                      child: _buildBack(theme),
+                    )
+                  : _buildFront(theme),
+              if (shineOpacity > 0.01)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: LinearGradient(
+                          begin: Alignment(-1.0 + (_animation.value * 2.0), -1.0),
+                          end: Alignment(1.0 + (_animation.value * 2.0), 1.0),
+                          colors: [
+                            Colors.white.withValues(alpha: 0.0),
+                            Colors.white.withValues(alpha: shineOpacity),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         );
       },
     );
@@ -199,6 +320,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
         padding: const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.16),
+            width: 1.0,
+          ),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -214,6 +339,24 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
         ),
         child: Stack(
           children: [
+            // Ambient light specular gradient at top-left
+            Positioned(
+              top: -30,
+              left: -30,
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withValues(alpha: 0.10),
+                      Colors.white.withValues(alpha: 0.0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             // Background artistic watermark curves. Directional so the
             // oversized currency code leans into the trailing edge instead
             // of colliding with the balance in RTL.
@@ -321,33 +464,18 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                   ],
                 ),
 
-                // Center row: EMV Chip & Balance
+                // Center row: Realistic EMV Chip & Contactless & Balance
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Chip icon
-                    Container(
-                      width: 32,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD4AF37),
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          color: const Color(0xFFF3E5AB),
-                          width: 0.7,
-                        ),
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 20,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black26, width: 0.6),
-                          ),
-                        ),
-                      ),
+                    _buildEmvChip(),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.contactless_rounded,
+                      color: Colors.white.withValues(alpha: 0.65),
+                      size: 17,
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,7 +491,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                               ru: 'Доступный баланс',
                             ),
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.65),
+                              color: Colors.white.withValues(alpha: 0.68),
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                             ),
@@ -375,9 +503,12 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                             ),
                             fit: BoxFit.scaleDown,
                             child: Row(
+                              textDirection: TextDirection.ltr,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   balance,
+                                  textDirection: TextDirection.ltr,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 22,
@@ -388,6 +519,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                                 const SizedBox(width: 6),
                                 Text(
                                   symbol.isNotEmpty ? symbol : code,
+                                  textDirection: TextDirection.ltr,
                                   style: TextStyle(
                                     color: theme.accentColor,
                                     fontSize: 15,
@@ -403,32 +535,48 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                   ],
                 ),
 
-                // Bottom row: Masked Account Number & Details
+                // Bottom row: Masked Account Number with Quick Copy & Details
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-<<<<<<< HEAD
-                    // Flexible, not fixed: a monospace account number plus the
-                    // badge together exceed the card width on a 320pt card and
-                    // overflowed the Row.
                     Flexible(
-                      child: Text(
-                        accountNo,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-=======
-                    Flexible(
-                      child: Text(
-                        accountNo,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
->>>>>>> origin/main
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.75),
-                          fontSize: 12,
-                          fontFamily: 'monospace',
-                          letterSpacing: 1.5,
-                          fontWeight: FontWeight.w600,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(6),
+                          onTap: () => _copyAccountNo(accountNo),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 2,
+                              horizontal: 2,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    accountNo,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                    textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(alpha: 0.82),
+                                      fontSize: 12,
+                                      fontFamily: 'monospace',
+                                      letterSpacing: 1.5,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Icon(
+                                  Icons.copy_rounded,
+                                  color: Colors.white.withValues(alpha: 0.50),
+                                  size: 11,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -451,8 +599,6 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                             tr: 'Varsayılan',
                             ru: 'По умолчанию',
                             zh: '默认',
-                            tr: 'Varsayılan',
-                            ru: 'По умолчанию',
                           ),
                           style: TextStyle(
                             color: theme.accentColor,
@@ -480,6 +626,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
       height: widget.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.16),
+          width: 1.0,
+        ),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -523,6 +673,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       accountNo,
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
+                      textDirection: TextDirection.ltr,
                       style: const TextStyle(
                         color: Colors.black87,
                         fontSize: 10,
@@ -550,21 +701,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                   // Mirrors automatically under RTL: the icon points away
                   // from the account number it copies.
                   icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 16),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    Clipboard.setData(ClipboardData(text: accountNo));
-                    ToastHelper().showSuccessToast(
-                      l10nPick(
-                        context,
-                        en: 'Account number copied',
-                        fa: 'شماره حساب کپی شد',
-                        ar: 'تم نسخ رقم الحساب',
-                        zh: '已复制账号',
-                        tr: 'Hesap numarası kopyalandı',
-                        ru: 'Номер счёта скопирован',
-                      ),
-                    );
-                  },
+                  onPressed: () => _copyAccountNo(accountNo),
                 ),
                 const SizedBox(width: 4),
                 // Flip back icon button
@@ -681,21 +818,15 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
             children: [
               icon,
               const SizedBox(width: 4),
-<<<<<<< HEAD
               // Flexible: Turkish ("Yatır") and Russian ("Пополнить") are much
               // longer than "Deposit"/"Vault" and overflowed the third of a
               // 3-up button row on a 320pt card.
-=======
->>>>>>> origin/main
               Flexible(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-<<<<<<< HEAD
                   textAlign: TextAlign.center,
-=======
->>>>>>> origin/main
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 10,

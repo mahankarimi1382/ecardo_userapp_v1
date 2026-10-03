@@ -28,9 +28,14 @@ class BiometricAuthService {
   Future<bool> canAuthenticate() async {
     try {
       if (kIsWeb) return false;
-      final canCheck = await auth.canCheckBiometrics;
-      final supported = await auth.isDeviceSupported();
-      final available = await auth.getAvailableBiometrics();
+      final canCheck = await auth.canCheckBiometrics
+          .timeout(const Duration(milliseconds: 300), onTimeout: () => false);
+      if (!canCheck) return false;
+      final supported = await auth.isDeviceSupported()
+          .timeout(const Duration(milliseconds: 300), onTimeout: () => false);
+      if (!supported) return false;
+      final available = await auth.getAvailableBiometrics()
+          .timeout(const Duration(milliseconds: 300), onTimeout: () => []);
       return supported && canCheck && available.isNotEmpty;
     } catch (_) {
       return false;
@@ -145,8 +150,11 @@ class BiometricAuthService {
 
   Future<bool> isBiometricAvailable() async {
     try {
-      final canCheckBiometrics = await auth.canCheckBiometrics;
-      final availableBiometrics = await auth.getAvailableBiometrics();
+      final canCheckBiometrics = await auth.canCheckBiometrics
+          .timeout(const Duration(milliseconds: 300), onTimeout: () => false);
+      if (!canCheckBiometrics) return false;
+      final availableBiometrics = await auth.getAvailableBiometrics()
+          .timeout(const Duration(milliseconds: 300), onTimeout: () => []);
       return canCheckBiometrics && availableBiometrics.isNotEmpty;
     } catch (e) {
       return false;

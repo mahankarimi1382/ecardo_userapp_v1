@@ -40,6 +40,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 
 import 'exchange_rate_source.dart';
 
@@ -126,6 +127,11 @@ class FeeEcardoRateSource implements ExchangeRateSource {
     required List<String> currencyCodes,
   }) async {
     if (currencyCodes.isEmpty) return const {};
+
+    // Instant demo rates in Demo Mode (0ms bypass without network timeouts)
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      return _getDemoRates();
+    }
 
     // v1.0.21+21 — Restructured so the /rates fallback is actually reached
     // when the primary /api/v1/rates endpoint throws. Previously the
@@ -273,5 +279,79 @@ class FeeEcardoRateSource implements ExchangeRateSource {
     if (v is num) return v.toDouble();
     if (v is String) return double.tryParse(v);
     return null;
+  }
+
+  Map<String, double> _getDemoRates() {
+    final now = DateTime.now().toIso8601String();
+    _lastEntries = {
+      'USD': FeeEcardoRateEntry(
+        code: 'USD',
+        priceToman: 187800,
+        priceIrr: 1878000,
+        changePercent: 0.15,
+        nameFa: 'دلار آمریکا',
+        nameEn: 'US Dollar',
+        unit: 'تومان',
+        updatedAt: now,
+      ),
+      'EUR': FeeEcardoRateEntry(
+        code: 'EUR',
+        priceToman: 216760,
+        priceIrr: 2167600,
+        changePercent: -0.22,
+        nameFa: 'یورو',
+        nameEn: 'Euro',
+        unit: 'تومان',
+        updatedAt: now,
+      ),
+      'AED': FeeEcardoRateEntry(
+        code: 'AED',
+        priceToman: 51080,
+        priceIrr: 510800,
+        changePercent: 0.05,
+        nameFa: 'درهم امارات',
+        nameEn: 'UAE Dirham',
+        unit: 'تومان',
+        updatedAt: now,
+      ),
+      'USDT_IRT': FeeEcardoRateEntry(
+        code: 'USDT_IRT',
+        priceToman: 187702,
+        priceIrr: 1877020,
+        changePercent: 0.17,
+        nameFa: 'تتر دلار',
+        nameEn: 'Tether Dollar',
+        unit: 'تومان',
+        updatedAt: now,
+      ),
+      'USDT': FeeEcardoRateEntry(
+        code: 'USDT',
+        priceToman: 187702,
+        priceIrr: 1877020,
+        changePercent: 0.17,
+        nameFa: 'تتر',
+        nameEn: 'Tether',
+        unit: 'تومان',
+        updatedAt: now,
+      ),
+      'IRR': FeeEcardoRateEntry(
+        code: 'IRR',
+        priceToman: 0.1,
+        priceIrr: 1,
+        changePercent: 0.0,
+        nameFa: 'ریال ایران',
+        nameEn: 'Iranian Rial',
+        unit: 'ریال',
+        updatedAt: now,
+      ),
+    };
+    return {
+      'USD': 1878000,
+      'EUR': 2167600,
+      'AED': 510800,
+      'USDT_IRT': 1877020,
+      'USDT': 1877020,
+      'IRR': 1,
+    };
   }
 }

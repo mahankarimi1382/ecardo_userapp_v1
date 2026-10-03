@@ -344,21 +344,13 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                     Flexible(
                       child: Text(
                         currentTierDef.title(context),
-<<<<<<< HEAD
-=======
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
->>>>>>> origin/main
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w800,
                           color: AppColors.lightTextPrimary,
                         ),
-<<<<<<< HEAD
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-=======
->>>>>>> origin/main
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -473,27 +465,18 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                           ar: 'الحد اليومي للمعاملات',
                           zh: '每日交易限额',
                         ),
-<<<<<<< HEAD
-=======
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
->>>>>>> origin/main
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w700,
                           color: AppColors.lightTextPrimary,
                         ),
-<<<<<<< HEAD
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-=======
->>>>>>> origin/main
                       ),
                     ),
                   ],
                 ),
               ),
-<<<<<<< HEAD
               SizedBox(width: 8.w),
               Flexible(
                 child: Text(
@@ -514,22 +497,6 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
-=======
-              Text(
-                currentTierDef.isUnlimited
-                    ? l10nPick(
-                        context,
-                        en: 'Unlimited',
-                        fa: 'نامحدود',
-                        ar: 'غير محدود',
-                        zh: '无限制',
-                      )
-                    : '\$${_formatNumber(consumed)} / \$${_formatNumber(maxLimit)}',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  color: currentTierDef.primaryColor,
->>>>>>> origin/main
                 ),
               ),
             ],
@@ -597,7 +564,6 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                           ar: '\$${_formatNumber(remaining)} المتبقي اليوم ($percentInt% مستخدم)',
                           zh: '今日剩余 \$${_formatNumber(remaining)} (已用 $percentInt%)',
                         ),
-<<<<<<< HEAD
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w500,
@@ -608,17 +574,6 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                 ),
               ),
               SizedBox(width: 8.w),
-=======
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.lightTextSecondary,
-                ),
-              ),
-              ),
->>>>>>> origin/main
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -661,21 +616,13 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                   ar: 'مقارنة المستويات وخريطة الترقية',
                   zh: '等级对比与升级路线',
                 ),
-<<<<<<< HEAD
-=======
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
->>>>>>> origin/main
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w800,
                   color: AppColors.lightTextPrimary,
                 ),
-<<<<<<< HEAD
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-=======
->>>>>>> origin/main
               ),
             ),
             SizedBox(width: 8.w),
@@ -1268,21 +1215,13 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
             Flexible(
               child: Text(
                 buttonLabel,
-<<<<<<< HEAD
-=======
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
->>>>>>> origin/main
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
-<<<<<<< HEAD
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-=======
->>>>>>> origin/main
               ),
             ),
             SizedBox(width: 6.w),

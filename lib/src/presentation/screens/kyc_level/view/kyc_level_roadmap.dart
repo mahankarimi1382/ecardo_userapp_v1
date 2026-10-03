@@ -300,7 +300,10 @@ class _LevelCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 6.w,
+                        runSpacing: 4.h,
                         children: [
                           Text(
                             localization?.kycUpgradeLevelChip(level.level) ??
@@ -311,7 +314,6 @@ class _LevelCard extends StatelessWidget {
                               color: secondaryTextColor,
                             ),
                           ),
-                          SizedBox(width: 6.w),
                           Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 6.w,

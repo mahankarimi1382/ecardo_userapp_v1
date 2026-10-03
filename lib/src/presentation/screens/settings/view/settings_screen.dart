@@ -30,7 +30,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final HomeController homeController = Get.find();
   final SettingsService settings = Get.find();
-  final BiometricAuthService _bio = BiometricAuthService();
+  late final BiometricAuthService _bio;
 
   bool _bioSupported = false;
   bool _bioEnabled = false;
@@ -48,6 +48,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    _bio = Get.isRegistered<BiometricAuthService>()
+        ? Get.find<BiometricAuthService>()
+        : BiometricAuthService();
     if (!homeController.isSettingsInitialized.value) {
       homeController.loadUser();
       homeController.isSettingsInitialized.value = true;
@@ -56,43 +59,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _load() async {
-    final supported = await _bio.isSupported();
-    var enabled = await _bio.isEnabled();
-    if (enabled && !await _bio.canAuthenticate()) {
-      await settings.saveBiometricEnableOrDisable(false);
-      enabled = false;
-    }
-    final lock = await settings.getAppLockMinutes();
-    final fin = await settings.getNotifPref(SettingsService.notifFinancialKey);
-    final promo = await settings.getNotifPref(
-      SettingsService.notifPromoKey,
-      def: false,
-    );
-    final sound = await settings.getNotifPref(SettingsService.notifSoundKey);
-    final vib = await settings.getNotifPref(SettingsService.notifVibrateKey);
-    final theme = await settings.getThemeModePref();
-    final unit = await settings.getRateUnit();
-    final notif = await Permission.notification.status;
-    String ver = '';
     try {
-      final info = await PackageInfo.fromPlatform();
-      ver = '${info.version}+${info.buildNumber}';
-    } catch (_) {}
-    if (!mounted) return;
-    setState(() {
-      _bioSupported = supported;
-      _bioEnabled = enabled;
-      _lockMinutes = lock;
-      _notifFinancial = fin;
-      _notifPromo = promo;
-      _notifSound = sound;
-      _notifVibrate = vib;
-      _themePref = theme;
-      _rateUnit = unit;
-      _version = ver;
-      _notifGranted = notif.isGranted || notif.isLimited;
-      _loading = false;
-    });
+      final supported = await _bio.isSupported();
+      var enabled = await _bio.isEnabled();
+      if (enabled && !await _bio.canAuthenticate()) {
+        await settings.saveBiometricEnableOrDisable(false);
+        enabled = false;
+      }
+      final lock = await settings.getAppLockMinutes();
+      final fin = await settings.getNotifPref(SettingsService.notifFinancialKey);
+      final promo = await settings.getNotifPref(
+        SettingsService.notifPromoKey,
+        def: false,
+      );
+      final sound = await settings.getNotifPref(SettingsService.notifSoundKey);
+      final vib = await settings.getNotifPref(SettingsService.notifVibrateKey);
+      final theme = await settings.getThemeModePref();
+      final unit = await settings.getRateUnit();
+      bool notifGranted = false;
+      try {
+        final notif = await Permission.notification.status
+            .timeout(const Duration(milliseconds: 150), onTimeout: () => PermissionStatus.denied);
+        notifGranted = notif.isGranted || notif.isLimited;
+      } catch (_) {}
+      String ver = '';
+      try {
+        final info = await PackageInfo.fromPlatform()
+            .timeout(const Duration(milliseconds: 150));
+        ver = '${info.version}+${info.buildNumber}';
+      } catch (_) {}
+      if (!mounted) return;
+      setState(() {
+        _bioSupported = supported;
+        _bioEnabled = enabled;
+        _lockMinutes = lock;
+        _notifFinancial = fin;
+        _notifPromo = promo;
+        _notifSound = sound;
+        _notifVibrate = vib;
+        _themePref = theme;
+        _rateUnit = unit;
+        _version = ver;
+        _notifGranted = notifGranted;
+        _loading = false;
+      });
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
   }
 
   Future<void> _toggleBio(bool value) async {

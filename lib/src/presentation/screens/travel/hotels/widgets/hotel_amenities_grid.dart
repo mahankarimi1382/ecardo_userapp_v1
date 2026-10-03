@@ -231,7 +231,6 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
     }
 
     final matched = <HotelAmenityItem>[];
-    final remainingRaw = <String>[...widget.amenities];
 
     for (final raw in widget.amenities) {
       final rawLower = raw.toLowerCase().trim();
