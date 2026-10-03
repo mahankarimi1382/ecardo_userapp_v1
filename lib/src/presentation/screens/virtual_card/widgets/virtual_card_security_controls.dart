@@ -134,13 +134,17 @@ class CardFreezeOverlay extends StatelessWidget {
                                     size: 13.sp,
                                   ),
                                   SizedBox(width: 6.w),
-                                  Text(
-                                    'Card is Frozen',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11.5.sp,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 0.5.w,
+                                  Flexible(
+                                    child: Text(
+                                      'Card is Frozen',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11.5.sp,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 0.5.w,
+                                      ),
                                     ),
                                   ),
                                 ],

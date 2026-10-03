@@ -38,7 +38,7 @@ void main() {
                 onFreezeToggled: (val) => freezeToggled = val,
                 child: Container(
                   width: 400,
-                  height: 420,
+                  height: 400,
                   color: Colors.blue,
                 ),
               ),
