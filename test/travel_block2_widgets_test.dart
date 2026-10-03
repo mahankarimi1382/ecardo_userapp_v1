@@ -302,6 +302,7 @@ void main() {
       // Default is iOS steps
       expect(find.text('1. Open Cellular Settings'), findsOneWidget);
 
+<<<<<<< HEAD
       // The card is taller than the viewport, so the platform tabs sit
       // off-screen at the default 800x600 test surface. Scroll it into view
       // before tapping or the tap lands outside the render tree.
@@ -309,6 +310,13 @@ void main() {
       await tester.ensureVisible(androidTab);
       await tester.pumpAndSettle();
       await tester.tap(androidTab);
+=======
+      // Switch to Android (bring the tab on-screen first — the card is
+      // taller than the test viewport, and taps off-screen miss)
+      await tester.ensureVisible(find.text('Android'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Android'));
+>>>>>>> origin/main
       await tester.pumpAndSettle();
 
       expect(find.text('1. Open SIM Manager'), findsOneWidget);

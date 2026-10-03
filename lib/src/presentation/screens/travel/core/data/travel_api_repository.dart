@@ -28,6 +28,9 @@ class TravelApiRepository implements TravelRepository {
 
   @override
   Future<TravelBootstrap> getBootstrap() async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      return _buildDemoBootstrap();
+    }
     try {
       final response = await _client.get<Map<String, dynamic>>(
         '/travel/bootstrap',
@@ -45,55 +48,59 @@ class TravelApiRepository implements TravelRepository {
       );
     } catch (_) {
       if (DemoAccountService.isDemoInterceptionAllowedNow) {
-        return TravelBootstrap(
-          currency: 'USD',
-          locale: _locale,
-          services: [
-            TravelServiceConfig(
-              type: TravelProductType.hotel,
-              displayName: 'Hotels',
-              description: 'Hotels and accommodations',
-              iconKey: 'hotel',
-              accentColor: '#1E88E5',
-              dataMode: 'live',
-              capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
-              searchFields: [],
-              presentation: {
-                'home_hero': [
-                  {
-                    'title': 'هتل‌ها و اقامتگاه‌های لوکس سراسر جهان',
-                    'subtitle': 'تضمین بهترین قیمت و صدور آنی ووچر',
-                  }
-                ],
-              },
-            ),
-            TravelServiceConfig(
-              type: TravelProductType.flight,
-              displayName: 'Flights',
-              description: 'Flight tickets worldwide',
-              iconKey: 'flight',
-              accentColor: '#4338CA',
-              dataMode: 'live',
-              capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
-              searchFields: [],
-              presentation: {},
-            ),
-            TravelServiceConfig(
-              type: TravelProductType.esim,
-              displayName: 'eSIM',
-              description: 'International eSIM cards',
-              iconKey: 'sim',
-              accentColor: '#059669',
-              dataMode: 'live',
-              capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
-              searchFields: [],
-              presentation: {},
-            ),
-          ],
-        );
+        return _buildDemoBootstrap();
       }
       rethrow;
     }
+  }
+
+  TravelBootstrap _buildDemoBootstrap() {
+    return TravelBootstrap(
+      currency: 'USD',
+      locale: _locale,
+      services: [
+        TravelServiceConfig(
+          type: TravelProductType.hotel,
+          displayName: 'Hotels',
+          description: 'Hotels and accommodations',
+          iconKey: 'hotel',
+          accentColor: '#1E88E5',
+          dataMode: 'live',
+          capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+          searchFields: [],
+          presentation: {
+            'home_hero': [
+              {
+                'title': 'هتل‌ها و اقامتگاه‌های لوکس سراسر جهان',
+                'subtitle': 'تضمین بهترین قیمت و صدور آنی ووچر',
+              }
+            ],
+          },
+        ),
+        TravelServiceConfig(
+          type: TravelProductType.flight,
+          displayName: 'Flights',
+          description: 'Flight tickets worldwide',
+          iconKey: 'flight',
+          accentColor: '#4338CA',
+          dataMode: 'live',
+          capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+          searchFields: [],
+          presentation: {},
+        ),
+        TravelServiceConfig(
+          type: TravelProductType.esim,
+          displayName: 'eSIM',
+          description: 'International eSIM cards',
+          iconKey: 'sim',
+          accentColor: '#059669',
+          dataMode: 'live',
+          capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+          searchFields: [],
+          presentation: {},
+        ),
+      ],
+    );
   }
 
   @override

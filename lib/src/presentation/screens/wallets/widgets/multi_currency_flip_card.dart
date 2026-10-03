@@ -407,6 +407,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+<<<<<<< HEAD
                     // Flexible, not fixed: a monospace account number plus the
                     // badge together exceed the card width on a 320pt card and
                     // overflowed the Row.
@@ -415,6 +416,13 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                         accountNo,
                         overflow: TextOverflow.ellipsis,
                         softWrap: false,
+=======
+                    Flexible(
+                      child: Text(
+                        accountNo,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+>>>>>>> origin/main
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.75),
                           fontSize: 12,
@@ -443,6 +451,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                             tr: 'Varsayılan',
                             ru: 'По умолчанию',
                             zh: '默认',
+                            tr: 'Varsayılan',
+                            ru: 'По умолчанию',
                           ),
                           style: TextStyle(
                             color: theme.accentColor,
@@ -671,15 +681,21 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
             children: [
               icon,
               const SizedBox(width: 4),
+<<<<<<< HEAD
               // Flexible: Turkish ("Yatır") and Russian ("Пополнить") are much
               // longer than "Deposit"/"Vault" and overflowed the third of a
               // 3-up button row on a 320pt card.
+=======
+>>>>>>> origin/main
               Flexible(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+<<<<<<< HEAD
                   textAlign: TextAlign.center,
+=======
+>>>>>>> origin/main
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 10,

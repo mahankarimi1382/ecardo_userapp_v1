@@ -543,7 +543,10 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+<<<<<<< HEAD
                 textAlign: TextAlign.center,
+=======
+>>>>>>> origin/main
                 style: TextStyle(
                   fontSize: 11.5.sp,
                   fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,

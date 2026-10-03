@@ -195,18 +195,37 @@ class CardFreezeOverlay extends StatelessWidget {
                                     color: AppColors.mainSoftBlue,
                                     size: 18.sp,
                                   ),
+<<<<<<< HEAD
                                   SizedBox(width: 8.w),
                                   Expanded(
                                     child: Text(
                                       'Card is currently frozen - all transactions blocked',
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
+=======
+                                  SizedBox(width: 6.w),
+                                  Icon(
+                                    Icons.lock_rounded,
+                                    color: Colors.white,
+                                    size: 13.sp,
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Flexible(
+                                    child: Text(
+                                      'Card is Frozen',
+                                      maxLines: 1,
+>>>>>>> origin/main
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 11.5.sp,
+<<<<<<< HEAD
                                         fontWeight: FontWeight.w700,
                                         height: 1.25,
+=======
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 0.5.w,
+>>>>>>> origin/main
                                       ),
                                     ),
                                   ),
@@ -276,9 +295,18 @@ class CardFreezeOverlay extends StatelessWidget {
                       // on one card and left the user with no idea whether the
                       // switch freezes or unfreezes.
                       Text(
+<<<<<<< HEAD
                         isFrozen ? 'Unfreeze Card' : 'Freeze Virtual Card',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+=======
+                        // Distinct action-style toggle title: the frost
+                        // badge on the card visual is THE single
+                        // "Card is Frozen" banner (QC expects one match).
+                        isFrozen
+                            ? 'Unfreeze Virtual Card'
+                            : 'Freeze Virtual Card',
+>>>>>>> origin/main
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w700,

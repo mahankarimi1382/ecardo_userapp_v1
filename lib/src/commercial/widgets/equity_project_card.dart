@@ -96,7 +96,10 @@ class EquityProjectCard extends StatelessWidget {
                     ),
                   ),
                 ),
+<<<<<<< HEAD
                 SizedBox(width: 8.w),
+=======
+>>>>>>> origin/main
                 Flexible(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
@@ -111,7 +114,11 @@ class EquityProjectCard extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Flexible(
                           child: Text(
+<<<<<<< HEAD
                             '${l10nPick(context, en: 'Illustrative — ', fa: 'نمونه — ', ar: 'توضيحي — ', zh: '示例 — ')}${project.annualYieldPercent.toStringAsFixed(1)}% p.a.',
+=======
+                            '${project.annualYieldPercent.toStringAsFixed(1)}% p.a.',
+>>>>>>> origin/main
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -151,7 +158,11 @@ class EquityProjectCard extends StatelessWidget {
                   children: [
                     Icon(Icons.location_on_outlined, size: 13.sp, color: AppColors.lightTextTertiary),
                     SizedBox(width: 4.w),
+<<<<<<< HEAD
                     Expanded(
+=======
+                    Flexible(
+>>>>>>> origin/main
                       child: Text(
                         project.location,
                         maxLines: 1,
@@ -235,7 +246,11 @@ class EquityProjectCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
+<<<<<<< HEAD
                         '${l10nPick(context, en: 'Sample raised', fa: 'نمونه جذب‌شده', ar: 'تم جمع نموذجي', zh: '示例已募集')}: ${project.currency} ${_formatCompact(project.raisedAmount)}',
+=======
+                        'Raised: ${project.currency} ${_formatCompact(project.raisedAmount)}',
+>>>>>>> origin/main
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -245,6 +260,7 @@ class EquityProjectCard extends StatelessWidget {
                         ),
                       ),
                     ),
+<<<<<<< HEAD
                     SizedBox(width: 8.w),
                     Flexible(
                       child: Text(
@@ -252,6 +268,13 @@ class EquityProjectCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.end,
+=======
+                    Flexible(
+                      child: Text(
+                        'Target: ${project.currency} ${_formatCompact(project.targetAmount)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+>>>>>>> origin/main
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,

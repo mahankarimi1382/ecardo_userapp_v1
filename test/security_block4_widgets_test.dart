@@ -40,14 +40,17 @@ void main() {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
+          // Mirrors app.dart: minTextAdapt keeps .sp-sized overlay content
+          // inside the child box at the 800x600 CI test surface.
+          minTextAdapt: true,
           builder: (context, child) => MaterialApp(
             home: Scaffold(
               body: CardFreezeOverlay(
                 isFrozen: true,
                 onFreezeToggled: (val) => freezeToggled = val,
                 child: Container(
-                  width: 300,
-                  height: 180,
+                  width: 400,
+                  height: 400,
                   color: Colors.blue,
                 ),
               ),
