@@ -146,6 +146,8 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         addons,
       ).map((tile) => resolveTile(tile, badge)).toList(growable: false);
 
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+
       return Column(
         children: [
           SectionHeader(
@@ -158,7 +160,7 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: AppColors.white,
+              color: isDark ? AppColors.darkSurface : AppColors.white,
             ),
             child: PagedServiceTilesGrid(tiles: tiles),
           ),

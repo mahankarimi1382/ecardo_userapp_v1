@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -9,7 +11,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../controllers/guarantee_controller.dart';
 import 'guarantee_application_screen.dart';
 
-/// Screen explaining bank guarantee instruments, LC facilities, and terms.
+/// Informational guide and fee estimator for Bank Guarantee & LC services.
 class GuaranteeIntroScreen extends StatefulWidget {
   const GuaranteeIntroScreen({super.key});
 
@@ -23,16 +25,18 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
       : Get.put(GuaranteeController());
 
   double _sampleAmount = 100000000; // 100M
-  double _marginPct = 10.0;
-  double _feePct = 1.5;
+  final double _marginPct = 10.0;
+  final double _feePct = 1.5;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryAccent = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488);
     final margin = _sampleAmount * (_marginPct / 100.0);
     final fee = _sampleAmount * (_feePct / 100.0);
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -49,7 +53,7 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsetsDirectional.all(AppSpacing.page.w),
           child: CommonButton(
             width: double.infinity,
             text: l10nPick(
@@ -59,8 +63,9 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
               ar: 'إصدار خطاب ضمان جديد',
               zh: '立即申请开立保函',
             ),
-            backgroundColor: AppColors.lightPrimary,
+            backgroundColor: primaryAccent,
             onPressed: () {
+              HapticFeedback.lightImpact();
               controller.amountInput.value = _sampleAmount.toStringAsFixed(0);
               Get.to(() => const GuaranteeApplicationScreen());
             },
@@ -68,21 +73,23 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.md.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Hero
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(20.r),
+              padding: EdgeInsetsDirectional.all(AppSpacing.xl.w),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF161614), Color(0xFF263238)],
+                gradient: LinearGradient(
+                  colors: isDark
+                      ? [const Color(0xFF161614), const Color(0xFF1E2E38)]
+                      : [const Color(0xFF161614), const Color(0xFF263238)],
                   begin: AlignmentDirectional.topStart,
                   end: AlignmentDirectional.bottomEnd,
                 ),
-                borderRadius: BorderRadius.circular(20.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,14 +97,14 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(10.r),
+                        padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0D9488).withValues(alpha: 0.2),
+                          color: const Color(0xFF0D9488).withValues(alpha: 0.25),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(Icons.verified_user_rounded, color: const Color(0xFF2DD4BF), size: 26.sp),
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Text(
                           l10nPick(
@@ -107,16 +114,15 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                             ar: 'خطابات ضمان معتمدة ومسجلة في سبام',
                             zh: '央行SEPAM认证电子银行保函',
                           ),
-                          style: TextStyle(
-                            fontSize: 15.sp,
+                          style: AppTextStyles.titleMedium.copyWith(
                             fontWeight: FontWeight.w900,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: AppSpacing.md.h),
                   Text(
                     l10nPick(
                       context,
@@ -125,8 +131,7 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                       ar: 'إصدار مختلف أنواع خطابات الضمان المصرفية بهامش نقدي ميسر وتوثيق إلكتروني فوري.',
                       zh: '提供具有极低保函保证金比例的官方电子保函，支持线上资产抵质押及雇主端实时真伪查验。',
                     ),
-                    style: TextStyle(
-                      fontSize: 12.sp,
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.warmWhite.withValues(alpha: 0.85),
                       height: 1.6,
                     ),
@@ -135,7 +140,7 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
               ),
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: AppSpacing.xl.h),
 
             // Types of instruments
             Text(
@@ -146,11 +151,15 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                 ar: 'أنواع خطابات الضمان',
                 zh: '保函与信用证分类',
               ),
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: AppSpacing.sm.h),
             _buildInstrumentCard(
               context,
+              isDark: isDark,
               titleFa: 'ضمانت‌نامه شرکت در مناقصه و مزایده (Bid Bond)',
               titleEn: 'Bid Bond (Tender Guarantee)',
               descFa: 'حداقل سپرده نقدی ۵٪ تا ۱۰٪. تضمین پیشنهاد قیمت در مناقصات دولتی و خصوصی.',
@@ -158,6 +167,7 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
             ),
             _buildInstrumentCard(
               context,
+              isDark: isDark,
               titleFa: 'ضمانت‌نامه حسن انجام تعهدات (Performance Bond)',
               titleEn: 'Performance Bond',
               descFa: 'تضمین اجرای صحیح مفاد قرارداد کاری، پروژه‌های پیمانکاری و ساختمانی.',
@@ -165,6 +175,7 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
             ),
             _buildInstrumentCard(
               context,
+              isDark: isDark,
               titleFa: 'ضمانت‌نامه پیش‌پرداخت (Advance Payment)',
               titleEn: 'Advance Payment Guarantee',
               descFa: 'تضمین بازپرداخت مبالغ واریز شده کارفرما قبل از تحویل کار.',
@@ -172,13 +183,14 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
             ),
             _buildInstrumentCard(
               context,
+              isDark: isDark,
               titleFa: 'اعتبار اسنادی داخلی و بین‌المللی (LC)',
               titleEn: 'Letter of Credit (LC)',
               descFa: 'تسهیل تبادلات بازرگانی کالا با تسویه مشروط به ارائه اسناد حمل معتبر.',
               descEn: 'Facilitates commercial transactions conditioned upon shipping document presentation.',
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: AppSpacing.xl.h),
 
             // Cost calculation preview
             Text(
@@ -189,15 +201,20 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                 ar: 'حاسبة التأمين والعمولة التقديرية',
                 zh: '保证金与开立费估算器',
               ),
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: AppSpacing.sm.h),
             Container(
-              padding: EdgeInsets.all(16.r),
+              padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.lightBorder),
+                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
               ),
               child: Column(
                 children: [
@@ -206,12 +223,16 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                     children: [
                       Text(
                         l10nPick(context, fa: 'مبلغ اسمی ضمانت‌نامه', en: 'Face Amount', ar: 'المبلغ الاسمي', zh: '保函面额'),
-                        style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
                       ),
                       Text(
-                        '${_sampleAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ' +
-                            l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔'),
-                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+                        '${_sampleAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
+                        style: AppTextStyles.titleSmall.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
                       ),
                     ],
                   ),
@@ -220,42 +241,56 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                     min: 20000000,
                     max: 500000000,
                     divisions: 24,
-                    activeColor: const Color(0xFF0D9488),
+                    activeColor: primaryAccent,
                     onChanged: (val) {
                       setState(() => _sampleAmount = val);
                     },
                   ),
-                  const Divider(height: 20),
+                  Divider(
+                    height: 20,
+                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         l10nPick(context, fa: 'وجه التزام نقدی (۱۰٪):', en: 'Cash Margin (10%):', ar: 'التأمين النقدي (١٠٪):', zh: '现金保证金（10%）：'),
-                        style: TextStyle(fontSize: 12.sp),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
                       ),
                       Text(
                         '${margin.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ریال',
-                        style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800, color: const Color(0xFF0D9488)),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: primaryAccent,
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 6.h),
+                  SizedBox(height: AppSpacing.xs.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         l10nPick(context, fa: 'کارمزد صدور سالانه (۱.۵٪):', en: 'Issuance Fee (1.5%):', ar: 'عمولة الإصدار (١.٥٪):', zh: '年化开立费（1.5%）：'),
-                        style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
                       ),
                       Text(
                         '${fee.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ریال',
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
+            SizedBox(height: AppSpacing.xxl.h),
           ],
         ),
       ),
@@ -264,43 +299,52 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
 
   Widget _buildInstrumentCard(
     BuildContext context, {
+    required bool isDark,
     required String titleFa,
     required String titleEn,
     required String descFa,
     required String descEn,
   }) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.r),
+      margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
+      padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.lightBorder),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(8.r),
+            padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D9488).withValues(alpha: 0.1),
+              color: const Color(0xFF0D9488).withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.shield_outlined, color: const Color(0xFF0D9488), size: 20.sp),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: AppSpacing.md.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   l10nPick(context, fa: titleFa, en: titleEn),
-                  style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800, color: AppColors.lightTextPrimary),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
                 ),
                 SizedBox(height: 3.h),
                 Text(
                   l10nPick(context, fa: descFa, en: descEn),
-                  style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary, height: 1.4),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
@@ -155,6 +156,7 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
   }
 
   Future<void> _onAction(_PermItem item) async {
+    HapticFeedback.lightImpact();
     final s = item.status;
     if (s.isGranted || s.isLimited) return;
     if (s.isPermanentlyDenied || s.isRestricted) {
@@ -170,8 +172,13 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(
           l10nPick(
@@ -183,28 +190,31 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
             ru: 'Разрешения',
             zh: '应用权限',
           ),
+          style: AppTextStyles.titleMedium.copyWith(color: primaryTextColor),
         ),
-        backgroundColor: AppColors.lightBackground,
-        foregroundColor: AppColors.black,
+        backgroundColor: bgColor,
+        foregroundColor: primaryTextColor,
         elevation: 0,
       ),
       body: ListView.separated(
         padding: EdgeInsetsDirectional.fromSTEB(
           AppSpacing.page,
-          AppSpacing.page,
+          AppSpacing.md,
           AppSpacing.page,
           AppSpacing.bottomSafe(context, AppSpacing.page),
         ),
         itemCount: _items.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
+        separatorBuilder: (_, _) => SizedBox(height: AppSpacing.sm),
         itemBuilder: (context, index) {
           final item = _items[index];
           final status = item.status;
           final granted = status.isGranted || status.isLimited;
           final deniedHard = status.isPermanentlyDenied || status.isRestricted;
           late final String label;
-          late final Color color;
+          late final Color statusColor;
+          late final IconData statusIcon;
           late final String? action;
+
           if (granted) {
             label = l10nPick(
               context,
@@ -215,7 +225,8 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
               ru: 'Включено',
               zh: '已开启',
             );
-            color = AppColors.success;
+            statusColor = AppColors.success;
+            statusIcon = Icons.check_circle_rounded;
             action = null;
           } else if (deniedHard) {
             label = l10nPick(
@@ -227,7 +238,8 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
               ru: 'Отклонено',
               zh: '已拒绝',
             );
-            color = AppColors.error;
+            statusColor = AppColors.error;
+            statusIcon = Icons.cancel_rounded;
             action = l10nPick(
               context,
               en: 'Open Settings',
@@ -247,7 +259,8 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
               ru: 'Не запрошено',
               zh: '未请求',
             );
-            color = Colors.grey;
+            statusColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+            statusIcon = Icons.radio_button_unchecked_rounded;
             action = l10nPick(
               context,
               en: 'Request',
@@ -258,39 +271,66 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
               zh: '请求',
             );
           }
+
           return Container(
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(AppSpacing.md),
             decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(14),
+              color: isDark ? AppColors.darkSurface : AppColors.white,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                width: 0.8,
+              ),
             ),
             child: Row(
               children: [
-                Icon(item.icon, color: AppColors.lightPrimary),
-                const SizedBox(width: 12),
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        .withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  ),
+                  child: Icon(
+                    item.icon,
+                    color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    size: 22,
+                  ),
+                ),
+                SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         item.titleBuilder(context),
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      Text(
-                        item.bodyBuilder(context),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
+                        style: AppTextStyles.titleSmall.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: primaryTextColor,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 2),
                       Text(
-                        granted
-                            ? '✅ $label'
-                            : deniedHard
-                                ? '❌ $label'
-                                : '⚪ $label',
-                        style: TextStyle(color: color, fontSize: 12),
+                        item.bodyBuilder(context),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.xs),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(statusIcon, size: 13, color: statusColor),
+                          SizedBox(width: 4),
+                          Text(
+                            label,
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: statusColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -298,7 +338,13 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
                 if (action != null)
                   TextButton(
                     onPressed: () => _onAction(item),
-                    child: Text(action),
+                    child: Text(
+                      action,
+                      style: AppTextStyles.labelMedium.copyWith(
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
               ],
             ),

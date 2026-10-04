@@ -321,7 +321,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
           ),
           itemBuilder: (context, index) {
             final amenity = displayedAmenities[index];
-            return _buildAmenityTile(amenity, isRtl);
+            return _buildAmenityTile(context, amenity, isRtl);
           },
         ),
 
@@ -335,9 +335,9 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                 child: OutlinedButton.icon(
                   onPressed: () => _showAllAmenitiesBottomSheet(context, allAmenities, isRtl),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: TravelTheme.purple,
+                    foregroundColor: TravelTheme.primaryFor(context),
                     side: BorderSide(
-                      color: TravelTheme.purple.withValues(alpha: 0.35),
+                      color: TravelTheme.primaryFor(context).withValues(alpha: 0.35),
                       width: 1.2.w,
                     ),
                     shape: RoundedRectangleBorder(
@@ -348,7 +348,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                   icon: Icon(
                     Icons.apps_rounded,
                     size: 16.sp,
-                    color: TravelTheme.purple,
+                    color: TravelTheme.primaryFor(context),
                   ),
                   label: Text(
                     isRtl
@@ -372,7 +372,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                   _isAccordionExpanded
                       ? Icons.keyboard_arrow_up_rounded
                       : Icons.keyboard_arrow_down_rounded,
-                  color: TravelTheme.purple,
+                  color: TravelTheme.primaryFor(context),
                 ),
                 label: Text(
                   _isAccordionExpanded
@@ -380,8 +380,8 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                       : (isRtl
                           ? 'نمایش بیشتر (${allAmenities.length})'
                           : 'Show all (${allAmenities.length})'),
-                  style: const TextStyle(
-                    color: TravelTheme.purple,
+                  style: TextStyle(
+                    color: TravelTheme.primaryFor(context),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -392,23 +392,22 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
     );
   }
 
-  Widget _buildAmenityTile(HotelAmenityItem amenity, bool isRtl) {
+  Widget _buildAmenityTile(BuildContext context, HotelAmenityItem amenity, bool isRtl) {
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
-          color: TravelTheme.border.withValues(alpha: 0.7),
+          color: borderColor.withValues(alpha: 0.7),
           width: 1.w,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 6.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
+        boxShadow: TravelTheme.shadowFor(context),
       ),
       child: Row(
         children: [
@@ -417,14 +416,14 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             width: 36.r,
             height: 36.r,
             decoration: BoxDecoration(
-              color: TravelTheme.purple.withValues(alpha: 0.08),
+              color: brandColor.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Icon(
                 amenity.icon,
                 size: 18.sp,
-                color: TravelTheme.purple,
+                color: brandColor,
               ),
             ),
           ),
@@ -436,7 +435,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w700,
-                color: TravelTheme.ink,
+                color: textPrimary,
                 height: 1.2,
               ),
               maxLines: 2,
@@ -465,12 +464,18 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) {
+        final isDark = TravelTheme.isDark(bottomSheetContext);
+        final cardBg = TravelTheme.cardSurfaceFor(bottomSheetContext);
+        final borderColor = TravelTheme.borderFor(bottomSheetContext);
+        final brandColor = TravelTheme.primaryFor(bottomSheetContext);
+        final textPrimary = TravelTheme.textPrimaryFor(bottomSheetContext);
+
         return Container(
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(bottomSheetContext).size.height * 0.82,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cardBg,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
           ),
           child: Column(
@@ -481,7 +486,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                 width: 44.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: TravelTheme.border,
+                  color: borderColor,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
               ),
@@ -495,13 +500,13 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                     Container(
                       padding: EdgeInsets.all(8.r),
                       decoration: BoxDecoration(
-                        color: TravelTheme.purple.withValues(alpha: 0.1),
+                        color: brandColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Icon(
                         Icons.hotel_rounded,
                         size: 20.sp,
-                        color: TravelTheme.purple,
+                        color: brandColor,
                       ),
                     ),
                     SizedBox(width: 10.w),
@@ -513,7 +518,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w900,
-                          color: TravelTheme.ink,
+                          color: textPrimary,
                         ),
                       ),
                     ),
@@ -525,7 +530,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                 ),
               ),
 
-              Divider(color: TravelTheme.border, height: 16.h),
+              Divider(color: borderColor, height: 16.h),
 
               // Grouped Amenity Sections List
               Expanded(
@@ -548,7 +553,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                                 width: 4.w,
                                 height: 14.h,
                                 decoration: BoxDecoration(
-                                  color: TravelTheme.purple,
+                                  color: brandColor,
                                   borderRadius: BorderRadius.circular(2.r),
                                 ),
                               ),
@@ -558,7 +563,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w800,
-                                  color: TravelTheme.ink,
+                                  color: textPrimary,
                                 ),
                               ),
                             ],
@@ -568,10 +573,10 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                           // Amenities in this category
                           Container(
                             decoration: BoxDecoration(
-                              color: TravelTheme.background,
+                              color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA),
                               borderRadius: BorderRadius.circular(16.r),
                               border: Border.all(
-                                color: TravelTheme.border.withValues(alpha: 0.8),
+                                color: borderColor.withValues(alpha: 0.8),
                               ),
                             ),
                             child: ListView.separated(
@@ -579,7 +584,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: categoryAmenities.length,
                               separatorBuilder: (_, _) => Divider(
-                                color: TravelTheme.border.withValues(alpha: 0.6),
+                                color: borderColor.withValues(alpha: 0.6),
                                 height: 1.h,
                               ),
                               itemBuilder: (context, itemIdx) {
@@ -594,19 +599,14 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                                       Container(
                                         padding: EdgeInsets.all(7.r),
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: isDark ? AppColors.darkSurface : AppColors.white,
                                           shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withValues(alpha: 0.04),
-                                              blurRadius: 4.r,
-                                            ),
-                                          ],
+                                          boxShadow: TravelTheme.shadowFor(context),
                                         ),
                                         child: Icon(
                                           item.icon,
                                           size: 18.sp,
-                                          color: TravelTheme.purple,
+                                          color: brandColor,
                                         ),
                                       ),
                                       SizedBox(width: 12.w),
@@ -616,37 +616,8 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: TravelTheme.ink,
+                                            color: textPrimary,
                                           ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 8.w,
-                                          vertical: 3.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.successContainer,
-                                          borderRadius: BorderRadius.circular(6.r),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              Icons.check_rounded,
-                                              size: 11.sp,
-                                              color: AppColors.success,
-                                            ),
-                                            SizedBox(width: 3.w),
-                                            Text(
-                                              item.localizedTag(isRtl),
-                                              style: TextStyle(
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.success,
-                                              ),
-                                            ),
-                                          ],
                                         ),
                                       ),
                                     ],
@@ -659,34 +630,6 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                       ),
                     );
                   },
-                ),
-              ),
-
-              // Bottom Dismiss Button
-              SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 14.h),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: TravelTheme.purple,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.r),
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                      ),
-                      child: Text(
-                        isRtl ? 'بستن' : 'Done',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ],

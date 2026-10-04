@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -12,7 +14,8 @@ import '../widgets/loan_calculator_slider.dart';
 import '../widgets/loan_amortization_schedule.dart';
 import 'loan_confirm_screen.dart';
 
-/// Form screen for submitting a loan request with rigorous input validation.
+/// Form screen to configure loan parameters, input applicant financial details,
+/// and review estimated amortization schedule before confirmation.
 class LoanApplicationScreen extends StatefulWidget {
   const LoanApplicationScreen({super.key});
 
@@ -22,6 +25,7 @@ class LoanApplicationScreen extends StatefulWidget {
 
 class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final LoanController controller = Get.isRegistered<LoanController>()
       ? Get.find<LoanController>()
       : Get.put(LoanController());
@@ -107,13 +111,17 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     controller.guarantorNationalIdInput.value = _guarantorController.text.trim();
     controller.graceMonthsInput.value = _calculatedGraceMonths;
 
+    HapticFeedback.lightImpact();
     Get.to(() => const LoanConfirmScreen());
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -130,25 +138,58 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
-          child: CommonButton(
-            width: double.infinity,
-            text: l10nPick(
-              context,
-              fa: 'بررسی نهایی و تأیید شرایط',
-              en: 'Review & Confirm',
-              ar: 'مراجعة وتأكيد الشروط',
-              zh: '审核并确认条件',
-            ),
-            backgroundColor: AppColors.lightPrimary,
-            onPressed: _onProceed,
+          padding: EdgeInsetsDirectional.all(AppSpacing.page.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_calculatedMonthlyPayment > 0)
+                Container(
+                  margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 14.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l10nPick(context, fa: 'قسط ماهانه تخمینی:', en: 'Estimated Monthly Installment:'),
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                      Text(
+                        '${_calculatedMonthlyPayment.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR')}',
+                        style: AppTextStyles.labelLarge.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: primaryAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              CommonButton(
+                width: double.infinity,
+                text: l10nPick(
+                  context,
+                  fa: 'بررسی نهایی و تأیید شرایط',
+                  en: 'Review & Confirm',
+                  ar: 'مراجعة وتأكيد الشروط',
+                  zh: '审核并确认条件',
+                ),
+                backgroundColor: primaryAccent,
+                onPressed: _onProceed,
+              ),
+            ],
           ),
         ),
       ),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.md.h),
           children: [
             // Product selection
             Text(
@@ -159,22 +200,25 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ar: 'اختر خطة التسهيل',
                 zh: '选择贷款方案',
               ),
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             Obx(() {
               if (controller.products.isEmpty) {
                 return Container(
-                  padding: EdgeInsets.all(14.r),
+                  padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(color: AppColors.lightBorder),
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.stars_rounded, color: AppColors.mainSoftBlue, size: 24.sp),
-                      SizedBox(width: 10.w),
+                      Icon(Icons.stars_rounded, color: primaryAccent, size: 24.sp),
+                      SizedBox(width: AppSpacing.sm.w),
                       Expanded(
                         child: Text(
                           l10nPick(
@@ -184,7 +228,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                             ar: 'خطة زرين الائتمانية الذكية (افتراضي)',
                             zh: 'Zarrin 智能信贷方案（默认）',
                           ),
-                          style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
                         ),
                       ),
                     ],
@@ -196,12 +243,12 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 initialValue: controller.selectedProduct.value ?? controller.products.first,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurface,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14.r),
-                    borderSide: const BorderSide(color: AppColors.lightBorder),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                    borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                  contentPadding: EdgeInsetsDirectional.symmetric(horizontal: 14.w, vertical: 12.h),
                 ),
                 items: controller.products.map((p) {
                   return DropdownMenuItem<LoanProductModel>(
@@ -210,12 +257,15 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                   );
                 }).toList(),
                 onChanged: (val) {
-                  if (val != null) controller.selectProduct(val);
+                  if (val != null) {
+                    HapticFeedback.selectionClick();
+                    controller.selectProduct(val);
+                  }
                 },
               );
             }),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.lg.h),
 
             // Interactive Loan Calculator Slider
             Obx(() {
@@ -238,30 +288,33 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               );
             }),
 
-            SizedBox(height: 14.h),
+            SizedBox(height: AppSpacing.md.h),
 
             // Quick Amortization Schedule Preview
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.lightBorder),
+                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InkWell(
-                    borderRadius: BorderRadius.circular(16.r),
-                    onTap: () => setState(() => _isSchedulePreviewExpanded = !_isSchedulePreviewExpanded),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      setState(() => _isSchedulePreviewExpanded = !_isSchedulePreviewExpanded);
+                    },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 14.w, vertical: 12.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.calendar_month_outlined, size: 18.sp, color: AppColors.lightPrimary),
-                              SizedBox(width: 8.w),
+                              Icon(Icons.calendar_month_outlined, size: 18.sp, color: primaryAccent),
+                              SizedBox(width: AppSpacing.sm.w),
                               Text(
                                 l10nPick(
                                   context,
@@ -270,13 +323,16 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                                   ar: 'معاينة جدول استهلاك الأقساط',
                                   zh: '还款与摊销计划表预览',
                                 ),
-                                style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800),
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                ),
                               ),
                             ],
                           ),
                           Icon(
                             _isSchedulePreviewExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                            color: AppColors.lightTextSecondary,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                             size: 20.sp,
                           ),
                         ],
@@ -284,9 +340,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                     ),
                   ),
                   if (_isSchedulePreviewExpanded) ...[
-                    const Divider(height: 1, color: AppColors.lightBorder),
+                    Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                     Padding(
-                      padding: EdgeInsets.all(12.r),
+                      padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
                       child: LoanAmortizationSchedule(
                         installments: InstallmentItem.generateSchedule(
                           principal: _calculatedAmount,
@@ -305,41 +361,51 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               ),
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.lg.h),
 
-            // Requested Amount (Manual fine-tuning input)
+            // Exact Amount Input Field
             Text(
               l10nPick(
                 context,
-                fa: 'مبلغ دقیق درخواستی (ریال - تنظیم دستی)',
-                en: 'Requested Amount (Manual input)',
-                ar: 'المبلغ المطلوب (إدخال يدوي)',
-                zh: '申请融资金额（手动微调）',
+                fa: 'مبلغ دقیق درخواستی (ریال)',
+                en: 'Exact Requested Amount (IRR)',
+                ar: 'المبلغ المطلوب بدقة',
+                zh: '精确申请金额（里亚尔）',
               ),
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             TextFormField(
               controller: _amountController,
               keyboardType: TextInputType.number,
               onChanged: _onAmountFieldChanged,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
-                hintText: 'مثال: ۵۰,۰۰۰,۰۰۰',
-                prefixIcon: const Icon(Icons.attach_money_rounded),
+                fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurface,
+                prefixIcon: const Icon(Icons.monetization_on_outlined),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14.r),
-                  borderSide: const BorderSide(color: AppColors.lightBorder),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 ),
               ),
               validator: (val) {
                 if (val == null || val.trim().isEmpty) {
-                  return l10nPick(context, fa: 'وارد کردن مبلغ الزامی است', en: 'Amount is required');
+                  return l10nPick(
+                    context,
+                    fa: 'مبلغ درخواستی الزامی است',
+                    en: 'Requested amount is required',
+                  );
                 }
                 final numVal = double.tryParse(val.replaceAll(',', '').trim());
                 if (numVal == null || numVal <= 0) {
-                  return l10nPick(context, fa: 'مبلغ عددی معتبر وارد کنید', en: 'Enter a valid numeric amount');
+                  return l10nPick(
+                    context,
+                    fa: 'مبلغ نامعتبر است',
+                    en: 'Invalid amount',
+                  );
                 }
                 final p = controller.selectedProduct.value;
                 if (p != null) {
@@ -362,7 +428,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               },
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.lg.h),
 
             // Loan purpose
             Text(
@@ -373,14 +439,17 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ar: 'الغرض من التسهيل',
                 zh: '贷款用途',
               ),
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             TextFormField(
               controller: _purposeController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurface,
                 hintText: l10nPick(
                   context,
                   fa: 'مثال: خرید تجهیزات، سرمایه در گردش، هزینه‌های بازرگانی',
@@ -390,8 +459,8 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ),
                 prefixIcon: const Icon(Icons.description_outlined),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14.r),
-                  borderSide: const BorderSide(color: AppColors.lightBorder),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 ),
               ),
               validator: (val) {
@@ -406,7 +475,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               },
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.lg.h),
 
             // Monthly Documented Income
             Text(
@@ -417,20 +486,23 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ar: 'الدخل الشهري الموثق',
                 zh: '月收入凭证金额',
               ),
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             TextFormField(
               controller: _incomeController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurface,
                 hintText: 'مثال: ۳۰,۰۰۰,۰۰۰',
                 prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14.r),
-                  borderSide: const BorderSide(color: AppColors.lightBorder),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 ),
               ),
               validator: (val) {
@@ -445,7 +517,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               },
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.lg.h),
 
             // Collateral type
             Text(
@@ -456,19 +528,22 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ar: 'نوع الضمان المقترح',
                 zh: '抵押物担保类型',
               ),
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             DropdownButtonFormField<String>(
               initialValue: _collateralType,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurface,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14.r),
-                  borderSide: const BorderSide(color: AppColors.lightBorder),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                contentPadding: EdgeInsetsDirectional.symmetric(horizontal: 14.w, vertical: 12.h),
               ),
               items: [
                 DropdownMenuItem(
@@ -489,11 +564,14 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ),
               ],
               onChanged: (val) {
-                if (val != null) setState(() => _collateralType = val);
+                if (val != null) {
+                  HapticFeedback.selectionClick();
+                  setState(() => _collateralType = val);
+                }
               },
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.lg.h),
 
             // Guarantor National ID (if applicable)
             Text(
@@ -504,25 +582,28 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ar: 'الرقم القومي للضامن (اختياري)',
                 zh: '担保人身份证号（选填）',
               ),
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+              style: AppTextStyles.titleSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             TextFormField(
               controller: _guarantorController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurface,
                 hintText: 'کد ملی ۱۰ رقمی ضامن',
                 prefixIcon: const Icon(Icons.person_add_alt_1_outlined),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14.r),
-                  borderSide: const BorderSide(color: AppColors.lightBorder),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 ),
               ),
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: AppSpacing.xxl.h),
           ],
         ),
       ),

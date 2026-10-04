@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../app/constants/app_colors.dart';
+import '../../app/constants/app_spacing.dart';
 import '../../helper/l10n_pick.dart';
 import '../controllers/visa_controller.dart';
 import '../models/visa_models.dart';
@@ -21,22 +23,28 @@ class VisaApplicationScreen extends StatelessWidget {
         ? Get.find<VisaController>()
         : Get.put(VisaController());
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
-          l10nPick(context, en: 'Visa Application', fa: 'ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â®ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Âª ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â²ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§'),
+          l10nPick(context, en: 'Visa Application', fa: 'فرم درخواست ویزا'),
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: AppColors.lightTextPrimary,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.lightTextPrimary, size: 18),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            size: AppSpacing.iconSm.r,
+          ),
           onPressed: () => Get.back(),
         ),
       ),
@@ -46,15 +54,21 @@ class VisaApplicationScreen extends StatelessWidget {
         return Stack(
           children: [
             ListView(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg.w,
+                vertical: AppSpacing.lg.h,
+              ),
               children: [
                 // Top Destination Info Bar
                 VisaCard(
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md.w,
+                    vertical: AppSpacing.md.h,
+                  ),
                   child: Row(
                     children: [
                       VisaCountryFlag(flagUrl: catalog.countryFlag, size: 36),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,14 +78,17 @@ class VisaApplicationScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.lightTextPrimary,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                               ),
                             ),
                             Text(
                               catalog.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 11.5.sp, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 11.5.sp,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              ),
                             ),
                           ],
                         ),
@@ -81,13 +98,13 @@ class VisaApplicationScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
-                          color: AppColors.lightSecondary,
+                          color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.lg.h),
 
                 // Section 1: Passenger / Applicant Info
                 VisaCard(
@@ -96,60 +113,81 @@ class VisaApplicationScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.person_outline_rounded, color: AppColors.lightSecondary, size: 20),
-                          SizedBox(width: 8.w),
+                          Icon(
+                            Icons.person_outline_rounded,
+                            color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            size: AppSpacing.iconSm.r,
+                          ),
+                          SizedBox(width: AppSpacing.sm.w),
                           Text(
-                            l10nPick(context, en: 'Applicant Information', fa: 'ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â´ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â®ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂµÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Âª ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¶ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ (ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â·ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â°ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡)'),
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+                            l10nPick(context, en: 'Applicant Information', fa: 'مشخصات متقاضی (مطابق گذرنامه)'),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 14.h),
+                      SizedBox(height: AppSpacing.md.h),
 
-                      // Full Name (English)
+                      // Full Name (Latin)
                       _textField(
+                        context: context,
+                        isDark: isDark,
                         controller: controller.fullNameController,
-                        label: l10nPick(context, en: 'Full Name (Latin as in passport)', fa: 'ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â  ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â®ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ (ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â·ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â°ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡)'),
+                        label: l10nPick(context, en: 'Full Name (Latin as in passport)', fa: 'نام و نام خانوادگی به انگلیسی'),
                         hint: 'e.g. ALI REZAEI',
                         keyboardType: TextInputType.name,
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: AppSpacing.md.h),
 
                       // Passport Number
                       _textField(
+                        context: context,
+                        isDark: isDark,
                         controller: controller.passportNumberController,
-                        label: l10nPick(context, en: 'Passport Number', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â´ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â°ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡'),
+                        label: l10nPick(context, en: 'Passport Number', fa: 'شماره گذرنامه'),
                         hint: 'e.g. A12345678',
                         keyboardType: TextInputType.text,
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: AppSpacing.md.h),
 
                       // Phone Number
                       _textField(
+                        context: context,
+                        isDark: isDark,
                         controller: controller.phoneController,
-                        label: l10nPick(context, en: 'Contact Phone Number', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â´ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â± ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³'),
+                        label: l10nPick(context, en: 'Contact Phone Number', fa: 'شماره تماس'),
                         hint: 'e.g. +989123456789',
                         keyboardType: TextInputType.phone,
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: AppSpacing.md.h),
 
                       // Email
                       _textField(
+                        context: context,
+                        isDark: isDark,
                         controller: controller.emailController,
-                        label: l10nPick(context, en: 'Email Address (for e-visa delivery)', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â©ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â²ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â©ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â©'),
+                        label: l10nPick(context, en: 'Email Address (for e-visa delivery)', fa: 'ایمیل دریافت ویزا الکترونیک'),
                         hint: 'e.g. yourname@example.com',
                         keyboardType: TextInputType.emailAddress,
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: AppSpacing.md.h),
 
                       // Travel Date Picker
                       Text(
-                        l10nPick(context, en: 'Intended Travel Date', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â® ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±'),
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary),
+                        l10nPick(context, en: 'Intended Travel Date', fa: 'تاریخ تقریبی سفر'),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
                       ),
-                      SizedBox(height: 6.h),
+                      SizedBox(height: AppSpacing.xs.h),
                       InkWell(
                         onTap: () async {
+                          HapticFeedback.lightImpact();
                           final now = DateTime.now();
                           final picked = await showDatePicker(
                             context: context,
@@ -161,12 +199,16 @@ class VisaApplicationScreen extends StatelessWidget {
                             controller.travelDate.value = picked;
                           }
                         },
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md.w,
+                            vertical: AppSpacing.md.h,
+                          ),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(color: AppColors.lightBorder),
-                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,13 +216,19 @@ class VisaApplicationScreen extends StatelessWidget {
                               Text(
                                 controller.travelDate.value != null
                                     ? "${controller.travelDate.value!.year}-${controller.travelDate.value!.month.toString().padLeft(2, '0')}-${controller.travelDate.value!.day.toString().padLeft(2, '0')}"
-                                    : l10nPick(context, en: 'Select date', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â®ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â® ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±'),
+                                    : l10nPick(context, en: 'Select date', fa: 'انتخاب تاریخ'),
                                 style: TextStyle(
                                   fontSize: 13.sp,
-                                  color: controller.travelDate.value != null ? Colors.black87 : Colors.grey,
+                                  color: controller.travelDate.value != null
+                                      ? (isDark ? AppColors.darkTextPrimary : AppColors.deepBlack)
+                                      : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
                                 ),
                               ),
-                              const Icon(Icons.calendar_today_outlined, size: 18, color: AppColors.lightSecondary),
+                              Icon(
+                                Icons.calendar_today_outlined,
+                                size: AppSpacing.iconSm.r,
+                                color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                              ),
                             ],
                           ),
                         ),
@@ -188,7 +236,7 @@ class VisaApplicationScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.lg.h),
 
                 // Section 2: Documents Checklist
                 VisaCard(
@@ -197,36 +245,49 @@ class VisaApplicationScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.upload_file_rounded, color: AppColors.lightSecondary, size: 20),
-                          SizedBox(width: 8.w),
+                          Icon(
+                            Icons.upload_file_rounded,
+                            color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            size: AppSpacing.iconSm.r,
+                          ),
+                          SizedBox(width: AppSpacing.sm.w),
                           Text(
-                            l10nPick(context, en: 'Document Checklist', fa: 'ÃƒÆ’Ã…Â¡ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â©ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Âª ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â© ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â²'),
-                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+                            l10nPick(context, en: 'Document Checklist', fa: 'چک‌لیست مدارک موردنیاز'),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 6.h),
+                      SizedBox(height: AppSpacing.xs.h),
                       Text(
                         l10nPick(
                           context,
                           en: 'Upload clear scans or photos (JPG, PNG, or PDF up to 5MB).',
-                          fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂµÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â± ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¶ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â­ ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â©ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â  ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â² JPGÃƒÆ’Ã‹Å“Ãƒâ€¦Ã¢â‚¬â„¢ PNG ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ PDF ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚Â ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€šÃ‚Âµ ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Âª ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â°ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯.',
+                          fa: 'تصاویر واضح یا اسکن با فرمت‌های مجاز JPG، PNG یا PDF تا حداکثر ۵ مگابایت بارگذاری نمایید.',
                         ),
-                        style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
                       ),
-                      SizedBox(height: 14.h),
+                      SizedBox(height: AppSpacing.md.h),
 
                       // Document upload items
                       if (catalog.requiredDocs.isEmpty)
-                        _UploadItemTile(
+                        _buildUploadItem(
+                          controller: controller,
                           docKey: 'passport_scan',
-                          title: l10nPick(context, en: 'Passport Scan', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â³ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â©ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â  ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂµÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â­ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ ÃƒÆ’Ã…Â¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â°ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡'),
-                          instructions: l10nPick(context, en: 'Must be valid for at least 6 months.', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â­ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€šÃ‚Â¶ ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¹ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±.'),
+                          title: l10nPick(context, en: 'Passport Scan', fa: 'اسکن صفحه اول گذرنامه'),
+                          instructions: l10nPick(context, en: 'Must be valid for at least 6 months.', fa: 'حداقل ۶ ماه اعتبار قانونی داشته باشد.'),
                           isRequired: true,
                         )
                       else
                         ...catalog.requiredDocs.map(
-                          (doc) => _UploadItemTile(
+                          (doc) => _buildUploadItem(
+                            controller: controller,
                             docKey: doc.key,
                             title: doc.title,
                             instructions: doc.instructions,
@@ -242,21 +303,26 @@ class VisaApplicationScreen extends StatelessWidget {
 
             if (isBusy)
               Container(
-                color: Colors.black26,
-                child: const Center(
-                  child: CircularProgressIndicator(),
+                color: AppColors.black.withValues(alpha: 0.35),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                  ),
                 ),
               ),
           ],
         );
       }),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg.w,
+          vertical: AppSpacing.md.h,
+        ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.darkSurface : AppColors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
               blurRadius: 10,
               offset: const Offset(0, -3),
             ),
@@ -265,16 +331,18 @@ class VisaApplicationScreen extends StatelessWidget {
         child: SafeArea(
           child: ElevatedButton(
             onPressed: () async {
+              HapticFeedback.lightImpact();
               final req = await controller.submitApplication();
               if (req != null) {
                 Get.to(() => VisaPaymentScreen(request: req));
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.lightSecondary,
+              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+              foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
               ),
               elevation: 0,
             ),
@@ -282,15 +350,14 @@ class VisaApplicationScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  l10nPick(context, en: 'Proceed to Payment', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â£ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€¹Ã¢â‚¬Â  ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â  ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â®ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Âª'),
+                  l10nPick(context, en: 'Proceed to Payment', fa: 'تأیید و رفتن به پرداخت'),
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
                   ),
                 ),
-                SizedBox(width: 8.w),
-                const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
+                SizedBox(width: AppSpacing.sm.w),
+                const Icon(Icons.arrow_forward_rounded, size: 18),
               ],
             ),
           ),
@@ -299,7 +366,42 @@ class VisaApplicationScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildUploadItem({
+    required VisaController controller,
+    required String docKey,
+    required String title,
+    required String instructions,
+    required bool isRequired,
+  }) {
+    return Obx(() {
+      final pickedFile = controller.pickedFiles[docKey];
+      final isUploading = controller.uploadProgress[docKey] == true;
+
+      return VisaDocUploadCard(
+        title: title,
+        instructions: instructions,
+        isRequired: isRequired,
+        pickedFile: pickedFile,
+        isUploading: isUploading,
+        onPickFile: () async {
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'webp'],
+          );
+          if (result != null && result.files.single.path != null) {
+            controller.pickDocumentFile(
+              docKey,
+              File(result.files.single.path!),
+            );
+          }
+        },
+      );
+    });
+  }
+
   Widget _textField({
+    required BuildContext context,
+    required bool isDark,
     required TextEditingController controller,
     required String label,
     required String hint,
@@ -310,145 +412,41 @@ class VisaApplicationScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary),
+          style: TextStyle(
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          ),
         ),
-        SizedBox(height: 6.h),
+        SizedBox(height: AppSpacing.xs.h),
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppColors.lightBorder),
-            color: Colors.white,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
           ),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
-            style: TextStyle(fontSize: 13.5.sp),
+            style: TextStyle(
+              fontSize: 13.5.sp,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(fontSize: 12.5.sp, color: Colors.grey),
+              hintStyle: TextStyle(
+                fontSize: 12.5.sp,
+                color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+              ),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.md.w,
+                vertical: AppSpacing.md.h,
+              ),
             ),
           ),
         ),
       ],
     );
-  }
-}
-
-class _UploadItemTile extends StatelessWidget {
-  final String docKey;
-  final String title;
-  final String instructions;
-  final bool isRequired;
-
-  const _UploadItemTile({
-    required this.docKey,
-    required this.title,
-    required this.instructions,
-    required this.isRequired,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<VisaController>();
-
-    return Obx(() {
-      final pickedFile = controller.pickedFiles[docKey];
-      final isUploading = controller.uploadProgress[docKey] == true;
-
-      return Container(
-        margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.all(12.r),
-        decoration: BoxDecoration(
-          color: pickedFile != null ? AppColors.successContainer : AppColors.lightBackground,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(
-            color: pickedFile != null ? AppColors.success : AppColors.lightBorder,
-          ),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 18.r,
-              backgroundColor: pickedFile != null ? AppColors.successContainer : AppColors.lightBackground,
-              child: Icon(
-                pickedFile != null ? Icons.check_circle_rounded : Icons.file_upload_outlined,
-                color: pickedFile != null ? AppColors.success : AppColors.lightTextSecondary,
-                size: 20.r,
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 12.5.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.lightTextPrimary,
-                        ),
-                      ),
-                      if (isRequired) ...[
-                        SizedBox(width: 4.w),
-                        Text('*', style: TextStyle(color: Colors.red, fontSize: 13.sp)),
-                      ],
-                    ],
-                  ),
-                  if (pickedFile != null)
-                    Text(
-                      pickedFile.path.split('/').last.split('\\').last,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 10.5.sp, color: AppColors.success, fontWeight: FontWeight.w600),
-                    )
-                  else if (instructions.isNotEmpty)
-                    Text(
-                      instructions,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 10.5.sp, color: AppColors.lightTextSecondary),
-                    ),
-                ],
-              ),
-            ),
-            SizedBox(width: 8.w),
-            if (isUploading)
-              const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-            else
-              TextButton(
-                onPressed: () async {
-                  final result = await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'webp'],
-                  );
-                  if (result != null && result.files.single.path != null) {
-                    controller.pickDocumentFile(
-                      docKey,
-                      File(result.files.single.path!),
-                    );
-                  }
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: pickedFile != null ? AppColors.lightBorder : AppColors.lightSecondary,
-                  foregroundColor: pickedFile != null ? AppColors.lightTextSecondary : Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                ),
-                child: Text(
-                  pickedFile != null
-                      ? l10nPick(context, en: 'Change', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂºÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â±')
-                      : l10nPick(context, en: 'Upload', fa: 'ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚ÂªÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â®ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â¨ ÃƒÆ’Ã¢â€žÂ¢Ãƒâ€šÃ‚ÂÃƒÆ’Ã‹Å“Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬ÂºÃƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã¢â€žÂ¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾'),
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700),
-                ),
-              ),
-          ],
-        ),
-      );
-    });
   }
 }

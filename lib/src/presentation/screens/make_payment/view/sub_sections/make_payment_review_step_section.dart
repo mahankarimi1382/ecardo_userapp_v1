@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_glass_card.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
@@ -18,6 +21,7 @@ class MakePaymentReviewStepSection extends StatelessWidget {
     final MakePaymentController controller = Get.find();
     final SettingsService settingsService = Get.find();
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: controller.wallet.value!.code!,
@@ -29,9 +33,9 @@ class MakePaymentReviewStepSection extends StatelessWidget {
     );
 
     return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,123 +43,128 @@ class MakePaymentReviewStepSection extends StatelessWidget {
               localization.makePaymentReviewStepSectionTitle,
               style: TextStyle(
                 letterSpacing: 0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 fontSize: 20,
-                color: AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
-            const SizedBox(height: 16),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
+            const SizedBox(height: AppSpacing.lg),
+
+            // Glassmorphic review card with fee breakdown
+            EcardoGlassCard(
+              variant: EcardoGlassVariant.standard,
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
               child: Column(
                 children: [
                   _buildReviewDynamicContent(
                     context,
+                    isDark: isDark,
                     title: localization.makePaymentReviewStepSectionAmount,
                     content:
                         "${(double.tryParse(controller.amountController.text) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                     contentColor: AppColors.success,
                   ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
-                  ),
-                  const SizedBox(height: 20),
+                  _buildDivider(isDark),
                   Obx(
                     () => _buildReviewDynamicContent(
                       context,
+                      isDark: isDark,
                       title: localization.makePaymentReviewStepSectionWallet,
                       content: controller.wallet.value!.name!,
-                      contentColor: AppColors.black,
+                      contentColor: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
-                  ),
-                  const SizedBox(height: 20),
+                  _buildDivider(isDark),
                   _buildReviewDynamicContent(
                     context,
+                    isDark: isDark,
                     title: localization
                         .makePaymentReviewStepSectionMerchantAccount,
                     content: controller.merchantMidController.text,
-                    contentColor: AppColors.black,
+                    contentColor: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                   ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
-                  ),
-                  const SizedBox(height: 20),
+                  _buildDivider(isDark),
                   Obx(
                     () => _buildReviewDynamicContent(
                       context,
+                      isDark: isDark,
                       title: localization.makePaymentReviewStepSectionCharge,
                       content: controller.chargeLoadFailed.value
                           ? '—'
                           : "${controller.charge.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                      contentColor: AppColors.error,
+                      contentColor: AppColors.warning,
+                      isBadge: true,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
-                  ),
-                  const SizedBox(height: 20),
+                  _buildDivider(isDark),
                   Obx(
                     () => _buildReviewDynamicContent(
                       context,
+                      isDark: isDark,
                       title:
                           localization.makePaymentReviewStepSectionTotalAmount,
                       content: controller.chargeLoadFailed.value
                           ? '—'
                           : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                      contentColor: AppColors.success,
+                      contentColor: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
+                      isTotal: true,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: AppSpacing.xxxl),
 
             Row(
               children: [
                 Expanded(
                   child: CommonIconButton(
-                    backgroundColor: AppColors.lightPrimary.withValues(
-                      alpha: 0.04,
-                    ),
-                    borderWidth: 2,
-                    borderColor: AppColors.lightPrimary.withValues(alpha: 0.50),
+                    backgroundColor: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightPrimary.withValues(alpha: 0.04),
+                    borderWidth: 1.5,
+                    borderColor: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightPrimary.withValues(alpha: 0.30),
                     width: double.infinity,
                     height: 52,
                     text: localization.makePaymentReviewStepSectionBackButton,
                     icon: PngAssets.reviewArrowBackCommonIcon,
                     iconWidth: 18,
                     iconHeight: 18,
-                    iconAndTextSpace: 8,
-                    iconColor: AppColors.lightTextPrimary,
-                    textColor: AppColors.lightTextPrimary,
-                    onPressed: () => controller.currentStep.value = 0,
+                    iconAndTextSpace: AppSpacing.sm,
+                    iconColor: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                    textColor: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      controller.currentStep.value = 0;
+                    },
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: AppSpacing.lg),
                 Expanded(
                   child: Obx(
                     () => CommonIconButton(
                       isLoading: controller.isMakePaymentLoading.value,
                       onPressed: () async {
+                        HapticFeedback.lightImpact();
                         final verified = await Get.bottomSheet<String>(
                           const VerifyPasscodeBottomSheet(),
                         );
-                        if (verified == null || !PasscodeHelper.isValidFormat(verified)) {
+                        if (verified == null ||
+                            !PasscodeHelper.isValidFormat(verified)) {
                           return;
                         }
                         await controller.makePayment(passcode: verified);
@@ -167,54 +176,94 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                       icon: PngAssets.reviewArrowRightCommonIcon,
                       iconWidth: 18,
                       iconHeight: 18,
-                      iconAndTextSpace: 8,
+                      iconAndTextSpace: AppSpacing.sm,
                       isIconRight: true,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: AppSpacing.huge),
           ],
         ),
       ),
     );
   }
 
+  static Widget _buildDivider(bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      child: Divider(
+        height: 1,
+        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+      ),
+    );
+  }
+
   static Widget _buildReviewDynamicContent(
     BuildContext context, {
+    required bool isDark,
     required String title,
     required String content,
     required Color contentColor,
+    bool isTotal = false,
+    bool isBadge = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             title,
             style: TextStyle(
               letterSpacing: 0,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
+              fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
+              fontSize: isTotal ? 16 : 14,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
-            child: Text(
-              content,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 15,
-                color: contentColor,
-              ),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-            ),
+            child: isBadge
+                ? Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: contentColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXs,
+                        ),
+                      ),
+                      child: Text(
+                        content,
+                        style: TextStyle(
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                          color: contentColor,
+                        ),
+                      ),
+                    ),
+                  )
+                : Text(
+                    content,
+                    style: TextStyle(
+                      letterSpacing: 0,
+                      fontWeight: isTotal ? FontWeight.w900 : FontWeight.w700,
+                      fontSize: isTotal ? 17 : 15,
+                      color: contentColor,
+                    ),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                  ),
           ),
         ],
       ),

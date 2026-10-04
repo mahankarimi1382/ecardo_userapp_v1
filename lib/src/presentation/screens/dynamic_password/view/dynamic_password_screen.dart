@@ -4,12 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
-import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/settings_screen.dart';
 
 class DynamicPasswordScreen extends StatefulWidget {
   const DynamicPasswordScreen({super.key});
@@ -47,9 +49,8 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
   }
 
   Future<void> _generateOtp() async {
-    // M-3 (PAYMENT-FIX): in-flight guard — a double tap on generate /
-    // regenerate must not mint two OTPs at once.
     if (_isLoading) return;
+    HapticFeedback.lightImpact();
     setState(() => _isLoading = true);
     _timer?.cancel();
 
@@ -73,7 +74,6 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
       }
 
       final response = await Get.find<NetworkService>().post(
-        // M-3 (PAYMENT-FIX): path moved into ApiPath (value unchanged).
         endpoint: ApiPath.generateDynamicPasswordOtpEndpoint,
         data: {'account_number': accountNumber},
       );
@@ -87,6 +87,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
             _secondsRemaining = data['expires_in'] ?? 60;
             _isLoading = false;
           });
+          HapticFeedback.mediumImpact();
           _startCountdown();
         } else {
           ToastHelper().showErrorToast(
@@ -97,11 +98,15 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
           setState(() => _isLoading = false);
         }
       } else {
-        ToastHelper().showErrorToast(response.message ?? AppLocalizations.of(Get.context!)!.dynamicPasswordServerError);
+        ToastHelper().showErrorToast(
+          response.message ?? AppLocalizations.of(Get.context!)!.dynamicPasswordServerError,
+        );
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.dynamicPasswordConnectionError);
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.dynamicPasswordConnectionError,
+      );
       setState(() => _isLoading = false);
     }
   }
@@ -125,10 +130,16 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
     final home = Get.isRegistered<HomeController>()
         ? Get.find<HomeController>()
         : null;
     final accountNumber = home?.userModel.value.data?.accountNumber ?? '';
+
     if (home == null || accountNumber.isEmpty) {
       final code = Localizations.localeOf(context).languageCode;
       String title;
@@ -150,170 +161,283 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
             'Open the home screen first so your account number is loaded, then try again.';
         back = 'Go back';
       }
+
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: bgColor,
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.dynamicPasswordHeading),
-          backgroundColor: Colors.white,
-          foregroundColor: AppColors.lightTextPrimary,
+          title: Text(
+            AppLocalizations.of(context)!.dynamicPasswordHeading,
+            style: AppTextStyles.titleMedium.copyWith(color: primaryTextColor),
+          ),
+          backgroundColor: bgColor,
+          foregroundColor: primaryTextColor,
           elevation: 0,
         ),
         body: Center(
-          child: EmptyView(
-            icon: Icons.lock_outline_rounded,
+          child: EcardoEmptyState(
+            animateGlow: false,
+            iconData: Icons.lock_outline_rounded,
             title: title,
-            subtitle: subtitle,
-            ctaLabel: back,
-            onCta: () => Get.back(),
+            description: subtitle,
+            primaryActionLabel: back,
+            onPrimaryAction: () => Get.back(),
           ),
         ),
       );
     }
 
+    final iconStyle = SettingsIconTokens.paymentOtp(isDark: isDark);
+
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        // v1.0.24: localized instead of hardcoded Persian title.
-        title: Text(AppLocalizations.of(context)!.dynamicPasswordTitle),
-        backgroundColor: AppColors.white,
+        title: Text(
+          AppLocalizations.of(context)!.dynamicPasswordTitle,
+          style: AppTextStyles.titleMedium.copyWith(color: primaryTextColor),
+        ),
+        backgroundColor: bgColor,
         elevation: 0,
-        foregroundColor: AppColors.lightTextPrimary,
+        foregroundColor: primaryTextColor,
         centerTitle: true,
       ),
-      // wallet-modules v1.0.122: SafeArea(bottom) — the usage-hint box used to
-      // stick to the system navigation bar / gesture area on notched devices.
       body: SafeArea(
-        top: false,
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
           child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppColors.lightPrimary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(Icons.pin_rounded, size: 40, color: AppColors.lightPrimary),
-            ),
-            const SizedBox(height: 24),
-            Text(AppLocalizations.of(context)!.dynamicPasswordHeading,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF0A2540))),
-            const SizedBox(height: 8),
-            Text(AppLocalizations.of(context)!.dynamicPasswordSubtitle,
-                style: TextStyle(fontSize: 14, color: Color(0xFF8898AA))),
-            const SizedBox(height: 40),
+            children: [
+              SizedBox(height: AppSpacing.lg),
 
-            if (_isLoading)
-              const CircularProgressIndicator(color: AppColors.lightPrimary)
-            else if (_otpCode != null && _secondsRemaining > 0) ...[
+              // Animated payment OTP icon container
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                width: 72,
+                height: 72,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F3FF),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.lightPrimary.withValues(alpha: 0.3), width: 2),
+                  color: iconStyle.backgroundColor,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                  border: Border.all(
+                    color: iconStyle.iconColor.withValues(alpha: 0.25),
+                    width: 1.5,
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    Text(_otpCode!,
-                        style: const TextStyle(
-                            fontSize: 42, fontWeight: FontWeight.bold, color: AppColors.lightPrimary, letterSpacing: 8)),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: _secondsRemaining <= 10
-                            ? Colors.red.withValues(alpha: 0.1)
-                            : AppColors.lightPrimary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
+                child: Icon(
+                  Icons.password_rounded,
+                  size: 34,
+                  color: iconStyle.iconColor,
+                ),
+              ),
+              SizedBox(height: AppSpacing.lg),
+
+              Text(
+                AppLocalizations.of(context)!.dynamicPasswordHeading,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: primaryTextColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: AppSpacing.xs),
+              Text(
+                AppLocalizations.of(context)!.dynamicPasswordSubtitle,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: secondaryTextColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: AppSpacing.xxl),
+
+              if (_isLoading)
+                CircularProgressIndicator(
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                )
+              else if (_otpCode != null && _secondsRemaining > 0) ...[
+                // Active OTP Card with pulsating glow
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(AppSpacing.xxl),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurface : AppColors.white,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                    border: Border.all(
+                      color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                          .withValues(alpha: 0.35),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                            .withValues(alpha: 0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.timer_outlined,
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // Monospace OTP Digits
+                      Text(
+                        _otpCode!,
+                        style: AppTextStyles.headlineLarge.copyWith(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                          letterSpacing: 8,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.md),
+
+                      // Countdown timer badge
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                          vertical: AppSpacing.xs,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _secondsRemaining <= 10
+                              ? AppColors.error.withValues(alpha: 0.12)
+                              : (isDark
+                                  ? AppColors.mainSoftBlue.withValues(alpha: 0.15)
+                                  : AppColors.lightPrimary.withValues(alpha: 0.10)),
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.timer_outlined,
                               size: 16,
-                              color: _secondsRemaining <= 10 ? Colors.red : AppColors.lightPrimary),
-                          const SizedBox(width: 4),
-                          Text(_formattedTime,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: _secondsRemaining <= 10 ? Colors.red : AppColors.lightPrimary)),
-                        ],
+                              color: _secondsRemaining <= 10
+                                  ? AppColors.error
+                                  : (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary),
+                            ),
+                            SizedBox(width: AppSpacing.xs),
+                            Text(
+                              _formattedTime,
+                              style: AppTextStyles.labelMedium.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: _secondsRemaining <= 10
+                                    ? AppColors.error
+                                    : (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.sm),
+                      Text(
+                        AppLocalizations.of(context)!.dynamicPasswordValidity,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontSize: 11,
+                          color: secondaryTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: AppSpacing.lg),
+
+                // Copy code button
+                ElevatedButton.icon(
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    Clipboard.setData(ClipboardData(text: _otpCode!));
+                    ToastHelper().showSuccessToast(
+                      AppLocalizations.of(Get.context!)!.dynamicPasswordCopied,
+                    );
+                  },
+                  icon: const Icon(Icons.copy_rounded, size: 18),
+                  label: Text(
+                    AppLocalizations.of(context)!.dynamicPasswordCopy,
+                    style: AppTextStyles.labelMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xxl,
+                      vertical: AppSpacing.md,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    ),
+                    elevation: 0,
+                  ),
+                ),
+                SizedBox(height: AppSpacing.sm),
+
+                TextButton.icon(
+                  onPressed: _generateOtp,
+                  icon: const Icon(Icons.refresh_rounded, size: 16),
+                  label: Text(
+                    AppLocalizations.of(context)!.dynamicPasswordRegenerate,
+                    style: AppTextStyles.labelMedium.copyWith(
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    ),
+                  ),
+                ),
+              ] else ...[
+                // Initial generate button
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton.icon(
+                    onPressed: _generateOtp,
+                    icon: const Icon(Icons.shield_outlined, size: 20),
+                    label: Text(
+                      AppLocalizations.of(context)!.dynamicPasswordGenerate,
+                      style: AppTextStyles.titleSmall.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(AppLocalizations.of(context)!.dynamicPasswordValidity,
-                        style: TextStyle(fontSize: 11, color: Color(0xFF8898AA))),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      ),
+                      elevation: 0,
+                    ),
+                  ),
+                ),
+              ],
+
+              const Spacer(),
+
+              // Usage hint bottom card
+              Container(
+                padding: EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF78350F).withValues(alpha: 0.25)
+                      : AppColors.warningContainer,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  border: Border.all(
+                    color: AppColors.warning.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info_outline_rounded, color: AppColors.warning, size: 20),
+                    SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.dynamicPasswordUsageHint,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontSize: 12,
+                          color: primaryTextColor,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: _otpCode!));
-                  ToastHelper().showSuccessToast(AppLocalizations.of(Get.context!)!.dynamicPasswordCopied);
-                },
-                icon: const Icon(Icons.copy, size: 18),
-                label: Text(AppLocalizations.of(context)!.dynamicPasswordCopy),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.lightPrimary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: _generateOtp,
-                child: Text(AppLocalizations.of(context)!.dynamicPasswordRegenerate, style: TextStyle(color: AppColors.lightPrimary)),
-              ),
-            ] else ...[
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _generateOtp,
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: Text(AppLocalizations.of(context)!.dynamicPasswordGenerate, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.lightPrimary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-              ),
+              SizedBox(height: AppSpacing.bottomSafe(context, AppSpacing.lg)),
             ],
-
-            const Spacer(),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFFBEA),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFFDE68A)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, color: Color(0xFF92400E), size: 20),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      AppLocalizations.of(context)!.dynamicPasswordUsageHint,
-                      style: TextStyle(fontSize: 12, color: Color(0xFF92400E)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ],
-          ),
           ),
         ),
-      );
+      ),
+    );
   }
 }

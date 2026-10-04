@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/app_haptics.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/controller/travel_controller.dart';
@@ -195,30 +197,38 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
     return TravelPage(
       title: localization.travelHotelSearch,
       child: ListView(
-        padding: EdgeInsets.all(20.r),
+        padding: EdgeInsets.all(AppSpacing.xl.r),
         children: [
-          Container(
-            height: 170.h,
-            padding: EdgeInsets.all(22.r),
-            decoration: BoxDecoration(
-              borderRadius: TravelTheme.radius,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6A1B9A), TravelTheme.purple],
-              ),
-            ),
-            child: Align(
-              alignment: AlignmentDirectional.bottomStart,
-              child: Text(
-                heroTitle,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.w900,
+          Builder(
+            builder: (context) {
+              final isDark = TravelTheme.isDark(context);
+              return Container(
+                height: 170.h,
+                padding: EdgeInsets.all(AppSpacing.xxl.r),
+                decoration: BoxDecoration(
+                  borderRadius: TravelTheme.radius,
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? const [Color(0xFF2C1045), Color(0xFF4A1A6D)]
+                        : const [Color(0xFF6A1B9A), TravelTheme.purple],
+                  ),
+                  boxShadow: TravelTheme.shadowFor(context),
                 ),
-              ),
-            ),
+                child: Align(
+                  alignment: AlignmentDirectional.bottomStart,
+                  child: Text(
+                    heroTitle,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-          SizedBox(height: 22.h),
+          SizedBox(height: AppSpacing.xxl.h),
           TravelCard(
             child: Column(
               children: [
@@ -277,9 +287,12 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                   () => CommonButton(
                     width: double.infinity,
                     text: localization.travelSearchHotels,
-                    backgroundColor: TravelTheme.purple,
+                    backgroundColor: TravelTheme.primaryFor(context),
                     isLoading: controller.isLoading.value,
-                    onPressed: _submitSearch,
+                    onPressed: () {
+                      AppHaptics.light();
+                      _submitSearch();
+                    },
                   ),
                 ),
               ],
@@ -302,7 +315,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
           ),
           SizedBox(height: 10.h),
           if (popularCities.isEmpty && discoveryLoading)
-            const Center(child: CircularProgressIndicator())
+            const TravelShimmerLoading(type: TravelShimmerType.card, count: 1)
           else
             SizedBox(
               height: 112.h,
@@ -322,14 +335,14 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         _loadRecommendations(city.value);
                       },
                       color: city.value == recommendedCity
-                          ? TravelTheme.purple.withValues(alpha: .1)
-                          : Colors.white,
+                          ? TravelTheme.primaryFor(context).withValues(alpha: .12)
+                          : TravelTheme.cardSurfaceFor(context),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.location_city_rounded,
-                            color: TravelTheme.purple,
+                            color: TravelTheme.primaryFor(context),
                           ),
                           const Spacer(),
                           TravelBidiText(
@@ -339,7 +352,7 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                           Text(
                             AppLocalizations.of(context)!.hotelHotelsCount(count),
                             style: TextStyle(
-                              color: TravelTheme.muted,
+                              color: TravelTheme.textSecondaryFor(context),
                               fontSize: 10.sp,
                             ),
                           ),
@@ -371,10 +384,12 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
           ),
           SizedBox(height: 12.h),
           if (discoveryLoading)
-            const Center(child: CircularProgressIndicator())
+            const TravelShimmerLoading(type: TravelShimmerType.card, count: 2)
           else if (recommendedHotels.isEmpty)
             TravelEmptyState(
-              message: AppLocalizations.of(context)!.hotel_no_recommended_hotels_are_available_for_this,
+              icon: Icons.hotel_rounded,
+              title: AppLocalizations.of(context)!.hotel_no_recommended_hotels_are_available_for_this,
+              message: localization.travelOfferUnavailable,
             )
           else
             SizedBox(
@@ -903,7 +918,10 @@ class _HotelResultsScreenState extends State<HotelResultsScreen> {
               SizedBox(height: 16.h),
             ],
             if (controller.isLoading.value)
-              const Center(child: CircularProgressIndicator())
+              const TravelShimmerLoading(
+                type: TravelShimmerType.hotelCard,
+                count: 4,
+              )
             else if (offers.isEmpty)
               _HotelResultsEmptyState(
                 hasError: controller.searchError.value != null,
@@ -1528,29 +1546,23 @@ class _HotelResultsEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    if (hasError) {
+      return TravelErrorState(
+        message: localization.allControllerLoadError,
+        onRetry: onRetry,
+      );
+    }
     return Column(
       children: [
         TravelEmptyState(
-          message: hasError
-              ? localization.allControllerLoadError
-              : localization.travelNoHotelResults,
-        ),
-        SizedBox(height: 16.h),
-        if (hasError && onRetry != null)
-          CommonButton(
-            width: double.infinity,
-            text: localization.noInternetConnectionRetryButton,
-            backgroundColor: TravelTheme.purple,
-            onPressed: onRetry,
-          ),
-        SizedBox(height: 10.h),
-        TextButton.icon(
-          onPressed: onEdit,
-          icon: const Icon(Icons.edit_outlined),
-          label: Text(localization.travelSearchHotels),
+          icon: Icons.hotel_rounded,
+          title: localization.travelNoHotelResults,
+          message: localization.travelOfferUnavailable,
+          actionText: localization.travelSearchHotels,
+          onAction: onEdit,
         ),
         if (onNotify != null) ...[
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.sm.h),
           FilledButton.icon(
             onPressed: onNotify,
             icon: const Icon(Icons.notifications_active_outlined),
@@ -1574,11 +1586,13 @@ class _HotelImageFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final colors = isDark
+        ? const [Color(0xFF2C1045), Color(0xFF4A1A6D)]
+        : const [Color(0xFF4A148C), TravelTheme.purple];
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF4A148C), TravelTheme.purple],
-        ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: colors),
       ),
       child: Center(
         child: Icon(

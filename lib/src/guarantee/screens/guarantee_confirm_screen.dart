@@ -214,7 +214,7 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
                     context,
                     labelFa: 'مدت اعتبار',
                     labelEn: 'Validity',
-                    value: '${controller.validityMonthsInput.value} ' + l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月'),
+                    value: '${controller.validityMonthsInput.value} ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
                   ),
                   if (controller.contractRefInput.value.isNotEmpty) ...[
                     const Divider(height: 20),

@@ -7,9 +7,15 @@ class HomeSkeletonLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? const Color(0xFF262625) : Colors.grey.shade300;
+    final highlightColor =
+        isDark ? const Color(0xFF383836) : Colors.grey.shade100;
+    final blockColor = isDark ? const Color(0xFF262625) : AppColors.white;
+
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: baseColor,
+      highlightColor: highlightColor,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
@@ -19,24 +25,23 @@ class HomeSkeletonLoader extends StatelessWidget {
               height: 280,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadiusDirectional.only(
+                color: blockColor,
+                borderRadius: const BorderRadiusDirectional.only(
                   bottomStart: Radius.circular(24),
                   bottomEnd: Radius.circular(24),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               height: 80,
-              margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+              margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: blockColor,
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
               child: Column(
@@ -48,7 +53,7 @@ class HomeSkeletonLoader extends StatelessWidget {
                         width: 80,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: AppColors.white,
+                          color: blockColor,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -56,7 +61,7 @@ class HomeSkeletonLoader extends StatelessWidget {
                         width: 50,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: blockColor,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -66,16 +71,15 @@ class HomeSkeletonLoader extends StatelessWidget {
                   Container(
                     height: 160,
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: blockColor,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 30),
-
             Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
               child: Column(
@@ -85,7 +89,7 @@ class HomeSkeletonLoader extends StatelessWidget {
                     width: 100,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: blockColor,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -102,21 +106,21 @@ class HomeSkeletonLoader extends StatelessWidget {
                                 width: 48,
                                 height: 48,
                                 decoration: BoxDecoration(
-                                  color: AppColors.white,
+                                  color: blockColor,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Container(
                                 width: 50,
                                 height: 10,
-                                color: AppColors.white,
+                                color: blockColor,
                               ),
                             ],
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: List.generate(
@@ -127,15 +131,15 @@ class HomeSkeletonLoader extends StatelessWidget {
                                 width: 48,
                                 height: 48,
                                 decoration: BoxDecoration(
-                                  color: AppColors.white,
+                                  color: blockColor,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Container(
                                 width: 50,
                                 height: 10,
-                                color: AppColors.white,
+                                color: blockColor,
                               ),
                             ],
                           ),
@@ -158,7 +162,7 @@ class HomeSkeletonLoader extends StatelessWidget {
                         width: 80,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: AppColors.white,
+                          color: blockColor,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -166,13 +170,13 @@ class HomeSkeletonLoader extends StatelessWidget {
                         width: 50,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: blockColor,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Column(
                     children: List.generate(
                       5,
@@ -184,7 +188,7 @@ class HomeSkeletonLoader extends StatelessWidget {
                               height: 48,
                               width: 48,
                               decoration: BoxDecoration(
-                                color: AppColors.white,
+                                color: blockColor,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
@@ -193,12 +197,12 @@ class HomeSkeletonLoader extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(height: 12, color: AppColors.white),
+                                  Container(height: 12, color: blockColor),
                                   const SizedBox(height: 8),
                                   Container(
                                     height: 12,
                                     width: 100,
-                                    color: AppColors.white,
+                                    color: blockColor,
                                   ),
                                 ],
                               ),
@@ -207,7 +211,7 @@ class HomeSkeletonLoader extends StatelessWidget {
                             Container(
                               height: 12,
                               width: 40,
-                              color: AppColors.white,
+                              color: blockColor,
                             ),
                           ],
                         ),

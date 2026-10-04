@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
-import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 
 import '../account/travel_account_screen.dart';
 import '../bookings/travel_orders_screen.dart';
@@ -81,12 +82,15 @@ class TravelHomeScreen extends StatelessWidget {
               action: localization.travelViewAll,
               onAction: () => Get.to(() => const TravelOrdersScreen()),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             Obx(
               () =>
                   controller.isActivityLoading.value &&
                   controller.activity.isEmpty
-                  ? const SizedBox(height: 120, child: CommonLoading())
+                  ? const TravelShimmerLoading(
+                      type: TravelShimmerType.tile,
+                      count: 2,
+                    )
                   : controller.activity.isEmpty
                   ? const SizedBox.shrink()
                   : Column(
@@ -94,59 +98,70 @@ class TravelHomeScreen extends StatelessWidget {
                           .take(3)
                           .map(
                             (item) => Padding(
-                              padding: EdgeInsets.only(bottom: 10.h),
+                              padding: EdgeInsets.only(bottom: AppSpacing.sm.h),
                               child: _ActivityTile(activity: item),
                             ),
                           )
                           .toList(),
                     ),
             ),
-            SizedBox(height: 14.h),
-            TravelCard(
-              color: const Color(0xFFEAF3FF),
-              onTap: () => Get.toNamed(
-                BaseRoute.addMoney,
-                arguments: {'returnRoute': BaseRoute.travel},
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(12.r),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.account_balance_wallet_rounded,
-                      color: TravelTheme.green,
-                    ),
+            SizedBox(height: AppSpacing.md.h),
+            Builder(
+              builder: (context) {
+                final isDark = TravelTheme.isDark(context);
+                return TravelCard(
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : const Color(0xFFEAF3FF),
+                  onTap: () => Get.toNamed(
+                    BaseRoute.addMoney,
+                    arguments: {'returnRoute': BaseRoute.travel},
                   ),
-                  SizedBox(width: 14.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          localization.travelMainWallet,
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w800,
-                          ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(AppSpacing.md.r),
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.darkSurface : AppColors.white,
+                          shape: BoxShape.circle,
                         ),
-                        SizedBox(height: 3.h),
-                        Text(
-                          localization.travelWalletSharedDescription,
-                          style: TextStyle(
-                            color: TravelTheme.muted,
-                            fontSize: 11.sp,
-                          ),
+                        child: const Icon(
+                          Icons.account_balance_wallet_rounded,
+                          color: TravelTheme.green,
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(width: AppSpacing.md.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              localization.travelMainWallet,
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w800,
+                                color: TravelTheme.textPrimaryFor(context),
+                              ),
+                            ),
+                            SizedBox(height: AppSpacing.xs.h),
+                            Text(
+                              localization.travelWalletSharedDescription,
+                              style: TextStyle(
+                                color: TravelTheme.textSecondaryFor(context),
+                                fontSize: 11.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        color: TravelTheme.textSecondaryFor(context),
+                      ),
+                    ],
                   ),
-                  const Icon(Icons.chevron_right_rounded),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -174,17 +189,26 @@ class _Hero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final heroGradient = isDark
+        ? const LinearGradient(
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomEnd,
+            colors: [Color(0xFF0A1E36), Color(0xFF1E3A5F), Color(0xFF2E4E74)],
+          )
+        : const LinearGradient(
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomEnd,
+            colors: [Color(0xFF0D47A1), TravelTheme.blue, TravelTheme.purple],
+          );
+
     return Container(
       height: 205.h,
-      padding: EdgeInsets.all(24.r),
+      padding: EdgeInsets.all(AppSpacing.xxl.r),
       decoration: BoxDecoration(
         borderRadius: TravelTheme.radius,
-        gradient: const LinearGradient(
-          begin: AlignmentDirectional.topStart,
-          end: AlignmentDirectional.bottomEnd,
-          colors: [Color(0xFF0D47A1), TravelTheme.blue, TravelTheme.purple],
-        ),
-        boxShadow: TravelTheme.shadow,
+        gradient: heroGradient,
+        boxShadow: TravelTheme.shadowFor(context),
       ),
       child: Stack(
         children: [
@@ -211,7 +235,7 @@ class _Hero extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: AppSpacing.sm.h),
                 Text(
                   title,
                   style: TextStyle(
@@ -249,21 +273,21 @@ class _Services extends StatelessWidget {
   Widget build(BuildContext context) {
     if (services.isEmpty) {
       if (isLoading) {
-        return const SizedBox(height: 112, child: CommonLoading());
-      }
-      if (hasError) {
-        return Column(
-          children: [
-            TravelEmptyState(message: localization.allControllerLoadError),
-            CommonButton(
-              width: double.infinity,
-              text: localization.noInternetConnectionRetryButton,
-              onPressed: onRetry,
-            ),
-          ],
+        return const TravelShimmerLoading(
+          type: TravelShimmerType.card,
+          count: 2,
         );
       }
-      return TravelEmptyState(message: localization.travelOfferUnavailable);
+      if (hasError) {
+        return TravelErrorState(
+          message: localization.allControllerLoadError,
+          onRetry: onRetry,
+        );
+      }
+      return TravelEmptyState(
+        message: localization.travelOfferUnavailable,
+        icon: Icons.travel_explore_rounded,
+      );
     }
 
     final serviceByType = {for (final service in services) service.type: service};
@@ -527,14 +551,22 @@ class _ServiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final iconBg = isDark
+        ? AppColors.darkSurface
+        : Colors.white.withValues(alpha: 0.94);
+
     return AspectRatio(
       aspectRatio: 1,
       child: Material(
         color: color,
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
         child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(24.r),
+          onTap: () {
+            AppHaptics.light();
+            onTap();
+          },
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 6.w),
             child: Column(
@@ -544,12 +576,12 @@ class _ServiceTile extends StatelessWidget {
                   width: 50.r,
                   height: 50.r,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.94),
+                    color: iconBg,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: color),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSpacing.md.h),
                 Text(
                   label,
                   maxLines: 2,

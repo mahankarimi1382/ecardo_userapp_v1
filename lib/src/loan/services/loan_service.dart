@@ -1,4 +1,3 @@
-import 'package:ecardo_user/src/network/response/api_response.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:get/get.dart' as getx;

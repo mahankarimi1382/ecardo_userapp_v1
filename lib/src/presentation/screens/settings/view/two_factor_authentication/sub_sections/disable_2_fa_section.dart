@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -14,44 +16,50 @@ class Disable2FaSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final TwoFactorAuthenticationController controller = Get.find();
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
 
     return Container(
-      margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 0.8,
+        ),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             localization.disable2FaSectionTitle,
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 20,
-              letterSpacing: 0,
-              color: AppColors.lightTextPrimary,
+            style: AppTextStyles.titleMedium.copyWith(
+              fontWeight: FontWeight.w800,
+              color: primaryTextColor,
             ),
           ),
-          Divider(color: AppColors.lightTextTertiary.withValues(alpha: 0.15)),
-          SizedBox(height: 10),
+          Divider(
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            height: AppSpacing.lg,
+          ),
+          SizedBox(height: AppSpacing.xs),
           Row(
             children: [
               Text(
                 localization.disable2FaSectionDescription,
-                style: TextStyle(
-                  letterSpacing: 0,
-                  fontSize: 14,
+                style: AppTextStyles.labelMedium.copyWith(
+                  color: secondaryTextColor,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextTertiary,
                 ),
               ),
-              Text(
-                "*",
+              const Text(
+                " *",
                 style: TextStyle(
-                  letterSpacing: 0,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: AppColors.error,
@@ -59,27 +67,27 @@ class Disable2FaSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSpacing.xs),
           Obx(
             () => CommonTextInputField(
               focusNode: controller.disable2FaFocusNode,
               isFocused: controller.isDisable2FaFocused.value,
-              // BUGFIX: the server disables 2FA with Hash::check against the
-              // ACCOUNT PASSWORD (SettingsController 'disable' branch), so a
-              // numeric keypad made this a one-way door — no user could turn
-              // 2FA off. It is now a real password field.
               hintText: localization.changePasswordCurrentPassword,
               obscureText: true,
               controller: controller.disable2FaController,
               keyboardType: TextInputType.visiblePassword,
+              backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+              textStyle: AppTextStyles.bodyMedium.copyWith(color: primaryTextColor),
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: AppSpacing.xl),
           CommonButton(
-            borderRadius: 10,
+            borderRadius: AppSpacing.radiusMd,
             width: double.infinity,
+            backgroundColor: AppColors.error,
             text: localization.disable2FaSectionDisableButton,
             onPressed: () async {
+              HapticFeedback.mediumImpact();
               if (controller.disable2FaController.text.isEmpty) {
                 ToastHelper().showErrorToast(
                   localization.disable2FaSectionPasswordRequired,

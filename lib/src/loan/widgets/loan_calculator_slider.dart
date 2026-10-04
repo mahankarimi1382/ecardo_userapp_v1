@@ -251,20 +251,23 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                l10nPick(
-                  context,
-                  fa: 'مبلغ تسهیلات درخواستی',
-                  en: 'Loan Amount',
-                  ar: 'مبلغ التسهيل',
-                  zh: '融资金额',
-                ),
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextSecondary,
+              Expanded(
+                child: Text(
+                  l10nPick(
+                    context,
+                    fa: 'مبلغ تسهیلات درخواستی',
+                    en: 'Loan Amount',
+                    ar: 'مبلغ التسهيل',
+                    zh: '融资金额',
+                  ),
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.lightTextSecondary,
+                  ),
                 ),
               ),
+              SizedBox(width: 8.w),
               _buildCurrencyBadge(context),
             ],
           ),
@@ -339,13 +342,23 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${l10nPick(context, fa: 'حداقل', en: 'Min', ar: 'الحد الأدنى', zh: '最小')}: ${_formatAmount(widget.minAmount)}',
-                  style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
+                Flexible(
+                  child: Text(
+                    '${l10nPick(context, fa: 'حداقل', en: 'Min', ar: 'الحد الأدنى', zh: '最小')}: ${_formatAmount(widget.minAmount)}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
+                  ),
                 ),
-                Text(
-                  '${l10nPick(context, fa: 'حداکثر', en: 'Max', ar: 'الحد الأقصى', zh: '最大')}: ${_formatAmount(widget.maxAmount)}',
-                  style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
+                SizedBox(width: 8.w),
+                Flexible(
+                  child: Text(
+                    '${l10nPick(context, fa: 'حداکثر', en: 'Max', ar: 'الحد الأقصى', zh: '最大')}: ${_formatAmount(widget.maxAmount)}',
+                    maxLines: 1,
+                    textAlign: TextAlign.end,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
+                  ),
                 ),
               ],
             ),

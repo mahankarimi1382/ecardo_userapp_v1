@@ -48,6 +48,7 @@ import 'package:ecardo_user/src/common/services/local_notifications_service.dart
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
 import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
@@ -616,7 +617,9 @@ class FirebaseMessagingService {
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 4),
             action: SnackBarAction(
-              label: 'باز کردن',
+              // NOTIF-FIX: was hardcoded Persian ('باز کردن') — every
+              // non-Persian user saw an unlabeled/foreign action button.
+              label: _openActionLabel(ctx),
               onPressed: () => _routeFromPayload(payload),
             ),
           ),
@@ -664,6 +667,20 @@ class FirebaseMessagingService {
       return;
     }
     Get.toNamed(BaseRoute.notifications);
+  }
+
+  /// NOTIF-FIX: localized label for the foreground banner action button.
+  String _openActionLabel(BuildContext? ctx) {
+    if (ctx == null) return 'Open';
+    return l10nPick(
+      ctx,
+      en: 'Open',
+      fa: 'باز کردن',
+      ar: 'فتح',
+      tr: 'Aç',
+      ru: 'Открыть',
+      zh: '打开',
+    );
   }
 
   /// Debug-only: synthesize a local notification of [type] for QA.

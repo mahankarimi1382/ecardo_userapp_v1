@@ -10,9 +10,12 @@ class TreeLinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final paint = Paint()
-      ..color = AppColors.lightTextTertiary.withValues(alpha: 0.5)
-      ..strokeWidth = 1;
+      ..color = isDark
+          ? AppColors.mainSoftBlue.withValues(alpha: 0.45)
+          : AppColors.mutedBlue.withValues(alpha: 0.45)
+      ..strokeWidth = 1.5;
 
     final double verticalLineSegmentLength = 40.0;
 

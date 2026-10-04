@@ -4,11 +4,13 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart' as image_picker;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
 import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/model/gateway_methods_model.dart';
@@ -27,26 +29,35 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Expanded(
       child: Container(
-        padding: EdgeInsetsDirectional.only(
-          start: 20,
-          end: 20,
-          top: 2,
+        padding: const EdgeInsetsDirectional.only(
+          start: AppSpacing.page,
+          end: AppSpacing.page,
+          top: AppSpacing.xs,
         ),
         decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(30),
-            topEnd: Radius.circular(30),
+          color: isDark ? AppColors.darkCard : AppColors.lightCard,
+          borderRadius: const BorderRadiusDirectional.only(
+            topStart: Radius.circular(AppSpacing.radiusXl),
+            topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: AppSpacing.lg,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               CommonRequiredLabelAndDynamicField(
                 labelText: localization.addMoneyGateway,
                 isLabelRequired: true,
@@ -54,8 +65,13 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                   () => CommonTextInputField(
                     focusNode: controller.gatewayFocusNode,
                     isFocused: controller.isGatewayFocused.value,
-                    suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
-                    borderRadius: 16,
+                    suffixIcon: Image.asset(
+                      PngAssets.arrowDownCommonIcon,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary,
+                    ),
+                    borderRadius: AppSpacing.radiusLg,
                     backgroundColor: AppColors.transparent,
                     onTap: () {
                       Get.bottomSheet(
@@ -91,7 +107,6 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                               }
                             }
                           },
-
                           selectedValue: controller.gatewayMethodsList
                               .map((item) => item.formattedName.toString())
                               .toList(),
@@ -106,7 +121,6 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                             controller.dynamicFieldControllers.clear();
                             controller.selectedImages.clear();
                           },
-
                           selectedItem: controller.gatewayController.text,
                           textController: controller.gatewayController,
                           currentlySelectedValue:
@@ -117,7 +131,9 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                     },
                     hintText: localization.addMoneySelectGateway,
                     controller: controller.gatewayController,
-                    suffixIconColor: AppColors.lightTextTertiary,
+                    suffixIconColor: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextTertiary,
                     readOnly: true,
                   ),
                 ),
@@ -128,66 +144,121 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                       controller.gatewayMethod.value?.formattedName != null &&
                       controller.gatewayMethod.value!.formattedName!.isNotEmpty,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 2),
+                    padding: const EdgeInsets.only(top: AppSpacing.xs),
                     child: Text(
                       "${localization.addMoneyCharge} ${double.tryParse(controller.gatewayMethod.value!.charge ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyType != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.chargeType == "percentage" ? "%" : controller.wallet.value?.code ?? ''}",
-                      style: TextStyle(
+                      style: const TextStyle(
                         letterSpacing: 0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         fontSize: 12,
-                        color: AppColors.error,
+                        color: AppColors.warning,
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              CommonRequiredLabelAndDynamicField(
-                labelText: localization.addMoneyAmount,
-                isLabelRequired: true,
-                dynamicField: Obx(
-                  () => CommonTextInputField(
-                    focusNode: controller.amountFocusNode,
-                    isFocused: controller.isAmountFocused.value,
-                    isSuffixIconCompact: false,
-                    suffixIcon: Center(
-                      child: Text(
-                        controller.wallet.value!.code!,
-                        style: TextStyle(
-                          letterSpacing: 0,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15,
-                          color: AppColors.lightTextPrimary.withValues(
-                            alpha: 0.40,
+              const SizedBox(height: AppSpacing.lg),
+
+              // Amount Hero Card with Currency Badge and Quick Amount Chips
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant.withValues(alpha: 0.5)
+                      : AppColors.lightSecondaryContainer.withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonRequiredLabelAndDynamicField(
+                      labelText: localization.addMoneyAmount,
+                      isLabelRequired: true,
+                      dynamicField: Obx(
+                        () => CommonTextInputField(
+                          focusNode: controller.amountFocusNode,
+                          isFocused: controller.isAmountFocused.value,
+                          isSuffixIconCompact: false,
+                          suffixIcon: Container(
+                            margin: const EdgeInsetsDirectional.only(
+                              end: AppSpacing.sm,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: AppSpacing.xs,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.darkPrimary.withValues(alpha: 0.15)
+                                  : AppColors.lightPrimary.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm,
+                              ),
+                            ),
+                            child: Text(
+                              controller.wallet.value?.code ?? "",
+                              style: TextStyle(
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary,
+                              ),
+                            ),
                           ),
+                          borderRadius: AppSpacing.radiusLg,
+                          backgroundColor: AppColors.transparent,
+                          hintText: "0.00",
+                          controller: controller.amountController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            AmountInputFormatter(maxDecimals: 8),
+                          ],
                         ),
                       ),
                     ),
-                    borderRadius: 16,
-                    backgroundColor: AppColors.transparent,
-                    hintText: "",
-                    controller: controller.amountController,
-                    keyboardType: TextInputType.number,
-                    // phase3-fix: normalize fa/ar digits, strip separators,
-                    // cap decimals (raw text used to go straight to the API).
-                    inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
-                  ),
+                    const SizedBox(height: AppSpacing.sm),
+                    // Quick-amount chips
+                    Obx(() {
+                      final wallet = controller.wallet.value;
+                      final balance = double.tryParse(wallet?.balance ?? '0') ?? 1000.0;
+                      return QuickAmountSelector(
+                        textController: controller.amountController,
+                        availableBalance: balance > 0 ? balance : 1000.0,
+                        isCrypto: wallet?.isCrypto ?? false,
+                        currencyCode: wallet?.code,
+                        height: 32.0,
+                        chipSpacing: AppSpacing.sm,
+                      );
+                    }),
+                  ],
                 ),
               ),
+
               Obx(
                 () => Visibility(
                   visible:
                       controller.gatewayMethod.value?.formattedName != null &&
                       controller.gatewayMethod.value!.formattedName!.isNotEmpty,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 2),
+                    padding: const EdgeInsetsDirectional.only(
+                      top: AppSpacing.xs,
+                      start: AppSpacing.xs,
+                    ),
                     child: Text(
-                      "${localization.addMoneyMin} ${double.tryParse(controller.gatewayMethod.value!.minimumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency} ${localization.addMoneyMax} ${double.tryParse(controller.gatewayMethod.value!.maximumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency}",
+                      "${localization.addMoneyMin} ${double.tryParse(controller.gatewayMethod.value!.minimumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency} | ${localization.addMoneyMax} ${double.tryParse(controller.gatewayMethod.value!.maximumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency}",
                       style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
-                        color: AppColors.error,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ),
@@ -206,20 +277,30 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.lg),
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: AppColors.lightPrimary.withValues(alpha: 0.10),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                        color: isDark
+                            ? AppColors.darkSurfaceVariant
+                            : AppColors.lightPrimary.withValues(alpha: 0.08),
+                        border: Border.all(
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
+                        ),
                       ),
                       child: HtmlWidget(
                         gateway!.instructions!,
-                        textStyle: const TextStyle(
+                        textStyle: TextStyle(
                           letterSpacing: 0,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
@@ -234,12 +315,12 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.lg),
                     ...controller.dynamicFieldControllers.entries.map((entry) {
                       final fieldName = entry.key;
                       final fieldData = entry.value;
 
-                      final controller =
+                      final dynamicCtrl =
                           fieldData['controller'] as TextEditingController;
                       final validation = fieldData['validation'] as String;
                       final type = fieldData['type'] as String;
@@ -256,21 +337,22 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                                 ? _buildUploadSection(
                                     title: fieldName,
                                     fieldName: fieldName,
+                                    isDark: isDark,
                                   )
                                 : CommonTextInputField(
-                                    borderRadius: 16,
+                                    borderRadius: AppSpacing.radiusLg,
                                     backgroundColor: AppColors.transparent,
                                     hintText: isTextArea
                                         ? localization.addMoneyWriteHere
                                         : '',
-                                    controller: controller,
+                                    controller: dynamicCtrl,
                                     maxLine: isTextArea ? 5 : 1,
                                     keyboardType: isTextArea
                                         ? TextInputType.multiline
                                         : TextInputType.text,
                                   ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.lg),
                         ],
                       );
                     }),
@@ -278,17 +360,19 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                 );
               }),
               SizedBox(
-                height: controller.dynamicFieldControllers.isEmpty ? 40 : 30,
+                height: controller.dynamicFieldControllers.isEmpty
+                    ? AppSpacing.xxl
+                    : AppSpacing.lg,
               ),
               CommonButton(
-                borderRadius: 16,
+                borderRadius: AppSpacing.radiusLg,
                 width: double.infinity,
                 text: localization.addMoneyAddMoneyButton,
                 onPressed: () {
                   controller.nextStepWithValidation();
                 },
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: AppSpacing.huge),
             ],
           ),
         ),
@@ -299,6 +383,7 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
   Widget _buildUploadSection({
     required String title,
     required String fieldName,
+    required bool isDark,
   }) {
     return Obx(() {
       final selectedImage = controller.selectedImages[fieldName];
@@ -312,39 +397,51 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
           height: selectedImage != null ? 120 : null,
           child: selectedImage != null
               ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   child: Image.file(selectedImage, fit: BoxFit.cover),
                 )
-              : Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      PngAssets.attachFileTwo,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
+              : Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.xl,
+                    horizontal: AppSpacing.lg,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightBackground,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                      style: BorderStyle.solid,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          PngAssets.commonUploadIcon,
-                          width: 20,
-                          fit: BoxFit.contain,
-                          color: AppColors.lightTextTertiary,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        PngAssets.commonUploadIcon,
+                        width: AppSpacing.iconMd,
+                        fit: BoxFit.contain,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextTertiary,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextTertiary,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: AppColors.lightTextTertiary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
         ),
       );

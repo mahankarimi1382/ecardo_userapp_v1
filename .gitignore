@@ -64,6 +64,7 @@ app.*.map.json
 # Local tools & audit outputs
 arena-audit-out/
 graphify-out/
+test/failures/
 
 # Screenshots from emulator/device QA runs.
 #

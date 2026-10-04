@@ -242,6 +242,9 @@ class TourController extends GetxController {
     }
   }
 
+  /// Backward-compatible alias for [loadBookingDetails]
+  Future<TourBookingModel?> loadBookingDetail(int id) => loadBookingDetails(id);
+
   /// Cancel booking
   Future<bool> cancelBooking(int id) async {
     isBookingAction.value = true;

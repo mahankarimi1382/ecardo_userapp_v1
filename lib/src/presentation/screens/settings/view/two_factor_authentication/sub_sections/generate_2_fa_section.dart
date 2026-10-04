@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/settings_screen.dart';
 
 class Generate2FaSection extends StatelessWidget {
   const Generate2FaSection({super.key});
@@ -12,75 +15,73 @@ class Generate2FaSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final TwoFactorAuthenticationController controller = Get.find();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final iconStyle = SettingsIconTokens.twoFactor(isDark: isDark);
 
     return Container(
-      margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: AppColors.white,
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 0.8,
+        ),
       ),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.lightTextTertiary.withValues(alpha: 0.1),
-          ),
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.security,
-                    color: AppColors.lightPrimary,
-                    size: 20,
-                  ),
+      padding: EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: iconStyle.backgroundColor,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    localization.generate2FaSectionTitle,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.lightTextPrimary,
-                    ),
-                  ),
+                child: Icon(
+                  Icons.security_rounded,
+                  color: iconStyle.iconColor,
+                  size: 22,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              localization.generate2FaSectionDescription,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w700,
-                fontSize: 15,
-                color: AppColors.lightTextTertiary,
               ),
+              SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text(
+                  localization.generate2FaSectionTitle,
+                  style: AppTextStyles.titleMedium.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: primaryTextColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSpacing.md),
+          Text(
+            localization.generate2FaSectionDescription,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: secondaryTextColor,
+              height: 1.45,
             ),
-            const SizedBox(height: 24),
-            CommonButton(
-              onPressed: controller.loadGenerate2Fa,
-              width: double.infinity,
-              borderRadius: 10,
-              text: localization.generate2FaSectionGenerateButton,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(height: AppSpacing.xxl),
+          CommonButton(
+            onPressed: () {
+              HapticFeedback.mediumImpact();
+              controller.loadGenerate2Fa();
+            },
+            width: double.infinity,
+            borderRadius: AppSpacing.radiusMd,
+            text: localization.generate2FaSectionGenerateButton,
+          ),
+        ],
       ),
     );
   }

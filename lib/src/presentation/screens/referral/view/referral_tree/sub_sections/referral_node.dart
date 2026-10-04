@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 
 class ReferralNode extends StatelessWidget {
   final String name;
@@ -15,48 +17,91 @@ class ReferralNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color primaryTextColor = AppColors.lightTextPrimary;
-    final Color nodeBackgroundColor = AppColors.lightBackground;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color primaryTextColor =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final Color nodeBackgroundColor =
+        isDark ? AppColors.darkCard : AppColors.white;
 
-    Border? nodeBorder;
-    nodeBorder = Border.all(
-      color: AppColors.lightTextPrimary.withValues(alpha: 0.15),
-      width: 1,
-    );
-
-    BoxDecoration nodeDecoration = BoxDecoration(
-      color: nodeBackgroundColor,
-      borderRadius: BorderRadius.circular(12.0),
-      border: nodeBorder,
+    final nodeBorder = Border.all(
+      color: isRoot
+          ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+          : (isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant),
+      width: isRoot ? 1.6 : 1.0,
     );
 
     return Container(
       width: 150,
-      decoration: nodeDecoration,
+      decoration: BoxDecoration(
+        color: nodeBackgroundColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: nodeBorder,
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : AppColors.mutedBlue.withValues(alpha: 0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: isRoot ? 28 : 22,
-              backgroundColor: AppColors.white,
-              backgroundImage: avatarUrl.isNotEmpty
-                  ? NetworkImage(avatarUrl)
-                  : null,
-              onBackgroundImageError:
-                  (dynamic exception, StackTrace? stackTrace) {},
-              child: avatarUrl.isEmpty
-                  ? Icon(Icons.person_outline, size: isRoot ? 35 : 30)
-                  : null,
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                CircleAvatar(
+                  radius: isRoot ? 28 : 22,
+                  backgroundColor: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightSecondaryContainer,
+                  backgroundImage: avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
+                  onBackgroundImageError: avatarUrl.isNotEmpty
+                      ? (dynamic exception, StackTrace? stackTrace) {}
+                      : null,
+                  child: avatarUrl.isEmpty
+                      ? Text(
+                          name.isNotEmpty ? name[0].toUpperCase() : '?',
+                          style: TextStyle(
+                            fontSize: isRoot ? 20 : 16,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                          ),
+                        )
+                      : null,
+                ),
+                if (isRoot)
+                  PositionedDirectional(
+                    bottom: 0,
+                    end: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: AppColors.success,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: nodeBackgroundColor,
+                          width: 2,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.star_rounded,
+                        size: 10,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               name,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: isRoot ? FontWeight.bold : FontWeight.w600,
-                fontSize: 13,
+              style: AppTextStyles.bodySmall.copyWith(
+                fontWeight: isRoot ? FontWeight.w800 : FontWeight.w600,
                 color: primaryTextColor,
               ),
               textAlign: TextAlign.center,

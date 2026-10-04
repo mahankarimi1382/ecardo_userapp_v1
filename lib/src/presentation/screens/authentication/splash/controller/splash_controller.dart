@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
+import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
@@ -107,6 +108,22 @@ class SplashController extends GetxController {
       final ctx = Get.context;
       if (ctx != null && ctx.mounted) {
         AppUpdateHelper.maybeAutoPromptForUpdate(ctx);
+      }
+    });
+
+    // NOTIF-FIX: the notification permission prompt used to live ONLY in
+    // the manual sign-in flow — users who auto-unlock (biometric/token) or
+    // skip login never saw it, so Android 13+ devices silently received
+    // zero pushes. Ask once per install after landing, without blocking
+    // navigation. Granted/denied state is remembered by the OS; the service
+    // also syncs the FCM token to the backend when newly granted.
+    Future.delayed(const Duration(milliseconds: 1200), () {
+      if (Get.isRegistered<PermissionFlowService>()) {
+        try {
+          Get.find<PermissionFlowService>().requestLaunchEssentials(Get.context);
+        } catch (e) {
+          debugPrint('NOTIF-FIX: launch permission prompt failed: $e');
+        }
       }
     });
   }

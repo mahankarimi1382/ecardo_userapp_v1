@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart' as image_picker;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -33,6 +35,7 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -41,7 +44,7 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
             return const CommonLoading();
           }
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -51,28 +54,40 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                     letterSpacing: 0,
                     fontWeight: FontWeight.w700,
                     fontSize: 18,
-                    color: AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsetsDirectional.only(
-                      start: 18,
-                      end: 18,
-                      top: 2,
+                    padding: const EdgeInsetsDirectional.only(
+                      start: AppSpacing.page,
+                      end: AppSpacing.page,
+                      top: AppSpacing.xs,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadiusDirectional.only(
-                        topStart: Radius.circular(30),
-                        topEnd: Radius.circular(30),
+                      color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                      borderRadius: const BorderRadiusDirectional.only(
+                        topStart: Radius.circular(AppSpacing.radiusXl),
+                        topEnd: Radius.circular(AppSpacing.radiusXl),
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDark
+                              ? AppColors.darkShadow
+                              : AppColors.lightShadow,
+                          blurRadius: AppSpacing.lg,
+                          offset: const Offset(0, -2),
+                        ),
+                      ],
                     ),
                     child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         children: [
-                          SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.lg),
                           CommonRequiredLabelAndDynamicField(
                             labelText: localization.createWithdrawAccountWallet,
                             isLabelRequired: true,
@@ -84,14 +99,20 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                       PngAssets.arrowDownCommonIcon,
                                     ),
                                     color: controller.isWalletFocused.value
-                                        ? AppColors.lightPrimary
-                                        : AppColors.lightTextTertiary,
+                                        ? (isDark
+                                            ? AppColors.darkPrimary
+                                            : AppColors.lightPrimary)
+                                        : (isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextTertiary),
                                   ),
                                 ),
                                 focusNode: controller.walletFocusNode,
                                 isFocused: controller.isWalletFocused.value,
+                                borderRadius: AppSpacing.radiusLg,
                                 backgroundColor: AppColors.transparent,
                                 onTap: () {
+                                  HapticFeedback.lightImpact();
                                   Get.bottomSheet(
                                     CommonDropdownWalletBottomSheet(
                                       notFoundText: localization
@@ -124,12 +145,14 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                 },
                                 hintText: "",
                                 controller: controller.walletController,
-                                suffixIconColor: AppColors.lightTextTertiary,
+                                suffixIconColor: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextTertiary,
                                 readOnly: true,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.lg),
                           CommonRequiredLabelAndDynamicField(
                             labelText: localization
                                 .createWithdrawAccountWithdrawMethod,
@@ -139,6 +162,7 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                 isFocused:
                                     controller.isWithdrawMethodFocused.value,
                                 focusNode: controller.withdrawMethodFocusNode,
+                                borderRadius: AppSpacing.radiusLg,
                                 backgroundColor: AppColors.transparent,
                                 suffixIcon: Obx(
                                   () => Image(
@@ -147,11 +171,16 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                     ),
                                     color:
                                         controller.isWithdrawMethodFocused.value
-                                        ? AppColors.lightPrimary
-                                        : AppColors.lightTextTertiary,
+                                        ? (isDark
+                                            ? AppColors.darkPrimary
+                                            : AppColors.lightPrimary)
+                                        : (isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextTertiary),
                                   ),
                                 ),
                                 onTap: () {
+                                  HapticFeedback.lightImpact();
                                   Get.bottomSheet(
                                     CommonDropdownBottomSheet(
                                       title: localization
@@ -193,7 +222,7 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                           controller.methodNameController.text =
                                               "${selected.name}-${selected.currency}";
                                           controller.methodName.value =
-                                              "${selected.name}-${selected.currency}";
+                                              selected.name ?? '';
                                           controller.dynamicFieldControllers
                                               .clear();
                                           if (selected.fields != null) {
@@ -230,7 +259,9 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                 },
                                 hintText: "",
                                 controller: controller.withdrawMethodController,
-                                suffixIconColor: AppColors.lightTextTertiary,
+                                suffixIconColor: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextTertiary,
                                 readOnly: true,
                               ),
                             ),
@@ -246,7 +277,7 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                       .isNotEmpty,
                               child: Column(
                                 children: [
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: AppSpacing.lg),
                                   CommonRequiredLabelAndDynamicField(
                                     labelText: localization
                                         .createWithdrawAccountMethodName,
@@ -258,6 +289,7 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                         isFocused: controller
                                             .isMethodNameFocused
                                             .value,
+                                        borderRadius: AppSpacing.radiusLg,
                                         backgroundColor: AppColors.transparent,
                                         controller:
                                             controller.methodNameController,
@@ -277,14 +309,14 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 16),
+                                const SizedBox(height: AppSpacing.lg),
                                 ...controller.dynamicFieldControllers.entries.map((
                                   entry,
                                 ) {
                                   final fieldName = entry.key;
                                   final fieldData = entry.value;
 
-                                  final controller =
+                                  final dynamicCtrl =
                                       fieldData['controller']
                                           as TextEditingController;
                                   final validation =
@@ -303,37 +335,43 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                             ? _buildUploadSection(
                                                 title: fieldName,
                                                 fieldName: fieldName,
+                                                isDark: isDark,
                                               )
                                             : CommonTextInputField(
+                                                borderRadius:
+                                                    AppSpacing.radiusLg,
                                                 backgroundColor:
                                                     AppColors.transparent,
                                                 hintText: isTextArea
                                                     ? localization
                                                           .createWithdrawAccountFieldHint
                                                     : '',
-                                                controller: controller,
+                                                controller: dynamicCtrl,
                                                 maxLine: isTextArea ? 5 : 1,
                                                 keyboardType: isTextArea
                                                     ? TextInputType.multiline
                                                     : TextInputType.text,
                                               ),
                                       ),
-                                      const SizedBox(height: 16),
+                                      const SizedBox(height: AppSpacing.lg),
                                     ],
                                   );
                                 }),
                               ],
                             );
                           }),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: AppSpacing.xxxl),
                           CommonButton(
-                            onPressed: () => controller.createWithdrawAccount(),
+                            borderRadius: AppSpacing.radiusLg,
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              controller.createWithdrawAccount();
+                            },
                             width: double.infinity,
-
                             text:
                                 localization.createWithdrawAccountCreateButton,
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: AppSpacing.huge),
                         ],
                       ),
                     ),
@@ -358,12 +396,14 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
   Widget _buildUploadSection({
     required String title,
     required String fieldName,
+    required bool isDark,
   }) {
     return Obx(() {
       final selectedImage = controller.selectedImages[fieldName];
 
       return GestureDetector(
         onTap: () {
+          HapticFeedback.lightImpact();
           controller.pickImage(fieldName, image_picker.ImageSource.gallery);
         },
         child: SizedBox(
@@ -371,39 +411,50 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
           height: selectedImage != null ? 120 : null,
           child: selectedImage != null
               ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   child: Image.file(selectedImage, fit: BoxFit.cover),
                 )
-              : Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      PngAssets.attachFileTwo,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
+              : Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.xl,
+                    horizontal: AppSpacing.lg,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightBackground,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          PngAssets.commonUploadIcon,
-                          width: 20,
-                          fit: BoxFit.contain,
-                          color: AppColors.lightTextTertiary,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        PngAssets.commonUploadIcon,
+                        width: AppSpacing.iconMd,
+                        fit: BoxFit.contain,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextTertiary,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextTertiary,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: AppColors.lightTextTertiary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
         ),
       );

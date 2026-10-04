@@ -1,4 +1,4 @@
-import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+﻿import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -207,7 +207,7 @@ Future<void> changeLanguage(String languageCode) async {
 
     if (!isSupported) {
       ToastHelper().showErrorToast(
-        localization!.homeBiometricDeviceNotSupported,
+        localization?.homeBiometricDeviceNotSupported ?? "Device not supported",
       );
       return;
     }
@@ -226,12 +226,12 @@ Future<void> changeLanguage(String languageCode) async {
       );
       ToastHelper().showSuccessToast(
         isBiometricEnable.value
-            ? localization!.homeBiometricEnabledSuccess
-            : localization!.homeBiometricDisabledSuccess,
+            ? localization?.homeBiometricEnabledSuccess ?? "Biometric enabled"
+            : localization?.homeBiometricDisabledSuccess ?? "Biometric disabled",
       );
     } else {
       ToastHelper().showErrorToast(
-        localization!.homeBiometricAuthenticationFailed,
+        localization?.homeBiometricAuthenticationFailed ?? "Authentication failed",
       );
     }
   }
@@ -248,7 +248,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchDashboard() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
     } finally {}
   }
 
@@ -270,7 +270,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
     } finally {}
   }
 
@@ -294,7 +294,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
     } finally {}
   }
 
@@ -311,7 +311,7 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
     } finally {}
   }
 
@@ -379,7 +379,7 @@ Future<void> changeLanguage(String languageCode) async {
             const SizedBox(height: 12),
 
             Text(
-              localization!.homeBiometricNotFoundTitle,
+              localization?.homeBiometricNotFoundTitle ?? "Biometric not found",
               style: TextStyle(
                 letterSpacing: 0,
                 fontSize: 24.0,
@@ -390,7 +390,7 @@ Future<void> changeLanguage(String languageCode) async {
             const SizedBox(height: 10.0),
 
             Text(
-              localization!.homeBiometricNotFoundDescription,
+              localization?.homeBiometricNotFoundDescription ?? "Biometric authentication is not available on this device.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
@@ -404,7 +404,7 @@ Future<void> changeLanguage(String languageCode) async {
             CommonButton(
               width: double.infinity,
 
-              text: localization!.homeBiometricOpenSettings,
+              text: localization?.homeBiometricOpenSettings ?? "Open Settings",
               onPressed: () => _openSecuritySettings(),
             ),
             const SizedBox(height: 10.0),
@@ -423,7 +423,7 @@ Future<void> changeLanguage(String languageCode) async {
       );
       intent.launch();
     } else if (Platform.isIOS) {
-      ToastHelper().showWarningToast(localization!.homeIosBiometricSetup);
+      ToastHelper().showWarningToast(localization?.homeIosBiometricSetup ?? "Set up Face ID / Touch ID in iOS Settings");
     }
   }
 }

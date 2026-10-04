@@ -3,23 +3,39 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/currency_sparkline_chart.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/rate_lock_countdown_timer.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
-/// Step 1 — Review. Shows the locked-at-confirmation rate, a soft banner
-/// if the rate has drifted or 60s have passed (with the confirm button
-/// disabled until the user re-acknowledges), and the standard list of
-/// charge / total / recipient.
-class ExchangeReviewStepSection extends StatelessWidget {
+/// Step 1 — Review.
+///
+/// Features:
+///   - Locked-at-confirmation live rate strip with countdown timer & 24h trend sparkline
+///   - Rate-drift alert banner (animated appearance when rate drifts or 60s expires)
+///   - Glassmorphic review summary card with clear fee and exchange rate breakdown
+///   - EcardoSwipeButton for secure confirmation with passcode verification
+///   - Full Dark Mode and RTL support with [ExchangeDesignTokens] and [AppSpacing]
+class ExchangeReviewStepSection extends StatefulWidget {
   const ExchangeReviewStepSection({super.key});
+
+  @override
+  State<ExchangeReviewStepSection> createState() =>
+      _ExchangeReviewStepSectionState();
+}
+
+class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
+  final GlobalKey<EcardoSwipeButtonState> _swipeKey =
+      GlobalKey<EcardoSwipeButtonState>();
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +59,11 @@ class ExchangeReviewStepSection extends StatelessWidget {
 
     return Obx(() {
       if (controller.isExchangeConfigLoading.value) {
-        return CommonLoading();
+        return const CommonLoading();
       }
 
       final isStale = controller.isReviewRateStale.value;
+      final isDark = ExchangeDesignTokens.isDark(context);
 
       return SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -55,34 +72,29 @@ class ExchangeReviewStepSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: AppSpacing.xxl),
               Text(
                 loc.exchangeReviewTitle,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 22,
-                  color: AppColors.lightTextPrimary,
+                  color: ExchangeDesignTokens.textPrimary(context),
                   letterSpacing: 0,
                 ),
               ),
-              const SizedBox(height: 12),
-              // Locked-rate section card with countdown timer & 24h trend sparkline
+              const SizedBox(height: AppSpacing.md),
+
+              // Live locked-rate card with countdown timer & 24h trend sparkline
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(AppSpacing.md + 2),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  color: ExchangeDesignTokens.cardSurface(context),
+                  borderRadius: BorderRadius.circular(AppSpacing.radius),
                   border: Border.all(
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.08),
+                    color: ExchangeDesignTokens.cardBorder(context),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.lightShadow.withValues(alpha: 0.04),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  boxShadow: ExchangeDesignTokens.cardShadow(context),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,53 +102,62 @@ class ExchangeReviewStepSection extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          width: 32,
-                          height: 32,
+                          width: 36,
+                          height: 36,
                           decoration: BoxDecoration(
-                            color: AppColors.lightPrimaryContainer
-                                .withValues(alpha: 0.5),
+                            color: isDark
+                                ? AppColors.mainSoftBlue.withValues(alpha: 0.16)
+                                : AppColors.lightPrimaryContainer
+                                    .withValues(alpha: 0.5),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.lock_rounded,
-                            size: 16,
-                            color: AppColors.lightPrimary,
+                            size: 18,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.lightPrimary,
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 loc.exchangeReviewRateLockedAt,
-                                // AppColors.lightTextTertiary is a
-                                // non-const static — no const TextStyle here.
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.lightTextTertiary,
+                                  color: ExchangeDesignTokens.textTertiary(
+                                    context,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 '1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
-                                style: const TextStyle(
-                                  fontSize: 13,
+                                style: TextStyle(
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w800,
-                                  color: AppColors.lightTextPrimary,
+                                  color: ExchangeDesignTokens.textPrimary(
+                                    context,
+                                  ),
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.sm),
                         RateLockCountdownTimer(
                           key: ValueKey(
                             'rate_lock_${controller.exchangeReviewRate.value}_$isStale',
                           ),
                           duration: const Duration(seconds: 60),
-                          size: 34,
+                          size: 36,
                           isExpired: isStale,
                           onExpired: () {
                             controller.isReviewRateStale.value = true;
@@ -144,16 +165,19 @@ class ExchangeReviewStepSection extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     // 24h currency rate trend sparkline chart
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.sm,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.lightBackground.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(12),
+                        color: isDark
+                            ? AppColors.darkSurfaceVariant
+                            : AppColors.lightBackground.withValues(alpha: 0.6),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusMd),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +190,8 @@ class ExchangeReviewStepSection extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
-                                  color: AppColors.lightTextTertiary,
+                                  color:
+                                      ExchangeDesignTokens.textTertiary(context),
                                   letterSpacing: 0.3,
                                 ),
                               ),
@@ -176,14 +201,18 @@ class ExchangeReviewStepSection extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w800,
-                                    color: controller.liveChangePercent.value! >= 0
+                                    color: controller.liveChangePercent.value! >=
+                                            0
                                         ? AppColors.success
                                         : AppColors.error,
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
                                   ),
                                 ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: AppSpacing.xs + 2),
                           CurrencySparklineChart(
                             changePercent: controller.liveChangePercent.value,
                             baseRate: controller.exchangeReviewRate.value > 0
@@ -197,57 +226,63 @@ class ExchangeReviewStepSection extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
 
-              // Stale banner
+              // Rate-drift alert banner (animated)
               AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
+                duration: AppSpacing.normal,
                 child: isStale
-                    ? _StaleRateBanner(
-                        key: const ValueKey('stale_banner'),
+                    ? _RateDriftBanner(
+                        key: const ValueKey('stale_drift_banner'),
                         message: loc.exchangeReviewRateStaleBanner,
                         isLoading: controller.isExchangeConfigLoading.value,
                         onAcknowledge: () async {
                           if (controller.isExchangeConfigLoading.value) return;
+                          HapticFeedback.mediumImpact();
                           await controller.acknowledgeRateChange();
                         },
                       )
                     : const SizedBox(
-                        key: ValueKey('no_stale'),
+                        key: ValueKey('no_drift'),
                         height: 0,
                       ),
               ),
-              if (isStale) const SizedBox(height: 16),
+              if (isStale) const SizedBox(height: AppSpacing.lg),
 
-              // Summary card
+              // Glassmorphic review summary card
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: AppSpacing.lg,
+                ),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  color: ExchangeDesignTokens.cardSurface(context),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                   border: Border.all(
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.06),
+                    color: ExchangeDesignTokens.cardBorder(context),
                   ),
+                  boxShadow: ExchangeDesignTokens.cardShadow(context),
                 ),
                 child: Column(
                   children: [
                     _ReviewRow(
                       title: loc.exchangeReviewAmount,
                       amount: double.tryParse(
-                        controller.amountController.text,
-                      ) ?? 0.0,
+                            controller.amountController.text,
+                          ) ??
+                          0.0,
                       decimals: fromDecimals,
                       currencyCode: controller.fromWallet.value!.code!,
                     ),
-                    _divider(),
+                    _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewFromWallet,
                       text: controller.fromWallet.value!.name!,
                       trailing: _WalletMiniBadge(
-                        isCrypto: controller.fromWallet.value!.isCrypto == true,
+                        isCrypto:
+                            controller.fromWallet.value!.isCrypto == true,
                       ),
                     ),
-                    _divider(),
+                    _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewCharge,
                       amount: controller.charge.value,
@@ -255,16 +290,16 @@ class ExchangeReviewStepSection extends StatelessWidget {
                       currencyCode: controller.fromWallet.value!.code!,
                       amountColor: AppColors.warning,
                     ),
-                    _divider(),
+                    _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewTotalAmount,
                       amount: controller.totalAmount.value,
                       decimals: fromDecimals,
                       currencyCode: controller.fromWallet.value!.code!,
-                      amountColor: AppColors.lightTextPrimary,
+                      amountColor: ExchangeDesignTokens.textPrimary(context),
                       emphasize: true,
                     ),
-                    _divider(),
+                    _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewToWallet,
                       text: controller.toWallet.value!.name!,
@@ -272,13 +307,13 @@ class ExchangeReviewStepSection extends StatelessWidget {
                         isCrypto: controller.toWallet.value!.isCrypto == true,
                       ),
                     ),
-                    _divider(),
+                    _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewExchangeRate,
                       text:
                           '1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
                     ),
-                    _divider(),
+                    _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewExchangeAmount,
                       amount: controller.exchangeAmount.value,
@@ -290,95 +325,84 @@ class ExchangeReviewStepSection extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.xxxl),
 
-              // Action buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonIconButton(
-                      backgroundColor:
-                          AppColors.lightPrimary.withValues(alpha: 0.04),
-                      borderWidth: 2,
-                      borderColor:
-                          AppColors.lightPrimary.withValues(alpha: 0.50),
-                      width: double.infinity,
-                      height: 52,
-                      text: loc.exchangeReviewBack,
-                      icon: PngAssets.reviewArrowBackCommonIcon,
-                      iconWidth: 18,
-                      iconHeight: 18,
-                      iconAndTextSpace: 8,
-                      iconColor: AppColors.lightTextPrimary,
-                      textColor: AppColors.lightTextPrimary,
-                      onPressed: controller.backToAmountStep,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Obx(
-                      () => CommonIconButton(
-                        // v1.0.24: bind to the submit state — a second tap
-                        // while the request is in flight must not fire.
-                        isLoading: controller.isExchangeWalletLoading.value,
-                        onPressed: isStale
-                            ? null
-                            : () async {
-                                HapticFeedback.mediumImpact();
+              // Swipe-to-swap confirmation
+              Obx(
+                () => EcardoSwipeButton(
+                  key: _swipeKey,
+                  text: loc.exchangeReviewConfirm,
+                  loadingText: 'Processing...',
+                  successText: 'Confirmed',
+                  isLoading: controller.isExchangeWalletLoading.value,
+                  enabled: !isStale,
+                  onSwipeComplete: () async {
+                    HapticFeedback.mediumImpact();
 
-                                // EX-04: backend semantics — a user has a
-                                // transaction passcode only when
-                                // users.passcode is non-null/non-empty and
-                                // not "0"; null/''/"0" users never see the
-                                // modal and never send the field.
-                                final savedPasscode =
-                                    controller.userModel.value.data?.passcode;
-                                final bool hasPasscode =
-                                    savedPasscode != null &&
-                                        savedPasscode.isNotEmpty &&
-                                        savedPasscode != "0";
+                    final savedPasscode =
+                        controller.userModel.value.data?.passcode;
+                    final bool hasPasscode =
+                        savedPasscode != null &&
+                            savedPasscode.isNotEmpty &&
+                            savedPasscode != "0";
 
-                                if (!hasPasscode) {
-                                  controller.exchangeWallet();
-                                  return;
-                                }
+                    if (!hasPasscode) {
+                      controller.exchangeWallet();
+                      return;
+                    }
 
-                                final bool isPasscodeEnabled =
-                                    settings.getSetting(
-                                          "exchange_passcode_status",
-                                        ) ==
-                                        "1";
+                    final bool isPasscodeEnabled =
+                        settings.getSetting(
+                              "exchange_passcode_status",
+                            ) ==
+                            "1";
 
-                                if (isPasscodeEnabled) {
-                                  final String? verifiedPasscode =
-                                      await Get.bottomSheet<String>(
-                                    const VerifyPasscodeBottomSheet(),
-                                  );
-                                  if (verifiedPasscode == null ||
-                                      verifiedPasscode.isEmpty) {
-                                    return;
-                                  }
-                                  controller.exchangeWallet(
-                                    passcode: verifiedPasscode,
-                                  );
-                                } else {
-                                  controller.exchangeWallet();
-                                }
-                              },
-                        width: double.infinity,
-                        height: 52,
-                        text: loc.exchangeReviewConfirm,
-                        icon: PngAssets.reviewArrowRightCommonIcon,
-                        iconWidth: 18,
-                        iconHeight: 18,
-                        iconAndTextSpace: 8,
-                        isIconRight: true,
-                      ),
-                    ),
-                  ),
-                ],
+                    if (isPasscodeEnabled) {
+                      final String? verifiedPasscode =
+                          await Get.bottomSheet<String>(
+                        const VerifyPasscodeBottomSheet(),
+                      );
+                      if (verifiedPasscode == null ||
+                          verifiedPasscode.isEmpty) {
+                        _swipeKey.currentState?.reset();
+                        return;
+                      }
+                      controller.exchangeWallet(
+                        passcode: verifiedPasscode,
+                      );
+                    } else {
+                      controller.exchangeWallet();
+                    }
+                  },
+                  margin: EdgeInsets.zero,
+                ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: AppSpacing.lg),
+
+              // Back button
+              CommonIconButton(
+                backgroundColor: isDark
+                    ? AppColors.darkCard
+                    : AppColors.lightPrimary.withValues(alpha: 0.04),
+                borderWidth: 1.5,
+                borderColor: isDark
+                    ? AppColors.darkBorder
+                    : AppColors.lightPrimary.withValues(alpha: 0.40),
+                width: double.infinity,
+                height: 52,
+                text: loc.exchangeReviewBack,
+                icon: PngAssets.reviewArrowBackCommonIcon,
+                iconWidth: 18,
+                iconHeight: 18,
+                iconAndTextSpace: AppSpacing.sm,
+                iconColor: ExchangeDesignTokens.textPrimary(context),
+                textColor: ExchangeDesignTokens.textPrimary(context),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  controller.backToAmountStep();
+                },
+              ),
+              const SizedBox(height: AppSpacing.huge),
             ],
           ),
         ),
@@ -386,11 +410,11 @@ class ExchangeReviewStepSection extends StatelessWidget {
     });
   }
 
-  Widget _divider() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+  Widget _divider(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         child: Divider(
           height: 0,
-          color: AppColors.black.withValues(alpha: 0.06),
+          color: ExchangeDesignTokens.divider(context),
         ),
       );
 }
@@ -419,7 +443,7 @@ class _ReviewRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -428,14 +452,14 @@ class _ReviewRow extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 14,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
+              color: ExchangeDesignTokens.textTertiary(context),
               letterSpacing: 0,
             ),
           ),
           const Spacer(),
           if (trailing != null) ...[
             trailing!,
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.sm),
           ],
           if (text != null)
             Text(
@@ -443,8 +467,9 @@ class _ReviewRow extends StatelessWidget {
               style: TextStyle(
                 fontWeight: emphasize ? FontWeight.w900 : FontWeight.w700,
                 fontSize: emphasize ? 16 : 14,
-                color: AppColors.lightTextPrimary,
+                color: ExchangeDesignTokens.textPrimary(context),
                 letterSpacing: 0,
+                fontFeatures: const [FontFeature.tabularFigures()],
               ),
             )
           else if (amount != null && decimals != null)
@@ -452,18 +477,21 @@ class _ReviewRow extends StatelessWidget {
               amount: amount!,
               decimals: decimals!,
               currencyCode: currencyCode,
-              integerColor: amountColor ?? AppColors.lightTextPrimary,
-              decimalColor: (amountColor ?? AppColors.lightTextPrimary)
+              integerColor:
+                  amountColor ?? ExchangeDesignTokens.textPrimary(context),
+              decimalColor: (amountColor ??
+                      ExchangeDesignTokens.textPrimary(context))
                   .withValues(alpha: 0.55),
               integerStyle: TextStyle(
                 fontWeight: emphasize ? FontWeight.w900 : FontWeight.w700,
                 fontSize: emphasize ? 18 : 15,
-                color: amountColor ?? AppColors.lightTextPrimary,
+                color: amountColor ?? ExchangeDesignTokens.textPrimary(context),
               ),
               decimalStyle: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: emphasize ? 14 : 12,
-                color: (amountColor ?? AppColors.lightTextPrimary)
+                color: (amountColor ??
+                        ExchangeDesignTokens.textPrimary(context))
                     .withValues(alpha: 0.55),
               ),
             ),
@@ -480,15 +508,15 @@ class _WalletMiniBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isCrypto) return const SizedBox();
+    if (!isCrypto) return const SizedBox.shrink();
     return Container(
       padding: const EdgeInsetsDirectional.symmetric(
         horizontal: 6,
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        color: AppColors.lightSecondary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(6),
+        color: AppColors.lightSecondary.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
       ),
       child: const Text(
         'CRYPTO',
@@ -503,8 +531,10 @@ class _WalletMiniBadge extends StatelessWidget {
   }
 }
 
-class _StaleRateBanner extends StatelessWidget {
-  const _StaleRateBanner({
+/// Rate-drift alert banner shown when the market price has drifted or the 60s
+/// rate lock has elapsed.
+class _RateDriftBanner extends StatelessWidget {
+  const _RateDriftBanner({
     super.key,
     required this.message,
     required this.onAcknowledge,
@@ -519,64 +549,73 @@ class _StaleRateBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 14,
-        vertical: 10,
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.md,
       ),
       decoration: BoxDecoration(
         color: AppColors.warningContainer,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         border: Border.all(
-          color: AppColors.warning.withValues(alpha: 0.30),
+          color: AppColors.warning.withValues(alpha: 0.35),
         ),
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.warning_amber_rounded,
-            size: 18,
+            size: 20,
             color: AppColors.warning,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Text(
               message,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: AppColors.warning,
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onTap: isLoading ? null : onAcknowledge,
-            child: Container(
-              padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: 10,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.warning,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: isLoading
-                  ? const SizedBox(
-                      width: 12,
-                      height: 12,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.white,
+          const SizedBox(width: AppSpacing.sm),
+          Semantics(
+            button: true,
+            label: 'Acknowledge rate change and re-lock',
+            child: GestureDetector(
+              onTap: isLoading ? null : onAcknowledge,
+              child: Container(
+                constraints: const BoxConstraints(
+                  minWidth: 44,
+                  minHeight: 32,
+                ),
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.warning,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                alignment: Alignment.center,
+                child: isLoading
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.white,
+                        ),
+                      )
+                    : const Text(
+                        'OK',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.white,
+                          letterSpacing: 0.5,
+                        ),
                       ),
-                    )
-                  : Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.white,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
+              ),
             ),
           ),
         ],

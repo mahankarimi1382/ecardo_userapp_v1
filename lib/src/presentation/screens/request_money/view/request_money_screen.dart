@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -30,6 +31,7 @@ class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return PopScope(
       canPop: false,
@@ -49,16 +51,28 @@ class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
                 decoration: controller.selectedScreen.value == 0
                     ? BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [AppColors.white, AppColors.lightBackground],
+                          colors: isDark
+                              ? [
+                                  AppColors.darkSurfaceVariant,
+                                  AppColors.darkBackground,
+                                ]
+                              : [
+                                  AppColors.white,
+                                  AppColors.lightBackground,
+                                ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          stops: [0.3, 0.5],
+                          stops: const [0.3, 0.5],
                         ),
                       )
-                    : const BoxDecoration(color: AppColors.white),
+                    : BoxDecoration(
+                        color: isDark
+                            ? AppColors.darkBackground
+                            : AppColors.lightBackground,
+                      ),
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    return CommonLoading();
+                    return const CommonLoading();
                   }
 
                   if (controller.selectedScreen.value == 0) {
@@ -68,20 +82,22 @@ class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
                             ? const RequestMoneyHeaderSection()
                             : controller.currentStep.value == 2
                             ? const SizedBox.shrink()
-                            : ColoredBox(
-                                color: AppColors.lightBackground,
+                            : Container(
+                                color: isDark
+                                    ? AppColors.darkBackground
+                                    : AppColors.lightBackground,
                                 child: Column(
                                   children: [
-                                    SizedBox(height: 60),
+                                    const SizedBox(height: 60),
                                     CommonAppBar(
                                       title:
                                           localization.requestMoneyScreenTitle,
                                     ),
-                                    SizedBox(height: 30),
+                                    const SizedBox(height: AppSpacing.xxl),
                                   ],
                                 ),
                               ),
-                        Expanded(child: const RequestMoneySection()),
+                        const Expanded(child: RequestMoneySection()),
                       ],
                     );
                   } else {
@@ -93,7 +109,7 @@ class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
             Obx(
               () => Visibility(
                 visible: controller.isRequestMoneyLoading.value,
-                child: CommonLoading(),
+                child: const CommonLoading(),
               ),
             ),
           ],

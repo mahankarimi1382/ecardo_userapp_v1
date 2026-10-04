@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/referral/model/referred_fri
 class ReferredFriendsController extends GetxController {
   // Global
   final RxBool isLoading = false.obs;
+  final RxBool isError = false.obs;
   final RxList<ReferredFriendsData> referredFriendsList =
       <ReferredFriendsData>[].obs;
 
@@ -22,23 +23,32 @@ class ReferredFriendsController extends GetxController {
   // Fetch Referred Friends
   Future<void> fetchReferredFriends() async {
     isLoading.value = true;
+    isError.value = false;
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.referralFriendsEndpoint,
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         final referredFriendsModel = ReferredFriendsModel.fromJson(
           response.data!,
         );
         referredFriendsList.clear();
-        referredFriendsList.assignAll(referredFriendsModel.data!);
+        if (referredFriendsModel.data != null) {
+          referredFriendsList.assignAll(referredFriendsModel.data!);
+        }
+      } else {
+        isError.value = true;
       }
     } catch (e, stackTrace) {
+      isError.value = true;
       debugPrint('❌ fetchReferredFriends() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      final ctx = Get.context;
+      if (ctx != null && ctx.mounted) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(ctx)!.allControllerLoadError,
+        );
+      }
     } finally {
       isLoading.value = false;
     }

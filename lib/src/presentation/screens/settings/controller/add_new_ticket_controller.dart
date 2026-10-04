@@ -64,7 +64,9 @@ class AddNewTicketController extends GetxController {
             'attachments[]',
             dio.MultipartFile.fromFileSync(
               value.path,
-              filename: value.path.split('/').last,
+              // TICKET-FIX: split on both '/' and '\' so Windows paths
+              // never leak the full path as the upload filename.
+              filename: value.path.split(RegExp(r'[/\\]')).last,
             ),
           ),
         );

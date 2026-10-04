@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/financial_service_unavailable_banner.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/guarantee_controller.dart';
 import '../models/guarantee_models.dart';
+import '../widgets/guarantee_status_stepper.dart';
 import 'guarantee_intro_screen.dart';
 import 'guarantee_application_screen.dart';
 import 'guarantee_tracking_screen.dart';
@@ -53,19 +56,22 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'RELEASED': return const Color(0xFF059669);
+      case 'RELEASED': return AppColors.success;
       case 'ISSUED': return const Color(0xFF0D9488);
-      case 'CLAIMED': case 'REJECTED': return const Color(0xFFDC2626);
-      case 'MARGIN_PENDING': case 'IN_ISSUANCE': return const Color(0xFFD97706);
-      case 'UNDER_REVIEW': case 'COMPLEMENT_REQUIRED': return const Color(0xFF2563EB);
+      case 'CLAIMED': case 'REJECTED': return AppColors.error;
+      case 'MARGIN_PENDING': case 'IN_ISSUANCE': return AppColors.warning;
+      case 'UNDER_REVIEW': case 'COMPLEMENT_REQUIRED': return AppColors.info;
       default: return Colors.blueGrey;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryAccent = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488);
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -78,11 +84,14 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
               zh: '保函与信用证',
             ),
             rightSideWidget: Padding(
-              padding: EdgeInsetsDirectional.only(end: 16.w),
+              padding: EdgeInsetsDirectional.only(end: AppSpacing.page.w),
               child: IconButton(
                 icon: const Icon(Icons.history_rounded),
                 tooltip: l10nPick(context, fa: 'پیگیری پرونده‌ها', en: 'Tracking', ar: 'المتابعة', zh: '追踪'),
-                onPressed: () => Get.to(() => const GuaranteeTrackingScreen()),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Get.to(() => const GuaranteeTrackingScreen());
+                },
               ),
             ),
           ),
@@ -90,7 +99,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
       ),
       body: Obx(() {
         if (controller.isLoadingInstruments.value && controller.instruments.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return const GuaranteeSkeletonLoader(itemCount: 4);
         }
 
         return RefreshIndicator(
@@ -99,7 +108,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
             await controller.fetchMyCases();
           },
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.sm.h),
             children: [
               // Notice banner if backend is pending / returning empty
               if (controller.hasBackendError.value || controller.instruments.isEmpty)
@@ -114,7 +123,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                   },
                 ),
 
-              SizedBox(height: 6.h),
+              SizedBox(height: AppSpacing.sm.h),
 
               // Action tiles
               Row(
@@ -122,28 +131,31 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                   Expanded(
                     child: _buildActionTile(
                       context,
+                      isDark: isDark,
                       icon: Icons.shield_outlined,
                       titleFa: 'راهنما و انواع ابزار',
                       titleEn: 'Guide & Tools',
-                      color: const Color(0xFF0D9488),
+                      color: primaryAccent,
                       onTap: () => Get.to(() => const GuaranteeIntroScreen()),
                     ),
                   ),
-                  SizedBox(width: 10.w),
+                  SizedBox(width: AppSpacing.sm.w),
                   Expanded(
                     child: _buildActionTile(
                       context,
+                      isDark: isDark,
                       icon: Icons.add_moderator_rounded,
                       titleFa: 'صدور ضمانت‌نامه',
                       titleEn: 'Issue Guarantee',
-                      color: AppColors.lightPrimary,
+                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                       onTap: () => Get.to(() => const GuaranteeApplicationScreen()),
                     ),
                   ),
-                  SizedBox(width: 10.w),
+                  SizedBox(width: AppSpacing.sm.w),
                   Expanded(
                     child: _buildActionTile(
                       context,
+                      isDark: isDark,
                       icon: Icons.assignment_outlined,
                       titleFa: 'پیگیری و کارتابل',
                       titleEn: 'Track Cases',
@@ -154,7 +166,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                 ],
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSpacing.xl.h),
 
               // Instruments Catalog
               Row(
@@ -168,35 +180,37 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                       ar: 'أدوات الضمان المعتمدة',
                       zh: '银行批准的保函种类',
                     ),
-                    style: TextStyle(
-                      fontSize: 14.sp,
+                    style: AppTextStyles.titleSmall.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.lightTextPrimary,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Get.to(() => const GuaranteeIntroScreen()),
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      Get.to(() => const GuaranteeIntroScreen());
+                    },
                     child: Text(
                       l10nPick(context, fa: 'مشاهده نرخ‌ها', en: 'Rates', ar: 'الأسعار', zh: '费率'),
-                      style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightPrimary),
+                      style: AppTextStyles.labelSmall.copyWith(color: primaryAccent),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: AppSpacing.xs.h),
 
               if (controller.instruments.isEmpty)
                 Container(
-                  padding: EdgeInsets.all(18.r),
+                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.lightBorder),
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                   ),
                   child: Column(
                     children: [
                       Icon(Icons.security_update_warning_rounded, size: 40.sp, color: Colors.grey.shade400),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: AppSpacing.sm.h),
                       Text(
                         l10nPick(
                           context,
@@ -205,7 +219,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                           ar: 'بانتظار مزامنة أدوات الضمان المصرفية',
                           zh: '正在等待银行Web服务同步保函目录',
                         ),
-                        style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
+                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
                       ),
                       SizedBox(height: 4.h),
                       Text(
@@ -217,15 +231,17 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                           zh: '您可以通过在线表单直接起草各类型保函申请。',
                         ),
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
                       ),
                     ],
                   ),
                 )
               else
-                ...controller.instruments.map((inst) => _buildInstrumentItem(context, inst)),
+                ...controller.instruments.map((inst) => _buildInstrumentItem(context, inst, isDark, primaryAccent)),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSpacing.xl.h),
 
               // Recent Cases
               Row(
@@ -239,36 +255,38 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                       ar: 'ملفاتي النشطة',
                       zh: '我的保函记录',
                     ),
-                    style: TextStyle(
-                      fontSize: 14.sp,
+                    style: AppTextStyles.titleSmall.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.lightTextPrimary,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                   if (controller.myCases.isNotEmpty)
                     TextButton(
-                      onPressed: () => Get.to(() => const GuaranteeTrackingScreen()),
+                      onPressed: () {
+                        HapticFeedback.lightImpact();
+                        Get.to(() => const GuaranteeTrackingScreen());
+                      },
                       child: Text(
                         l10nPick(context, fa: 'مشاهده همه', en: 'View All', ar: 'الكل', zh: '全部'),
-                        style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightPrimary),
+                        style: AppTextStyles.labelSmall.copyWith(color: primaryAccent),
                       ),
                     ),
                 ],
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: AppSpacing.xs.h),
 
               if (controller.myCases.isEmpty)
                 Container(
-                  padding: EdgeInsets.all(16.r),
+                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.lightBorder),
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                   ),
                   child: Row(
                     children: [
                       Icon(Icons.folder_shared_outlined, size: 28.sp, color: Colors.grey.shade400),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Text(
                           l10nPick(
@@ -278,14 +296,16 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                             ar: 'لا توجد خطابات ضمان أو اعتمادات مسجلة لحسابك.',
                             zh: '您当前没有任何未结清的保函或信用证申请。',
                           ),
-                          style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 )
               else
-                ...controller.myCases.take(3).map((c) => _buildCaseItem(context, c)),
+                ...controller.myCases.take(3).map((c) => _buildCaseItem(context, c, isDark)),
             ],
           ),
         );
@@ -295,6 +315,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
 
   Widget _buildActionTile(
     BuildContext context, {
+    required bool isDark,
     required IconData icon,
     required String titleFa,
     required String titleEn,
@@ -302,34 +323,36 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
     required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16.r),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTap();
+      },
+      borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 8.w),
+        padding: EdgeInsetsDirectional.symmetric(vertical: 14.h, horizontal: 8.w),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.lightBorder),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(8.r),
+              padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 20.sp),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             Text(
               l10nPick(context, fa: titleFa, en: titleEn),
               textAlign: TextAlign.center,
               maxLines: 2,
-              style: TextStyle(
-                fontSize: 11.sp,
+              style: AppTextStyles.labelSmall.copyWith(
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextPrimary,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
           ],
@@ -338,31 +361,42 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
     );
   }
 
-  Widget _buildInstrumentItem(BuildContext context, GuaranteeInstrumentModel inst) {
+  Widget _buildInstrumentItem(
+    BuildContext context,
+    GuaranteeInstrumentModel inst,
+    bool isDark,
+    Color primaryAccent,
+  ) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.all(14.r),
+      margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
+      padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.lightBorder),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(10.r),
+            padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D9488).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12.r),
+              color: primaryAccent.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
             ),
-            child: Icon(Icons.shield_rounded, color: const Color(0xFF0D9488), size: 22.sp),
+            child: Icon(Icons.shield_rounded, color: primaryAccent, size: 22.sp),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: AppSpacing.md.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(inst.name, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800)),
+                Text(
+                  inst.name,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
                 SizedBox(height: 3.h),
                 Text(
                   l10nPick(
@@ -372,24 +406,30 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                     ar: 'التأمين: ${inst.marginPct}٪ · الرسوم: ${inst.feePct}٪',
                     zh: '保证金：${inst.marginPct}% · 开立费：${inst.feePct}%',
                   ),
-                  style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
                 ),
               ],
             ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0D9488),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              backgroundColor: primaryAccent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 6.h),
             ),
             onPressed: () {
+              HapticFeedback.lightImpact();
               controller.selectedInstrument.value = inst;
               Get.to(() => const GuaranteeApplicationScreen());
             },
             child: Text(
               l10nPick(context, fa: 'صدور', en: 'Apply', ar: 'طلب', zh: '申请'),
-              style: TextStyle(fontSize: 11.5.sp, color: Colors.white, fontWeight: FontWeight.w700),
+              style: AppTextStyles.labelSmall.copyWith(
+                color: AppColors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -397,18 +437,21 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
     );
   }
 
-  Widget _buildCaseItem(BuildContext context, GuaranteeCaseModel c) {
+  Widget _buildCaseItem(BuildContext context, GuaranteeCaseModel c, bool isDark) {
     final statusColor = _statusColor(c.status);
 
     return InkWell(
-      onTap: () => Get.to(() => GuaranteeDetailScreen(caseId: c.id)),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Get.to(() => GuaranteeDetailScreen(caseId: c.id));
+      },
       child: Container(
-        margin: EdgeInsets.only(bottom: 8.h),
-        padding: EdgeInsets.all(12.r),
+        margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
+        padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.lightBorder),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
         child: Row(
           children: [
@@ -418,29 +461,41 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                 children: [
                   Text(
                     '${c.instrument?.name ?? ''} (${c.beneficiaryName})',
-                    style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     '${c.amount.toInt()} ${c.currency}',
-                    style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightTextSecondary),
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
                   ),
                 ],
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 2.h),
               decoration: BoxDecoration(
                 color: statusColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
               ),
               child: Text(
                 _statusFa(c.status),
-                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: statusColor),
+                style: AppTextStyles.labelSmall.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: statusColor,
+                ),
               ),
             ),
-            SizedBox(width: 8.w),
-            Icon(Icons.chevron_right, size: 20.sp, color: Colors.grey),
+            SizedBox(width: AppSpacing.sm.w),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14.sp,
+              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+            ),
           ],
         ),
       ),

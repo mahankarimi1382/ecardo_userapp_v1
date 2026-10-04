@@ -14,64 +14,70 @@ class DeleteWalletBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedContainer(
       width: double.infinity,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutQuart,
-      margin: EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadiusDirectional.only(
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        borderRadius: const BorderRadiusDirectional.only(
           topStart: Radius.circular(20),
           topEnd: Radius.circular(20),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
+            color: AppColors.black.withValues(alpha: isDark ? 0.3 : 0.06),
             blurRadius: 40,
             spreadRadius: 0,
-            offset: Offset(0, 0),
+            offset: const Offset(0, 0),
           ),
         ],
       ),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Container(
               width: 40,
               height: 6,
               decoration: BoxDecoration(
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                color: (isDark ? AppColors.warmWhite : AppColors.lightTextPrimary)
+                    .withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             Image.asset(PngAssets.walletDeleteCommonIconTwo, width: 70),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               localization.deleteWalletBottomSheetTitle,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 22,
-                color: AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
                 letterSpacing: 0,
                 fontWeight: FontWeight.w900,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               textAlign: TextAlign.center,
               localization.deleteWalletBottomSheetMessage,
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.lightTextTertiary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextTertiary,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0,
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
 
             CommonButton(
               backgroundColor: AppColors.error,

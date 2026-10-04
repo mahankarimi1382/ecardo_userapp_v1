@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -101,6 +100,8 @@ class RecentTransactionsSection extends StatelessWidget {
                       final Transactions transaction = txList[index];
                       final visual = _getVisual(context, transaction.type);
                       final isPlus = transaction.isPlus == true;
+                      final isDark =
+                          Theme.of(context).brightness == Brightness.dark;
 
                       return InkWell(
                         onTap: () {
@@ -145,7 +146,9 @@ class RecentTransactionsSection extends StatelessWidget {
                                         letterSpacing: 0,
                                         fontWeight: FontWeight.w800,
                                         fontSize: 14.sp,
-                                        color: AppColors.lightTextPrimary,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
                                       ),
                                     ),
                                     SizedBox(height: 4.h),
@@ -156,7 +159,9 @@ class RecentTransactionsSection extends StatelessWidget {
                                           style: TextStyle(
                                             letterSpacing: 0,
                                             fontSize: 11.5.sp,
-                                            color: AppColors.lightTextTertiary,
+                                            color: isDark
+                                                ? AppColors.darkTextSecondary
+                                                : AppColors.lightTextTertiary,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),

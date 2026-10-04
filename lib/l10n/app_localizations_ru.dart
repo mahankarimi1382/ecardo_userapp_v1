@@ -39,32 +39,32 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comment_common_exit_application => '==== Exit Application ====';
 
   @override
-  String get exitApplicationTitle => 'Exit Application';
+  String get exitApplicationTitle => 'Выход из приложения';
 
   @override
   String get exitApplicationMessage =>
-      'Are you sure you want to exit the application?';
+      'Вы уверены, что хотите выйти из приложения?';
 
   @override
   String get comment_common_dropdown => '==== Common Dropdown ====';
 
   @override
-  String get commonDropdownSelectGender => 'Select Gender';
+  String get commonDropdownSelectGender => 'Выберите пол';
 
   @override
-  String get commonDropdownGender => 'Gender';
+  String get commonDropdownGender => 'Пол';
 
   @override
-  String get commonDropdownGenderNotFound => 'Gender not found';
+  String get commonDropdownGenderNotFound => 'Пол не найден';
 
   @override
-  String get commonDropdownMale => 'Male';
+  String get commonDropdownMale => 'Мужской';
 
   @override
-  String get commonDropdownFemale => 'Female';
+  String get commonDropdownFemale => 'Женский';
 
   @override
-  String get commonDropdownOther => 'Other';
+  String get commonDropdownOther => 'Другое';
 
   @override
   String get comment_welcome => '==== Welcome Screen ====';
@@ -111,915 +111,915 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get signInBiometricErrorFirstTime =>
-      'First Sign In with Email and Password';
+      'Сначала войдите с эл. почтой и паролем';
 
   @override
-  String get signInBiometricErrorNotEnabled => 'Your biometric is not enabled';
+  String get signInBiometricErrorNotEnabled => 'Биометрия не включена';
 
   @override
-  String get signInRegistrationDisabled => 'Registration is disabled';
+  String get signInRegistrationDisabled => 'Регистрация отключена';
 
   @override
-  String get signInValidationEmailRequired => 'The email field is required';
+  String get signInValidationEmailRequired => 'Поле эл. почты обязательно';
 
   @override
-  String get signInValidationPasswordRequired =>
-      'The password field is required';
+  String get signInValidationPasswordRequired => 'Поле пароля обязательно';
 
   @override
   String get comment_two_factor_auth =>
       '==== Two Factor Authentication Screen ====';
 
   @override
-  String get twoFactorAuthTitle => 'Verify Two FA';
+  String get twoFactorAuthTitle => 'Подтверждение 2FA';
 
   @override
-  String get twoFactorAuthSubtitle => 'Enter code via google authenticator app';
+  String get twoFactorAuthSubtitle =>
+      'Введите код из приложения Google Authenticator';
 
   @override
-  String get twoFactorAuthEnterOtp => 'Enter OTP';
+  String get twoFactorAuthEnterOtp => 'Введите OTP';
 
   @override
-  String get twoFactorAuthVerifyButton => 'Verify';
+  String get twoFactorAuthVerifyButton => 'Подтвердить';
 
   @override
-  String get twoFactorAuthBackTo => 'Back to? ';
+  String get twoFactorAuthBackTo => 'Вернуться к? ';
 
   @override
-  String get twoFactorAuthSignIn => 'Sign In';
+  String get twoFactorAuthSignIn => 'Войти';
 
   @override
-  String get twoFactorAuthOtpRequired => 'The otp field is required';
+  String get twoFactorAuthOtpRequired => 'Поле OTP обязательно';
 
   @override
   String get comment_forgot_password => '==== Forgot Password Screen ====';
 
   @override
-  String get forgotPasswordTitle => 'Reset Your Password';
+  String get forgotPasswordTitle => 'Сброс пароля';
 
   @override
   String get forgotPasswordSubtitle =>
-      'Don\'t worry! It happens. Enter your email to reset your password.';
+      'Не волнуйтесь, такое случается! Введите email для сброса пароля.';
 
   @override
   String get forgotPasswordEmail => 'Email';
 
   @override
-  String get forgotPasswordButton => 'Forgot Password';
+  String get forgotPasswordButton => 'Забыли пароль?';
 
   @override
-  String get forgotPasswordBackTo => 'Back to? ';
+  String get forgotPasswordBackTo => 'Вернуться к? ';
 
   @override
-  String get forgotPasswordSignIn => 'Sign In';
+  String get forgotPasswordSignIn => 'Войти';
 
   @override
-  String get forgotPasswordEmailRequired => 'The email field is required';
+  String get forgotPasswordEmailRequired => 'Поле email обязательно';
 
   @override
   String get comment_forgot_password_pin_verification =>
       '==== Forgot Password Pin Verification Screen ====';
 
   @override
-  String get forgotPasswordPinVerifyTitle => 'Verify Email';
+  String get forgotPasswordPinVerifyTitle => 'Подтверждение email';
 
   @override
-  String get forgotPasswordPinOtpSent => 'OTP sent to ';
+  String get forgotPasswordPinOtpSent => 'OTP-код отправлен на ';
 
   @override
-  String get forgotPasswordPinEnterOtp => 'Enter OTP';
+  String get forgotPasswordPinEnterOtp => 'Введите OTP-код';
 
   @override
-  String get forgotPasswordPinOtpCountdown => 'OTP in';
+  String get forgotPasswordPinOtpCountdown => 'OTP-код через';
 
   @override
-  String get forgotPasswordPinVerifyButton => 'Verify OTP';
+  String get forgotPasswordPinVerifyButton => 'Подтвердить OTP';
 
   @override
-  String get forgotPasswordPinDidNotReceive => 'Didn\'t receive the code? ';
+  String get forgotPasswordPinDidNotReceive => 'Не получили код? ';
 
   @override
-  String get forgotPasswordPinResend => 'Resend';
+  String get forgotPasswordPinResend => 'Отправить повторно';
 
   @override
-  String get forgotPasswordPinOtpRequired => 'The otp field is required';
+  String get forgotPasswordPinOtpRequired => 'Поле OTP-кода обязательно';
 
   @override
   String get comment_reset_password => '==== Reset Password Screen ====';
 
   @override
-  String get resetPasswordTitle => 'Reset Password';
+  String get resetPasswordTitle => 'Сброс пароля';
 
   @override
-  String get resetPasswordSubtitle =>
-      'Write your password and confirm password.';
+  String get resetPasswordSubtitle => 'Введите пароль и подтвердите его.';
 
   @override
-  String get resetPasswordPassword => 'Password';
+  String get resetPasswordPassword => 'Пароль';
 
   @override
-  String get resetPasswordConfirmPassword => 'Confirm Password';
+  String get resetPasswordConfirmPassword => 'Подтвердите пароль';
 
   @override
-  String get resetPasswordButton => 'Reset';
+  String get resetPasswordButton => 'Сбросить';
 
   @override
-  String get resetPasswordAlreadyHaveAccount => 'Already have an account? ';
+  String get resetPasswordAlreadyHaveAccount => 'Уже есть аккаунт? ';
 
   @override
-  String get resetPasswordSignIn => 'Sign In';
+  String get resetPasswordSignIn => 'Войти';
 
   @override
-  String get resetPasswordValidationRequired => 'Password is required';
+  String get resetPasswordValidationRequired => 'Пожалуйста, введите пароль';
 
   @override
   String get resetPasswordValidationMinLength =>
-      'Password must be at least 8 characters';
+      'Пароль должен содержать не менее 8 символов';
 
   @override
   String get resetPasswordValidationConfirmRequired =>
-      'Please confirm your password';
+      'Пожалуйста, подтвердите пароль';
 
   @override
-  String get resetPasswordValidationMismatch => 'Passwords don\'t match';
+  String get resetPasswordValidationMismatch => 'Пароли не совпадают';
 
   @override
   String get comment_auth_id_verification =>
       '==== Auth ID Verification Screen ====';
 
   @override
-  String get authIdVerificationInvalidFieldType => 'Invalid field type';
+  String get authIdVerificationInvalidFieldType => 'Недопустимый тип поля';
 
   @override
-  String get authIdVerificationUnknownFieldType => 'Unknown field type: ';
+  String get authIdVerificationUnknownFieldType => 'Неизвестный тип поля: ';
 
   @override
   String get comment_camera_type_section => '==== Camera Type Section ====';
 
   @override
-  String get cameraTypeBack => 'Back';
+  String get cameraTypeBack => 'Назад';
 
   @override
-  String get cameraTypeNotAvailable => 'N/A';
+  String get cameraTypeNotAvailable => 'Н/Д';
 
   @override
-  String get cameraTypeButton => 'Camera';
+  String get cameraTypeButton => 'Камера';
 
   @override
-  String get cameraTypeSkip => 'Skip';
+  String get cameraTypeSkip => 'Пропустить';
 
   @override
   String get comment_file_type_section => '==== File Type Section ====';
 
   @override
-  String get fileTypeBack => 'Back';
+  String get fileTypeBack => 'Назад';
 
   @override
-  String get fileTypeNotAvailable => 'N/A';
+  String get fileTypeNotAvailable => 'Н/Д';
 
   @override
-  String get fileTypeChooseFile => 'Choose File';
+  String get fileTypeChooseFile => 'Выбрать файл';
 
   @override
-  String get fileTypeSkip => 'Skip';
+  String get fileTypeSkip => 'Пропустить';
 
   @override
   String get comment_front_camera_type_section =>
       '==== Front Camera Type Section ====';
 
   @override
-  String get frontCameraTypeBack => 'Back';
+  String get frontCameraTypeBack => 'Назад';
 
   @override
-  String get frontCameraTypeNotAvailable => 'N/A';
+  String get frontCameraTypeNotAvailable => 'Н/Д';
 
   @override
-  String get frontCameraTypeButton => 'Front Camera';
+  String get frontCameraTypeButton => 'Фронтальная камера';
 
   @override
-  String get frontCameraTypeSkip => 'Skip';
+  String get frontCameraTypeSkip => 'Пропустить';
 
   @override
   String get comment_kyc_submission_section =>
       '==== KYC Submission Section ====';
 
   @override
-  String get kycSubmissionIdVerification => 'ID Verification';
+  String get kycSubmissionIdVerification => 'Проверка личности';
 
   @override
-  String get kycSubmissionSubmit => 'Submit';
+  String get kycSubmissionSubmit => 'Отправить';
 
   @override
-  String get kycSubmissionNext => 'Next';
+  String get kycSubmissionNext => 'Далее';
 
   @override
-  String get kycSubmissionReUpload => 'Re Upload';
+  String get kycSubmissionReUpload => 'Загрузить заново';
 
   @override
-  String get kycSubmissionRetake => 'Retake';
+  String get kycSubmissionRetake => 'Переснять';
 
   @override
   String get comment_email_screen => '==== Email Screen ====';
 
   @override
-  String get emailScreenCreateAccount => 'Create Your Account';
+  String get emailScreenCreateAccount => 'Создайте свой аккаунт';
 
   @override
   String get emailScreenSubtitle =>
-      'Join and take control of your finances today';
+      'Присоединяйтесь и берите свои финансы под контроль уже сегодня';
 
   @override
   String get emailScreenEmail => 'Email';
 
   @override
-  String get emailScreenContinue => 'Continue';
+  String get emailScreenContinue => 'Продолжить';
 
   @override
-  String get emailScreenAlreadyHaveAccount => 'Already have an account? ';
+  String get emailScreenAlreadyHaveAccount => 'Уже есть аккаунт? ';
 
   @override
-  String get emailScreenSignIn => 'Sign In';
+  String get emailScreenSignIn => 'Войти';
 
   @override
-  String get emailScreenEmailRequired => 'Please enter an email';
+  String get emailScreenEmailRequired => 'Введите email';
 
   @override
   String get comment_personal_info_screen => '==== Personal Info Screen ====';
 
   @override
-  String get personalInfoTitle => 'Your Information';
+  String get personalInfoTitle => 'Ваши данные';
 
   @override
   String get personalInfoSubtitle =>
-      'Enter your legal information to continue.';
+      'Введите ваши официальные данные, чтобы продолжить.';
 
   @override
-  String get personalInfoFirstName => 'First Name';
+  String get personalInfoFirstName => 'Имя';
 
   @override
-  String get personalInfoLastName => 'Last Name';
+  String get personalInfoLastName => 'Фамилия';
 
   @override
-  String get personalInfoUserName => 'User Name';
+  String get personalInfoUserName => 'Имя пользователя';
 
   @override
-  String get personalInfoCountry => 'Country';
+  String get personalInfoCountry => 'Страна';
 
   @override
-  String get personalInfoSelectCountry => 'Select Country';
+  String get personalInfoSelectCountry => 'Выберите страну';
 
   @override
-  String get personalInfoPhoneNo => 'Phone No';
+  String get personalInfoPhoneNo => 'Номер телефона';
 
   @override
-  String get personalInfoReferralCode => 'Referral Code';
+  String get personalInfoReferralCode => 'Реферальный код';
 
   @override
-  String get personalInfoContinue => 'Continue';
+  String get personalInfoContinue => 'Продолжить';
 
   @override
-  String get personalInfoValidationFirstNameRequired =>
-      'First name is required';
+  String get personalInfoValidationFirstNameRequired => 'Укажите имя';
 
   @override
-  String get personalInfoValidationLastNameRequired => 'Last name is required';
+  String get personalInfoValidationLastNameRequired => 'Укажите фамилию';
 
   @override
-  String get personalInfoValidationUserNameRequired => 'Username is required';
+  String get personalInfoValidationUserNameRequired =>
+      'Укажите имя пользователя';
 
   @override
-  String get personalInfoValidationCountryRequired => 'Country is required';
+  String get personalInfoValidationCountryRequired => 'Укажите страну';
 
   @override
-  String get personalInfoValidationPhoneRequired => 'Phone number is required';
+  String get personalInfoValidationPhoneRequired => 'Укажите номер телефона';
 
   @override
   String get personalInfoValidationReferralCodeRequired =>
-      'Referral code is required';
+      'Укажите реферальный код';
 
   @override
-  String get personalInfoValidationGenderRequired => 'Gender is required';
+  String get personalInfoValidationGenderRequired => 'Укажите пол';
 
   @override
   String get comment_setup_password_screen => '==== Setup Password Screen ====';
 
   @override
-  String get setupPasswordTitle => 'Setup Password';
+  String get setupPasswordTitle => 'Задать пароль';
 
   @override
-  String get setupPasswordSubtitle => 'Create a strong password and confirm it';
+  String get setupPasswordSubtitle =>
+      'Создайте надёжный пароль и подтвердите его';
 
   @override
-  String get setupPasswordPassword => 'Password';
+  String get setupPasswordPassword => 'Пароль';
 
   @override
-  String get setupPasswordConfirmPassword => 'Confirm Password';
+  String get setupPasswordConfirmPassword => 'Подтвердите пароль';
 
   @override
-  String get setupPasswordAgreeTerms => 'I agree with the ';
+  String get setupPasswordAgreeTerms => 'Я соглашаюсь с ';
 
   @override
-  String get setupPasswordTermsConditions => 'Terms & Conditions';
+  String get setupPasswordTermsConditions => 'Условия и положения';
 
   @override
-  String get setupPasswordButton => 'Setup Password';
+  String get setupPasswordButton => 'Задать пароль';
 
   @override
-  String get setupPasswordValidationRequired => 'Password is required';
+  String get setupPasswordValidationRequired => 'Пожалуйста, введите пароль';
 
   @override
   String get setupPasswordValidationMinLength =>
-      'Password must be at least 8 characters';
+      'Пароль должен содержать не менее 8 символов';
 
   @override
   String get setupPasswordValidationConfirmRequired =>
-      'Please confirm your password';
+      'Пожалуйста, подтвердите пароль';
 
   @override
-  String get setupPasswordValidationMismatch => 'Passwords don\'t match';
+  String get setupPasswordValidationMismatch => 'Пароли не совпадают';
 
   @override
   String get setupPasswordValidationTermsRequired =>
-      'Please accept terms and conditions';
+      'Пожалуйста, примите условия и положения';
 
   @override
   String get comment_sign_up_status_screen => '==== Sign Up Status Screen ====';
 
   @override
-  String get signUpStatusTitle => 'Your Current Status';
+  String get signUpStatusTitle => 'Ваш текущий статус';
 
   @override
   String get signUpStatusSubtitle =>
-      'A Quick 4-Step Process to Keep Your eCardo Account Secure';
+      'Быстрый процесс из 4 шагов для защиты вашего аккаунта eCardo';
 
   @override
-  String get signUpStatusStep => 'Step';
+  String get signUpStatusStep => 'Шаг';
 
   @override
-  String get signUpStatusEmailVerification => 'Email Verification';
+  String get signUpStatusEmailVerification => 'Верификация эл. почты';
 
   @override
-  String get signUpStatusSetupPassword => 'Setup Password';
+  String get signUpStatusSetupPassword => 'Задать пароль';
 
   @override
-  String get signUpStatusPersonalInfo => 'Personal Info';
+  String get signUpStatusPersonalInfo => 'Личные данные';
 
   @override
-  String get signUpStatusVerification => 'Verification';
+  String get signUpStatusVerification => 'Верификация';
 
   @override
-  String get signUpStatusInReview => 'In Review';
+  String get signUpStatusInReview => 'На рассмотрении';
 
   @override
-  String get signUpStatusRejected => 'Rejected';
+  String get signUpStatusRejected => 'Отклонено';
 
   @override
-  String get signUpStatusNoReason => 'No reason provided';
+  String get signUpStatusNoReason => 'Причина не указана';
 
   @override
-  String get signUpStatusNextStep => 'Next Step';
+  String get signUpStatusNextStep => 'Следующий шаг';
 
   @override
-  String get signUpStatusSubmitAgain => 'Submit Again';
+  String get signUpStatusSubmitAgain => 'Отправить снова';
 
   @override
-  String get signUpStatusDashboard => 'Dashboard';
+  String get signUpStatusDashboard => 'Главная';
 
   @override
-  String get signUpStatusBack => 'Back';
+  String get signUpStatusBack => 'Назад';
 
   @override
   String get signUpStatusErrorProcessing =>
-      'Error processing next step. Please try again.';
+      'Ошибка обработки следующего шага. Попробуйте ещё раз.';
 
   @override
-  String get signUpStatusVerificationTypeEmpty => 'Verification Type Is Empty!';
+  String get signUpStatusVerificationTypeEmpty => 'Тип верификации не задан!';
 
   @override
   String get signUpStatusErrorLoadingTypes =>
-      'Error loading verification types. Please try again.';
+      'Ошибка загрузки типов верификации. Попробуйте ещё раз.';
 
   @override
   String get signUpStatusDropdownTwoVerificationNotFound =>
-      'Verification Type Not Found';
+      'Тип верификации не найден';
 
   @override
   String get comment_verify_email_screen => '==== Verify Email Screen ====';
 
   @override
-  String get verifyEmailTitle => 'Verify Email';
+  String get verifyEmailTitle => 'Подтверждение эл. почты';
 
   @override
-  String get verifyEmailOtpSent => 'OTP sent to ';
+  String get verifyEmailOtpSent => 'OTP отправлен на ';
 
   @override
-  String get verifyEmailEnterOtp => 'Enter OTP';
+  String get verifyEmailEnterOtp => 'Введите OTP';
 
   @override
-  String get verifyEmailResendAvailable => 'Resend available in';
+  String get verifyEmailResendAvailable => 'Повторная отправка через';
 
   @override
-  String get verifyEmailRequestNewOtp => 'You can request a new OTP now';
+  String get verifyEmailRequestNewOtp => 'Можно запросить новый OTP';
 
   @override
-  String get verifyEmailButton => 'Verify Email';
+  String get verifyEmailButton => 'Подтвердить эл. почту';
 
   @override
-  String get verifyEmailDidNotReceive => 'Didn\'t receive the code? ';
+  String get verifyEmailDidNotReceive => 'Не получили код? ';
 
   @override
-  String get verifyEmailResend => 'Resend';
+  String get verifyEmailResend => 'Отправить снова';
 
   @override
-  String get verifyEmailOtpRequired => 'The otp field is required';
+  String get verifyEmailOtpRequired => 'Поле OTP обязательно';
 
   @override
   String get comment_add_money_screen => '==== Add Money Screen ====';
 
   @override
-  String get addMoneyTitle => 'Add Money';
+  String get addMoneyTitle => 'Пополнить';
 
   @override
-  String get addMoneyBalance => 'Balance';
+  String get addMoneyBalance => 'Баланс';
 
   @override
-  String get addMoneyHistory => 'Add Money History';
+  String get addMoneyHistory => 'История пополнений';
 
   @override
-  String get addMoneyWalletsNotFound => 'Wallets Not Found';
+  String get addMoneyWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get comment_add_money_amount_step => '==== Add Money Amount Step ====';
 
   @override
-  String get addMoneyGateway => 'Gateway';
+  String get addMoneyGateway => 'Платёжный шлюз';
 
   @override
-  String get addMoneyGatewayNotFound => 'Gateway not found';
+  String get addMoneyGatewayNotFound => 'Шлюз не найден';
 
   @override
-  String get addMoneySelectGateway => 'Select Gateway';
+  String get addMoneySelectGateway => 'Выберите шлюз';
 
   @override
-  String get addMoneyCharge => 'Charge:';
+  String get addMoneyCharge => 'Комиссия:';
 
   @override
-  String get addMoneyAmount => 'Amount';
+  String get addMoneyAmount => 'Сумма';
 
   @override
-  String get addMoneyMin => 'Minimum';
+  String get addMoneyMin => 'Минимум';
 
   @override
-  String get addMoneyMax => 'and Maximum';
+  String get addMoneyMax => 'и максимум';
 
   @override
-  String get addMoneyWriteHere => 'Write here...';
+  String get addMoneyWriteHere => 'Напишите здесь...';
 
   @override
-  String get addMoneyAddMoneyButton => 'Add Money';
+  String get addMoneyAddMoneyButton => 'Пополнить';
 
   @override
   String get comment_add_money_pending_step =>
       '==== Add Money Pending Step ====';
 
   @override
-  String get addMoneyPendingTitle => 'Your Deposit Process Is\nPending';
+  String get addMoneyPendingTitle => 'Ваш депозит\nнаходится в обработке';
 
   @override
-  String get addMoneyPendingAmount => 'Amount';
+  String get addMoneyPendingAmount => 'Сумма';
 
   @override
-  String get addMoneyPendingTransactionId => 'Transaction ID';
+  String get addMoneyPendingTransactionId => 'ID транзакции';
 
   @override
-  String get addMoneyPendingWalletName => 'Wallet Name';
+  String get addMoneyPendingWalletName => 'Название кошелька';
 
   @override
-  String get addMoneyPendingPaymentMethod => 'Payment Method';
+  String get addMoneyPendingPaymentMethod => 'Способ оплаты';
 
   @override
-  String get addMoneyPendingCharge => 'Charge';
+  String get addMoneyPendingCharge => 'Комиссия';
 
   @override
-  String get addMoneyPendingType => 'Type';
+  String get addMoneyPendingType => 'Тип';
 
   @override
-  String get addMoneyPendingFinalAmount => 'Final Amount';
+  String get addMoneyPendingFinalAmount => 'Итоговая сумма';
 
   @override
-  String get addMoneyPendingDepositAgain => 'Deposit Again';
+  String get addMoneyPendingDepositAgain => 'Пополнить снова';
 
   @override
-  String get addMoneyPendingBackHome => 'Back Home';
+  String get addMoneyPendingBackHome => 'На главную';
 
   @override
   String get comment_add_money_review_step => '==== Add Money Review Step ====';
 
   @override
-  String get addMoneyReviewTitle => 'Review Details';
+  String get addMoneyReviewTitle => 'Проверка данных';
 
   @override
-  String get addMoneyReviewAmount => 'Amount';
+  String get addMoneyReviewAmount => 'Сумма';
 
   @override
-  String get addMoneyReviewWalletName => 'Wallet Name';
+  String get addMoneyReviewWalletName => 'Название кошелька';
 
   @override
-  String get addMoneyReviewPaymentMethod => 'Payment Method';
+  String get addMoneyReviewPaymentMethod => 'Способ оплаты';
 
   @override
-  String get addMoneyReviewCharge => 'Charge';
+  String get addMoneyReviewCharge => 'Комиссия';
 
   @override
-  String get addMoneyReviewTotal => 'Total';
+  String get addMoneyReviewTotal => 'Итого';
 
   @override
-  String get addMoneyReviewBack => 'Back';
+  String get addMoneyReviewBack => 'Назад';
 
   @override
-  String get addMoneyReviewConfirm => 'Confirm';
+  String get addMoneyReviewConfirm => 'Подтвердить';
 
   @override
-  String get addMoneyReviewNoFileUploaded => 'No file uploaded';
+  String get addMoneyReviewNoFileUploaded => 'Файл не загружен';
 
   @override
   String get comment_add_money_success_step =>
       '==== Add Money Success Step ====';
 
   @override
-  String get addMoneySuccessTitle => 'Deposit Money Success!';
+  String get addMoneySuccessTitle => 'Пополнение выполнено!';
 
   @override
-  String get addMoneySuccessAmount => 'Amount';
+  String get addMoneySuccessAmount => 'Сумма';
 
   @override
-  String get addMoneySuccessTransactionId => 'Transection ID';
+  String get addMoneySuccessTransactionId => 'ID транзакции';
 
   @override
-  String get addMoneySuccessCharge => 'Charge';
+  String get addMoneySuccessCharge => 'Комиссия';
 
   @override
-  String get addMoneySuccessTransactionType => 'Transaction Type';
+  String get addMoneySuccessTransactionType => 'Тип транзакции';
 
   @override
-  String get addMoneySuccessFinalAmount => 'Final Amount';
+  String get addMoneySuccessFinalAmount => 'Итоговая сумма';
 
   @override
-  String get addMoneySuccessAddMoneyAgain => 'Add Money Again';
+  String get addMoneySuccessAddMoneyAgain => 'Пополнить снова';
 
   @override
-  String get addMoneySuccessBackHome => 'Back Home';
+  String get addMoneySuccessBackHome => 'На главную';
 
   @override
   String get comment_add_money_history => '==== Add Money History ====';
 
   @override
-  String get addMoneyHistoryTitle => 'Add Money History';
+  String get addMoneyHistoryTitle => 'История пополнений';
 
   @override
   String get comment_add_money_filter_bottom_sheet =>
       '==== Add Money Filter Bottom Sheet ====';
 
   @override
-  String get addMoneyFilterTransactionId => 'Transactions ID';
+  String get addMoneyFilterTransactionId => 'ID транзакции';
 
   @override
-  String get addMoneyFilterStatus => 'Status';
+  String get addMoneyFilterStatus => 'Статус';
 
   @override
-  String get addMoneyFilterSuccess => 'Success';
+  String get addMoneyFilterSuccess => 'Успешно';
 
   @override
-  String get addMoneyFilterPending => 'Pending';
+  String get addMoneyFilterPending => 'В обработке';
 
   @override
-  String get addMoneyFilterFailed => 'Failed';
+  String get addMoneyFilterFailed => 'Ошибка';
 
   @override
-  String get addMoneyFilterButton => 'Filter';
+  String get addMoneyFilterButton => 'Фильтр';
 
   @override
-  String get addMoneyFilterReset => 'Reset';
+  String get addMoneyFilterReset => 'Сбросить';
 
   @override
   String get comment_create_beneficiary_screen =>
       '==== Create Beneficiary Screen ====';
 
   @override
-  String get createBeneficiaryTitle => 'Create New';
+  String get createBeneficiaryTitle => 'Создать нового';
 
   @override
-  String get createBeneficiaryAccountNumber => 'Account Number';
+  String get createBeneficiaryAccountNumber => 'Номер счёта';
 
   @override
-  String get createBeneficiaryNickName => 'Nick Name';
+  String get createBeneficiaryNickName => 'Имя (псевдоним)';
 
   @override
-  String get createBeneficiaryCreateButton => 'Create';
+  String get createBeneficiaryCreateButton => 'Создать';
 
   @override
-  String get createBeneficiaryValidationAccountNumber =>
-      'Fill up account number';
+  String get createBeneficiaryValidationAccountNumber => 'Укажите номер счёта';
 
   @override
-  String get createBeneficiaryValidationNickName => 'Fill up nick name';
+  String get createBeneficiaryValidationNickName => 'Укажите имя (псевдоним)';
 
   @override
   String get comment_update_beneficiary_screen =>
       '==== Update Beneficiary Screen ====';
 
   @override
-  String get updateBeneficiaryTitle => 'Update';
+  String get updateBeneficiaryTitle => 'Обновить';
 
   @override
-  String get updateBeneficiaryNickName => 'Nick Name';
+  String get updateBeneficiaryNickName => 'Ник';
 
   @override
-  String get updateBeneficiaryUpdateButton => 'Update';
+  String get updateBeneficiaryUpdateButton => 'Обновить';
 
   @override
-  String get updateBeneficiaryValidationNickName => 'Fill up nick name';
+  String get updateBeneficiaryValidationNickName => 'Укажите ник';
 
   @override
   String get comment_account_user_types => '==== Account User Types ====';
 
   @override
-  String get accountUserMerchant => 'Merchant';
+  String get accountUserMerchant => 'Мерчант';
 
   @override
-  String get accountUserBeneficiary => 'Beneficiary';
+  String get accountUserBeneficiary => 'Получатель';
 
   @override
-  String get accountUserAgent => 'Agent';
+  String get accountUserAgent => 'Агент';
 
   @override
   String get comment_cash_out_screen => '==== Cash Out Screen ====';
 
   @override
-  String get cashOutTitle => 'Cash Out From Agent';
+  String get cashOutTitle => 'Вывод через агента';
 
   @override
-  String get cashOutHistory => 'Cash Out History';
+  String get cashOutHistory => 'История вывода наличных';
 
   @override
   String get comment_cash_out_amount_step => '==== Cash Out Amount Step ====';
 
   @override
-  String get cashOutAgentId => 'Agent ID';
+  String get cashOutAgentId => 'ID агента';
 
   @override
-  String get cashOutAmount => 'Amount';
+  String get cashOutAmount => 'Сумма';
 
   @override
-  String get cashOutMin => 'Minimum';
+  String get cashOutMin => 'Минимум';
 
   @override
-  String get cashOutMax => 'and Maximum';
+  String get cashOutMax => 'и максимум';
 
   @override
-  String get cashOutButton => 'Cash Out';
+  String get cashOutButton => 'Вывести наличные';
 
   @override
-  String get cashOutSavedAgents => 'Saved Agents';
+  String get cashOutSavedAgents => 'Сохранённые агенты';
 
   @override
-  String get cashOutAgents => 'Agents';
+  String get cashOutAgents => 'Агенты';
 
   @override
-  String get cashOutAddAgent => 'Add Agent';
+  String get cashOutAddAgent => 'Добавить агента';
 
   @override
   String get cashOutAid => 'AID:';
 
   @override
   String get cashOutQrInvalidDigits =>
-      'Invalid QR code. Agent AID must be digits only.';
+      'Неверный QR-код. AID агента должен состоять только из цифр.';
 
   @override
-  String get cashOutQrInvalidPrefix => 'Invalid QR code. AID prefix not found.';
+  String get cashOutQrInvalidPrefix =>
+      'Неверный QR-код. Префикс AID не найден.';
 
   @override
-  String get cashOutDeleteConfirm => 'Are you sure?';
+  String get cashOutDeleteConfirm => 'Вы уверены?';
 
   @override
-  String get cashOutDeleteMessage => 'You want to delete this agent?';
+  String get cashOutDeleteMessage => 'Вы хотите удалить этого агента?';
 
   @override
-  String get cashOutDeleteButton => 'Delete';
+  String get cashOutDeleteButton => 'Удалить';
 
   @override
-  String get cashOutCancelButton => 'Cancel';
+  String get cashOutCancelButton => 'Отмена';
 
   @override
   String get comment_cash_out_review_step => '==== Cash Out Review Step ====';
 
   @override
-  String get cashOutReviewTitle => 'Review Details';
+  String get cashOutReviewTitle => 'Проверка данных';
 
   @override
-  String get cashOutReviewAmount => 'Amount';
+  String get cashOutReviewAmount => 'Сумма';
 
   @override
-  String get cashOutReviewWallet => 'Wallet';
+  String get cashOutReviewWallet => 'Кошелёк';
 
   @override
-  String get cashOutReviewAgentAccount => 'Agent Account';
+  String get cashOutReviewAgentAccount => 'Счёт агента';
 
   @override
-  String get cashOutReviewCharge => 'Charge';
+  String get cashOutReviewCharge => 'Комиссия';
 
   @override
-  String get cashOutReviewTotalAmount => 'Total Amount';
+  String get cashOutReviewTotalAmount => 'Итоговая сумма';
 
   @override
-  String get cashOutReviewBack => 'Back';
+  String get cashOutReviewBack => 'Назад';
 
   @override
-  String get cashOutReviewConfirm => 'Confirm';
+  String get cashOutReviewConfirm => 'Подтвердить';
 
   @override
   String get comment_cash_out_success_step => '==== Cash Out Success Step ====';
 
   @override
-  String get cashOutSuccessTitle => 'Cash Out Success!';
+  String get cashOutSuccessTitle => 'Вывод наличных выполнен!';
 
   @override
-  String get cashOutSuccessAmount => 'Amount';
+  String get cashOutSuccessAmount => 'Сумма';
 
   @override
-  String get cashOutSuccessTransactionId => 'Transection ID';
+  String get cashOutSuccessTransactionId => 'ID транзакции';
 
   @override
-  String get cashOutSuccessWalletName => 'Wallet Name';
+  String get cashOutSuccessWalletName => 'Название кошелька';
 
   @override
-  String get cashOutSuccessPaymentMethod => 'Payment Method';
+  String get cashOutSuccessPaymentMethod => 'Способ оплаты';
 
   @override
-  String get cashOutSuccessCharge => 'Charge';
+  String get cashOutSuccessCharge => 'Комиссия';
 
   @override
-  String get cashOutSuccessType => 'Type';
+  String get cashOutSuccessType => 'Тип';
 
   @override
-  String get cashOutSuccessFinalAmount => 'Final Amount';
+  String get cashOutSuccessFinalAmount => 'Итоговая сумма';
 
   @override
-  String get cashOutSuccessCashOutAgain => 'Cash Out Again';
+  String get cashOutSuccessCashOutAgain => 'Вывести снова';
 
   @override
-  String get cashOutSuccessBackHome => 'Back Home';
+  String get cashOutSuccessBackHome => 'На главную';
 
   @override
   String get comment_cash_out_wallets_section =>
       '==== Cash Out Wallets Section ====';
 
   @override
-  String get cashOutWalletsBalance => 'Balance';
+  String get cashOutWalletsBalance => 'Баланс';
 
   @override
-  String get cashOutWalletsNotFound => 'Wallets Not Found';
+  String get cashOutWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get comment_cash_out_history => '==== Cash Out History ====';
 
   @override
-  String get cashOutHistoryTitle => 'Cash Out History';
+  String get cashOutHistoryTitle => 'История вывода наличных';
 
   @override
   String get comment_cash_out_filter_bottom_sheet =>
       '==== Cash Out Filter Bottom Sheet ====';
 
   @override
-  String get cashOutFilterTransactionId => 'Transactions ID';
+  String get cashOutFilterTransactionId => 'ID транзакции';
 
   @override
-  String get cashOutFilterStatus => 'Status';
+  String get cashOutFilterStatus => 'Статус';
 
   @override
-  String get cashOutFilterButton => 'Filter';
+  String get cashOutFilterButton => 'Фильтр';
 
   @override
-  String get cashOutFilterReset => 'Reset';
+  String get cashOutFilterReset => 'Сбросить';
 
   @override
   String get comment_exchange_screen => '==== Exchange Screen ====';
 
   @override
-  String get exchangeTitle => 'Exchange Wallet';
+  String get exchangeTitle => 'Обмен между кошельками';
 
   @override
-  String get exchangeHistory => 'Exchange History';
+  String get exchangeHistory => 'История обменов';
 
   @override
   String get comment_exchange_amount_step => '==== Exchange Amount Step ====';
 
   @override
-  String get exchangeAmount => 'Amount';
+  String get exchangeAmount => 'Сумма';
 
   @override
-  String get exchangeMin => 'Minimum';
+  String get exchangeMin => 'Минимум';
 
   @override
-  String get exchangeMax => 'and Maximum';
+  String get exchangeMax => 'и максимум';
 
   @override
-  String get exchangeButton => 'Exchange';
+  String get exchangeButton => 'Обменять';
 
   @override
   String get comment_exchange_review_step => '==== Exchange Review Step ====';
 
   @override
-  String get exchangeReviewTitle => 'Review Details';
+  String get exchangeReviewTitle => 'Проверка данных';
 
   @override
-  String get exchangeReviewAmount => 'Amount';
+  String get exchangeReviewAmount => 'Сумма';
 
   @override
-  String get exchangeReviewFromWallet => 'From Wallet';
+  String get exchangeReviewFromWallet => 'Из кошелька';
 
   @override
-  String get exchangeReviewCharge => 'Charge';
+  String get exchangeReviewCharge => 'Комиссия';
 
   @override
-  String get exchangeReviewTotalAmount => 'Total Amount';
+  String get exchangeReviewTotalAmount => 'Итоговая сумма';
 
   @override
-  String get exchangeReviewToWallet => 'To Wallet';
+  String get exchangeReviewToWallet => 'В кошелёк';
 
   @override
-  String get exchangeReviewExchangeRate => 'Exchange Rate';
+  String get exchangeReviewExchangeRate => 'Курс обмена';
 
   @override
-  String get exchangeReviewExchangeAmount => 'Exchange Amount';
+  String get exchangeReviewExchangeAmount => 'Сумма обмена';
 
   @override
-  String get exchangeReviewBack => 'Back';
+  String get exchangeReviewBack => 'Назад';
 
   @override
-  String get exchangeReviewConfirm => 'Confirm';
+  String get exchangeReviewConfirm => 'Подтвердить';
 
   @override
   String get comment_exchange_success_step => '==== Exchange Success Step ====';
 
   @override
-  String get exchangeSuccessTitle => 'Exchange Success!';
+  String get exchangeSuccessTitle => 'Обмен выполнен!';
 
   @override
-  String get exchangeSuccessAmount => 'Amount';
+  String get exchangeSuccessAmount => 'Сумма';
 
   @override
-  String get exchangeSuccessTransactionId => 'Transaction ID';
+  String get exchangeSuccessTransactionId => 'ID транзакции';
 
   @override
-  String get exchangeSuccessPayAmount => 'Pay Amount';
+  String get exchangeSuccessPayAmount => 'Сумма списания';
 
   @override
-  String get exchangeSuccessConvertedAmount => 'Converted Amount';
+  String get exchangeSuccessConvertedAmount => 'Конвертированная сумма';
 
   @override
-  String get exchangeSuccessCharge => 'Charge';
+  String get exchangeSuccessCharge => 'Комиссия';
 
   @override
-  String get exchangeSuccessDate => 'Date';
+  String get exchangeSuccessDate => 'Дата';
 
   @override
-  String get exchangeSuccessFinalAmount => 'Final Amount';
+  String get exchangeSuccessFinalAmount => 'Итоговая сумма';
 
   @override
-  String get exchangeSuccessExchangeAgain => 'Exchange Again';
+  String get exchangeSuccessExchangeAgain => 'Обменять снова';
 
   @override
-  String get exchangeSuccessBackHome => 'Back Home';
+  String get exchangeSuccessBackHome => 'На главную';
 
   @override
   String get comment_exchange_wallet_section =>
       '==== Exchange Wallet Section ====';
 
   @override
-  String get exchangeWalletBalance => 'Balance';
+  String get exchangeWalletBalance => 'Баланс';
 
   @override
-  String get exchangeWalletsNotFound => 'Wallets Not Found';
+  String get exchangeWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get comment_exchange_wallet_to_wallet =>
       '==== Exchange Wallet To Wallet ====';
 
   @override
-  String get exchangeWalletToWallet => 'Wallet to Wallet';
+  String get exchangeWalletToWallet => 'Кошелёк → кошелёк';
 
   @override
-  String get exchangeFromWallet => 'From Wallet';
+  String get exchangeFromWallet => 'Из кошелька';
 
   @override
-  String get exchangeToWallet => 'To Wallet';
+  String get exchangeToWallet => 'В кошелёк';
 
   @override
-  String get exchangeRate => 'Exchange Rate: ';
+  String get exchangeRate => 'Курс обмена: ';
 
   @override
-  String get exchangeWalletToWalletWalletsNotFound => 'Wallets Not Found';
+  String get exchangeWalletToWalletWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get exchangeWalletSectionFiat => 'Фиатные валюты';
@@ -1121,198 +1121,198 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comment_exchange_history => '==== Exchange History ====';
 
   @override
-  String get exchangeHistoryTitle => 'Exchange History';
+  String get exchangeHistoryTitle => 'История обменов';
 
   @override
   String get comment_exchange_filter_bottom_sheet =>
       '==== Exchange Filter Bottom Sheet ====';
 
   @override
-  String get exchangeFilterTransactionId => 'Transactions ID';
+  String get exchangeFilterTransactionId => 'ID транзакции';
 
   @override
-  String get exchangeFilterStatus => 'Status';
+  String get exchangeFilterStatus => 'Статус';
 
   @override
-  String get exchangeFilterButton => 'Filter';
+  String get exchangeFilterButton => 'Фильтр';
 
   @override
-  String get exchangeFilterReset => 'Reset';
+  String get exchangeFilterReset => 'Сбросить';
 
   @override
   String get comment_gift_code_screen => '==== Gift Code Screen ====';
 
   @override
-  String get giftCodeTitle => 'Gift Code';
+  String get giftCodeTitle => 'Подарочный код';
 
   @override
-  String get giftCodeCreateGift => 'Create Gift';
+  String get giftCodeCreateGift => 'Создать подарок';
 
   @override
   String get comment_create_gift_amount_step =>
       '==== Create Gift Amount Step ====';
 
   @override
-  String get createGiftAmount => 'Amount';
+  String get createGiftAmount => 'Сумма';
 
   @override
-  String get createGiftMin => 'Minimum';
+  String get createGiftMin => 'Минимум';
 
   @override
-  String get createGiftMax => 'and Maximum';
+  String get createGiftMax => 'и максимум';
 
   @override
-  String get createGiftButton => 'Create Gift';
+  String get createGiftButton => 'Создать подарок';
 
   @override
   String get comment_create_gift_review_section =>
       '==== Create Gift Review Section ====';
 
   @override
-  String get createGiftReviewTitle => 'Review Details';
+  String get createGiftReviewTitle => 'Проверка данных';
 
   @override
-  String get createGiftReviewAmount => 'Amount';
+  String get createGiftReviewAmount => 'Сумма';
 
   @override
-  String get createGiftReviewWalletName => 'Wallet Name';
+  String get createGiftReviewWalletName => 'Название кошелька';
 
   @override
-  String get createGiftReviewCharge => 'Charge';
+  String get createGiftReviewCharge => 'Комиссия';
 
   @override
-  String get createGiftReviewTotalAmount => 'Total Amount';
+  String get createGiftReviewTotalAmount => 'Итоговая сумма';
 
   @override
-  String get createGiftReviewBack => 'Back';
+  String get createGiftReviewBack => 'Назад';
 
   @override
-  String get createGiftReviewConfirm => 'Confirm';
+  String get createGiftReviewConfirm => 'Подтвердить';
 
   @override
   String get comment_create_gift_success_step =>
       '==== Create Gift Success Step ====';
 
   @override
-  String get createGiftSuccessTitle => 'Create Gift Success!';
+  String get createGiftSuccessTitle => 'Подарок создан!';
 
   @override
-  String get createGiftSuccessAmount => 'Amount';
+  String get createGiftSuccessAmount => 'Сумма';
 
   @override
-  String get createGiftSuccessCharge => 'Charge';
+  String get createGiftSuccessCharge => 'Комиссия';
 
   @override
-  String get createGiftSuccessFinalAmount => 'Final Amount';
+  String get createGiftSuccessFinalAmount => 'Итоговая сумма';
 
   @override
-  String get createGiftSuccessCreatedAt => 'Created At';
+  String get createGiftSuccessCreatedAt => 'Дата создания';
 
   @override
-  String get createGiftSuccessCreateAgain => 'Create Gift Code Again';
+  String get createGiftSuccessCreateAgain => 'Создать подарочный код снова';
 
   @override
-  String get createGiftSuccessBackHome => 'Back Home';
+  String get createGiftSuccessBackHome => 'На главную';
 
   @override
   String get comment_create_gift_wallet_section =>
       '==== Create Gift Wallet Section ====';
 
   @override
-  String get createGiftWalletBalance => 'Balance';
+  String get createGiftWalletBalance => 'Баланс';
 
   @override
-  String get createGiftWalletWalletsNotFound => 'Wallets Not Found';
+  String get createGiftWalletWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get comment_gift_code_header_section =>
       '==== Gift Code Header Section ====';
 
   @override
-  String get giftCodeHeaderTitle => 'Gift Code';
+  String get giftCodeHeaderTitle => 'Подарочный код';
 
   @override
-  String get giftCodeHeaderGiftRedeem => 'Gift Redeem';
+  String get giftCodeHeaderGiftRedeem => 'Активация подарка';
 
   @override
-  String get giftCodeHeaderMyGift => 'My Gift';
+  String get giftCodeHeaderMyGift => 'Мои подарки';
 
   @override
-  String get giftCodeHeaderGiftRedeemHistory => 'Gift Redeem History';
+  String get giftCodeHeaderGiftRedeemHistory => 'История активаций';
 
   @override
   String get comment_gift_history => '==== Gift History ====';
 
   @override
-  String get giftHistoryCreatedAt => 'Created At:';
+  String get giftHistoryCreatedAt => 'Дата создания:';
 
   @override
-  String get giftHistoryStatus => 'Status: ';
+  String get giftHistoryStatus => 'Статус: ';
 
   @override
-  String get giftHistoryClaimed => 'Claimed';
+  String get giftHistoryClaimed => 'Получен';
 
   @override
-  String get giftHistoryClaimable => 'Claimable';
+  String get giftHistoryClaimable => 'Доступен к получению';
 
   @override
-  String get giftHistoryCodeCopied => 'Gift Code Copied';
+  String get giftHistoryCodeCopied => 'Подарочный код скопирован';
 
   @override
   String get comment_gift_history_filter_bottom_sheet =>
       '==== Gift History Filter Bottom Sheet ====';
 
   @override
-  String get giftHistoryFilterGiftCode => 'Gift Code';
+  String get giftHistoryFilterGiftCode => 'Подарочный код';
 
   @override
-  String get giftHistoryFilterButton => 'Filter';
+  String get giftHistoryFilterButton => 'Фильтр';
 
   @override
   String get comment_gift_redeem_section => '==== Gift Redeem Section ====';
 
   @override
-  String get giftRedeemGiftCode => 'Gift Code';
+  String get giftRedeemGiftCode => 'Подарочный код';
 
   @override
-  String get giftRedeemButton => 'Redeem';
+  String get giftRedeemButton => 'Активировать';
 
   @override
-  String get giftRedeemValidation => 'Please enter an gift code';
+  String get giftRedeemValidation => 'Введите подарочный код';
 
   @override
   String get comment_gift_redeem_history => '==== Gift Redeem History ====';
 
   @override
-  String get giftRedeemHistoryTitle => 'My Redeem History';
+  String get giftRedeemHistoryTitle => 'Моя история активаций';
 
   @override
-  String get giftRedeemHistoryCreatedAt => 'Created At:';
+  String get giftRedeemHistoryCreatedAt => 'Дата создания:';
 
   @override
-  String get giftRedeemHistoryStatus => 'Status: ';
+  String get giftRedeemHistoryStatus => 'Статус: ';
 
   @override
-  String get giftRedeemHistoryClaimed => 'Claimed';
+  String get giftRedeemHistoryClaimed => 'Получен';
 
   @override
-  String get giftRedeemHistoryClaimable => 'Claimable';
+  String get giftRedeemHistoryClaimable => 'Доступен к получению';
 
   @override
-  String get giftRedeemHistoryCodeCopied => 'Gift Code Copied';
+  String get giftRedeemHistoryCodeCopied => 'Подарочный код скопирован';
 
   @override
   String get comment_gift_redeem_filter_bottom_sheet =>
       '==== Gift Redeem Filter Bottom Sheet ====';
 
   @override
-  String get giftRedeemFilterCode => 'Code';
+  String get giftRedeemFilterCode => 'Код';
 
   @override
-  String get giftRedeemFilterButton => 'Filter';
+  String get giftRedeemFilterButton => 'Фильтр';
 
   @override
-  String get giftRedeemFilterReset => 'Reset';
+  String get giftRedeemFilterReset => 'Сбросить';
 
   @override
   String get comment_drawer_section => '==== Drawer Section ====';
@@ -1345,210 +1345,214 @@ class AppLocalizationsRu extends AppLocalizations {
   String get drawerMakePayment => 'Оплатить';
 
   @override
-  String get drawerTransfer => 'Transfer';
+  String get drawerTransfer => 'Перевод';
 
   @override
-  String get drawerWithdraw => 'Withdraw';
+  String get drawerWithdraw => 'Вывод средств';
 
   @override
-  String get drawerExchange => 'Exchange';
+  String get drawerExchange => 'Обмен';
 
   @override
-  String get drawerInviting => 'Inviting';
+  String get drawerInviting => 'Приглашения';
 
   @override
-  String get drawerGiftCard => 'Gift Card';
+  String get drawerGiftCard => 'Подарочные карты';
 
   @override
-  String get drawerP2pTrading => 'P2P Trading';
+  String get drawerP2pTrading => 'P2P-торговля';
 
   @override
-  String get drawerKycVerification => 'Please verify your KYC!';
+  String get drawerKycVerification => 'Пройдите верификацию KYC!';
 
   @override
   String get comment_end_drawer_section => '==== End Drawer Section ====';
 
   @override
-  String get endDrawerProfileSettings => 'Profile Settings';
+  String get endDrawerProfileSettings => 'Настройки профиля';
 
   @override
-  String get endDrawerChangePassword => 'Change Password';
+  String get endDrawerChangePassword => 'Смена пароля';
 
   @override
-  String get endDrawerAllNotification => 'All Notification';
+  String get endDrawerAllNotification => 'Все уведомления';
 
   @override
-  String get endDrawerHelpSupport => 'Help & Support';
+  String get endDrawerHelpSupport => 'Помощь и поддержка';
 
   @override
-  String get endDrawerLanguage => 'Language';
+  String get endDrawerLanguage => 'Язык';
 
   @override
-  String get endDrawerBiometric => 'Biometric';
+  String get endDrawerBiometric => 'Биометрия';
 
   @override
-  String get endDrawerSignOut => 'Sign Out';
+  String get endDrawerSignOut => 'Выйти';
 
   @override
-  String get endDrawerLanguageNotFound => 'Language not found';
+  String get endDrawerLanguageNotFound => 'Язык не найден';
 
   @override
-  String get endDrawerChooseLanguage => 'Choose Language';
+  String get endDrawerChooseLanguage => 'Выбор языка';
 
   @override
   String get comment_recent_transaction_details =>
       '==== Recent Transaction Details ====';
 
   @override
-  String get transactionDetailsTitle => 'Transaction Details';
+  String get transactionDetailsTitle => 'Детали транзакции';
 
   @override
-  String get transactionDetailsWallet => 'Wallet';
+  String get transactionDetailsWallet => 'Кошелёк';
 
   @override
-  String get transactionDetailsCharge => 'Charge';
+  String get transactionDetailsCharge => 'Комиссия';
 
   @override
-  String get transactionDetailsTransactionId => 'Transaction ID';
+  String get transactionDetailsTransactionId => 'ID транзакции';
 
   @override
-  String get transactionDetailsMethod => 'Method';
+  String get transactionDetailsMethod => 'Способ';
 
   @override
-  String get transactionDetailsTotalAmount => 'Total Amount';
+  String get transactionDetailsTotalAmount => 'Общая сумма';
 
   @override
-  String get transactionDetailsStatus => 'Status';
+  String get transactionDetailsStatus => 'Статус';
 
   @override
-  String get transactionDetailsDescription => 'Description';
+  String get transactionDetailsDescription => 'Описание';
 
   @override
-  String get transactionStatusSuccess => 'Success';
+  String get transactionStatusSuccess => 'Успешно';
 
   @override
-  String get transactionStatusPending => 'Pending';
+  String get transactionStatusPending => 'В ожидании';
 
   @override
-  String get transactionStatusFailed => 'Failed';
+  String get transactionStatusFailed => 'Ошибка';
 
   @override
   String get comment_wallet_details => '==== Wallet Details ====';
 
   @override
-  String get walletDetailsHistory => 'History';
+  String get walletDetailsHistory => 'История';
 
   @override
-  String get walletDetailsAvailableBalance => 'AVAILABLE BALANCE';
+  String get walletDetailsAvailableBalance => 'ДОСТУПНЫЙ БАЛАНС';
 
   @override
-  String get walletDetailsTopUp => 'Top Up';
+  String get walletDetailsTopUp => 'Пополнить';
 
   @override
-  String get walletDetailsWithdraw => 'Withdraw';
+  String get walletDetailsWithdraw => 'Вывести';
 
   @override
-  String get walletDetailsUserDepositNotEnabled => 'User Deposit Not Enabled';
+  String get walletDetailsUserDepositNotEnabled => 'Пополнение недоступно';
 
   @override
-  String get walletDetailsUserWithdrawNotEnabled => 'User Withdraw Not Enabled';
+  String get walletDetailsUserWithdrawNotEnabled => 'Вывод недоступен';
 
   @override
-  String get walletDetailsWalletsNotFound => 'Wallets Not Found';
+  String get walletDetailsWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get comment_action_button_section => '==== Action Button Section ====';
 
   @override
-  String get actionButtonTransfer => 'Transfer';
+  String get actionButtonTransfer => 'Перевод';
 
   @override
-  String get actionButtonWithdraw => 'Withdraw';
+  String get actionButtonWithdraw => 'Вывод средств';
 
   @override
-  String get actionButtonPayment => 'Payment';
+  String get actionButtonPayment => 'Оплата';
 
   @override
-  String get actionButtonExchange => 'Exchange';
+  String get actionButtonExchange => 'Обмен';
 
   @override
-  String get actionButtonUserTransferNotEnabled => 'User Transfer Not Enabled';
+  String get actionButtonUserTransferNotEnabled =>
+      'Перевод для пользователя не включён';
 
   @override
-  String get actionButtonUserWithdrawNotEnabled => 'User Withdraw Not Enabled';
+  String get actionButtonUserWithdrawNotEnabled =>
+      'Вывод средств для пользователя не включён';
 
   @override
-  String get actionButtonUserPaymentNotEnabled => 'User Payment Not Enabled';
+  String get actionButtonUserPaymentNotEnabled =>
+      'Оплата для пользователя не включена';
 
   @override
-  String get actionButtonUserExchangeNotEnabled => 'User Exchange Not Enabled';
+  String get actionButtonUserExchangeNotEnabled =>
+      'Обмен для пользователя не включён';
 
   @override
   String get comment_my_wallet_section => '==== My Wallet Section ====';
 
   @override
-  String get myWalletSectionTitle => 'My Wallets';
+  String get myWalletSectionTitle => 'Мои кошельки';
 
   @override
-  String get myWalletTopUp => 'Top Up';
+  String get myWalletTopUp => 'Пополнить';
 
   @override
-  String get myWalletWithdraw => 'Withdraw';
+  String get myWalletWithdraw => 'Вывести';
 
   @override
-  String get myWalletUserDepositNotEnabled => 'User Deposit Not Enabled';
+  String get myWalletUserDepositNotEnabled => 'Пополнение не включено';
 
   @override
-  String get myWalletUserWithdrawNotEnabled => 'User Withdraw Not Enabled';
+  String get myWalletUserWithdrawNotEnabled => 'Вывод средств не включён';
 
   @override
   String get comment_other_services_section =>
       '==== Other Services Section ====';
 
   @override
-  String get otherServicesTitle => 'Other Services';
+  String get otherServicesTitle => 'Другие услуги';
 
   @override
-  String get dynamicPasswordTitle => 'Dynamic Password';
+  String get dynamicPasswordTitle => 'Динамический пароль';
 
   @override
-  String get dynamicPasswordDesc => '6-digit code for wallet payment';
+  String get dynamicPasswordDesc => '6-значный код для оплаты с кошелька';
 
   @override
-  String get otherServicesQrCode => 'QR Code';
+  String get otherServicesQrCode => 'QR-код';
 
   @override
-  String get otherServicesAddMoney => 'Add Money';
+  String get otherServicesAddMoney => 'Пополнить';
 
   @override
-  String get otherServicesCashOut => 'Cash Out';
+  String get otherServicesCashOut => 'Вывод средств';
 
   @override
-  String get otherServicesMakePayment => 'Make Payment';
+  String get otherServicesMakePayment => 'Совершить платёж';
 
   @override
-  String get otherServicesTransactions => 'Transactions';
+  String get otherServicesTransactions => 'Транзакции';
 
   @override
-  String get otherServicesInvoice => 'Invoice';
+  String get otherServicesInvoice => 'Счёт';
 
   @override
-  String get otherServicesRequestMoney => 'Request Money';
+  String get otherServicesRequestMoney => 'Запросить средства';
 
   @override
-  String get otherServicesGift => 'Gift';
+  String get otherServicesGift => 'Подарок';
 
   @override
-  String get otherServicesWallets => 'Wallets';
+  String get otherServicesWallets => 'Кошельки';
 
   @override
-  String get otherServicesWithdraw => 'Withdraw';
+  String get otherServicesWithdraw => 'Вывод';
 
   @override
-  String get otherServicesExchange => 'Exchange';
+  String get otherServicesExchange => 'Обмен';
 
   @override
-  String get otherServicesTransfer => 'Transfer';
+  String get otherServicesTransfer => 'Перевод';
 
   @override
   String get otherServicesDynamicPassword => 'Динамичный PIN';
@@ -1557,850 +1561,852 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commonComingSoon => 'Скоро';
 
   @override
-  String get otherServicesInvite => 'Invite';
+  String get otherServicesInvite => 'Пригласить';
 
   @override
-  String get otherServicesBillPayment => 'Bill Payment';
+  String get otherServicesBillPayment => 'Оплата счетов';
 
   @override
-  String get otherServicesVirtualCard => 'Virtual Cards';
+  String get otherServicesVirtualCard => 'Виртуальные карты';
 
   @override
-  String get otherServicesGiftCards => 'Gift Cards';
+  String get otherServicesGiftCards => 'Подарочные карты';
 
   @override
-  String get otherServicesP2pTrading => 'P2P Trading';
+  String get otherServicesP2pTrading => 'P2P-торговля';
 
   @override
-  String get otherServicesPaymentLinks => 'Payment Links';
+  String get otherServicesPaymentLinks => 'Платёжные ссылки';
 
   @override
-  String get otherServicesKycVerification => 'Please verify your KYC!';
+  String get otherServicesKycVerification => 'Пройдите верификацию KYC!';
 
   @override
-  String get otherServicesUserGiftNotEnabled => 'User Gift Not Enabled';
+  String get otherServicesUserGiftNotEnabled => 'Подарки не включены';
 
   @override
-  String get otherServicesUserDepositNotEnabled => 'User Deposit Not Enabled';
+  String get otherServicesUserDepositNotEnabled => 'Пополнение не включено';
 
   @override
-  String get otherServicesUserCashOutNotEnabled => 'User Cash Out Not Enabled';
+  String get otherServicesUserCashOutNotEnabled => 'Вывод средств не включён';
 
   @override
-  String get otherServicesUserPaymentNotEnabled => 'User Payment Not Enabled';
+  String get otherServicesUserPaymentNotEnabled => 'Платежи не включены';
 
   @override
   String get otherServicesUserRequestMoneyNotEnabled =>
-      'User Request Money Not Enabled';
+      'Запрос средств не включён';
 
   @override
-  String get otherServicesUserInvoiceNotEnabled =>
-      'User Invoice Money Not Enabled';
+  String get otherServicesUserInvoiceNotEnabled => 'Счета не включены';
 
   @override
   String get comment_recent_transactions_section =>
       '==== Recent Transactions Section ====';
 
   @override
-  String get recentTransactionsTitle => 'Recent';
+  String get recentTransactionsTitle => 'Последние';
 
   @override
   String get comment_section_header => '==== Section Header ====';
 
   @override
-  String get sectionHeaderSeeAll => 'See All';
+  String get sectionHeaderSeeAll => 'Показать все';
 
   @override
   String get comment_sign_up_bonus_popup => '==== Sign Up Bonus Popup ====';
 
   @override
-  String get signUpBonusCongratulations => 'Congratulations!';
+  String get signUpBonusCongratulations => 'Поздравляем!';
 
   @override
-  String get signUpBonusReceived => 'You have received bonus';
+  String get signUpBonusReceived => 'Вы получили бонус';
 
   @override
   String get comment_user_profile_section => '==== User Profile Section ====';
 
   @override
-  String get userProfileHello => 'Hello, 👋';
+  String get userProfileHello => 'Здравствуйте, 👋';
 
   @override
   String get userProfileUid => 'UID:';
 
   @override
-  String get userProfileCopied => 'Copied';
+  String get userProfileCopied => 'Скопировано';
 
   @override
   String get comment_invoice_screen => '==== Invoice Screen ====';
 
   @override
-  String get invoiceTitle => 'Invoice';
+  String get invoiceTitle => 'Счёт';
 
   @override
-  String get invoiceCreateInvoice => 'Create Invoice';
+  String get invoiceCreateInvoice => 'Создать счёт';
 
   @override
-  String get invoiceAmount => 'Amount:';
+  String get invoiceAmount => 'Сумма:';
 
   @override
-  String get invoiceCharge => 'Charge:';
+  String get invoiceCharge => 'Комиссия:';
 
   @override
-  String get invoiceStatus => 'Status: ';
+  String get invoiceStatus => 'Статус: ';
 
   @override
-  String get invoicePublished => 'Published';
+  String get invoicePublished => 'Опубликован';
 
   @override
-  String get invoiceDraft => 'Draft';
+  String get invoiceDraft => 'Черновик';
 
   @override
-  String get invoiceView => 'View';
+  String get invoiceView => 'Просмотр';
 
   @override
-  String get invoicePaid => 'Paid';
+  String get invoicePaid => 'Оплачен';
 
   @override
-  String get invoiceUnpaid => 'Unpaid';
+  String get invoiceUnpaid => 'Не оплачен';
 
   @override
   String get comment_update_invoice => '==== Update Invoice ====';
 
   @override
-  String get updateInvoiceTitle => 'Update Invoice';
+  String get updateInvoiceTitle => 'Обновить счёт';
 
   @override
-  String get updateInvoiceItems => 'Invoice Items';
+  String get updateInvoiceItems => 'Позиции счёта';
 
   @override
-  String get updateInvoiceAddItem => 'Add Item';
+  String get updateInvoiceAddItem => 'Добавить позицию';
 
   @override
-  String get updateInvoiceButton => 'Update Invoice';
+  String get updateInvoiceButton => 'Обновить счёт';
 
   @override
   String get comment_update_invoice_add_item =>
       '==== Update Invoice Add Item ====';
 
   @override
-  String get updateInvoiceItemName => 'Item Name';
+  String get updateInvoiceItemName => 'Название позиции';
 
   @override
-  String get updateInvoiceQuantity => 'Quantity';
+  String get updateInvoiceQuantity => 'Количество';
 
   @override
-  String get updateInvoiceUnitPrice => 'Unit Price';
+  String get updateInvoiceUnitPrice => 'Цена за единицу';
 
   @override
-  String get updateInvoiceSubTotal => 'Sub Total';
+  String get updateInvoiceSubTotal => 'Промежуточный итог';
 
   @override
   String get comment_update_invoice_information =>
       '==== Update Invoice Information ====';
 
   @override
-  String get updateInvoiceInformationTitle => 'Invoice Information';
+  String get updateInvoiceInformationTitle => 'Данные счёта';
 
   @override
-  String get updateInvoiceTo => 'Invoice To';
+  String get updateInvoiceTo => 'Кому выставлен счёт';
 
   @override
-  String get updateInvoiceEmailAddress => 'Email Address';
+  String get updateInvoiceEmailAddress => 'Эл. почта';
 
   @override
-  String get updateInvoiceAddress => 'Address';
+  String get updateInvoiceAddress => 'Адрес';
 
   @override
-  String get updateInvoiceWallet => 'Wallet';
+  String get updateInvoiceWallet => 'Кошелёк';
 
   @override
-  String get updateInvoiceStatus => 'Status';
+  String get updateInvoiceStatus => 'Статус';
 
   @override
-  String get updateInvoiceIssueDate => 'Issue Date';
+  String get updateInvoiceIssueDate => 'Дата выставления';
 
   @override
-  String get updateInvoicePaymentStatus => 'Payment Status';
+  String get updateInvoicePaymentStatus => 'Статус оплаты';
 
   @override
-  String get updateInvoiceSelectWallet => 'Select Wallet';
+  String get updateInvoiceSelectWallet => 'Выберите кошелёк';
 
   @override
-  String get updateInvoiceSelectStatus => 'Select Status';
+  String get updateInvoiceSelectStatus => 'Выберите статус';
 
   @override
-  String get updateInvoiceSelectPaymentStatus => 'Select Payment Status';
+  String get updateInvoiceSelectPaymentStatus => 'Выберите статус оплаты';
 
   @override
-  String get updateInvoiceWalletNotFound => 'Wallet not found';
+  String get updateInvoiceWalletNotFound => 'Кошелёк не найден';
 
   @override
-  String get updateInvoiceStatusNotFound => 'Status not found';
+  String get updateInvoiceStatusNotFound => 'Статус не найден';
 
   @override
-  String get updateInvoicePaymentStatusNotFound => 'Payment status not found';
+  String get updateInvoicePaymentStatusNotFound => 'Статус оплаты не найден';
 
   @override
   String get comment_invoice_status_options =>
       '==== Invoice Status Options ====';
 
   @override
-  String get invoiceStatusDraft => 'Draft';
+  String get invoiceStatusDraft => 'Черновик';
 
   @override
-  String get invoiceStatusPublished => 'Published';
+  String get invoiceStatusPublished => 'Опубликован';
 
   @override
-  String get invoiceStatusPaid => 'Paid';
+  String get invoiceStatusPaid => 'Оплачен';
 
   @override
-  String get invoiceStatusUnpaid => 'Unpaid';
+  String get invoiceStatusUnpaid => 'Не оплачен';
 
   @override
   String get comment_invoice_details => '==== Invoice Details ====';
 
   @override
-  String get invoiceDetailsTitle => 'Invoice';
+  String get invoiceDetailsTitle => 'Счёт';
 
   @override
-  String get invoiceDetailsReference => 'Ref:';
+  String get invoiceDetailsReference => 'Реф.:';
 
   @override
-  String get invoiceDetailsIssued => 'Issued:';
+  String get invoiceDetailsIssued => 'Дата выставления:';
 
   @override
-  String get invoiceDetailsName => 'Name';
+  String get invoiceDetailsName => 'Название';
 
   @override
-  String get invoiceDetailsEmail => 'Email';
+  String get invoiceDetailsEmail => 'Эл. почта';
 
   @override
-  String get invoiceDetailsCharge => 'Charge';
+  String get invoiceDetailsCharge => 'Комиссия';
 
   @override
-  String get invoiceDetailsAddress => 'Address';
+  String get invoiceDetailsAddress => 'Адрес';
 
   @override
-  String get invoiceDetailsTotalAmount => 'Total Amount';
+  String get invoiceDetailsTotalAmount => 'Итоговая сумма';
 
   @override
-  String get invoiceDetailsStatus => 'Status';
+  String get invoiceDetailsStatus => 'Статус';
 
   @override
-  String get invoiceDetailsItemName => 'Item Name';
+  String get invoiceDetailsItemName => 'Наименование товара';
 
   @override
-  String get invoiceDetailsQuantity => 'Quantity';
+  String get invoiceDetailsQuantity => 'Количество';
 
   @override
-  String get invoiceDetailsUnitPrice => 'Unit Price';
+  String get invoiceDetailsUnitPrice => 'Цена за единицу';
 
   @override
-  String get invoiceDetailsSubTotal => 'Sub Total';
+  String get invoiceDetailsSubTotal => 'Подытог';
 
   @override
-  String get invoiceDetailsPayNow => 'Pay Now';
+  String get invoiceDetailsPayNow => 'Оплатить';
 
   @override
-  String get invoiceDetailsPrintInvoice => 'Print Invoice';
+  String get invoiceDetailsPrintInvoice => 'Распечатать счёт';
 
   @override
-  String get invoiceDetailsPaid => 'Paid';
+  String get invoiceDetailsPaid => 'Оплачено';
 
   @override
-  String get invoiceDetailsUnpaid => 'Unpaid';
+  String get invoiceDetailsUnpaid => 'Не оплачено';
 
   @override
   String get comment_invoice_pdf => '==== Invoice PDF ====';
 
   @override
-  String get invoicePdfReference => 'Ref:';
+  String get invoicePdfReference => 'Реф.:';
 
   @override
-  String get invoicePdfIssued => 'Issued:';
+  String get invoicePdfIssued => 'Дата выставления:';
 
   @override
-  String get invoicePdfPaid => 'Paid';
+  String get invoicePdfPaid => 'Оплачен';
 
   @override
-  String get invoicePdfUnpaid => 'Unpaid';
+  String get invoicePdfUnpaid => 'Не оплачен';
 
   @override
-  String get invoicePdfTotalAmount => 'Total Amount:';
+  String get invoicePdfTotalAmount => 'Итоговая сумма:';
 
   @override
-  String get invoicePdfAmount => 'Amount:';
+  String get invoicePdfAmount => 'Сумма:';
 
   @override
-  String get invoicePdfCharge => 'Charge:';
+  String get invoicePdfCharge => 'Комиссия:';
 
   @override
-  String get invoicePdfItemName => 'Item Name';
+  String get invoicePdfItemName => 'Наименование товара';
 
   @override
-  String get invoicePdfQuantity => 'Quantity';
+  String get invoicePdfQuantity => 'Количество';
 
   @override
-  String get invoicePdfUnitPrice => 'Unit Price';
+  String get invoicePdfUnitPrice => 'Цена за единицу';
 
   @override
-  String get invoicePdfSubtotal => 'Subtotal';
+  String get invoicePdfSubtotal => 'Подытог';
 
   @override
-  String get invoicePdfSubtotalLabel => 'Subtotal: ';
+  String get invoicePdfSubtotalLabel => 'Подытог: ';
 
   @override
-  String get invoicePdfChargeLabel => 'Charge: ';
+  String get invoicePdfChargeLabel => 'Комиссия: ';
 
   @override
-  String get invoicePdfTotalAmountLabel => 'Total Amount: ';
+  String get invoicePdfTotalAmountLabel => 'Итоговая сумма: ';
 
   @override
-  String get invoicePdfThanks => 'Thanks for the purchase.';
+  String get invoicePdfThanks => 'Спасибо за покупку.';
 
   @override
   String get comment_create_invoice => '==== Create Invoice ====';
 
   @override
-  String get createInvoiceTitle => 'Create Invoice';
+  String get createInvoiceTitle => 'Создать счёт';
 
   @override
-  String get createInvoiceItems => 'Invoice Items';
+  String get createInvoiceItems => 'Позиции счёта';
 
   @override
-  String get createInvoiceAddItem => 'Add Item';
+  String get createInvoiceAddItem => 'Добавить позицию';
 
   @override
-  String get createInvoiceButton => 'Create Invoice';
+  String get createInvoiceButton => 'Создать счёт';
 
   @override
-  String get createInvoiceStatusDraft => 'Draft';
+  String get createInvoiceStatusDraft => 'Черновик';
 
   @override
   String get comment_create_invoice_add_item_section =>
       '==== Create Invoice Add Item Section ====';
 
   @override
-  String get createInvoiceAddItemSectionItemName => 'Item Name';
+  String get createInvoiceAddItemSectionItemName => 'Наименование';
 
   @override
-  String get createInvoiceAddItemSectionQuantity => 'Quantity';
+  String get createInvoiceAddItemSectionQuantity => 'Количество';
 
   @override
-  String get createInvoiceAddItemSectionUnitPrice => 'Unit Price';
+  String get createInvoiceAddItemSectionUnitPrice => 'Цена за единицу';
 
   @override
-  String get createInvoiceAddItemSectionSubTotal => 'Sub Total';
+  String get createInvoiceAddItemSectionSubTotal => 'Подытог';
 
   @override
   String get comment_create_invoice_information_section =>
       '==== Create Invoice Information Section ====';
 
   @override
-  String get createInvoiceInformationSectionTitle => 'Invoice Information';
+  String get createInvoiceInformationSectionTitle => 'Данные счёта';
 
   @override
-  String get createInvoiceInformationSectionInvoiceTo => 'Invoice To';
+  String get createInvoiceInformationSectionInvoiceTo => 'Плательщик';
 
   @override
-  String get createInvoiceInformationSectionEmailAddress => 'Email Address';
+  String get createInvoiceInformationSectionEmailAddress => 'Email';
 
   @override
-  String get createInvoiceInformationSectionAddress => 'Address';
+  String get createInvoiceInformationSectionAddress => 'Адрес';
 
   @override
-  String get createInvoiceInformationSectionWallet => 'Wallet';
+  String get createInvoiceInformationSectionWallet => 'Кошелёк';
 
   @override
-  String get createInvoiceInformationSectionStatus => 'Status';
+  String get createInvoiceInformationSectionStatus => 'Статус';
 
   @override
-  String get createInvoiceInformationSectionIssueDate => 'Issue Date';
+  String get createInvoiceInformationSectionIssueDate => 'Дата выставления';
 
   @override
   String get createInvoiceInformationSectionWalletNotFound =>
-      'Wallets Not Found';
+      'Кошельки не найдены';
 
   @override
-  String get createInvoiceInformationSectionWalletHint => 'Select Wallet';
+  String get createInvoiceInformationSectionWalletHint => 'Выберите кошелёк';
 
   @override
-  String get createInvoiceInformationSectionStatusTitle => 'Status';
+  String get createInvoiceInformationSectionStatusTitle => 'Статус';
 
   @override
   String get createInvoiceInformationSectionStatusNotFound =>
-      'Status not found';
+      'Статус не найден';
 
   @override
-  String get createInvoiceInformationSectionStatusDraft => 'Draft';
+  String get createInvoiceInformationSectionStatusDraft => 'Черновик';
 
   @override
-  String get createInvoiceInformationSectionStatusPublished => 'Published';
+  String get createInvoiceInformationSectionStatusPublished => 'Опубликован';
 
   @override
   String get comment_make_payment_screen => '==== Make Payment Screen ====';
 
   @override
-  String get makePaymentScreenTitle => 'Make Payment';
+  String get makePaymentScreenTitle => 'Совершить платёж';
 
   @override
-  String get makePaymentScreenWalletsNotFound => 'Wallets Not Found';
+  String get makePaymentScreenWalletsNotFound => 'Кошельки не найдены';
 
   @override
-  String get makePaymentScreenBalance => 'Balance';
+  String get makePaymentScreenBalance => 'Баланс';
 
   @override
-  String get makePaymentScreenHistory => 'Make Payment History';
+  String get makePaymentScreenHistory => 'История платежей';
 
   @override
   String get comment_make_payment_amount_step_section =>
       '==== Make Payment Amount Step Section ====';
 
   @override
-  String get makePaymentAmountStepSectionMerchantId => 'Merchant ID';
+  String get makePaymentAmountStepSectionMerchantId => 'ID мерчанта';
 
   @override
-  String get makePaymentAmountStepSectionAmount => 'Amount';
+  String get makePaymentAmountStepSectionAmount => 'Сумма';
 
   @override
-  String get makePaymentAmountStepSectionMinLimit => 'Minimum';
+  String get makePaymentAmountStepSectionMinLimit => 'Минимум';
 
   @override
-  String get makePaymentAmountStepSectionMaxLimit => 'and Maximum';
+  String get makePaymentAmountStepSectionMaxLimit => 'и максимум';
 
   @override
-  String get makePaymentAmountStepSectionMakePaymentButton => 'Make Payment';
+  String get makePaymentAmountStepSectionMakePaymentButton => 'Оплатить';
 
   @override
   String get makePaymentAmountStepSectionSavedMerchantsButton =>
-      'Saved Merchants';
+      'Сохранённые мерчанты';
 
   @override
   String get makePaymentAmountStepSectionInvalidQrCodeDigits =>
-      'Invalid QR code. Merchant MID must be digits only.';
+      'Неверный QR-код. MID мерчанта должен состоять только из цифр.';
 
   @override
   String get makePaymentAmountStepSectionInvalidQrCodePrefix =>
-      'Invalid QR code. MID prefix not found.';
+      'Неверный QR-код. Префикс MID не найден.';
 
   @override
-  String get makePaymentAmountStepSectionMerchantsTitle => 'Merchants';
+  String get makePaymentAmountStepSectionMerchantsTitle => 'Мерчанты';
 
   @override
-  String get makePaymentAmountStepSectionAddMerchant => 'Add Merchant';
+  String get makePaymentAmountStepSectionAddMerchant => 'Добавить мерчанта';
 
   @override
   String get makePaymentAmountStepSectionMidLabel => 'MID:';
 
   @override
   String get makePaymentAmountStepSectionDeleteConfirmationTitle =>
-      'Are you sure?';
+      'Вы уверены?';
 
   @override
   String get makePaymentAmountStepSectionDeleteConfirmationMessage =>
-      'You want to delete this merchant?';
+      'Удалить этого мерчанта?';
 
   @override
-  String get makePaymentAmountStepSectionDeleteButton => 'Delete';
+  String get makePaymentAmountStepSectionDeleteButton => 'Удалить';
 
   @override
-  String get makePaymentAmountStepSectionCancelButton => 'Cancel';
+  String get makePaymentAmountStepSectionCancelButton => 'Отмена';
 
   @override
   String get comment_make_payment_review_step_section =>
       '==== Make Payment Review Step Section ====';
 
   @override
-  String get makePaymentReviewStepSectionTitle => 'Review Details';
+  String get makePaymentReviewStepSectionTitle => 'Проверка данных';
 
   @override
-  String get makePaymentReviewStepSectionAmount => 'Amount';
+  String get makePaymentReviewStepSectionAmount => 'Сумма';
 
   @override
-  String get makePaymentReviewStepSectionWallet => 'Wallet';
+  String get makePaymentReviewStepSectionWallet => 'Кошелёк';
 
   @override
-  String get makePaymentReviewStepSectionMerchantAccount => 'Merchant Account';
+  String get makePaymentReviewStepSectionMerchantAccount => 'Счёт мерчанта';
 
   @override
-  String get makePaymentReviewStepSectionCharge => 'Charge';
+  String get makePaymentReviewStepSectionCharge => 'Комиссия';
 
   @override
-  String get makePaymentReviewStepSectionTotalAmount => 'Total Amount';
+  String get makePaymentReviewStepSectionTotalAmount => 'Итоговая сумма';
 
   @override
-  String get makePaymentReviewStepSectionBackButton => 'Back';
+  String get makePaymentReviewStepSectionBackButton => 'Назад';
 
   @override
-  String get makePaymentReviewStepSectionConfirmButton => 'Confirm';
+  String get makePaymentReviewStepSectionConfirmButton => 'Подтвердить';
 
   @override
   String get comment_make_payment_success_step_section =>
       '==== Make Payment Success Step Section ====';
 
   @override
-  String get makePaymentSuccessStepSectionTitle => 'Payment Success!';
+  String get makePaymentSuccessStepSectionTitle => 'Платёж выполнен!';
 
   @override
-  String get makePaymentSuccessStepSectionAmount => 'Amount';
+  String get makePaymentSuccessStepSectionAmount => 'Сумма';
 
   @override
-  String get makePaymentSuccessStepSectionTransactionId => 'Transection ID';
+  String get makePaymentSuccessStepSectionTransactionId => 'ID транзакции';
 
   @override
-  String get makePaymentSuccessStepSectionWalletName => 'Wallet Name';
+  String get makePaymentSuccessStepSectionWalletName => 'Название кошелька';
 
   @override
-  String get makePaymentSuccessStepSectionPaymentMethod => 'Payment Method';
+  String get makePaymentSuccessStepSectionPaymentMethod => 'Способ оплаты';
 
   @override
-  String get makePaymentSuccessStepSectionCharge => 'Charge';
+  String get makePaymentSuccessStepSectionCharge => 'Комиссия';
 
   @override
-  String get makePaymentSuccessStepSectionType => 'Type';
+  String get makePaymentSuccessStepSectionType => 'Тип';
 
   @override
-  String get makePaymentSuccessStepSectionFinalAmount => 'Final Amount';
+  String get makePaymentSuccessStepSectionFinalAmount => 'Итоговая сумма';
 
   @override
-  String get makePaymentSuccessStepSectionPaymentAgainButton => 'Payment Again';
+  String get makePaymentSuccessStepSectionPaymentAgainButton =>
+      'Оплатить снова';
 
   @override
-  String get makePaymentSuccessStepSectionBackHomeButton => 'Back Home';
+  String get makePaymentSuccessStepSectionBackHomeButton => 'На главную';
 
   @override
   String get comment_make_payment_history_screen =>
       '==== Make Payment History Screen ====';
 
   @override
-  String get makePaymentHistoryScreenTitle => 'Payment History';
+  String get makePaymentHistoryScreenTitle => 'История платежей';
 
   @override
   String get comment_make_payment_filter_bottom_sheet =>
       '==== Make Payment Filter Bottom Sheet ====';
 
   @override
-  String get makePaymentFilterTransactionId => 'Transactions ID';
+  String get makePaymentFilterTransactionId => 'ID транзакции';
 
   @override
-  String get makePaymentFilterStatus => 'Status';
+  String get makePaymentFilterStatus => 'Статус';
 
   @override
-  String get makePaymentFilterApplyButton => 'Filter';
+  String get makePaymentFilterApplyButton => 'Фильтр';
 
   @override
-  String get makePaymentFilterResetButton => 'Reset';
+  String get makePaymentFilterResetButton => 'Сбросить';
 
   @override
   String get comment_qr_code_screen => '==== QR Code Screen ====';
 
   @override
-  String get qrCodeScreenTitle => 'My QR Code';
+  String get qrCodeScreenTitle => 'Мой QR-код';
 
   @override
-  String get qrCodeScreenDownloadButton => 'Download';
+  String get qrCodeScreenDownloadButton => 'Скачать';
 
   @override
   String get qrCodeScreenPermissionRequired =>
-      'Permission is required. Please allow it in settings.';
+      'Требуется разрешение. Разрешите доступ в настройках.';
 
   @override
-  String get qrCodeScreenDownloadSuccess => 'Downloaded successfully!';
+  String get qrCodeScreenDownloadSuccess => 'Успешно загружено!';
 
   @override
   String get comment_referral_screen => '==== Referral Screen ====';
 
   @override
-  String get referralScreenTitle => 'Referral';
+  String get referralScreenTitle => 'Реферальная программа';
 
   @override
-  String get referralScreenEarnAmount => 'Earn';
+  String get referralScreenEarnAmount => 'Заработок';
 
   @override
-  String get referralScreenAfterInviting => 'After Inviting';
+  String get referralScreenAfterInviting => 'После приглашения';
 
   @override
-  String get referralScreenOneMember => 'One Member';
+  String get referralScreenOneMember => 'Один участник';
 
   @override
-  String get referralScreenNoCode => 'No Code';
+  String get referralScreenNoCode => 'Нет кода';
 
   @override
-  String get referralScreenCodeCopied => 'Code Copied';
+  String get referralScreenCodeCopied => 'Код скопирован';
 
   @override
-  String get referralScreenShareButton => 'Share';
+  String get referralScreenShareButton => 'Поделиться';
 
   @override
-  String get referralScreenReferredFriends => 'Referred Friends';
+  String get referralScreenReferredFriends => 'Приглашённые друзья';
 
   @override
   String get comment_referred_friends_screen =>
       '==== Referred Friends Screen ====';
 
   @override
-  String get referredFriendsScreenTitle => 'Referred Friends';
+  String get referredFriendsScreenTitle => 'Приглашённые друзья';
 
   @override
-  String get referredFriendsScreenReferralTreeButton => 'Referral Tree';
+  String get referredFriendsScreenReferralTreeButton => 'Реферальное дерево';
 
   @override
   String get comment_referred_friend_list => '==== Referred Friend List ====';
 
   @override
-  String get referredFriendListJoinedOn => 'Joined on';
+  String get referredFriendListJoinedOn => 'Дата регистрации';
 
   @override
-  String get referredFriendListActive => 'Active';
+  String get referredFriendListActive => 'Активен';
 
   @override
-  String get referredFriendListInactive => 'Inactive';
+  String get referredFriendListInactive => 'Неактивен';
 
   @override
   String get comment_referral_tree_screen => '==== Referral Tree Screen ====';
 
   @override
-  String get referralTreeScreenTitle => 'Referral Tree';
+  String get referralTreeScreenTitle => 'Реферальное дерево';
 
   @override
   String get comment_request_money_screen => '==== Request Money Screen ====';
 
   @override
-  String get requestMoneyScreenTitle => 'Request Money';
+  String get requestMoneyScreenTitle => 'Запрос средств';
 
   @override
   String get comment_request_money_amount_step_section =>
       '==== Request Money Amount Step Section ====';
 
   @override
-  String get requestMoneyAmountStepSectionRecipientId => 'Recipient ID';
+  String get requestMoneyAmountStepSectionRecipientId => 'ID получателя';
 
   @override
-  String get requestMoneyAmountStepSectionRequestAmount => 'Request Amount';
+  String get requestMoneyAmountStepSectionRequestAmount => 'Сумма запроса';
 
   @override
-  String get requestMoneyAmountStepSectionMin => 'Minimum';
+  String get requestMoneyAmountStepSectionMin => 'Минимум';
 
   @override
-  String get requestMoneyAmountStepSectionMax => 'and Maximum';
+  String get requestMoneyAmountStepSectionMax => 'и максимум';
 
   @override
-  String get requestMoneyAmountStepSectionNote => 'Note';
+  String get requestMoneyAmountStepSectionNote => 'Примечание';
 
   @override
-  String get requestMoneyAmountStepSectionRequestMoneyButton => 'Request Money';
+  String get requestMoneyAmountStepSectionRequestMoneyButton =>
+      'Запросить средства';
 
   @override
   String get requestMoneyAmountStepSectionInvalidQrCodeDigits =>
-      'Invalid QR code. Recipient UID must be digits only.';
+      'Неверный QR-код. UID получателя должен состоять только из цифр.';
 
   @override
   String get requestMoneyAmountStepSectionInvalidQrCodePrefix =>
-      'Invalid QR code. UID prefix not found.';
+      'Неверный QR-код. Префикс UID не найден.';
 
   @override
   String get comment_request_money_header_section =>
       '==== Request Money Header Section ====';
 
   @override
-  String get requestMoneyHeaderSectionTitle => 'Request Money';
+  String get requestMoneyHeaderSectionTitle => 'Запрос средств';
 
   @override
-  String get requestMoneyHeaderSectionRequestMoneyButton => 'Request Money';
+  String get requestMoneyHeaderSectionRequestMoneyButton =>
+      'Запросить средства';
 
   @override
   String get requestMoneyHeaderSectionReceivedRequestButton =>
-      'Received Request';
+      'Полученные запросы';
 
   @override
-  String get requestMoneyHeaderSectionHistory => 'Request Money History';
+  String get requestMoneyHeaderSectionHistory => 'История запросов средств';
 
   @override
   String get comment_request_money_review_step_section =>
       '==== Request Money Review Step Section ====';
 
   @override
-  String get requestMoneyReviewStepSectionTitle => 'Review Details';
+  String get requestMoneyReviewStepSectionTitle => 'Проверка данных';
 
   @override
-  String get requestMoneyReviewStepSectionAmount => 'Amount';
+  String get requestMoneyReviewStepSectionAmount => 'Сумма';
 
   @override
-  String get requestMoneyReviewStepSectionWalletName => 'Wallet Name';
+  String get requestMoneyReviewStepSectionWalletName => 'Название кошелька';
 
   @override
-  String get requestMoneyReviewStepSectionRecipientUid => 'Recipient UID';
+  String get requestMoneyReviewStepSectionRecipientUid => 'UID получателя';
 
   @override
-  String get requestMoneyReviewStepSectionBackButton => 'Back';
+  String get requestMoneyReviewStepSectionBackButton => 'Назад';
 
   @override
-  String get requestMoneyReviewStepSectionConfirmButton => 'Confirm';
+  String get requestMoneyReviewStepSectionConfirmButton => 'Подтвердить';
 
   @override
   String get comment_request_money_success_step_section =>
       '==== Request Money Success Step Section ====';
 
   @override
-  String get requestMoneySuccessStepSectionTitle => 'Request Money Success!';
+  String get requestMoneySuccessStepSectionTitle => 'Запрос отправлен!';
 
   @override
-  String get requestMoneySuccessStepSectionAmount => 'Amount';
+  String get requestMoneySuccessStepSectionAmount => 'Сумма';
 
   @override
-  String get requestMoneySuccessStepSectionRecipientName => 'Recipient Name';
+  String get requestMoneySuccessStepSectionRecipientName => 'Имя получателя';
 
   @override
   String get requestMoneySuccessStepSectionRequestWalletName =>
-      'Request Wallet Name';
+      'Кошелёк запроса';
 
   @override
-  String get requestMoneySuccessStepSectionCharge => 'Charge';
+  String get requestMoneySuccessStepSectionCharge => 'Комиссия';
 
   @override
-  String get requestMoneySuccessStepSectionFinalAmount => 'Final Amount';
+  String get requestMoneySuccessStepSectionFinalAmount => 'Итоговая сумма';
 
   @override
-  String get requestMoneySuccessStepSectionStatus => 'Status';
+  String get requestMoneySuccessStepSectionStatus => 'Статус';
 
   @override
   String get requestMoneySuccessStepSectionRequestAgainButton =>
-      'Request Again';
+      'Запросить снова';
 
   @override
-  String get requestMoneySuccessStepSectionBackHomeButton => 'Back Home';
+  String get requestMoneySuccessStepSectionBackHomeButton => 'На главную';
 
   @override
   String get comment_request_money_wallet_section =>
       '==== Request Money Wallet Section ====';
 
   @override
-  String get requestMoneyWalletSectionBalance => 'Balance';
+  String get requestMoneyWalletSectionBalance => 'Баланс';
 
   @override
-  String get requestMoneyWalletSectionWalletsNotFound => 'Wallets Not Found';
+  String get requestMoneyWalletSectionWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get comment_request_money_history_screen =>
       '==== Request Money History Screen ====';
 
   @override
-  String get requestMoneyHistoryScreenTitle => 'Request Money History';
+  String get requestMoneyHistoryScreenTitle => 'История запросов средств';
 
   @override
-  String get requestMoneyHistoryRequestedAt => 'Requested At:';
+  String get requestMoneyHistoryRequestedAt => 'Дата запроса:';
 
   @override
-  String get requestMoneyHistoryStatus => 'Status: ';
+  String get requestMoneyHistoryStatus => 'Статус: ';
 
   @override
   String get comment_request_money_history_details =>
       '==== Request Money History Details ====';
 
   @override
-  String get requestMoneyHistoryDetailsRequestEmail => 'Request Email';
+  String get requestMoneyHistoryDetailsRequestEmail => 'Эл. почта запроса';
 
   @override
-  String get requestMoneyHistoryDetailsCurrency => 'Currency';
+  String get requestMoneyHistoryDetailsCurrency => 'Валюта';
 
   @override
-  String get requestMoneyHistoryDetailsCharge => 'Charge';
+  String get requestMoneyHistoryDetailsCharge => 'Комиссия';
 
   @override
-  String get requestMoneyHistoryDetailsFinalAmount => 'Final Amount';
+  String get requestMoneyHistoryDetailsFinalAmount => 'Итоговая сумма';
 
   @override
-  String get requestMoneyHistoryDetailsRequestAt => 'Request At';
+  String get requestMoneyHistoryDetailsRequestAt => 'Дата запроса';
 
   @override
-  String get requestMoneyHistoryDetailsStatus => 'Status';
+  String get requestMoneyHistoryDetailsStatus => 'Статус';
 
   @override
   String get comment_received_request_screen =>
       '==== Received Request Screen ====';
 
   @override
-  String get receivedRequestRequestedAt => 'Requested At:';
+  String get receivedRequestRequestedAt => 'Дата запроса:';
 
   @override
-  String get receivedRequestStatus => 'Status: ';
+  String get receivedRequestStatus => 'Статус: ';
 
   @override
-  String get receivedRequestRejectButton => 'Reject';
+  String get receivedRequestRejectButton => 'Отклонить';
 
   @override
-  String get receivedRequestAcceptButton => 'Accept';
+  String get receivedRequestAcceptButton => 'Принять';
 
   @override
   String get comment_accept_request_dropdown =>
       '==== Accept Request Dropdown ====';
 
   @override
-  String get acceptRequestDropdownTitle => 'Are You Sure?';
+  String get acceptRequestDropdownTitle => 'Вы уверены?';
 
   @override
   String get acceptRequestDropdownMessage =>
-      'Do you want to accept this money request?';
+      'Вы хотите принять этот запрос денег?';
 
   @override
-  String get acceptRequestDropdownPayableAmount => 'Payable Amount:';
+  String get acceptRequestDropdownPayableAmount => 'Сумма к оплате:';
 
   @override
-  String get acceptRequestDropdownPayWallet => 'Pay Wallet:';
+  String get acceptRequestDropdownPayWallet => 'Оплата с кошелька:';
 
   @override
-  String get acceptRequestDropdownRequesterNote => 'Requester Note:';
+  String get acceptRequestDropdownRequesterNote => 'Заметка отправителя:';
 
   @override
-  String get acceptRequestDropdownNoteNotFound => 'Note Not Found';
+  String get acceptRequestDropdownNoteNotFound => 'Заметка не найдена';
 
   @override
-  String get acceptRequestDropdownAcceptButton => 'Accept';
+  String get acceptRequestDropdownAcceptButton => 'Принять';
 
   @override
-  String get acceptRequestDropdownCancelButton => 'Cancel';
+  String get acceptRequestDropdownCancelButton => 'Отмена';
 
   @override
   String get comment_received_request_details =>
       '==== Received Request Details ====';
 
   @override
-  String get receivedRequestDetailsRequestEmail => 'Request Email';
+  String get receivedRequestDetailsRequestEmail => 'Эл. почта запроса';
 
   @override
-  String get receivedRequestDetailsCurrency => 'Currency';
+  String get receivedRequestDetailsCurrency => 'Валюта';
 
   @override
-  String get receivedRequestDetailsCharge => 'Charge';
+  String get receivedRequestDetailsCharge => 'Комиссия';
 
   @override
-  String get receivedRequestDetailsFinalAmount => 'Final Amount';
+  String get receivedRequestDetailsFinalAmount => 'Итоговая сумма';
 
   @override
-  String get receivedRequestDetailsRequestAt => 'Request At';
+  String get receivedRequestDetailsRequestAt => 'Дата запроса';
 
   @override
-  String get receivedRequestDetailsStatus => 'Status';
+  String get receivedRequestDetailsStatus => 'Статус';
 
   @override
   String get comment_change_password_screen =>
       '==== Change Password Screen ====';
 
   @override
-  String get changePasswordScreenTitle => 'Change Password';
+  String get changePasswordScreenTitle => 'Смена пароля';
 
   @override
-  String get changePasswordCurrentPassword => 'Current Password';
+  String get changePasswordCurrentPassword => 'Текущий пароль';
 
   @override
-  String get changePasswordNewPassword => 'New Password';
+  String get changePasswordNewPassword => 'Новый пароль';
 
   @override
-  String get changePasswordConfirmPassword => 'Confirm Password';
+  String get changePasswordConfirmPassword => 'Подтвердите пароль';
 
   @override
-  String get changePasswordSaveChangesButton => 'Save Changes';
+  String get changePasswordSaveChangesButton => 'Сохранить изменения';
 
   @override
   String get comment_id_verification_screen =>
@@ -2410,415 +2416,416 @@ class AppLocalizationsRu extends AppLocalizations {
   String get idVerificationScreenTitle => 'KYC';
 
   @override
-  String get idVerificationHistoryButton => 'KYC History';
+  String get idVerificationHistoryButton => 'История KYC';
 
   @override
-  String get idVerificationCenterTitle => 'Verification Center';
+  String get idVerificationCenterTitle => 'Центр верификации';
 
   @override
-  String get idVerificationNothingToSubmit => 'You have nothing to submit';
+  String get idVerificationNothingToSubmit => 'Вам нечего отправлять';
 
   @override
   String get kycStatusVerified =>
-      'You have submitted your documents and it is verified';
+      'Вы отправили документы, и они верифицированы';
 
   @override
   String get kycStatusPending =>
-      'You have submitted your documents and it is awaiting for the approval';
+      'Вы отправили документы, и они ожидают одобрения';
 
   @override
   String get kycStatusRejected =>
-      'Your KYC verification has failed. Please resubmit the documents.';
+      'Не удалось пройти верификацию KYC. Пожалуйста, отправьте документы повторно.';
 
   @override
-  String get kycStatusNotSubmitted =>
-      'You have not submitted any KYC documents yet';
+  String get kycStatusNotSubmitted => 'Вы ещё не отправляли документы KYC';
 
   @override
   String get comment_kyc_history_screen => '==== KYC History Screen ====';
 
   @override
-  String get kycHistoryScreenTitle => 'KYC History';
+  String get kycHistoryScreenTitle => 'История KYC';
 
   @override
-  String get kycHistoryDate => 'Date:';
+  String get kycHistoryDate => 'Дата:';
 
   @override
-  String get kycHistoryStatus => 'Status: ';
+  String get kycHistoryStatus => 'Статус: ';
 
   @override
-  String get kycHistoryStatusPending => 'Pending';
+  String get kycHistoryStatusPending => 'В ожидании';
 
   @override
-  String get kycHistoryStatusApproved => 'Approved';
+  String get kycHistoryStatusApproved => 'Одобрено';
 
   @override
-  String get kycHistoryStatusRejected => 'Rejected';
+  String get kycHistoryStatusRejected => 'Отклонено';
 
   @override
-  String get kycHistoryViewButton => 'View';
+  String get kycHistoryViewButton => 'Просмотр';
 
   @override
   String get comment_kyc_details_bottom_sheet =>
       '==== KYC Details Bottom Sheet ====';
 
   @override
-  String get kycDetailsTitle => 'KYC Details';
+  String get kycDetailsTitle => 'Данные KYC';
 
   @override
-  String get kycDetailsStatus => 'Status:';
+  String get kycDetailsStatus => 'Статус:';
 
   @override
-  String get kycDetailsCreatedAt => 'Created At:';
+  String get kycDetailsCreatedAt => 'Дата создания:';
 
   @override
-  String get kycDetailsMessageFromAdmin => 'Message From Admin:';
+  String get kycDetailsMessageFromAdmin => 'Сообщение от администратора:';
 
   @override
-  String get kycDetailsSubmittedData => 'Submitted Data';
+  String get kycDetailsSubmittedData => 'Отправленные данные';
 
   @override
-  String get kycDetailsStatusPending => 'Pending';
+  String get kycDetailsStatusPending => 'В ожидании';
 
   @override
-  String get kycDetailsStatusApproved => 'Approved';
+  String get kycDetailsStatusApproved => 'Одобрено';
 
   @override
-  String get kycDetailsStatusRejected => 'Rejected';
+  String get kycDetailsStatusRejected => 'Отклонено';
 
   @override
   String get comment_notifications_screen => '==== Notifications Screen ====';
 
   @override
-  String get notificationsScreenTitle => 'All Notification';
+  String get notificationsScreenTitle => 'Все уведомления';
 
   @override
-  String get notificationsMarkAllReadButton => 'Mark All Read';
+  String get notificationsMarkAllReadButton => 'Отметить все как прочитанные';
 
   @override
   String get comment_profile_settings_screen =>
       '==== Profile Settings Screen ====';
 
   @override
-  String get profileSettingsScreenTitle => 'Profile Settings';
+  String get profileSettingsScreenTitle => 'Настройки профиля';
 
   @override
-  String get profileSettingsFirstName => 'First Name';
+  String get profileSettingsFirstName => 'Имя';
 
   @override
-  String get profileSettingsLastName => 'Last Name';
+  String get profileSettingsLastName => 'Фамилия';
 
   @override
-  String get profileSettingsUserName => 'User Name';
+  String get profileSettingsUserName => 'Имя пользователя';
 
   @override
-  String get profileSettingsGender => 'Gender';
+  String get profileSettingsGender => 'Пол';
 
   @override
-  String get profileSettingsDateOfBirth => 'Date of Birth';
+  String get profileSettingsDateOfBirth => 'Дата рождения';
 
   @override
-  String get profileSettingsEmailAddress => 'Email Address';
+  String get profileSettingsEmailAddress => 'Адрес эл. почты';
 
   @override
-  String get profileSettingsPhone => 'Phone';
+  String get profileSettingsPhone => 'Телефон';
 
   @override
-  String get profileSettingsCountry => 'Country';
+  String get profileSettingsCountry => 'Страна';
 
   @override
-  String get profileSettingsCity => 'City';
+  String get profileSettingsCity => 'Город';
 
   @override
-  String get profileSettingsZipCode => 'Zip Code';
+  String get profileSettingsZipCode => 'Почтовый индекс';
 
   @override
-  String get profileSettingsJoiningDate => 'Joining Date';
+  String get profileSettingsJoiningDate => 'Дата регистрации';
 
   @override
-  String get profileSettingsAddress => 'Address';
+  String get profileSettingsAddress => 'Адрес';
 
   @override
-  String get profileSettingsGenderTitle => 'Gender';
+  String get profileSettingsGenderTitle => 'Пол';
 
   @override
-  String get profileSettingsGenderNotFound => 'Gender not found';
+  String get profileSettingsGenderNotFound => 'Пол не найден';
 
   @override
-  String get profileSettingsGenderMale => 'Male';
+  String get profileSettingsGenderMale => 'Мужской';
 
   @override
-  String get profileSettingsGenderFemale => 'Female';
+  String get profileSettingsGenderFemale => 'Женский';
 
   @override
-  String get profileSettingsGenderOther => 'Other';
+  String get profileSettingsGenderOther => 'Другой';
 
   @override
-  String get profileSettingsSelectGender => 'Select Gender';
+  String get profileSettingsSelectGender => 'Выберите пол';
 
   @override
-  String get profileSettingsCountryTitle => 'Country';
+  String get profileSettingsCountryTitle => 'Страна';
 
   @override
-  String get profileSettingsCountryNotFound => 'Country not found';
+  String get profileSettingsCountryNotFound => 'Страна не найдена';
 
   @override
-  String get profileSettingsSelectCountry => 'Select Country';
+  String get profileSettingsSelectCountry => 'Выберите страну';
 
   @override
-  String get profileSettingsSaveChangesButton => 'Save Changes';
+  String get profileSettingsSaveChangesButton => 'Сохранить изменения';
 
   @override
   String get comment_support_tickets_screen =>
       '==== Support Tickets Screen ====';
 
   @override
-  String get supportTicketsScreenTitle => 'Support Ticket';
+  String get supportTicketsScreenTitle => 'Обращение в поддержку';
 
   @override
-  String get supportTicketsCreateTicketButton => 'Create Ticket';
+  String get supportTicketsCreateTicketButton => 'Создать обращение';
 
   @override
-  String get supportTicketsLastUpdate => 'Last Update';
+  String get supportTicketsLastUpdate => 'Последнее обновление';
 
   @override
-  String get supportTicketsRequestedAt => 'Requested At';
+  String get supportTicketsRequestedAt => 'Дата обращения';
 
   @override
-  String get supportTicketsPriorityHigh => 'High';
+  String get supportTicketsPriorityHigh => 'Высокий';
 
   @override
-  String get supportTicketsPriorityMedium => 'Medium';
+  String get supportTicketsPriorityMedium => 'Средний';
 
   @override
-  String get supportTicketsPriorityLow => 'Low';
+  String get supportTicketsPriorityLow => 'Низкий';
 
   @override
-  String get supportTicketsStatus => 'Status: ';
+  String get supportTicketsStatus => 'Статус: ';
 
   @override
-  String get supportTicketsStatusOpen => 'Open';
+  String get supportTicketsStatusOpen => 'Открыто';
 
   @override
-  String get supportTicketsStatusClose => 'Close';
+  String get supportTicketsStatusClose => 'Закрыть';
 
   @override
-  String get supportTicketsStatusInProgress => 'In Progress';
+  String get supportTicketsStatusInProgress => 'В работе';
 
   @override
-  String get supportTicketsStatusWaitingUser => 'Waiting for You';
+  String get supportTicketsStatusWaitingUser => 'Ожидает вашего ответа';
 
   @override
-  String get supportTicketsStatusResolved => 'Resolved';
+  String get supportTicketsStatusResolved => 'Решено';
 
   @override
-  String get supportTicketsStatusClosed => 'Closed';
+  String get supportTicketsStatusClosed => 'Закрыто';
 
   @override
-  String get supportTicketsStatusArchived => 'Archived';
+  String get supportTicketsStatusArchived => 'В архиве';
 
   @override
-  String get supportTicketsReplyButton => 'Reply';
+  String get supportTicketsReplyButton => 'Ответить';
 
   @override
   String get comment_ticket_details => '==== Ticket Details ====';
 
   @override
-  String get ticketDetailsTitle => 'Ticket Details';
+  String get ticketDetailsTitle => 'Детали обращения';
 
   @override
-  String get ticketDetailsTicketId => 'Ticket ID';
+  String get ticketDetailsTicketId => 'ID обращения';
 
   @override
-  String get ticketDetailsCategory => 'Category';
+  String get ticketDetailsCategory => 'Категория';
 
   @override
-  String get ticketDetailsPriority => 'Priority';
+  String get ticketDetailsPriority => 'Приоритет';
 
   @override
-  String get ticketDetailsCreatedOn => 'Created On';
+  String get ticketDetailsCreatedOn => 'Дата создания';
 
   @override
-  String get ticketDetailsLastUpdated => 'Last Updated';
+  String get ticketDetailsLastUpdated => 'Последнее обновление';
 
   @override
-  String get ticketDetailsPriorityHigh => 'High';
+  String get ticketDetailsPriorityHigh => 'Высокий';
 
   @override
-  String get ticketDetailsPriorityMedium => 'Medium';
+  String get ticketDetailsPriorityMedium => 'Средний';
 
   @override
-  String get ticketDetailsPriorityLow => 'Low';
+  String get ticketDetailsPriorityLow => 'Низкий';
 
   @override
   String get comment_replay_ticket_screen => '==== Replay Ticket Screen ====';
 
   @override
-  String get replayTicketMarkAsClosedButton => 'Mark As Closed';
+  String get replayTicketMarkAsClosedButton => 'Отметить как закрытый';
 
   @override
-  String get replayTicketMessageHint => 'Type your message...';
+  String get replayTicketMessageHint => 'Введите сообщение...';
 
   @override
-  String get replayTicketEmptyMessageError => 'Please enter an message';
+  String get replayTicketEmptyMessageError => 'Пожалуйста, введите сообщение';
 
   @override
-  String get replayTicketAttachmentsLabel => 'Attachments:';
+  String get replayTicketAttachmentsLabel => 'Вложения:';
 
   @override
-  String get replayTicketUnknownFile => 'Unknown file';
+  String get replayTicketUnknownFile => 'Неизвестный файл';
 
   @override
-  String get replayTicketAttachmentPreviewTitle => 'Attachment Preview';
+  String get replayTicketAttachmentPreviewTitle => 'Предпросмотр вложения';
 
   @override
-  String get replayTicketAttachmentError => 'Something went wrong!';
+  String get replayTicketAttachmentError => 'Что-то пошло не так!';
 
   @override
   String get comment_add_new_ticket_screen => '==== Add New Ticket Screen ====';
 
   @override
-  String get addNewTicketScreenTitle => 'Create Ticket';
+  String get addNewTicketScreenTitle => 'Создать тикет';
 
   @override
-  String get addNewTicketTitle => 'Title';
+  String get addNewTicketTitle => 'Заголовок';
 
   @override
-  String get addNewTicketDescription => 'Description';
+  String get addNewTicketDescription => 'Описание';
 
   @override
-  String get addNewTicketAttachments => 'Attachments';
+  String get addNewTicketAttachments => 'Вложения';
 
   @override
-  String get addNewTicketAttachFile => 'Attach File';
+  String get addNewTicketAttachFile => 'Прикрепить файл';
 
   @override
-  String get addNewTicketAddButton => 'Add Ticket';
+  String get addNewTicketAddButton => 'Создать тикет';
 
   @override
   String get comment_two_factor_authentication_screen =>
       '==== Two Factor Authentication Screen ====';
 
   @override
-  String get twoFactorAuthenticationScreenTitle => '2FA Authentication';
+  String get twoFactorAuthenticationScreenTitle =>
+      'Двухфакторная аутентификация';
 
   @override
   String get comment_disable_2fa_section => '==== Disable 2FA Section ====';
 
   @override
-  String get disable2FaSectionTitle => '2FA Authentication';
+  String get disable2FaSectionTitle => 'Двухфакторная аутентификация (2FA)';
 
   @override
   String get disable2FaSectionDescription => 'noInternetConnectionRetryButton';
 
   @override
-  String get disable2FaSectionDisableButton => 'Disable 2FA';
+  String get disable2FaSectionDisableButton => 'Отключить 2FA';
 
   @override
-  String get disable2FaSectionPasswordRequired => 'Please enter an password';
+  String get disable2FaSectionPasswordRequired => 'Введите пароль';
 
   @override
   String get comment_enable_2fa_section => '==== Enable 2FA Section ====';
 
   @override
-  String get enable2FaSectionTitle => '2FA Authentication';
+  String get enable2FaSectionTitle => 'Двухфакторная аутентификация (2FA)';
 
   @override
   String get enable2FaSectionDescription =>
-      'Scan the QR code with Google Authenticator\nApp to enable 2FA';
+      'Отсканируйте QR-код в приложении\nGoogle Authenticator, чтобы включить 2FA';
 
   @override
   String get enable2FaSectionPinLabel =>
-      'The PIN From Google Authenticator App';
+      'PIN-код из приложения Google Authenticator';
 
   @override
-  String get enable2FaSectionEnableButton => 'Enable 2FA';
+  String get enable2FaSectionEnableButton => 'Включить 2FA';
 
   @override
   String get enable2FaSectionPinRequired =>
-      'Please enter an google authentication pin';
+      'Введите PIN-код из Google Authenticator';
 
   @override
   String get comment_generate_2fa_section => '==== Generate 2FA Section ====';
 
   @override
-  String get generate2FaSectionTitle => '2FA Authentication';
+  String get generate2FaSectionTitle => 'Двухфакторная аутентификация (2FA)';
 
   @override
   String get generate2FaSectionDescription =>
-      'Enhance your account security with two-factor authentication';
+      'Повысьте безопасность аккаунта с помощью двухфакторной аутентификации';
 
   @override
-  String get generate2FaSectionGenerateButton => 'Generate 2FA';
+  String get generate2FaSectionGenerateButton => 'Настроить 2FA';
 
   @override
   String get comment_settings_screen => '==== Settings Screen ====';
 
   @override
-  String get settingsScreenTitle => 'Settings';
+  String get settingsScreenTitle => 'Настройки';
 
   @override
-  String get settingsProfileSettings => 'Profile Settings';
+  String get settingsProfileSettings => 'Настройки профиля';
 
   @override
-  String get settingsChangePassword => 'Change Password';
+  String get settingsChangePassword => 'Сменить пароль';
 
   @override
-  String get settingsAllNotification => 'All Notification';
+  String get settingsAllNotification => 'Все уведомления';
 
   @override
-  String get settingsTwoFactorAuthentication => '2FA Authentication';
+  String get settingsTwoFactorAuthentication =>
+      'Двухфакторная аутентификация (2FA)';
 
   @override
-  String get settingsIdVerification => 'ID Verification';
+  String get settingsIdVerification => 'Проверка личности';
 
   @override
-  String get settingsSupport => 'Support';
+  String get settingsSupport => 'Поддержка';
 
   @override
-  String get settingsSignOut => 'Sign Out';
+  String get settingsSignOut => 'Выйти';
 
   @override
-  String get settingsKycVerified => 'Verified';
+  String get settingsKycVerified => 'Верифицирован';
 
   @override
-  String get settingsKycPending => 'Pending';
+  String get settingsKycPending => 'В ожидании';
 
   @override
-  String get settingsKycFailed => 'Failed';
+  String get settingsKycFailed => 'Не пройдена';
 
   @override
-  String get settingsKycNotSubmitted => 'Not Submitted';
+  String get settingsKycNotSubmitted => 'Не отправлено';
 
   @override
   String get comment_transactions_screen => '==== Transactions Screen ====';
 
   @override
-  String get transactionsScreenTitle => 'My Transactions';
+  String get transactionsScreenTitle => 'Мои транзакции';
 
   @override
   String get comment_transactions_popup => '==== Transactions Popup ====';
 
   @override
-  String get transactionsPopupDate => 'Date';
+  String get transactionsPopupDate => 'Дата';
 
   @override
-  String get transactionsPopupTransactionId => 'Transaction ID';
+  String get transactionsPopupTransactionId => 'ID транзакции';
 
   @override
-  String get transactionsPopupWalletName => 'Wallet Name';
+  String get transactionsPopupWalletName => 'Название кошелька';
 
   @override
-  String get transactionsPopupAmount => 'Amount';
+  String get transactionsPopupAmount => 'Сумма';
 
   @override
-  String get transactionsPopupCharge => 'Charge';
+  String get transactionsPopupCharge => 'Комиссия';
 
   @override
-  String get transactionsPopupFinalAmount => 'Final Amount';
+  String get transactionsPopupFinalAmount => 'Итоговая сумма';
 
   @override
-  String get transactionsPopupStatus => 'Status';
+  String get transactionsPopupStatus => 'Статус';
 
   @override
   String get transactionsPopupClose => 'Закрыть';
@@ -2840,626 +2847,621 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Transaction Filter Bottom Sheet ====';
 
   @override
-  String get transactionFilterTransactionId => 'Transactions ID';
+  String get transactionFilterTransactionId => 'ID транзакции';
 
   @override
-  String get transactionFilterStatus => 'Status';
+  String get transactionFilterStatus => 'Статус';
 
   @override
-  String get transactionFilterApplyButton => 'Filter';
+  String get transactionFilterApplyButton => 'Фильтр';
 
   @override
-  String get transactionFilterResetButton => 'Reset';
+  String get transactionFilterResetButton => 'Сбросить';
 
   @override
   String get comment_transfer_screen => '==== Transfer Screen ====';
 
   @override
-  String get transferScreenTitle => 'Transfer Money';
+  String get transferScreenTitle => 'Перевод денег';
 
   @override
-  String get transferHistoryTransferHistory => 'Transfer History';
+  String get transferHistoryTransferHistory => 'История переводов';
 
   @override
-  String get transferHistoryReceivedHistory => 'Received History';
+  String get transferHistoryReceivedHistory => 'История получения';
 
   @override
   String get comment_transfer_received_history_screen =>
       '==== Transfer Received History Screen ====';
 
   @override
-  String get transferReceivedHistoryScreenTitle => 'Received History';
+  String get transferReceivedHistoryScreenTitle => 'История получения';
 
   @override
   String get comment_transfer_received_filter_bottom_sheet =>
       '==== Transfer Received Filter Bottom Sheet ====';
 
   @override
-  String get transferReceivedFilterTransactionId => 'Transactions ID';
+  String get transferReceivedFilterTransactionId => 'ID транзакции';
 
   @override
-  String get transferReceivedFilterStatus => 'Status';
+  String get transferReceivedFilterStatus => 'Статус';
 
   @override
-  String get transferReceivedFilterApplyButton => 'Filter';
+  String get transferReceivedFilterApplyButton => 'Фильтр';
 
   @override
-  String get transferReceivedFilterResetButton => 'Reset';
+  String get transferReceivedFilterResetButton => 'Сбросить';
 
   @override
   String get comment_transfer_history_screen =>
       '==== Transfer History Screen ====';
 
   @override
-  String get transferHistoryScreenTitle => 'Transfer History';
+  String get transferHistoryScreenTitle => 'История переводов';
 
   @override
   String get comment_transfer_transaction_filter_bottom_sheet =>
       '==== Transfer Transaction Filter Bottom Sheet ====';
 
   @override
-  String get transferTransactionFilterTransactionId => 'Transactions ID';
+  String get transferTransactionFilterTransactionId => 'ID транзакции';
 
   @override
-  String get transferTransactionFilterStatus => 'Status';
+  String get transferTransactionFilterStatus => 'Статус';
 
   @override
-  String get transferTransactionFilterApplyButton => 'Filter';
+  String get transferTransactionFilterApplyButton => 'Фильтр';
 
   @override
-  String get transferTransactionFilterResetButton => 'Reset';
+  String get transferTransactionFilterResetButton => 'Сбросить';
 
   @override
   String get comment_transfer_amount_step_section =>
       '==== Transfer Amount Step Section ====';
 
   @override
-  String get transferAmountStepSectionRecipientUid => 'Recipient UID';
+  String get transferAmountStepSectionRecipientUid => 'UID получателя';
 
   @override
-  String get transferAmountStepSectionAmount => 'Amount';
+  String get transferAmountStepSectionAmount => 'Сумма';
 
   @override
-  String get transferAmountStepSectionMin => 'Minimum';
+  String get transferAmountStepSectionMin => 'Минимум';
 
   @override
-  String get transferAmountStepSectionMax => 'and Maximum';
+  String get transferAmountStepSectionMax => 'и максимум';
 
   @override
-  String get transferAmountStepSectionTransferMoneyButton => 'Transfer Money';
+  String get transferAmountStepSectionTransferMoneyButton => 'Перевести деньги';
 
   @override
   String get transferAmountStepSectionSavedBeneficiaryButton =>
-      'Saved Beneficiary';
+      'Сохранённый получатель';
 
   @override
   String get transferAmountStepSectionInvalidQrCodeDigits =>
-      'Invalid QR code. Recipient UID must be digits only.';
+      'Неверный QR-код. UID получателя должен состоять только из цифр.';
 
   @override
   String get transferAmountStepSectionInvalidQrCodePrefix =>
-      'Invalid QR code. UID prefix not found.';
+      'Неверный QR-код. Префикс UID не найден.';
 
   @override
-  String get transferAmountStepSectionBeneficiariesTitle => 'Beneficiaries';
+  String get transferAmountStepSectionBeneficiariesTitle => 'Получатели';
 
   @override
-  String get transferAmountStepSectionAddBeneficiary => 'Add Beneficiary';
+  String get transferAmountStepSectionAddBeneficiary => 'Добавить получателя';
 
   @override
   String get transferAmountStepSectionUidLabel => 'UID:';
 
   @override
-  String get transferAmountStepSectionDeleteConfirmationTitle =>
-      'Are you sure?';
+  String get transferAmountStepSectionDeleteConfirmationTitle => 'Вы уверены?';
 
   @override
   String get transferAmountStepSectionDeleteConfirmationMessage =>
-      'You want to delete this beneficiary?';
+      'Удалить этого получателя?';
 
   @override
-  String get transferAmountStepSectionDeleteButton => 'Delete';
+  String get transferAmountStepSectionDeleteButton => 'Удалить';
 
   @override
-  String get transferAmountStepSectionCancelButton => 'Cancel';
+  String get transferAmountStepSectionCancelButton => 'Отмена';
 
   @override
   String get comment_transfer_review_step_section =>
       '==== Transfer Review Step Section ====';
 
   @override
-  String get transferReviewStepSectionTitle => 'Review Details';
+  String get transferReviewStepSectionTitle => 'Проверка данных';
 
   @override
-  String get transferReviewStepSectionAmount => 'Amount';
+  String get transferReviewStepSectionAmount => 'Сумма';
 
   @override
-  String get transferReviewStepSectionWallet => 'Wallet';
+  String get transferReviewStepSectionWallet => 'Кошелёк';
 
   @override
-  String get transferReviewStepSectionRecipientAccount => 'Recipient Account';
+  String get transferReviewStepSectionRecipientAccount => 'Счёт получателя';
 
   @override
-  String get transferReviewStepSectionCharge => 'Charge';
+  String get transferReviewStepSectionCharge => 'Комиссия';
 
   @override
-  String get transferReviewStepSectionTotalAmount => 'Total Amount';
+  String get transferReviewStepSectionTotalAmount => 'Общая сумма';
 
   @override
-  String get transferReviewStepSectionBackButton => 'Back';
+  String get transferReviewStepSectionBackButton => 'Назад';
 
   @override
-  String get transferReviewStepSectionConfirmButton => 'Confirm';
+  String get transferReviewStepSectionConfirmButton => 'Подтвердить';
 
   @override
   String get comment_transfer_success_step_section =>
       '==== Transfer Success Step Section ====';
 
   @override
-  String get transferSuccessStepSectionTitle => 'Transfer Money Success!';
+  String get transferSuccessStepSectionTitle => 'Перевод выполнен!';
 
   @override
-  String get transferSuccessStepSectionAmount => 'Amount';
+  String get transferSuccessStepSectionAmount => 'Сумма';
 
   @override
-  String get transferSuccessStepSectionTransactionId => 'Transection ID';
+  String get transferSuccessStepSectionTransactionId => 'ID транзакции';
 
   @override
-  String get transferSuccessStepSectionWalletName => 'Wallet Name';
+  String get transferSuccessStepSectionWalletName => 'Название кошелька';
 
   @override
-  String get transferSuccessStepSectionPaymentMethod => 'Payment Method';
+  String get transferSuccessStepSectionPaymentMethod => 'Способ оплаты';
 
   @override
-  String get transferSuccessStepSectionDateTime => 'Date & Time';
+  String get transferSuccessStepSectionDateTime => 'Дата и время';
 
   @override
-  String get transferSuccessStepSectionName => 'Name';
+  String get transferSuccessStepSectionName => 'Имя';
 
   @override
-  String get transferSuccessStepSectionCharge => 'Charge';
+  String get transferSuccessStepSectionCharge => 'Комиссия';
 
   @override
-  String get transferSuccessStepSectionTotalAmount => 'Total Amount';
+  String get transferSuccessStepSectionTotalAmount => 'Общая сумма';
 
   @override
-  String get transferSuccessStepSectionTransferAgainButton => 'Transfer Again';
+  String get transferSuccessStepSectionTransferAgainButton => 'Перевести снова';
 
   @override
-  String get transferSuccessStepSectionBackHomeButton => 'Back Home';
+  String get transferSuccessStepSectionBackHomeButton => 'На главную';
 
   @override
   String get comment_transfer_wallet_section =>
       '==== Transfer Wallet Section ====';
 
   @override
-  String get transferWalletSectionBalance => 'Balance';
+  String get transferWalletSectionBalance => 'Баланс';
 
   @override
-  String get transferWalletSectionWalletsNotFound => 'Wallets Not Found';
+  String get transferWalletSectionWalletsNotFound => 'Кошельки не найдены';
 
   @override
   String get comment_wallets_screen => '==== Wallets Screen ====';
 
   @override
-  String get walletsScreenTitle => 'My Wallets';
+  String get walletsScreenTitle => 'Мои кошельки';
 
   @override
   String get comment_delete_wallet_bottom_sheet =>
       '==== Delete Wallet Bottom Sheet ====';
 
   @override
-  String get deleteWalletBottomSheetTitle => 'Are you sure?';
+  String get deleteWalletBottomSheetTitle => 'Вы уверены?';
 
   @override
   String get deleteWalletBottomSheetMessage =>
-      'You want to delete this wallet?';
+      'Вы хотите удалить этот кошелёк?';
 
   @override
-  String get deleteWalletBottomSheetDeleteButton => 'Delete';
+  String get deleteWalletBottomSheetDeleteButton => 'Удалить';
 
   @override
-  String get deleteWalletBottomSheetCancelButton => 'Cancel';
+  String get deleteWalletBottomSheetCancelButton => 'Отмена';
 
   @override
   String get comment_wallet_list_section => '==== Wallet List Section ====';
 
   @override
-  String get walletListSectionTopUpButton => 'Top Up';
+  String get walletListSectionTopUpButton => 'Пополнить';
 
   @override
-  String get walletListSectionWithdrawButton => 'Withdraw';
+  String get walletListSectionWithdrawButton => 'Вывести';
 
   @override
-  String get walletListSectionUserDepositNotEnabled =>
-      'User Deposit Not Enabled';
+  String get walletListSectionUserDepositNotEnabled => 'Пополнение недоступно';
 
   @override
-  String get walletListSectionUserWithdrawNotEnabled =>
-      'User Withdraw Not Enabled';
+  String get walletListSectionUserWithdrawNotEnabled => 'Вывод недоступен';
 
   @override
   String get comment_create_new_wallet_screen =>
       '==== Create New Wallet Screen ====';
 
   @override
-  String get createNewWalletScreenTitle => 'Create New Wallet';
+  String get createNewWalletScreenTitle => 'Создать новый кошелёк';
 
   @override
-  String get createNewWalletCurrency => 'Currency';
+  String get createNewWalletCurrency => 'Валюта';
 
   @override
-  String get createNewWalletSelectCurrency => 'Select Currency';
+  String get createNewWalletSelectCurrency => 'Выберите валюту';
 
   @override
-  String get createNewWalletCurrencyNotFound => 'Currency not found';
+  String get createNewWalletCurrencyNotFound => 'Валюта не найдена';
 
   @override
-  String get createNewWalletCreateButton => 'Create';
+  String get createNewWalletCreateButton => 'Создать';
 
   @override
   String get comment_withdraw_screen => '==== Withdraw Screen ====';
 
   @override
-  String get withdrawScreenTitle => 'Withdraw Money';
+  String get withdrawScreenTitle => 'Вывод денег';
 
   @override
-  String get withdrawScreenAddAccountButton => 'Add Account';
+  String get withdrawScreenAddAccountButton => 'Добавить счёт';
 
   @override
   String get comment_withdraw_history_screen =>
       '==== Withdraw History Screen ====';
 
   @override
-  String get withdrawHistoryScreenTitle => 'Withdraw History';
+  String get withdrawHistoryScreenTitle => 'История выводов';
 
   @override
   String get comment_withdraw_transaction_filter_bottom_sheet =>
       '==== Withdraw Transaction Filter Bottom Sheet ====';
 
   @override
-  String get withdrawTransactionFilterTransactionId => 'Transactions ID';
+  String get withdrawTransactionFilterTransactionId => 'ID транзакции';
 
   @override
-  String get withdrawTransactionFilterStatus => 'Status';
+  String get withdrawTransactionFilterStatus => 'Статус';
 
   @override
-  String get withdrawTransactionFilterApplyButton => 'Filter';
+  String get withdrawTransactionFilterApplyButton => 'Фильтр';
 
   @override
-  String get withdrawTransactionFilterResetButton => 'Reset';
+  String get withdrawTransactionFilterResetButton => 'Сбросить';
 
   @override
   String get comment_delete_account_dropdown_section =>
       '==== Delete Account Dropdown Section ====';
 
   @override
-  String get deleteAccountDropdownTitle => 'Are you sure?';
+  String get deleteAccountDropdownTitle => 'Вы уверены?';
 
   @override
-  String get deleteAccountDropdownMessage => 'You want to delete this account?';
+  String get deleteAccountDropdownMessage => 'Вы хотите удалить этот аккаунт?';
 
   @override
-  String get deleteAccountDropdownDeleteButton => 'Delete';
+  String get deleteAccountDropdownDeleteButton => 'Удалить';
 
   @override
-  String get deleteAccountDropdownCancelButton => 'Cancel';
+  String get deleteAccountDropdownCancelButton => 'Отмена';
 
   @override
   String get comment_withdraw_account_filter_bottom_sheet =>
       '==== Withdraw Account Filter Bottom Sheet ====';
 
   @override
-  String get withdrawAccountFilterMethodName => 'Method Name';
+  String get withdrawAccountFilterMethodName => 'Название способа';
 
   @override
-  String get withdrawAccountFilterApplyButton => 'Filter';
+  String get withdrawAccountFilterApplyButton => 'Фильтр';
 
   @override
   String get comment_withdraw_account_section =>
       '==== Withdraw Account Section ====';
 
   @override
-  String get withdrawAccountSectionTitle => 'All Account';
+  String get withdrawAccountSectionTitle => 'Все счета';
 
   @override
   String get comment_withdraw_amount_step_section =>
       '==== Withdraw Amount Step Section ====';
 
   @override
-  String get withdrawAmountStepSectionWithdrawAccount => 'Withdraw Account';
+  String get withdrawAmountStepSectionWithdrawAccount => 'Счёт для вывода';
 
   @override
-  String get withdrawAmountStepSectionAmount => 'Amount';
+  String get withdrawAmountStepSectionAmount => 'Сумма';
 
   @override
-  String get withdrawAmountStepSectionMin => 'Minimum';
+  String get withdrawAmountStepSectionMin => 'Минимум';
 
   @override
-  String get withdrawAmountStepSectionMax => 'and Maximum';
+  String get withdrawAmountStepSectionMax => 'и максимум';
 
   @override
-  String get withdrawAmountStepSectionWithdrawMoneyButton => 'Withdraw Money';
+  String get withdrawAmountStepSectionWithdrawMoneyButton => 'Вывести деньги';
 
   @override
-  String get withdrawAmountStepSectionWithdrawAccountTitle =>
-      'Withdraw Account';
+  String get withdrawAmountStepSectionWithdrawAccountTitle => 'Счёт для вывода';
 
   @override
   String get withdrawAmountStepSectionNoAccountsFound =>
-      'No withdraw accounts found';
+      'Счета для вывода не найдены';
 
   @override
-  String get withdrawAmountStepSectionCurrencyLabel => 'Currency:';
+  String get withdrawAmountStepSectionCurrencyLabel => 'Валюта:';
 
   @override
-  String get withdrawAmountStepSectionMinDescription => 'Min:';
+  String get withdrawAmountStepSectionMinDescription => 'Мин.:';
 
   @override
-  String get withdrawAmountStepSectionMaxDescription => 'Max:';
+  String get withdrawAmountStepSectionMaxDescription => 'Макс.:';
 
   @override
   String get comment_withdraw_header_section =>
       '==== Withdraw Header Section ====';
 
   @override
-  String get withdrawHeaderSectionTitle => 'Withdraw Money';
+  String get withdrawHeaderSectionTitle => 'Вывод денег';
 
   @override
-  String get withdrawHeaderSectionWithdrawButton => 'Withdraw';
+  String get withdrawHeaderSectionWithdrawButton => 'Вывести';
 
   @override
-  String get withdrawHeaderSectionWithdrawAccountButton => 'Withdraw Account';
+  String get withdrawHeaderSectionWithdrawAccountButton => 'Счёт для вывода';
 
   @override
-  String get withdrawHeaderSectionHistory => 'Withdraw History';
+  String get withdrawHeaderSectionHistory => 'История выводов';
 
   @override
   String get comment_withdraw_review_step_section =>
       '==== Withdraw Review Step Section ====';
 
   @override
-  String get withdrawReviewStepSectionTitle => 'Review Details';
+  String get withdrawReviewStepSectionTitle => 'Проверка данных';
 
   @override
-  String get withdrawReviewStepSectionAmount => 'Amount';
+  String get withdrawReviewStepSectionAmount => 'Сумма';
 
   @override
-  String get withdrawReviewStepSectionCharge => 'Charge';
+  String get withdrawReviewStepSectionCharge => 'Комиссия';
 
   @override
-  String get withdrawReviewStepSectionTotalAmount => 'Total Amount';
+  String get withdrawReviewStepSectionTotalAmount => 'Общая сумма';
 
   @override
-  String get withdrawReviewStepSectionBackButton => 'Back';
+  String get withdrawReviewStepSectionBackButton => 'Назад';
 
   @override
-  String get withdrawReviewStepSectionConfirmButton => 'Confirm';
+  String get withdrawReviewStepSectionConfirmButton => 'Подтвердить';
 
   @override
   String get comment_withdraw_success_step_section =>
       '==== Withdraw Success Step Section ====';
 
   @override
-  String get withdrawSuccessStepSectionTitle => 'Withdraw Money Success!';
+  String get withdrawSuccessStepSectionTitle => 'Вывод выполнен!';
 
   @override
-  String get withdrawSuccessStepSectionAmount => 'Amount';
+  String get withdrawSuccessStepSectionAmount => 'Сумма';
 
   @override
-  String get withdrawSuccessStepSectionTransactionId => 'Transection ID';
+  String get withdrawSuccessStepSectionTransactionId => 'ID транзакции';
 
   @override
-  String get withdrawSuccessStepSectionCharge => 'Charge';
+  String get withdrawSuccessStepSectionCharge => 'Комиссия';
 
   @override
-  String get withdrawSuccessStepSectionTransactionType => 'Transaction Type';
+  String get withdrawSuccessStepSectionTransactionType => 'Тип транзакции';
 
   @override
-  String get withdrawSuccessStepSectionFinalAmount => 'Final Amount';
+  String get withdrawSuccessStepSectionFinalAmount => 'Итоговая сумма';
 
   @override
-  String get withdrawSuccessStepSectionWithdrawAgainButton =>
-      'Withdraw Money Again';
+  String get withdrawSuccessStepSectionWithdrawAgainButton => 'Вывести снова';
 
   @override
-  String get withdrawSuccessStepSectionBackHomeButton => 'Back Home';
+  String get withdrawSuccessStepSectionBackHomeButton => 'На главную';
 
   @override
   String get comment_edit_withdraw_account_screen =>
       '==== Edit Withdraw Account Screen ====';
 
   @override
-  String get editWithdrawAccountTitle => 'Update Withdraw Account';
+  String get editWithdrawAccountTitle => 'Изменить счёт для вывода';
 
   @override
-  String get editWithdrawAccountMethodName => 'Method Name';
+  String get editWithdrawAccountMethodName => 'Название метода';
 
   @override
-  String get editWithdrawAccountMethodNameHint => 'Enter method name';
+  String get editWithdrawAccountMethodNameHint => 'Введите название метода';
 
   @override
-  String get editWithdrawAccountFieldHint => 'Write here...';
+  String get editWithdrawAccountFieldHint => 'Напишите здесь...';
 
   @override
-  String get editWithdrawAccountGenericFieldHint => 'Enter';
+  String get editWithdrawAccountGenericFieldHint => 'Введите';
 
   @override
-  String get editWithdrawAccountUpdateButton => 'Update Account';
+  String get editWithdrawAccountUpdateButton => 'Сохранить счёт';
 
   @override
   String get comment_create_withdraw_account_screen =>
       '==== Create Withdraw Account Screen ====';
 
   @override
-  String get createWithdrawAccountTitle => 'Create Withdraw Account';
+  String get createWithdrawAccountTitle => 'Создать счёт для вывода';
 
   @override
-  String get createWithdrawAccountWallet => 'Wallet';
+  String get createWithdrawAccountWallet => 'Кошелёк';
 
   @override
-  String get createWithdrawAccountWithdrawMethod => 'Withdraw Method';
+  String get createWithdrawAccountWithdrawMethod => 'Метод вывода';
 
   @override
-  String get createWithdrawAccountMethodName => 'Method Name';
+  String get createWithdrawAccountMethodName => 'Название метода';
 
   @override
-  String get createWithdrawAccountCreateButton => 'Create Account';
+  String get createWithdrawAccountCreateButton => 'Создать счёт';
 
   @override
-  String get createWithdrawAccountWalletsNotFound => 'Wallets Not Found';
+  String get createWithdrawAccountWalletsNotFound => 'Кошельки не найдены';
 
   @override
-  String get createWithdrawAccountWithdrawMethodTitle => 'Withdraw Method';
+  String get createWithdrawAccountWithdrawMethodTitle => 'Метод вывода';
 
   @override
   String get createWithdrawAccountWithdrawMethodNotFound =>
-      'Withdraw method not found';
+      'Метод вывода не найден';
 
   @override
-  String get createWithdrawAccountFieldHint => 'Write here...';
+  String get createWithdrawAccountFieldHint => 'Напишите здесь...';
 
   @override
   String get comment_dynamic_attachment_preview =>
       '==== Dynamic Attachment Preview ====';
 
   @override
-  String get dynamicAttachmentPreviewTitle => 'Attachment Preview';
+  String get dynamicAttachmentPreviewTitle => 'Просмотр вложения';
 
   @override
   String get comment_no_internet_connection =>
       '==== No Internet Connection ====';
 
   @override
-  String get noInternetConnectionTitle => 'No Internet Connection';
+  String get noInternetConnectionTitle => 'Нет подключения к интернету';
 
   @override
-  String get noInternetConnectionMessage =>
-      'Please check your network settings';
+  String get noInternetConnectionMessage => 'Проверьте настройки сети';
 
   @override
-  String get noInternetConnectionRetryButton => 'Retry';
+  String get noInternetConnectionRetryButton => 'Повторить';
 
   @override
   String get comment_qr_scanner_screen => '==== QR Scanner Screen ====';
 
   @override
   String get qrScannerScreenInstruction =>
-      'Place QR code within the frame to scan';
+      'Поместите QR-код в рамку для сканирования';
 
   @override
-  String get qrScannerScreenProcessing => 'Processing...';
+  String get qrScannerScreenProcessing => 'Обработка...';
 
   @override
   String get comment_webview_screen => '==== WebView Screen ====';
 
   @override
-  String get webViewScreenPaymentSuccessful => 'Payment Successful!';
+  String get webViewScreenPaymentSuccessful => 'Оплата прошла успешно!';
 
   @override
-  String get webViewScreenPaymentFailed => 'Payment Failed!';
+  String get webViewScreenPaymentFailed => 'Ошибка оплаты!';
 
   @override
-  String get webViewScreenPaymentCancelled => 'Payment was cancelled!';
+  String get webViewScreenPaymentCancelled => 'Оплата отменена!';
 
   @override
   String get comment_common_country_dropdown_bottom_sheet =>
       '==== Common Country Dropdown Bottom Sheet ====';
 
   @override
-  String get commonCountryDropdownSearchHint => 'Search';
+  String get commonCountryDropdownSearchHint => 'Поиск';
 
   @override
-  String get commonCountryDropdownNotFound => 'Country not found';
+  String get commonCountryDropdownNotFound => 'Страна не найдена';
 
   @override
   String get comment_common_dropdown_bottom_sheet =>
       '==== Common Dropdown Bottom Sheet ====';
 
   @override
-  String get commonDropdownSearchHint => 'Search';
+  String get commonDropdownSearchHint => 'Поиск';
 
   @override
   String get comment_common_dropdown_bottom_sheet_three =>
       '==== Common Dropdown Bottom Sheet Three ====';
 
   @override
-  String get commonDropdownThreeSearchHint => 'Search';
+  String get commonDropdownThreeSearchHint => 'Поиск';
 
   @override
   String get comment_common_dropdown_bottom_sheet_two =>
       '==== Common Dropdown Bottom Sheet Two ====';
 
   @override
-  String get commonDropdownTwoSearchHint => 'Search';
+  String get commonDropdownTwoSearchHint => 'Поиск';
 
   @override
   String get comment_common_dropdown_wallet_bottom_sheet =>
       '==== Common Dropdown Wallet Bottom Sheet ====';
 
   @override
-  String get commonDropdownWalletTitle => 'Select Wallet';
+  String get commonDropdownWalletTitle => 'Выберите кошелёк';
 
   @override
   String get comment_image_picker_dropdown_bottom_sheet =>
       '==== Image Picker Dropdown Bottom Sheet ====';
 
   @override
-  String get imagePickerDropdownTitle => 'Select Image Source';
+  String get imagePickerDropdownTitle => 'Выберите источник изображения';
 
   @override
-  String get imagePickerDropdownCamera => 'Camera';
+  String get imagePickerDropdownCamera => 'Камера';
 
   @override
-  String get imagePickerDropdownGallery => 'Gallery';
+  String get imagePickerDropdownGallery => 'Галерея';
 
   @override
   String get comment_multiple_image_picker_dropdown_bottom_sheet =>
       '==== Multiple Image Picker Dropdown Bottom Sheet ====';
 
   @override
-  String get multipleImagePickerDropdownTitle => 'Image Source';
+  String get multipleImagePickerDropdownTitle => 'Источник изображения';
 
   @override
-  String get multipleImagePickerDropdownCamera => 'Camera';
+  String get multipleImagePickerDropdownCamera => 'Камера';
 
   @override
-  String get multipleImagePickerDropdownGallery => 'Gallery';
+  String get multipleImagePickerDropdownGallery => 'Галерея';
 
   @override
   String get comment_navigation_screen => '==== Navigation Screen ====';
 
   @override
-  String get bottomNavHome => 'Home';
+  String get bottomNavHome => 'Главная';
 
   @override
-  String get bottomNavTransfer => 'Transfer';
+  String get bottomNavTransfer => 'Перевод';
 
   @override
-  String get bottomNavGift => 'Gift';
+  String get bottomNavGift => 'Подарки';
 
   @override
-  String get bottomNavSettings => 'Settings';
+  String get bottomNavSettings => 'Настройки';
 
   @override
   String get qrInvalidFormat =>
-      'Invalid QR format. Only AID, MID, or UID codes are accepted.';
+      'Неверный формат QR-кода. Допускаются только коды AID, MID или UID.';
 
   @override
-  String get userTransferNotEnabled => 'User Transfer Not Enabled';
+  String get userTransferNotEnabled => 'Переводы пользователя недоступны';
 
   @override
-  String get userGiftNotEnabled => 'User Gift Not Enabled';
+  String get userGiftNotEnabled => 'Подарки пользователя недоступны';
 
   @override
   String get comment_image_picker_controller =>
       '==== Image Picker Controller ====';
 
   @override
-  String get imagePickerGalleryError => 'Failed to pick image from gallery';
+  String get imagePickerGalleryError =>
+      'Не удалось выбрать изображение из галереи';
 
   @override
-  String get imagePickerCameraError => 'Failed to pick image from camera';
+  String get imagePickerCameraError => 'Не удалось сделать снимок с камеры';
 
   @override
   String get comment_multiple_image_picker_controller =>
@@ -3467,11 +3469,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get multipleImagePickerGalleryError =>
-      'Failed to pick image from gallery';
+      'Не удалось выбрать изображение из галереи';
 
   @override
   String get multipleImagePickerCameraError =>
-      'Failed to pick image from camera';
+      'Не удалось сделать снимок с камеры';
 
   @override
   String get comment_biometric_auth_service =>
@@ -3479,25 +3481,26 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get biometricDeviceNotSupported =>
-      'This device does not support biometrics.';
+      'Это устройство не поддерживает биометрию.';
 
   @override
   String get biometricNotEnrolled =>
-      'No biometric enrolled. Please set up fingerprint';
+      'Биометрия не настроена. Настройте отпечаток пальца';
 
   @override
   String get biometricUnavailable =>
-      'Biometric features are currently unavailable.';
+      'Биометрические функции сейчас недоступны.';
 
   @override
   String get biometricAuthenticationFailed =>
-      'Biometric authentication failed.';
+      'Не удалось пройти биометрическую аутентификацию.';
 
   @override
-  String get biometricCheckFailed => 'Unable to check biometric availability.';
+  String get biometricCheckFailed =>
+      'Не удалось проверить доступность биометрии.';
 
   @override
-  String get biometricAuthReason => 'Authenticate to log in';
+  String get biometricAuthReason => 'Подтвердите вход';
 
   @override
   String get comment_network_service => '==== Network Service ====';
@@ -3524,195 +3527,192 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comment_add_money_controller => '==== Add Money Controller ====';
 
   @override
-  String get addMoneySuccess => 'Money added successfully';
+  String get addMoneySuccess => 'Деньги успешно зачислены';
 
   @override
-  String get addMoneyValidationSelectWallet => 'Please select a wallet';
+  String get addMoneyValidationSelectWallet => 'Выберите кошелёк';
 
   @override
-  String get addMoneyValidationSelectGateway => 'Please select a gateway';
+  String get addMoneyValidationSelectGateway => 'Выберите платёжный шлюз';
 
   @override
-  String get addMoneyValidationEnterAmount => 'Please enter an amount';
+  String get addMoneyValidationEnterAmount => 'Введите сумму';
 
   @override
   String get addMoneyValidationAmountGreaterThanZero =>
-      'Amount must be greater than 0';
+      'Сумма должна быть больше 0';
 
   @override
   String addMoneyValidationAmountMinimum(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Сумма не должна превышать $amount';
   }
 
   @override
   String addMoneyValidationAmountMaximum(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Сумма не должна превышать $amount';
   }
 
   @override
   String addMoneyValidationUploadFile(Object fieldName) {
-    return 'Please upload a file for $fieldName';
+    return 'Загрузите файл для $fieldName';
   }
 
   @override
   String addMoneyValidationFillField(Object fieldName) {
-    return 'Please fill in the $fieldName field';
+    return 'Заполните поле $fieldName';
   }
 
   @override
   String get comment_cash_out_controller => '==== Cash Out Controller ====';
 
   @override
-  String get cashOutValidationSelectWallet => 'Please select a wallet';
+  String get cashOutValidationSelectWallet => 'Выберите кошелёк';
 
   @override
-  String get cashOutValidationEnterAgentAid => 'Please enter an Agent AID';
+  String get cashOutValidationEnterAgentAid => 'Введите AID агента';
 
   @override
-  String get cashOutValidationEnterAmount => 'Please enter an amount';
+  String get cashOutValidationEnterAmount => 'Введите сумму';
 
   @override
   String cashOutValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Минимальная сумма — $amount $currency';
   }
 
   @override
   String cashOutValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Максимальная сумма — $amount $currency';
   }
 
   @override
   String get comment_exchange_controller => '==== Exchange Controller ====';
 
   @override
-  String get exchangeValidationSelectFromWallet =>
-      'Please select a from wallet';
+  String get exchangeValidationSelectFromWallet => 'Выберите исходный кошелёк';
 
   @override
-  String get exchangeValidationSelectToWallet => 'Please select a to wallet';
+  String get exchangeValidationSelectToWallet => 'Выберите целевой кошелёк';
 
   @override
-  String get exchangeValidationEnterAmount => 'Please enter an amount';
+  String get exchangeValidationEnterAmount => 'Введите сумму';
 
   @override
   String exchangeValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Минимальная сумма — $amount $currency';
   }
 
   @override
   String exchangeValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Максимальная сумма — $amount $currency';
   }
 
   @override
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
-    return 'Insufficient balance — available: $amount $currency';
+    return 'Недостаточно средств — доступно: $amount $currency';
   }
 
   @override
   String get exchangeValidationSameWallet =>
-      'From and to currencies must be different.';
+      'Исходная и целевая валюты должны различаться.';
 
   @override
-  String get dashboardReferralInvited => 'Invited';
+  String get dashboardReferralInvited => 'Приглашено';
 
   @override
-  String get dashboardReferralBonus => 'Referral bonus';
+  String get dashboardReferralBonus => 'Реферальный бонус';
 
   @override
   String get comment_create_gift_controller =>
       '==== Create Gift Controller ====';
 
   @override
-  String get createGiftValidationSelectWallet => 'Please select a wallet';
+  String get createGiftValidationSelectWallet => 'Выберите кошелёк';
 
   @override
-  String get createGiftValidationEnterAmount => 'Please enter an amount';
+  String get createGiftValidationEnterAmount => 'Введите сумму';
 
   @override
   String createGiftValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Минимальная сумма — $amount $currency';
   }
 
   @override
   String createGiftValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Максимальная сумма — $amount $currency';
   }
 
   @override
   String get comment_home_controller => '==== Home Controller ====';
 
   @override
-  String get homeLanguageChangeFailed => 'Failed to change language';
+  String get homeLanguageChangeFailed => 'Не удалось изменить язык';
 
   @override
   String get homeBiometricDeviceNotSupported =>
-      'This device does not support biometrics.';
+      'Это устройство не поддерживает биометрию.';
 
   @override
   String get homeBiometricAuthenticationFailed =>
-      'Authentication failed. Biometric setting not changed.';
+      'Аутентификация не пройдена. Настройка биометрии не изменена.';
 
   @override
-  String get homeBiometricEnabledSuccess => 'Biometric enabled successfully';
+  String get homeBiometricEnabledSuccess => 'Биометрия успешно включена';
 
   @override
-  String get homeBiometricDisabledSuccess => 'Biometric disabled successfully';
+  String get homeBiometricDisabledSuccess => 'Биометрия успешно отключена';
 
   @override
-  String get homeBiometricNotFoundTitle => 'Biometric Not Found';
+  String get homeBiometricNotFoundTitle => 'Биометрия не найдена';
 
   @override
   String get homeBiometricNotFoundDescription =>
-      'No fingerprint or biometric is enrolled on this device. You can set it up from the system settings.';
+      'На этом устройстве не настроены отпечаток пальца или биометрия. Вы можете настроить их в системных настройках.';
 
   @override
-  String get homeBiometricOpenSettings => 'Open Security Settings';
+  String get homeBiometricOpenSettings => 'Открыть настройки безопасности';
 
   @override
   String get homeIosBiometricSetup =>
-      'Please go to Settings > Face ID & Passcode to set up biometrics.';
+      'Перейдите в Настройки > Face ID и код-пароль, чтобы настроить биометрию.';
 
   @override
   String get comment_create_invoice_controller =>
       '==== Create Invoice Controller ====';
 
   @override
-  String get createInvoiceValidationEnterInvoiceTo =>
-      'Please enter an invoice to';
+  String get createInvoiceValidationEnterInvoiceTo => 'Укажите плательщика';
 
   @override
-  String get createInvoiceValidationEnterEmailAddress =>
-      'Please enter an email address';
+  String get createInvoiceValidationEnterEmailAddress => 'Введите email';
 
   @override
-  String get createInvoiceValidationEnterAddress => 'Please enter an address';
+  String get createInvoiceValidationEnterAddress => 'Введите адрес';
 
   @override
-  String get createInvoiceValidationSelectWallet => 'Please select a wallet';
+  String get createInvoiceValidationSelectWallet => 'Выберите кошелёк';
 
   @override
-  String get createInvoiceValidationSelectStatus => 'Please select a status';
+  String get createInvoiceValidationSelectStatus => 'Выберите статус';
 
   @override
   String get createInvoiceValidationSelectIssueDate =>
-      'Please select an issue date';
+      'Выберите дату выставления';
 
   @override
   String createInvoiceValidationItemNameRequired(Object itemNumber) {
-    return 'Item $itemNumber: Name is required';
+    return 'Позиция $itemNumber: укажите наименование';
   }
 
   @override
   String createInvoiceValidationItemQuantityGreaterThanZero(Object itemNumber) {
-    return 'Item $itemNumber: Quantity must be greater than 0';
+    return 'Позиция $itemNumber: количество должно быть больше 0';
   }
 
   @override
   String createInvoiceValidationItemUnitPriceGreaterThanZero(
     Object itemNumber,
   ) {
-    return 'Item $itemNumber: Unit Price must be greater than 0';
+    return 'Позиция $itemNumber: цена за единицу должна быть больше 0';
   }
 
   @override
@@ -3720,23 +3720,24 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Make Payment Controller ====';
 
   @override
-  String get makePaymentValidationSelectWallet => 'Please select a wallet';
+  String get makePaymentValidationSelectWallet =>
+      'Пожалуйста, выберите кошелёк';
 
   @override
   String get makePaymentValidationEnterMerchantMid =>
-      'Please enter an merchant mid';
+      'Пожалуйста, введите MID мерчанта';
 
   @override
-  String get makePaymentValidationEnterAmount => 'Please enter an amount';
+  String get makePaymentValidationEnterAmount => 'Пожалуйста, введите сумму';
 
   @override
   String makePaymentValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Минимальная сумма — $amount $currency';
   }
 
   @override
   String makePaymentValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Максимальная сумма — $amount $currency';
   }
 
   @override
@@ -3744,24 +3745,25 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Request Money Controller ====';
 
   @override
-  String get requestMoneyValidationSelectWallet => 'Please select a wallet';
+  String get requestMoneyValidationSelectWallet =>
+      'Пожалуйста, выберите кошелёк';
 
   @override
   String get requestMoneyValidationEnterRecipientUid =>
-      'Please enter an recipient uid';
+      'Пожалуйста, введите UID получателя';
 
   @override
   String get requestMoneyValidationEnterRequestAmount =>
-      'Please enter an request amount';
+      'Пожалуйста, введите сумму запроса';
 
   @override
   String requestMoneyValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Минимальная сумма — $amount $currency';
   }
 
   @override
   String requestMoneyValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Максимальная сумма — $amount $currency';
   }
 
   @override
@@ -3769,13 +3771,13 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Add New Ticket Controller ====';
 
   @override
-  String get addNewTicketSuccess => 'Ticket created successfully';
+  String get addNewTicketSuccess => 'Тикет успешно создан';
 
   @override
-  String get addNewValidationEnterTitle => 'Please enter a title';
+  String get addNewValidationEnterTitle => 'Введите заголовок';
 
   @override
-  String get addNewValidationEnterDescription => 'Please enter a description';
+  String get addNewValidationEnterDescription => 'Введите описание';
 
   @override
   String get comment_change_password_controller =>
@@ -3783,45 +3785,43 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get changePasswordValidationEnterCurrentPassword =>
-      'Please enter an current password';
+      'Введите текущий пароль';
 
   @override
-  String get changePasswordValidationEnterNewPassword =>
-      'Please enter an new password';
+  String get changePasswordValidationEnterNewPassword => 'Введите новый пароль';
 
   @override
   String get changePasswordValidationPasswordMinLength =>
-      'Password must be at least 8 characters';
+      'Пароль должен содержать не менее 8 символов';
 
   @override
   String get changePasswordValidationEnterConfirmPassword =>
-      'Please enter an confirm password';
+      'Введите подтверждение пароля';
 
   @override
   String get changePasswordValidationPasswordsDoNotMatch =>
-      'Passwords do not match';
+      'Пароли не совпадают';
 
   @override
   String get comment_transfer_controller => '==== Transfer Controller ====';
 
   @override
-  String get transferValidationSelectWallet => 'Please select a wallet';
+  String get transferValidationSelectWallet => 'Выберите кошелёк';
 
   @override
-  String get transferValidationEnterRecipientUid =>
-      'Please enter an recipient uid';
+  String get transferValidationEnterRecipientUid => 'Укажите UID получателя';
 
   @override
-  String get transferValidationEnterAmount => 'Please enter an amount';
+  String get transferValidationEnterAmount => 'Укажите сумму';
 
   @override
   String transferValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Минимальная сумма — $amount $currency';
   }
 
   @override
   String transferValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Максимальная сумма — $amount $currency';
   }
 
   @override
@@ -3830,34 +3830,33 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String createWithdrawAccountFileRequiredError(Object fieldName) {
-    return 'File required for $fieldName';
+    return 'Для $fieldName требуется файл';
   }
 
   @override
   String createWithdrawAccountFieldRequiredError(Object fieldName) {
-    return 'Field $fieldName is required';
+    return 'Поле $fieldName обязательно';
   }
 
   @override
-  String get createWithdrawAccountValidationSelectWallet =>
-      'Please select a wallet';
+  String get createWithdrawAccountValidationSelectWallet => 'Выберите кошелёк';
 
   @override
   String get createWithdrawAccountValidationSelectWithdrawMethod =>
-      'Please select a withdraw method';
+      'Выберите метод вывода';
 
   @override
   String get createWithdrawAccountValidationEnterMethodName =>
-      'Please enter an method name';
+      'Введите название метода';
 
   @override
   String createWithdrawAccountValidationUploadFile(Object fieldName) {
-    return 'Please upload a file for $fieldName';
+    return 'Загрузите файл для $fieldName';
   }
 
   @override
   String createWithdrawAccountValidationFillField(Object fieldName) {
-    return 'Please fill in the $fieldName field';
+    return 'Заполните поле $fieldName';
   }
 
   @override
@@ -3865,79 +3864,79 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get withdrawValidationSelectWithdrawAccount =>
-      'Please select a withdraw account';
+      'Выберите счёт для вывода';
 
   @override
-  String get withdrawValidationEnterAmount => 'Please enter an amount';
+  String get withdrawValidationEnterAmount => 'Укажите сумму';
 
   @override
   String withdrawValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Минимальная сумма — $amount $currency';
   }
 
   @override
   String withdrawValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Максимальная сумма — $amount $currency';
   }
 
   @override
   String get comment_airtime_controller => '==== Airtime Controller ====';
 
   @override
-  String get airtimeCountryRequired => 'Please select a Country';
+  String get airtimeCountryRequired => 'Выберите страну';
 
   @override
-  String get airtimeServiceRequired => 'Please select a service';
+  String get airtimeServiceRequired => 'Выберите услугу';
 
   @override
-  String get airtimeAmountRequired => 'Please enter an amount';
+  String get airtimeAmountRequired => 'Введите сумму';
 
   @override
-  String get airtimeAmountValid => 'Please enter a valid amount';
+  String get airtimeAmountValid => 'Введите корректную сумму';
 
   @override
   String airtimeDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Введите $fieldName';
   }
 
   @override
   String get comment_cable_controller => '==== Cable Controller ====';
 
   @override
-  String get cableCountryRequired => 'Please select a Country';
+  String get cableCountryRequired => 'Выберите страну';
 
   @override
-  String get cableServiceRequired => 'Please select a service';
+  String get cableServiceRequired => 'Выберите услугу';
 
   @override
-  String get cableAmountRequired => 'Please enter an amount';
+  String get cableAmountRequired => 'Введите сумму';
 
   @override
-  String get cableAmountValid => 'Please enter a valid amount';
+  String get cableAmountValid => 'Введите корректную сумму';
 
   @override
   String cableDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Введите $fieldName';
   }
 
   @override
   String get comment_toll_controller => '==== Toll Controller ====';
 
   @override
-  String get tollCountryRequired => 'Please select a Country';
+  String get tollCountryRequired => 'Пожалуйста, выберите страну';
 
   @override
-  String get tollServiceRequired => 'Please select a service';
+  String get tollServiceRequired => 'Пожалуйста, выберите услугу';
 
   @override
-  String get tollAmountRequired => 'Please enter an amount';
+  String get tollAmountRequired => 'Пожалуйста, введите сумму';
 
   @override
-  String get tollAmountValid => 'Please enter a valid amount';
+  String get tollAmountValid => 'Пожалуйста, введите корректную сумму';
 
   @override
   String tollDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Пожалуйста, введите $fieldName';
   }
 
   @override
@@ -3945,40 +3944,40 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Electricity Controller ====';
 
   @override
-  String get electricityCountryRequired => 'Please select a Country';
+  String get electricityCountryRequired => 'Выберите страну';
 
   @override
-  String get electricityServiceRequired => 'Please select a service';
+  String get electricityServiceRequired => 'Выберите услугу';
 
   @override
-  String get electricityAmountRequired => 'Please enter an amount';
+  String get electricityAmountRequired => 'Введите сумму';
 
   @override
-  String get electricityAmountValid => 'Please enter a valid amount';
+  String get electricityAmountValid => 'Введите корректную сумму';
 
   @override
   String electricityDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Введите $fieldName';
   }
 
   @override
   String get comment_internet_controller => '==== Internet Controller ====';
 
   @override
-  String get internetCountryRequired => 'Please select a Country';
+  String get internetCountryRequired => 'Выберите страну';
 
   @override
-  String get internetServiceRequired => 'Please select a service';
+  String get internetServiceRequired => 'Пожалуйста, выберите услугу';
 
   @override
-  String get internetAmountRequired => 'Please enter an amount';
+  String get internetAmountRequired => 'Введите сумму';
 
   @override
-  String get internetAmountValid => 'Please enter a valid amount';
+  String get internetAmountValid => 'Введите корректную сумму';
 
   @override
   String internetDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Введите $fieldName';
   }
 
   @override
@@ -3986,521 +3985,520 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Data Bundle Controller ====';
 
   @override
-  String get dataBundleCountryRequired => 'Please select a Country';
+  String get dataBundleCountryRequired => 'Выберите страну';
 
   @override
-  String get dataBundleServiceRequired => 'Please select a service';
+  String get dataBundleServiceRequired => 'Выберите услугу';
 
   @override
-  String get dataBundleAmountRequired => 'Please enter an amount';
+  String get dataBundleAmountRequired => 'Введите сумму';
 
   @override
-  String get dataBundleAmountValid => 'Please enter a valid amount';
+  String get dataBundleAmountValid => 'Введите корректную сумму';
 
   @override
   String dataBundleDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Введите $fieldName';
   }
 
   @override
   String get comment_airtime_screen => '==== Airtime Screen ====';
 
   @override
-  String get airtimeAppBarTitle => 'Airtime';
+  String get airtimeAppBarTitle => 'Мобильная связь';
 
   @override
   String get comment_airtime_amount_section =>
       '==== Airtime Amount Step Section ====';
 
   @override
-  String get airtimeCountryLabel => 'Country';
+  String get airtimeCountryLabel => 'Страна';
 
   @override
-  String get airtimeCountryHint => 'Select Country';
+  String get airtimeCountryHint => 'Выберите страну';
 
   @override
-  String get airtimeCountrySelectTitle => 'Select Country';
+  String get airtimeCountrySelectTitle => 'Выбор страны';
 
   @override
-  String get airtimeCountryNotFound => 'Country Not Found';
+  String get airtimeCountryNotFound => 'Страна не найдена';
 
   @override
-  String get airtimeServiceLabel => 'Service';
+  String get airtimeServiceLabel => 'Услуга';
 
   @override
-  String get airtimeServiceHint => 'Select Service';
+  String get airtimeServiceHint => 'Выберите услугу';
 
   @override
-  String get airtimeServiceSelectTitle => 'Select Service';
+  String get airtimeServiceSelectTitle => 'Выбор услуги';
 
   @override
-  String get airtimeServiceNotFound => 'Service Not Found';
+  String get airtimeServiceNotFound => 'Услуга не найдена';
 
   @override
-  String get airtimeAmountLabel => 'Amount';
+  String get airtimeAmountLabel => 'Сумма';
 
   @override
-  String get airtimePayButton => 'Pay Now';
+  String get airtimePayButton => 'Оплатить';
 
   @override
   String get comment_airtime_review_section =>
       '==== Airtime Review Step Section ====';
 
   @override
-  String get airtimeReviewTitle => 'Review Details';
+  String get airtimeReviewTitle => 'Проверка данных';
 
   @override
-  String get airtimeReviewAmountLabel => 'Amount';
+  String get airtimeReviewAmountLabel => 'Сумма';
 
   @override
-  String get airtimeReviewChargeLabel => 'Charge';
+  String get airtimeReviewChargeLabel => 'Комиссия';
 
   @override
-  String get airtimeReviewConversionRateLabel => 'Conversion Rate';
+  String get airtimeReviewConversionRateLabel => 'Курс конвертации';
 
   @override
-  String get airtimeReviewPayableAmountLabel => 'Payable Amount';
+  String get airtimeReviewPayableAmountLabel => 'Сумма к оплате';
 
   @override
-  String get airtimeReviewBackButton => 'Back';
+  String get airtimeReviewBackButton => 'Назад';
 
   @override
-  String get airtimeReviewConfirmButton => 'Confirm';
+  String get airtimeReviewConfirmButton => 'Подтвердить';
 
   @override
   String get comment_bill_payment_history => '==== Bill Payment History ====';
 
   @override
-  String get billPaymentHistoryTitle => 'Bill Payment History';
+  String get billPaymentHistoryTitle => 'История платежей';
 
   @override
   String get comment_bill_payment_details =>
       '==== Bill Payment Details Sheet ====';
 
   @override
-  String get billPaymentDetailsTitle => 'Bill Payment Details';
+  String get billPaymentDetailsTitle => 'Детали платежа';
 
   @override
-  String get billPaymentDetailsTime => 'Time';
+  String get billPaymentDetailsTime => 'Время';
 
   @override
-  String get billPaymentDetailsAmount => 'Amount';
+  String get billPaymentDetailsAmount => 'Сумма';
 
   @override
-  String get billPaymentDetailsCharge => 'Charge';
+  String get billPaymentDetailsCharge => 'Комиссия';
 
   @override
-  String get billPaymentDetailsMethod => 'Method';
+  String get billPaymentDetailsMethod => 'Способ';
 
   @override
-  String get billPaymentDetailsStatus => 'Status';
+  String get billPaymentDetailsStatus => 'Статус';
 
   @override
   String get comment_cable_screen => '==== Cable Screen ====';
 
   @override
-  String get cableTitle => 'Cable';
+  String get cableTitle => 'Кабельное ТВ';
 
   @override
   String get comment_cable_amount_section =>
       '==== Cable Amount Step Section ====';
 
   @override
-  String get cableCountryLabel => 'Country';
+  String get cableCountryLabel => 'Страна';
 
   @override
-  String get cableCountryHint => 'Select Country';
+  String get cableCountryHint => 'Выберите страну';
 
   @override
-  String get cableCountrySelectTitle => 'Select Country';
+  String get cableCountrySelectTitle => 'Выбор страны';
 
   @override
-  String get cableCountryNotFound => 'Country Not Found';
+  String get cableCountryNotFound => 'Страна не найдена';
 
   @override
-  String get cableServiceLabel => 'Service';
+  String get cableServiceLabel => 'Услуга';
 
   @override
-  String get cableServiceHint => 'Select Service';
+  String get cableServiceHint => 'Выберите услугу';
 
   @override
-  String get cableServiceSelectTitle => 'Select Service';
+  String get cableServiceSelectTitle => 'Выбор услуги';
 
   @override
-  String get cableServiceNotFound => 'Service Not Found';
+  String get cableServiceNotFound => 'Услуга не найдена';
 
   @override
-  String get cableAmountLabel => 'Amount';
+  String get cableAmountLabel => 'Сумма';
 
   @override
-  String get cablePayButton => 'Pay Now';
+  String get cablePayButton => 'Оплатить';
 
   @override
   String get comment_cable_review_section =>
       '==== Cable Review Step Section ====';
 
   @override
-  String get cableReviewTitle => 'Review Details';
+  String get cableReviewTitle => 'Проверка данных';
 
   @override
-  String get cableReviewAmountLabel => 'Amount';
+  String get cableReviewAmountLabel => 'Сумма';
 
   @override
-  String get cableReviewChargeLabel => 'Charge';
+  String get cableReviewChargeLabel => 'Комиссия';
 
   @override
-  String get cableReviewConversionRateLabel => 'Conversion Rate';
+  String get cableReviewConversionRateLabel => 'Курс конвертации';
 
   @override
-  String get cableReviewPayableAmountLabel => 'Payable Amount';
+  String get cableReviewPayableAmountLabel => 'Сумма к оплате';
 
   @override
-  String get cableReviewBackButton => 'Back';
+  String get cableReviewBackButton => 'Назад';
 
   @override
-  String get cableReviewConfirmButton => 'Confirm';
+  String get cableReviewConfirmButton => 'Подтвердить';
 
   @override
   String get comment_toll_screen => '==== Toll Screen ====';
 
   @override
-  String get tollTitle => 'Toll';
+  String get tollTitle => 'Платные дороги';
 
   @override
   String get comment_toll_amount_section =>
       '==== Toll Amount Step Section ====';
 
   @override
-  String get tollCountryLabel => 'Country';
+  String get tollCountryLabel => 'Страна';
 
   @override
-  String get tollCountryHint => 'Select Country';
+  String get tollCountryHint => 'Выберите страну';
 
   @override
-  String get tollCountrySelectTitle => 'Select Country';
+  String get tollCountrySelectTitle => 'Выбор страны';
 
   @override
-  String get tollCountryNotFound => 'Country Not Found';
+  String get tollCountryNotFound => 'Страна не найдена';
 
   @override
-  String get tollServiceLabel => 'Service';
+  String get tollServiceLabel => 'Услуга';
 
   @override
-  String get tollServiceHint => 'Select Service';
+  String get tollServiceHint => 'Выберите услугу';
 
   @override
-  String get tollServiceSelectTitle => 'Select Service';
+  String get tollServiceSelectTitle => 'Выбор услуги';
 
   @override
-  String get tollServiceNotFound => 'Service Not Found';
+  String get tollServiceNotFound => 'Услуга не найдена';
 
   @override
-  String get tollAmountLabel => 'Amount';
+  String get tollAmountLabel => 'Сумма';
 
   @override
-  String get tollPayButton => 'Pay Now';
+  String get tollPayButton => 'Оплатить';
 
   @override
   String get comment_toll_review_section =>
       '==== Toll Review Step Section ====';
 
   @override
-  String get tollReviewTitle => 'Review Details';
+  String get tollReviewTitle => 'Проверка данных';
 
   @override
-  String get tollReviewAmountLabel => 'Amount';
+  String get tollReviewAmountLabel => 'Сумма';
 
   @override
-  String get tollReviewChargeLabel => 'Charge';
+  String get tollReviewChargeLabel => 'Комиссия';
 
   @override
-  String get tollReviewConversionRateLabel => 'Conversion Rate';
+  String get tollReviewConversionRateLabel => 'Курс конверсии';
 
   @override
-  String get tollReviewPayableAmountLabel => 'Payable Amount';
+  String get tollReviewPayableAmountLabel => 'Сумма к оплате';
 
   @override
-  String get tollReviewBackButton => 'Back';
+  String get tollReviewBackButton => 'Назад';
 
   @override
-  String get tollReviewConfirmButton => 'Confirm';
+  String get tollReviewConfirmButton => 'Подтвердить';
 
   @override
   String get comment_electricity_screen => '==== Electricity Screen ====';
 
   @override
-  String get electricityTitle => 'Electricity';
+  String get electricityTitle => 'Электричество';
 
   @override
   String get comment_electricity_amount_section =>
       '==== Electricity Amount Step Section ====';
 
   @override
-  String get electricityCountryLabel => 'Country';
+  String get electricityCountryLabel => 'Страна';
 
   @override
-  String get electricityCountryHint => 'Select Country';
+  String get electricityCountryHint => 'Выберите страну';
 
   @override
-  String get electricityCountrySelectTitle => 'Select Country';
+  String get electricityCountrySelectTitle => 'Выбор страны';
 
   @override
-  String get electricityCountryNotFound => 'Country Not Found';
+  String get electricityCountryNotFound => 'Страна не найдена';
 
   @override
-  String get electricityServiceLabel => 'Service';
+  String get electricityServiceLabel => 'Услуга';
 
   @override
-  String get electricityServiceHint => 'Select Service';
+  String get electricityServiceHint => 'Выберите услугу';
 
   @override
-  String get electricityServiceSelectTitle => 'Select Service';
+  String get electricityServiceSelectTitle => 'Выбор услуги';
 
   @override
-  String get electricityServiceNotFound => 'Service Not Found';
+  String get electricityServiceNotFound => 'Услуга не найдена';
 
   @override
-  String get electricityAmountLabel => 'Amount';
+  String get electricityAmountLabel => 'Сумма';
 
   @override
-  String get electricityPayButton => 'Pay Now';
+  String get electricityPayButton => 'Оплатить';
 
   @override
   String get comment_electricity_review_section =>
       '==== Electricity Review Step Section ====';
 
   @override
-  String get electricityReviewTitle => 'Review Details';
+  String get electricityReviewTitle => 'Проверка данных';
 
   @override
-  String get electricityReviewAmountLabel => 'Amount';
+  String get electricityReviewAmountLabel => 'Сумма';
 
   @override
-  String get electricityReviewChargeLabel => 'Charge';
+  String get electricityReviewChargeLabel => 'Комиссия';
 
   @override
-  String get electricityReviewConversionRateLabel => 'Conversion Rate';
+  String get electricityReviewConversionRateLabel => 'Курс конвертации';
 
   @override
-  String get electricityReviewPayableAmountLabel => 'Payable Amount';
+  String get electricityReviewPayableAmountLabel => 'Сумма к оплате';
 
   @override
-  String get electricityReviewBackButton => 'Back';
+  String get electricityReviewBackButton => 'Назад';
 
   @override
-  String get electricityReviewConfirmButton => 'Confirm';
+  String get electricityReviewConfirmButton => 'Подтвердить';
 
   @override
   String get comment_internet_screen => '==== Internet Screen ====';
 
   @override
-  String get internetTitle => 'Internet';
+  String get internetTitle => 'Интернет';
 
   @override
   String get comment_internet_amount_section =>
       '==== Internet Amount Step Section ====';
 
   @override
-  String get internetCountryLabel => 'Country';
+  String get internetCountryLabel => 'Страна';
 
   @override
-  String get internetCountryHint => 'Select Country';
+  String get internetCountryHint => 'Выберите страну';
 
   @override
-  String get internetCountrySelectTitle => 'Select Country';
+  String get internetCountrySelectTitle => 'Выбор страны';
 
   @override
-  String get internetCountryNotFound => 'Country Not Found';
+  String get internetCountryNotFound => 'Страна не найдена';
 
   @override
-  String get internetServiceLabel => 'Service';
+  String get internetServiceLabel => 'Услуга';
 
   @override
-  String get internetServiceHint => 'Select Service';
+  String get internetServiceHint => 'Выберите услугу';
 
   @override
-  String get internetServiceSelectTitle => 'Select Service';
+  String get internetServiceSelectTitle => 'Выбор услуги';
 
   @override
-  String get internetServiceNotFound => 'Service Not Found';
+  String get internetServiceNotFound => 'Услуга не найдена';
 
   @override
-  String get internetAmountLabel => 'Amount';
+  String get internetAmountLabel => 'Сумма';
 
   @override
-  String get internetPayButton => 'Pay Now';
+  String get internetPayButton => 'Оплатить';
 
   @override
   String get comment_internet_review_section =>
       '==== Internet Review Step Section ====';
 
   @override
-  String get internetReviewTitle => 'Review Details';
+  String get internetReviewTitle => 'Проверка данных';
 
   @override
-  String get internetReviewAmountLabel => 'Amount';
+  String get internetReviewAmountLabel => 'Сумма';
 
   @override
-  String get internetReviewChargeLabel => 'Charge';
+  String get internetReviewChargeLabel => 'Комиссия';
 
   @override
-  String get internetReviewConversionRateLabel => 'Conversion Rate';
+  String get internetReviewConversionRateLabel => 'Курс конверсии';
 
   @override
-  String get internetReviewPayableAmountLabel => 'Payable Amount';
+  String get internetReviewPayableAmountLabel => 'Сумма к оплате';
 
   @override
-  String get internetReviewBackButton => 'Back';
+  String get internetReviewBackButton => 'Назад';
 
   @override
-  String get internetReviewConfirmButton => 'Confirm';
+  String get internetReviewConfirmButton => 'Подтвердить';
 
   @override
   String get comment_data_bundle_screen => '==== Data Bundle Screen ====';
 
   @override
-  String get dataBundleTitle => 'Data Bundle';
+  String get dataBundleTitle => 'Мобильный интернет';
 
   @override
   String get comment_data_bundle_amount_section =>
       '==== Data Bundle Amount Step Section ====';
 
   @override
-  String get dataBundleCountryLabel => 'Country';
+  String get dataBundleCountryLabel => 'Страна';
 
   @override
-  String get dataBundleCountryHint => 'Select Country';
+  String get dataBundleCountryHint => 'Выберите страну';
 
   @override
-  String get dataBundleCountrySelectTitle => 'Select Country';
+  String get dataBundleCountrySelectTitle => 'Выбор страны';
 
   @override
-  String get dataBundleCountryNotFound => 'Country Not Found';
+  String get dataBundleCountryNotFound => 'Страна не найдена';
 
   @override
-  String get dataBundleServiceLabel => 'Service';
+  String get dataBundleServiceLabel => 'Услуга';
 
   @override
-  String get dataBundleServiceHint => 'Select Service';
+  String get dataBundleServiceHint => 'Выберите услугу';
 
   @override
-  String get dataBundleServiceSelectTitle => 'Select Service';
+  String get dataBundleServiceSelectTitle => 'Выбор услуги';
 
   @override
-  String get dataBundleServiceNotFound => 'Service Not Found';
+  String get dataBundleServiceNotFound => 'Услуга не найдена';
 
   @override
-  String get dataBundleAmountLabel => 'Amount';
+  String get dataBundleAmountLabel => 'Сумма';
 
   @override
-  String get dataBundlePayButton => 'Pay Now';
+  String get dataBundlePayButton => 'Оплатить';
 
   @override
   String get comment_data_bundle_review_section =>
       '==== Data Bundle Review Step Section ====';
 
   @override
-  String get dataBundleReviewTitle => 'Review Details';
+  String get dataBundleReviewTitle => 'Проверка данных';
 
   @override
-  String get dataBundleReviewAmountLabel => 'Amount';
+  String get dataBundleReviewAmountLabel => 'Сумма';
 
   @override
-  String get dataBundleReviewChargeLabel => 'Charge';
+  String get dataBundleReviewChargeLabel => 'Комиссия';
 
   @override
-  String get dataBundleReviewConversionRateLabel => 'Conversion Rate';
+  String get dataBundleReviewConversionRateLabel => 'Курс конвертации';
 
   @override
-  String get dataBundleReviewPayableAmountLabel => 'Payable Amount';
+  String get dataBundleReviewPayableAmountLabel => 'Сумма к оплате';
 
   @override
-  String get dataBundleReviewBackButton => 'Back';
+  String get dataBundleReviewBackButton => 'Назад';
 
   @override
-  String get dataBundleReviewConfirmButton => 'Confirm';
+  String get dataBundleReviewConfirmButton => 'Подтвердить';
 
   @override
   String get comment_bill_payment_screen =>
       '==== Bill Payment Main Screen ====';
 
   @override
-  String get billPaymentScreenTitle => 'Bill Payments';
+  String get billPaymentScreenTitle => 'Оплата счетов';
 
   @override
-  String get billPaymentAirtime => 'Airtime';
+  String get billPaymentAirtime => 'Мобильная связь';
 
   @override
-  String get billPaymentElectricity => 'Electricity';
+  String get billPaymentElectricity => 'Электричество';
 
   @override
-  String get billPaymentInternet => 'Internet';
+  String get billPaymentInternet => 'Интернет';
 
   @override
-  String get billPaymentDataBundle => 'Data Bundle';
+  String get billPaymentDataBundle => 'Мобильный интернет';
 
   @override
-  String get billPaymentCables => 'Cables';
+  String get billPaymentCables => 'Кабельное ТВ';
 
   @override
-  String get billPaymentToll => 'Toll';
+  String get billPaymentToll => 'Платные дороги';
 
   @override
   String get comment_create_virtual_card_controller =>
       '==== Create Virtual Card Controller ====';
 
   @override
-  String get createCardProviderRequired => 'Please select card provider';
+  String get createCardProviderRequired => 'Выберите эмитента карты';
 
   @override
-  String get createCardHolderRequired => 'Please select card holder';
+  String get createCardHolderRequired => 'Выберите держателя карты';
 
   @override
-  String get createNameRequired => 'Please enter name';
+  String get createNameRequired => 'Введите имя';
 
   @override
-  String get createEmailRequired => 'Please enter email';
+  String get createEmailRequired => 'Введите email';
 
   @override
-  String get createEmailInvalid => 'Please enter a valid email';
+  String get createEmailInvalid => 'Введите корректный email';
 
   @override
-  String get createPhoneNumberRequired => 'Please enter phone number';
+  String get createPhoneNumberRequired => 'Введите номер телефона';
 
   @override
-  String get createCountryRequired => 'Please select country';
+  String get createCountryRequired => 'Выберите страну';
 
   @override
-  String get createCityRequired => 'Please enter city';
+  String get createCityRequired => 'Введите город';
 
   @override
-  String get createStateRequired => 'Please enter state';
+  String get createStateRequired => 'Введите область / штат';
 
   @override
-  String get createPostalCodeRequired => 'Please enter postal code';
+  String get createPostalCodeRequired => 'Введите почтовый индекс';
 
   @override
-  String get createAddressRequired => 'Please enter address';
+  String get createAddressRequired => 'Введите адрес';
 
   @override
   String get comment_virtual_card_details_controller =>
       '==== Virtual Card Details Controller ====';
 
   @override
-  String get cardDetailsEnterAmount => 'Please enter an amount';
+  String get cardDetailsEnterAmount => 'Введите сумму';
 
   @override
-  String get cardDetailsAmountGreaterThanZero =>
-      'Amount must be greater than 0';
+  String get cardDetailsAmountGreaterThanZero => 'Сумма должна быть больше 0';
 
   @override
   String cardDetailsAmountMinimumLimit(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Сумма не должна превышать $amount';
   }
 
   @override
   String cardDetailsAmountMaximumLimit(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Сумма не должна превышать $amount';
   }
 
   @override
@@ -4508,192 +4506,192 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Card Holder Tab Section ====';
 
   @override
-  String get cardHolderTabExistingCardholders => 'Existing Cardholders';
+  String get cardHolderTabExistingCardholders => 'Существующие держатели';
 
   @override
-  String get cardHolderTabCreateCardholder => 'Create Cardholder';
+  String get cardHolderTabCreateCardholder => 'Создать держателя карты';
 
   @override
   String get comment_choose_card_holder_section =>
       '==== Choose Card Holder Section ====';
 
   @override
-  String get chooseCardHolderLabel => 'Card Holder';
+  String get chooseCardHolderLabel => 'Держатель карты';
 
   @override
-  String get chooseCardHolderDropdownNotFound => 'Card holder not found';
+  String get chooseCardHolderDropdownNotFound => 'Держатель карты не найден';
 
   @override
-  String get chooseCardHolderDropdownTitle => 'Select Card Holder';
+  String get chooseCardHolderDropdownTitle => 'Выберите держателя карты';
 
   @override
-  String get chooseCardHolderButtonCreate => 'Create Now';
+  String get chooseCardHolderButtonCreate => 'Создать сейчас';
 
   @override
   String get comment_choose_card_provider_section =>
       '==== Choose Card Provider Section ====';
 
   @override
-  String get chooseCardProviderLabel => 'Card Provider';
+  String get chooseCardProviderLabel => 'Эмитент карты';
 
   @override
-  String get chooseCardProviderDropdownNotFound => 'Card provider not found';
+  String get chooseCardProviderDropdownNotFound => 'Эмитент карты не найден';
 
   @override
-  String get chooseCardProviderDropdownTitle => 'Select Card Provider';
+  String get chooseCardProviderDropdownTitle => 'Выберите эмитента карты';
 
   @override
   String get comment_create_new_card_holder_section =>
       '==== Create New Card Holder Section ====';
 
   @override
-  String get createCardHolderLabelName => 'Name';
+  String get createCardHolderLabelName => 'Имя';
 
   @override
   String get createCardHolderLabelEmail => 'Email';
 
   @override
-  String get createCardHolderLabelPhoneNumber => 'Phone Number';
+  String get createCardHolderLabelPhoneNumber => 'Номер телефона';
 
   @override
-  String get createCardHolderLabelCountry => 'Country';
+  String get createCardHolderLabelCountry => 'Страна';
 
   @override
-  String get createCardHolderDropdownCountryNotFound => 'Country not found';
+  String get createCardHolderDropdownCountryNotFound => 'Страна не найдена';
 
   @override
-  String get createCardHolderDropdownCountryTitle => 'Select Country';
+  String get createCardHolderDropdownCountryTitle => 'Выберите страну';
 
   @override
-  String get createCardHolderLabelCity => 'City';
+  String get createCardHolderLabelCity => 'Город';
 
   @override
-  String get createCardHolderLabelState => 'State';
+  String get createCardHolderLabelState => 'Область / штат';
 
   @override
-  String get createCardHolderLabelPostalCode => 'Postal Code';
+  String get createCardHolderLabelPostalCode => 'Почтовый индекс';
 
   @override
-  String get createCardHolderLabelAddress => 'Address';
+  String get createCardHolderLabelAddress => 'Адрес';
 
   @override
-  String get createCardHolderButtonCreate => 'Create Now';
+  String get createCardHolderButtonCreate => 'Создать сейчас';
 
   @override
   String get comment_create_virtual_card_screen =>
       '==== Create Virtual Card Screen ====';
 
   @override
-  String get createVirtualCardAppBarTitle => 'Create New Card';
+  String get createVirtualCardAppBarTitle => 'Создать новую карту';
 
   @override
   String get comment_get_card_info_screen => '==== Get Card Info Screen ====';
 
   @override
-  String get getCardInfoAppBarTitle => 'Get Card';
+  String get getCardInfoAppBarTitle => 'Получить карту';
 
   @override
-  String get getCardInfoBenefitsTitle => 'Benefits of virtual cards';
+  String get getCardInfoBenefitsTitle => 'Преимущества виртуальных карт';
 
   @override
-  String get getCardInfoBenefitSecurityTitle => 'Better Security';
+  String get getCardInfoBenefitSecurityTitle => 'Повышенная безопасность';
 
   @override
   String get getCardInfoBenefitSecuritySubtitle =>
-      'Your real card number stays hidden';
+      'Ваш настоящий номер карты остаётся скрытым';
 
   @override
-  String get getCardInfoBenefitShoppingTitle => 'Safe Online Shopping';
+  String get getCardInfoBenefitShoppingTitle => 'Безопасные онлайн-покупки';
 
   @override
   String get getCardInfoBenefitShoppingSubtitle =>
-      'Create virtual cards only for online purchases';
+      'Создавайте виртуальные карты специально для онлайн-покупок';
 
   @override
-  String get getCardInfoBenefitActivationTitle => 'Fast & Easy Activation';
+  String get getCardInfoBenefitActivationTitle => 'Быстрая и простая активация';
 
   @override
   String get getCardInfoBenefitActivationSubtitle =>
-      'No physical delivery needed';
+      'Физическая доставка не требуется';
 
   @override
-  String get getCardInfoButtonContinue => 'Continue';
+  String get getCardInfoButtonContinue => 'Продолжить';
 
   @override
   String get comment_card_details_info => '==== Card Details Info ====';
 
   @override
-  String get cardDetailsInfoTitle => 'Card Details';
+  String get cardDetailsInfoTitle => 'Детали карты';
 
   @override
-  String get cardDetailsCardTypeLabel => 'Card Type';
+  String get cardDetailsCardTypeLabel => 'Тип карты';
 
   @override
-  String get cardDetailsCardTypeValue => 'Virtual';
+  String get cardDetailsCardTypeValue => 'Виртуальная';
 
   @override
-  String get cardDetailsBillingAddressLabel => 'Billing Address';
+  String get cardDetailsBillingAddressLabel => 'Платёжный адрес';
 
   @override
-  String get cardDetailsCardCurrencyLabel => 'Card Currency';
+  String get cardDetailsCardCurrencyLabel => 'Валюта карты';
 
   @override
   String get bsicardsCardDetailsCurrencyValue => 'USD';
 
   @override
-  String get cardDetailsCardCreatedLabel => 'Card Created';
+  String get cardDetailsCardCreatedLabel => 'Карта создана';
 
   @override
-  String get cardDetailsStatusButtonActive => 'Active';
+  String get cardDetailsStatusButtonActive => 'Активна';
 
   @override
-  String get cardDetailsStatusButtonInactive => 'Inactive';
+  String get cardDetailsStatusButtonInactive => 'Неактивна';
 
   @override
   String get comment_card_top_up_bottom_sheet =>
       '==== Card Top Up Bottom Sheet ====';
 
   @override
-  String get cardTopUpTitle => 'Card Balance Top Up';
+  String get cardTopUpTitle => 'Пополнение баланса карты';
 
   @override
-  String get cardTopUpMainWalletBalance => 'Main Wallet Balance';
+  String get cardTopUpMainWalletBalance => 'Баланс основного кошелька';
 
   @override
-  String get cardTopUpLabelAmount => 'Amount';
+  String get cardTopUpLabelAmount => 'Сумма';
 
   @override
   String cardTopUpAmountLimits(Object currency, Object max, Object min) {
-    return 'Minimum $min $currency Maximum $max $currency';
+    return 'Минимум $min $currency, максимум $max $currency';
   }
 
   @override
-  String get cardTopUpReviewTopupAmount => 'Topup Amount';
+  String get cardTopUpReviewTopupAmount => 'Сумма пополнения';
 
   @override
-  String get cardTopUpReviewTopupCharge => 'Topup Charge';
+  String get cardTopUpReviewTopupCharge => 'Комиссия за пополнение';
 
   @override
-  String get cardTopUpReviewTotalTopupBalance => 'Total Amount';
+  String get cardTopUpReviewTotalTopupBalance => 'Итоговая сумма';
 
   @override
-  String get cardTopUpButtonTopupNow => 'Topup Now';
+  String get cardTopUpButtonTopupNow => 'Пополнить сейчас';
 
   @override
   String get bsicardsTopUpInfoMessage =>
-      'Please send your funds to the provided crypto address. Once your transaction is confirmed, the balance will be added to your card.';
+      'Отправьте средства на указанный криптоадрес. После подтверждения транзакции баланс будет зачислен на вашу карту.';
 
   @override
-  String get bsicardsTopUpCopyButton => 'Copy';
+  String get bsicardsTopUpCopyButton => 'Копировать';
 
   @override
-  String get bsicardsTopUpCopySuccess => 'Address copied';
+  String get bsicardsTopUpCopySuccess => 'Адрес скопирован';
 
   @override
   String get comment_virtual_card_display => '==== Virtual Card Display ====';
 
   @override
-  String get virtualCardExpiryDateLabel => 'Expiry Date';
+  String get virtualCardExpiryDateLabel => 'Срок действия';
 
   @override
   String get virtualCardCvcLabel => 'CVC';
@@ -4703,160 +4701,159 @@ class AppLocalizationsRu extends AppLocalizations {
       '==== Virtual Card Details Screen ====';
 
   @override
-  String get virtualCardDetailsAppBarTitle => 'Virtual Card Details';
+  String get virtualCardDetailsAppBarTitle => 'Данные виртуальной карты';
 
   @override
-  String get virtualCardDetailsFloatingButton => 'Add Balance';
+  String get virtualCardDetailsFloatingButton => 'Пополнить баланс';
 
   @override
   String get comment_virtual_card_transaction_screen =>
       '==== Virtual Card Transaction Screen ====';
 
   @override
-  String get virtualCardTransactionAppBarTitle => 'Card Transactions';
+  String get virtualCardTransactionAppBarTitle => 'Операции по карте';
 
   @override
-  String get virtualCardTransactionSyncButton => 'Sync';
+  String get virtualCardTransactionSyncButton => 'Синхронизировать';
 
   @override
   String get comment_virtual_card_screen => '==== Virtual Card Screen ====';
 
   @override
-  String get virtualCardScreenAppBarTitle => 'Virtual Cards';
+  String get virtualCardScreenAppBarTitle => 'Виртуальные карты';
 
   @override
-  String get virtualCardCardExpiryDateLabel => 'Expiry Date';
+  String get virtualCardCardExpiryDateLabel => 'Срок действия';
 
   @override
   String get virtualCardCardCvcLabel => 'CVC';
 
   @override
   String get virtualCardCreateCardTitle =>
-      'Create your virtual card to get started';
+      'Создайте виртуальную карту, чтобы начать';
 
   @override
-  String get virtualCardCreateCardButton => 'Create Card';
+  String get virtualCardCreateCardButton => 'Создать карту';
 
   @override
   String get comment_verify_passcode_controller =>
       '==== Verify Passcode Controller ====';
 
   @override
-  String get verifyPasscodeValidationEnterPasscode =>
-      'Please enter your passcode';
+  String get verifyPasscodeValidationEnterPasscode => 'Введите пароль';
 
   @override
   String get comment_change_passcode_bottom_sheet =>
       '==== Change Passcode Bottom Sheet ====';
 
   @override
-  String get changePasscodeTitle => 'Change Passcode';
+  String get changePasscodeTitle => 'Изменение код-пароля';
 
   @override
-  String get changePasscodeLabelOldPasscode => 'Old Passcode';
+  String get changePasscodeLabelOldPasscode => 'Старый код-пароль';
 
   @override
-  String get changePasscodeLabelNewPasscode => 'New Passcode';
+  String get changePasscodeLabelNewPasscode => 'Новый код-пароль';
 
   @override
-  String get changePasscodeLabelConfirmPasscode => 'Confirm Passcode';
+  String get changePasscodeLabelConfirmPasscode => 'Подтвердите код-пароль';
 
   @override
-  String get changePasscodeButtonChange => 'Change Passcode';
+  String get changePasscodeButtonChange => 'Изменить код-пароль';
 
   @override
   String get comment_disable_and_change_passcode_section =>
       '==== Disable and Change Passcode Section ====';
 
   @override
-  String get disableChangePasscodeTitle => 'Passcode';
+  String get disableChangePasscodeTitle => 'Код-пароль';
 
   @override
-  String get disableChangePasscodeButtonChange => 'Change Passcode';
+  String get disableChangePasscodeButtonChange => 'Изменить код-пароль';
 
   @override
-  String get disableChangePasscodeButtonDisable => 'Disable Passcode';
+  String get disableChangePasscodeButtonDisable => 'Отключить код-пароль';
 
   @override
   String get comment_disable_passcode_bottom_sheet =>
       '==== Disable Passcode Bottom Sheet ====';
 
   @override
-  String get disablePasscodeTitle => 'Disable Passcode';
+  String get disablePasscodeTitle => 'Отключение код-пароля';
 
   @override
-  String get disablePasscodeLabelPassword => 'Password';
+  String get disablePasscodeLabelPassword => 'Пароль';
 
   @override
-  String get disablePasscodeButtonDisable => 'Disable Passcode';
+  String get disablePasscodeButtonDisable => 'Отключить код-пароль';
 
   @override
   String get comment_generate_passcode_bottom_sheet =>
       '==== Generate Passcode Bottom Sheet ====';
 
   @override
-  String get generatePasscodeTitle => 'Add Passcode';
+  String get generatePasscodeTitle => 'Добавить код-пароль';
 
   @override
-  String get generatePasscodeLabelPasscode => 'Passcode';
+  String get generatePasscodeLabelPasscode => 'Код-пароль';
 
   @override
-  String get generatePasscodeLabelConfirmPasscode => 'Confirm Passcode';
+  String get generatePasscodeLabelConfirmPasscode => 'Подтвердите код-пароль';
 
   @override
-  String get generatePasscodeButtonConfirm => 'Confirm';
+  String get generatePasscodeButtonConfirm => 'Подтвердить';
 
   @override
   String get comment_generate_passcode_section =>
       '==== Generate Passcode Section ====';
 
   @override
-  String get generatePasscodeSectionTitle => 'Passcode';
+  String get generatePasscodeSectionTitle => 'Код-пароль';
 
   @override
   String get generatePasscodeSectionDescription =>
-      'Create a secure passcode for quick access to your account';
+      'Создайте безопасный код-пароль для быстрого доступа к аккаунту';
 
   @override
-  String get generatePasscodeSectionButtonGenerate => 'Generate Passcode';
+  String get generatePasscodeSectionButtonGenerate => 'Создать код-пароль';
 
   @override
   String get comment_verify_passcode_bottom_sheet =>
       '==== Verify Passcode Bottom Sheet ====';
 
   @override
-  String get verifyPasscodeTitle => 'Confirm Your Passcode';
+  String get verifyPasscodeTitle => 'Подтвердите пароль';
 
   @override
-  String get verifyPasscodeLabelPasscode => 'Passcode';
+  String get verifyPasscodeLabelPasscode => 'Пароль';
 
   @override
-  String get verifyPasscodeButtonConfirm => 'Confirm';
+  String get verifyPasscodeButtonConfirm => 'Подтвердить';
 
   @override
   String get comment_payment_links_amount_section =>
       '==== Payment Links Amount Section ====';
 
   @override
-  String get paymentLinksAmountSectionTitle => 'Amount';
+  String get paymentLinksAmountSectionTitle => 'Сумма';
 
   @override
-  String get paymentLinksCurrencyLabel => 'Currency';
+  String get paymentLinksCurrencyLabel => 'Валюта';
 
   @override
-  String get paymentLinksCurrencyHint => 'Select Currency';
+  String get paymentLinksCurrencyHint => 'Выберите валюту';
 
   @override
-  String get paymentLinksCurrencyDropdownTitle => 'Currency';
+  String get paymentLinksCurrencyDropdownTitle => 'Валюта';
 
   @override
-  String get paymentLinksCurrencyNotFound => 'Currency Not Found';
+  String get paymentLinksCurrencyNotFound => 'Валюта не найдена';
 
   @override
-  String get paymentLinksNoteLabel => 'Note';
+  String get paymentLinksNoteLabel => 'Примечание';
 
   @override
-  String get paymentLinksCreateLinkButton => 'Create Link';
+  String get paymentLinksCreateLinkButton => 'Создать ссылку';
 
   @override
   String get comment_payment_links_create_section =>
@@ -4864,190 +4861,190 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paymentLinksInstructionText =>
-      'You can create a payment link without specifying an amount or currency. The payer can fill up account, currency while making the payment.';
+      'Вы можете создать платёжную ссылку без указания суммы и валюты. Плательщик сможет указать счёт и валюту при оплате.';
 
   @override
   String get comment_payment_links_header_section =>
       '==== Payment Links Header Section ====';
 
   @override
-  String get paymentLinksAppBarTitle => 'Payment Links';
+  String get paymentLinksAppBarTitle => 'Платёжные ссылки';
 
   @override
-  String get paymentLinksTabList => 'List';
+  String get paymentLinksTabList => 'Список';
 
   @override
-  String get paymentLinksTabCreate => 'Create';
+  String get paymentLinksTabCreate => 'Создание';
 
   @override
   String get comment_payment_links_history_filter_bottom_sheet =>
       '==== Payment Links History Filter Bottom Sheet ====';
 
   @override
-  String get paymentLinksFilterNumberLabel => 'Number';
+  String get paymentLinksFilterNumberLabel => 'Номер';
 
   @override
-  String get paymentLinksFilterButton => 'Filter';
+  String get paymentLinksFilterButton => 'Фильтр';
 
   @override
   String get comment_payment_links_list_section =>
       '==== Payment Links List Section ====';
 
   @override
-  String get paymentLinksListItemCreatedAt => 'Create At: ';
+  String get paymentLinksListItemCreatedAt => 'Создано: ';
 
   @override
-  String get paymentLinksListItemStatus => 'Status: ';
+  String get paymentLinksListItemStatus => 'Статус: ';
 
   @override
-  String get paymentLinksStatusPaid => 'Paid';
+  String get paymentLinksStatusPaid => 'Оплачена';
 
   @override
-  String get paymentLinksStatusUnpaid => 'Unpaid';
+  String get paymentLinksStatusUnpaid => 'Не оплачена';
 
   @override
-  String get paymentLinksCopySuccessToast => 'Payment Link Code Copied';
+  String get paymentLinksCopySuccessToast => 'Код платёжной ссылки скопирован';
 
   @override
   String get comment_gift_card_header_section =>
       '---- Gift Card Header Section ----';
 
   @override
-  String get giftCardHeaderTitle => 'Gift Card';
+  String get giftCardHeaderTitle => 'Подарочная карта';
 
   @override
-  String get giftCardHeaderTabCards => 'Cards';
+  String get giftCardHeaderTabCards => 'Карты';
 
   @override
-  String get giftCardHeaderTabHistory => 'History';
+  String get giftCardHeaderTabHistory => 'История';
 
   @override
   String get comment_gift_card_history_filter_bottom_sheet =>
       '---- Gift Card History Filter Bottom Sheet ----';
 
   @override
-  String get giftCardHistoryFilterSearchLabel => 'Search';
+  String get giftCardHistoryFilterSearchLabel => 'Поиск';
 
   @override
-  String get giftCardHistoryFilterSearchButton => 'Search';
+  String get giftCardHistoryFilterSearchButton => 'Поиск';
 
   @override
   String get comment_gift_card_filter_bottom_sheet =>
       '---- Gift Card Filter Bottom Sheet ----';
 
   @override
-  String get giftCardFilterGiftCardLabel => 'Gift Card';
+  String get giftCardFilterGiftCardLabel => 'Подарочная карта';
 
   @override
-  String get giftCardFilterCountryLabel => 'Country';
+  String get giftCardFilterCountryLabel => 'Страна';
 
   @override
-  String get giftCardFilterCountrySelectTitle => 'Select Country';
+  String get giftCardFilterCountrySelectTitle => 'Выбор страны';
 
   @override
-  String get giftCardFilterAllOption => 'All';
+  String get giftCardFilterAllOption => 'Все';
 
   @override
-  String get giftCardFilterCountryNotFound => 'Country not found';
+  String get giftCardFilterCountryNotFound => 'Страна не найдена';
 
   @override
-  String get giftCardFilterCategoryLabel => 'Category';
+  String get giftCardFilterCategoryLabel => 'Категория';
 
   @override
-  String get giftCardFilterCategorySelectTitle => 'Select Category';
+  String get giftCardFilterCategorySelectTitle => 'Выбор категории';
 
   @override
-  String get giftCardFilterCategoryNotFound => 'Category not found';
+  String get giftCardFilterCategoryNotFound => 'Категория не найдена';
 
   @override
-  String get giftCardFilterSearchButton => 'Search';
+  String get giftCardFilterSearchButton => 'Поиск';
 
   @override
   String get comment_gift_card_history_details =>
       '---- Gift Card History Details ----';
 
   @override
-  String get giftCardHistoryDetailsTitle => 'Transaction Details';
+  String get giftCardHistoryDetailsTitle => 'Детали транзакции';
 
   @override
   String giftCardHistoryQtyLabel(Object qty) {
-    return 'QTY : $qty';
+    return 'Кол-во: $qty';
   }
 
   @override
-  String get giftCardTransactionIdLabel => 'Transaction ID';
+  String get giftCardTransactionIdLabel => 'ID транзакции';
 
   @override
-  String get giftCardProductNameLabel => 'Product Name';
+  String get giftCardProductNameLabel => 'Название продукта';
 
   @override
-  String get giftCardSenderNameLabel => 'Sender Name';
+  String get giftCardSenderNameLabel => 'Имя отправителя';
 
   @override
-  String get giftCardRecipientEmailLabel => 'Recipient Email';
+  String get giftCardRecipientEmailLabel => 'Email получателя';
 
   @override
-  String get giftCardRecipientPhoneLabel => 'Recipient Phone';
+  String get giftCardRecipientPhoneLabel => 'Телефон получателя';
 
   @override
-  String get giftCardUnitPriceLabel => 'Unit Price';
+  String get giftCardUnitPriceLabel => 'Цена за единицу';
 
   @override
-  String get giftCardTotalAmountLabel => 'Total Amount';
+  String get giftCardTotalAmountLabel => 'Итоговая сумма';
 
   @override
   String get comment_gift_card_review_details =>
       '---- Gift Card Review Details ----';
 
   @override
-  String get giftCardReviewDetailsTitle => 'Review Details';
+  String get giftCardReviewDetailsTitle => 'Проверка данных';
 
   @override
-  String get giftCardSubTotalLabel => 'Sub Total';
+  String get giftCardSubTotalLabel => 'Подытог';
 
   @override
-  String get giftCardTotalFeeLabel => 'Total Fee';
+  String get giftCardTotalFeeLabel => 'Общая комиссия';
 
   @override
-  String get giftCardTotalLabel => 'Total';
+  String get giftCardTotalLabel => 'Итого';
 
   @override
-  String get giftCardReviewBackButton => 'Back';
+  String get giftCardReviewBackButton => 'Назад';
 
   @override
-  String get giftCardReviewPayNowButton => 'Pay Now';
+  String get giftCardReviewPayNowButton => 'Оплатить';
 
   @override
   String get comment_gift_card_success_section =>
       '---- Gift Card Success Section ----';
 
   @override
-  String get giftCardSuccessTitle => 'Gift Card Order Successfully Placed!';
+  String get giftCardSuccessTitle => 'Заказ подарочной карты успешно оформлен!';
 
   @override
-  String get giftCardSuccessGiftCardsButton => 'Gift Cards';
+  String get giftCardSuccessGiftCardsButton => 'Подарочные карты';
 
   @override
-  String get giftCardSuccessBackHomeButton => 'Back Home';
+  String get giftCardSuccessBackHomeButton => 'На главную';
 
   @override
   String get comment_gift_card_amount_validation =>
       '---- Gift Card Controller Amount Validation ----';
 
   @override
-  String get giftCardAmountRequired => 'Please enter an amount';
+  String get giftCardAmountRequired => 'Введите сумму';
 
   @override
-  String get giftCardAmountInvalid => 'Amount must be greater than zero';
+  String get giftCardAmountInvalid => 'Сумма должна быть больше нуля';
 
   @override
   String giftCardAmountMinError(Object min) {
-    return 'Amount must not exceed $min';
+    return 'Сумма не должна превышать $min';
   }
 
   @override
   String giftCardAmountMaxError(Object max) {
-    return 'Amount must not exceed $max';
+    return 'Сумма не должна превышать $max';
   }
 
   @override
@@ -5055,212 +5052,212 @@ class AppLocalizationsRu extends AppLocalizations {
       '---- Gift Card Controller User Validation ----';
 
   @override
-  String get giftCardEmailRequired => 'Please enter an email';
+  String get giftCardEmailRequired => 'Введите email';
 
   @override
-  String get giftCardEmailInvalid => 'Please enter a valid email';
+  String get giftCardEmailInvalid => 'Введите корректный email';
 
   @override
-  String get giftCardCountryRequired => 'Please select a country';
+  String get giftCardCountryRequired => 'Выберите страну';
 
   @override
-  String get giftCardPhoneRequired => 'Please enter a phone';
+  String get giftCardPhoneRequired => 'Введите номер телефона';
 
   @override
-  String get giftCardNameRequired => 'Please enter a name';
+  String get giftCardNameRequired => 'Введите имя';
 
   @override
   String get comment_gift_card_details_section =>
       '---- Gift Card Details Section ----';
 
   @override
-  String get giftCardDetailsTitle => 'Gift Card Details';
+  String get giftCardDetailsTitle => 'Детали подарочной карты';
 
   @override
-  String get giftCardAmountLabel => 'Amount';
+  String get giftCardAmountLabel => 'Сумма';
 
   @override
   String giftCardAmountBetweenLabel(Object currency, Object max, Object min) {
-    return 'Amount between $min $currency and $max $currency';
+    return 'Сумма от $min $currency до $max $currency';
   }
 
   @override
   String get giftCardEmailLabel => 'Email';
 
   @override
-  String get giftCardCountryLabel => 'Country';
+  String get giftCardCountryLabel => 'Страна';
 
   @override
-  String get giftCardSelectCountryTitle => 'Select Country';
+  String get giftCardSelectCountryTitle => 'Выбор страны';
 
   @override
-  String get giftCardCountryNotFound => 'Country not found';
+  String get giftCardCountryNotFound => 'Страна не найдена';
 
   @override
-  String get giftCardPhoneLabel => 'Phone';
+  String get giftCardPhoneLabel => 'Телефон';
 
   @override
-  String get giftCardYourNameLabel => 'Your Name';
+  String get giftCardYourNameLabel => 'Ваше имя';
 
   @override
-  String get giftCardQuantityLabel => 'Quantity';
+  String get giftCardQuantityLabel => 'Количество';
 
   @override
-  String get giftCardBuyNowButton => 'Buy Now';
+  String get giftCardBuyNowButton => 'Купить сейчас';
 
   @override
-  String get giftCardRedeemInstructionTitle => 'Redeem Instruction';
+  String get giftCardRedeemInstructionTitle => 'Инструкция по активации';
 
   @override
   String get comment_p2p => '==== P2P ====';
 
   @override
-  String get p2pMyOrder => 'My Order';
+  String get p2pMyOrder => 'Мой заказ';
 
   @override
-  String get p2pPaymentAccount => 'Payment Account';
+  String get p2pPaymentAccount => 'Платёжный счёт';
 
   @override
-  String get p2pCreateAd => 'Create Ad';
+  String get p2pCreateAd => 'Создать объявление';
 
   @override
-  String get p2pApplyVerification => 'Apply Verification';
+  String get p2pApplyVerification => 'Подать заявку на верификацию';
 
   @override
   String get p2pP2p => 'P2P';
 
   @override
-  String get p2pMyOrders => 'My Orders';
+  String get p2pMyOrders => 'Мои заказы';
 
   @override
-  String get p2pPaymentAccounts => 'Payment Accounts';
+  String get p2pPaymentAccounts => 'Платёжные счета';
 
   @override
-  String get p2pMyAds => 'My Ads';
+  String get p2pMyAds => 'Мои объявления';
 
   @override
-  String get p2pSelectAsset => 'Select Asset';
+  String get p2pSelectAsset => 'Выберите актив';
 
   @override
-  String get p2pSelectFiat => 'Select Fiat';
+  String get p2pSelectFiat => 'Выберите фиат';
 
   @override
-  String get p2pBuy => 'Buy';
+  String get p2pBuy => 'Купить';
 
   @override
-  String get p2pSell => 'Sell';
+  String get p2pSell => 'Продать';
 
   @override
-  String get p2pAmount => 'Amount';
+  String get p2pAmount => 'Сумма';
 
   @override
-  String get p2pPayment => 'Payment';
+  String get p2pPayment => 'Оплата';
 
   @override
-  String get p2pOrders => 'Orders';
+  String get p2pOrders => 'Заказы';
 
   @override
-  String get p2pCompletion => 'Completion';
+  String get p2pCompletion => 'Завершённость';
 
   @override
-  String get p2pLimit => 'Limit';
+  String get p2pLimit => 'Лимит';
 
   @override
-  String get p2pAvailable => 'Available';
+  String get p2pAvailable => 'Доступно';
 
   @override
-  String get p2pOrderDetails => 'Order Details';
+  String get p2pOrderDetails => 'Детали заказа';
 
   @override
-  String get p2pNoOrderDetailsFound => 'No order details found';
+  String get p2pNoOrderDetailsFound => 'Данные заказа не найдены';
 
   @override
-  String get p2pNoAdDetailsFound => 'No ad details found';
+  String get p2pNoAdDetailsFound => 'Данные объявления не найдены';
 
   @override
-  String get p2pPrice => 'Price';
+  String get p2pPrice => 'Цена';
 
   @override
-  String get p2pOrderLimit => 'Order Limit';
+  String get p2pOrderLimit => 'Лимит заказа';
 
   @override
-  String get p2pYouPay => 'You Pay';
+  String get p2pYouPay => 'Вы платите';
 
   @override
-  String get p2pYouSell => 'You Sell';
+  String get p2pYouSell => 'Вы продаёте';
 
   @override
-  String get p2pYouReceive => 'You Receive';
+  String get p2pYouReceive => 'Вы получаете';
 
   @override
-  String get p2pPaymentMethods => 'Payment Methods';
+  String get p2pPaymentMethods => 'Способы оплаты';
 
   @override
-  String get p2pLoadingPaymentMethods => 'Loading payment methods...';
+  String get p2pLoadingPaymentMethods => 'Загрузка способов оплаты...';
 
   @override
-  String get p2pSelectPaymentMethod => 'Select Payment Method';
+  String get p2pSelectPaymentMethod => 'Выберите способ оплаты';
 
   @override
-  String get p2pNoPaymentMethodFound => 'No payment method found';
+  String get p2pNoPaymentMethodFound => 'Способ оплаты не найден';
 
   @override
   String get p2pAdvertisersTerms =>
-      'Advertisers\' Terms (Please read carefully)';
+      'Условия для рекламодателей (пожалуйста, прочитайте внимательно)';
 
   @override
-  String get p2pPaymentTimeLimit => 'Payment Time Limit';
+  String get p2pPaymentTimeLimit => 'Срок оплаты';
 
   @override
-  String get p2pAvgReleaseTime => 'Avg. Release Time';
+  String get p2pAvgReleaseTime => 'Ср. время высвобождения';
 
   @override
-  String get p2pNoTermsProvided => 'No terms provided';
+  String get p2pNoTermsProvided => 'Условия не указаны';
 
   @override
-  String get p2pOrderNumber => 'Order number';
+  String get p2pOrderNumber => 'Номер заказа';
 
   @override
-  String get p2pSearchOrderNumber => 'Search Order number';
+  String get p2pSearchOrderNumber => 'Поиск по номеру заказа';
 
   @override
-  String get p2pOrderNumberCopied => 'Order number copied';
+  String get p2pOrderNumberCopied => 'Номер заказа скопирован';
 
   @override
-  String get p2pCopied => 'Copied';
+  String get p2pCopied => 'Скопировано';
 
   @override
-  String get p2pOrderCreated => 'Order Created';
+  String get p2pOrderCreated => 'Заказ создан';
 
   @override
-  String get p2pFiatAmount => 'Fiat Amount';
+  String get p2pFiatAmount => 'Сумма в фиате';
 
   @override
-  String get p2pReceiveQuantity => 'Receive Quantity';
+  String get p2pReceiveQuantity => 'Количество к получению';
 
   @override
-  String get p2pPaymentMethod => 'Payment Method';
+  String get p2pPaymentMethod => 'Способ оплаты';
 
   @override
-  String get p2pChange => 'Change';
+  String get p2pChange => 'Изменить';
 
   @override
-  String get p2pRecipient => 'Recipient';
+  String get p2pRecipient => 'Получатель';
 
   @override
-  String get p2pView => 'View';
+  String get p2pView => 'Просмотр';
 
   @override
-  String get p2pFilterAmount => 'Filter Amount';
+  String get p2pFilterAmount => 'Фильтр по сумме';
 
   @override
-  String get p2pEnterAmount => 'Enter Amount';
+  String get p2pEnterAmount => 'Введите сумму';
 
   @override
-  String get p2pFilterPaymentMethod => 'Filter Payment Method';
+  String get p2pFilterPaymentMethod => 'Фильтр по способу оплаты';
 
   @override
-  String get p2pUnableToLoadImage => 'Unable to load image';
+  String get p2pUnableToLoadImage => 'Не удалось загрузить изображение';
 
   @override
   String get p2pFieldRequired => 'Это поле обязательно';
@@ -5285,7 +5282,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get p2pInPerson => 'Обмен при встрече';
 
   @override
-  String get p2pMinutes => 'Minutes';
+  String get p2pMinutes => 'Минут';
 
   @override
   String get p2pNoPaymentMethodFound2 => 'Способ оплаты не найден';
@@ -5306,482 +5303,486 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get p2pUnableToLoadAttachment => 'Unable to load attachment';
+  String get p2pUnableToLoadAttachment => 'Не удалось загрузить вложение';
 
   @override
-  String get p2pTransferredNotifySeller => 'Transferred, Notify Seller';
+  String get p2pTransferredNotifySeller => 'Переведено, уведомить продавца';
 
   @override
-  String get p2pCancelOrder => 'Cancel Order';
+  String get p2pCancelOrder => 'Отменить заказ';
 
   @override
-  String get p2pDisputeOrder => 'Dispute Order';
+  String get p2pDisputeOrder => 'Оспорить заказ';
 
   @override
-  String get p2pPaymentReceived => 'Payment Received';
+  String get p2pPaymentReceived => 'Оплата получена';
 
   @override
-  String get p2pEnterDisputeReason => 'Enter Dispute Reason';
+  String get p2pEnterDisputeReason => 'Укажите причину спора';
 
   @override
-  String get p2pWriteYourReason => 'Write your reason...';
+  String get p2pWriteYourReason => 'Напишите причину...';
 
   @override
-  String get p2pEnterReason => 'Enter Reason';
+  String get p2pEnterReason => 'Укажите причину';
 
   @override
-  String get p2pReasonIsRequired => 'Reason is required';
+  String get p2pReasonIsRequired => 'Причина обязательна';
 
   @override
   String get p2pCancelOrderConfirmation =>
-      'Are you sure you want to cancel this order?';
+      'Вы уверены, что хотите отменить этот заказ?';
 
   @override
-  String get p2pOrderCompleted => 'Order Completed';
+  String get p2pOrderCompleted => 'Заказ завершён';
 
   @override
-  String get p2pOrderCancelled => 'Order Cancelled';
+  String get p2pOrderCancelled => 'Заказ отменён';
 
   @override
-  String get p2pPendingRelease => 'Pending Release';
+  String get p2pPendingRelease => 'Ожидает высвобождения';
 
   @override
-  String get p2pOrderDisputed => 'Order Disputed';
+  String get p2pOrderDisputed => 'Заказ оспорен';
 
   @override
-  String get p2pOrderExpired => 'Order Expired';
+  String get p2pOrderExpired => 'Срок заказа истёк';
 
   @override
-  String get p2pBuyerMarkedAsPaid => 'Buyer Marked as Paid';
+  String get p2pBuyerMarkedAsPaid => 'Покупатель отметил оплату';
 
   @override
   String get p2pOrderCreatedPayTheSellerWithin =>
-      'Order Created, Pay the Seller within';
+      'Заказ создан. Оплатите продавцу в течение';
 
   @override
   String get p2pBuyerHasNotPaidYetPaymentDueWithin =>
-      'Buyer has not paid yet. Payment due within';
+      'Покупатель ещё не оплатил. Срок оплаты в течение';
 
   @override
   String get p2pSellerFundsLockedInEscrow =>
-      'The seller\'s funds are locked in escrow. Our support team will review the evidence and respond shortly.';
+      'Средства продавца заблокированы в эскроу. Наша служба поддержки рассмотрит доказательства и скоро ответит.';
 
   @override
   String get p2pYourLockedAssetsInEscrow =>
-      'Your locked assets are in escrow. Our support team will review this dispute shortly.';
+      'Ваши заблокированные активы находятся в эскроу. Наша служба поддержки скоро рассмотрит этот спор.';
 
   @override
   String get p2pPaymentNotCompletedInAllowedTime =>
-      'You did not complete the payment within the allowed time.';
+      'Вы не завершили оплату в отведённое время.';
 
   @override
   String get p2pBuyerDidNotCompletePaymentInAllowedTime =>
-      'Buyer did not complete payment in allowed time.';
+      'Покупатель не завершил оплату в отведённое время.';
 
   @override
   String p2pConfirmPaymentFrom(Object name) {
-    return 'Confirm that the payment is from (buyer by: $name)';
+    return 'Подтвердите, что оплата поступила от (покупатель: $name)';
   }
 
   @override
   String get p2pVerifyAmountAndSender =>
-      'Please verify the amount and sender details in your account, then continue with release action.';
+      'Проверьте сумму и данные отправителя в своём счёте, затем подтвердите высвобождение средств.';
 
   @override
   String get p2pTransferFundsToSeller =>
-      'Transfer the funds to the seller\'s account provided below.';
+      'Переведите средства на счёт продавца, указанный ниже.';
 
   @override
-  String get p2pNotifySeller => 'Notify Seller';
+  String get p2pNotifySeller => 'Уведомить продавца';
 
   @override
-  String get p2pConfirmPaymentReceived => 'Confirm Payment received';
+  String get p2pConfirmPaymentReceived => 'Подтвердить получение оплаты';
 
   @override
   String get p2pConfirmPaymentReceivedDescription =>
-      'After confirming that payment has been received, click the \"Payment Received\" button below.';
+      'После подтверждения получения оплаты нажмите кнопку «Оплата получена» ниже.';
 
   @override
   String get p2pNotifySellerDescription =>
-      'After payment, remember to click the \'Transferred, Notify Seller\' button to facilitate the crypto release by the seller.';
+      'После оплаты не забудьте нажать кнопку «Переведено, уведомить продавца», чтобы продавец высвободил криптовалюту.';
 
   @override
-  String get p2pAllAccount => 'All Account';
+  String get p2pAllAccount => 'Все счета';
 
   @override
-  String get p2pAddPaymentMethod => 'Add Payment Method';
+  String get p2pAddPaymentMethod => 'Добавить способ оплаты';
 
   @override
-  String get p2pEdit => 'Edit';
+  String get p2pEdit => 'Изменить';
 
   @override
-  String get p2pEditPaymentAccount => 'Edit Payment Account';
+  String get p2pEditPaymentAccount => 'Изменить платёжный счёт';
 
   @override
-  String get p2pUpdateAccount => 'Update Account';
+  String get p2pUpdateAccount => 'Обновить счёт';
 
   @override
-  String get p2pCancel => 'Cancel';
+  String get p2pCancel => 'Отмена';
 
   @override
-  String get p2pSubmit => 'Submit';
+  String get p2pSubmit => 'Отправить';
 
   @override
-  String get p2pBack => 'Back';
+  String get p2pBack => 'Назад';
 
   @override
-  String get p2pNext => 'Next';
+  String get p2pNext => 'Далее';
 
   @override
-  String get p2pDone => 'Done';
+  String get p2pDone => 'Готово';
 
   @override
-  String get p2pIWantToBuy => 'I want to Buy';
+  String get p2pIWantToBuy => 'Хочу купить';
 
   @override
-  String get p2pIWantToSell => 'I want to Sell';
+  String get p2pIWantToSell => 'Хочу продать';
 
   @override
-  String get p2pAsset => 'Asset';
+  String get p2pAsset => 'Актив';
 
   @override
-  String get p2pWithFiat => 'With Fiat';
+  String get p2pWithFiat => 'В фиате';
 
   @override
-  String get p2pPriceType => 'Price Type';
+  String get p2pPriceType => 'Тип цены';
 
   @override
-  String get p2pYourPrice => 'Your Price';
+  String get p2pYourPrice => 'Ваша цена';
 
   @override
-  String get p2pHighestOrderPrice => 'Highest Order Price';
+  String get p2pHighestOrderPrice => 'Наивысшая цена заказа';
 
   @override
-  String get p2pTotalAmount => 'Total Amount';
+  String get p2pTotalAmount => 'Итоговая сумма';
 
   @override
   String get p2pSelectAtLeastOnePaymentMethod =>
-      'Select at least one payment method';
+      'Выберите хотя бы один способ оплаты';
 
   @override
-  String get p2pAdd => 'Add';
+  String get p2pAdd => 'Добавить';
 
   @override
-  String get p2pTerms => 'Terms';
+  String get p2pTerms => 'Условия';
 
   @override
-  String get p2pAutomaticReply => 'Automatic Reply';
+  String get p2pAutomaticReply => 'Автоответ';
 
   @override
-  String get p2pFixed => 'Fixed';
+  String get p2pFixed => 'Фиксированная';
 
   @override
-  String get p2pFloat => 'Float';
+  String get p2pFloat => 'Плавающая';
 
   @override
-  String get p2pSelectPriceType => 'Select Price Type';
+  String get p2pSelectPriceType => 'Выберите тип цены';
 
   @override
-  String get p2pNoAssetsFound => 'No assets found';
+  String get p2pNoAssetsFound => 'Активы не найдены';
 
   @override
-  String get p2pNoFiatCurrenciesFound => 'No fiat currencies found';
+  String get p2pNoFiatCurrenciesFound => 'Фиатные валюты не найдены';
 
   @override
-  String get p2pNoPriceTypeFound => 'No price type found';
+  String get p2pNoPriceTypeFound => 'Тип цены не найден';
 
   @override
-  String get p2pAdSuccessfullyPosted => 'Ad Successfully Posted';
+  String get p2pAdSuccessfullyPosted => 'Объявление успешно размещено';
 
   @override
-  String get p2pAdsSubmittedUnderReview => 'Ads submitted and under reviewing.';
+  String get p2pAdsSubmittedUnderReview =>
+      'Объявления отправлены и проверяются.';
 
   @override
   String get p2pAdPublishedDescription =>
-      'Your Ad has been published and users can now place order. Please pay attention to the prompt for new orders.';
+      'Ваше объявление опубликовано, и пользователи могут размещать заказы. Следите за уведомлениями о новых заказах.';
 
   @override
   String get p2pAdUnderReviewDescription =>
-      'Your Ad is under review. Once approved, it will be published and users can place order. Please pay attention to the prompt for new orders.';
+      'Ваше объявление на проверке. После одобрения оно будет опубликовано, и пользователи смогут размещать заказы. Следите за уведомлениями о новых заказах.';
 
   @override
-  String get p2pAdNumber => 'Ad number';
+  String get p2pAdNumber => 'Номер объявления';
 
   @override
-  String get p2pMethod => 'Method';
+  String get p2pMethod => 'Способ';
 
   @override
-  String get p2pGoToMyAds => 'Go To My Ads';
+  String get p2pGoToMyAds => 'Перейти к моим объявлениям';
 
   @override
-  String get p2pEligibilityValidationFailed => 'Eligibility Validation Failed';
+  String get p2pEligibilityValidationFailed =>
+      'Проверка права на размещение не пройдена';
 
   @override
   String get p2pPleaseFulfillRequirements =>
-      'Please fulfill the following requirements:';
+      'Пожалуйста, выполните следующие требования:';
 
   @override
   String get p2pNotEligibleCreateAd =>
-      'You are currently not eligible to create an ad.';
+      'Сейчас вы не можете создавать объявления.';
 
   @override
-  String get p2pCompletedTradeQty => 'Completed Trade QTY';
+  String get p2pCompletedTradeQty => 'Завершённых сделок';
 
   @override
-  String get p2pStatus => 'Status';
+  String get p2pStatus => 'Статус';
 
   @override
-  String get p2pAdsView => 'Ads View';
+  String get p2pAdsView => 'Просмотр объявлений';
 
   @override
-  String get p2pAdNumberTitle => 'Ad Number';
+  String get p2pAdNumberTitle => 'Номер объявления';
 
   @override
-  String get p2pType => 'Type';
+  String get p2pType => 'Тип';
 
   @override
-  String get p2pAssetFiat => 'Asset/Fiat';
+  String get p2pAssetFiat => 'Актив/Фиат';
 
   @override
-  String get p2pPriceExchangeRate => 'Price\nExchange Rate';
+  String get p2pPriceExchangeRate => 'Цена\nКурс обмена';
 
   @override
-  String get p2pLastUpdated => 'Last Updated';
+  String get p2pLastUpdated => 'Последнее обновление';
 
   @override
-  String get p2pCreateTime => 'Create Time';
+  String get p2pCreateTime => 'Время создания';
 
   @override
   String get p2pDeleteAdConfirmation =>
-      'Are you sure you want to delete this ad?';
+      'Вы уверены, что хотите удалить это объявление?';
 
   @override
-  String get p2pFiat => 'Fiat';
+  String get p2pFiat => 'Фиат';
 
   @override
-  String get p2pCryptoAmount => 'Crypto Amount';
+  String get p2pCryptoAmount => 'Сумма в криптовалюте';
 
   @override
-  String get p2pCounterparty => 'Counterparty';
+  String get p2pCounterparty => 'Контрагент';
 
   @override
-  String get p2pChat => 'Chat';
+  String get p2pChat => 'Чат';
 
   @override
-  String get p2pNoMessagesYet => 'No messages yet';
+  String get p2pNoMessagesYet => 'Сообщений пока нет';
 
   @override
-  String get p2pTypeYourMessage => 'Type your message...';
+  String get p2pTypeYourMessage => 'Введите сообщение...';
 
   @override
-  String get p2pCamera => 'Camera';
+  String get p2pCamera => 'Камера';
 
   @override
-  String get p2pGallery => 'Gallery';
+  String get p2pGallery => 'Галерея';
 
   @override
-  String get p2pAttachment => 'Attachment';
+  String get p2pAttachment => 'Вложение';
 
   @override
-  String get p2pUser => 'User';
+  String get p2pUser => 'Пользователь';
 
   @override
-  String get p2pYouAreVerifiedTrader => 'You are a verified trader';
+  String get p2pYouAreVerifiedTrader => 'Вы верифицированный трейдер';
 
   @override
   String get p2pVerifiedTraderStatusActive =>
-      'Your verified trader status is active.';
+      'Ваш статус верифицированного трейдера активен.';
 
   @override
-  String get p2pVerificationUnderReview => 'Verification under review';
+  String get p2pVerificationUnderReview => 'Верификация на рассмотрении';
 
   @override
   String get p2pVerificationRequestUnderReview =>
-      'Your verification request is currently under review.';
+      'Ваша заявка на верификацию сейчас на рассмотрении.';
 
   @override
-  String get p2pSubmittedOn => 'Submitted on';
+  String get p2pSubmittedOn => 'Дата отправки';
 
   @override
-  String get p2pVerificationDataUnavailable => 'Verification data unavailable';
+  String get p2pVerificationDataUnavailable => 'Данные верификации недоступны';
 
   @override
-  String get p2pPleaseRefreshAndTryAgain => 'Please refresh and try again.';
+  String get p2pPleaseRefreshAndTryAgain =>
+      'Пожалуйста, обновите страницу и попробуйте снова.';
 
   @override
   String get p2pPreviousVerificationRejected =>
-      'Previous verification request was rejected';
+      'Предыдущая заявка на верификацию была отклонена';
 
   @override
-  String get p2pReason => 'Reason';
+  String get p2pReason => 'Причина';
 
   @override
   String get p2pCorrectInformationApplyAgain =>
-      'Please correct the information and apply again.';
+      'Пожалуйста, исправьте данные и подайте заявку снова.';
 
   @override
-  String get p2pApplyVerificationTitle => 'Apply Verification';
+  String get p2pApplyVerificationTitle => 'Подать заявку на верификацию';
 
   @override
   String get p2pFillRequiredFieldsVerification =>
-      'Fill out all required fields to submit verification.';
+      'Заполните все обязательные поля для отправки заявки на верификацию.';
 
   @override
   String get p2pNoVerificationFormFieldsFound =>
-      'No verification form fields found.';
+      'Поля формы верификации не найдены.';
 
   @override
-  String get p2pSubmitVerification => 'Submit Verification';
+  String get p2pSubmitVerification => 'Отправить заявку на верификацию';
 
   @override
   String p2pEnterField(Object field) {
-    return 'Enter $field';
+    return 'Введите $field';
   }
 
   @override
-  String get edit_my_ad => 'Edit My Ad';
+  String get edit_my_ad => 'Редактировать моё объявление';
 
   @override
-  String get amount => 'Amount';
+  String get amount => 'Сумма';
 
   @override
-  String get total_amount => 'Total Amount';
+  String get total_amount => 'Итоговая сумма';
 
   @override
-  String get min_amount => 'Min Amount';
+  String get min_amount => 'Мин. сумма';
 
   @override
-  String get max_amount => 'Max Amount';
+  String get max_amount => 'Макс. сумма';
 
   @override
-  String get payment_duration => 'Payment duration';
+  String get payment_duration => 'Срок оплаты';
 
   @override
-  String get payment_method => 'Payment Method';
+  String get payment_method => 'Способ оплаты';
 
   @override
-  String get no_payment_method => 'No payment method found';
+  String get no_payment_method => 'Способ оплаты не найден';
 
   @override
-  String get terms => 'Terms';
+  String get terms => 'Условия';
 
   @override
-  String get auto_response => 'Auto Response Message';
+  String get auto_response => 'Автоматический ответ';
 
   @override
-  String get update => 'Update';
+  String get update => 'Обновить';
 
   @override
-  String get error_ad_invalid => 'Ad data is invalid';
+  String get error_ad_invalid => 'Данные объявления недействительны';
 
   @override
-  String get error_amount_zero => 'Amount can not be zero';
+  String get error_amount_zero => 'Сумма не может быть нулевой';
 
   @override
-  String get error_total_amount_zero => 'Total amount can not be zero';
+  String get error_total_amount_zero => 'Общая сумма не может быть нулевой';
 
   @override
-  String get error_min_zero => 'Min amount can not be zero';
+  String get error_min_zero => 'Минимальная сумма не может быть нулевой';
 
   @override
-  String get error_max_zero => 'Max amount can not be zero';
+  String get error_max_zero => 'Максимальная сумма не может быть нулевой';
 
   @override
   String get error_min_greater =>
-      'Min amount can not be greater than max amount';
+      'Минимальная сумма не может превышать максимальную';
 
   @override
-  String get error_payment_duration_zero => 'Payment duration can not be zero';
+  String get error_payment_duration_zero =>
+      'Длительность оплаты не может быть нулевой';
 
   @override
-  String get error_select_payment => 'Please select payment method';
+  String get error_select_payment => 'Выберите способ оплаты';
 
   @override
-  String get error_terms_empty => 'Terms can not be empty';
+  String get error_terms_empty => 'Условия не могут быть пустыми';
 
   @override
-  String get error_select_asset => 'Please select asset';
+  String get error_select_asset => 'Выберите актив';
 
   @override
-  String get error_select_fiat => 'Please select fiat';
+  String get error_select_fiat => 'Выберите фиатную валюту';
 
   @override
-  String get error_select_price_type => 'Please select price type';
+  String get error_select_price_type => 'Выберите тип цены';
 
   @override
-  String get error_price_zero => 'Price can not be zero';
+  String get error_price_zero => 'Цена не может быть нулевой';
 
   @override
-  String get error_enter_total_amount => 'Please enter total amount';
+  String get error_enter_total_amount => 'Введите общую сумму';
 
   @override
-  String get error_enter_min_order => 'Please enter minimum order limit';
+  String get error_enter_min_order => 'Введите минимальный лимит заказа';
 
   @override
-  String get error_enter_max_order => 'Please enter maximum order limit';
+  String get error_enter_max_order => 'Введите максимальный лимит заказа';
 
   @override
-  String get error_payment_time_zero => 'Payment time can not be zero';
+  String get error_payment_time_zero => 'Время оплаты не может быть нулевым';
 
   @override
-  String get error_enter_terms => 'Please enter terms';
+  String get error_enter_terms => 'Введите условия';
 
   @override
-  String get filterMyAds => 'Filter My Ads';
+  String get filterMyAds => 'Фильтр моих объявлений';
 
   @override
-  String get status => 'Status';
+  String get status => 'Статус';
 
   @override
-  String get type => 'Type';
+  String get type => 'Тип';
 
   @override
-  String get fiatCurrency => 'Fiat Currency';
+  String get fiatCurrency => 'Фиатная валюта';
 
   @override
-  String get assetCurrency => 'Asset Currency';
+  String get assetCurrency => 'Валюта актива';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Сбросить';
 
   @override
-  String get search => 'Search';
+  String get search => 'Поиск';
 
   @override
-  String get select => 'Select';
+  String get select => 'Выбрать';
 
   @override
-  String get selectStatus => 'Select Status';
+  String get selectStatus => 'Выберите статус';
 
   @override
-  String get selectType => 'Select Type';
+  String get selectType => 'Выберите тип';
 
   @override
-  String get selectFiatCurrency => 'Select Fiat Currency';
+  String get selectFiatCurrency => 'Выберите фиатную валюту';
 
   @override
-  String get selectAssetCurrency => 'Select Asset Currency';
+  String get selectAssetCurrency => 'Выберите валюту актива';
 
   @override
-  String get noStatusFound => 'No status found';
+  String get noStatusFound => 'Статус не найден';
 
   @override
-  String get noTypeFound => 'No type found';
+  String get noTypeFound => 'Тип не найден';
 
   @override
-  String get noDataFound => 'No Data found';
+  String get noDataFound => 'Данные не найдены';
 
   @override
-  String get noFiatCurrencyFound => 'No fiat currency found';
+  String get noFiatCurrencyFound => 'Фиатная валюта не найдена';
 
   @override
-  String get noAssetCurrencyFound => 'No asset currency found';
+  String get noAssetCurrencyFound => 'Валюта актива не найдена';
 
   @override
-  String get filterPaymentAccount => 'Filter Payment Account';
+  String get filterPaymentAccount => 'Фильтр платёжных счетов';
 
   @override
-  String get filterMyOrder => 'Filter My Order';
+  String get filterMyOrder => 'Фильтр моих заказов';
 
   @override
   String get comment_travel => '==== eCardo Travel ====';
@@ -5790,561 +5791,564 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelTitle => 'eCardo Travel';
 
   @override
-  String get travelHeroEyebrow => 'A better travel experience';
+  String get travelHeroEyebrow => 'Путешествия нового уровня';
 
   @override
-  String get travelHeroTitle => 'Book your next journey today';
+  String get travelHeroTitle =>
+      'Забронируйте следующее путешествие уже сегодня';
 
   @override
-  String get travelFlights => 'Flights';
+  String get travelFlights => 'Рейсы';
 
   @override
-  String get travelHotels => 'Hotels';
+  String get travelHotels => 'Отели';
 
   @override
   String get travelEsim => 'eSIM';
 
   @override
-  String get travelRecentActivity => 'Recent activity';
+  String get travelRecentActivity => 'Последние операции';
 
   @override
-  String get travelViewAll => 'View all';
+  String get travelViewAll => 'Показать все';
 
   @override
-  String get travelMainWallet => 'Main eCardo wallet';
+  String get travelMainWallet => 'Основной кошелёк eCardo';
 
   @override
   String get travelWalletSharedDescription =>
-      'The same secure wallet you use across eCardo';
+      'Тот же защищённый кошелёк, что и во всём приложении eCardo';
 
   @override
-  String get travelHotelSearch => 'Hotel search';
+  String get travelHotelSearch => 'Поиск отелей';
 
   @override
-  String get travelHotelHero => 'Stay somewhere unforgettable';
+  String get travelHotelHero => 'Остановитесь в незабываемом месте';
 
   @override
-  String get travelDestinationCountry => 'Destination country';
+  String get travelDestinationCountry => 'Страна назначения';
 
   @override
-  String get travelDestinationCity => 'City';
+  String get travelDestinationCity => 'Город';
 
   @override
-  String get travelCheckIn => 'Check-in';
+  String get travelCheckIn => 'Заезд';
 
   @override
-  String get travelCheckOut => 'Check-out';
+  String get travelCheckOut => 'Выезд';
 
   @override
-  String get travelGuests => 'Guests';
+  String get travelGuests => 'Гости';
 
   @override
-  String get travelSearchHotels => 'Search hotels';
+  String get travelSearchHotels => 'Найти отели';
 
   @override
-  String get travelRecentSearches => 'Recent searches';
+  String get travelRecentSearches => 'Недавние поиски';
 
   @override
-  String get travelHotelResults => 'Hotel results';
+  String get travelHotelResults => 'Результаты поиска отелей';
 
   @override
-  String get travelNoHotelResults => 'No matching hotels were found.';
+  String get travelNoHotelResults => 'Подходящие отели не найдены.';
 
   @override
-  String get travelStartingPrice => 'Starting price per stay';
+  String get travelStartingPrice => 'Цена за проживание от';
 
   @override
-  String get travelViewDetails => 'View details';
+  String get travelViewDetails => 'Подробнее';
 
   @override
-  String get travelHotelDetails => 'Hotel details';
+  String get travelHotelDetails => 'Детали отеля';
 
   @override
-  String get travelOfferUnavailable => 'This offer is no longer available.';
+  String get travelOfferUnavailable => 'Это предложение больше недоступно.';
 
   @override
-  String get travelReserveHotel => 'Reserve hotel';
+  String get travelReserveHotel => 'Забронировать отель';
 
   @override
-  String get travelIncluded => 'Included';
+  String get travelIncluded => 'Включено';
 
   @override
-  String get travelFree => 'Free';
+  String get travelFree => 'Бесплатно';
 
   @override
-  String get travelAboutHotel => 'About the hotel';
+  String get travelAboutHotel => 'Об отеле';
 
   @override
   String get travelHotelDescription =>
-      'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the eCardo Travel API.';
+      'Изысканное пребывание в городе с комфортабельными номерами, внимательным сервисом и удобным доступом к главным достопримечательностям. Итоговое описание номеров и правила будут предоставлены API eCardo Travel.';
 
   @override
-  String get travelPolicies => 'Policies';
+  String get travelPolicies => 'Правила';
 
   @override
-  String get travelCancellation => 'Cancellation';
+  String get travelCancellation => 'Отмена';
 
   @override
   String get travelCancellationSummary =>
-      'Free cancellation before the stated deadline';
+      'Бесплатная отмена до указанного срока';
 
   @override
-  String get travelFlightSearch => 'Flight search';
+  String get travelFlightSearch => 'Поиск рейсов';
 
   @override
-  String get travelFlightHero => 'Your dream journey starts here';
+  String get travelFlightHero => 'Ваше путешествие мечты начинается здесь';
 
   @override
-  String get travelOrigin => 'Origin';
+  String get travelOrigin => 'Отправление';
 
   @override
-  String get travelDestination => 'Destination';
+  String get travelDestination => 'Направление';
 
   @override
-  String get travelDepartureDate => 'Departure date';
+  String get travelDepartureDate => 'Дата вылета';
 
   @override
-  String get travelReturnDate => 'Return date';
+  String get travelReturnDate => 'Дата возвращения';
 
   @override
-  String get travelOneWay => 'One-way';
+  String get travelOneWay => 'В одну сторону';
 
   @override
-  String get travelRoundTrip => 'Round trip';
+  String get travelRoundTrip => 'Туда и обратно';
 
   @override
-  String get travelAdults => 'Adults';
+  String get travelAdults => 'Взрослые';
 
   @override
-  String get travelChildren => 'Children';
+  String get travelChildren => 'Дети';
 
   @override
-  String get travelInfants => 'Infants';
+  String get travelInfants => 'Младенцы';
 
   @override
-  String get travelCabinClass => 'Cabin class';
+  String get travelCabinClass => 'Класс обслуживания';
 
   @override
-  String get travelEconomy => 'Economy';
+  String get travelEconomy => 'Эконом';
 
   @override
-  String get travelBusiness => 'Business';
+  String get travelBusiness => 'Бизнес';
 
   @override
-  String get travelSearchFlights => 'Search flights';
+  String get travelSearchFlights => 'Найти рейсы';
 
   @override
-  String get travelFlightResults => 'Flight results';
+  String get travelFlightResults => 'Результаты поиска рейсов';
 
   @override
-  String get travelNoFlightResults => 'No matching flights were found.';
+  String get travelNoFlightResults => 'Подходящие рейсы не найдены.';
 
   @override
-  String get travelAlternativeFlights => 'Alternative flights.';
+  String get travelAlternativeFlights => 'Альтернативные рейсы.';
 
   @override
   String get travelAlternativeFlightsDescription =>
-      'Your exact search has no matches. These upcoming options are shown as alternatives; edit the search to change route or date.';
+      'По точному запросу совпадений нет. Эти ближайшие варианты показаны как альтернативы; измените маршрут или дату в поиске.';
 
   @override
-  String get travelSelectFlight => 'Select flight';
+  String get travelSelectFlight => 'Выбрать рейс';
 
   @override
-  String get travelSelectReturnFlight => 'Select return flight';
+  String get travelSelectReturnFlight => 'Выбрать обратный рейс';
 
   @override
-  String get travelOutboundFlight => 'Outbound flight';
+  String get travelOutboundFlight => 'Рейс туда';
 
   @override
-  String get travelReturnFlight => 'Return flight';
+  String get travelReturnFlight => 'Обратный рейс';
 
   @override
-  String get travelFlightDetails => 'Flight and passenger details';
+  String get travelFlightDetails => 'Рейс и данные пассажиров';
 
   @override
-  String get travelContinueToPayment => 'Continue to payment';
+  String get travelContinueToPayment => 'Перейти к оплате';
 
   @override
-  String get travelPassengerReview => 'Passenger review';
+  String get travelPassengerReview => 'Проверка пассажиров';
 
   @override
-  String get travelPrimaryPassenger => 'Primary passenger';
+  String get travelPrimaryPassenger => 'Главный пассажир';
 
   @override
   String get travelPassengerFromProfile =>
-      'Details are shared from your eCardo profile';
+      'Данные взяты из вашего профиля eCardo';
 
   @override
-  String get travelFareDetails => 'Fare details';
+  String get travelFareDetails => 'Детали тарифа';
 
   @override
-  String get travelBaseFare => 'Base fare';
+  String get travelBaseFare => 'Базовый тариф';
 
   @override
-  String get travelTaxesAndFees => 'Taxes and fees';
+  String get travelTaxesAndFees => 'Налоги и сборы';
 
   @override
-  String get travelTotal => 'Total';
+  String get travelTotal => 'Итого';
 
   @override
-  String get travelBrowseEsimPackages => 'Browse eSIM packages';
+  String get travelBrowseEsimPackages => 'Пакеты eSIM';
 
   @override
-  String get travelEsimIntroTitle => 'Stay connected wherever you travel';
+  String get travelEsimIntroTitle => 'Оставайтесь на связи в любых поездках';
 
   @override
   String get travelEsimIntroDescription =>
-      'Choose a digital data package, pay from your main eCardo wallet and activate it without replacing your physical SIM.';
+      'Выберите цифровой интернет-пакет, оплатите его из основного кошелька eCardo и активируйте без замены физической SIM-карты.';
 
   @override
-  String get travelEsimInstantTitle => 'Instant delivery';
+  String get travelEsimInstantTitle => 'Мгновенная доставка';
 
   @override
   String get travelEsimInstantDescription =>
-      'Activation details are available immediately after payment.';
+      'Данные для активации доступны сразу после оплаты.';
 
   @override
-  String get travelEsimCoverageTitle => 'Travel-ready coverage';
+  String get travelEsimCoverageTitle => 'Покрытие в поездках';
 
   @override
   String get travelEsimCoverageDescription =>
-      'Choose local or global packages for your destination.';
+      'Выберите местный или глобальный пакет для вашего направления.';
 
   @override
-  String get travelEsimTransparentTitle => 'Transparent pricing';
+  String get travelEsimTransparentTitle => 'Прозрачные цены';
 
   @override
   String get travelEsimTransparentDescription =>
-      'See the backend-confirmed total before you pay.';
+      'Смотрите итоговую сумму, подтверждённую сервером, до оплаты.';
 
   @override
-  String get travelEsimPackages => 'eSIM packages';
+  String get travelEsimPackages => 'Пакеты eSIM';
 
   @override
-  String get travelNoEsimPackages => 'No matching eSIM packages were found.';
+  String get travelNoEsimPackages => 'Подходящие пакеты eSIM не найдены.';
 
   @override
-  String get travelChoosePackage => 'Choose a package';
+  String get travelChoosePackage => 'Выберите пакет';
 
   @override
-  String get travelMostPopular => 'Most popular';
+  String get travelMostPopular => 'Популярное';
 
   @override
-  String get travelSelect => 'Select';
+  String get travelSelect => 'Выбрать';
 
   @override
   String travelValidityDays(int days) {
-    return '$days days validity';
+    return 'Срок действия: $days дн.';
   }
 
   @override
-  String get travelWalletCheckout => 'Wallet checkout';
+  String get travelWalletCheckout => 'Оплата из кошелька';
 
   @override
-  String get travelBackendConfirmedPrice => 'Price confirmed by eCardo Travel';
+  String get travelBackendConfirmedPrice => 'Цена подтверждена eCardo Travel';
 
   @override
-  String get travelPaymentMethod => 'Payment method';
+  String get travelPaymentMethod => 'Способ оплаты';
 
   @override
-  String get travelAvailableBalance => 'Available balance';
+  String get travelAvailableBalance => 'Доступный баланс';
 
   @override
   String get travelInsufficientBalance =>
-      'Your main wallet balance is insufficient. Add money, then return to refresh checkout.';
+      'На основном кошельке недостаточно средств. Пополните его и вернитесь, чтобы обновить оплату.';
 
   @override
-  String get travelPriceSummary => 'Price summary';
+  String get travelPriceSummary => 'Сводка по цене';
 
   @override
-  String get travelSubtotal => 'Subtotal';
+  String get travelSubtotal => 'Промежуточный итог';
 
   @override
-  String get travelWalletPayment => 'Wallet payment';
+  String get travelWalletPayment => 'Оплата кошельком';
 
   @override
   String get travelCheckoutSafetyNote =>
-      'Payment is submitted once using an idempotent booking request.';
+      'Оплата отправляется один раз по идемпотентному запросу бронирования.';
 
   @override
-  String get travelPayFromWallet => 'Pay from wallet';
+  String get travelPayFromWallet => 'Оплатить из кошелька';
 
   @override
-  String get travelAddMoney => 'Add money';
+  String get travelAddMoney => 'Пополнить';
 
   @override
-  String get travelPaymentFailed => 'Payment was not completed';
+  String get travelPaymentFailed => 'Оплата не завершена';
 
   @override
   String get travelPaymentFailedDescription =>
-      'Your wallet was not treated as paid. Please review the booking and try again.';
+      'Оплата с кошелька не была проведена. Проверьте бронирование и попробуйте снова.';
 
   @override
-  String get travelHotelVoucher => 'Hotel voucher';
+  String get travelHotelVoucher => 'Ваучер на отель';
 
   @override
-  String get travelFlightTicket => 'Flight ticket';
+  String get travelFlightTicket => 'Авиабилет';
 
   @override
-  String get travelEsimActivation => 'eSIM activation';
+  String get travelEsimActivation => 'Активация eSIM';
 
   @override
-  String get travelVoucherReady => 'Your confirmed hotel voucher is ready.';
+  String get travelVoucherReady => 'Ваш подтверждённый ваучер на отель готов.';
 
   @override
-  String get travelTicketReady => 'Your issued flight ticket is ready.';
+  String get travelTicketReady => 'Ваш авиабилет оформлен и готов.';
 
   @override
-  String get travelEsimReady => 'Your eSIM is active and ready to install.';
+  String get travelEsimReady => 'Ваша eSIM активна и готова к установке.';
 
   @override
-  String get travelPurchaseSuccessful => 'Purchase successful';
+  String get travelPurchaseSuccessful => 'Покупка выполнена';
 
   @override
-  String get travelReference => 'Reference';
+  String get travelReference => 'Референс';
 
   @override
-  String get travelStatus => 'Status';
+  String get travelStatus => 'Статус';
 
   @override
-  String get travelActive => 'Active';
+  String get travelActive => 'Активна';
 
   @override
-  String get travelConfirmed => 'Confirmed';
+  String get travelConfirmed => 'Подтверждено';
 
   @override
-  String get travelCompleted => 'Completed';
+  String get travelCompleted => 'Завершено';
 
   @override
-  String get travelRefunded => 'Refunded';
+  String get travelRefunded => 'Возвращено';
 
   @override
-  String get travelFailed => 'Failed';
+  String get travelFailed => 'Ошибка';
 
   @override
-  String get travelBookingFailed => 'Booking failed';
+  String get travelBookingFailed => 'Не удалось забронировать';
 
   @override
   String get travelBookingFailedDescription =>
-      'This booking did not complete. Review the order status before trying another payment.';
+      'Бронирование не завершено. Проверьте статус заказа перед повторной оплатой.';
 
   @override
-  String get travelBookingRefunded => 'Booking refunded';
+  String get travelBookingRefunded => 'Средства возвращены';
 
   @override
   String get travelBookingRefundedDescription =>
-      'The payment for this booking has been returned to the wallet.';
+      'Оплата за это бронирование возвращена в кошелёк.';
 
   @override
-  String get travelPendingConfirmation => 'Pending confirmation';
+  String get travelPendingConfirmation => 'Ожидает подтверждения';
 
   @override
-  String get travelHotelBookingSubmitted => 'Hotel booking submitted';
+  String get travelHotelBookingSubmitted => 'Бронирование отеля отправлено';
 
   @override
   String get travelHotelPendingConfirmationDescription =>
-      'Payment was received. eCardo Travel is confirming the hotel with the authorized supplier before issuing your voucher.';
+      'Оплата получена. eCardo Travel подтверждает бронирование в отеле у официального поставщика перед выдачей ваучера.';
 
   @override
-  String get travelPaidAmount => 'Paid amount';
+  String get travelPaidAmount => 'Оплаченная сумма';
 
   @override
-  String get travelActivationDetails => 'Activation details';
+  String get travelActivationDetails => 'Данные для активации';
 
   @override
   String get travelActivationInstructions =>
-      'Open your device cellular settings, add an eSIM and use the secure installation details returned by the eCardo backend.';
+      'Откройте настройки сотовой связи на устройстве, добавьте eSIM и используйте защищённые данные для установки, полученные от сервера eCardo.';
 
   @override
-  String get travelViewMyBookings => 'View my bookings';
+  String get travelViewMyBookings => 'Показать мои бронирования';
 
   @override
-  String get travelMyBookings => 'My bookings';
+  String get travelMyBookings => 'Мои бронирования';
 
   @override
-  String get travelAllBookings => 'All bookings';
+  String get travelAllBookings => 'Все бронирования';
 
   @override
-  String get travelMyHotels => 'My hotels';
+  String get travelMyHotels => 'Мои отели';
 
   @override
-  String get travelMyFlights => 'My flights';
+  String get travelMyFlights => 'Мои рейсы';
 
   @override
-  String get travelMyEsims => 'My eSIMs';
+  String get travelMyEsims => 'Мои eSIM';
 
   @override
-  String get travelMyHotelsDescription => 'Confirmed stays and hotel vouchers';
+  String get travelMyHotelsDescription =>
+      'Подтверждённое проживание и ваучеры на отели';
 
   @override
-  String get travelMyFlightsDescription => 'Booked flights and issued tickets';
+  String get travelMyFlightsDescription =>
+      'Забронированные рейсы и оформленные билеты';
 
   @override
-  String get travelMyEsimsDescription => 'Active and previous data packages';
+  String get travelMyEsimsDescription => 'Активные и прошлые интернет-пакеты';
 
   @override
-  String get travelNoBookings => 'You do not have any travel bookings yet.';
+  String get travelNoBookings => 'У вас пока нет бронирований.';
 
   @override
-  String get travelNoHotels => 'You do not have any hotel bookings yet.';
+  String get travelNoHotels => 'У вас пока нет бронирований отелей.';
 
   @override
-  String get travelNoFlights => 'You do not have any flight bookings yet.';
+  String get travelNoFlights => 'У вас пока нет авиабронирований.';
 
   @override
-  String get travelNoEsims => 'You do not have any eSIM purchases yet.';
+  String get travelNoEsims => 'У вас пока нет покупок eSIM.';
 
   @override
-  String get travelSavedTravelers => 'Saved travelers';
+  String get travelSavedTravelers => 'Сохранённые пассажиры';
 
   @override
-  String get travelNoTravelers => 'No saved travelers are available yet.';
+  String get travelNoTravelers => 'Сохранённых пассажиров пока нет.';
 
   @override
-  String get travelAddTraveler => 'Add traveler';
+  String get travelAddTraveler => 'Добавить пассажира';
 
   @override
-  String get travelEditTraveler => 'Edit traveler';
+  String get travelEditTraveler => 'Изменить пассажира';
 
   @override
-  String get travelTravelerFullName => 'Full name';
+  String get travelTravelerFullName => 'Полное имя';
 
   @override
-  String get travelFirstName => 'First name';
+  String get travelFirstName => 'Имя';
 
   @override
-  String get travelLastName => 'Last name';
+  String get travelLastName => 'Фамилия';
 
   @override
-  String get travelBirthDate => 'Date of birth';
+  String get travelBirthDate => 'Дата рождения';
 
   @override
-  String get travelPassportExpiry => 'Passport expiry';
+  String get travelPassportExpiry => 'Срок действия паспорта';
 
   @override
-  String get travelGender => 'Gender';
+  String get travelGender => 'Пол';
 
   @override
-  String get travelMale => 'Male';
+  String get travelMale => 'Мужской';
 
   @override
-  String get travelFemale => 'Female';
+  String get travelFemale => 'Женский';
 
   @override
-  String get travelNotificationContact => 'Booking notifications';
+  String get travelNotificationContact => 'Уведомления о бронировании';
 
   @override
-  String get travelPhone => 'Mobile number';
+  String get travelPhone => 'Номер телефона';
 
   @override
-  String get travelEmail => 'Email address';
+  String get travelEmail => 'Электронная почта';
 
   @override
   String get travelPassengerDetailsRequired =>
-      'Complete every passenger and add a mobile number or email for booking updates.';
+      'Заполните данные всех пассажиров и укажите номер телефона или эл. почту для уведомлений о бронировании.';
 
   @override
-  String get travelAdultPassenger => 'Adult passenger';
+  String get travelAdultPassenger => 'Взрослый пассажир';
 
   @override
-  String get travelChildPassenger => 'Child passenger';
+  String get travelChildPassenger => 'Детский пассажир';
 
   @override
-  String get travelInfantPassenger => 'Infant passenger';
+  String get travelInfantPassenger => 'Младенец (пассажир)';
 
   @override
-  String get travelCompleteTravelerDetails => 'Complete traveler details';
+  String get travelCompleteTravelerDetails => 'Заполнить данные пассажира';
 
   @override
-  String get travelPassportNumber => 'Passport number';
+  String get travelPassportNumber => 'Номер паспорта';
 
   @override
-  String get travelNationalityCode => 'Nationality code';
+  String get travelNationalityCode => 'Код гражданства';
 
   @override
-  String get travelNationalityCodeInvalid => 'Enter a two-letter country code';
+  String get travelNationalityCodeInvalid => 'Введите двухбуквенный код страны';
 
   @override
-  String get travelFieldRequired => 'This field is required';
+  String get travelFieldRequired => 'Обязательное поле';
 
   @override
-  String get travelSaveTraveler => 'Save traveler';
+  String get travelSaveTraveler => 'Сохранить пассажира';
 
   @override
-  String get travelAccount => 'Travel account';
+  String get travelAccount => 'Счёт для путешествий';
 
   @override
-  String get travelAccountHolder => 'eCardo member';
+  String get travelAccountHolder => 'Участник eCardo';
 
   @override
   String get travelMemberDescription =>
-      'Shared profile, wallet and traveler information';
+      'Общий профиль, кошелёк и данные пассажиров';
 
   @override
-  String get travelMyBookingsDescription => 'Hotels, flights and active eSIMs';
+  String get travelMyBookingsDescription => 'Отели, рейсы и активные eSIM';
 
   @override
   String get travelSavedTravelersDescription =>
-      'Reuse passenger details securely';
+      'Безопасное повторное использование данных пассажиров';
 
   @override
-  String get travelPersonalInformation => 'Personal information';
+  String get travelPersonalInformation => 'Личные данные';
 
   @override
   String get travelPersonalInformationDescription =>
-      'Manage details shared with Travel';
+      'Управляйте данными, передаваемыми в Travel';
 
   @override
-  String get travelHistory => 'Travel and wallet history';
+  String get travelHistory => 'История поездок и кошелька';
 
   @override
   String get travelHistoryDescription =>
-      'View purchases and wallet activity together';
+      'Покупки и операции с кошельком в одном месте';
 
   @override
-  String get travelNoActivity => 'No travel or wallet activity is available.';
+  String get travelNoActivity => 'Нет операций по поездкам или кошельку.';
 
   @override
-  String get travelMockIran => 'Iran';
+  String get travelMockIran => 'Иран';
 
   @override
-  String get travelMockTehran => 'Tehran';
+  String get travelMockTehran => 'Тегеран';
 
   @override
-  String get travelMockGuests => '2 adults, 1 child';
+  String get travelMockGuests => '2 взрослых, 1 ребёнок';
 
   @override
-  String get travelMockTehranHotels => 'Hotels in Tehran';
+  String get travelMockTehranHotels => 'Отели Тегерана';
 
   @override
   String get travelMockHotelEspinas => 'Espinas Palace Hotel';
 
   @override
-  String get travelMockHotelEspinasLocation => 'Saadat Abad, Tehran';
+  String get travelMockHotelEspinasLocation => 'Саадат-Абад, Тегеран';
 
   @override
   String get travelMockHotelParsian => 'Parsian International Hotel';
 
   @override
-  String get travelMockHotelParsianLocation => 'Valiasr Street, Tehran';
+  String get travelMockHotelParsianLocation => 'Улица Валиаср, Тегеран';
 
   @override
   String get travelMockHotelVisteria => 'Visteria Hotel';
 
   @override
-  String get travelMockHotelVisteriaLocation => 'Tajrish, Tehran';
+  String get travelMockHotelVisteriaLocation => 'Таджриш, Тегеран';
 
   @override
-  String get travelMockTehranAirport => 'Tehran (THR)';
+  String get travelMockTehranAirport => 'Тегеран (THR)';
 
   @override
-  String get travelMockIstanbulAirport => 'Istanbul (IST)';
+  String get travelMockIstanbulAirport => 'Стамбул (IST)';
 
   @override
-  String get travelMockRouteTehranIstanbul => 'Tehran → Istanbul';
+  String get travelMockRouteTehranIstanbul => 'Тегеран → Стамбул';
 
   @override
-  String get travelMockFlightTehranIstanbul => 'Tehran to Istanbul';
+  String get travelMockFlightTehranIstanbul => 'Тегеран — Стамбул';
 
   @override
   String get travelMockAirlineOne => 'eCardo Air';
@@ -6353,423 +6357,424 @@ class AppLocalizationsRu extends AppLocalizations {
   String get travelMockAirlineTwo => 'Atlas Airways';
 
   @override
-  String get travelEsimTurkey => 'Turkey eSIM';
+  String get travelEsimTurkey => 'eSIM Турция';
 
   @override
-  String get travelRecommended => 'Recommended';
+  String get travelRecommended => 'Рекомендуем';
 
   @override
-  String get travelBestValue => 'Best value';
+  String get travelBestValue => 'Оптимальный вариант';
 
   @override
-  String get travelLuxury => 'Luxury';
+  String get travelLuxury => 'Люкс';
 
   @override
-  String get travelDirect => 'Direct';
+  String get travelDirect => 'Без пересадок';
 
   @override
-  String get travelLowestPrice => 'Lowest price';
+  String get travelLowestPrice => 'Самая низкая цена';
 
   @override
-  String get travelFeatureBreakfast => 'Breakfast';
+  String get travelFeatureBreakfast => 'Завтрак';
 
   @override
-  String get travelFeaturePool => 'Pool';
+  String get travelFeaturePool => 'Бассейн';
 
   @override
   String get travelFeatureWifi => 'Wi-Fi';
 
   @override
-  String get travelFeatureParking => 'Parking';
+  String get travelFeatureParking => 'Парковка';
 
   @override
-  String get travelFeatureAirportTransfer => 'Airport transfer';
+  String get travelFeatureAirportTransfer => 'Трансфер';
 
   @override
-  String get travelFeatureCabinBag => 'Cabin bag';
+  String get travelFeatureCabinBag => 'Ручная кладь';
 
   @override
-  String get travelFeatureRefundable => 'Refundable';
+  String get travelFeatureRefundable => 'С возможностью возврата';
 
   @override
-  String get travelActivityFlightPurchase => 'Flight purchase';
+  String get travelActivityFlightPurchase => 'Покупка авиабилета';
 
   @override
-  String get travelActivityEsimPurchase => 'eSIM purchase';
+  String get travelActivityEsimPurchase => 'Покупка eSIM';
 
   @override
-  String get travelActivityWalletTopUp => 'Wallet top-up';
+  String get travelActivityWalletTopUp => 'Пополнение кошелька';
 
   @override
-  String get travelDemoOffer => 'Demo offer';
+  String get travelDemoOffer => 'Демо-предложение';
 
   @override
-  String get travelRequiresConfirmation => 'Confirmation required';
+  String get travelRequiresConfirmation => 'Требуется подтверждение';
 
   @override
-  String get travelHotelBooking => 'Hotel booking';
+  String get travelHotelBooking => 'Бронирование отеля';
 
   @override
-  String get travelReviewStep => 'Review';
+  String get travelReviewStep => 'Проверка';
 
   @override
-  String get travelConfirmationStep => 'Confirmation';
+  String get travelConfirmationStep => 'Подтверждение';
 
   @override
-  String get travelReviewConfirmation => 'I reviewed and confirm these details';
+  String get travelReviewConfirmation =>
+      'Я проверил(а) и подтверждаю эти данные';
 
   @override
   String get travelReviewConfirmationDescription =>
-      'Confirm the traveler, product, total, and wallet before creating the reservation.';
+      'Подтвердите пассажира, услугу, итоговую сумму и кошелёк перед созданием резервирования.';
 
   @override
   String get travelReservationHoldActive =>
-      'Complete payment before this reservation expires';
+      'Завершите оплату до истечения срока резервирования';
 
   @override
   String get travelReservationExpired =>
-      'Reservation expired. Start again to create a new hold.';
+      'Срок резервирования истёк. Начните заново, чтобы создать новое бронирование.';
 
   @override
-  String get travelNeedsAttention => 'Needs attention';
+  String get travelNeedsAttention => 'Требует внимания';
 
   @override
-  String get travelUpcomingAndActive => 'Upcoming and active';
+  String get travelUpcomingAndActive => 'Предстоящие и активные';
 
   @override
-  String get travelCancellationsAndRefunds => 'Cancellations and refunds';
+  String get travelCancellationsAndRefunds => 'Отмены и возвраты';
 
   @override
-  String get travelPaymentPending => 'Payment pending';
+  String get travelPaymentPending => 'Ожидается оплата';
 
   @override
-  String get travelPaymentProcessing => 'Payment processing';
+  String get travelPaymentProcessing => 'Обработка оплаты';
 
   @override
-  String get travelVoucherIssued => 'Voucher issued';
+  String get travelVoucherIssued => 'Ваучер оформлен';
 
   @override
-  String get travelCancellationRequested => 'Cancellation requested';
+  String get travelCancellationRequested => 'Запрос на отмену отправлен';
 
   @override
-  String get travelRefundInReview => 'Refund in review';
+  String get travelRefundInReview => 'Возврат на рассмотрении';
 
   @override
-  String get travelCancelled => 'Cancelled';
+  String get travelCancelled => 'Отменено';
 
   @override
-  String get travelExpired => 'Expired';
+  String get travelExpired => 'Истёк';
 
   @override
-  String get travelStatusUnavailable => 'Status unavailable';
+  String get travelStatusUnavailable => 'Статус недоступен';
 
   @override
-  String get travelBookingCancelled => 'Booking cancelled';
+  String get travelBookingCancelled => 'Бронирование отменено';
 
   @override
-  String get travelBookingExpired => 'Booking expired';
+  String get travelBookingExpired => 'Срок бронирования истёк';
 
   @override
-  String get travelCompletePayment => 'Complete payment';
+  String get travelCompletePayment => 'Завершить оплату';
 
   @override
-  String get travelPaymentIsProcessing => 'Payment is processing';
+  String get travelPaymentIsProcessing => 'Идёт обработка оплаты';
 
   @override
-  String get travelFlightRequestSubmitted => 'Flight request submitted';
+  String get travelFlightRequestSubmitted => 'Запрос на рейс отправлен';
 
   @override
-  String get travelEsimRequestSubmitted => 'eSIM request submitted';
+  String get travelEsimRequestSubmitted => 'Запрос на eSIM отправлен';
 
   @override
-  String get travelBookingStatusUnavailable => 'Booking status unavailable';
+  String get travelBookingStatusUnavailable => 'Статус бронирования недоступен';
 
   @override
   String get travelBookingCancelledDescription =>
-      'This booking is cancelled. No active voucher is available.';
+      'Это бронирование отменено. Активный ваучер недоступен.';
 
   @override
   String get travelBookingExpiredDescription =>
-      'The booking hold expired before it reached a confirmed state.';
+      'Время бронирования истекло до подтверждения.';
 
   @override
   String get travelCancellationRequestedDescription =>
-      'Your cancellation request is awaiting an authoritative supplier review.';
+      'Ваш запрос на отмену ожидает подтверждения от поставщика услуг.';
 
   @override
   String get travelRefundInReviewDescription =>
-      'Your refund request is under review. The final amount and timing are not confirmed yet.';
+      'Ваш запрос на возврат рассматривается. Итоговая сумма и сроки пока не подтверждены.';
 
   @override
   String get travelPaymentPendingDescription =>
-      'Payment has not been confirmed for this booking.';
+      'Оплата по этому бронированию не подтверждена.';
 
   @override
   String get travelPaymentProcessingDescription =>
-      'The wallet result is still being verified. Do not submit another payment.';
+      'Результат операции с кошельком ещё проверяется. Не отправляйте повторную оплату.';
 
   @override
   String get travelSupplierPendingDescription =>
-      'Payment was received, but supplier confirmation or the travel document is not ready yet.';
+      'Оплата получена, но подтверждение поставщика или дорожный документ пока не готовы.';
 
   @override
   String get travelUnknownStatusDescription =>
-      'The latest booking state could not be recognized. Refresh My Bookings before taking further action.';
+      'Не удалось распознать актуальный статус бронирования. Обновите «Мои бронирования» перед дальнейшими действиями.';
 
   @override
   String get travelConfirmedArtifactPendingDescription =>
-      'The booking is confirmed, but its voucher or ticket is not available yet.';
+      'Бронирование подтверждено, но ваучер или билет пока недоступны.';
 
   @override
-  String get travelStatusReference => 'Status reference';
+  String get travelStatusReference => 'Референс статуса';
 
   @override
-  String get travelRequestRefund => 'Request refund';
+  String get travelRequestRefund => 'Запросить возврат';
 
   @override
-  String get travelCancelBooking => 'Cancel booking';
+  String get travelCancelBooking => 'Отменить бронирование';
 
   @override
-  String get travelPurchaseDate => 'Purchase date';
+  String get travelPurchaseDate => 'Дата покупки';
 
   @override
-  String get travelSupplierReference => 'Supplier reference';
+  String get travelSupplierReference => 'Референс поставщика';
 
   @override
-  String get travelBookingNumber => 'Booking number';
+  String get travelBookingNumber => 'Номер бронирования';
 
   @override
-  String get travelVoucherNumber => 'Voucher number';
+  String get travelVoucherNumber => 'Номер ваучера';
 
   @override
-  String get travelRoom => 'Room';
+  String get travelRoom => 'Номер';
 
   @override
-  String get travelRooms => 'Rooms';
+  String get travelRooms => 'Номера';
 
   @override
-  String get travelBoard => 'Board';
+  String get travelBoard => 'Посадка';
 
   @override
-  String get travelCancellationPolicy => 'Cancellation policy';
+  String get travelCancellationPolicy => 'Правила отмены';
 
   @override
-  String get travelBeneficiary => 'Passenger or beneficiary';
+  String get travelBeneficiary => 'Пассажир или получатель';
 
   @override
-  String get travelDeparture => 'Departure';
+  String get travelDeparture => 'Вылет';
 
   @override
-  String get travelArrival => 'Arrival';
+  String get travelArrival => 'Прибытие';
 
   @override
-  String get travelFlightNumber => 'Flight number';
+  String get travelFlightNumber => 'Номер рейса';
 
   @override
-  String get travelAirline => 'Airline';
+  String get travelAirline => 'Авиакомпания';
 
   @override
-  String get travelCabin => 'Cabin';
+  String get travelCabin => 'Салон';
 
   @override
-  String get travelBaggage => 'Baggage';
+  String get travelBaggage => 'Багаж';
 
   @override
   String get travelRefundReviewNotice =>
-      'This sends a request for review. Cancellation and refund are not immediate, and supplier penalties may apply.';
+      'Будет отправлен запрос на рассмотрение. Отмена и возврат происходят не мгновенно; возможно применение штрафов поставщика.';
 
   @override
-  String get travelReason => 'Reason';
+  String get travelReason => 'Причина';
 
   @override
-  String get travelReasonPlansChanged => 'Travel plans changed';
+  String get travelReasonPlansChanged => 'Изменились планы на поездку';
 
   @override
-  String get travelReasonBookingMistake => 'Booking mistake';
+  String get travelReasonBookingMistake => 'Ошибка при бронировании';
 
   @override
-  String get travelReasonPersonal => 'Personal reason';
+  String get travelReasonPersonal => 'Личная причина';
 
   @override
-  String get travelAdditionalNoteOptional => 'Additional note (optional)';
+  String get travelAdditionalNoteOptional => 'Примечание (необязательно)';
 
   @override
-  String get travelKeepBooking => 'Keep booking';
+  String get travelKeepBooking => 'Оставить бронирование';
 
   @override
-  String get travelSubmitRequest => 'Submit request';
+  String get travelSubmitRequest => 'Отправить запрос';
 
   @override
   String get travelCancellationUnavailable =>
-      'The booking cannot be cancelled from its current state.';
+      'Бронирование нельзя отменить в его текущем статусе.';
 
   @override
   String get travelRefundRequestAwaitingReview =>
-      'Your cancellation and refund request is awaiting review.';
+      'Ваш запрос на отмену и возврат ожидает рассмотрения.';
 
   @override
-  String get travelPriceLowToHigh => 'Price: low to high';
+  String get travelPriceLowToHigh => 'Цена: по возрастанию';
 
   @override
-  String get travelPriceHighToLow => 'Price: high to low';
+  String get travelPriceHighToLow => 'Цена: по убыванию';
 
   @override
-  String get travelRatingHighToLow => 'Rating: high to low';
+  String get travelRatingHighToLow => 'Рейтинг: по убыванию';
 
   @override
-  String get travelAllRatings => 'All ratings';
+  String get travelAllRatings => 'Все оценки';
 
   @override
-  String get travelRating => 'Rating';
+  String get travelRating => 'Рейтинг';
 
   @override
-  String get travelSortAndFilter => 'Sort and filter';
+  String get travelSortAndFilter => 'Сортировка и фильтры';
 
   @override
-  String get travelShortestDuration => 'Shortest duration';
+  String get travelShortestDuration => 'Самая короткая длительность';
 
   @override
-  String get travelNonRefundable => 'Non-refundable';
+  String get travelNonRefundable => 'Без возможности возврата';
 
   @override
-  String get travelEsimDeviceReadinessTitle => 'Check device compatibility';
+  String get travelEsimDeviceReadinessTitle =>
+      'Проверьте совместимость устройства';
 
   @override
   String get travelEsimDeviceReadinessDescription =>
-      'Before purchase, confirm that your device supports eSIM and is unlocked for another mobile plan.';
+      'Перед покупкой убедитесь, что устройство поддерживает eSIM и не привязано к одному оператору.';
 
   @override
   String get travelEsimCompatibilityNotice =>
-      'Package purchase does not guarantee device compatibility. Installation details appear only after the backend marks the eSIM ready.';
+      'Покупка пакета не гарантирует совместимость с устройством. Данные для установки появятся после того, как сервер отметит eSIM готовой.';
 
   @override
-  String get travelEsimValidity => 'Validity';
+  String get travelEsimValidity => 'Срок действия';
 
   @override
-  String get travelEsimActivationReady =>
-      'Your eSIM installation details are ready.';
+  String get travelEsimActivationReady => 'Данные для установки eSIM готовы.';
 
   @override
-  String get travelPaymentReceived => 'Payment received';
+  String get travelPaymentReceived => 'Оплата получена';
 
   @override
   String get travelPaymentReceivedDescription =>
-      'Payment was received. eCardo Travel is completing supplier confirmation before issuing the final document.';
+      'Оплата получена. eCardo Travel завершает подтверждение с поставщиком перед выдачей итогового документа.';
 
   @override
   String get travelSearchFailedDescription =>
-      'Search did not complete. Previous results are still shown when available; edit the search or try again.';
+      'Поиск не завершён. Прошлые результаты показываются, если доступны; измените запрос или повторите попытку.';
 
   @override
   String get travelReservationFailedDescription =>
-      'Reservation could not be created. Your wallet was not charged by this app session.';
+      'Резервирование не создано. Списаний с кошелька в этом сеансе приложения не было.';
 
   @override
   String get travelRefundFailedDescription =>
-      'The cancellation or refund request was not submitted. Please review the booking and try again.';
+      'Запрос на отмену или возврат не отправлен. Проверьте бронирование и попробуйте снова.';
 
   @override
   String get travelNoPaymentAttemptedAfterExpiry =>
-      'No payment was attempted or charged in this app session for this expired hold.';
+      'За истёкшее бронирование оплата в этом сеансе приложения не взималась и не предпринималась.';
 
   @override
-  String get travelLastUpdated => 'Last updated';
+  String get travelLastUpdated => 'Обновлено';
 
   @override
-  String get travelJourneySearch => 'Search';
+  String get travelJourneySearch => 'Поиск';
 
   @override
-  String get travelJourneyCompare => 'Compare';
+  String get travelJourneyCompare => 'Сравнить';
 
   @override
-  String get travelJourneyReview => 'Review';
+  String get travelJourneyReview => 'Проверка';
 
   @override
-  String get travelJourneyPay => 'Pay';
+  String get travelJourneyPay => 'Оплатить';
 
   @override
   String get travelHotelSearchGuidance =>
-      'Choose the destination, dates, and occupancy. Results and availability always come from the Travel backend.';
+      'Выберите направление, даты и число гостей. Результаты и наличие всегда предоставляются сервером Travel.';
 
   @override
   String get travelHotelResultsGuidance =>
-      'Compare backend-provided price, rating, facilities, location, rooms, and policies before opening an option.';
+      'Перед открытием варианта сравните цену, рейтинг, удобства, расположение, номера и правила из данных сервера.';
 
   @override
   String get travelHotelDetailsGuidance =>
-      'Review the property, room facts, occupancy, price, and cancellation rules before continuing.';
+      'Проверьте отель, характеристики номеров, число гостей, цену и правила отмены перед продолжением.';
 
   @override
   String get travelFlightSearchGuidance =>
-      'Choose the route, date, and passenger count. Flight availability and fares always come from the Travel backend.';
+      'Выберите маршрут, дату и количество пассажиров. Наличие рейсов и тарифы всегда предоставляются сервером Travel.';
 
   @override
   String get travelFlightResultsGuidance =>
-      'Compare backend-provided times, airline, cabin, baggage, fare, and refundability before selecting.';
+      'Перед выбором сравните время рейса, авиакомпанию, класс, багаж, тариф и возможность возврата из данных сервера.';
 
   @override
   String get travelFlightDetailsGuidance =>
-      'Review the flight, fare components, baggage, passenger count, and cancellation rules before continuing.';
+      'Проверьте рейс, составляющие тарифа, багаж, количество пассажиров и правила отмены перед продолжением.';
 
   @override
   String travelSelectedForComparison(int count) {
-    return '$count selected';
+    return 'Выбрано: $count';
   }
 
   @override
-  String get travelCompare => 'Compare';
+  String get travelCompare => 'Сравнить';
 
   @override
   String get travelCompareLimit =>
-      'You can compare up to three options at a time.';
+      'Можно сравнить до трёх вариантов одновременно.';
 
   @override
-  String get travelCompareHotels => 'Compare hotels';
+  String get travelCompareHotels => 'Сравнить отели';
 
   @override
-  String get travelCompareFlights => 'Compare flights';
+  String get travelCompareFlights => 'Сравнить рейсы';
 
   @override
   String get travelComparisonUsesBackendFacts =>
-      'Only facts returned by the backend are shown. Missing facts are not inferred.';
+      'Показаны только данные, полученные от сервера. Недостающие данные не предполагаются.';
 
   @override
-  String get travelAddress => 'Address';
+  String get travelAddress => 'Адрес';
 
   @override
-  String get travelAircraft => 'Aircraft';
+  String get travelAircraft => 'Самолёт';
 
   @override
-  String get travelDescription => 'Description';
+  String get travelDescription => 'Описание';
 
   @override
-  String get travelDuration => 'Duration';
+  String get travelDuration => 'Длительность';
 
   @override
-  String get travelRefundPolicy => 'Refund policy';
+  String get travelRefundPolicy => 'Правила возврата';
 
   @override
   String get travelPostPurchaseGuidance =>
-      'Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel.';
+      'Сохраните номер подтверждения, обновляйте «Мои бронирования» для изменений статуса и используйте для поездки только оформленные документы от сервера.';
 
   @override
-  String get remittanceTitle => 'International Remittance';
+  String get remittanceTitle => 'Международный перевод';
 
   @override
-  String get remittanceHistoryTitle => 'Remittance History';
+  String get remittanceHistoryTitle => 'История переводов';
 
   @override
-  String get remittanceDetailsTitle => 'Remittance Details';
+  String get remittanceDetailsTitle => 'Детали перевода';
 
   @override
-  String get remittanceSelectPayoutMethod => 'Select Payout Method';
+  String get remittanceSelectPayoutMethod => 'Выберите способ выплаты';
 
   @override
   String get remittanceNoMethods =>
-      'No remittance methods available.\nPlease try again later.';
+      'Доступные способы переводов не найдены.\nПожалуйста, попробуйте позже.';
 
   @override
-  String get remittanceSendAmount => 'Send Amount';
+  String get remittanceSendAmount => 'Сумма отправления';
 
   @override
   String get remittanceSendCurrency => 'Валюта отправки';
@@ -6784,155 +6789,154 @@ class AppLocalizationsRu extends AppLocalizations {
   String get remittanceNoCurrencies => 'Нет доступных валют';
 
   @override
-  String get remittanceEnterAmount => 'Enter amount';
+  String get remittanceEnterAmount => 'Введите сумму';
 
   @override
-  String get remittanceUnknownMethod => 'Unknown';
+  String get remittanceUnknownMethod => 'Неизвестно';
 
   @override
   String remittanceRateLocked(int seconds) {
-    return 'Rate locked: ${seconds}s';
+    return 'Курс зафиксирован: $seconds с';
   }
 
   @override
-  String get remittanceExchangeRate => 'Exchange Rate';
+  String get remittanceExchangeRate => 'Курс обмена';
 
   @override
-  String get remittanceReceiveAmount => 'Receive Amount';
+  String get remittanceReceiveAmount => 'Сумма к получению';
 
   @override
-  String get remittanceSystemFee => 'System Fee';
+  String get remittanceSystemFee => 'Системная комиссия';
 
   @override
-  String get remittanceTotalPayable => 'Total Payable';
+  String get remittanceTotalPayable => 'Итого к оплате';
 
   @override
-  String get remittanceGetQuote => 'Get Quote';
+  String get remittanceGetQuote => 'Получить котировку';
 
   @override
-  String get remittanceStepAmount => 'Amount';
+  String get remittanceStepAmount => 'Сумма';
 
   @override
-  String get remittanceStepSender => 'Sender';
+  String get remittanceStepSender => 'Отправитель';
 
   @override
-  String get remittanceStepReceiver => 'Receiver';
+  String get remittanceStepReceiver => 'Получатель';
 
   @override
-  String get remittanceStepReview => 'Review';
+  String get remittanceStepReview => 'Проверка';
 
   @override
-  String get remittanceStepDone => 'Done';
+  String get remittanceStepDone => 'Готово';
 
   @override
-  String get remittanceSenderInfo => 'Sender Information';
+  String get remittanceSenderInfo => 'Информация об отправителе';
 
   @override
-  String get remittanceSelectCountry => 'Select country';
+  String get remittanceSelectCountry => 'Выберите страну';
 
   @override
-  String get remittanceSenderTypeIndividual => 'Individual';
+  String get remittanceSenderTypeIndividual => 'Физическое лицо';
 
   @override
-  String get remittanceSenderTypeBusiness => 'Business';
+  String get remittanceSenderTypeBusiness => 'Юридическое лицо';
 
   @override
-  String get remittanceSenderName => 'Full Name';
+  String get remittanceSenderName => 'Полное имя';
 
   @override
-  String get remittanceSenderPhone => 'Phone Number';
+  String get remittanceSenderPhone => 'Номер телефона';
 
   @override
-  String get remittanceSenderIdNumber => 'ID Number';
+  String get remittanceSenderIdNumber => 'Номер документа';
 
   @override
-  String get remittanceReceiverInfo => 'Receiver Information';
+  String get remittanceReceiverInfo => 'Информация о получателе';
 
   @override
-  String get remittancePayoutDetails => 'Payout Details';
+  String get remittancePayoutDetails => 'Детали выплаты';
 
   @override
   String get remittancePayoutDetailsHint =>
-      'Fill in the fields relevant to the selected payout method.';
+      'Заполните поля, относящиеся к выбранному способу выплаты.';
 
   @override
-  String get remittanceReceiverName => 'Full Name';
+  String get remittanceReceiverName => 'Полное имя';
 
   @override
-  String get remittanceReceiverPhone => 'Phone Number';
+  String get remittanceReceiverPhone => 'Номер телефона';
 
   @override
-  String get remittanceBankName => 'Bank Name';
+  String get remittanceBankName => 'Название банка';
 
   @override
-  String get remittanceAccountNumber => 'Account Number';
+  String get remittanceAccountNumber => 'Номер счёта';
 
   @override
   String get remittanceIban => 'IBAN';
 
   @override
-  String get remittanceAlipayAccount => 'Alipay Account';
+  String get remittanceAlipayAccount => 'Счёт Alipay';
 
   @override
-  String get remittanceWechatAccount => 'WeChat Account';
+  String get remittanceWechatAccount => 'Счёт WeChat';
 
   @override
-  String get remittanceReviewConfirm => 'Review & Confirm';
+  String get remittanceReviewConfirm => 'Проверка и подтверждение';
 
   @override
   String get remittanceReviewHint =>
-      'Please review all details before submitting your remittance request.';
+      'Проверьте все данные перед отправкой заявки на перевод.';
 
   @override
   String get remittanceTermsNotice =>
-      'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.';
+      'Отправляя заявку, вы соглашаетесь с условиями переводов. Курс фиксируется на 15 минут. После отправки потребуется загрузить документы KYC и квитанцию об оплате.';
 
   @override
-  String get remittanceReviewSender => 'Sender';
+  String get remittanceReviewSender => 'Отправитель';
 
   @override
-  String get remittanceReviewReceiver => 'Receiver';
+  String get remittanceReviewReceiver => 'Получатель';
 
   @override
-  String get remittanceReviewPayment => 'Payment';
+  String get remittanceReviewPayment => 'Платёж';
 
   @override
-  String get remittanceRequestSubmitted => 'Request Submitted!';
+  String get remittanceRequestSubmitted => 'Заявка отправлена!';
 
   @override
-  String get remittanceRequestCreated =>
-      'Your remittance request has been created.';
+  String get remittanceRequestCreated => 'Ваша заявка на перевод создана.';
 
   @override
-  String get remittanceUploadDocuments => 'Upload Documents';
+  String get remittanceUploadDocuments => 'Загрузить документы';
 
   @override
   String get remittanceUploadHint =>
-      'Upload your KYC documents and payment receipt to proceed.';
+      'Загрузите документы KYC и квитанцию об оплате, чтобы продолжить.';
 
   @override
-  String get remittanceAddDocument => 'Add Document';
+  String get remittanceAddDocument => 'Добавить документ';
 
   @override
-  String get remittanceDocumentType => 'Document Type';
+  String get remittanceDocumentType => 'Тип документа';
 
   @override
-  String get remittanceDocTypeKyc => 'KYC Document';
+  String get remittanceDocTypeKyc => 'Документ KYC';
 
   @override
-  String get remittanceDocTypePaymentReceipt => 'Payment Receipt';
+  String get remittanceDocTypePaymentReceipt => 'Квитанция об оплате';
 
   @override
-  String get remittanceDocTypePayoutReceipt => 'Payout Receipt';
+  String get remittanceDocTypePayoutReceipt => 'Квитанция о выплате';
 
   @override
-  String get remittanceDocTypeOther => 'Other';
+  String get remittanceDocTypeOther => 'Другое';
 
   @override
-  String get remittanceCancel => 'Cancel';
+  String get remittanceCancel => 'Отмена';
 
   @override
-  String get remittanceAdd => 'Add';
+  String get remittanceAdd => 'Добавить';
 
   @override
   String get remittanceTakePhoto => 'Сделать фото';
@@ -6954,159 +6958,157 @@ class AppLocalizationsRu extends AppLocalizations {
       'Нет подходящих файлов для загрузки. Пожалуйста, выберите документы заново.';
 
   @override
-  String get remittanceContinue => 'Continue';
+  String get remittanceContinue => 'Продолжить';
 
   @override
-  String get remittanceSubmitRequest => 'Submit Request';
+  String get remittanceSubmitRequest => 'Отправить заявку';
 
   @override
-  String get remittanceUploading => 'Uploading...';
+  String get remittanceUploading => 'Загрузка...';
 
   @override
-  String get remittanceRefresh => 'Refresh';
+  String get remittanceRefresh => 'Обновить';
 
   @override
-  String get remittanceNoHistory => 'No remittances yet';
+  String get remittanceNoHistory => 'Переводов пока нет';
 
   @override
   String get remittanceNoHistoryHint =>
-      'Your remittance history will appear here.';
+      'Здесь появится история ваших переводов.';
 
   @override
-  String get remittanceSend => 'Send';
+  String get remittanceSend => 'Отправка';
 
   @override
-  String get remittanceReceive => 'Receive';
+  String get remittanceReceive => 'Получение';
 
   @override
-  String get remittanceDate => 'Date';
+  String get remittanceDate => 'Дата';
 
   @override
-  String get remittanceNotFound => 'Remittance not found';
+  String get remittanceNotFound => 'Перевод не найден';
 
   @override
-  String get remittanceStatusFinalized => 'This request is finalized.';
+  String get remittanceStatusFinalized => 'Эта заявка завершена.';
 
   @override
-  String get remittanceStatusProcessing => 'Your request is being processed.';
+  String get remittanceStatusProcessing => 'Ваша заявка обрабатывается.';
 
   @override
-  String get remittanceStatusActionNeeded =>
-      'Please complete the required steps.';
+  String get remittanceStatusActionNeeded => 'Выполните необходимые шаги.';
 
   @override
-  String get remittanceDetailsSectionSender => 'Sender Information';
+  String get remittanceDetailsSectionSender => 'Информация об отправителе';
 
   @override
-  String get remittanceDetailsSectionReceiver => 'Receiver Information';
+  String get remittanceDetailsSectionReceiver => 'Информация о получателе';
 
   @override
-  String get remittanceDetailsSectionPayment => 'Payment Details';
+  String get remittanceDetailsSectionPayment => 'Детали платежа';
 
   @override
-  String get remittanceDetailsSectionTimeline => 'Status Timeline';
+  String get remittanceDetailsSectionTimeline => 'Хронология статусов';
 
   @override
-  String get remittanceErrLoadMethods => 'Failed to load methods';
+  String get remittanceErrLoadMethods => 'Не удалось загрузить способы';
 
   @override
-  String get remittanceErrSelectPayout => 'Please select a payout method';
+  String get remittanceErrSelectPayout => 'Выберите способ выплаты';
 
   @override
-  String get remittanceErrInvalidAmount => 'Please enter a valid amount';
+  String get remittanceErrInvalidAmount => 'Введите корректную сумму';
 
   @override
-  String get remittanceErrSelectSendCurrency => 'Please select a send currency';
+  String get remittanceErrSelectSendCurrency => 'Выберите валюту отправления';
 
   @override
-  String get remittanceErrQuoteFailed => 'Quote failed';
+  String get remittanceErrQuoteFailed => 'Не удалось получить котировку';
 
   @override
-  String get remittanceErrRequestQuoteFirst => 'Please request a quote first';
+  String get remittanceErrRequestQuoteFirst => 'Сначала запросите котировку';
 
   @override
   String get remittanceErrQuoteExpired =>
-      'Quote expired. Please request a new one.';
+      'Срок котировки истёк. Запросите новую.';
 
   @override
-  String get remittanceErrSenderInfo => 'Please complete sender information';
+  String get remittanceErrSenderInfo => 'Заполните информацию об отправителе';
 
   @override
-  String get remittanceErrReceiverInfo =>
-      'Please complete receiver information';
+  String get remittanceErrReceiverInfo => 'Заполните информацию о получателе';
 
   @override
-  String get remittanceErrSubmissionFailed => 'Submission failed';
+  String get remittanceErrSubmissionFailed => 'Не удалось отправить заявку';
 
   @override
-  String get remittanceErrNoRemittance => 'No remittance to upload to';
+  String get remittanceErrNoRemittance =>
+      'Нет перевода для загрузки документов';
 
   @override
-  String get remittanceErrAddDocument => 'Please add at least one document';
+  String get remittanceErrAddDocument => 'Добавьте хотя бы один документ';
 
   @override
-  String get remittanceErrUploadFailed => 'Upload failed';
+  String get remittanceErrUploadFailed => 'Не удалось загрузить файлы';
 
   @override
-  String get remittanceErrLoadDetails => 'Failed to load details';
+  String get remittanceErrLoadDetails => 'Не удалось загрузить данные';
 
   @override
-  String get remittanceErrCompleteSender => 'Please complete all sender fields';
+  String get remittanceErrCompleteSender => 'Заполните все поля отправителя';
 
   @override
-  String get remittanceErrCompleteReceiver =>
-      'Please complete all receiver fields';
+  String get remittanceErrCompleteReceiver => 'Заполните все поля получателя';
 
   @override
-  String get remittanceSuccessUploaded => 'Documents uploaded successfully';
+  String get remittanceSuccessUploaded => 'Документы успешно загружены';
 
   @override
-  String get remittanceError => 'Error';
+  String get remittanceError => 'Ошибка';
 
   @override
-  String get remittanceStatusDraft => 'Draft';
+  String get remittanceStatusDraft => 'Черновик';
 
   @override
-  String get remittanceStatusWaitingInformation => 'Waiting Information';
+  String get remittanceStatusWaitingInformation => 'Ожидание информации';
 
   @override
-  String get remittanceStatusWaitingDocuments => 'Waiting Documents';
+  String get remittanceStatusWaitingDocuments => 'Ожидание документов';
 
   @override
-  String get remittanceStatusWaitingPayment => 'Waiting Payment';
+  String get remittanceStatusWaitingPayment => 'Ожидание платежа';
 
   @override
-  String get remittanceStatusPaymentReviewing => 'Payment Reviewing';
+  String get remittanceStatusPaymentReviewing => 'Платёж проверяется';
 
   @override
-  String get remittanceStatusInProcess => 'In Process';
+  String get remittanceStatusInProcess => 'В обработке';
 
   @override
-  String get remittanceStatusDestinationProcessing => 'Destination Processing';
+  String get remittanceStatusDestinationProcessing => 'Выплата обрабатывается';
 
   @override
-  String get remittanceStatusDestinationPaid => 'Destination Paid';
+  String get remittanceStatusDestinationPaid => 'Выплачено получателю';
 
   @override
-  String get remittanceStatusCompleted => 'Completed';
+  String get remittanceStatusCompleted => 'Завершён';
 
   @override
-  String get remittanceStatusRejected => 'Rejected';
+  String get remittanceStatusRejected => 'Отклонён';
 
   @override
-  String get remittanceStatusExpired => 'Expired';
+  String get remittanceStatusExpired => 'Истёк';
 
   @override
-  String get remittanceStatusCancelled => 'Cancelled';
+  String get remittanceStatusCancelled => 'Отменён';
 
   @override
-  String get remittanceStatusRefundRequested => 'Refund Requested';
+  String get remittanceStatusRefundRequested => 'Запрошен возврат';
 
   @override
-  String get remittanceStatusRefundCompleted => 'Refund Completed';
+  String get remittanceStatusRefundCompleted => 'Возврат завершён';
 
   @override
-  String get remittanceStatusUnknown => 'Unknown';
+  String get remittanceStatusUnknown => 'Неизвестен';
 
   @override
   String get remittanceRetry => 'Повторить';
@@ -8221,22 +8223,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get webViewLinkCannotOpen => 'Эту ссылку нельзя открыть в приложении.';
 
   @override
-  String get networkReconnected => 'You are back online';
+  String get networkReconnected => 'Вы снова в сети';
 
   @override
   String get vpnHintBanner =>
-      'VPN detected — turn it off for a more stable experience';
+      'Обнаружен VPN — отключите его для более стабильной работы';
 
   @override
-  String get signInWithTelegram => 'Continue with Telegram';
+  String get signInWithTelegram => 'Продолжить через Telegram';
 
   @override
   String get signInTelegramUnavailable =>
-      'Telegram sign-in will be available once enabled on the server.';
+      'Вход через Telegram станет доступен, когда он будет включён на сервере.';
 
   @override
   String get sessionExpiredMessage =>
-      'Your session has expired. Please sign in again.';
+      'Ваша сессия истекла. Пожалуйста, войдите снова.';
 
   @override
   String get travelFromPrice => 'От';

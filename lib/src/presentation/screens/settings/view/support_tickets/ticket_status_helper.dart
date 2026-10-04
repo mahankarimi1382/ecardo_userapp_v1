@@ -48,6 +48,29 @@ class TicketStatusHelper {
     }
   }
 
+  static IconData icon(String? status) {
+    switch ((status ?? '').toLowerCase()) {
+      case 'open':
+        return Icons.mark_email_unread_outlined;
+      case 'in_progress':
+        return Icons.pending_actions_outlined;
+      case 'waiting_user':
+        return Icons.hourglass_empty_rounded;
+      case 'resolved':
+        return Icons.task_alt_rounded;
+      case 'closed':
+      case 'archived':
+        return Icons.check_circle_outline_rounded;
+      default:
+        return Icons.chat_bubble_outline_rounded;
+    }
+  }
+
+  static Color containerColor(String? status, {required bool isDark}) {
+    final c = color(status);
+    return isDark ? c.withValues(alpha: 0.22) : c.withValues(alpha: 0.12);
+  }
+
   static bool isClosed({bool? isClosed, String? status}) {
     if (isClosed != null) return isClosed;
     final s = (status ?? '').toLowerCase();

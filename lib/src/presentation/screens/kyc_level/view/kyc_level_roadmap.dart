@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_labels.dart';
 
 /// KycLevelRoadmap — visual verification roadmap and tier comparison cards
+/// Featuring connected roadmap stepper, benefit chips, tier requirements, and 4-state coverage.
 class KycLevelRoadmap extends StatelessWidget {
   final VoidCallback? onLevelTap;
 
@@ -19,24 +23,47 @@ class KycLevelRoadmap extends StatelessWidget {
     final controller = Get.find<KycLevelController>();
     final localization = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryTextColor =
-        isDark ? AppColors.warmWhite : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
 
     return Obx(() {
       if (controller.isLoading.value && controller.levels.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
+        return _buildLoadingSkeleton(isDark);
       }
 
       if (controller.levels.isEmpty) {
-        return const SizedBox.shrink();
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
+          child: EcardoEmptyState(
+            animateGlow: false,
+            iconData: Icons.verified_user_outlined,
+            title: localization?.kycRoadmapTitle ??
+                l10nPick(
+                  context,
+                  en: 'Verification Roadmap',
+                  fa: 'سطوح احراز هویت',
+                  ar: 'خريطة التحقق',
+                  zh: '认证等级路线',
+                ),
+            description: l10nPick(
+              context,
+              en: 'No verification tiers available at the moment.',
+              fa: 'در حال حاضر اطلاعات سطوح احراز هویت در دسترس نیست.',
+              ar: 'لا توجد مستويات تحقق متاحة حالياً.',
+              zh: '当前暂无可用的认证等级。',
+            ),
+            primaryActionLabel: l10nPick(context, en: 'Retry', fa: 'تلاش مجدد'),
+            onPrimaryAction: () => controller.fetchStatus(),
+          ),
+        );
       }
+
+      final levelsList = controller.levels.toList();
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Single, clean roadmap header with title & crystal clear guidance
+          // Header with title & guidance
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: Column(
@@ -51,13 +78,12 @@ class KycLevelRoadmap extends StatelessWidget {
                         ar: 'خريطة مستويات التحقق',
                         zh: '认证等级路线',
                       ),
-                  style: TextStyle(
-                    fontSize: 18.sp,
+                  style: AppTextStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.w800,
                     color: primaryTextColor,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: AppSpacing.xs),
                 Text(
                   l10nPick(
                     context,
@@ -68,8 +94,7 @@ class KycLevelRoadmap extends StatelessWidget {
                     ru: 'Повышайте уровень для увеличения лимитов и доступа к финансовым сервисам.',
                     zh: '逐步提升等级以提高交易限额并解锁高级金融服务。',
                   ),
-                  style: TextStyle(
-                    fontSize: 12.sp,
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: secondaryTextColor,
                     height: 1.35,
                   ),
@@ -77,43 +102,49 @@ class KycLevelRoadmap extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: AppSpacing.md),
 
-          // Levels list
-          ...controller.levels.map((level) => _LevelCard(
-                level: level,
-                onTap: onLevelTap,
-              )),
+          // Connected Stepper Roadmap Cards
+          ...List.generate(levelsList.length, (index) {
+            final level = levelsList[index];
+            final isLast = index == levelsList.length - 1;
+            return _StepperLevelCard(
+              level: level,
+              isLast: isLast,
+              onTap: onLevelTap,
+            );
+          }),
 
           // Upgrade CTA button (if next level is available)
           if (controller.nextLevel != null && !controller.isPending) ...[
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.md),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 18.w),
               child: SizedBox(
                 width: double.infinity,
-                height: 50.h,
-                child: ElevatedButton(
-                  onPressed: onLevelTap,
+                height: 48.h,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    if (onLevelTap != null) onLevelTap!();
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark
-                        ? AppColors.mainSoftBlue
-                        : AppColors.lightPrimary,
-                    foregroundColor:
-                        isDark ? AppColors.deepBlack : AppColors.white,
+                    backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     ),
                     elevation: 0,
                   ),
-                  child: Text(
+                  icon: const Icon(Icons.arrow_upward_rounded, size: 18),
+                  label: Text(
                     localization?.kycRoadmapContinueForLevel(
                           controller.nextLevel!.level,
                         ) ??
                         'Continue verification — level ${controller.nextLevel!.level}',
-                    style: TextStyle(
-                      fontSize: 15.sp,
+                    style: AppTextStyles.labelMedium.copyWith(
                       fontWeight: FontWeight.w700,
+                      color: isDark ? AppColors.deepBlack : AppColors.white,
                     ),
                   ),
                 ),
@@ -123,17 +154,17 @@ class KycLevelRoadmap extends StatelessWidget {
 
           // Pending review notification
           if (controller.isPending) ...[
-            SizedBox(height: 12.h),
+            SizedBox(height: AppSpacing.md),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 18.w),
-              padding: EdgeInsets.all(12.w),
+              padding: EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
                 color: isDark
-                    ? const Color(0xFF78350F).withValues(alpha: 0.35)
+                    ? const Color(0xFF78350F).withValues(alpha: 0.3)
                     : AppColors.warningContainer,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 border: Border.all(
-                  color: AppColors.warning.withValues(alpha: 0.3),
+                  color: AppColors.warning.withValues(alpha: 0.4),
                   width: 1,
                 ),
               ),
@@ -144,13 +175,12 @@ class KycLevelRoadmap extends StatelessWidget {
                     color: AppColors.warning,
                     size: 20.sp,
                   ),
-                  SizedBox(width: 8.w),
+                  SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Text(
                       localization?.kycRoadmapPending ??
                           'Your documents are under review. This usually takes 1–2 business days.',
-                      style: TextStyle(
-                        fontSize: 12.sp,
+                      style: AppTextStyles.bodySmall.copyWith(
                         color: primaryTextColor,
                         height: 1.3,
                       ),
@@ -163,17 +193,17 @@ class KycLevelRoadmap extends StatelessWidget {
 
           // Rejection notification
           if (controller.isRejected) ...[
-            SizedBox(height: 12.h),
+            SizedBox(height: AppSpacing.md),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 18.w),
-              padding: EdgeInsets.all(12.w),
+              padding: EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
                 color: isDark
                     ? const Color(0xFF450A0A).withValues(alpha: 0.35)
                     : AppColors.errorContainer,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 border: Border.all(
-                  color: AppColors.error.withValues(alpha: 0.3),
+                  color: AppColors.error.withValues(alpha: 0.4),
                   width: 1,
                 ),
               ),
@@ -184,12 +214,11 @@ class KycLevelRoadmap extends StatelessWidget {
                     color: AppColors.error,
                     size: 20.sp,
                   ),
-                  SizedBox(width: 8.w),
+                  SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Text(
                       _rejectedText(localization, controller),
-                      style: TextStyle(
-                        fontSize: 12.sp,
+                      style: AppTextStyles.bodySmall.copyWith(
                         color: primaryTextColor,
                         height: 1.3,
                       ),
@@ -204,8 +233,32 @@ class KycLevelRoadmap extends StatelessWidget {
     });
   }
 
-  /// Rejection message: server reason when present, localized guidance
-  /// otherwise — both halves localized.
+  Widget _buildLoadingSkeleton(bool isDark) {
+    return Column(
+      children: List.generate(
+        3,
+        (i) => Container(
+          margin: EdgeInsets.symmetric(horizontal: 18.w, vertical: 6.h),
+          height: 120.h,
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSurface : AppColors.white,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              width: 0.8,
+            ),
+          ),
+          child: Center(
+            child: CircularProgressIndicator(
+              color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              strokeWidth: 2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   String _rejectedText(
     AppLocalizations? localization,
     KycLevelController controller,
@@ -218,13 +271,17 @@ class KycLevelRoadmap extends StatelessWidget {
   }
 }
 
-/// A single KYC tier card with clean modern icons, crystal clear descriptions,
-/// spec chips, and ripple touch targets >= 44px.
-class _LevelCard extends StatelessWidget {
+/// A single KYC tier card connected with a visual stepper line and rich benefit chips
+class _StepperLevelCard extends StatelessWidget {
   final KycLevel level;
+  final bool isLast;
   final VoidCallback? onTap;
 
-  const _LevelCard({required this.level, this.onTap});
+  const _StepperLevelCard({
+    required this.level,
+    required this.isLast,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -233,213 +290,245 @@ class _LevelCard extends StatelessWidget {
     final color = Color(level.colorValue);
     final statusColor = _statusColor(level, color);
     final statusIcon = _statusIcon(level);
-    final primaryTextColor =
-        isDark ? AppColors.warmWhite : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
 
     final cardBg = isDark
         ? AppColors.darkSurface
         : (level.isLocked ? AppColors.lightBackground : AppColors.lightSurface);
     final borderColor = isDark
-        ? (level.isCurrent
-            ? color
-            : AppColors.lightWarmGray.withValues(alpha: 0.15))
+        ? (level.isCurrent ? color : AppColors.darkBorder)
         : (level.isCurrent ? color : AppColors.lightBorder);
 
-    return Container(
-      margin: EdgeInsets.only(bottom: 12.h, left: 18.w, right: 18.w),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: borderColor,
-          width: level.isCurrent ? 2 : 1,
-        ),
-        boxShadow: !isDark && !level.isLocked
-            ? [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(14),
-          onTap: level.isAvailable ? onTap : null,
-          child: Padding(
-            padding: EdgeInsets.all(14.w),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return IntrinsicHeight(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 18.w),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Left (or start) Stepper Column: Step Circle + Connecting Line
+            Column(
               children: [
-                // Level status icon badge
+                // Step Indicator Node
                 Container(
-                  width: 44.w,
-                  height: 44.w,
+                  width: 36.w,
+                  height: 36.w,
                   decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.14),
+                    color: statusColor.withValues(alpha: isDark ? 0.2 : 0.12),
                     shape: BoxShape.circle,
-                    border: Border.all(color: statusColor, width: 2),
+                    border: Border.all(
+                      color: statusColor,
+                      width: level.isCurrent ? 2.5 : 1.5,
+                    ),
+                    boxShadow: level.isCurrent
+                        ? [
+                            BoxShadow(
+                              color: statusColor.withValues(alpha: 0.35),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ]
+                        : null,
                   ),
                   child: Icon(
                     statusIcon,
                     color: statusColor,
-                    size: 22.sp,
-                  ),
-                ),
-                SizedBox(width: 12.w),
-
-                // Level information & crystal clear tier description
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 6.w,
-                        runSpacing: 4.h,
-                        children: [
-                          Text(
-                            localization?.kycUpgradeLevelChip(level.level) ??
-                                'Level ${level.level}',
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w700,
-                              color: secondaryTextColor,
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 6.w,
-                              vertical: 2.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: statusColor.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _statusLabel(level, localization),
-                              style: TextStyle(
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.w700,
-                                color: statusColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        level.name,
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w700,
-                          color: level.isLocked
-                              ? (isDark
-                                  ? AppColors.softGray
-                                  : AppColors.lightTextHint)
-                              : primaryTextColor,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 4.h),
-                      // Crystal clear tier description
-                      Text(
-                        _tierDescription(context, level),
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          height: 1.35,
-                          color: secondaryTextColor,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-
-                      // Feature & Limit Highlight micro-chips
-                      _buildTierHighlights(context, isDark, level),
-
-                      // Required docs (for current or available tiers)
-                      if ((level.isCurrent || level.isAvailable) &&
-                          level.requiredDocs.isNotEmpty) ...[
-                        SizedBox(height: 8.h),
-                        Wrap(
-                          spacing: 4.w,
-                          runSpacing: 4.h,
-                          children: level.requiredDocs.map((doc) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 6.w,
-                                vertical: 2.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? AppColors.darkBackground
-                                    : AppColors.lightBackground,
-                                borderRadius: BorderRadius.circular(6),
-                                border: isDark
-                                    ? Border.all(
-                                        color: AppColors.lightWarmGray
-                                            .withValues(alpha: 0.12),
-                                      )
-                                    : null,
-                              ),
-                              child: Text(
-                                KycDocLabels.label(localization, doc),
-                                style: TextStyle(
-                                  fontSize: 9.5.sp,
-                                  color: secondaryTextColor,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-
-                      // Server-defined dynamic transaction limits
-                      if (level.isAvailable && level.limits.isNotEmpty) ...[
-                        SizedBox(height: 8.h),
-                        _LimitsSection(
-                          localization: localization,
-                          level: level,
-                          isDark: isDark,
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                SizedBox(width: 8.w),
-
-                // Lock icon or chevron indicator
-                if (level.isLocked)
-                  Icon(
-                    Icons.lock_outline_rounded,
-                    color:
-                        isDark ? AppColors.softGray : AppColors.lightTextHint,
                     size: 18.sp,
-                  )
-                else if (level.isAvailable)
-                  Icon(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? Icons.chevron_left_rounded
-                        : Icons.chevron_right_rounded,
-                    color: color,
-                    size: 22.sp,
+                  ),
+                ),
+                // Stepper Line to next step
+                if (!isLast)
+                  Expanded(
+                    child: Container(
+                      width: 2.w,
+                      margin: EdgeInsets.symmetric(vertical: 4.h),
+                      color: level.isCompleted
+                          ? AppColors.success.withValues(alpha: 0.6)
+                          : (isDark ? AppColors.darkDivider : AppColors.lightDivider),
+                    ),
                   ),
               ],
             ),
-          ),
+            SizedBox(width: AppSpacing.md),
+
+            // Main Tier Information Card
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(bottom: AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: cardBg,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  border: Border.all(
+                    color: borderColor,
+                    width: level.isCurrent ? 2 : 1,
+                  ),
+                  boxShadow: !isDark && !level.isLocked
+                      ? [
+                          BoxShadow(
+                            color: AppColors.black.withValues(alpha: 0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                    onTap: level.isAvailable
+                        ? () {
+                            HapticFeedback.lightImpact();
+                            if (onTap != null) onTap!();
+                          }
+                        : null,
+                    child: Padding(
+                      padding: EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Level Chip & Status Pill
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 6.w,
+                                children: [
+                                  Text(
+                                    localization?.kycUpgradeLevelChip(level.level) ??
+                                        'Level ${level.level}',
+                                    style: AppTextStyles.labelSmall.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      color: secondaryTextColor,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w,
+                                      vertical: 2.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: statusColor.withValues(alpha: 0.12),
+                                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                    ),
+                                    child: Text(
+                                      _statusLabel(level, localization),
+                                      style: AppTextStyles.labelSmall.copyWith(
+                                        fontSize: 9.sp,
+                                        fontWeight: FontWeight.w800,
+                                        color: statusColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if (level.isLocked)
+                                Icon(
+                                  Icons.lock_outline_rounded,
+                                  color: isDark ? AppColors.softGray : AppColors.lightTextHint,
+                                  size: 16.sp,
+                                )
+                              else if (level.isAvailable)
+                                Icon(
+                                  Directionality.of(context) == TextDirection.rtl
+                                      ? Icons.chevron_left_rounded
+                                      : Icons.chevron_right_rounded,
+                                  color: color,
+                                  size: 20.sp,
+                                ),
+                            ],
+                          ),
+                          SizedBox(height: 4.h),
+
+                          // Tier Name
+                          Text(
+                            level.name,
+                            style: AppTextStyles.titleSmall.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: level.isLocked
+                                  ? (isDark ? AppColors.softGray : AppColors.lightTextHint)
+                                  : primaryTextColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 4.h),
+
+                          // Tier Description
+                          Text(
+                            _tierDescription(context, level),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: secondaryTextColor,
+                              height: 1.35,
+                            ),
+                          ),
+                          SizedBox(height: AppSpacing.sm),
+
+                          // Feature & Limit Highlight micro-chips
+                          _buildTierHighlights(context, isDark, level),
+
+                          // Required docs (for current or available tiers)
+                          if ((level.isCurrent || level.isAvailable) &&
+                              level.requiredDocs.isNotEmpty) ...[
+                            SizedBox(height: AppSpacing.sm),
+                            Wrap(
+                              spacing: 4.w,
+                              runSpacing: 4.h,
+                              children: level.requiredDocs.map((doc) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 6.w,
+                                    vertical: 2.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? AppColors.darkBackground
+                                        : AppColors.lightBackground,
+                                    borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
+                                    border: Border.all(
+                                      color: isDark
+                                          ? AppColors.darkBorder
+                                          : AppColors.lightBorder,
+                                      width: 0.8,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    KycDocLabels.label(localization, doc),
+                                    style: AppTextStyles.labelSmall.copyWith(
+                                      fontSize: 9.5.sp,
+                                      color: secondaryTextColor,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+
+                          // Server-defined dynamic transaction limits
+                          if (level.isAvailable && level.limits.isNotEmpty) ...[
+                            SizedBox(height: AppSpacing.sm),
+                            _LimitsSection(
+                              localization: localization,
+                              level: level,
+                              isDark: isDark,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// Crystal clear, comprehensive tier descriptions
   String _tierDescription(BuildContext context, KycLevel level) {
     if (level.description.trim().length > 25) {
       return level.description.trim();
@@ -486,87 +575,37 @@ class _LevelCard extends StatelessWidget {
     };
   }
 
-  /// Compact highlight badges for immediate tier comparison
   Widget _buildTierHighlights(
     BuildContext context,
     bool isDark,
     KycLevel level,
   ) {
-    final chipBg =
-        isDark ? AppColors.darkBackground : const Color(0xFFF1F5F9);
+    final chipBg = isDark ? AppColors.darkBackground : const Color(0xFFF1F5F9);
     final borderCol = isDark
-        ? AppColors.lightWarmGray.withValues(alpha: 0.12)
+        ? AppColors.darkBorder
         : const Color(0xFFE2E8F0);
     final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     final (limitText, cardText, featureText) = switch (level.level) {
       1 => (
           '\$1,000 / day',
-          l10nPick(
-            context,
-            en: '1 Card',
-            fa: '۱ کارت',
-            ar: 'بطاقة 1',
-            zh: '1张卡',
-          ),
-          l10nPick(
-            context,
-            en: 'Transfers',
-            fa: 'انتقال پایه',
-            ar: 'تحويلات',
-            zh: '转账',
-          ),
+          l10nPick(context, en: '1 Card', fa: '۱ کارت', ar: 'بطاقة 1', zh: '1张卡'),
+          l10nPick(context, en: 'Transfers', fa: 'انتقال پایه', ar: 'تحويلات', zh: '转账'),
         ),
       2 => (
           '\$10,000 / day',
-          l10nPick(
-            context,
-            en: '3 Cards',
-            fa: '۳ کارت',
-            ar: '3 بطاقات',
-            zh: '3张卡',
-          ),
-          l10nPick(
-            context,
-            en: 'Travel & FX',
-            fa: 'صرافی و سفر',
-            ar: 'سفر وصرافة',
-            zh: '商旅兑换',
-          ),
+          l10nPick(context, en: '3 Cards', fa: '۳ کارت', ar: '3 بطاقات', zh: '3张卡'),
+          l10nPick(context, en: 'Travel & FX', fa: 'صرافی و سفر', ar: 'سفر وصرافة', zh: '商旅兑换'),
         ),
       3 => (
           '\$100,000 / day',
-          l10nPick(
-            context,
-            en: 'Unlimited Cards',
-            fa: 'کارت نامحدود',
-            ar: 'بطاقات غير محدودة',
-            zh: '无限卡',
-          ),
-          l10nPick(
-            context,
-            en: 'Loans & VIP',
-            fa: 'وام و VIP',
-            ar: 'قروض وVIP',
-            zh: '信贷VIP',
-          ),
+          l10nPick(context, en: 'Unlimited Cards', fa: 'کارت نامحدود', ar: 'بطاقات غير محدودة', zh: '无限卡'),
+          l10nPick(context, en: 'Loans & VIP', fa: 'وام و VIP', ar: 'قروض وVIP', zh: '信贷VIP'),
         ),
       _ => (
           'Custom Limits',
-          l10nPick(
-            context,
-            en: 'Corporate',
-            fa: 'شرکتی',
-            ar: 'شركات',
-            zh: '企业卡',
-          ),
-          l10nPick(
-            context,
-            en: 'Merchant Facilities',
-            fa: 'امکانات تجاری',
-            ar: 'بوابات تجارية',
-            zh: '商户设施',
-          ),
+          l10nPick(context, en: 'Corporate', fa: 'شرکتی', ar: 'شركات', zh: '企业卡'),
+          l10nPick(context, en: 'Merchant Facilities', fa: 'امکانات تجاری', ar: 'بوابات تجارية', zh: '商户设施'),
         ),
     };
 
@@ -575,7 +614,7 @@ class _LevelCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.5.h),
         decoration: BoxDecoration(
           color: chipBg,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
           border: Border.all(color: borderCol, width: 0.8),
         ),
         child: Row(
@@ -585,7 +624,7 @@ class _LevelCard extends StatelessWidget {
             SizedBox(width: 4.w),
             Text(
               text,
-              style: TextStyle(
+              style: AppTextStyles.labelSmall.copyWith(
                 fontSize: 9.5.sp,
                 fontWeight: FontWeight.w600,
                 color: textColor,
@@ -654,25 +693,22 @@ class _LimitsSection extends StatelessWidget {
 
     final bg = isDark ? AppColors.darkBackground : AppColors.lightBackground;
     final chipBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final chipBorder = isDark
-        ? AppColors.lightWarmGray.withValues(alpha: 0.12)
-        : AppColors.lightBorder;
-    final primaryTextColor =
-        isDark ? AppColors.warmWhite : AppColors.lightTextPrimary;
+    final chipBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(8.w),
+      padding: EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             localization?.kycLimitsSectionTitle ?? 'Transaction limits',
-            style: TextStyle(
+            style: AppTextStyles.labelSmall.copyWith(
               fontSize: 10.sp,
               fontWeight: FontWeight.w700,
               color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
@@ -685,20 +721,16 @@ class _LimitsSection extends StatelessWidget {
             children: rows
                 .map(
                   (row) => Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                     decoration: BoxDecoration(
                       color: chipBg,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: chipBorder),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
+                      border: Border.all(color: chipBorder, width: 0.8),
                     ),
                     child: Text(
-                      row.measureLabel == null
-                          ? '${row.groupLabel}: ${row.value}'
-                          : '${row.groupLabel} — ${row.measureLabel}: ${row.value}',
-                      style: TextStyle(
+                      '${row.groupLabel}${row.measureLabel != null ? ' (${row.measureLabel})' : ''}: ${row.value}',
+                      style: AppTextStyles.labelSmall.copyWith(
                         fontSize: 9.sp,
-                        fontWeight: FontWeight.w600,
                         color: primaryTextColor,
                       ),
                     ),

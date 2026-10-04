@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/config/theme/dark_theme.dart';
 import 'package:ecardo_user/src/app/config/theme/light_theme.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -144,6 +145,62 @@ void main() {
       await lts.setThemeModePref('system');
       await tester.pumpAndSettle();
       expect(lts.themeMode.value, equals(ThemeMode.system));
+    });
+
+    test('SettingsIconTokens resolves robust light and dark semantic styles', () {
+      final tiles = <String, SettingsIconStyle Function(bool)>{
+        'profile': (dark) => SettingsIconTokens.profile(isDark: dark),
+        'kyc': (dark) => SettingsIconTokens.kyc(isDark: dark),
+        'demoLab': (dark) => SettingsIconTokens.demoLab(isDark: dark),
+        'changePassword': (dark) => SettingsIconTokens.changePassword(isDark: dark),
+        'transactionPin': (dark) => SettingsIconTokens.transactionPin(isDark: dark),
+        'twoFactor': (dark) => SettingsIconTokens.twoFactor(isDark: dark),
+        'paymentOtp': (dark) => SettingsIconTokens.paymentOtp(isDark: dark),
+        'deviceSessions': (dark) => SettingsIconTokens.deviceSessions(isDark: dark),
+        'biometric': (dark) => SettingsIconTokens.biometric(isDark: dark),
+        'autoAppLock': (dark) => SettingsIconTokens.autoAppLock(isDark: dark),
+        'appLockPin': (dark) => SettingsIconTokens.appLockPin(isDark: dark),
+        'notificationAccessGranted': (dark) =>
+            SettingsIconTokens.notificationAccess(isDark: dark, granted: true),
+        'notificationAccessDenied': (dark) =>
+            SettingsIconTokens.notificationAccess(isDark: dark, granted: false),
+        'notificationFinancial': (dark) =>
+            SettingsIconTokens.notificationFinancial(isDark: dark),
+        'notificationPromo': (dark) =>
+            SettingsIconTokens.notificationPromo(isDark: dark),
+        'notificationSecurity': (dark) =>
+            SettingsIconTokens.notificationSecurity(isDark: dark),
+        'sound': (dark) => SettingsIconTokens.sound(isDark: dark),
+        'vibration': (dark) => SettingsIconTokens.vibration(isDark: dark),
+        'notificationFeed': (dark) =>
+            SettingsIconTokens.notificationFeed(isDark: dark),
+        'permissions': (dark) => SettingsIconTokens.permissions(isDark: dark),
+        'language': (dark) => SettingsIconTokens.language(isDark: dark),
+        'theme': (dark) => SettingsIconTokens.theme(isDark: dark),
+        'rateUnit': (dark) => SettingsIconTokens.rateUnit(isDark: dark),
+        'support': (dark) => SettingsIconTokens.support(isDark: dark),
+        'about': (dark) => SettingsIconTokens.about(isDark: dark),
+        'terms': (dark) => SettingsIconTokens.terms(isDark: dark),
+        'appUpdate': (dark) => SettingsIconTokens.appUpdate(isDark: dark),
+        'demoKyc': (dark) => SettingsIconTokens.demoKyc(isDark: dark),
+        'demoExit': (dark) => SettingsIconTokens.demoExit(isDark: dark),
+      };
+
+      for (final entry in tiles.entries) {
+        final lightStyle = entry.value(false);
+        final darkStyle = entry.value(true);
+
+        expect(lightStyle.iconColor, isNotNull, reason: '${entry.key} light iconColor');
+        expect(lightStyle.backgroundColor, isNotNull, reason: '${entry.key} light bgColor');
+        expect(darkStyle.iconColor, isNotNull, reason: '${entry.key} dark iconColor');
+        expect(darkStyle.backgroundColor, isNotNull, reason: '${entry.key} dark bgColor');
+        expect(lightStyle.iconColor != lightStyle.backgroundColor, isTrue);
+        expect(darkStyle.iconColor != darkStyle.backgroundColor, isTrue);
+      }
+
+      // Chevron color verification
+      expect(SettingsIconTokens.chevronColor(isDark: false), isNotNull);
+      expect(SettingsIconTokens.chevronColor(isDark: true), equals(AppColors.softGray));
     });
   });
 

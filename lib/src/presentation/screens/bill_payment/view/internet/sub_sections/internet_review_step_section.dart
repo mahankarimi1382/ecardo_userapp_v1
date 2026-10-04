@@ -1,205 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/controller/internet_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/bill_payment/view/widgets/bill_review_receipt_card.dart';
 
 class InternetReviewStepSection extends StatelessWidget {
   const InternetReviewStepSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final InternetController controller = Get.find();
     final localization = AppLocalizations.of(context);
+    final InternetController controller = Get.find<InternetController>();
+    final settings = Get.find<SettingsService>();
 
-    return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              localization!.internetReviewTitle,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                color: AppColors.lightTextPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                children: [
-                  Obx(
-                    () => _buildReviewDynamicContent(
-                      context,
-                      title: localization.internetReviewAmountLabel,
-                      content:
-                          "${controller.amountText.value.isEmpty ? "0" : controller.amountText.value} ${controller.serviceData.value!.currency}",
-                      contentColor: AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
-                  ),
-                  const SizedBox(height: 20),
-                  Obx(
-                    () => _buildReviewDynamicContent(
-                      context,
-                      title: localization.internetReviewChargeLabel,
-                      content: controller.chargeText.value,
-                      contentColor: AppColors.error,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
-                  ),
-                  const SizedBox(height: 20),
-                  Obx(
-                    () => _buildReviewDynamicContent(
-                      context,
-                      title: localization.internetReviewConversionRateLabel,
-                      content: controller.rateText.value,
-                      contentColor: AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
-                  ),
-                  const SizedBox(height: 20),
-                  Obx(() {
-                    final settings = Get.find<SettingsService>();
+    final int decimals = int.tryParse(
+          settings.getSetting("site_currency_decimals")?.toString() ?? "2",
+        ) ??
+        2;
+    final String currency = settings.getSetting("site_currency")?.toString() ?? "تومان";
 
-                    final int decimals =
-                        int.tryParse(
-                          settings
-                                  .getSetting("site_currency_decimals")
-                                  ?.toString() ??
-                              "2",
-                        ) ??
-                        2;
-
-                    final String currency =
-                        settings.getSetting("site_currency")?.toString() ?? "";
-
-                    final String payableText =
-                        "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency";
-
-                    return _buildReviewDynamicContent(
-                      context,
-                      title: localization.internetReviewPayableAmountLabel,
-                      content: payableText,
-                      contentColor: AppColors.lightTextPrimary,
-                    );
-                  }),
-                ],
-              ),
-            ),
-            const SizedBox(height: 40),
-
-            Row(
-              children: [
-                Expanded(
-                  child: CommonIconButton(
-                    backgroundColor: AppColors.lightPrimary.withValues(
-                      alpha: 0.04,
-                    ),
-                    borderWidth: 2,
-                    borderColor: AppColors.lightPrimary.withValues(alpha: 0.50),
-                    width: double.infinity,
-                    height: 52,
-                    text: localization.internetReviewBackButton,
-                    icon: PngAssets.reviewArrowBackCommonIcon,
-                    iconWidth: 18,
-                    iconHeight: 18,
-                    iconAndTextSpace: 8,
-                    iconColor: AppColors.lightTextPrimary,
-                    textColor: AppColors.lightTextPrimary,
-                    onPressed: () => controller.currentStep.value = 0,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Obx(
-                    () => CommonIconButton(
-                      // PAYMENT-FIX (P-2): bind to the submit state — a
-                      // second tap while the request is in flight must not
-                      // fire (mirrors the cash_out review step).
-                      isLoading: controller.isSubmitLoading.value,
-                      onPressed: () => controller.submitPayBill(),
-                      width: double.infinity,
-                      height: 52,
-                      text: localization.internetReviewConfirmButton,
-                      icon: PngAssets.reviewArrowRightCommonIcon,
-                      iconWidth: 18,
-                      iconHeight: 18,
-                      iconAndTextSpace: 8,
-                      isIconRight: true,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 50),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Widget _buildReviewDynamicContent(
-    BuildContext context, {
-    required String title,
-    required String content,
-    required Color contentColor,
-  }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              content,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 15,
-                color: contentColor,
-              ),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-            ),
-          ),
-        ],
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 18.w),
+      child: Obx(() {
+        final payableText =
+            "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency";
+
+        final recipient = controller.targetAccountNumber.value.isNotEmpty
+            ? controller.targetAccountNumber.value
+            : (controller.dynamicFieldControllers.values.firstOrNull?.text ?? 'حساب کاربری اینترنت');
+
+        final baseAmountText =
+            "${controller.amountText.value.isEmpty ? "0" : controller.amountText.value} ${controller.serviceData.value?.currency ?? currency}";
+
+        return BillReviewReceiptCard(
+          serviceTitle: localization?.internetReviewTitle ?? 'اینترنت و بسته‌های دیتا',
+          operatorId: controller.selectedOperatorId.value,
+          operatorName: controller.selectedOperatorName.value,
+          recipientValue: recipient,
+          recipientLabel: 'شناسه کاربری / تلفن اشتراک',
+          baseAmount: baseAmountText,
+          chargeAmount: controller.chargeText.value.isEmpty ? '0 $currency' : controller.chargeText.value,
+          conversionRate: controller.rateText.value.isEmpty ? null : controller.rateText.value,
+          payableAmount: payableText,
+          isLoading: controller.isSubmitLoading.value,
+          confirmButtonText: localization?.internetReviewConfirmButton ?? 'تأیید و تمدید اشتراک',
+          backButtonText: localization?.internetReviewBackButton ?? 'بازگشت',
+          onBack: () => controller.currentStep.value = 0,
+          onConfirm: () => controller.submitPayBill(),
+        );
+      }),
     );
   }
 }

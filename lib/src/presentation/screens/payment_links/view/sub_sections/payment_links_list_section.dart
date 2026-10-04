@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_error_view.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/payment_links/model/payment_links_history_model.dart';
-import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
-
-import '../../../../../../l10n/app_localizations.dart';
 
 class PaymentLinksListSection extends StatefulWidget {
   const PaymentLinksListSection({super.key});
@@ -24,6 +25,7 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
   final PaymentLinksController controller = Get.find();
   final SettingsService settingsService = Get.find();
   late ScrollController _scrollController;
+  final RxBool _hasLoadError = false.obs;
 
   @override
   void initState() {
@@ -52,17 +54,30 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
 
   Future<void> loadData() async {
     controller.isListLoading.value = true;
-    await controller.fetchPaymentLinksHistory(isRefresh: true);
-    controller.isListLoading.value = false;
+    _hasLoadError.value = false;
+    try {
+      await controller.fetchPaymentLinksHistory(isRefresh: true);
+    } catch (_) {
+      _hasLoadError.value = true;
+    } finally {
+      controller.isListLoading.value = false;
+    }
   }
 
   Future<void> _onRefresh() async {
-    await controller.fetchPaymentLinksHistory(isRefresh: true);
+    _hasLoadError.value = false;
+    try {
+      await controller.fetchPaymentLinksHistory(isRefresh: true);
+    } catch (_) {
+      _hasLoadError.value = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Expanded(
       child: Stack(
         children: [
@@ -70,33 +85,80 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
             final paymentLinks = controller.allPaymentLinks;
 
             if (controller.isListLoading.value && paymentLinks.isEmpty) {
-              return CommonLoading();
+              return const CommonLoading();
+            }
+
+            if (_hasLoadError.value && paymentLinks.isEmpty) {
+              return EcardoErrorView(
+                message: localizations.allControllerLoadError,
+                onRetry: loadData,
+                retryLabel: localizations.noInternetConnectionRetryButton,
+              );
             }
 
             if (paymentLinks.isEmpty) {
-              return NoDataFound();
+              return LayoutBuilder(
+                builder: (context, constraints) => SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Center(
+                      child: EcardoEmptyState(
+                        title: localizations.paymentLinksTabList,
+                        description: localizations.noDataFound,
+                        iconData: Icons.link_rounded,
+                        primaryActionLabel: localizations.paymentLinksTabCreate,
+                        onPrimaryAction: () {
+                          HapticFeedback.lightImpact();
+                          controller.selectedScreen.value = 1;
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              );
             }
 
             return RefreshIndicator(
-              color: AppColors.lightPrimary,
+              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
               onRefresh: _onRefresh,
               child: ListView.separated(
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 controller: _scrollController,
                 padding: const EdgeInsetsDirectional.only(
-                  top: 30,
-                  bottom: 30,
-                  start: 18,
-                  end: 18,
+                  top: AppSpacing.lg,
+                  bottom: AppSpacing.xxxl,
+                  start: AppSpacing.page,
+                  end: AppSpacing.page,
                 ),
                 itemBuilder: (context, index) {
                   final PaymentLinks paymentLink = paymentLinks[index];
+                  final isPaid = paymentLink.isPaid == true;
+                  final statusColor =
+                      isPaid ? AppColors.success : AppColors.warning;
 
                   return Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSpacing.lg),
                     decoration: BoxDecoration(
-                      color: Color(0xFFFFF9F0),
-                      borderRadius: BorderRadius.circular(16),
+                      color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusLg,
+                      ),
+                      border: Border.all(
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDark
+                              ? AppColors.darkShadow
+                              : AppColors.lightShadow,
+                          blurRadius: AppSpacing.sm,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,15 +174,21 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                                   style: TextStyle(
                                     letterSpacing: 0,
                                     overflow: TextOverflow.ellipsis,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 15,
-                                    color: AppColors.lightTextPrimary,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    color: isDark
+                                        ? AppColors.darkTextPrimary
+                                        : AppColors.lightTextPrimary,
                                   ),
                                 ),
                               ),
                             ),
                             InkWell(
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm,
+                              ),
                               onTap: () {
+                                HapticFeedback.lightImpact();
                                 Clipboard.setData(
                                   ClipboardData(
                                     text: paymentLink.paymentLink ?? "",
@@ -131,76 +199,96 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                                 );
                               },
                               child: Container(
-                                width: 30,
-                                height: 30,
+                                width: 34,
+                                height: 34,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusSm,
+                                  ),
+                                  color: (isDark
+                                          ? AppColors.darkPrimary
+                                          : AppColors.lightPrimary)
+                                      .withValues(alpha: 0.10),
                                   border: Border.all(
-                                    color: AppColors.lightPrimary.withValues(
-                                      alpha: 0.16,
-                                    ),
-                                    width: 2,
+                                    color: (isDark
+                                            ? AppColors.darkPrimary
+                                            : AppColors.lightPrimary)
+                                        .withValues(alpha: 0.25),
+                                    width: 1,
                                   ),
                                 ),
-                                padding: EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(AppSpacing.xs + 2),
                                 child: Image.asset(
                                   PngAssets.commonGiftCopyIcon,
+                                  color: isDark
+                                      ? AppColors.darkPrimary
+                                      : AppColors.lightPrimary,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.sm),
                         Text(
-                          "${localizations.paymentLinksListItemCreatedAt}${paymentLink.createdAt}",
+                          "${localizations.paymentLinksListItemCreatedAt} ${paymentLink.createdAt ?? ''}",
                           style: TextStyle(
                             letterSpacing: 0,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            color: AppColors.lightTextTertiary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextTertiary,
                           ),
                         ),
-                        SizedBox(height: 12),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.white,
-                                AppColors.lightTextPrimary.withValues(
-                                  alpha: 0.2,
-                                ),
-                                AppColors.white,
-                              ],
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.md,
+                          ),
+                          child: Divider(
+                            height: 1,
+                            color: isDark
+                                ? AppColors.darkDivider
+                                : AppColors.lightDivider,
                           ),
                         ),
-                        SizedBox(height: 12),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               localizations.paymentLinksListItemStatus,
                               style: TextStyle(
                                 letterSpacing: 0,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                                color: AppColors.lightTextTertiary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextTertiary,
                               ),
                             ),
-                            Flexible(
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
+                                vertical: AppSpacing.xs,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusFull,
+                                ),
+                                border: Border.all(
+                                  color: statusColor.withValues(alpha: 0.3),
+                                ),
+                                color: statusColor.withValues(alpha: 0.08),
+                              ),
                               child: Text(
-                                paymentLink.isPaid == true
+                                isPaid
                                     ? localizations.paymentLinksStatusPaid
                                     : localizations.paymentLinksStatusUnpaid,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   letterSpacing: 0,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                  color: paymentLink.isPaid == true
-                                      ? AppColors.success
-                                      : AppColors.error,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 12,
+                                  color: statusColor,
                                 ),
                               ),
                             ),
@@ -210,19 +298,12 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                     ),
                   );
                 },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 15);
-                },
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: AppSpacing.md),
                 itemCount: paymentLinks.length,
               ),
             );
           }),
-          Obx(
-            () => Visibility(
-              visible: controller.isListLoadingMore.value,
-              child: const CommonLoading(),
-            ),
-          ),
         ],
       ),
     );

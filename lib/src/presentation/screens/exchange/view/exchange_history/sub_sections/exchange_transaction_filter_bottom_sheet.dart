@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_history_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 
 class ExchangeTransactionFilterBottomSheet extends StatefulWidget {
   const ExchangeTransactionFilterBottomSheet({super.key});
@@ -23,42 +26,46 @@ class _ExchangeTransactionFilterBottomSheetState
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = ExchangeDesignTokens.isDark(context);
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: AppSpacing.normal,
       curve: Curves.easeOutQuart,
-      height: 400,
-      margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+      height: 410,
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+        color: ExchangeDesignTokens.cardSurface(context),
+        borderRadius: const BorderRadiusDirectional.only(
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.5)
+                : AppColors.black.withValues(alpha: 0.08),
             blurRadius: 40,
             spreadRadius: 0,
-            offset: Offset(0, 0),
+            offset: Offset.zero,
           ),
         ],
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 18),
+        padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               Container(
                 width: 40,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(30),
+                  color: ExchangeDesignTokens.textPrimary(context)
+                      .withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
               CommonRequiredLabelAndDynamicField(
                 labelText: localizations.exchangeFilterTransactionId,
                 isLabelRequired: false,
@@ -72,7 +79,7 @@ class _ExchangeTransactionFilterBottomSheetState
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: AppSpacing.lg),
               CommonRequiredLabelAndDynamicField(
                 labelText: localizations.exchangeFilterStatus,
                 isLabelRequired: false,
@@ -94,7 +101,7 @@ class _ExchangeTransactionFilterBottomSheetState
                                   final status = controller.statusList[index];
                                   final isSelected =
                                       controller.selectedStatusIndex.value ==
-                                      index;
+                                          index;
 
                                   Color getStatusColor(String status) {
                                     switch (status.toLowerCase()) {
@@ -105,18 +112,22 @@ class _ExchangeTransactionFilterBottomSheetState
                                       case 'failed':
                                         return AppColors.error;
                                       default:
-                                        return AppColors.lightTextPrimary;
+                                        return isDark
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.lightPrimary;
                                     }
                                   }
 
                                   final statusColor = getStatusColor(status);
 
                                   return InkWell(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusSm,
+                                    ),
                                     onTap: () {
+                                      HapticFeedback.selectionClick();
                                       if (controller
-                                              .selectedStatusIndex
-                                              .value ==
+                                              .selectedStatusIndex.value ==
                                           index) {
                                         controller.selectedStatusIndex.value =
                                             -1;
@@ -126,33 +137,41 @@ class _ExchangeTransactionFilterBottomSheetState
                                       }
                                     },
                                     child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 200,
-                                      ),
+                                      duration: AppSpacing.fast,
                                       alignment: Alignment.center,
-                                      padding: EdgeInsetsDirectional.symmetric(
-                                        horizontal: 18,
+                                      padding:
+                                          const EdgeInsetsDirectional.symmetric(
+                                        horizontal: AppSpacing.lg,
                                       ),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(
+                                          AppSpacing.radiusSm,
+                                        ),
                                         color: isSelected
                                             ? statusColor
-                                            : AppColors.lightBackground,
+                                            : (isDark
+                                                ? AppColors.darkSurfaceVariant
+                                                : AppColors.lightBackground),
                                         border: Border.all(
                                           color: isSelected
                                               ? statusColor
-                                              : AppColors.lightTextPrimary
-                                                    .withValues(alpha: 0.06),
+                                              : ExchangeDesignTokens.cardBorder(
+                                                  context,
+                                                ),
                                         ),
                                       ),
                                       child: Text(
-                                        StatusLabelHelper.localize(localizations, status),
+                                        StatusLabelHelper.localize(
+                                          localizations,
+                                          status,
+                                        ),
                                         style: TextStyle(
                                           letterSpacing: 0,
-                                          fontSize: 14,
+                                          fontSize: 13,
                                           color: isSelected
                                               ? AppColors.white
-                                              : AppColors.lightTextTertiary,
+                                              : ExchangeDesignTokens
+                                                  .textTertiary(context),
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
@@ -168,29 +187,33 @@ class _ExchangeTransactionFilterBottomSheetState
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: AppSpacing.xxxl),
               CommonButton(
                 onPressed: () {
+                  HapticFeedback.lightImpact();
                   controller.updateStatusFilter();
                   controller.fetchDynamicTransactions();
                   Get.back();
                 },
                 width: double.infinity,
-
+                backgroundColor: isDark
+                    ? AppColors.mainSoftBlue
+                    : AppColors.lightPrimary,
+                textColor: isDark ? AppColors.deepBlack : AppColors.white,
                 text: localizations.exchangeFilterButton,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.md),
               CommonButton(
                 backgroundColor: AppColors.error,
                 onPressed: () {
+                  HapticFeedback.lightImpact();
                   controller.resetFilters();
                   Get.back();
                 },
                 width: double.infinity,
-
                 text: localizations.exchangeFilterReset,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: AppSpacing.xxxl),
             ],
           ),
         ),

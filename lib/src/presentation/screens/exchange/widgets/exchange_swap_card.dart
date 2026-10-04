@@ -5,30 +5,21 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/wallet_selector_sheet.dart';
 
-/// Unified from/to card with a circular Swap button overlapping the seam.
+/// Unified From ⇄ To card with a hero Swap button overlapping the seam.
 ///
-/// Layout (top → bottom):
-///   ┌─────────────────────────────────────┐
-///   │  FROM  [icon] USDT ▾     [balance]  │  ← gradient + glass overlay
-///   │  [Amount input — large, hero]       │
-///   ├────[⇅]──────────────────────────────┤
-///   │  TO    [icon] BTC  ▾                 │  ← light surface
-///   │  You will receive ≈ 0.02340000 BTC  │
-///   └─────────────────────────────────────┘
-///
-/// The swap button is centred on the seam. Tapping it:
-///   1. fires [HapticFeedback.selectionClick]
-///   2. triggers a 180° rotation animation on the icon
-///   3. calls [onSwapPressed] which the controller uses to swap from/to
-///
-/// The amount input on the FROM side is wired directly to the controller's
-/// [TextEditingController] and [FocusNode] passed in — this widget owns no
-/// state of its own for the amount.
+/// Features:
+///   - 180° animated rotation + haptic feedback on swap
+///   - Frosted glassmorphism on the Hero Amount field
+///   - Full Dark Mode and RTL directional layout
+///   - M3 design token adoption from [AppSpacing] and [ExchangeDesignTokens]
 class ExchangeSwapCard extends StatefulWidget {
   const ExchangeSwapCard({
     super.key,
@@ -80,26 +71,46 @@ class ExchangeSwapCard extends StatefulWidget {
 class _ExchangeSwapCardState extends State<ExchangeSwapCard>
     with TickerProviderStateMixin {
   late final AnimationController _swapRotationController;
+  late final AnimationController _swapScaleController;
+  late final Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _swapRotationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 360),
+    );
+
+    _swapScaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 140),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.88).animate(
+      CurvedAnimation(
+        parent: _swapScaleController,
+        curve: Curves.easeInOut,
+      ),
     );
   }
 
   @override
   void dispose() {
     _swapRotationController.dispose();
+    _swapScaleController.dispose();
     super.dispose();
   }
 
   void _handleSwap() {
-    HapticFeedback.selectionClick();
-    // Restart from current angle so rapid taps override gracefully without
-    // queueing (per spec: animations must be interruptible).
+    HapticFeedback.mediumImpact();
+
+    // Micro-interaction: scale down and pop back
+    _swapScaleController.forward().then((_) {
+      if (mounted) _swapScaleController.reverse();
+    });
+
+    // Smooth 180° rotation
     _swapRotationController.forward(from: 0.0);
     widget.onSwapPressed();
   }
@@ -126,21 +137,20 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
               isFrom: true,
             ),
           ),
-          // Swap button sits in the gap between the two cards,
-          // overlapping both. We translate it up by half its height so
-          // it visually straddles the seam.
+          // Swap button sits in the seam between the two cards
           Transform.translate(
             offset: const Offset(0, -_kSwapButtonSize / 2),
             child: Center(
-              child: _SwapButton(
-                rotation: _swapRotationController,
-                onTap: _handleSwap,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: _SwapButton(
+                  rotation: _swapRotationController,
+                  onTap: _handleSwap,
+                ),
               ),
             ),
           ),
-          // Pull the to-card up by half the swap button's height so the
-          // total visual gap between cards stays at the swap-button
-          // diameter.
+          // Pull the to-card up by half the swap button's height to seal the seam
           Transform.translate(
             offset: const Offset(0, -_kSwapButtonSize / 2),
             child: _ToCard(
@@ -167,8 +177,7 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
     final loc = AppLocalizations.of(context)!;
     Get.bottomSheet(
       WalletSelectorSheet(
-        wallets:
-            isFrom ? widget.fromWalletsList : widget.toWalletsList,
+        wallets: isFrom ? widget.fromWalletsList : widget.toWalletsList,
         currentlySelectedWalletId:
             (isFrom ? widget.fromWallet : widget.toWallet)?.id,
         notFoundText: loc.exchangeWalletsNotFound,
@@ -182,7 +191,7 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
   }
 }
 
-const double _kSwapButtonSize = 48;
+const double _kSwapButtonSize = 48.0;
 
 class _FromCard extends StatelessWidget {
   const _FromCard({
@@ -205,40 +214,29 @@ class _FromCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = ExchangeDesignTokens.isDark(context);
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 24),
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        AppSpacing.xl,
+        AppSpacing.xl,
+        AppSpacing.xl,
+        AppSpacing.xxl,
+      ),
       decoration: BoxDecoration(
         borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(24),
-          topEnd: Radius.circular(24),
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
-        gradient: LinearGradient(
-          // Directional — mirrors automatically in RTL.
-          begin: AlignmentDirectional.topStart.resolve(
-            Directionality.of(context),
-          ),
-          end: AlignmentDirectional.bottomEnd.resolve(
-            Directionality.of(context),
-          ),
-          colors: const [
-            AppColors.lightPrimary,
-            AppColors.lightPrimaryDark,
-          ],
+        gradient: ExchangeDesignTokens.gradientFor(
+          Theme.of(context).brightness,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.lightPrimary.withValues(alpha: 0.20),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: ExchangeDesignTokens.heroCardShadow(context),
       ),
       child: Stack(
         children: [
-          // Soft radial highlight in the leading-top corner — adds
-          // depth without an image asset. Directional so it mirrors in
-          // RTL.
+          // Soft radial highlight in the leading-top corner
           Positioned.directional(
             textDirection: Directionality.of(context),
             top: -40,
@@ -248,11 +246,8 @@ class _FromCard extends StatelessWidget {
               height: 160,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    Colors.white.withValues(alpha: 0.18),
-                    Colors.white.withValues(alpha: 0.0),
-                  ],
+                gradient: ExchangeDesignTokens.softHighlightFor(
+                  Theme.of(context).brightness,
                 ),
               ),
             ),
@@ -260,57 +255,84 @@ class _FromCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Wallet row
-              GestureDetector(
-                onTap: onTapWallet,
-                child: Row(
-                  children: [
-                    _WalletIcon(wallet: wallet, onLight: true),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+              // Wallet selector button with minimum 44px touch target
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  onTap: onTapWallet,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.symmetric(
+                      vertical: AppSpacing.xs,
+                    ),
+                    child: Row(
+                      children: [
+                        _WalletIcon(wallet: wallet, onLight: true),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      wallet?.name ?? '—',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 18,
+                                        color: AppColors.white,
+                                        letterSpacing: 0,
+                                      ),
+                                    ),
+                                  ),
+                                  if (wallet?.isCrypto == true) ...[
+                                    const SizedBox(width: AppSpacing.sm),
+                                    const _LightCryptoBadge(),
+                                  ],
+                                ],
+                              ),
+                              const SizedBox(height: 2),
                               Text(
-                                wallet?.name ?? '—',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 18,
-                                  color: AppColors.white,
+                                '$balanceLabel · ${(wallet?.formattedBalance ?? '0.00')} ${wallet?.code ?? ''}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white.withValues(
+                                    alpha: isDark ? 0.75 : 0.88,
+                                  ),
                                   letterSpacing: 0,
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
                                 ),
                               ),
-                              if (wallet?.isCrypto == true) ...[
-                                const SizedBox(width: 8),
-                                _LightCryptoBadge(),
-                              ],
                             ],
                           ),
-                          Text(
-                            '$balanceLabel · ${(wallet?.formattedBalance ?? '0.00')} ${wallet?.code ?? ''}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.white.withValues(alpha: 0.85),
-                              letterSpacing: 0,
-                            ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Container(
+                          padding: const EdgeInsets.all(AppSpacing.xs),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.12),
+                            shape: BoxShape.circle,
                           ),
-                        ],
-                      ),
+                          child: Image.asset(
+                            PngAssets.commonArrowDownIcon,
+                            width: 14,
+                            color: AppColors.white.withValues(alpha: 0.95),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Image.asset(
-                      PngAssets.commonArrowDownIcon,
-                      width: 14,
-                      color: AppColors.white.withValues(alpha: 0.9),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
-              // Amount input — large, hero, monospace tabular figures.
+              const SizedBox(height: AppSpacing.xl),
+              // Hero Amount input field with glassmorphic overlay
               _HeroAmountField(
                 controller: amountController,
                 focusNode: amountFocusNode,
@@ -343,70 +365,95 @@ class _ToCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsetsDirectional.fromSTEB(20, 28, 20, 20),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: const BorderRadiusDirectional.only(
-          bottomStart: Radius.circular(24),
-          bottomEnd: Radius.circular(24),
-        ),
-        border: Border.all(
-          color: AppColors.lightTextPrimary.withValues(alpha: 0.06),
-        ),
+    return EcardoGlassCard(
+      variant: EcardoGlassVariant.frosted,
+      blur: 16.0,
+      borderRadius: 0,
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        AppSpacing.xl,
+        AppSpacing.xxl + 4,
+        AppSpacing.xl,
+        AppSpacing.xl,
       ),
+      shadows: ExchangeDesignTokens.cardShadow(context),
+      backgroundColor: ExchangeDesignTokens.cardSurface(context),
+      interactive: false,
+      clipBehavior: Clip.none,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: onTapWallet,
-            child: Row(
-              children: [
-                _WalletIcon(wallet: wallet, onLight: false),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              onTap: onTapWallet,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.symmetric(
+                  vertical: AppSpacing.xs,
+                ),
+                child: Row(
+                  children: [
+                    _WalletIcon(wallet: wallet, onLight: false),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  wallet?.name ?? '—',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 16,
+                                    color: ExchangeDesignTokens.textPrimary(
+                                      context,
+                                    ),
+                                    letterSpacing: 0,
+                                  ),
+                                ),
+                              ),
+                              if (wallet?.isCrypto == true) ...[
+                                const SizedBox(width: AppSpacing.sm),
+                                const _DarkCryptoBadge(),
+                              ],
+                            ],
+                          ),
+                          const SizedBox(height: 2),
                           Text(
-                            wallet?.name ?? '—',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 16,
-                              color: AppColors.lightTextPrimary,
+                            receiveLabel,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: ExchangeDesignTokens.textTertiary(context),
                               letterSpacing: 0,
                             ),
                           ),
-                          if (wallet?.isCrypto == true) ...[
-                            const SizedBox(width: 8),
-                            _DarkCryptoBadge(),
-                          ],
                         ],
                       ),
-                      Text(
-                        receiveLabel,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.lightTextTertiary,
-                          letterSpacing: 0,
-                        ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.xs),
+                      decoration: BoxDecoration(
+                        color: ExchangeDesignTokens.textPrimary(context)
+                            .withValues(alpha: 0.05),
+                        shape: BoxShape.circle,
                       ),
-                    ],
-                  ),
+                      child: Image.asset(
+                        PngAssets.commonArrowDownIcon,
+                        width: 14,
+                        color: ExchangeDesignTokens.textTertiary(context),
+                      ),
+                    ),
+                  ],
                 ),
-                Image.asset(
-                  PngAssets.commonArrowDownIcon,
-                  width: 14,
-                  color: AppColors.lightTextTertiary,
-                ),
-              ],
+              ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: AppSpacing.md),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
@@ -416,18 +463,15 @@ class _ToCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextTertiary,
+                  color: ExchangeDesignTokens.textTertiary(context),
                 ),
               ),
               Expanded(
                 child: isCalculating
                     ? _CalculatingPlaceholder()
                     : AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
+                        duration: AppSpacing.normal,
                         child: MoneyDisplayText(
-                          // Key on the rounded amount so AnimatedSwitcher
-                          // actually rebuilds when only the value changes
-                          // by a meaningful amount.
                           key: ValueKey(
                             calculatedAmount.toStringAsFixed(
                               (wallet?.isCrypto ?? false) ? 8 : 2,
@@ -462,15 +506,16 @@ class _CalculatingPlaceholder extends StatelessWidget {
           height: 14,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            color: AppColors.lightPrimary.withValues(alpha: 0.4),
+            color: ExchangeDesignTokens.textPrimary(context)
+                .withValues(alpha: 0.4),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.sm),
         Text(
           loc.exchangeCalculating,
           style: TextStyle(
             fontSize: 13,
-            color: AppColors.lightTextTertiary,
+            color: ExchangeDesignTokens.textTertiary(context),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -487,31 +532,42 @@ class _WalletIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = ExchangeDesignTokens.isDark(context);
+
     if (wallet == null) {
       return Container(
-        width: 36,
-        height: 36,
+        width: 38,
+        height: 38,
         decoration: BoxDecoration(
-          color: AppColors.lightTextPrimary.withValues(alpha: 0.1),
+          color: onLight
+              ? Colors.white.withValues(alpha: 0.15)
+              : ExchangeDesignTokens.textPrimary(context).withValues(alpha: 0.08),
           shape: BoxShape.circle,
         ),
         child: Icon(
           Icons.account_balance_wallet_rounded,
           size: 18,
-          color: AppColors.lightTextTertiary,
+          color: onLight
+              ? Colors.white.withValues(alpha: 0.7)
+              : ExchangeDesignTokens.textTertiary(context),
         ),
       );
     }
 
     if (wallet!.isDefault == true) {
       return Container(
-        width: 36,
-        height: 36,
+        width: 38,
+        height: 38,
         decoration: BoxDecoration(
-          color: onLight ? AppColors.white : AppColors.lightBackground,
+          color: onLight
+              ? Colors.white
+              : (isDark ? AppColors.darkCard : AppColors.lightBackground),
           shape: BoxShape.circle,
           border: Border.all(
-            color: AppColors.lightPrimary.withValues(alpha: 0.20),
+            color: onLight
+                ? Colors.white.withValues(alpha: 0.40)
+                : ExchangeDesignTokens.cardBorder(context),
+            width: 1.5,
           ),
         ),
         child: Center(
@@ -519,9 +575,11 @@ class _WalletIcon extends StatelessWidget {
             wallet!.symbol ?? '',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: AppColors.lightPrimary,
+              color: onLight
+                  ? AppColors.lightPrimary
+                  : ExchangeDesignTokens.textPrimary(context),
               fontWeight: FontWeight.w900,
-              fontSize: 14,
+              fontSize: 15,
             ),
           ),
         ),
@@ -529,12 +587,14 @@ class _WalletIcon extends StatelessWidget {
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
       child: Container(
-        width: 36,
-        height: 36,
+        width: 38,
+        height: 38,
         decoration: BoxDecoration(
-          color: AppColors.lightBackground,
+          color: onLight
+              ? Colors.white.withValues(alpha: 0.15)
+              : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
           shape: BoxShape.circle,
         ),
         child: wallet!.icon != null && wallet!.icon!.isNotEmpty
@@ -555,7 +615,9 @@ class _WalletIcon extends StatelessWidget {
                       .toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: AppColors.lightTextTertiary,
+                    color: onLight
+                        ? Colors.white
+                        : ExchangeDesignTokens.textTertiary(context),
                   ),
                 ),
               ),
@@ -572,38 +634,38 @@ class _SwapButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: _kSwapButtonSize,
-        height: _kSwapButtonSize,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: AppColors.lightPrimary.withValues(alpha: 0.18),
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.lightPrimary.withValues(alpha: 0.20),
-              blurRadius: 14,
-              offset: const Offset(0, 4),
+    final isDark = ExchangeDesignTokens.isDark(context);
+
+    return Semantics(
+      button: true,
+      label: 'Swap wallets',
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: _kSwapButtonSize,
+          height: _kSwapButtonSize,
+          decoration: BoxDecoration(
+            color: ExchangeDesignTokens.swapButtonBg(context),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: ExchangeDesignTokens.swapButtonBorder(context),
+              width: 2.0,
             ),
-          ],
-        ),
-        child: AnimatedBuilder(
-          animation: rotation,
-          builder: (context, child) {
-            return Transform.rotate(
-              angle: rotation.value * 3.14159265, // π radians = 180°
-              child: child,
-            );
-          },
-          child: const Icon(
-            Icons.swap_vert_rounded,
-            size: 24,
-            color: AppColors.lightPrimary,
+            boxShadow: ExchangeDesignTokens.swapButtonShadow(context),
+          ),
+          child: AnimatedBuilder(
+            animation: rotation,
+            builder: (context, child) {
+              return Transform.rotate(
+                angle: rotation.value * 3.14159265, // 180° = π rad
+                child: child,
+              );
+            },
+            child: Icon(
+              Icons.swap_vert_rounded,
+              size: 24,
+              color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+            ),
           ),
         ),
       ),
@@ -612,6 +674,8 @@ class _SwapButton extends StatelessWidget {
 }
 
 class _LightCryptoBadge extends StatelessWidget {
+  const _LightCryptoBadge();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -620,8 +684,8 @@ class _LightCryptoBadge extends StatelessWidget {
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.20),
-        borderRadius: BorderRadius.circular(6),
+        color: AppColors.white.withValues(alpha: 0.22),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
       ),
       child: const Text(
         'CRYPTO',
@@ -637,6 +701,8 @@ class _LightCryptoBadge extends StatelessWidget {
 }
 
 class _DarkCryptoBadge extends StatelessWidget {
+  const _DarkCryptoBadge();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -645,8 +711,8 @@ class _DarkCryptoBadge extends StatelessWidget {
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        color: AppColors.lightSecondary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(6),
+        color: AppColors.lightSecondary.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
       ),
       child: const Text(
         'CRYPTO',
@@ -678,22 +744,25 @@ class _HeroAmountField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-      // Subtle glassmorphism layer only on this hero field, per spec.
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppSpacing.radius),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: AppSpacing.fast,
           padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: 16,
-            vertical: 12,
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: AppColors.white.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(16),
+            color: isFocused
+                ? ExchangeDesignTokens.glassOverlayFocused(context)
+                : ExchangeDesignTokens.glassOverlay(context),
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
             border: Border.all(
-              color: AppColors.white.withValues(
-                alpha: isFocused ? 0.45 : 0.18,
+              color: ExchangeDesignTokens.glassBorder(
+                context,
+                isFocused: isFocused,
               ),
               width: 1.5,
             ),
@@ -731,14 +800,24 @@ class _HeroAmountField extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(
-                currencyCode,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                  color: AppColors.white.withValues(alpha: 0.7),
-                  letterSpacing: 0,
+              const SizedBox(width: AppSpacing.sm),
+              Container(
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: Text(
+                  currencyCode,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                    color: AppColors.white,
+                    letterSpacing: 0.4,
+                  ),
                 ),
               ),
             ],

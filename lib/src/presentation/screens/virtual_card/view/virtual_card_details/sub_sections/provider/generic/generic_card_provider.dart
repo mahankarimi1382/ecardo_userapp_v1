@@ -152,7 +152,6 @@ class _UniversalCardDetails extends StatelessWidget {
     ].whereType<String>().where((value) => value.isNotEmpty).toList();
     final createdAt = DateTime.tryParse(card.createdAt ?? '');
     final canChangeStatus = card.capabilities?.canFreeze == true;
-    final status = _status(card);
 
     return Container(
       width: double.infinity,

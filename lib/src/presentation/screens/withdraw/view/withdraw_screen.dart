@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -25,6 +27,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Obx(
       () => Scaffold(
@@ -34,13 +37,17 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               decoration: controller.currentStep.value == 1
                   ? null
                   : controller.selectedScreen.value == 1
-                  ? BoxDecoration(color: AppColors.white)
+                  ? BoxDecoration(
+                      color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                    )
                   : BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [AppColors.white, AppColors.lightBackground],
+                        colors: isDark
+                            ? [AppColors.darkSurfaceVariant, AppColors.darkBackground]
+                            : [AppColors.white, AppColors.lightBackground],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        stops: [0.24, 0.27],
+                        stops: const [0.24, 0.27],
                       ),
                     ),
               child: Column(
@@ -48,65 +55,74 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   controller.currentStep.value == 1
                       ? Column(
                           children: [
-                            SizedBox(height: 60),
+                            const SizedBox(height: 60),
                             CommonAppBar(
                               title: localization.withdrawScreenTitle,
                             ),
                           ],
                         )
                       : controller.currentStep.value == 2
-                      ? SizedBox.shrink()
-                      : WithdrawHeaderSection(),
-                  SizedBox(height: 30),
+                      ? const SizedBox.shrink()
+                      : const WithdrawHeaderSection(),
+                  const SizedBox(height: AppSpacing.xxl),
                   Expanded(
                     child: controller.selectedScreen.value == 0
-                        ? WithdrawMoneySection()
+                        ? const WithdrawMoneySection()
                         : controller.selectedScreen.value == 1
-                        ? WithdrawAccountSection()
+                        ? const WithdrawAccountSection()
                         : controller.selectedScreen.value == 2
-                        ? CreateWithdrawAccount()
+                        ? const CreateWithdrawAccount()
                         : controller.selectedScreen.value == 3
                         ? EditWithdrawAccount(
                             account: controller.selectedAccount.value!,
                           )
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                   ),
                 ],
               ),
             ),
             Visibility(
               visible: controller.isWithdrawLoading.value,
-              child: CommonLoading(),
+              child: const CommonLoading(),
             ),
           ],
         ),
         floatingActionButton: controller.selectedScreen.value == 1
             ? Padding(
-                padding: const EdgeInsets.only(bottom: 40),
+                padding: const EdgeInsets.only(bottom: AppSpacing.xxxl),
                 child: SizedBox(
                   height: 48,
-                  width: 150,
+                  width: 160,
                   child: FloatingActionButton(
                     heroTag: null,
-                    elevation: 0,
+                    elevation: 3,
                     onPressed: () {
+                      HapticFeedback.lightImpact();
                       controller.selectedScreen.value = 2;
                     },
-                    backgroundColor: AppColors.lightPrimary,
+                    backgroundColor: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusLg,
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Image.asset(PngAssets.addCommonIcon, width: 22),
-                        SizedBox(width: 5),
+                        Image.asset(
+                          PngAssets.addCommonIcon,
+                          width: 22,
+                          color: isDark ? AppColors.deepBlack : AppColors.white,
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
                         Text(
                           localization.withdrawScreenAddAccountButton,
                           style: TextStyle(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15.5,
+                            color: isDark ? AppColors.deepBlack : AppColors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14.5,
                             letterSpacing: 0,
                           ),
                         ),
@@ -115,7 +131,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   ),
                 ),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
       ),
     );
   }

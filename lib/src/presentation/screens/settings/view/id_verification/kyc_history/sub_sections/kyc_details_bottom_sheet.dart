@@ -14,252 +14,237 @@ class KycDetailsBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final innerBg = isDark ? AppColors.darkBackground : AppColors.lightBackground;
 
     return SafeArea(
       top: false,
-      child: AnimatedContainer(
-      width: double.infinity,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuart,
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.75,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
-            blurRadius: 40,
-            spreadRadius: 0,
-            offset: Offset.zero,
+        margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: surfaceColor,
+          borderRadius: const BorderRadiusDirectional.only(
+            topStart: Radius.circular(24),
+            topEnd: Radius.circular(24),
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildHeader(context),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.1),
+              blurRadius: 30,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildHeader(context, localization, isDark, primaryTextColor),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       _typeLabel(historyData.type, context, localization),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 18,
-                        color: AppColors.lightTextPrimary,
-                        overflow: TextOverflow.visible,
-                        letterSpacing: 0,
+                      style: AppTextStyles.titleMedium.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: primaryTextColor,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSpacing.sm),
                     Row(
                       children: [
                         Text(
                           localization.kycDetailsStatus,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: AppColors.lightTextTertiary,
-                            letterSpacing: 0,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: secondaryTextColor,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 5),
-                        Text(
-                          _statusText(historyData.status, localization, context),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            letterSpacing: 0,
-                            color: _statusColor(historyData.status),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: _statusColor(historyData.status)
+                                .withValues(alpha: isDark ? 0.2 : 0.12),
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                          ),
+                          child: Text(
+                            _statusText(historyData.status, localization, context),
+                            style: AppTextStyles.labelSmall.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: _statusColor(historyData.status),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSpacing.sm),
                     Row(
                       children: [
                         Text(
                           localization.kycDetailsCreatedAt,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: AppColors.lightTextTertiary,
-                            letterSpacing: 0,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: secondaryTextColor,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 5),
+                        const SizedBox(width: 8),
                         Text(
                           historyData.createdAt != null && historyData.createdAt!.isNotEmpty
-                              ? DateFormat("dd MMM yyyy hh:mm a").format(
+                              ? DateFormat("dd MMM yyyy · hh:mm a").format(
                                   DateTime.tryParse(historyData.createdAt!) ?? DateTime.now(),
                                 )
                               : "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: AppColors.lightTextTertiary,
-                            letterSpacing: 0,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: primaryTextColor,
                           ),
                         ),
                       ],
                     ),
 
                     if (historyData.message != null &&
-                        historyData.message!.isNotEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 10),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: AppColors.lightBackground,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  localization.kycDetailsMessageFromAdmin,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                    letterSpacing: 0,
-                                    color: AppColors.lightTextPrimary,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  historyData.message ?? "",
-                                  style: TextStyle(
-                                    letterSpacing: 0,
-                                    fontSize: 14,
-                                    color: AppColors.lightTextTertiary,
-                                  ),
-                                ),
-                              ],
-                            ),
+                        historyData.message!.isNotEmpty) ...[
+                      SizedBox(height: AppSpacing.md),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(AppSpacing.md),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                          color: innerBg,
+                          border: Border.all(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            width: 0.8,
                           ),
-                        ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              localization.kycDetailsMessageFromAdmin,
+                              style: AppTextStyles.titleSmall.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: primaryTextColor,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              historyData.message ?? "",
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: secondaryTextColor,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    SizedBox(height: 10),
+                    ],
+
                     if (historyData.submittedData != null &&
-                        historyData.submittedData!.isNotEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 10),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: AppColors.lightBackground,
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  localization.kycDetailsSubmittedData,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 16,
-                                    letterSpacing: 0,
-                                    color: AppColors.lightTextPrimary,
-                                  ),
-                                ),
-                                ...historyData.submittedData!.entries.map((
-                                  entry,
-                                ) {
-                                  final key = entry.key;
-                                  final value = entry.value;
-
-                                  bool isImage =
-                                      value is String &&
-                                      value.startsWith('http') &&
-                                      (value.endsWith('.jpg') ||
-                                          value.endsWith('.png') ||
-                                          value.endsWith('.jpeg'));
-
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      if (!isImage)
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${_fieldLabel(key, context)}: ",
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 14,
-                                                color:
-                                                    AppColors.lightTextPrimary,
-                                                letterSpacing: 0,
-                                              ),
-                                            ),
-                                            if (!isImage) const SizedBox(height: 10),
-                                            Expanded(
-                                              child: Text(
-                                                value.toString(),
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 14,
-                                                  color:
-                                                      AppColors.lightTextPrimary,
-                                                  letterSpacing: 0,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      const SizedBox(height: 20),
-                                      if (isImage)
-                                        Text(
-                                          "${_fieldLabel(key, context)}: ",
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                            color: AppColors.lightTextPrimary,
-                                            letterSpacing: 0,
-                                          ),
-                                        ),
-                                      if (isImage) const SizedBox(height: 10),
-                                      if (isImage)
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          child: Image.network(
-                                            value,
-                                            height: 150,
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                }),
-                              ],
-                            ),
+                        historyData.submittedData!.isNotEmpty) ...[
+                      SizedBox(height: AppSpacing.md),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(AppSpacing.md),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                          color: innerBg,
+                          border: Border.all(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            width: 0.8,
                           ),
-                        ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              localization.kycDetailsSubmittedData,
+                              style: AppTextStyles.titleSmall.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: primaryTextColor,
+                              ),
+                            ),
+                            SizedBox(height: AppSpacing.sm),
+                            ...historyData.submittedData!.entries.map((entry) {
+                              final key = entry.key;
+                              final value = entry.value;
+
+                              bool isImage = value is String &&
+                                  value.startsWith('http') &&
+                                  (value.endsWith('.jpg') ||
+                                      value.endsWith('.png') ||
+                                      value.endsWith('.jpeg'));
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (!isImage)
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${_fieldLabel(key, context)}: ",
+                                            style: AppTextStyles.bodySmall.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: secondaryTextColor,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              value.toString(),
+                                              style: AppTextStyles.bodySmall.copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: primaryTextColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    if (isImage) ...[
+                                      Text(
+                                        "${_fieldLabel(key, context)}: ",
+                                        style: AppTextStyles.bodySmall.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: secondaryTextColor,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                        child: Image.network(
+                                          value,
+                                          height: 150,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
                       ),
+                    ],
                     SizedBox(height: AppSpacing.bottomSafe(context, 20)),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -367,50 +352,38 @@ class KycDetailsBottomSheet extends StatelessWidget {
     return spaced.isNotEmpty ? (spaced[0].toUpperCase() + spaced.substring(1)) : key;
   }
 
-  Widget _buildHeader(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
-
+  Widget _buildHeader(
+    BuildContext context,
+    AppLocalizations localization,
+    bool isDark,
+    Color primaryTextColor,
+  ) {
     return Column(
       children: [
         const SizedBox(height: 12),
         Container(
-          width: 40,
-          height: 5,
+          width: 38,
+          height: 4,
           decoration: BoxDecoration(
-            color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(30),
+            color: (isDark ? AppColors.warmWhite : AppColors.deepBlack).withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         Text(
           localization.kycDetailsTitle,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0,
-            color: AppColors.lightTextPrimary,
+          style: AppTextStyles.titleMedium.copyWith(
+            fontWeight: FontWeight.w800,
+            color: primaryTextColor,
           ),
         ),
-        const SizedBox(height: 16),
-        _buildDivider(),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _buildDivider() {
-    return Container(
-      width: double.infinity,
-      height: 1.1,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.white,
-            AppColors.lightTextPrimary.withValues(alpha: 0.1),
-            AppColors.white,
-          ],
+        const SizedBox(height: 14),
+        Divider(
+          height: 1,
+          color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
         ),
-      ),
+        const SizedBox(height: 12),
+      ],
     );
   }
 }

@@ -55,35 +55,38 @@ class HotelRoomSelectionCard extends StatelessWidget {
 
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
+    final isDark = TravelTheme.isDark(context);
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: _selected
-            ? TravelTheme.purple.withValues(alpha: 0.035)
-            : Colors.white,
+            ? (isDark
+                ? brandColor.withValues(alpha: 0.15)
+                : brandColor.withValues(alpha: 0.04))
+            : cardBg,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           color: _selected
-              ? TravelTheme.purple
-              : TravelTheme.border.withValues(alpha: 0.9),
+              ? brandColor
+              : borderColor.withValues(alpha: 0.9),
           width: _selected ? 2.0.w : 1.0.w,
         ),
         boxShadow: _selected
             ? [
                 BoxShadow(
-                  color: TravelTheme.purple.withValues(alpha: 0.12),
+                  color: brandColor.withValues(alpha: 0.15),
                   blurRadius: 18.r,
                   offset: Offset(0, 6.h),
                 ),
               ]
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 12.r,
-                  offset: Offset(0, 4.h),
-                ),
-              ],
+            : TravelTheme.shadowFor(context),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(19.r),
@@ -113,7 +116,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w800,
-                                color: TravelTheme.ink,
+                                color: textPrimary,
                                 height: 1.25,
                               ),
                             ),
@@ -124,14 +127,14 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                   Icon(
                                     Icons.square_foot_rounded,
                                     size: 14.sp,
-                                    color: TravelTheme.muted,
+                                    color: textSecondary,
                                   ),
                                   SizedBox(width: 4.w),
                                   Text(
                                     roomSize,
                                     style: TextStyle(
                                       fontSize: 12.sp,
-                                      color: TravelTheme.muted,
+                                      color: textSecondary,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -143,7 +146,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                       ),
                       SizedBox(width: 10.w),
                       // Interactive Radio Indicator
-                      _buildRadioIndicator(),
+                      _buildRadioIndicator(brandColor, textSecondary),
                     ],
                   ),
 
@@ -155,7 +158,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                     runSpacing: 6.h,
                     children: [
                       // Meal Inclusion Badge
-                      _buildMealBadge(isBreakfastIncluded, isRtl),
+                      _buildMealBadge(isBreakfastIncluded, isRtl, isDark, borderColor, textSecondary),
 
                       // Free Cancellation Badge
                       if (cancellationBadge.isNotEmpty)
@@ -175,6 +178,8 @@ class HotelRoomSelectionCard extends StatelessWidget {
                         _buildSpecChip(
                           icon: Icons.bed_rounded,
                           label: bed,
+                          brandColor: brandColor,
+                          textPrimary: textPrimary,
                         ),
 
                       // Capacity Chip
@@ -182,12 +187,16 @@ class HotelRoomSelectionCard extends StatelessWidget {
                         _buildSpecChip(
                           icon: Icons.group_outlined,
                           label: capacity,
+                          brandColor: brandColor,
+                          textPrimary: textPrimary,
                         ),
 
                       if (imageUrls.isNotEmpty && roomSize.isNotEmpty)
                         _buildSpecChip(
                           icon: Icons.aspect_ratio_rounded,
                           label: roomSize,
+                          brandColor: brandColor,
+                          textPrimary: textPrimary,
                         ),
                     ],
                   ),
@@ -205,10 +214,10 @@ class HotelRoomSelectionCard extends StatelessWidget {
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
-                            color: TravelTheme.background,
+                            color: isDark ? AppColors.darkSurfaceVariant : TravelTheme.backgroundFor(context),
                             borderRadius: BorderRadius.circular(8.r),
                             border: Border.all(
-                              color: TravelTheme.border.withValues(alpha: 0.6),
+                              color: borderColor.withValues(alpha: 0.6),
                             ),
                           ),
                           child: Row(
@@ -217,14 +226,14 @@ class HotelRoomSelectionCard extends StatelessWidget {
                               Icon(
                                 _iconForFeature(feature),
                                 size: 12.sp,
-                                color: TravelTheme.purple,
+                                color: brandColor,
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 feature,
                                 style: TextStyle(
                                   fontSize: 11.sp,
-                                  color: TravelTheme.ink,
+                                  color: textPrimary,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -237,7 +246,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
 
                   SizedBox(height: 14.h),
                   Divider(
-                    color: TravelTheme.border.withValues(alpha: 0.7),
+                    color: borderColor.withValues(alpha: 0.7),
                     height: 1.h,
                   ),
                   SizedBox(height: 14.h),
@@ -267,7 +276,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                       ),
                                     ),
                                     style: TextStyle(
-                                      color: TravelTheme.purple,
+                                      color: brandColor,
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w900,
                                     ),
@@ -276,7 +285,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                   Text(
                                     isRtl ? '/ هر شب' : '/ night',
                                     style: TextStyle(
-                                      color: TravelTheme.muted,
+                                      color: textSecondary,
                                       fontSize: 11.sp,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -290,7 +299,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                   ? 'مجموع برای $stayNights شب: ${travelMoney(context, TravelMoney(amount: totalStayPrice, currency: currency))}'
                                   : 'Total for $stayNights night${stayNights > 1 ? 's' : ''}: ${travelMoney(context, TravelMoney(amount: totalStayPrice, currency: currency))}',
                               style: TextStyle(
-                                color: TravelTheme.ink,
+                                color: textPrimary,
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -303,7 +312,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                   ? 'شامل کلیه مالیات‌ها و عوارض'
                                   : 'Includes taxes & fees',
                               style: TextStyle(
-                                color: TravelTheme.muted,
+                                color: textSecondary,
                                 fontSize: 10.sp,
                               ),
                             ),
@@ -320,10 +329,10 @@ class HotelRoomSelectionCard extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.only(bottom: 8.h),
                               decoration: BoxDecoration(
-                                color: TravelTheme.purple.withValues(alpha: 0.08),
+                                color: brandColor.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(
-                                  color: TravelTheme.purple.withValues(alpha: 0.3),
+                                  color: brandColor.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: Row(
@@ -342,7 +351,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                       child: Icon(
                                         Icons.remove_rounded,
                                         size: 18.sp,
-                                        color: TravelTheme.purple,
+                                        color: brandColor,
                                       ),
                                     ),
                                   ),
@@ -355,7 +364,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 13.sp,
                                         fontWeight: FontWeight.w900,
-                                        color: TravelTheme.purple,
+                                        color: brandColor,
                                       ),
                                     ),
                                   ),
@@ -372,7 +381,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                       child: Icon(
                                         Icons.add_rounded,
                                         size: 18.sp,
-                                        color: TravelTheme.purple,
+                                        color: brandColor,
                                       ),
                                     ),
                                   ),
@@ -384,7 +393,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                           Material(
                             color: _selected
                                 ? TravelTheme.green
-                                : (enabled ? TravelTheme.purple : TravelTheme.border),
+                                : (enabled ? brandColor : borderColor),
                             borderRadius: BorderRadius.circular(12.r),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(12.r),
@@ -487,7 +496,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
     }
   }
 
-  Widget _buildRadioIndicator() {
+  Widget _buildRadioIndicator(Color brandColor, Color textSecondary) {
     return GestureDetector(
       onTap: enabled ? _handleToggleSelection : null,
       behavior: HitTestBehavior.opaque,
@@ -497,9 +506,9 @@ class HotelRoomSelectionCard extends StatelessWidget {
         height: 24.r,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: _selected ? TravelTheme.purple : Colors.transparent,
+          color: _selected ? brandColor : Colors.transparent,
           border: Border.all(
-            color: _selected ? TravelTheme.purple : TravelTheme.muted.withValues(alpha: 0.6),
+            color: _selected ? brandColor : textSecondary.withValues(alpha: 0.6),
             width: 2.0.w,
           ),
         ),
@@ -509,7 +518,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                   width: 8.r,
                   height: 8.r,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -608,12 +617,18 @@ class HotelRoomSelectionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMealBadge(bool isBreakfastIncluded, bool isRtl) {
+  Widget _buildMealBadge(
+    bool isBreakfastIncluded,
+    bool isRtl,
+    bool isDark,
+    Color borderColor,
+    Color textSecondary,
+  ) {
     if (isBreakfastIncluded) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
         decoration: BoxDecoration(
-          color: AppColors.successContainer,
+          color: isDark ? const Color(0xFF1E3A24) : AppColors.successContainer,
           borderRadius: BorderRadius.circular(8.r),
           border: Border.all(
             color: AppColors.success.withValues(alpha: 0.3),
@@ -632,7 +647,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
             Text(
               isRtl ? 'صبحانه رایگان' : 'Breakfast Included',
               style: TextStyle(
-                color: AppColors.success,
+                color: isDark ? const Color(0xFF81C784) : AppColors.success,
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w700,
               ),
@@ -645,10 +660,10 @@ class HotelRoomSelectionCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: TravelTheme.background,
+        color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: TravelTheme.border.withValues(alpha: 0.7),
+          color: borderColor.withValues(alpha: 0.7),
           width: 1.w,
         ),
       ),
@@ -658,13 +673,13 @@ class HotelRoomSelectionCard extends StatelessWidget {
           Icon(
             Icons.no_meals_outlined,
             size: 13.sp,
-            color: TravelTheme.muted,
+            color: textSecondary,
           ),
           SizedBox(width: 5.w),
           Text(
             isRtl ? 'فقط اتاق (بدون وعده)' : 'Room Only',
             style: TextStyle(
-              color: TravelTheme.muted,
+              color: textSecondary,
               fontSize: 11.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -714,11 +729,13 @@ class HotelRoomSelectionCard extends StatelessWidget {
   Widget _buildSpecChip({
     required IconData icon,
     required String label,
+    required Color brandColor,
+    required Color textPrimary,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: TravelTheme.purple.withValues(alpha: 0.06),
+        color: brandColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
@@ -727,7 +744,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
           Icon(
             icon,
             size: 13.sp,
-            color: TravelTheme.purple,
+            color: brandColor,
           ),
           SizedBox(width: 4.w),
           Text(
@@ -735,7 +752,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w600,
-              color: TravelTheme.ink,
+              color: textPrimary,
             ),
           ),
         ],

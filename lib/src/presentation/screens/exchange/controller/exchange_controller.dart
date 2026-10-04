@@ -16,8 +16,9 @@ import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_config_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_rate_manager.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_rate_service.dart';
-import 'package:ecardo_user/src/presentation/screens/exchange/service/fee_ecardo_rate_source.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_validation_service.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pairs_store.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/live_rate_badge.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
@@ -25,34 +26,38 @@ import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_mo
 /// Controller for the redesigned Exchange flow.
 ///
 /// Responsibilities:
-///   - Load wallets / currencies / user / exchange-config (unchanged from
-///     legacy logic — only orchestration moved here).
-///   - Subscribe to [ExchangeRateService] for live rates and recompute the
-///     preview amount when either wallet changes or the rate changes.
-///   - Track [previousRate] / [currentRate] so the UI can render a direction
-///     arrow on the live rate badge.
-///   - Debounce amount input — typing 6 digits must not fire 6 conversion
-///     API calls. A 300ms debounce is enforced via [Timer].
-///   - When the user is typing (focus on amount field), rate refreshes
-///     silently update the badge — they never steal focus or jump the
-///     layout. Only the displayed number animates.
-///   - Lock the rate at the moment the user leaves Amount step → Review
-///     step. While on Review, watch for drift; if rate changes by more than
-///     0.01% or 60 seconds pass, surface a "rate updated" banner and
-///     disable confirm until the user re-confirms.
+///   - Orchestrate data loading (wallets, currencies, user, exchange-config).
+///   - Delegate live rate subscription, cross-rate math, drift detection,
+///     and review-step rate locking to [ExchangeRateManager].
+///   - Delegate min/max validation, balance verification, and fee calculations
+///     to [ExchangeValidationService].
+///   - Debounce amount input with a 300ms [Timer].
+///   - Coordinate step transitions (Amount -> Review -> Success).
+///   - Submit exchange transaction via [NetworkService].
 class ExchangeController extends GetxController {
-  ExchangeController({ExchangeRateService? rateService})
-      : _rateService = rateService ?? Get.find<ExchangeRateService>();
+  ExchangeController({
+    ExchangeRateService? rateService,
+    ExchangeRateManager? rateManager,
+    ExchangeValidationService? validationService,
+  })  : _rateService = rateService ??
+            (Get.isRegistered<ExchangeRateService>()
+                ? Get.find<ExchangeRateService>()
+                : ExchangeRateService()),
+        _validationService =
+            validationService ?? const ExchangeValidationService() {
+    _rateManager = rateManager ??
+        ExchangeRateManager(rateService: _rateService);
+  }
 
   final ExchangeRateService _rateService;
+  late final ExchangeRateManager _rateManager;
+  final ExchangeValidationService _validationService;
 
   // ------------------ loading flags ------------------
   final RxBool isLoading = false.obs;
   final RxBool isExchangeConfigLoading = false.obs;
   final RxBool isExchangeWalletLoading = false.obs;
   final RxBool isCalculateExchangeRateLoading = false.obs;
-  /// WAVE-REVIEW: لیست کیف‌ها شکست خورد/خالی ماند → سکشن Amount کارت خطا +
-  /// Retry نشان می‌دهد (به‌جای فرم مردهٔ «Wallets Not Found» بدون دکمه).
   final RxBool walletLoadError = false.obs;
 
   // ------------------ step state ------------------
@@ -73,42 +78,25 @@ class ExchangeController extends GetxController {
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
 
-  /// P-4 pattern (v1.0.38 — structural fix): the previous
-  /// `final localization = AppLocalizations.of(Get.context!)!` field froze
-  /// the locale at controller construction — every exchange toast stayed in
-  /// the language the user had when the screen was first opened, even after
-  /// switching languages — and it crashed when constructed without a
-  /// localization context. Resolve per call instead.
+  /// Dynamic localization lookup per call.
   AppLocalizations? get localizationOrNull {
     final ctx = Get.context;
     if (ctx == null) return null;
     return AppLocalizations.of(ctx);
   }
 
-  // ------------------ rate direction tracking ------------------
-  /// Previously displayed live rate (used to compute direction arrow).
-  final RxDouble previousRate = 0.0.obs;
+  // ------------------ rate delegation ------------------
+  ExchangeRateService get rateService => _rateManager.rateService;
+  ExchangeRateManager get rateManager => _rateManager;
+  ExchangeValidationService get validationService => _validationService;
 
-  /// Most recent live rate.
-  final RxDouble currentRate = 0.0.obs;
-
-  /// Direction derived from [previousRate] → [currentRate].
-  final Rx<RateDirection> rateDirection = RateDirection.unknown.obs;
-
-  /// 24h change percentage as reported by the API (e.g. +0.17, -0.21).
-  /// Null until the first successful fetch returns a value (or if the API
-  /// omits it for this pair). When non-null, the [LiveRateBadge] shows this
-  /// value directly — it's more accurate than deriving from two consecutive
-  /// snapshots of the cross-rate (which can be noisy at the second decimal).
-  final Rxn<double> liveChangePercent = Rxn<double>();
-
-  /// English name of the FROM currency as returned by fee.ecardo.ir
-  /// (e.g. "Tether Dollar", "US Dollar"). Surfaced as a subtitle on the
-  /// [LiveRateBadge]. Empty when the API didn't return one.
-  final RxString liveFromNameEn = ''.obs;
-
-  /// English name of the TO currency, same source as [liveFromNameEn].
-  final RxString liveToNameEn = ''.obs;
+  RxDouble get previousRate => _rateManager.previousRate;
+  RxDouble get currentRate => _rateManager.currentRate;
+  Rx<RateDirection> get rateDirection => _rateManager.rateDirection;
+  Rxn<double> get liveChangePercent => _rateManager.liveChangePercent;
+  RxString get liveFromNameEn => _rateManager.liveFromNameEn;
+  RxString get liveToNameEn => _rateManager.liveToNameEn;
+  RxBool get isReviewRateStale => _rateManager.isReviewRateStale;
 
   // ------------------ from / to wallet ------------------
   final RxBool fromWalletBorderFocused = false.obs;
@@ -129,32 +117,14 @@ class ExchangeController extends GetxController {
   final RxDouble liveToAmount = 0.0.obs;
   final RxString amountInput = ''.obs;
 
-  /// True when the user pressed Continue but validation failed — used to
-  /// render the Continue button in an errored / disabled state.
+  /// True when the user pressed Continue but validation failed.
   final RxBool isContinueInvalid = false.obs;
 
-  /// True when the user is on Review step and the rate has drifted past
-  /// the staleness threshold since entering that step.
-  final RxBool isReviewRateStale = false.obs;
-
-  /// Recently used (from, to) currency pairs — loaded from local storage
-  /// on init, persisted when an exchange is confirmed.
+  /// Recently used (from, to) currency pairs.
   final RxList<RecentPair> recentPairs = <RecentPair>[].obs;
 
-  /// Wall-clock when the user entered the Review step. Used to compute
-  /// "60 seconds elapsed" — even if the rate hasn't changed, the user has
-  /// been staring at the rate long enough that we should ask them to
-  /// re-confirm.
-  DateTime? _reviewEnteredAt;
-
-  /// Rate snapshot locked when entering Review. Drift detection compares
-  /// this to the live rate.
-  double? _lockedReviewRate;
-
-  // ------------------ internal timers ------------------
+  // ------------------ internal timer ------------------
   Timer? _amountDebounce;
-  Timer? _reviewStaleTimer;
-  Worker? _rateServiceWorker;
 
   @override
   void onInit() {
@@ -162,32 +132,23 @@ class ExchangeController extends GetxController {
     loadData();
     amountFocusNode.addListener(_handleAmountFocusChange);
 
-    // React to live rate updates from the service — only recompute the
-    // preview, never steal focus.
-    _rateServiceWorker = ever(_rateService.rates, _onRatesChanged);
+    // Initialize rate manager to react to live rate updates
+    _rateManager.init(
+      fromCodeProvider: () => fromWallet.value?.code,
+      toCodeProvider: () => toWallet.value?.code,
+      onRateUpdated: _scheduleLivePreview,
+    );
   }
 
   @override
   void onClose() {
-    // CRITICAL: cancel every timer / subscription. GetX leaks are the #1
-    // source of jank in this kind of screen.
     _amountDebounce?.cancel();
     _amountDebounce = null;
-    _reviewStaleTimer?.cancel();
-    _reviewStaleTimer = null;
-    _rateServiceWorker?.dispose();
-    _rateServiceWorker = null;
 
-    // Tell the rate service we no longer need rates for our codes.
-    final codes = <String>{
-      if (fromWallet.value?.code != null) fromWallet.value!.code!,
-      if (toWallet.value?.code != null) toWallet.value!.code!,
-    }.toList();
-    if (codes.isNotEmpty) {
-      _rateService.unsubscribe(codes);
-    }
-    // Ensure the service completely stops its periodic polling timer upon exit.
-    _rateService.clearSubscriptions();
+    _rateManager.dispose(
+      fromCode: fromWallet.value?.code,
+      toCode: toWallet.value?.code,
+    );
 
     amountFocusNode.removeListener(_handleAmountFocusChange);
     amountFocusNode.dispose();
@@ -204,12 +165,7 @@ class ExchangeController extends GetxController {
       fetchCurrencies(),
       fetchUser(),
     ]);
-    // v1.0.23+23 (E-1) — Load exchange config up-front so the Amount step
-    // can show real fee + total values. Previously this was deferred to
-    // `nextStepWithValidation()` (entering Review), leaving the Amount
-    // step with charge=0 and total=0 until the user pressed Continue.
     await fetchExchangeConfig();
-    // Load recent pairs in parallel — non-blocking on the critical path.
     unawaited(_loadRecentPairs());
     isLoading.value = false;
     _subscribeToRateService();
@@ -220,7 +176,6 @@ class ExchangeController extends GetxController {
       final pairs = await RecentPairsStore.load();
       recentPairs.assignAll(pairs);
     } catch (e) {
-      // Local storage failures are non-fatal — just don't show chips.
       debugPrint('⚠️ recent pairs load failed: $e');
     }
   }
@@ -242,15 +197,11 @@ class ExchangeController extends GetxController {
   }
 
   /// Subscribes the rate service to the currently selected from/to codes.
-  /// Called once after the initial wallet load completes.
   void _subscribeToRateService() {
-    final codes = <String>[
-      if (fromWallet.value?.code != null) fromWallet.value!.code!,
-      if (toWallet.value?.code != null) toWallet.value!.code!,
-    ];
-    if (codes.isNotEmpty) {
-      _rateService.subscribe(codes);
-    }
+    _rateManager.subscribeWallets(
+      fromWallet.value?.code,
+      toWallet.value?.code,
+    );
   }
 
   // ------------------ amount focus ------------------
@@ -273,11 +224,8 @@ class ExchangeController extends GetxController {
       currentStep.value++;
       if (currentStep.value == 1) {
         // Entering Review: lock the rate and start the staleness clock.
-        _lockedReviewRate = currentRate.value;
-        _reviewEnteredAt = DateTime.now();
-        isReviewRateStale.value = false;
+        _rateManager.lockRateForReview();
         await fetchExchangeConfig();
-        _startReviewStaleWatcher();
       }
     } else {
       currentStep.value = 0;
@@ -287,44 +235,13 @@ class ExchangeController extends GetxController {
   /// Pops back to the Amount step and clears the locked-rate state.
   void backToAmountStep() {
     currentStep.value = 0;
-    _reviewStaleTimer?.cancel();
-    _reviewStaleTimer = null;
-    _reviewEnteredAt = null;
-    _lockedReviewRate = null;
-    isReviewRateStale.value = false;
+    _rateManager.clearReviewLock();
   }
 
-  /// Triggered when the user taps "Confirm" on the Review step and the
-  /// rate-staleness banner is showing. Re-locks the rate to the current
-  /// live value, re-fetches config & latest converter rate, recalculates
-  /// charges/totals, and re-enables confirm.
+  /// Triggered when user confirms an updated rate after staleness warning.
   Future<void> acknowledgeRateChange() async {
-    _lockedReviewRate = currentRate.value;
-    _reviewEnteredAt = DateTime.now();
-    isReviewRateStale.value = false;
+    _rateManager.acknowledgeRateChange();
     await fetchExchangeConfig();
-  }
-
-  void _startReviewStaleWatcher() {
-    _reviewStaleTimer?.cancel();
-    _reviewStaleTimer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (_reviewEnteredAt == null || _lockedReviewRate == null) return;
-
-      final elapsed = DateTime.now().difference(_reviewEnteredAt!);
-      final drift = (currentRate.value - _lockedReviewRate!).abs();
-      final driftPct = _lockedReviewRate == 0
-          ? 0.0
-          : drift / _lockedReviewRate!;
-
-      // Two trigger conditions:
-      //   1. Rate changed by more than 0.01% — material drift.
-      //   2. 60 seconds elapsed since entering Review — even without
-      //      drift, ask the user to re-confirm to prevent stale-rate
-      //      exploitation.
-      if (driftPct > 0.0001 || elapsed.inSeconds >= 60) {
-        isReviewRateStale.value = true;
-      }
-    });
   }
 
   // ------------------ user / config fetch ------------------
@@ -334,7 +251,7 @@ class ExchangeController extends GetxController {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.userEndpoint,
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         userModel.value = UserModel.fromJson(response.data!);
       }
     } catch (e, stackTrace) {
@@ -342,7 +259,7 @@ class ExchangeController extends GetxController {
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
     }
   }
@@ -354,15 +271,12 @@ class ExchangeController extends GetxController {
         endpoint: ApiPath.exchangeConfigEndpoint,
       );
 
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         exchangeConfigModel.value = ExchangeConfigModel.fromJson(
           response.data!,
         );
         await getExchangeRateConverter();
-        _calculateCharge();
-        // v1.0.23+23 (E-1) — After config loads, recompute the Amount
-        // step's charge/total preview so it reflects the real fee rules
-        // immediately (not just when the user types a new amount).
+        await _calculateCharge();
         _recalculateChargeForAmountStep();
       }
     } catch (e, stackTrace) {
@@ -370,22 +284,17 @@ class ExchangeController extends GetxController {
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
     } finally {
-      // v1.0.40 (stuck-loading fix): the flag was only cleared on the
-      // success path — a failed config fetch left the exchange page on an
-      // eternal loading spinner ("the page never comes").
       isExchangeConfigLoading.value = false;
     }
   }
 
-  // ------------------ charge calculation (unchanged business logic) ----
+  // ------------------ charge calculation ------------------
 
   Future<void> _calculateCharge() async {
     final amount = double.tryParse(amountController.text) ?? 0.0;
-    // v1.0.38 (structural fix): data!/settings! force-unwraps crashed when
-    // the config payload arrived without a settings block.
     final settings = exchangeConfigModel.value.data?.settings;
     if (settings == null) {
       charge.value = 0.0;
@@ -396,24 +305,27 @@ class ExchangeController extends GetxController {
     final userChargeStr = settings.charge ?? "0";
     final userChargeType = settings.chargeType ?? "fixed";
 
-    double calculatedCharge = 0.0;
-
     if (userChargeType == "percentage") {
       final percent = double.tryParse(userChargeStr) ?? 0.0;
-      calculatedCharge = amount * percent / 100;
-      charge.value = calculatedCharge;
+      final calc = _validationService.calculatePercentageCharge(
+        amount: amount,
+        percent: percent,
+      );
+      charge.value = calc.charge;
+      totalAmount.value = calc.totalAmount;
     } else {
       await getChargeConverter();
-      calculatedCharge = charge.value;
+      final calc = _validationService.calculateTotalWithFixedCharge(
+        amount: amount,
+        fixedCharge: charge.value,
+      );
+      totalAmount.value = calc.totalAmount;
     }
 
-    totalAmount.value = amount + calculatedCharge;
     isExchangeConfigLoading.value = false;
   }
 
   Future<void> getChargeConverter() async {
-    // v1.0.38 (structural fix): force-unwraps crashed when the config had no
-    // charge or no from-wallet was selected yet.
     final chargeStr = exchangeConfigModel.value.data?.settings?.charge;
     final fromCode = fromWallet.value?.code;
     if (chargeStr == null || chargeStr.isEmpty || fromCode == null) return;
@@ -424,18 +336,19 @@ class ExchangeController extends GetxController {
           currencyCode: fromCode,
         ),
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         converterModel.value = ConverterModel.fromJson(response.data!);
         charge.value = double.tryParse(
-          converterModel.value.data!.convertedAmount ?? "0",
-        ) ?? 0.0;
+              converterModel.value.data?.convertedAmount ?? "0",
+            ) ??
+            0.0;
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getChargeConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
     }
   }
@@ -443,10 +356,6 @@ class ExchangeController extends GetxController {
   Future<void> getExchangeRateConverter() async {
     isExchangeConfigLoading.value = true;
     try {
-      // WAVE-REVIEW (ریشهٔ «Not Found» هنگام ورود): این متد با متن مبلغِ
-      // خالی صدا زده می‌شود (بعد از انتخاب کیف، پیش از تایپ کاربر) →
-      // URL ناقص `/api/convert//IRT/...` → 404 «Not Found» سرور و توست
-      // روی ورود به صفحه. گارد: مبلغ صفر/خالی = هیچ فراخوانی؛ پیش‌نمایش صفر.
       final rawAmount = amountController.text.trim();
       final amount = double.tryParse(rawAmount) ?? 0.0;
       if (amount <= 0) {
@@ -455,8 +364,6 @@ class ExchangeController extends GetxController {
         isExchangeConfigLoading.value = false;
         return;
       }
-      // v1.0.40 (crash fix): force-unwrapped wallet codes crashed the
-      // config chain when no exchange wallet was resolvable yet.
       final fromCode = fromWallet.value?.code;
       final toCode = toWallet.value?.code;
       if (fromCode == null || toCode == null) return;
@@ -467,138 +374,67 @@ class ExchangeController extends GetxController {
           fromCurrencyCode: fromCode,
         ),
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         converterModel.value = ConverterModel.fromJson(response.data!);
         exchangeReviewRate.value = double.tryParse(
-          converterModel.value.data!.rate ?? "0",
-        ) ?? 0.0;
+              converterModel.value.data?.rate ?? "0",
+            ) ??
+            0.0;
         exchangeAmount.value = double.tryParse(
-          converterModel.value.data!.convertedAmount ?? "0",
-        ) ?? 0.0;
+              converterModel.value.data?.convertedAmount ?? "0",
+            ) ??
+            0.0;
       }
     } catch (e, stackTrace) {
       debugPrint('❌ getExchangeRateConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
     } finally {
       isExchangeConfigLoading.value = false;
     }
   }
 
-  // ------------------ validation (unchanged logic, decimal-aware messages) ----
+  // ------------------ validation ------------------
 
   bool validateAmountStep() {
-    if (fromWallet.value == null || fromWallet.value!.name?.isEmpty == true) {
-      ToastHelper().showErrorToast(
-        localizationOrNull?.exchangeValidationSelectFromWallet ??
-            'Please select a wallet to exchange from.',
-      );
-      return false;
-    }
+    final from = fromWallet.value;
+    final to = toWallet.value;
 
-    if (toWallet.value == null || toWallet.value!.name?.isEmpty == true) {
-      ToastHelper().showErrorToast(
-        localizationOrNull?.exchangeValidationSelectToWallet ??
-            'Please select a wallet to exchange to.',
-      );
-      return false;
-    }
-
-    // v1.0.38 (structural fix): same-currency exchanges were previously
-    // accepted by the client — the wallet dropdowns don't exclude the
-    // opposite selection and swapWallets can produce identical codes when
-    // only one wallet holds a balance. The server rejects these with a raw
-    // 422 after the fact.
-    final fromCode = fromWallet.value?.code?.toUpperCase();
-    final toCode = toWallet.value?.code?.toUpperCase();
-    if (fromCode != null && fromCode == toCode) {
-      ToastHelper().showErrorToast(
-        localizationOrNull?.exchangeValidationSameWallet ??
-            'From and to currencies must be different.',
-      );
-      return false;
-    }
-
-    if (amountController.text.isEmpty) {
-      ToastHelper().showErrorToast(
-        localizationOrNull?.exchangeValidationEnterAmount ??
-            'Please enter an amount.',
-      );
-      return false;
-    }
-
-    // v1.0.38 (structural fix): exchangeLimit/isCrypto were force-unwrapped —
-    // a wallet served without an exchangeLimit block crashed the app on
-    // Continue. Fall back to permissive bounds instead of crashing.
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: fromWallet.value!.code!,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting("site_currency") ??
-          'USD',
+      currencyCode: from?.code ?? '',
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
       siteCurrencyDecimals:
           Get.find<SettingsService>().getSetting("site_currency_decimals") ??
-          '2',
-      isCrypto: fromWallet.value!.isCrypto ?? false,
+              '2',
+      isCrypto: from?.isCrypto ?? false,
     );
 
-    final double enteredAmount =
-        double.tryParse(amountController.text.trim()) ?? 0.0;
-    final double min =
-        double.tryParse(fromWallet.value?.exchangeLimit?.min ?? '') ?? 0.0;
-    final double max = double.tryParse(
-          fromWallet.value?.exchangeLimit?.max ?? '',
-        ) ??
-        double.infinity;
+    final result = _validationService.validateAmountStep(
+      fromWallet: from,
+      toWallet: to,
+      amountText: amountController.text,
+      decimals: calculateDecimals,
+      localizations: localizationOrNull,
+    );
 
-    if (enteredAmount < min) {
-      ToastHelper().showErrorToast(
-        localizationOrNull?.exchangeValidationAmountMinimum(
-              min.toStringAsFixed(calculateDecimals),
-              fromWallet.value!.code!,
-            ) ??
-            'Minimum amount is $min ${fromWallet.value!.code!}.',
-      );
-      return false;
-    }
-
-    if (enteredAmount > max) {
-      ToastHelper().showErrorToast(
-        localizationOrNull?.exchangeValidationAmountMaximum(
-              max.toStringAsFixed(calculateDecimals),
-              fromWallet.value!.code!,
-            ) ??
-            'Maximum amount is $max ${fromWallet.value!.code!}.',
-      );
-      return false;
-    }
-
-    // v1.0.24: balance guard — the flow used to submit exchanges larger than
-    // the wallet balance and only failed after the server rejected them.
-    final double availableBalance =
-        double.tryParse(fromWallet.value!.balance ?? '') ?? 0.0;
-    if (enteredAmount > availableBalance) {
-      ToastHelper().showErrorToast(
-        localizationOrNull?.exchangeValidationInsufficientBalance(
-              availableBalance.toStringAsFixed(calculateDecimals),
-              fromWallet.value!.code!,
-            ) ??
-            'Insufficient balance in ${fromWallet.value!.code!}.',
-      );
+    if (!result.isValid) {
+      if (result.errorMessage != null) {
+        ToastHelper().showErrorToast(result.errorMessage!);
+      }
       return false;
     }
 
     return true;
   }
 
-  // ------------------ wallets ------------------
+  // ------------------ wallets & currencies ------------------
 
   Future<void> fetchWallets() async {
     walletLoadError.value = false;
-    // WAVE-REVIEW: یک تلاشِ شبکه‌ایِ ناپایدار نباید کل صفحه را مرده بگذارد —
-    // تا ۲ بار با تاخیر کوتاه تلاش می‌کنیم و در شکست نهایی، سکشن Amount
-    // کارت خطا + Retry نشان می‌دهد (نه فرم مردهٔ بدون دکمه).
     Object? lastError;
     ApiResponse<Map<String, dynamic>>? response;
     for (var attempt = 0; attempt < 2; attempt++) {
@@ -622,22 +458,19 @@ class ExchangeController extends GetxController {
       walletLoadError.value = true;
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
       return;
     }
 
-    if (response.status == Status.completed) {
+    if (response.status == Status.completed && response.data != null) {
       final exchangeWalletsModel = ExchangeWalletModel.fromJson(
         response.data!,
       );
 
-      fromExchangeWalletsList.assignAll(
-        exchangeWalletsModel.data?.wallets ?? [],
-      );
-      toExchangeWalletsList.assignAll(
-        exchangeWalletsModel.data?.wallets ?? [],
-      );
+      final wallets = exchangeWalletsModel.data?.wallets ?? [];
+      fromExchangeWalletsList.assignAll(wallets);
+      toExchangeWalletsList.assignAll(wallets);
       walletLoadError.value = fromExchangeWalletsList.isEmpty;
 
       if (fromExchangeWalletsList.isNotEmpty &&
@@ -667,14 +500,13 @@ class ExchangeController extends GetxController {
 
         calculateExchange();
       } else {
-        // پاسخ 200 بود ولی لیست کیف‌ها خالی برگشت — صفحه مرده نماند.
         walletLoadError.value = true;
       }
     } else {
       walletLoadError.value = true;
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
     }
   }
@@ -684,7 +516,7 @@ class ExchangeController extends GetxController {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.currenciesEndpoint,
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         final currenciesModel = CurrenciesModel.fromJson(response.data!);
         currenciesList.assignAll(currenciesModel.data ?? []);
       }
@@ -693,48 +525,23 @@ class ExchangeController extends GetxController {
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
     }
   }
 
   // ------------------ exchange math ------------------
 
-  /// Recomputes [exchangeRate] (1 from = X to) from the local currency
-  /// list. This is the *static* rate that comes from the main backend and
-  /// is independent of the live fee.ecardo.ir feed — the live feed is
-  /// surfaced separately on the badge.
   void calculateExchange() {
-    if (fromWallet.value != null && toWallet.value != null) {
-      final fromCurrency = currenciesList.firstWhere(
-        (c) => c.code == fromWallet.value!.code,
-        orElse: () => CurrenciesData(
-          conversionRate: "1",
-          code: fromWallet.value!.code,
-        ),
-      );
-
-      final toCurrency = currenciesList.firstWhere(
-        (c) => c.code == toWallet.value!.code,
-        orElse: () => CurrenciesData(
-          conversionRate: "1",
-          code: toWallet.value!.code,
-        ),
-      );
-
-      final double fromRate =
-          double.tryParse(fromCurrency.conversionRate ?? "1") ?? 1;
-      final double toRate =
-          double.tryParse(toCurrency.conversionRate ?? "1") ?? 1;
-
-      exchangeRate.value = 1 / fromRate * toRate;
-      _bumpLiveRate(exchangeRate.value);
-    }
+    _rateManager.calculateStaticRate(
+      fromWallet: fromWallet.value,
+      toWallet: toWallet.value,
+      currenciesList: currenciesList,
+      targetStaticRate: exchangeRate,
+    );
     _scheduleLivePreview();
   }
 
-  /// Swap from/to wallets. Fires haptic feedback and animates the swap
-  /// button (handled by the widget). The controller only updates state.
   void swapWallets() {
     HapticFeedback.selectionClick();
     final tmp = fromWallet.value;
@@ -744,147 +551,55 @@ class ExchangeController extends GetxController {
     _subscribeToRateService();
   }
 
-  /// Called by the rate service whenever a fresh batch of rates arrives.
-  /// We never recompute on UI rebuild — only when rates actually change.
-  void _onRatesChanged(Map<String, double> rates) {
-    final fromCode = fromWallet.value?.code?.toUpperCase();
-    final toCode = toWallet.value?.code?.toUpperCase();
-    if (fromCode == null || toCode == null) return;
-
-    // Map wallet currency codes to fee.ecardo.ir's API codes:
-    //   - "IRR" (Iranian Rial) is the base unit — rate = 1.
-    //   - "USDT" appears in the API as "USDT_IRT" (Tether priced in Toman).
-    //   - Everything else (USD, EUR, AED, ...) matches directly.
-    final apiFromCode = _normalizeApiCode(fromCode);
-    final apiToCode = _normalizeApiCode(toCode);
-
-    final fromRate = rates[apiFromCode] ?? (apiFromCode == 'IRR' ? 1.0 : null);
-    final toRate = rates[apiToCode] ?? (apiToCode == 'IRR' ? 1.0 : null);
-    if (fromRate == null || toRate == null) return;
-    if (fromRate == 0) return;
-
-    // phase1-fix (P0-4): the parser stores rates[code] = price of ONE unit
-    // in IRR, so "1 FROM = X TO" is fromRate / toRate (was inverted).
-    final newRate = fromRate / toRate;
-    if (!newRate.isFinite || newRate <= 0) return;
-
-    _bumpLiveRate(newRate);
-
-    // Pull the 24h change_percent straight from the API for the FROM
-    // currency (the badge shows "1 USD = X EUR  +0.17%" — the percent is
-    // the FROM currency's 24h move, which is what users care about).
-    final source = _rateService.source;
-    if (source is FeeEcardoRateSource) {
-      final entries = source.lastEntries;
-      final fromEntry = entries[apiFromCode];
-      final toEntry = entries[apiToCode];
-      liveChangePercent.value = fromEntry?.changePercent;
-      liveFromNameEn.value = fromEntry?.nameEn ?? '';
-      liveToNameEn.value = toEntry?.nameEn ?? '';
-    }
-
-    _scheduleLivePreview();
-  }
-
-  /// Maps a wallet currency code to the fee.ecardo.ir API code.
-  ///   - "USDT" → "USDT_IRT"  (Tether is priced in Toman by the API)
-  ///   - "IRR" → "IRR"        (base unit; rate=1, handled by caller)
-  ///   - everything else passes through unchanged
-  String _normalizeApiCode(String walletCode) {
-    final upper = walletCode.toUpperCase();
-    if (upper == 'USDT') return 'USDT_IRT';
-    return upper;
-  }
-
-  void _bumpLiveRate(double newRate) {
-    if ((newRate - currentRate.value).abs() < 1e-12) return;
-    previousRate.value = currentRate.value;
-    currentRate.value = newRate;
-
-    if (previousRate.value == 0) {
-      rateDirection.value = RateDirection.unknown;
-    } else if (newRate > previousRate.value) {
-      rateDirection.value = RateDirection.up;
-    } else if (newRate < previousRate.value) {
-      rateDirection.value = RateDirection.down;
-    } else {
-      rateDirection.value = RateDirection.stable;
-    }
-  }
-
-  /// Debounced preview recomputation. While the user is typing, we wait
-  /// 300ms after the last keystroke before hitting the converter endpoint.
   void onAmountChanged(String val) {
     amountInput.value = val;
     isContinueInvalid.value = false;
     _amountDebounce?.cancel();
     _amountDebounce = Timer(const Duration(milliseconds: 300), () {
       _scheduleLivePreview();
-      // v1.0.23+23 (E-1) — Recompute charge + total on every amount change
-      // so the Amount step's `_FeeAndLimitsSummary` shows real values
-      // instead of zeros. Previously `_calculateCharge()` was only called
-      // from `fetchExchangeConfig()` which runs when entering Review —
-      // leaving the Amount step with charge=0 and total=0 until the user
-      // navigated forward.
       _recalculateChargeForAmountStep();
     });
   }
 
-  /// v1.0.23+23 (E-1) — Lightweight charge recompute for the Amount step.
-  ///
-  /// Unlike [_calculateCharge] (which is called from [fetchExchangeConfig]
-  /// and may call the converter endpoint for fixed-charge currency
-  /// conversion), this method only handles the **percentage** charge path
-  /// locally — that covers the common case without an extra network call
-  /// on every keystroke.
-  ///
-  /// For the **fixed** charge path, we keep the last computed
-  /// [charge] value (already converted to the from-currency) and just
-  /// update [totalAmount] = amount + charge. The exact fixed-charge
-  /// conversion is re-fetched when the user enters Review (existing
-  /// behavior) — that's acceptable because the Amount step's fee summary
-  /// is a live preview, not a final value.
   void _recalculateChargeForAmountStep() {
     final amount = double.tryParse(amountController.text) ?? 0.0;
     final settings = exchangeConfigModel.value.data?.settings;
     if (settings == null) {
-      // Config not loaded yet — can't compute. Leave zeros.
       charge.value = 0.0;
       totalAmount.value = amount;
       return;
     }
 
-    final userChargeStr = settings.charge ?? '0';
-    final userChargeType = settings.chargeType ?? 'fixed';
+    final calc = _validationService.calculateChargeForAmountStep(
+      amount: amount,
+      chargeStr: settings.charge,
+      chargeType: settings.chargeType,
+      currentCharge: charge.value,
+    );
 
-    if (userChargeType == 'percentage') {
-      final percent = double.tryParse(userChargeStr) ?? 0.0;
-      charge.value = amount * percent / 100;
-      totalAmount.value = amount + charge.value;
-    } else {
-      // Fixed charge: keep the last `charge` value (which was converted
-      // to the from-currency by [getChargeConverter] when config was
-      // loaded) and just update the total.
-      totalAmount.value = amount + charge.value;
-    }
+    charge.value = calc.charge;
+    totalAmount.value = calc.totalAmount;
   }
 
   void _scheduleLivePreview() {
     final amount = double.tryParse(amountController.text) ?? 0.0;
-    if (amount <= 0 || currentRate.value <= 0) {
+    final rate = currentRate.value;
+    if (amount <= 0 || rate <= 0) {
       liveToAmount.value = 0.0;
       return;
     }
-    liveToAmount.value = amount * currentRate.value;
+    liveToAmount.value = amount * rate;
   }
 
-  /// Quick-fill the amount field with a percentage of the from-wallet
-  /// balance. Used by the 25 / 50 / 75 / Max chips.
   void setAmountPercent(double percent) {
-    final balance = double.tryParse(fromWallet.value?.balance ?? '0') ?? 0.0;
+    final from = fromWallet.value;
+    if (from == null) return;
+    final balance = double.tryParse(from.balance ?? '0') ?? 0.0;
     if (balance <= 0) return;
-    final amount = (balance * percent).toStringAsFixed(
-      fromWallet.value?.isCrypto == true ? 8 : 2,
+    final amount = _validationService.calculateQuickAmountString(
+      balance: balance,
+      percent: percent,
+      isCrypto: from.isCrypto == true,
     );
     amountController.text = amount;
     amountController.selection = TextSelection.fromPosition(
@@ -896,10 +611,8 @@ class ExchangeController extends GetxController {
   // ------------------ exchange wallet submission ------------------
 
   Future<void> exchangeWallet({String? passcode}) async {
-    // v1.0.24: guard against double submission while a request is in flight.
     if (isExchangeWalletLoading.isTrue) return;
 
-    // Defense-in-depth: Reject submission if the review rate is currently marked stale.
     if (isReviewRateStale.isTrue) {
       ToastHelper().showWarningToast(
         localizationOrNull?.exchangeReviewRateStaleBanner ??
@@ -910,41 +623,26 @@ class ExchangeController extends GetxController {
 
     isExchangeWalletLoading.value = true;
 
-    // v1.0.23+23 (E-3) — Send rate + total + charge to the backend so the
-    // server can validate the rate the user saw at confirm time and reject
-    // the request if the rate has drifted past the server's tolerance.
-    // Previously the request body only contained amount + from_wallet +
-    // to_wallet, so the backend had to re-fetch the rate and compute the
-    // charge itself — opening a window for rate manipulation between the
-    // user pressing Confirm and the server processing the request.
-    //
-    // We use `_lockedReviewRate` (the rate snapshot captured when the user
-    // entered the Review step) instead of `currentRate` (which may have
-    // drifted since then). If `_lockedReviewRate` is null (e.g. the user
-    // somehow bypassed the Review step), we fall back to `currentRate` —
-    // better to send something than nothing.
-    final rateToSend = _lockedReviewRate ?? currentRate.value;
+    final rateToSend = _rateManager.lockedReviewRate ?? currentRate.value;
+    final reviewEnteredAt = _rateManager.reviewEnteredAt;
+
+    final from = fromWallet.value;
+    final to = toWallet.value;
+
+    final fromWalletId = from?.id ?? 0;
+    final toWalletId = to?.id ?? 0;
 
     final Map<String, dynamic> requestBody = {
       'amount': amountController.text.trim(),
-      'from_wallet': fromWallet.value!.id == 0
-          ? "default"
-          : fromWallet.value!.id.toString(),
-      'to_wallet': toWallet.value!.id == 0
-          ? "default"
-          : toWallet.value!.id.toString(),
-      // E-3 — additional context for server-side rate validation.
+      'from_wallet': fromWalletId == 0 ? "default" : fromWalletId.toString(),
+      'to_wallet': toWalletId == 0 ? "default" : toWalletId.toString(),
       'rate': rateToSend.toStringAsFixed(8),
       'total_amount': totalAmount.value.toStringAsFixed(8),
       'charge': charge.value.toStringAsFixed(8),
       'exchange_amount': exchangeAmount.value.toStringAsFixed(8),
       'exchange_review_rate': exchangeReviewRate.value.toStringAsFixed(8),
-      // ISO timestamp of when the user entered the Review step — the
-      // backend can compare this to its own rate-locked-at window.
-      if (_reviewEnteredAt != null)
-        'rate_locked_at': _reviewEnteredAt!.toUtc().toIso8601String(),
-      // EX-04: پس‌کد تراکنش باید سمت سرور هم تأیید شود (بک‌اند Hash::check می‌کند).
-      // کاربران بدون پس‌کد فیلد را اصلاً نمی‌فرستند — بدنه تمیز می‌ماند.
+      if (reviewEnteredAt != null)
+        'rate_locked_at': reviewEnteredAt.toUtc().toIso8601String(),
       if (passcode != null && passcode.isNotEmpty) 'passcode': passcode,
     };
 
@@ -954,13 +652,11 @@ class ExchangeController extends GetxController {
         data: requestBody,
       );
 
-      if (response.status == Status.completed) {
-        ToastHelper().showSuccessToast(response.data!["message"]);
+      if (response.status == Status.completed && response.data != null) {
+        ToastHelper().showSuccessToast(response.data!["message"] ?? '');
         successExchangeData.value = response.data!['data'];
-        // Persist this pair as a recent one. Fire-and-forget — never
-        // blocks the success screen.
-        final fromCode = fromWallet.value?.code?.toUpperCase();
-        final toCode = toWallet.value?.code?.toUpperCase();
+        final fromCode = from?.code?.toUpperCase();
+        final toCode = to?.code?.toUpperCase();
         if (fromCode != null && toCode != null) {
           unawaited(
             RecentPairsStore.add(
@@ -976,7 +672,7 @@ class ExchangeController extends GetxController {
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
-        'Something went wrong. Please try again.',
+            'Something went wrong. Please try again.',
       );
     } finally {
       isExchangeWalletLoading.value = false;
@@ -995,28 +691,23 @@ class ExchangeController extends GetxController {
     exchangeReviewRate.value = 0.0;
     exchangeAmount.value = 0.0;
     liveToAmount.value = 0.0;
-    previousRate.value = 0.0;
-    currentRate.value = 0.0;
-    rateDirection.value = RateDirection.unknown;
     fromWalletBorderFocused.value = false;
     toWalletBorderFocused.value = false;
     isContinueInvalid.value = false;
-    isReviewRateStale.value = false;
+    _rateManager.reset();
   }
 
   // ------------------ accessors used by the UI ------------------
 
-  ExchangeRateService get rateService => _rateService;
-
   bool get isAmountValid {
     final from = fromWallet.value;
     final to = toWallet.value;
-    final text = amountInput.value.isNotEmpty ? amountInput.value : amountController.text;
-    if (from == null || to == null) return false;
-    final amount = double.tryParse(text) ?? 0.0;
-    if (amount <= 0) return false;
-    final min = double.tryParse(from.exchangeLimit?.min ?? '0') ?? 0.0;
-    final max = double.tryParse(from.exchangeLimit?.max ?? '0') ?? double.infinity;
-    return amount >= min && amount <= max;
+    final text =
+        amountInput.value.isNotEmpty ? amountInput.value : amountController.text;
+    return _validationService.isAmountValid(
+      fromWallet: from,
+      toWallet: to,
+      amountText: text,
+    );
   }
 }

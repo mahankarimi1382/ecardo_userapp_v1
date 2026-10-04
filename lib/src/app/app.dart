@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/app/routes/routes_handler.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
 
 class EcardoUser extends StatefulWidget {
   const EcardoUser({super.key});
@@ -88,6 +90,13 @@ class _EcardoUserState extends State<EcardoUser> {
             Locale('ru'),
           ],
           builder: (context, widget) {
+            // NOTIF-FIX: keep the FCM service's context fresh so deferred
+            // routing works, and drain any notification payload that was
+            // parked during cold start (tap on tray notification while the
+            // app was launching).
+            if (!kIsWeb && Get.isRegistered<FirebaseMessagingService>()) {
+              Get.find<FirebaseMessagingService>().attachContext(context);
+            }
             Widget body = widget ?? const SizedBox.shrink();
             // UI Defensive hardening: clamp system font scaling (max 1.3) to prevent fixed-height layout breaks
             final mediaQuery = MediaQuery.of(context);

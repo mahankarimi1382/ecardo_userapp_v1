@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
@@ -23,42 +25,48 @@ class _CashOutTransactionFilterBottomSheetState
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: AppDurations.normal,
       curve: Curves.easeOutQuart,
       height: 400,
-      margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
+      margin: const EdgeInsetsDirectional.symmetric(
+        horizontal: AppSpacing.md,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+        color: isDark ? AppColors.darkCard : AppColors.lightCard,
+        borderRadius: const BorderRadiusDirectional.only(
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
-            blurRadius: 40,
-            spreadRadius: 0,
-            offset: Offset(0, 0),
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+            blurRadius: AppSpacing.xxl,
+            offset: Offset.zero,
           ),
         ],
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 18),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.page,
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               Container(
                 width: 40,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(30),
+                  color: isDark
+                      ? AppColors.darkTextSecondary.withValues(alpha: 0.3)
+                      : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
               CommonRequiredLabelAndDynamicField(
                 labelText: localizations.cashOutFilterTransactionId,
                 isLabelRequired: false,
@@ -72,7 +80,7 @@ class _CashOutTransactionFilterBottomSheetState
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: AppSpacing.lg),
               CommonRequiredLabelAndDynamicField(
                 labelText: localizations.cashOutFilterStatus,
                 isLabelRequired: false,
@@ -96,8 +104,8 @@ class _CashOutTransactionFilterBottomSheetState
                                       controller.selectedStatusIndex.value ==
                                       index;
 
-                                  Color getStatusColor(String status) {
-                                    switch (status.toLowerCase()) {
+                                  Color getStatusColor(String s) {
+                                    switch (s.toLowerCase()) {
                                       case 'success':
                                         return AppColors.success;
                                       case 'pending':
@@ -105,15 +113,20 @@ class _CashOutTransactionFilterBottomSheetState
                                       case 'failed':
                                         return AppColors.error;
                                       default:
-                                        return AppColors.lightTextPrimary;
+                                        return isDark
+                                            ? AppColors.darkPrimary
+                                            : AppColors.lightPrimary;
                                     }
                                   }
 
                                   final statusColor = getStatusColor(status);
 
                                   return InkWell(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusSm,
+                                    ),
                                     onTap: () {
+                                      HapticFeedback.lightImpact();
                                       if (controller
                                               .selectedStatusIndex
                                               .value ==
@@ -126,32 +139,41 @@ class _CashOutTransactionFilterBottomSheetState
                                       }
                                     },
                                     child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 200,
-                                      ),
+                                      duration: AppDurations.fast,
                                       alignment: Alignment.center,
-                                      padding: EdgeInsetsDirectional.symmetric(
-                                        horizontal: 18,
+                                      padding:
+                                          const EdgeInsetsDirectional.symmetric(
+                                        horizontal: AppSpacing.lg,
                                       ),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(
+                                          AppSpacing.radiusSm,
+                                        ),
                                         color: isSelected
                                             ? statusColor
+                                            : isDark
+                                            ? AppColors.darkSurfaceVariant
                                             : AppColors.lightBackground,
                                         border: Border.all(
                                           color: isSelected
                                               ? statusColor
-                                              : AppColors.lightTextPrimary
-                                                    .withValues(alpha: 0.06),
+                                              : isDark
+                                              ? AppColors.darkBorder
+                                              : AppColors.lightBorder,
                                         ),
                                       ),
                                       child: Text(
-                                        StatusLabelHelper.localize(localizations, status),
+                                        StatusLabelHelper.localize(
+                                          localizations,
+                                          status,
+                                        ),
                                         style: TextStyle(
                                           letterSpacing: 0,
-                                          fontSize: 14,
+                                          fontSize: 13,
                                           color: isSelected
                                               ? AppColors.white
+                                              : isDark
+                                              ? AppColors.darkTextSecondary
                                               : AppColors.lightTextTertiary,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -168,29 +190,21 @@ class _CashOutTransactionFilterBottomSheetState
                   ),
                 ),
               ),
-              SizedBox(height: 40),
-              CommonButton(
-                onPressed: () {
-                  controller.updateStatusFilter();
-                  controller.fetchDynamicTransactions();
-                  Get.back();
-                },
-                width: double.infinity,
-
-                text: localizations.cashOutFilterButton,
+              const SizedBox(height: AppSpacing.xxxl),
+              Obx(
+                () => CommonButton(
+                  isLoading: controller.isTransactionsLoading.value,
+                  onPressed: () async {
+                    HapticFeedback.lightImpact();
+                    controller.updateStatusFilter();
+                    await controller.fetchDynamicTransactions();
+                    Get.back();
+                  },
+                  width: double.infinity,
+                  text: localizations.cashOutFilterButton,
+                ),
               ),
-              const SizedBox(height: 10),
-              CommonButton(
-                backgroundColor: AppColors.error,
-                onPressed: () {
-                  controller.resetFilters();
-                  Get.back();
-                },
-                width: double.infinity,
-
-                text: localizations.cashOutFilterReset,
-              ),
-              SizedBox(height: 40),
+              const SizedBox(height: AppSpacing.xl),
             ],
           ),
         ),

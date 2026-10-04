@@ -344,7 +344,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           : ListView(
               padding: EdgeInsetsDirectional.fromSTEB(
                 AppSpacing.page,
-                12,
+                AppSpacing.cardGap,
                 AppSpacing.page,
                 AppSpacing.bottomSafe(context, 32),
               ),
@@ -363,12 +363,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.person_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF93C5FD)
-                            : const Color(0xFF2563EB),
-                        backgroundColor: isDark
-                            ? const Color(0xFF1E293B)
-                            : const Color(0xFFEFF6FF),
+                        style: SettingsIconTokens.profile(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -392,12 +387,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         isDark: isDark,
                         leading: _iconBox(
                           icon: Icons.badge_rounded,
-                          iconColor: isDark
-                              ? const Color(0xFF5EEAD4)
-                              : const Color(0xFF0D9488),
-                          backgroundColor: isDark
-                              ? const Color(0xFF134E4A).withValues(alpha: 0.5)
-                              : const Color(0xFFF0FDFA),
+                          style: SettingsIconTokens.kyc(isDark: isDark),
                         ),
                         title: loc.settingsIdVerification,
                         subtitle: l10nPick(
@@ -413,7 +403,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   cardBg: cardBg,
                   dividerColor: dividerColor,
                 ),
-                _group(
+                if (DemoAccountService.isDemoAvailableInThisBuild &&
+                    Get.isRegistered<DemoAccountService>())
+                  _group(
                   l10nPick(
                     context,
                     en: 'Demo & Testing Lab',
@@ -427,12 +419,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.biotech_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFC4B5FD)
-                            : const Color(0xFF7C3AED),
-                        backgroundColor: isDark
-                            ? const Color(0xFF2E1065).withValues(alpha: 0.5)
-                            : const Color(0xFFF5F3FF),
+                        style: SettingsIconTokens.demoLab(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -475,12 +462,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.lock_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFA5B4FC)
-                            : const Color(0xFF4F46E5),
-                        backgroundColor: isDark
-                            ? const Color(0xFF312E81).withValues(alpha: 0.5)
-                            : const Color(0xFFEEF2FF),
+                        style: SettingsIconTokens.changePassword(isDark: isDark),
                       ),
                       title: loc.settingsChangePassword,
                       subtitle: l10nPick(
@@ -497,12 +479,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.dialpad_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFFCD34D)
-                            : const Color(0xFFD97706),
-                        backgroundColor: isDark
-                            ? const Color(0xFF78350F).withValues(alpha: 0.5)
-                            : const Color(0xFFFFFBEB),
+                        style: SettingsIconTokens.transactionPin(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -528,12 +505,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         isDark: isDark,
                         leading: _iconBox(
                           icon: Icons.phonelink_lock_rounded,
-                          iconColor: isDark
-                              ? const Color(0xFF6EE7B7)
-                              : const Color(0xFF059669),
-                          backgroundColor: isDark
-                              ? const Color(0xFF064E3B).withValues(alpha: 0.5)
-                              : const Color(0xFFECFDF5),
+                          style: SettingsIconTokens.twoFactor(isDark: isDark),
                         ),
                         title: loc.settingsTwoFactorAuthentication,
                         subtitle: l10nPick(
@@ -551,12 +523,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.password_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF7DD3FC)
-                            : const Color(0xFF0284C7),
-                        backgroundColor: isDark
-                            ? const Color(0xFF0C4A6E).withValues(alpha: 0.5)
-                            : const Color(0xFFF0F9FF),
+                        style: SettingsIconTokens.paymentOtp(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -579,12 +546,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.devices_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFA5B4FC)
-                            : const Color(0xFF6366F1),
-                        backgroundColor: isDark
-                            ? const Color(0xFF312E81).withValues(alpha: 0.5)
-                            : const Color(0xFFEEF2FF),
+                        style: SettingsIconTokens.deviceSessions(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -608,12 +570,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         isDark: isDark,
                         leading: _iconBox(
                           icon: Icons.fingerprint_rounded,
-                          iconColor: isDark
-                              ? const Color(0xFF2DD4BF)
-                              : const Color(0xFF0D9488),
-                          backgroundColor: isDark
-                              ? const Color(0xFF134E4A).withValues(alpha: 0.5)
-                              : const Color(0xFFF0FDFA),
+                          style: SettingsIconTokens.biometric(isDark: isDark),
                         ),
                         title: l10nPick(
                           context,
@@ -639,12 +596,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.timer_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFFB923C)
-                            : const Color(0xFFEA580C),
-                        backgroundColor: isDark
-                            ? const Color(0xFF7C2D12).withValues(alpha: 0.5)
-                            : const Color(0xFFFFF7ED),
+                        style: SettingsIconTokens.autoAppLock(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -712,12 +664,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.pin_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFCBD5E1)
-                            : const Color(0xFF475569),
-                        backgroundColor: isDark
-                            ? const Color(0xFF334155).withValues(alpha: 0.5)
-                            : const Color(0xFFF1F5F9),
+                        style: SettingsIconTokens.appLockPin(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -756,15 +703,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         icon: _notifGranted
                             ? Icons.notifications_active_rounded
                             : Icons.notifications_off_rounded,
-                        iconColor:
-                            _notifGranted ? AppColors.success : AppColors.error,
-                        backgroundColor: _notifGranted
-                            ? (isDark
-                                ? const Color(0xFF064E3B).withValues(alpha: 0.5)
-                                : AppColors.successContainer)
-                            : (isDark
-                                ? const Color(0xFF450A0A).withValues(alpha: 0.5)
-                                : AppColors.errorContainer),
+                        style: SettingsIconTokens.notificationAccess(
+                          isDark: isDark,
+                          granted: _notifGranted,
+                        ),
                       ),
                       title: l10nPick(
                         context,
@@ -804,12 +746,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.account_balance_wallet_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF34D399)
-                            : const Color(0xFF059669),
-                        backgroundColor: isDark
-                            ? const Color(0xFF064E3B).withValues(alpha: 0.5)
-                            : const Color(0xFFECFDF5),
+                        style: SettingsIconTokens.notificationFinancial(
+                          isDark: isDark,
+                        ),
                       ),
                       title: l10nPick(
                         context,
@@ -836,12 +775,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.campaign_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFFBBF24)
-                            : const Color(0xFFD97706),
-                        backgroundColor: isDark
-                            ? const Color(0xFF78350F).withValues(alpha: 0.5)
-                            : const Color(0xFFFFFBEB),
+                        style: SettingsIconTokens.notificationPromo(
+                          isDark: isDark,
+                        ),
                       ),
                       title: l10nPick(
                         context,
@@ -864,12 +800,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.shield_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF34D399)
-                            : AppColors.success,
-                        backgroundColor: isDark
-                            ? const Color(0xFF064E3B).withValues(alpha: 0.5)
-                            : AppColors.successContainer,
+                        style: SettingsIconTokens.notificationSecurity(
+                          isDark: isDark,
+                        ),
                       ),
                       title: l10nPick(
                         context,
@@ -896,12 +829,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.volume_up_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF60A5FA)
-                            : const Color(0xFF2563EB),
-                        backgroundColor: isDark
-                            ? const Color(0xFF1E293B)
-                            : const Color(0xFFEFF6FF),
+                        style: SettingsIconTokens.sound(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -923,12 +851,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.vibration_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFA78BFA)
-                            : const Color(0xFF7C3AED),
-                        backgroundColor: isDark
-                            ? const Color(0xFF2E1065).withValues(alpha: 0.5)
-                            : const Color(0xFFF5F3FF),
+                        style: SettingsIconTokens.vibration(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -951,12 +874,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.notifications_none_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF38BDF8)
-                            : const Color(0xFF0284C7),
-                        backgroundColor: isDark
-                            ? const Color(0xFF0C4A6E).withValues(alpha: 0.5)
-                            : const Color(0xFFF0F9FF),
+                        style: SettingsIconTokens.notificationFeed(
+                          isDark: isDark,
+                        ),
                       ),
                       title: loc.settingsAllNotification,
                       subtitle: l10nPick(
@@ -986,12 +906,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.admin_panel_settings_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFA5B4FC)
-                            : const Color(0xFF4F46E5),
-                        backgroundColor: isDark
-                            ? const Color(0xFF312E81).withValues(alpha: 0.5)
-                            : const Color(0xFFEEF2FF),
+                        style: SettingsIconTokens.permissions(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -1027,12 +942,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.translate_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF38BDF8)
-                            : const Color(0xFF0284C7),
-                        backgroundColor: isDark
-                            ? const Color(0xFF0C4A6E).withValues(alpha: 0.5)
-                            : const Color(0xFFF0F9FF),
+                        style: SettingsIconTokens.language(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -1080,12 +990,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.dark_mode_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFFA78BFA)
-                            : const Color(0xFF7C3AED),
-                        backgroundColor: isDark
-                            ? const Color(0xFF2E1065).withValues(alpha: 0.5)
-                            : const Color(0xFFF5F3FF),
+                        style: SettingsIconTokens.theme(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -1154,12 +1059,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.currency_exchange_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF34D399)
-                            : const Color(0xFF059669),
-                        backgroundColor: isDark
-                            ? const Color(0xFF064E3B).withValues(alpha: 0.5)
-                            : const Color(0xFFECFDF5),
+                        style: SettingsIconTokens.rateUnit(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -1222,12 +1122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         isDark: isDark,
                         leading: _iconBox(
                           icon: Icons.support_agent_rounded,
-                          iconColor: isDark
-                              ? const Color(0xFF2DD4BF)
-                              : const Color(0xFF0D9488),
-                          backgroundColor: isDark
-                              ? const Color(0xFF134E4A).withValues(alpha: 0.5)
-                              : const Color(0xFFF0FDFA),
+                          style: SettingsIconTokens.support(isDark: isDark),
                         ),
                         title: loc.settingsSupport,
                         subtitle: l10nPick(
@@ -1243,12 +1138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.info_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF60A5FA)
-                            : const Color(0xFF2563EB),
-                        backgroundColor: isDark
-                            ? const Color(0xFF1E293B)
-                            : const Color(0xFFEFF6FF),
+                        style: SettingsIconTokens.about(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -1267,12 +1157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.policy_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF94A3B8)
-                            : const Color(0xFF475569),
-                        backgroundColor: isDark
-                            ? const Color(0xFF334155).withValues(alpha: 0.5)
-                            : const Color(0xFFF1F5F9),
+                        style: SettingsIconTokens.terms(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -1290,12 +1175,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.system_update_rounded,
-                        iconColor: isDark
-                            ? const Color(0xFF34D399)
-                            : const Color(0xFF059669),
-                        backgroundColor: isDark
-                            ? const Color(0xFF064E3B).withValues(alpha: 0.5)
-                            : const Color(0xFFECFDF5),
+                        style: SettingsIconTokens.appUpdate(isDark: isDark),
                       ),
                       title: l10nPick(
                         context,
@@ -1343,11 +1223,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           isDark: isDark,
                           leading: _iconBox(
                             icon: Icons.verified_user_rounded,
-                            iconColor: AppColors.success,
-                            backgroundColor: isDark
-                                ? const Color(0xFF064E3B)
-                                    .withValues(alpha: 0.5)
-                                : AppColors.successContainer,
+                            style: SettingsIconTokens.demoKyc(isDark: isDark),
                           ),
                           title: l10nPick(
                             context,
@@ -1398,11 +1274,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           isDark: isDark,
                           leading: _iconBox(
                             icon: Icons.exit_to_app_rounded,
-                            iconColor: AppColors.error,
-                            backgroundColor: isDark
-                                ? const Color(0xFF450A0A)
-                                    .withValues(alpha: 0.5)
-                                : AppColors.errorContainer,
+                            style: SettingsIconTokens.demoExit(isDark: isDark),
                           ),
                           title: l10nPick(
                             context,
@@ -1419,7 +1291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       dividerColor: dividerColor,
                     );
                   }),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.cardGap),
                 OutlinedButton.icon(
                   onPressed: _confirmLogout,
                   icon: const Icon(Icons.logout_rounded, color: AppColors.error),
@@ -1493,18 +1365,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _iconBox({
     required IconData icon,
-    required Color iconColor,
-    required Color backgroundColor,
+    required SettingsIconStyle style,
   }) {
     return Container(
       width: 38,
       height: 38,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: style.backgroundColor,
         borderRadius: BorderRadius.circular(10),
       ),
       alignment: Alignment.center,
-      child: Icon(icon, size: 20, color: iconColor),
+      child: Icon(icon, size: 20, color: style.iconColor),
     );
   }
 
@@ -1513,7 +1384,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Icon(
       isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
       size: 20,
-      color: isDark ? AppColors.softGray : const Color(0xFF9CA3AF),
+      color: SettingsIconTokens.chevronColor(isDark: isDark),
     );
   }
 
@@ -1544,7 +1415,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sectionGap),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1563,7 +1434,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             decoration: BoxDecoration(
               color: cardBg,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.radius),
               border: isDark
                   ? Border.all(
                       color: AppColors.lightWarmGray.withValues(alpha: 0.12),
@@ -1582,7 +1453,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             child: Material(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.radius),
               clipBehavior: Clip.antiAlias,
               child: Column(children: separated),
             ),
@@ -1832,4 +1703,307 @@ class _BottomSheetItem<T> {
     this.isSelected = false,
     required this.value,
   });
+}
+
+/// Style definition for settings leading icon containers.
+class SettingsIconStyle {
+  final Color iconColor;
+  final Color backgroundColor;
+
+  const SettingsIconStyle({
+    required this.iconColor,
+    required this.backgroundColor,
+  });
+}
+
+/// Semantic design tokens for Settings screen icon containers, badges, and accents.
+///
+/// Maps each setting category/tile to unified semantic color tokens supporting
+/// both light and dark mode variants gracefully.
+class SettingsIconTokens {
+  // ------------------ SEMANTIC PALETTE TOKENS ------------------
+  // Blue — Profile, Sound, About Us
+  static const Color _blue50 = Color(0xFFEFF6FF);
+  static const Color _blue300 = Color(0xFF93C5FD);
+  static const Color _blue400 = Color(0xFF60A5FA);
+  static const Color _blue600 = Color(0xFF2563EB);
+  static const Color _slate800 = Color(0xFF1E293B);
+
+  // Teal — Identity, Verification, Support
+  static const Color _teal50 = Color(0xFFF0FDFA);
+  static const Color _teal300 = Color(0xFF5EEAD4);
+  static const Color _teal400 = Color(0xFF2DD4BF);
+  static const Color _teal600 = Color(0xFF0D9488);
+  static const Color _teal900 = Color(0xFF134E4A);
+
+  // Violet / Purple — Testing Lab, Vibration, Theme
+  static const Color _violet50 = Color(0xFFF5F3FF);
+  static const Color _violet300 = Color(0xFFC4B5FD);
+  static const Color _violet400 = Color(0xFFA78BFA);
+  static const Color _violet600 = Color(0xFF7C3AED);
+  static const Color _violet950 = Color(0xFF2E1065);
+
+  // Indigo — Authentication, Device Management, Permissions
+  static const Color _indigo50 = Color(0xFFEEF2FF);
+  static const Color _indigo300 = Color(0xFFA5B4FC);
+  static const Color _indigo500 = Color(0xFF6366F1);
+  static const Color _indigo600 = Color(0xFF4F46E5);
+  static const Color _indigo900 = Color(0xFF312E81);
+
+  // Amber — Financial Authorization, Marketing
+  static const Color _amber50 = Color(0xFFFFFBEB);
+  static const Color _amber300 = Color(0xFFFCD34D);
+  static const Color _amber400 = Color(0xFFFBBF24);
+  static const Color _amber600 = Color(0xFFD97706);
+  static const Color _amber900 = Color(0xFF78350F);
+
+  // Emerald — Two-Factor, Transfers, Currency, App Updates
+  static const Color _emerald50 = Color(0xFFECFDF5);
+  static const Color _emerald300 = Color(0xFF6EE7B7);
+  static const Color _emerald400 = Color(0xFF34D399);
+  static const Color _emerald600 = Color(0xFF059669);
+  static const Color _emerald950 = Color(0xFF064E3B);
+
+  // Sky — OTP Generation, History Feeds, Localization
+  static const Color _sky50 = Color(0xFFF0F9FF);
+  static const Color _sky300 = Color(0xFF7DD3FC);
+  static const Color _sky400 = Color(0xFF38BDF8);
+  static const Color _sky600 = Color(0xFF0284C7);
+  static const Color _sky900 = Color(0xFF0C4A6E);
+
+  // Orange — Security Timers & Lockouts
+  static const Color _orange50 = Color(0xFFFFF7ED);
+  static const Color _orange400 = Color(0xFFFB923C);
+  static const Color _orange600 = Color(0xFFEA580C);
+  static const Color _orange900 = Color(0xFF7C2D12);
+
+  // Slate — Local PIN, Legal Policies & Documentation
+  static const Color _slate100 = Color(0xFFF1F5F9);
+  static const Color _slate300 = Color(0xFFCBD5E1);
+  static const Color _slate400 = Color(0xFF94A3B8);
+  static const Color _slate600 = Color(0xFF475569);
+  static const Color _slate700 = Color(0xFF334155);
+
+  // Danger Dark Background (Elevated Error Surface)
+  static const Color _red950 = Color(0xFF450A0A);
+
+  // Chevron Neutral Light
+  static const Color _chevronLight = Color(0xFF9CA3AF);
+
+  // ------------------ SEMANTIC HELPERS ------------------
+
+  /// Trailing chevron color respecting theme brightness
+  static Color chevronColor({required bool isDark}) =>
+      isDark ? AppColors.softGray : _chevronLight;
+
+  // ------------------ CATEGORY: ACCOUNT ------------------
+
+  /// Profile setting tile (name, photo)
+  static SettingsIconStyle profile({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _blue300 : _blue600,
+        backgroundColor: isDark ? _slate800 : _blue50,
+      );
+
+  /// KYC / ID Verification tile (tier & document status)
+  static SettingsIconStyle kyc({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _teal300 : _teal600,
+        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+      );
+
+  // ------------------ CATEGORY: DEMO & QA LAB ------------------
+
+  /// Tester control panel tile
+  static SettingsIconStyle demoLab({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _violet300 : _violet600,
+        backgroundColor: isDark ? _violet950.withValues(alpha: 0.5) : _violet50,
+      );
+
+  // ------------------ CATEGORY: SECURITY ------------------
+
+  /// Change account password tile
+  static SettingsIconStyle changePassword({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _indigo300 : _indigo600,
+        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
+      );
+
+  /// Transaction PIN tile (transfers & payments)
+  static SettingsIconStyle transactionPin({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _amber300 : _amber600,
+        backgroundColor: isDark ? _amber900.withValues(alpha: 0.5) : _amber50,
+      );
+
+  /// Two-factor authentication (Google Authenticator) tile
+  static SettingsIconStyle twoFactor({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _emerald300 : _emerald600,
+        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+      );
+
+  /// Dynamic payment OTP generator tile
+  static SettingsIconStyle paymentOtp({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _sky300 : _sky600,
+        backgroundColor: isDark ? _sky900.withValues(alpha: 0.5) : _sky50,
+      );
+
+  /// Active devices & sessions tile
+  static SettingsIconStyle deviceSessions({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _indigo300 : _indigo500,
+        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
+      );
+
+  /// Biometric authentication toggle tile
+  static SettingsIconStyle biometric({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _teal400 : _teal600,
+        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+      );
+
+  /// Auto app lock timer tile
+  static SettingsIconStyle autoAppLock({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _orange400 : _orange600,
+        backgroundColor: isDark ? _orange900.withValues(alpha: 0.5) : _orange50,
+      );
+
+  /// App lock PIN tile (local device unlock)
+  static SettingsIconStyle appLockPin({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _slate300 : _slate600,
+        backgroundColor: isDark ? _slate700.withValues(alpha: 0.5) : _slate100,
+      );
+
+  // ------------------ CATEGORY: NOTIFICATIONS ------------------
+
+  /// System notification access permission status tile
+  static SettingsIconStyle notificationAccess({
+    required bool isDark,
+    required bool granted,
+  }) =>
+      granted
+          ? SettingsIconStyle(
+              iconColor: AppColors.success,
+              backgroundColor: isDark
+                  ? _emerald950.withValues(alpha: 0.5)
+                  : AppColors.successContainer,
+            )
+          : SettingsIconStyle(
+              iconColor: AppColors.error,
+              backgroundColor: isDark
+                  ? _red950.withValues(alpha: 0.5)
+                  : AppColors.errorContainer,
+            );
+
+  /// Financial notification preferences tile
+  static SettingsIconStyle notificationFinancial({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _emerald400 : _emerald600,
+        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+      );
+
+  /// Promotional notification preferences tile
+  static SettingsIconStyle notificationPromo({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _amber400 : _amber600,
+        backgroundColor: isDark ? _amber900.withValues(alpha: 0.5) : _amber50,
+      );
+
+  /// Security notifications tile (always active)
+  static SettingsIconStyle notificationSecurity({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _emerald400 : AppColors.success,
+        backgroundColor: isDark
+            ? _emerald950.withValues(alpha: 0.5)
+            : AppColors.successContainer,
+      );
+
+  /// Notification sound toggle tile
+  static SettingsIconStyle sound({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _blue400 : _blue600,
+        backgroundColor: isDark ? _slate800 : _blue50,
+      );
+
+  /// Notification vibration toggle tile
+  static SettingsIconStyle vibration({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _violet400 : _violet600,
+        backgroundColor: isDark ? _violet950.withValues(alpha: 0.5) : _violet50,
+      );
+
+  /// Notification history and feed tile
+  static SettingsIconStyle notificationFeed({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _sky400 : _sky600,
+        backgroundColor: isDark ? _sky900.withValues(alpha: 0.5) : _sky50,
+      );
+
+  // ------------------ CATEGORY: PERMISSIONS ------------------
+
+  /// Manage device permissions tile
+  static SettingsIconStyle permissions({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _indigo300 : _indigo600,
+        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
+      );
+
+  // ------------------ CATEGORY: PERSONALIZATION ------------------
+
+  /// Language selection tile
+  static SettingsIconStyle language({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _sky400 : _sky600,
+        backgroundColor: isDark ? _sky900.withValues(alpha: 0.5) : _sky50,
+      );
+
+  /// Theme mode selection tile
+  static SettingsIconStyle theme({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _violet400 : _violet600,
+        backgroundColor: isDark ? _violet950.withValues(alpha: 0.5) : _violet50,
+      );
+
+  /// Rate display unit tile
+  static SettingsIconStyle rateUnit({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _emerald400 : _emerald600,
+        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+      );
+
+  // ------------------ CATEGORY: GENERAL ------------------
+
+  /// Support and tickets tile
+  static SettingsIconStyle support({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _teal400 : _teal600,
+        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+      );
+
+  /// About us tile
+  static SettingsIconStyle about({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _blue400 : _blue600,
+        backgroundColor: isDark ? _slate800 : _blue50,
+      );
+
+  /// Terms and privacy tile
+  static SettingsIconStyle terms({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _slate400 : _slate600,
+        backgroundColor: isDark ? _slate700.withValues(alpha: 0.5) : _slate100,
+      );
+
+  /// Check for application updates tile
+  static SettingsIconStyle appUpdate({required bool isDark}) => SettingsIconStyle(
+        iconColor: isDark ? _emerald400 : _emerald600,
+        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+      );
+
+  // ------------------ DEMO & QA PANEL TILES ------------------
+
+  /// Simulated KYC status tile in demo panel
+  static SettingsIconStyle demoKyc({required bool isDark}) => SettingsIconStyle(
+        iconColor: AppColors.success,
+        backgroundColor: isDark
+            ? _emerald950.withValues(alpha: 0.5)
+            : AppColors.successContainer,
+      );
+
+  /// Exit demo mode tile
+  static SettingsIconStyle demoExit({required bool isDark}) => SettingsIconStyle(
+        iconColor: AppColors.error,
+        backgroundColor: isDark
+            ? _red950.withValues(alpha: 0.5)
+            : AppColors.errorContainer,
+      );
 }

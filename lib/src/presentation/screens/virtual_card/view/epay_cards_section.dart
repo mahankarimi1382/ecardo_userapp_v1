@@ -317,7 +317,7 @@ class EpayCardsSection extends StatelessWidget {
     EpayCardController controller,
   ) {
     final amountController = TextEditingController();
-    final pick = ({
+    String pick({
       required String en,
       required String fa,
       String? ar,

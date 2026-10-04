@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
@@ -83,21 +84,22 @@ class CommercialDocumentChecklist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final verifiedCount =
         documents.where((d) => d.status == DocumentVerificationStatus.verified).length;
     final progress = documents.isNotEmpty ? verifiedCount / documents.length : 0.0;
 
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSpacing.lg.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18.r),
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radius.r),
         border: Border.all(
-          color: AppColors.lightTextPrimary.withValues(alpha: 0.08),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -124,32 +126,34 @@ class CommercialDocumentChecklist extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: AppSpacing.md.w),
               Text(
                 '$verifiedCount/${documents.length}',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.lightPrimary,
+                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.sm.h),
           ClipRRect(
             borderRadius: BorderRadius.circular(4.r),
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 5.h,
-              backgroundColor: AppColors.lightBorder.withValues(alpha: 0.5),
+              backgroundColor: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightBorder.withValues(alpha: 0.5),
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.success),
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: AppSpacing.lg.h),
 
           // Items list
           ListView.separated(
@@ -158,11 +162,13 @@ class CommercialDocumentChecklist extends StatelessWidget {
             itemCount: documents.length,
             separatorBuilder: (_, _) => Divider(
               height: 16.h,
-              color: AppColors.lightBorder.withValues(alpha: 0.5),
+              color: isDark
+                  ? AppColors.darkDivider
+                  : AppColors.lightBorder.withValues(alpha: 0.5),
             ),
             itemBuilder: (context, index) {
               final doc = documents[index];
-              return _buildDocTile(context, doc);
+              return _buildDocTile(context, doc, isDark);
             },
           ),
         ],
@@ -170,19 +176,19 @@ class CommercialDocumentChecklist extends StatelessWidget {
     );
   }
 
-  Widget _buildDocTile(BuildContext context, CommercialDocumentItem doc) {
+  Widget _buildDocTile(BuildContext context, CommercialDocumentItem doc, bool isDark) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.all(8.w),
+          padding: EdgeInsets.all(AppSpacing.sm.w),
           decoration: BoxDecoration(
-            color: doc.status.color.withValues(alpha: 0.10),
+            color: doc.status.color.withValues(alpha: 0.12),
             shape: BoxShape.circle,
           ),
           child: Icon(doc.status.icon, color: doc.status.color, size: 18.sp),
         ),
-        SizedBox(width: 12.w),
+        SizedBox(width: AppSpacing.md.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +201,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextPrimary,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                   ),
@@ -204,7 +210,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
                       margin: EdgeInsetsDirectional.only(start: 6.w),
                       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                       decoration: BoxDecoration(
-                        color: AppColors.lightPrimary.withValues(alpha: 0.08),
+                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
@@ -212,7 +218,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 9.sp,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.lightPrimary,
+                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                         ),
                       ),
                     ),
@@ -223,7 +229,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
                 doc.description,
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: AppColors.lightTextTertiary,
+                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                 ),
               ),
               if (doc.rejectionReason != null) ...[
@@ -251,7 +257,7 @@ class CommercialDocumentChecklist extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(width: 8.w),
+        SizedBox(width: AppSpacing.sm.w),
         ElevatedButton(
           onPressed: () {
             HapticFeedback.selectionClick();
@@ -266,14 +272,14 @@ class CommercialDocumentChecklist extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: doc.status == DocumentVerificationStatus.verified
                 ? AppColors.success.withValues(alpha: 0.12)
-                : AppColors.lightPrimary.withValues(alpha: 0.10),
+                : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.10),
             foregroundColor: doc.status == DocumentVerificationStatus.verified
                 ? AppColors.success
-                : AppColors.lightPrimary,
+                : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
             elevation: 0,
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
             ),
           ),
           child: Text(

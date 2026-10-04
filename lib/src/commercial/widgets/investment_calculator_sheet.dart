@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -55,6 +56,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final currency = widget.project.currency;
     final minAmount = widget.project.minInvestment;
     // Illustrative slider ceiling. Not a regulatory per-investor cap — there is
@@ -63,10 +65,10 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl.r)),
       ),
-      padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, MediaQuery.of(context).viewInsets.bottom + 24.h),
+      padding: EdgeInsets.fromLTRB(AppSpacing.xl.w, AppSpacing.lg.h, AppSpacing.xl.w, MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl.h),
       child: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -81,12 +83,12 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                   width: 36.w,
                   height: 4.h,
                   decoration: BoxDecoration(
-                    color: AppColors.lightBorder,
+                    color: isDark ? AppColors.darkDivider : AppColors.lightBorder,
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSpacing.lg.h),
 
               // Title & Project
               Row(
@@ -106,11 +108,11 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                   ),
-                  SizedBox(width: 8.w),
+                  SizedBox(width: AppSpacing.sm.w),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     decoration: BoxDecoration(
@@ -135,21 +137,23 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                 widget.project.title,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: AppColors.lightTextTertiary,
+                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                   fontWeight: FontWeight.w500,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSpacing.xl.h),
 
               // Amount Selector Card
               Container(
-                padding: EdgeInsets.all(16.w),
+                padding: EdgeInsets.all(AppSpacing.lg.w),
                 decoration: BoxDecoration(
-                  color: AppColors.lightBackground.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: AppColors.lightBorder),
+                  color: isDark ? AppColors.darkCard : AppColors.lightBackground.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -170,11 +174,11 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.lightTextSecondary,
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                             ),
                           ),
                         ),
-                        SizedBox(width: 8.w),
+                        SizedBox(width: AppSpacing.sm.w),
                         Flexible(
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
@@ -184,19 +188,19 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w900,
-                                color: AppColors.lightPrimary,
+                                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                               ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: AppSpacing.sm.h),
                     SliderTheme(
                       data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: AppColors.lightPrimary,
-                        inactiveTrackColor: AppColors.lightBorder,
-                        thumbColor: AppColors.lightPrimary,
+                        activeTrackColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        inactiveTrackColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        thumbColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                         trackHeight: 4.h,
                       ),
                       child: Slider(
@@ -219,11 +223,17 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                         children: [
                           Text(
                             '${l10nPick(context, en: 'Min', fa: 'حداقل', ar: 'الحد الأدنى', zh: '最小')}: $currency ${_formatNumber(minAmount)}',
-                            style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextTertiary),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                            ),
                           ),
                           Text(
                             '${l10nPick(context, en: 'Max', fa: 'حداکثر', ar: 'الحد الأقصى', zh: '最大')}: $currency ${_formatNumber(maxAmount)}',
-                            style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextTertiary),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                            ),
                           ),
                         ],
                       ),
@@ -231,14 +241,14 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                   ],
                 ),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSpacing.lg.h),
 
               // Projected Returns Breakdown
               Container(
-                padding: EdgeInsets.all(16.w),
+                padding: EdgeInsets.all(AppSpacing.lg.w),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(16.r),
+                  color: isDark ? AppColors.darkCard : AppColors.white,
+                  borderRadius: BorderRadius.circular(AppSpacing.radius.r),
                   border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
                 ),
                 child: Row(
@@ -259,7 +269,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: AppColors.lightTextTertiary,
+                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -279,7 +289,11 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                         ],
                       ),
                     ),
-                    Container(width: 1, height: 32.h, color: AppColors.lightBorder),
+                    Container(
+                      width: 1,
+                      height: 32.h,
+                      color: isDark ? AppColors.darkDivider : AppColors.lightBorder,
+                    ),
                     SizedBox(width: 14.w),
                     Expanded(
                       child: Column(
@@ -297,7 +311,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: AppColors.lightTextTertiary,
+                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -320,7 +334,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                   ],
                 ),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSpacing.lg.h),
 
               // Pre-registration notice — equity crowdfunding is not live, so
               // this sheet may not read as an order screen.
@@ -329,14 +343,14 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
                   color: AppColors.warning.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   border: Border.all(color: AppColors.warning.withValues(alpha: 0.5)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(Icons.info_outline_rounded, size: 18.sp, color: AppColors.warning),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: AppSpacing.sm.w),
                     Expanded(
                       child: Text(
                         l10nPick(
@@ -349,18 +363,20 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                         style: TextStyle(
                           fontSize: 11.sp,
                           height: 1.5,
-                          color: AppColors.lightTextSecondary,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSpacing.lg.h),
 
               // Interest Button
               CommonButton(
                 width: double.infinity,
+                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                textColor: isDark ? AppColors.deepBlack : AppColors.white,
                 text: l10nPick(
                   context,
                   en: 'Register My Interest',
@@ -369,6 +385,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                   zh: '登记我的意向',
                 ),
                 onPressed: () {
+                  HapticFeedback.lightImpact();
                   Navigator.pop(context);
                   // Truthful message: this records interest in this device's
                   // session only. It is NOT an investment and NOT submitted
@@ -394,13 +411,16 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
 
   String _formatNumber(double amount) {
     if (amount >= 1000000000) {
-      return '${(amount / 1000000000).toStringAsFixed(1)}B';
+      final b = amount / 1000000000;
+      return '${b % 1 == 0 ? b.toInt() : b.toStringAsFixed(1)}B';
     }
     if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M';
+      final m = amount / 1000000;
+      return '${m % 1 == 0 ? m.toInt() : m.toStringAsFixed(1)}M';
     }
     if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K';
+      final k = amount / 1000;
+      return '${k % 1 == 0 ? k.toInt() : k.toStringAsFixed(1)}K';
     }
     return amount.toStringAsFixed(0);
   }

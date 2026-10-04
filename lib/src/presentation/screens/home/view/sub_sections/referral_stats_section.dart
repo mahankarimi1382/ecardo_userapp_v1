@@ -26,15 +26,17 @@ class ReferralStatsSection extends StatelessWidget {
     final bool hasBonus = _hasValue(referral.bonus);
     if (!hasCount && !hasBonus) return const SizedBox.shrink();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 18),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.04),
+            color: AppColors.black.withValues(alpha: isDark ? 0.2 : 0.04),
             blurRadius: 12,
             offset: const Offset(0, 3),
           ),
@@ -49,34 +51,40 @@ class ReferralStatsSection extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.lightPrimary.withValues(alpha: 0.10),
+                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                    .withValues(alpha: isDark ? 0.16 : 0.10),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.card_giftcard_rounded,
-                color: AppColors.lightPrimary,
+                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 size: 22,
               ),
             ),
-            const SizedBox(width: 14),
-            _Stat(
-              label: localization.dashboardReferralInvited,
-              value: '${referral.count ?? 0}',
+            const SizedBox(width: 8),
+            Expanded(
+              child: _Stat(
+                label: localization.dashboardReferralInvited,
+                value: '${referral.count ?? 0}',
+              ),
             ),
             Container(
               width: 1,
               height: 30,
-              color: AppColors.black.withValues(alpha: 0.08),
-              margin: const EdgeInsets.symmetric(horizontal: 14),
+              color: isDark
+                  ? AppColors.warmWhite.withValues(alpha: 0.12)
+                  : AppColors.black.withValues(alpha: 0.08),
+              margin: const EdgeInsets.symmetric(horizontal: 8),
             ),
-            _Stat(
-              label: localization.dashboardReferralBonus,
-              value: _formatValue(referral.bonus),
+            Expanded(
+              child: _Stat(
+                label: localization.dashboardReferralBonus,
+                value: _formatValue(referral.bonus),
+              ),
             ),
-            const Spacer(),
             Icon(
               Icons.chevron_right_rounded,
-              color: AppColors.lightTextTertiary,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
               size: 20,
             ),
           ],
@@ -110,6 +118,8 @@ class _Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -118,21 +128,23 @@ class _Stat extends StatelessWidget {
           value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
+          style: TextStyle(
             letterSpacing: 0,
             fontSize: 16,
             fontWeight: FontWeight.w900,
-            color: AppColors.lightTextPrimary,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 2),
         Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             letterSpacing: 0,
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: AppColors.lightTextTertiary,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
           ),
         ),
       ],

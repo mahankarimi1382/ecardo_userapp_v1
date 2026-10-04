@@ -165,6 +165,10 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
     final localization = AppLocalizations.of(context);
     final hasResolvedLevel = _requiredLevel != null;
     final featureLabel = _featureDisplayLabel(localization, _feature);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
 
     // باگ ۱: دکمه back سیستم (gesture/hardware) در صفحه‌های KYC باید redirect
     // کند. وقتی مسدودی feature-level باشد، Get.back() کافی است؛ وقتی
@@ -184,17 +188,17 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
         }
       },
       child: Scaffold(
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: AppColors.lightSurface,
+        backgroundColor: bgColor,
         elevation: 0,
         leading: _isAppWideBlock
             // مسدودی سراسری: بازگشت، کاربر را به صفحه‌ای می‌برد که دوباره
             // ۴۰۳ می‌دهد. به‌جای دکمهٔ بی‌اثر، هیچ ناوبری پیشنهاد نمی‌شود.
             ? null
             : IconButton(
-                icon: const Icon(Icons.arrow_back,
-                    color: AppColors.lightTextPrimary),
+                icon: Icon(Icons.arrow_back,
+                    color: primaryTextColor),
                 onPressed: () {
                   if (Get.key.currentState?.canPop() ?? false) {
                     Get.back();
@@ -208,42 +212,43 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(
-              32.w,
-              32.h,
-              32.w,
-              AppSpacing.bottomSafe(context, 32.h),
+              28.w,
+              24.h,
+              28.w,
+              AppSpacing.bottomSafe(context, 28.h),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
               // Icon
               Container(
-                width: 100.w,
-                height: 100.w,
+                width: 90.w,
+                height: 90.w,
                 decoration: BoxDecoration(
-                  color: AppColors.warningContainer,
+                  color: isDark
+                      ? AppColors.warning.withValues(alpha: 0.15)
+                      : AppColors.warningContainer,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.lock_outline,
                   color: AppColors.warning,
-                  size: 48.sp,
+                  size: 44.sp,
                 ),
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: AppSpacing.xxl),
 
               // Title
               Text(
                 localization?.kycUpgradeRequiredTitle ??
                     'Verification upgrade required',
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.lightTextPrimary,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: primaryTextColor,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSpacing.md),
 
               // Description
               if (_resolving && !hasResolvedLevel)
@@ -268,34 +273,33 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
                               'this action. Please complete or upgrade your '
                               'identity verification.'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: AppColors.lightTextSecondary,
-                    height: 1.6,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: secondaryTextColor,
+                    height: 1.5,
                   ),
                 ),
 
               // Feature chip (only when the server told us which feature)
               if (featureLabel != null) ...[
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSpacing.md),
                 Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(20),
+                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        .withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                   child: Text(
                     featureLabel,
-                    style: TextStyle(
-                      fontSize: 12.sp,
+                    style: AppTextStyles.labelSmall.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: AppColors.lightPrimary,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                     ),
                   ),
                 ),
               ],
-              SizedBox(height: 24.h),
+              SizedBox(height: AppSpacing.xxl),
 
               CommonButton(
                 width: double.infinity,
@@ -313,7 +317,7 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
                   );
                 },
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSpacing.lg),
 
               // Secondary button — only when a non-app-wide screen exists to
               // return to. See _isAppWideBlock.
@@ -322,8 +326,9 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
                   onPressed: () => Get.back(),
                   child: Text(
                     localization?.kycUpgradeLater ?? "I'll do it later",
-                    style: TextStyle(
-                        fontSize: 14.sp, color: AppColors.lightTextSecondary),
+                    style: AppTextStyles.labelMedium.copyWith(
+                      color: secondaryTextColor,
+                    ),
                   ),
                 ),
               ],

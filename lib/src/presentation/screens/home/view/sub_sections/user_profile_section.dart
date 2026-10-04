@@ -80,10 +80,19 @@ class UserProfileSection extends StatelessWidget {
                       Expanded(
                         child: _UidPill(accountNumber: user?.accountNumber ?? ""),
                       ),
-                      Obx(() {
-                        if (Get.isRegistered<DemoAccountService>() &&
-                            DemoAccountService.to.isDemoMode.value) {
-                          return InkWell(
+                      // DEMO-FIX: this Obx threw in release builds — with
+                      // DemoAccountService unregistered (debug-only), the
+                      // `isRegistered &&` short-circuit meant the builder
+                      // read ZERO observables and GetX rejected the Obx
+                      // ("improper use"), surfacing as the red "Something
+                      // went wrong rendering this section" card in the
+                      // profile row. The registration check now lives
+                      // OUTSIDE the Obx; inside, isDemoMode.value is read
+                      // unconditionally so the Obx always subscribes.
+                      if (Get.isRegistered<DemoAccountService>())
+                        Obx(() {
+                          if (DemoAccountService.to.isDemoMode.value) {
+                            return InkWell(
                             onTap: () => DemoAccountService.to
                                 .showTesterControlBottomSheet(context),
                             borderRadius: BorderRadius.circular(16.r),
@@ -125,9 +134,9 @@ class UserProfileSection extends StatelessWidget {
                               ),
                             ),
                           );
-                        }
-                        return const SizedBox.shrink();
-                      }),
+                          }
+                          return const SizedBox.shrink();
+                        }),
                     ],
                   ),
                 ],
@@ -135,7 +144,7 @@ class UserProfileSection extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 65),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -256,8 +265,13 @@ class _UidPill extends StatelessWidget {
                             ],
                             color: AppColors.white,
                           );
+                          final safeWidth = (constraints.hasBoundedWidth &&
+                                  constraints.maxWidth.isFinite &&
+                                  constraints.maxWidth < 5000)
+                              ? constraints.maxWidth
+                              : null;
                           return SizedBox(
-                            width: constraints.maxWidth,
+                            width: safeWidth,
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               alignment: AlignmentDirectional.centerStart,

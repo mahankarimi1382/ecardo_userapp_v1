@@ -214,7 +214,9 @@ class DrawerSection extends StatelessWidget {
                       itemCount: navigationItemList.length,
                     ),
                   ),
-                  // Demo & Tester Control Panel Tile
+                  // Demo & Tester Control Panel Tile — debug builds only
+                  if (DemoAccountService.isDemoAvailableInThisBuild &&
+                      Get.isRegistered<DemoAccountService>())
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     decoration: BoxDecoration(

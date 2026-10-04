@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/multiple_image_picker_controller.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/api_response.dart';
@@ -30,7 +32,17 @@ class ReplyTicketController extends GetxController {
         endpoint: "${ApiPath.supportTicketsEndpoint}/$ticketUid",
       );
       if (response.status == Status.completed) {
-        ticketMessageModel.value = TicketMessageModel.fromJson(response.data!);
+        final parsed =
+            TicketMessageModel.fromJson(_unwrapTicketPayload(response.data!));
+        // TICKET-FIX: only replace the model when the payload actually
+        // contains a ticket — a malformed/empty response must not blank
+        // out a conversation the user is reading.
+        if (parsed.data?.ticket != null || (parsed.data?.messages?.isNotEmpty ?? false)) {
+          ticketMessageModel.value = parsed;
+        } else if (kDebugMode) {
+          debugPrint(
+              '⚠️ fetchTicketMessage: empty payload for $ticketUid — keeping current model');
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchTicketMessage() error: $e');
@@ -39,6 +51,29 @@ class ReplyTicketController extends GetxController {
         AppLocalizations.of(Get.context!)!.allControllerLoadError,
       );
     } finally {}
+  }
+
+  /// TICKET-FIX: tolerate double-nested envelopes and missing 'messages'
+  /// (some backends return {ticket, conversation|replies} instead of
+  /// {ticket, messages}).
+  static Map<String, dynamic> _unwrapTicketPayload(Map<String, dynamic> json) {
+    if (json['ticket'] != null || json['messages'] != null) {
+      return json;
+    }
+    final data = json['data'];
+    if (data is Map<String, dynamic>) {
+      final messages =
+          data['messages'] ?? data['conversation'] ?? data['replies'];
+      return {
+        'status': json['status'] ?? data['status'],
+        'message': json['message'] ?? data['message'],
+        'data': {
+          'ticket': data['ticket'],
+          if (messages is List) 'messages': messages,
+        },
+      };
+    }
+    return json;
   }
 
   // Submit Reply Ticket
@@ -65,7 +100,9 @@ class ReplyTicketController extends GetxController {
               'attachments[]',
               dio.MultipartFile.fromFileSync(
                 file.path,
-                filename: file.path.split('/').last,
+                // TICKET-FIX: Windows paths use '\', not '/' — split on
+                // both so the filename is never the full path.
+                filename: file.path.split(RegExp(r'[/\\]')).last,
               ),
             ),
           );
@@ -97,12 +134,28 @@ class ReplyTicketController extends GetxController {
   Future<void> submitCloseTicket({required String ticketUid}) async {
     isCloseTicketLoading.value = true;
     try {
+      // TICKET-FIX: was `data: null` — the backend needs an explicit action
+      // verb to know what to do. Send the common shapes; an unknown route
+      // still surfaces through the error path below.
       final response = await Get.find<NetworkService>().post(
         endpoint: "${ApiPath.supportTicketsEndpoint}/action/$ticketUid",
-        data: null,
+        data: {'action': 'close', 'status': 'closed'},
       );
       if (response.status == Status.completed) {
-        ToastHelper().showSuccessToast(response.data!["message"]);
+        final msg = response.data?['message'];
+        ToastHelper().showSuccessToast(msg is String && msg.isNotEmpty
+            ? msg
+            : (Get.context != null
+                ? l10nPick(
+                    Get.context!,
+                    en: 'Ticket closed',
+                    fa: 'تیکت بسته شد',
+                    ar: 'تم إغلاق التذكرة',
+                    tr: 'Talep kapatıldı',
+                    ru: 'Тикет закрыт',
+                    zh: '工单已关闭',
+                  )
+                : 'Ticket closed'));
         await fetchTicketMessage(ticketUid: ticketUid);
       }
     } catch (e, stackTrace) {

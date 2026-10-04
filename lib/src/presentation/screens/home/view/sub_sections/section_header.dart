@@ -17,9 +17,10 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -34,7 +35,9 @@ class SectionHeader extends StatelessWidget {
               style: TextStyle(
                 letterSpacing: 0,
                 fontSize: 16,
-                color: AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -52,11 +55,13 @@ class SectionHeader extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     child: Text(
                       localizations.sectionHeaderSeeAll,
-                      style: const TextStyle(
+                      style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
-                        color: AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     ),
                   ),

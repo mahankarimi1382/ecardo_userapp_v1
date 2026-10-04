@@ -139,7 +139,7 @@ class SignUpStatusController extends GetxController {
             )
             .catchError((e) {
               debugPrint('⚠️ Non-blocking FCM token registration notice: $e');
-              return ApiResponse(status: Status.error);
+              return ApiResponse<Map<String, dynamic>>(status: Status.error);
             }),
       );
     } catch (e) {

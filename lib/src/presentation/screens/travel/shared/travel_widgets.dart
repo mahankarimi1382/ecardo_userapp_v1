@@ -3,9 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/app_haptics.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
@@ -82,7 +87,7 @@ class TravelPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: TravelTheme.background,
+      backgroundColor: TravelTheme.backgroundFor(context),
       appBar: const CommonDefaultAppBar(),
       body: Column(
         children: [
@@ -140,13 +145,17 @@ class TravelBottomNavigation extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Container(
-        padding: EdgeInsets.fromLTRB(18.w, 8.h, 18.w, 10.h),
+        padding: EdgeInsetsDirectional.fromSTEB(18.w, 8.h, 18.w, 10.h),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: const Border(top: BorderSide(color: TravelTheme.border)),
+          color: TravelTheme.cardSurfaceFor(context),
+          border: Border(
+            top: BorderSide(color: TravelTheme.borderFor(context)),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: .06),
+              color: TravelTheme.shadowFor(context).first.color.withValues(
+                alpha: .06,
+              ),
               blurRadius: 22,
               offset: const Offset(0, -6),
             ),
@@ -158,24 +167,28 @@ class TravelBottomNavigation extends StatelessWidget {
               label: localization.travelTitle,
               icon: Icons.dashboard_rounded,
               selected: activeSection == TravelNavigationSection.dashboard,
+              semanticLabel: localization.travelTitle,
               onTap: () => _open(BaseRoute.travel),
             ),
             _TravelNavigationItem(
               label: localization.travelHistory,
               icon: Icons.history_rounded,
               selected: activeSection == TravelNavigationSection.history,
+              semanticLabel: localization.travelHistory,
               onTap: () => _open(BaseRoute.travelHistory),
             ),
             _TravelNavigationItem(
               label: localization.travelAccount,
               icon: Icons.person_rounded,
               selected: activeSection == TravelNavigationSection.account,
+              semanticLabel: localization.travelAccount,
               onTap: () => _open(BaseRoute.travelAccount),
             ),
             _TravelNavigationItem(
               label: localization.bottomNavHome,
               icon: Icons.home_rounded,
               selected: false,
+              semanticLabel: localization.bottomNavHome,
               onTap: () => Get.offAllNamed(BaseRoute.navigation),
             ),
           ],
@@ -241,40 +254,56 @@ class _TravelNavigationItem extends StatelessWidget {
   final String label;
   final IconData icon;
   final bool selected;
+  final String semanticLabel;
   final VoidCallback onTap;
 
   const _TravelNavigationItem({
     required this.label,
     required this.icon,
     required this.selected,
+    required this.semanticLabel,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? TravelTheme.blue : TravelTheme.muted;
+    final color = selected
+        ? TravelTheme.primaryFor(context)
+        : TravelTheme.textSecondaryFor(context);
     return Expanded(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16.r),
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, color: color, size: 23.r),
-              SizedBox(height: 3.h),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 9.sp,
-                  fontWeight: selected ? FontWeight.w900 : FontWeight.w600,
-                ),
+      child: Semantics(
+        label: semanticLabel,
+        selected: selected,
+        button: true,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16.r),
+          onTap: () {
+            AppHaptics.selection();
+            onTap();
+          },
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 44),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 6.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, color: color, size: 23.r),
+                  SizedBox(height: 3.h),
+                  Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 9.sp,
+                      fontWeight: selected ? FontWeight.w900 : FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -285,31 +314,44 @@ class _TravelNavigationItem extends StatelessWidget {
 class TravelCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
-  final Color color;
+  final Color? color;
   final VoidCallback? onTap;
+  final BorderRadius? borderRadius;
 
   const TravelCard({
     super.key,
     required this.child,
     this.padding,
-    this.color = Colors.white,
+    this.color,
     this.onTap,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
+    final radius = borderRadius ?? TravelTheme.radius;
+    final surface =
+        color ??
+        (TravelTheme.isDark(context)
+            ? AppColors.darkSurfaceVariant
+            : TravelTheme.cardSurfaceFor(context));
     return Material(
-      color: color,
-      borderRadius: TravelTheme.radius,
+      color: surface,
+      borderRadius: radius,
       child: InkWell(
-        borderRadius: TravelTheme.radius,
-        onTap: onTap,
+        borderRadius: radius,
+        onTap: onTap == null
+            ? null
+            : () {
+                AppHaptics.light();
+                onTap!();
+              },
         child: Container(
           padding: padding ?? EdgeInsets.all(18.r),
           decoration: BoxDecoration(
-            borderRadius: TravelTheme.radius,
-            border: Border.all(color: TravelTheme.border),
-            boxShadow: onTap == null ? null : TravelTheme.shadow,
+            borderRadius: radius,
+            border: Border.all(color: TravelTheme.borderFor(context)),
+            boxShadow: onTap == null ? null : TravelTheme.shadowFor(context),
           ),
           child: child,
         ),
@@ -334,44 +376,62 @@ class TravelFieldTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(18.r),
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF1F2F4),
-          borderRadius: BorderRadius.circular(18.r),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: TravelTheme.blue),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(color: TravelTheme.muted, fontSize: 11.sp),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14.sp,
+    return Semantics(
+      button: onTap != null,
+      label: '$label: $value',
+      excludeSemantics: true,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+        onTap: onTap == null
+            ? null
+            : () {
+                AppHaptics.light();
+                onTap!();
+              },
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+          decoration: BoxDecoration(
+            color: TravelTheme.isDark(context)
+                ? AppColors.darkSurfaceVariant
+                : AppColors.lightSurfaceVariant,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+            border: Border.all(color: TravelTheme.borderFor(context)),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: TravelTheme.primaryFor(context)),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        color: TravelTheme.textSecondaryFor(context),
+                        fontSize: 11.sp,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 4.h),
+                    Text(
+                      value,
+                      style: TextStyle(
+                        color: TravelTheme.textPrimaryFor(context),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: TravelTheme.muted,
-            ),
-          ],
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: TravelTheme.textSecondaryFor(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -398,7 +458,7 @@ class TravelSectionHeader extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: TravelTheme.ink,
+              color: TravelTheme.textPrimaryFor(context),
               fontSize: 20.sp,
               fontWeight: FontWeight.w900,
             ),
@@ -407,14 +467,17 @@ class TravelSectionHeader extends StatelessWidget {
         if (action != null)
           InkWell(
             borderRadius: BorderRadius.circular(10.r),
-            onTap: onAction,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-              child: Text(
-                action!,
-                style: const TextStyle(
-                  color: TravelTheme.blue,
-                  fontWeight: FontWeight.w700,
+            onTap: onTapWithHaptics(onAction),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 44),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+                child: Text(
+                  action!,
+                  style: TextStyle(
+                    color: TravelTheme.primaryFor(context),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -422,6 +485,15 @@ class TravelSectionHeader extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Wraps a callback with light haptic feedback, tolerating a null action.
+VoidCallback? onTapWithHaptics(VoidCallback? action) {
+  if (action == null) return null;
+  return () {
+    AppHaptics.light();
+    action();
+  };
 }
 
 String travelLocalizedKey(AppLocalizations localization, String key) {
@@ -555,6 +627,11 @@ class TravelJourneyGuide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = TravelTheme.primaryFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+
     return TravelCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -563,12 +640,12 @@ class TravelJourneyGuide extends StatelessWidget {
             Text(
               message!,
               style: TextStyle(
-                color: TravelTheme.muted,
+                color: textSecondary,
                 fontSize: 11.sp,
                 height: 1.5,
               ),
             ),
-            SizedBox(height: 14.h),
+            SizedBox(height: AppSpacing.md.h),
           ],
           Row(
             children: [
@@ -579,26 +656,26 @@ class TravelJourneyGuide extends StatelessWidget {
                       CircleAvatar(
                         radius: 14.r,
                         backgroundColor: index <= currentStep
-                            ? TravelTheme.blue
-                            : TravelTheme.border,
+                            ? primaryColor
+                            : borderColor,
                         child: index < currentStep
                             ? const Icon(
                                 Icons.check_rounded,
-                                color: Colors.white,
+                                color: AppColors.white,
                                 size: 16,
                               )
                             : Text(
                                 '${index + 1}',
                                 style: TextStyle(
                                   color: index == currentStep
-                                      ? Colors.white
-                                      : TravelTheme.muted,
+                                      ? AppColors.white
+                                      : textSecondary,
                                   fontWeight: FontWeight.w900,
                                   fontSize: 10.sp,
                                 ),
                               ),
                       ),
-                      SizedBox(height: 6.h),
+                      SizedBox(height: AppSpacing.xs.h),
                       Text(
                         steps[index],
                         textAlign: TextAlign.center,
@@ -606,8 +683,8 @@ class TravelJourneyGuide extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: index == currentStep
-                              ? TravelTheme.ink
-                              : TravelTheme.muted,
+                              ? textPrimary
+                              : textSecondary,
                           fontSize: 9.sp,
                           fontWeight: index == currentStep
                               ? FontWeight.w900
@@ -622,8 +699,8 @@ class TravelJourneyGuide extends StatelessWidget {
                     width: 18.w,
                     height: 2,
                     color: index < currentStep
-                        ? TravelTheme.blue
-                        : TravelTheme.border,
+                        ? primaryColor
+                        : borderColor,
                   ),
               ],
             ],
@@ -653,21 +730,443 @@ Color travelProductColor(TravelProductType type) => switch (type) {
   TravelProductType.esim => TravelTheme.yellow,
 };
 
+/// 4-State: Empty State with themed icon, title, subtitle, and primary action CTA.
 class TravelEmptyState extends StatelessWidget {
   final String message;
+  final String? title;
+  final IconData? icon;
+  final String? actionText;
+  final VoidCallback? onAction;
 
-  const TravelEmptyState({super.key, required this.message});
+  const TravelEmptyState({
+    super.key,
+    required this.message,
+    this.title,
+    this.icon,
+    this.actionText,
+    this.onAction,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final primaryColor = TravelTheme.primaryFor(context);
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(32.r),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: TravelTheme.muted, fontSize: 14.sp),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.xxl.w,
+          vertical: AppSpacing.xxxl.h,
         ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 68.r,
+              height: 68.r,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.darkSurfaceVariant
+                    : primaryColor.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark
+                      ? TravelTheme.borderFor(context)
+                      : primaryColor.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Icon(
+                icon ?? Icons.flight_takeoff_rounded,
+                size: 32.r,
+                color: primaryColor,
+              ),
+            ),
+            if (title?.isNotEmpty == true) ...[
+              SizedBox(height: AppSpacing.lg.h),
+              TravelBidiText(
+                title!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: TravelTheme.textPrimaryFor(context),
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+            SizedBox(height: AppSpacing.sm.h),
+            TravelBidiText(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: TravelTheme.textSecondaryFor(context),
+                fontSize: 13.sp,
+                height: 1.4,
+              ),
+            ),
+            if (actionText?.isNotEmpty == true && onAction != null) ...[
+              SizedBox(height: AppSpacing.xl.h),
+              CommonButton(
+                width: 200.w,
+                height: 44.h,
+                text: actionText!,
+                onPressed: () {
+                  AppHaptics.light();
+                  onAction!();
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 4-State: Error State with themed icon, humanized message, and Retry button.
+class TravelErrorState extends StatelessWidget {
+  final String message;
+  final String? title;
+  final VoidCallback? onRetry;
+  final String? retryText;
+
+  const TravelErrorState({
+    super.key,
+    required this.message,
+    this.title,
+    this.onRetry,
+    this.retryText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    final isDark = TravelTheme.isDark(context);
+    final safeMessage = travelSafePresentationMessage(message);
+
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.xxl.w,
+          vertical: AppSpacing.xxxl.h,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 68.r,
+              height: 68.r,
+              decoration: BoxDecoration(
+                color: AppColors.errorContainer.withValues(alpha: isDark ? 0.2 : 0.7),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.error.withValues(alpha: 0.3),
+                ),
+              ),
+              child: const Icon(
+                Icons.cloud_off_rounded,
+                size: 32,
+                color: AppColors.error,
+              ),
+            ),
+            SizedBox(height: AppSpacing.lg.h),
+            TravelBidiText(
+              title ?? localization?.allControllerLoadError ?? 'Connection Error',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: TravelTheme.textPrimaryFor(context),
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            SizedBox(height: AppSpacing.sm.h),
+            TravelBidiText(
+              safeMessage,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: TravelTheme.textSecondaryFor(context),
+                fontSize: 13.sp,
+                height: 1.4,
+              ),
+            ),
+            if (onRetry != null) ...[
+              SizedBox(height: AppSpacing.xl.h),
+              CommonButton(
+                width: 180.w,
+                height: 44.h,
+                text: retryText ?? localization?.noInternetConnectionRetryButton ?? 'Retry',
+                onPressed: () {
+                  AppHaptics.light();
+                  onRetry!();
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Shimmer layout types for travel skeleton loader.
+enum TravelShimmerType { card, flightCard, hotelCard, list, tile }
+
+/// 4-State: Dark-mode safe shimmer loading skeleton for travel screens.
+class TravelShimmerLoading extends StatelessWidget {
+  final TravelShimmerType type;
+  final int count;
+
+  const TravelShimmerLoading({
+    super.key,
+    this.type = TravelShimmerType.card,
+    this.count = 3,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final baseColor = isDark ? const Color(0xFF262625) : const Color(0xFFE5E7EB);
+    final highlightColor = isDark ? const Color(0xFF383836) : const Color(0xFFF3F4F6);
+    final blockColor = isDark ? const Color(0xFF2E2E2D) : AppColors.white;
+
+    return Shimmer.fromColors(
+      baseColor: baseColor,
+      highlightColor: highlightColor,
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
+        itemCount: count,
+        separatorBuilder: (_, _) => SizedBox(height: AppSpacing.md.h),
+        itemBuilder: (_, index) => _buildShimmerItem(context, blockColor),
+      ),
+    );
+  }
+
+  Widget _buildShimmerItem(BuildContext context, Color blockColor) {
+    switch (type) {
+      case TravelShimmerType.flightCard:
+        return Container(
+          padding: EdgeInsets.all(AppSpacing.lg.r),
+          decoration: BoxDecoration(
+            color: blockColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 44.r,
+                    height: 44.r,
+                    decoration: BoxDecoration(
+                      color: blockColor,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                    ),
+                  ),
+                  SizedBox(width: AppSpacing.md.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(width: 120.w, height: 14.h, color: blockColor),
+                        SizedBox(height: 6.h),
+                        Container(width: 80.w, height: 10.h, color: blockColor),
+                      ],
+                    ),
+                  ),
+                  Container(width: 70.w, height: 16.h, color: blockColor),
+                ],
+              ),
+              SizedBox(height: AppSpacing.lg.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(width: 60.w, height: 28.h, color: blockColor),
+                  Container(width: 100.w, height: 12.h, color: blockColor),
+                  Container(width: 60.w, height: 28.h, color: blockColor),
+                ],
+              ),
+            ],
+          ),
+        );
+
+      case TravelShimmerType.hotelCard:
+        return Container(
+          decoration: BoxDecoration(
+            color: blockColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 140.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: blockColor,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(AppSpacing.radiusXl.r),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(AppSpacing.lg.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(width: 160.w, height: 16.h, color: blockColor),
+                    SizedBox(height: 8.h),
+                    Container(width: 100.w, height: 12.h, color: blockColor),
+                    SizedBox(height: 12.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(width: 80.w, height: 12.h, color: blockColor),
+                        Container(width: 90.w, height: 22.h, color: blockColor),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+
+      case TravelShimmerType.tile:
+      case TravelShimmerType.list:
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.md.h),
+          decoration: BoxDecoration(
+            color: blockColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44.r,
+                height: 44.r,
+                decoration: BoxDecoration(
+                  color: blockColor,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                ),
+              ),
+              SizedBox(width: AppSpacing.md.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(width: 140.w, height: 14.h, color: blockColor),
+                    SizedBox(height: 6.h),
+                    Container(width: 90.w, height: 10.h, color: blockColor),
+                  ],
+                ),
+              ),
+              Container(width: 50.w, height: 14.h, color: blockColor),
+            ],
+          ),
+        );
+
+      case TravelShimmerType.card:
+        return Container(
+          height: 90.h,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: blockColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
+        );
+    }
+  }
+}
+
+/// Stylish dashed divider line for tickets, receipts, and vouchers.
+class TravelDashedDivider extends StatelessWidget {
+  final Color? color;
+  final double height;
+  final double dashWidth;
+  final double dashGap;
+
+  const TravelDashedDivider({
+    super.key,
+    this.color,
+    this.height = 1.0,
+    this.dashWidth = 6.0,
+    this.dashGap = 4.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveColor = color ?? TravelTheme.borderFor(context);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boxWidth = constraints.constrainWidth();
+        final count = (boxWidth / (dashWidth + dashGap)).floor();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(count, (_) {
+            return SizedBox(
+              width: dashWidth,
+              height: height,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: effectiveColor),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+}
+
+/// Creative celebratory ticket card with notch cutouts, dashed divider, and theme awareness.
+class TravelTicketCard extends StatelessWidget {
+  final Widget header;
+  final Widget body;
+  final Widget? footer;
+  final EdgeInsetsGeometry? padding;
+
+  const TravelTicketCard({
+    super.key,
+    required this.header,
+    required this.body,
+    this.footer,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final surface = TravelTheme.cardSurfaceFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+        border: Border.all(color: borderColor),
+        boxShadow: TravelTheme.shadowFor(context),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: padding ?? EdgeInsets.all(AppSpacing.lg.r),
+            child: header,
+          ),
+          TravelDashedDivider(color: borderColor),
+          Padding(
+            padding: padding ?? EdgeInsets.all(AppSpacing.lg.r),
+            child: body,
+          ),
+          if (footer != null) ...[
+            TravelDashedDivider(color: borderColor),
+            Padding(
+              padding: padding ?? EdgeInsets.all(AppSpacing.lg.r),
+              child: footer!,
+            ),
+          ],
+        ],
       ),
     );
   }

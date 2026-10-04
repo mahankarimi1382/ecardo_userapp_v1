@@ -53,7 +53,7 @@ class QrCodeController extends GetxController {
       debugPrint('❌ fetchQrCode() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       final ctx = Get.context;
-      if (ctx != null) {
+      if (ctx != null && ctx.mounted) {
         ToastHelper().showErrorToast(
           AppLocalizations.of(ctx)!.allControllerLoadError,
         );

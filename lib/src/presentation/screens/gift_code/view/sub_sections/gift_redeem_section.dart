@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
@@ -16,33 +19,43 @@ class GiftRedeemSection extends StatefulWidget {
 }
 
 class _GiftRedeemSectionState extends State<GiftRedeemSection> {
-  final GiftRedeemController controller = Get.find();
+  final GiftRedeemController controller = Get.find<GiftRedeemController>();
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Expanded(
       child: Container(
-        margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
-        padding: EdgeInsetsDirectional.only(
-          start: 20,
-          end: 20,
-          bottom: 24,
-          top: 2,
+        margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.lg),
+        padding: const EdgeInsetsDirectional.only(
+          start: AppSpacing.xl,
+          end: AppSpacing.xl,
+          bottom: AppSpacing.xxl,
+          top: AppSpacing.xs,
         ),
         decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(30),
-            topEnd: Radius.circular(30),
+          color: isDark ? AppColors.darkCard : AppColors.white,
+          borderRadius: const BorderRadiusDirectional.only(
+            topStart: Radius.circular(AppSpacing.radiusXl),
+            topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.25)
+                  : AppColors.mutedBlue.withValues(alpha: 0.08),
+              blurRadius: 18,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               CommonRequiredLabelAndDynamicField(
                 labelText: localizations.giftRedeemGiftCode,
                 isLabelRequired: true,
@@ -51,15 +64,16 @@ class _GiftRedeemSectionState extends State<GiftRedeemSection> {
                     isFocused: controller.isGiftCodeFocused.value,
                     focusNode: controller.giftCodeFocusNode,
                     backgroundColor: AppColors.transparent,
-                    hintText: "",
+                    hintText: 'Enter 12 or 16-character code',
                     keyboardType: TextInputType.text,
                     controller: controller.giftCodeController,
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: AppSpacing.xxxl),
               CommonButton(
                 onPressed: () async {
+                  HapticFeedback.lightImpact();
                   if (controller.giftCodeController.text.isNotEmpty) {
                     await controller.giftCodeRedeem();
                   } else {
@@ -69,10 +83,9 @@ class _GiftRedeemSectionState extends State<GiftRedeemSection> {
                   }
                 },
                 width: double.infinity,
-
                 text: localizations.giftRedeemButton,
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: AppSpacing.huge),
             ],
           ),
         ),

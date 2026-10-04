@@ -18,6 +18,25 @@ class SupportTicketController extends GetxController {
   final RxInt currentPage = 1.obs;
   final RxBool hasMorePages = true.obs;
 
+  /// TICKET-FIX: some backend envelopes nest the payload twice
+  /// ({status, data: {status, data: {tickets...}}}) or wrap the list under
+  /// a different key. Normalize to the shape the model expects: if there
+  /// is no 'tickets' key but the inner data holds one, lift it up.
+  static Map<String, dynamic> _unwrap(Map<String, dynamic> json) {
+    if (json['tickets'] != null) return json;
+    final data = json['data'];
+    if (data is Map<String, dynamic> && data['tickets'] != null) {
+      return {
+        ...json,
+        'data': {
+          'tickets': data['tickets'],
+          'pagination': data['pagination'] ?? data['meta'],
+        },
+      };
+    }
+    return json;
+  }
+
   // Fetch Support Tickets
   Future<void> fetchSupportTickets() async {
     try {
@@ -30,9 +49,15 @@ class SupportTicketController extends GetxController {
       );
 
       if (response.status == Status.completed) {
-        supportTicketModel.value = SupportTicketModel.fromJson(response.data!);
-        if (supportTicketModel.value.data!.tickets!.length <
-            supportTicketModel.value.data!.pagination!.perPage!) {
+        supportTicketModel.value =
+            SupportTicketModel.fromJson(_unwrap(response.data!));
+        final tickets = supportTicketModel.value.data?.tickets ?? const [];
+        // TICKET-FIX: pagination can be absent depending on the backend
+        // envelope — never null-assert it. Fall back to counting tickets
+        // against a sane default page size.
+        final perPage =
+            supportTicketModel.value.data?.pagination?.perPage ?? 15;
+        if (tickets.length < perPage) {
           hasMorePages.value = false;
         }
       }
@@ -60,17 +85,24 @@ class SupportTicketController extends GetxController {
           '${ApiPath.supportTicketsEndpoint}?${queryParams.join('&')}';
       final response = await Get.find<NetworkService>().get(endpoint: endpoint);
       if (response.status == Status.completed) {
-        final newTickets = SupportTicketModel.fromJson(response.data!);
+        final newTickets =
+            SupportTicketModel.fromJson(_unwrap(response.data!));
+        final incoming = newTickets.data?.tickets ?? const [];
 
-        if (newTickets.data!.tickets!.isEmpty) {
+        if (incoming.isEmpty) {
           hasMorePages.value = false;
         } else {
-          supportTicketModel.value.data!.tickets!.addAll(
-            newTickets.data!.tickets!,
-          );
-          supportTicketModel.refresh();
-          if (newTickets.data!.tickets!.length <
-              supportTicketModel.value.data!.pagination!.perPage!) {
+          final current = supportTicketModel.value.data?.tickets;
+          if (current == null) {
+            // First page never loaded (e.g. deep navigation) — adopt payload.
+            supportTicketModel.value = newTickets;
+          } else {
+            current.addAll(incoming);
+            supportTicketModel.refresh();
+          }
+          // TICKET-FIX: null-safe pagination read.
+          final perPage = newTickets.data?.pagination?.perPage ?? 15;
+          if (incoming.length < perPage) {
             hasMorePages.value = false;
           }
         }

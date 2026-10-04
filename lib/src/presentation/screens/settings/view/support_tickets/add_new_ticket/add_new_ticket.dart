@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/multiple_image_picker_controller.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -27,31 +29,41 @@ class _AddNewTicketState extends State<AddNewTicket> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
+      backgroundColor: bgColor,
+      appBar: const CommonDefaultAppBar(),
       body: Stack(
         children: [
           Column(
             children: [
-              SizedBox(height: 16),
+              SizedBox(height: AppSpacing.cardGap),
               CommonAppBar(title: localization.addNewTicketScreenTitle),
-              SizedBox(height: 30),
+              SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: Container(
-                  margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
-                  padding: EdgeInsetsDirectional.only(start: 20, end: 20, top: 2),
+                  margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 24),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadiusDirectional.only(
-                      topStart: Radius.circular(30),
-                      topEnd: Radius.circular(30),
+                    color: surfaceColor,
+                    borderRadius: const BorderRadiusDirectional.only(
+                      topStart: Radius.circular(24),
+                      topEnd: Radius.circular(24),
+                    ),
+                    border: Border.all(
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      width: 1,
                     ),
                   ),
                   child: SingleChildScrollView(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 16),
+                        SizedBox(height: AppSpacing.sm),
                         CommonRequiredLabelAndDynamicField(
                           labelText: localization.addNewTicketTitle,
                           isLabelRequired: true,
@@ -59,14 +71,19 @@ class _AddNewTicketState extends State<AddNewTicket> {
                             () => CommonTextInputField(
                               focusNode: controller.titleFocusNode,
                               isFocused: controller.isTitleFocused.value,
-                              backgroundColor: AppColors.transparent,
+                              backgroundColor: isDark
+                                  ? AppColors.darkBackground
+                                  : AppColors.lightBackground,
                               controller: controller.titleController,
                               hintText: "",
                               keyboardType: TextInputType.text,
+                              textStyle: AppTextStyles.bodyMedium.copyWith(
+                                color: primaryTextColor,
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: AppSpacing.lg),
                         CommonRequiredLabelAndDynamicField(
                           labelText: localization.addNewTicketDescription,
                           isLabelRequired: true,
@@ -74,15 +91,20 @@ class _AddNewTicketState extends State<AddNewTicket> {
                             () => CommonTextInputField(
                               focusNode: controller.descriptionFocusNode,
                               isFocused: controller.isDescriptionFocused.value,
-                              backgroundColor: AppColors.transparent,
+                              backgroundColor: isDark
+                                  ? AppColors.darkBackground
+                                  : AppColors.lightBackground,
                               controller: controller.descriptionController,
                               keyboardType: TextInputType.text,
                               hintText: "",
                               maxLine: 4,
+                              textStyle: AppTextStyles.bodyMedium.copyWith(
+                                color: primaryTextColor,
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: AppSpacing.lg),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -91,50 +113,59 @@ class _AddNewTicketState extends State<AddNewTicket> {
                               isRequired: false,
                             ),
                             GestureDetector(
-                              onTap: () => controller.addAttachment(),
+                              onTap: () {
+                                HapticFeedback.lightImpact();
+                                controller.addAttachment();
+                              },
                               child: Container(
-                                padding: EdgeInsets.all(3),
-                                width: 25,
-                                height: 25,
+                                padding: const EdgeInsets.all(4),
+                                width: 28,
+                                height: 28,
                                 decoration: BoxDecoration(
-                                  color: AppColors.lightPrimary,
-                                  borderRadius: BorderRadius.circular(100),
+                                  color: isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.lightPrimary,
+                                  shape: BoxShape.circle,
                                 ),
-                                child: Image.asset(PngAssets.addCommonIcon),
+                                child: Image.asset(
+                                  PngAssets.addCommonIcon,
+                                  color: isDark ? AppColors.deepBlack : AppColors.white,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSpacing.md),
                         Obx(
                           () => Column(
                             children: controller.attachments
                                 .map(
                                   (id) => Padding(
-                                    padding: EdgeInsets.only(bottom: 16),
+                                    padding: EdgeInsets.only(bottom: AppSpacing.md),
                                     child: _buildAttachmentItem(
                                       context,
                                       id,
                                       controller,
+                                      isDark,
                                     ),
                                   ),
                                 )
                                 .toList(),
                           ),
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: AppSpacing.xxl),
                         CommonButton(
                           onPressed: () async {
+                            HapticFeedback.mediumImpact();
                             if (!controller.validateForm()) {
                               return;
                             }
                             await controller.addNewTicket();
                           },
                           width: double.infinity,
-
                           text: localization.addNewTicketAddButton,
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: AppSpacing.bottomSafe(context, 20)),
                       ],
                     ),
                   ),
@@ -145,7 +176,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
           Obx(
             () => Visibility(
               visible: controller.isAddTicketLoading.value,
-              child: CommonLoading(),
+              child: const CommonLoading(),
             ),
           ),
         ],
@@ -157,6 +188,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
     BuildContext context,
     int id,
     AddNewTicketController controller,
+    bool isDark,
   ) {
     final localization = AppLocalizations.of(context)!;
     final MultipleImagePickerController multipleImagePickerController = Get.put(
@@ -165,16 +197,48 @@ class _AddNewTicketState extends State<AddNewTicket> {
 
     return GestureDetector(
       onTap: () {
+        HapticFeedback.lightImpact();
         showImageSourceSheet(id);
       },
       child: Obx(
         () => Stack(
           alignment: Alignment.center,
           children: [
-            Image.asset(PngAssets.attachFileTwo),
+            Container(
+              height: 130,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  width: 1.2,
+                ),
+              ),
+              child: !multipleImagePickerController.images.containsKey(id)
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.cloud_upload_outlined,
+                          size: 32,
+                          color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        ),
+                        SizedBox(height: AppSpacing.xs),
+                        Text(
+                          localization.addNewTicketAttachFile,
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: isDark ? AppColors.softGray : AppColors.lightTextTertiary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    )
+                  : null,
+            ),
             if (multipleImagePickerController.images.containsKey(id))
               ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                 child: Image.file(
                   multipleImagePickerController.images[id]!,
                   width: double.infinity,
@@ -182,44 +246,27 @@ class _AddNewTicketState extends State<AddNewTicket> {
                   fit: BoxFit.cover,
                 ),
               ),
-            if (!multipleImagePickerController.images.containsKey(id))
-              Column(
-                children: [
-                  Image.asset(
-                    PngAssets.commonUploadIcon,
-                    width: 20,
-                    height: 20,
-                    color: AppColors.lightTextTertiary,
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    localization.addNewTicketAttachFile,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                      color: AppColors.lightTextTertiary,
-                    ),
-                  ),
-                ],
-              ),
             if (controller.attachments.length > 1 ||
                 multipleImagePickerController.images.containsKey(id))
               PositionedDirectional(
-                top: 10,
-                end: 10,
+                top: 8,
+                end: 8,
                 child: GestureDetector(
-                  onTap: () => controller.removeAttachment(id),
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    controller.removeAttachment(id);
+                  },
                   child: Container(
-                    padding: EdgeInsets.all(4),
-                    width: 25,
-                    height: 25,
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.all(4),
+                    width: 24,
+                    height: 24,
+                    decoration: const BoxDecoration(
                       color: AppColors.error,
-                      borderRadius: BorderRadius.circular(100),
+                      shape: BoxShape.circle,
                     ),
-                    child: Image.asset(
-                      PngAssets.closeCommonIcon,
+                    child: const Icon(
+                      Icons.close_rounded,
+                      size: 14,
                       color: AppColors.white,
                     ),
                   ),

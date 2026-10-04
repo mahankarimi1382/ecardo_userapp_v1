@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -208,6 +207,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       final locale = Localizations.localeOf(context);
       final isRtl = const {'fa', 'ar'}.contains(locale.languageCode);
 
+      final badge = _getValidityBadge(context);
       final fontAsset = switch (locale.languageCode) {
         'fa' || 'ar' => 'assets/fonts/Vazirmatn-Regular.ttf',
         'ru' || 'zh' => 'assets/fonts/NotoSans-Regular.ttf',
@@ -223,7 +223,6 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       }
 
       final doc = pw.Document();
-      final badge = _getValidityBadge(context);
       final formattedAmt = '${_formatCurrency(amount)} $currency';
       final verifyUrl = _effectiveVerificationUrl;
 
@@ -955,7 +954,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               ),
                               SizedBox(height: 6.h),
                               Text(
-                                'Checksum: ${_cryptographicFingerprint}',
+                                'Checksum: $_cryptographicFingerprint',
                                 style: TextStyle(
                                   fontSize: 8.5.sp,
                                   fontFamily: 'monospace',

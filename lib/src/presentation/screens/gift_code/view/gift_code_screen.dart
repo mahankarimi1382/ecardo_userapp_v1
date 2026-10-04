@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
@@ -24,8 +27,6 @@ class GiftCodeScreen extends StatefulWidget {
 }
 
 class _GiftCodeScreenState extends State<GiftCodeScreen> {
-  // BUG-09: Use Get.find since all 4 bindings are registered in routes_handler.dart
-  // avoiding duplicate controller instantiation on screen rebuilds.
   final GiftCodeController controller = Get.find<GiftCodeController>();
   final GiftRedeemController redeemController = Get.find<GiftRedeemController>();
   final GiftHistoryController giftHistoryController =
@@ -52,6 +53,7 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return PopScope(
       canPop: homeController.selectedIndex.value != 2,
@@ -66,9 +68,9 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
       },
       child: Obx(
         () => Scaffold(
+          backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
           resizeToAvoidBottomInset: false,
-          appBar:
-              createGiftController.currentStep.value == 1 ||
+          appBar: createGiftController.currentStep.value == 1 ||
                   createGiftController.currentStep.value == 2
               ? CommonDefaultAppBar()
               : null,
@@ -79,35 +81,35 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
                     ? null
                     : BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [AppColors.white, AppColors.lightBackground],
+                          colors: isDark
+                              ? [AppColors.darkSurface, AppColors.darkBackground]
+                              : [AppColors.white, AppColors.lightBackground],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          stops: [0.26, 0.31],
+                          stops: const [0.26, 0.31],
                         ),
                       ),
                 child: Column(
                   children: [
                     createGiftController.currentStep.value == 1
                         ? ColoredBox(
-                            color: AppColors.lightBackground,
+                            color: isDark
+                                ? AppColors.darkBackground
+                                : AppColors.lightBackground,
                             child: Column(
                               children: [
-                                SizedBox(height: 16),
+                                const SizedBox(height: AppSpacing.lg),
                                 CommonAppBar(
                                   title: localizations.giftCodeTitle,
                                   isBackLogicApply: true,
                                   backLogicFunction: () {
-                                    if (homeController.selectedIndex.value ==
-                                        2) {
+                                    if (homeController.selectedIndex.value == 2) {
                                       Get.delete<GiftCodeController>();
                                       Get.delete<GiftRedeemController>();
                                       Get.delete<GiftHistoryController>();
                                       Get.delete<CreateGiftController>();
                                       homeController.selectedIndex.value = 0;
-                                    } else if (homeController
-                                            .selectedIndex
-                                            .value ==
-                                        2) {
+                                    } else {
                                       Get.delete<GiftCodeController>();
                                       Get.delete<GiftRedeemController>();
                                       Get.delete<GiftHistoryController>();
@@ -120,70 +122,66 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
                             ),
                           )
                         : createGiftController.currentStep.value == 2
-                        ? SizedBox.shrink()
-                        : GiftCodeHeaderSection(),
+                        ? const SizedBox.shrink()
+                        : const GiftCodeHeaderSection(),
                     controller.selectedScreen.value == 0
-                        ? SizedBox(height: 30)
-                        : SizedBox.shrink(),
+                        ? const SizedBox(height: AppSpacing.xxl)
+                        : const SizedBox.shrink(),
                     controller.selectedScreen.value == 0
-                        ? GiftRedeemSection()
+                        ? const GiftRedeemSection()
                         : controller.selectedScreen.value == 1
-                        ? GiftHistory()
-                        : CreateGiftStepSection(),
+                        ? const GiftHistory()
+                        : const CreateGiftStepSection(),
                   ],
                 ),
               ),
               Visibility(
-                visible:
-                    redeemController.isGiftRedeemLoading.value ||
+                visible: redeemController.isGiftRedeemLoading.value ||
                     createGiftController.isCreateGiftLoading.value,
                 child: Padding(
                   padding: EdgeInsets.only(
                     top: redeemController.isGiftRedeemLoading.value ? 100 : 0,
                   ),
-                  child: CommonLoading(),
+                  child: const CommonLoading(),
                 ),
               ),
             ],
           ),
           floatingActionButton: controller.selectedScreen.value == 1
               ? Padding(
-                  padding: const EdgeInsetsDirectional.only(bottom: 40),
+                  padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.xxl),
                   child: SizedBox(
                     height: 48,
-                    width: 140,
-                    child: FloatingActionButton(
+                    child: FloatingActionButton.extended(
                       heroTag: null,
-                      elevation: 0,
+                      elevation: 2,
                       onPressed: () async {
+                        HapticFeedback.lightImpact();
                         controller.selectedScreen.value = 2;
                         await createGiftController.fetchWallets();
                         await createGiftController.fetchUser();
                       },
-                      backgroundColor: AppColors.lightPrimary,
+                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                      foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(PngAssets.addCommonIcon, width: 22),
-                          SizedBox(width: 5),
-                          Text(
-                            localizations.giftCodeCreateGift,
-                            style: TextStyle(
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15.5,
-                              letterSpacing: 0,
-                            ),
-                          ),
-                        ],
+                      icon: Image.asset(
+                        PngAssets.addCommonIcon,
+                        width: 20,
+                        color: isDark ? AppColors.deepBlack : AppColors.white,
+                      ),
+                      label: Text(
+                        localizations.giftCodeCreateGift,
+                        style: AppTextStyles.labelLarge.copyWith(
+                          color: isDark ? AppColors.deepBlack : AppColors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ),
       ),
     );

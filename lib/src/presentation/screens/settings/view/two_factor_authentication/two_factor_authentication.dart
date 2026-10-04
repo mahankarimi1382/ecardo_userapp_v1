@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -47,18 +48,22 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
 
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
+      backgroundColor: bgColor,
+      appBar: const CommonDefaultAppBar(),
       body: Stack(
         children: [
           Column(
             children: [
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.cardGap),
               CommonAppBar(
                 title: localization.twoFactorAuthenticationScreenTitle,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSpacing.sm),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Text(
@@ -69,17 +74,16 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
                     ar: 'لتسجيل الدخول إلى الحساب فقط (Google Authenticator). للتحويلات، استخدم رمز التحويل.',
                     zh: '仅用于账户登录 (Google Authenticator)。转账请使用转账密码。',
                   ),
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.lightTextTertiary,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: secondaryTextColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: RefreshIndicator(
-                  color: AppColors.lightPrimary,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                   onRefresh: () => loadData(),
                   child: Obx(() {
                     if (controller.isLoading.value ||
@@ -92,13 +96,13 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
                       child: Column(
                         children: [
                           controller.userModel.value.data?.twoFa == true
-                              ? Disable2FaSection()
+                              ? const Disable2FaSection()
                               : controller.userModel.value.data
                                           ?.google2faSecret ==
                                       null
-                              ? Generate2FaSection()
-                              : Enable2FaSection(),
-                          const SizedBox(height: 40),
+                              ? const Generate2FaSection()
+                              : const Enable2FaSection(),
+                          SizedBox(height: AppSpacing.bottomSafe(context, 40)),
                         ],
                       ),
                     );

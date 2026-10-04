@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_error_view.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_history_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/view/add_money_history/sub_sections/add_money_transaction_filter_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
-import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_color.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_icon.dart';
 
@@ -25,6 +28,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory>
     with WidgetsBindingObserver {
   final AddMoneyHistoryController controller = Get.find();
   late ScrollController _scrollController;
+  final RxBool _hasLoadError = false.obs;
 
   @override
   void initState() {
@@ -46,71 +50,100 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory>
 
   Future<void> loadData() async {
     controller.isLoading.value = true;
-    await controller.fetchTransactions();
-    controller.isLoading.value = false;
+    _hasLoadError.value = false;
+    try {
+      await controller.fetchTransactions();
+    } catch (_) {
+      _hasLoadError.value = true;
+    } finally {
+      controller.isLoading.value = false;
+    }
   }
 
   Future<void> refreshData() async {
-    controller.isLoading.value = true;
-    await controller.fetchTransactions();
-    controller.isLoading.value = false;
+    _hasLoadError.value = false;
+    try {
+      await controller.fetchTransactions();
+    } catch (_) {
+      _hasLoadError.value = true;
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
+      appBar: const CommonDefaultAppBar(),
       body: Obx(
         () => Stack(
           children: [
             Column(
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 CommonAppBar(
                   title: localizations.addMoneyHistoryTitle,
-                  rightSideWidget: GestureDetector(
+                  rightSideWidget: InkWell(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                     onTap: () {
-                      Get.bottomSheet(AddMoneyTransactionFilterBottomSheet());
+                      HapticFeedback.lightImpact();
+                      Get.bottomSheet(
+                        const AddMoneyTransactionFilterBottomSheet(),
+                      );
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsetsDirectional.only(end: 18),
+                      padding: const EdgeInsets.all(AppSpacing.sm),
+                      margin: const EdgeInsetsDirectional.only(
+                        end: AppSpacing.page,
+                      ),
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
+                        color: isDark
+                            ? AppColors.darkSurfaceVariant
+                            : AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                         border: Border.all(
-                          color: AppColors.lightTextPrimary.withValues(
-                            alpha: 0.16,
-                          ),
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                       ),
-                      child: Image.asset(PngAssets.commonFilterIcon),
+                      child: Image.asset(
+                        PngAssets.commonFilterIcon,
+                        color: isDark ? AppColors.warmWhite : null,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return CommonLoading();
+                      return const CommonLoading();
                     }
 
-                    return Column(
-                      children: [
-                        const SizedBox(height: 16),
-                        _buildTransactionsList(),
-                      ],
-                    );
+                    if (_hasLoadError.value) {
+                      return EcardoErrorView(
+                        message: localizations.allControllerLoadError,
+                        onRetry: loadData,
+                        retryLabel:
+                            localizations.noInternetConnectionRetryButton,
+                      );
+                    }
+
+                    return _buildTransactionsList(localizations, isDark);
                   }),
                 ),
               ],
@@ -127,178 +160,188 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory>
     );
   }
 
-  Widget _buildTransactionsList() {
+  Widget _buildTransactionsList(
+    AppLocalizations localizations,
+    bool isDark,
+  ) {
     final transactions =
         controller.transactionsModel.value.data?.transactions ?? [];
 
-    if (controller.isLoading.value) {
-      return Expanded(child: CommonLoading());
-    }
-
     if (transactions.isEmpty) {
-      return Expanded(child: NoDataFound());
+      return LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: EcardoEmptyState(
+                title: localizations.addMoneyHistoryTitle,
+                description: localizations.noDataFound,
+                iconData: Icons.receipt_long_rounded,
+                primaryActionLabel: localizations.addMoneyTitle,
+                onPrimaryAction: () {
+                  HapticFeedback.lightImpact();
+                  Get.back();
+                },
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
-    return Expanded(
-      child: RefreshIndicator(
-        color: AppColors.lightPrimary,
-        onRefresh: () => refreshData(),
-        child: controller.isLoading.value
-            ? CommonLoading()
-            : Container(
-                margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: AppColors.white,
+    return RefreshIndicator(
+      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+      onRefresh: refreshData,
+      child: Container(
+        margin: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.page,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          color: isDark ? AppColors.darkCard : AppColors.lightCard,
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: AppSpacing.md,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: _scrollController,
+          padding: const EdgeInsetsDirectional.symmetric(
+            vertical: AppSpacing.md,
+          ),
+          itemBuilder: (context, index) {
+            final Transactions transaction = transactions[index];
+
+            return InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                Get.bottomSheet(
+                  RecentTransactionDetails(transaction: transaction),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsetsDirectional.symmetric(
+                  vertical: AppSpacing.sm,
+                  horizontal: AppSpacing.lg,
                 ),
-                child: ListView.separated(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  controller: _scrollController,
-                  padding: const EdgeInsetsDirectional.symmetric(vertical: 12),
-                  itemBuilder: (context, index) {
-                    final Transactions transaction = transactions[index];
-
-                    return GestureDetector(
-                      onTap: () {
-                        Get.bottomSheet(
-                          RecentTransactionDetails(transaction: transaction),
-                        );
-                      },
-                      child: Container(
-                        color: AppColors.transparent,
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          vertical: 8,
-                          horizontal: 16,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: TransactionDynamicColor.getTransactionColor(
+                          transaction.type,
                         ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 46,
-                                    height: 46,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          TransactionDynamicColor.getTransactionColor(
-                                            transaction.type,
-                                          ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Image.asset(
-                                        TransactionDynamicIcon.getTransactionIcon(
-                                          transaction.type,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          transaction.type ?? "",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            letterSpacing: 0,
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 15.5,
-                                            color: AppColors.lightTextPrimary,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          transaction.createdAt!
-                                              .split(",")
-                                              .first,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            letterSpacing: 0,
-                                            fontSize: 14,
-                                            color: AppColors.lightTextTertiary,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Transform.translate(
-                                      offset: const Offset(0, -2),
-                                      child: Text(
-                                        textAlign: TextAlign.center,
-                                        transaction.isPlus == true ? "+" : "-",
-                                        style: TextStyle(
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 15,
-                                          color: transaction.isPlus == true
-                                              ? AppColors.success
-                                              : AppColors.error,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      textAlign: TextAlign.center,
-                                      "${transaction.isCrypto == true ? "" : transaction.trxCurrencySymbol}",
-                                      style: TextStyle(
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 15,
-                                        color: transaction.isPlus == true
-                                            ? AppColors.success
-                                            : AppColors.error,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  transaction.isCrypto == true
-                                      ? "${transaction.amount} ${transaction.trxCurrencyCode}"
-                                      : "${transaction.amount}",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 15,
-                                    color: transaction.isPlus == true
-                                        ? AppColors.success
-                                        : AppColors.error,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
                         ),
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      child: Divider(
-                        color: AppColors.lightTextPrimary.withValues(
-                          alpha: 0.10,
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        child: Image.asset(
+                          TransactionDynamicIcon.getTransactionIcon(
+                            transaction.type,
+                          ),
                         ),
-                        height: 0,
                       ),
-                    );
-                  },
-                  itemCount: transactions.length,
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            transaction.type ?? "",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            transaction.createdAt ?? "",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextTertiary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "${transaction.amount ?? ''} ${transaction.trxCurrencyCode ?? transaction.payCurrency ?? ''}",
+                          style: TextStyle(
+                            letterSpacing: -0.2,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.xs,
+                            vertical: 1,
+                          ),
+                          decoration: BoxDecoration(
+                            color: (transaction.isSuccess
+                                    ? AppColors.success
+                                    : AppColors.warning)
+                                .withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusXs,
+                            ),
+                          ),
+                          child: Text(
+                            transaction.isSuccess ? "Success" : "Pending",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: transaction.isSuccess
+                                  ? AppColors.success
+                                  : AppColors.warning,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+            );
+          },
+          separatorBuilder: (context, index) => Divider(
+            height: 1,
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            indent: AppSpacing.lg,
+            endIndent: AppSpacing.lg,
+          ),
+          itemCount: transactions.length,
+        ),
       ),
     );
   }

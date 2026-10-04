@@ -19,6 +19,7 @@ import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'package:ecardo_user/src/common/services/notification_router_helper.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -28,6 +29,26 @@ import 'package:ecardo_user/src/app/constants/app_strings.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // NOTIF-FIX: background / terminated data-only messages used to be
+  // dropped entirely (no tray notification, no history, no badge). Show
+  // them through flutter_local_notifications, which works without a live
+  // Flutter engine. `notification`-type messages are displayed by the OS
+  // automatically, so only pure data messages need this path.
+  if (message.notification == null) {
+    try {
+      final title = message.data['title']?.toString() ?? 'eCardo';
+      final body = message.data['body']?.toString() ?? '';
+      final type = message.data['type']?.toString() ?? 'general';
+      await NotificationRouterHelper.showBackgroundNotification(
+        title: title,
+        body: body,
+        type: type,
+      );
+    } catch (e) {
+      debugPrint('⚠️ background notification display failed: $e');
+    }
+  }
 }
 
 Future<void> main() async {

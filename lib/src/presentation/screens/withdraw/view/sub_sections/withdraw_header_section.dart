@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -16,98 +18,138 @@ class WithdrawHeaderSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final WithdrawController controller = Get.find();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
         Image.asset(PngAssets.headerFrame),
         Column(
           children: [
-            SizedBox(height: 60),
+            const SizedBox(height: 60),
             CommonAppBar(
               title: localization.withdrawHeaderSectionTitle,
-              isBackLogicApply:
-                  controller.selectedScreen.value == 2 ||
-                      controller.selectedScreen.value == 3
-                  ? true
-                  : false,
-              backLogicFunction:
-                  controller.selectedScreen.value == 2 ||
+              isBackLogicApply: controller.selectedScreen.value == 2 ||
+                  controller.selectedScreen.value == 3,
+              backLogicFunction: controller.selectedScreen.value == 2 ||
                       controller.selectedScreen.value == 3
                   ? () {
                       controller.selectedScreen.value = 1;
                     }
                   : null,
               rightSideWidget: controller.selectedScreen.value == 1
-                  ? GestureDetector(
+                  ? InkWell(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                       onTap: () {
-                        Get.bottomSheet(WithdrawAccountFilterBottomSheet());
+                        HapticFeedback.lightImpact();
+                        Get.bottomSheet(
+                          const WithdrawAccountFilterBottomSheet(),
+                        );
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(6),
-                        margin: const EdgeInsetsDirectional.only(end: 18),
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        margin: const EdgeInsetsDirectional.only(
+                          end: AppSpacing.page,
+                        ),
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(6),
+                          color: isDark
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.white,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
+                          border: Border.all(
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
+                          ),
                         ),
-                        child: Image.asset(PngAssets.commonGiftFilterIcon),
+                        child: Image.asset(
+                          PngAssets.commonGiftFilterIcon,
+                          color: isDark ? AppColors.warmWhite : null,
+                        ),
                       ),
                     )
                   : controller.selectedScreen.value == 0
                   ? Padding(
-                      padding: const EdgeInsetsDirectional.only(end: 8),
+                      padding: const EdgeInsetsDirectional.only(
+                        end: AppSpacing.sm,
+                      ),
                       child: IconButton(
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,
+                        tooltip: localization.withdrawHeaderSectionHistory,
                         onPressed: () {
-                          _buildHistoryNavigation(context);
+                          HapticFeedback.lightImpact();
+                          _buildHistoryNavigation(context, isDark);
                         },
-                        icon: Icon(Icons.more_vert),
+                        icon: Icon(
+                          Icons.more_vert_rounded,
+                          color: isDark
+                              ? AppColors.warmWhite
+                              : AppColors.lightTextPrimary,
+                        ),
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: AppSpacing.xxl),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
               child: Obx(
                 () => Row(
                   children: [
                     Expanded(
                       child: CommonButton(
                         onPressed: () {
+                          HapticFeedback.lightImpact();
                           controller.selectedScreen.value = 0;
                         },
                         width: double.infinity,
-
                         text: localization.withdrawHeaderSectionWithdrawButton,
-                        fontSize: 15,
+                        fontSize: 14.5,
                         backgroundColor: controller.selectedScreen.value == 0
-                            ? AppColors.lightPrimary
-                            : AppColors.white,
+                            ? (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            : (isDark
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.white),
                         textColor: controller.selectedScreen.value == 0
-                            ? AppColors.white
-                            : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+                            ? (isDark
+                                ? AppColors.deepBlack
+                                : AppColors.white)
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: AppSpacing.md),
                     Expanded(
                       child: CommonButton(
                         onPressed: () {
+                          HapticFeedback.lightImpact();
                           controller.selectedScreen.value = 1;
                         },
                         width: double.infinity,
-
                         text: localization
                             .withdrawHeaderSectionWithdrawAccountButton,
-                        fontSize: 15,
+                        fontSize: 14.5,
                         backgroundColor: controller.selectedScreen.value != 0
-                            ? AppColors.lightPrimary
-                            : AppColors.white,
+                            ? (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            : (isDark
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.white),
                         textColor: controller.selectedScreen.value != 0
-                            ? AppColors.white
-                            : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+                            ? (isDark
+                                ? AppColors.deepBlack
+                                : AppColors.white)
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
                       ),
                     ),
                   ],
@@ -120,27 +162,26 @@ class WithdrawHeaderSection extends StatelessWidget {
     );
   }
 
-  void _buildHistoryNavigation(BuildContext context) {
+  void _buildHistoryNavigation(BuildContext context, bool isDark) {
     final localization = AppLocalizations.of(context)!;
 
     Get.bottomSheet(
       AnimatedContainer(
         width: double.infinity,
-        duration: const Duration(milliseconds: 300),
+        duration: AppDurations.normal,
         curve: Curves.easeOutQuart,
         height: 160,
-        margin: const EdgeInsets.symmetric(horizontal: 12),
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: isDark ? AppColors.darkCard : AppColors.lightCard,
           borderRadius: const BorderRadiusDirectional.only(
-            topStart: Radius.circular(20),
-            topEnd: Radius.circular(20),
+            topStart: Radius.circular(AppSpacing.radiusXl),
+            topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.06),
-              blurRadius: 40,
-              spreadRadius: 0,
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: AppSpacing.xxl,
               offset: Offset.zero,
             ),
           ],
@@ -148,17 +189,18 @@ class WithdrawHeaderSection extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Container(
               width: 40,
               height: 5,
               decoration: BoxDecoration(
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(30),
+                color: isDark
+                    ? AppColors.darkTextSecondary.withValues(alpha: 0.3)
+                    : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
               ),
             ),
-            const SizedBox(height: 16),
-
+            const SizedBox(height: AppSpacing.lg),
             Expanded(
               child: ListView.builder(
                 itemCount: 1,
@@ -168,25 +210,39 @@ class WithdrawHeaderSection extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
+                        HapticFeedback.lightImpact();
                         Get.back();
-
                         if (index == 0) {
                           Get.toNamed(BaseRoute.withdrawHistory);
                         }
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 10,
+                          horizontal: AppSpacing.page,
+                          vertical: AppSpacing.md,
                         ),
-                        child: Text(
-                          items[index],
-                          style: TextStyle(
-                            letterSpacing: 0,
-                            color: AppColors.lightTextPrimary,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                          ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.history_rounded,
+                              size: AppSpacing.iconSm,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Text(
+                              items[index],
+                              style: TextStyle(
+                                letterSpacing: 0,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

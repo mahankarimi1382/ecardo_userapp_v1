@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -21,6 +23,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
   final LoanController controller = Get.find<LoanController>();
 
   void _handleSubmit() async {
+    HapticFeedback.lightImpact();
     if (!controller.termsAccepted.value) {
       Get.snackbar(
         l10nPick(context, fa: 'خطا', en: 'Error'),
@@ -30,7 +33,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
           en: 'Please accept terms and conditions to proceed.',
         ),
         backgroundColor: AppColors.error,
-        colorText: Colors.white,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -39,14 +42,13 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
     if (!mounted) return;
 
     if (err != null) {
-      // Backend returned error or 404
       Get.dialog(
         AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
           title: Row(
             children: [
-              Icon(Icons.info_outline_rounded, color: const Color(0xFFF59E0B), size: 24.sp),
-              SizedBox(width: 8.w),
+              Icon(Icons.info_outline_rounded, color: AppColors.warning, size: 24.sp),
+              SizedBox(width: AppSpacing.sm.w),
               Expanded(
                 child: Text(
                   l10nPick(
@@ -56,7 +58,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                     ar: 'حالة بوابة التسهيلات',
                     zh: '信贷网关状态',
                   ),
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+                  style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800),
                 ),
               ),
             ],
@@ -69,41 +71,57 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
               ar: 'جاري تحديث الربط المباشر مع بوابة التسهيلات الائتمانية.',
               zh: '信贷评分在线网关正在维护更新中（接口 /loan/apply）。您的申请参数已完成本地校验。',
             ),
-            style: TextStyle(fontSize: 12.sp, height: 1.6),
+            style: AppTextStyles.bodySmall.copyWith(height: 1.5),
           ),
           actions: [
+            TextButton(
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Get.back();
+              },
+              child: Text(l10nPick(context, fa: 'متوجه شدم', en: 'Understood', ar: 'حسناً', zh: '知道了')),
+            ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.lightPrimary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
               ),
               onPressed: () {
+                HapticFeedback.lightImpact();
                 Get.back();
                 Get.off(() => const LoanTrackingScreen());
               },
               child: Text(
-                l10nPick(
-                  context,
-                  fa: 'مشاهده کارتابل پیگیری',
-                  en: 'View Tracking Portal',
-                  ar: 'عرض بوابة المتابعة',
-                  zh: '查看追踪进度',
-                ),
-                style: const TextStyle(color: Colors.white),
+                l10nPick(context, fa: 'مشاهده کارتابل', en: 'View Dashboard', ar: 'لوحة المتابعة', zh: '查看进度'),
+                style: const TextStyle(color: AppColors.white),
               ),
             ),
           ],
         ),
       );
     } else {
-      // Successful submission
       Get.off(() => const LoanTrackingScreen());
+      Get.snackbar(
+        l10nPick(context, fa: 'ثبت موفق', en: 'Application Submitted', ar: 'تم التسجيل', zh: '提交成功'),
+        l10nPick(
+          context,
+          fa: 'درخواست تسهیلات شما با موفقیت ثبت شد و در فرآیند سنجش اعتبار قرار گرفت.',
+          en: 'Loan application submitted successfully and sent for credit scoring.',
+          ar: 'تم تقديم الطلب بنجاح وهو قيد التقييم الائتماني.',
+          zh: '您的贷款申请已成功提交并进入信用评级流程。',
+        ),
+        backgroundColor: AppColors.success,
+        colorText: AppColors.white,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final amount = double.tryParse(controller.amountInput.value) ?? 0;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+
+    final amount = double.tryParse(controller.amountInput.value) ?? 50000000;
     final tenure = controller.selectedTenure.value > 0 ? controller.selectedTenure.value : 12;
     final grace = controller.graceMonthsInput.value;
     final rate = controller.selectedProduct.value?.baseRateAnnual ?? 18.0;
@@ -114,6 +132,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
       tenureMonths: tenure,
       gracePeriodMonths: grace,
     );
+
     final total = controller.calculateTotalRepayment(
       principal: amount,
       annualInterestRatePct: rate,
@@ -122,7 +141,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
     );
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -139,7 +158,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsetsDirectional.all(AppSpacing.page.w),
           child: Obx(
             () => CommonButton(
               width: double.infinity,
@@ -151,27 +170,27 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                 ar: 'تأكيد وإرسال إلى التقييم',
                 zh: '确认并提交信用审核',
               ),
-              backgroundColor: AppColors.lightPrimary,
+              backgroundColor: primaryAccent,
               onPressed: _handleSubmit,
             ),
           ),
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.md.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Summary Card
             Container(
-              padding: EdgeInsets.all(18.r),
+              padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18.r),
-                border: Border.all(color: AppColors.lightBorder),
+                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
+                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -181,69 +200,78 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                 children: [
                   _buildSummaryRow(
                     context,
+                    isDark: isDark,
                     labelFa: 'طرح انتخابی',
                     labelEn: 'Selected Scheme',
                     value: controller.selectedProduct.value?.name ?? 'تسهیلات هوشمند زرین',
                     isBold: true,
                   ),
-                  const Divider(height: 20),
+                  Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                   _buildSummaryRow(
                     context,
+                    isDark: isDark,
                     labelFa: 'مبلغ درخواستی',
                     labelEn: 'Requested Amount',
                     value: '${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                     isBold: true,
                   ),
-                  const Divider(height: 20),
+                  Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                   _buildSummaryRow(
                     context,
+                    isDark: isDark,
                     labelFa: 'مدت بازپرداخت',
                     labelEn: 'Tenure',
                     value: '$tenure ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
                   ),
                   if (grace > 0) ...[
-                    const Divider(height: 20),
+                    Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                     _buildSummaryRow(
                       context,
+                      isDark: isDark,
                       labelFa: 'دوره تنفس',
                       labelEn: 'Grace Period',
                       value: '$grace ${l10nPick(context, fa: 'ماه (فقط پرداخت سود)', en: 'Months (Interest only)', ar: 'شهر (فائدة فقط)', zh: '个月（仅还利息）')}',
                     ),
                   ],
-                  const Divider(height: 20),
+                  Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                   _buildSummaryRow(
                     context,
+                    isDark: isDark,
                     labelFa: 'نرخ سود سالیانه',
                     labelEn: 'Annual Interest Rate',
                     value: '$rate%',
                   ),
-                  const Divider(height: 20),
+                  Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                   _buildSummaryRow(
                     context,
+                    isDark: isDark,
                     labelFa: 'قسط ماهیانه تخمینی',
                     labelEn: 'Monthly Installment (EMI)',
                     value: '${emi.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
-                    valueColor: const Color(0xFF059669),
+                    valueColor: isDark ? const Color(0xFF4ADE80) : const Color(0xFF059669),
                     isBold: true,
                   ),
-                  const Divider(height: 20),
+                  Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                   _buildSummaryRow(
                     context,
+                    isDark: isDark,
                     labelFa: 'مجموع بازپرداخت اصل و سود',
                     labelEn: 'Total Repayment',
                     value: '${total.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                   ),
-                  const Divider(height: 20),
+                  Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                   _buildSummaryRow(
                     context,
+                    isDark: isDark,
                     labelFa: 'نوع وثیقه تودیعی',
                     labelEn: 'Collateral Type',
                     value: controller.collateralTypeInput.value,
                   ),
                   if (controller.purposeInput.value.isNotEmpty) ...[
-                    const Divider(height: 20),
+                    Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                     _buildSummaryRow(
                       context,
+                      isDark: isDark,
                       labelFa: 'موضوع تسهیلات',
                       labelEn: 'Loan Purpose',
                       value: controller.purposeInput.value,
@@ -253,34 +281,36 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
               ),
             ),
 
-            SizedBox(height: 18.h),
+            SizedBox(height: AppSpacing.lg.h),
 
             // Terms & Conditions checkbox
             Obx(
               () => Container(
-                padding: EdgeInsets.all(12.r),
+                padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14.r),
-                  border: Border.all(color: AppColors.lightBorder),
+                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Checkbox(
                       value: controller.termsAccepted.value,
-                      activeColor: AppColors.lightPrimary,
+                      activeColor: primaryAccent,
                       onChanged: (val) {
+                        HapticFeedback.selectionClick();
                         controller.termsAccepted.value = val ?? false;
                       },
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
+                          HapticFeedback.selectionClick();
                           controller.termsAccepted.value = !controller.termsAccepted.value;
                         },
                         child: Padding(
-                          padding: EdgeInsets.only(top: 8.h),
+                          padding: EdgeInsetsDirectional.only(top: 8.h),
                           child: Text(
                             l10nPick(
                               context,
@@ -289,10 +319,9 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                               ar: 'أؤكد صحة البيانات وأوافق على الشروط واستعلام السجل الائتماني وسداد الأقساط.',
                               zh: '本人确认所填信息真实无误，同意授信条款、征信查询及分期自动代扣协议。',
                             ),
-                            style: TextStyle(
-                              fontSize: 11.5.sp,
+                            style: AppTextStyles.bodySmall.copyWith(
                               height: 1.5,
-                              color: AppColors.lightTextPrimary,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                           ),
                         ),
@@ -302,6 +331,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                 ),
               ),
             ),
+            SizedBox(height: AppSpacing.xxl.h),
           ],
         ),
       ),
@@ -310,6 +340,7 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
 
   Widget _buildSummaryRow(
     BuildContext context, {
+    required bool isDark,
     required String labelFa,
     required String labelEn,
     required String value,
@@ -321,14 +352,15 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
       children: [
         Text(
           l10nPick(context, fa: labelFa, en: labelEn),
-          style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+          style: AppTextStyles.bodySmall.copyWith(
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          ),
         ),
         Text(
           value,
-          style: TextStyle(
-            fontSize: 12.5.sp,
+          style: AppTextStyles.bodyMedium.copyWith(
             fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
-            color: valueColor ?? AppColors.lightTextPrimary,
+            color: valueColor ?? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
           ),
         ),
       ],

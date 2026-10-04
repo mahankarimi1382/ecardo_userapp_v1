@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
@@ -19,15 +22,20 @@ class GiftCodeHeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final GiftCodeController controller = Get.find();
-    final HomeController homeController = Get.find();
+    final GiftCodeController controller = Get.find<GiftCodeController>();
+    final HomeController homeController = Get.find<HomeController>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
-        Image.asset(PngAssets.headerFrame),
+        Image.asset(
+          PngAssets.headerFrame,
+          color: isDark ? AppColors.darkSurfaceVariant.withValues(alpha: 0.3) : null,
+          errorBuilder: (_, _, _) => const SizedBox(height: 140),
+        ),
         Column(
           children: [
-            SizedBox(height: 60),
+            const SizedBox(height: 60),
             Obx(
               () => CommonAppBar(
                 title: localizations.giftCodeHeaderTitle,
@@ -50,72 +58,85 @@ class GiftCodeHeaderSection extends StatelessWidget {
                 rightSideWidget: controller.selectedScreen.value == 1
                     ? GestureDetector(
                         onTap: () {
-                          Get.bottomSheet(GiftHistoryFilterBottomSheet());
+                          HapticFeedback.lightImpact();
+                          Get.bottomSheet(const GiftHistoryFilterBottomSheet());
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(6),
-                          margin: const EdgeInsetsDirectional.only(end: 18),
-                          width: 40,
-                          height: 40,
+                          padding: const EdgeInsets.all(AppSpacing.sm),
+                          margin: const EdgeInsetsDirectional.only(end: AppSpacing.lg),
+                          width: 42,
+                          height: 42,
                           decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(6),
+                            color: isDark ? AppColors.darkCard : AppColors.white,
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                            border: Border.all(
+                              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            ),
                           ),
-                          child: Image.asset(PngAssets.commonGiftFilterIcon),
+                          child: Image.asset(
+                            PngAssets.commonGiftFilterIcon,
+                            color: isDark ? AppColors.mainSoftBlue : null,
+                          ),
                         ),
                       )
                     : Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 18),
+                        padding: const EdgeInsetsDirectional.only(end: AppSpacing.lg),
                         child: IconButton(
                           visualDensity: VisualDensity.compact,
                           padding: EdgeInsets.zero,
-                          onPressed: () {
-                            _buildHistoryNavigation();
-                          },
-                          icon: Icon(Icons.more_vert),
+                          tooltip: 'Options',
+                          onPressed: () => _buildHistoryNavigation(context, isDark),
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
                         ),
                       ),
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: AppSpacing.xxl),
             Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.lg),
               child: Obx(
                 () => Row(
                   children: [
                     Expanded(
                       child: CommonButton(
                         onPressed: () {
+                          HapticFeedback.lightImpact();
                           controller.selectedScreen.value = 0;
                         },
                         width: double.infinity,
-
                         text: localizations.giftCodeHeaderGiftRedeem,
                         fontSize: 15,
                         backgroundColor: controller.selectedScreen.value == 0
-                            ? AppColors.lightPrimary
-                            : AppColors.white,
+                            ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
+                            : (isDark ? AppColors.darkCard : AppColors.white),
                         textColor: controller.selectedScreen.value == 0
-                            ? AppColors.white
-                            : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+                            ? (isDark ? AppColors.deepBlack : AppColors.white)
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: AppSpacing.lg),
                     Expanded(
                       child: CommonButton(
                         onPressed: () {
+                          HapticFeedback.lightImpact();
                           controller.selectedScreen.value = 1;
                         },
                         width: double.infinity,
-
                         text: localizations.giftCodeHeaderMyGift,
                         fontSize: 15,
                         backgroundColor: controller.selectedScreen.value != 0
-                            ? AppColors.lightPrimary
-                            : AppColors.white,
+                            ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
+                            : (isDark ? AppColors.darkCard : AppColors.white),
                         textColor: controller.selectedScreen.value != 0
-                            ? AppColors.white
-                            : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+                            ? (isDark ? AppColors.deepBlack : AppColors.white)
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
                       ),
                     ),
                   ],
@@ -128,80 +149,65 @@ class GiftCodeHeaderSection extends StatelessWidget {
     );
   }
 
-  void _buildHistoryNavigation() {
-    final localizations = AppLocalizations.of(Get.context!)!;
+  void _buildHistoryNavigation(BuildContext context, bool isDark) {
+    final localizations = AppLocalizations.of(context)!;
     Get.bottomSheet(
-      AnimatedContainer(
+      Container(
         width: double.infinity,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutQuart,
-        height: 160,
-        margin: const EdgeInsetsDirectional.symmetric(horizontal: 12),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: const BorderRadiusDirectional.only(
-            topStart: Radius.circular(20),
-            topEnd: Radius.circular(20),
+            topStart: Radius.circular(AppSpacing.radiusXl),
+            topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.06),
-              blurRadius: 40,
-              spreadRadius: 0,
-              offset: Offset.zero,
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 30,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 5,
-              decoration: BoxDecoration(
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(30),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 44,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkTextSecondary.withValues(alpha: 0.4)
+                      : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-
-            Expanded(
-              child: ListView.builder(
-                itemCount: 1,
-                itemBuilder: (context, index) {
-                  final items = [localizations.giftCodeHeaderGiftRedeemHistory];
-                  return Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        Get.back();
-
-                        if (index == 0) {
-                          Get.toNamed(BaseRoute.giftRedeemHistory);
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 18,
-                          vertical: 10,
-                        ),
-                        child: Text(
-                          items[index],
-                          style: TextStyle(
-                            letterSpacing: 0,
-                            color: AppColors.lightTextPrimary,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
+              const SizedBox(height: AppSpacing.lg),
+              ListTile(
+                leading: Icon(
+                  Icons.receipt_long_rounded,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                ),
+                title: Text(
+                  localizations.giftCodeHeaderGiftRedeemHistory,
+                  style: AppTextStyles.titleSmall.copyWith(
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.chevron_right_rounded,
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                ),
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(BaseRoute.giftRedeemHistory);
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

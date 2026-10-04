@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/view/sub_sections/cash_out_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/view/sub_sections/cash_out_review_step_section.dart';
@@ -34,6 +37,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return PopScope(
       canPop: false,
@@ -43,7 +47,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
         }
       },
       child: Scaffold(
-        appBar: CommonDefaultAppBar(),
+        appBar: const CommonDefaultAppBar(),
         body: Stack(
           children: [
             Column(
@@ -55,7 +59,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
                         controller.currentStep.value == 1,
                     child: Column(
                       children: [
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.lg),
                         Obx(
                           () => CommonAppBar(
                             title: localizations.cashOutTitle,
@@ -66,21 +70,28 @@ class _CashOutScreenState extends State<CashOutScreen> {
                             rightSideWidget: controller.currentStep.value == 0
                                 ? Padding(
                                     padding: const EdgeInsetsDirectional.only(
-                                      end: 8,
+                                      end: AppSpacing.sm,
                                     ),
                                     child: IconButton(
                                       visualDensity: VisualDensity.compact,
                                       padding: EdgeInsets.zero,
+                                      tooltip: localizations.cashOutHistory,
                                       onPressed: () {
-                                        _buildHistoryNavigation();
+                                        HapticFeedback.lightImpact();
+                                        _buildHistoryNavigation(isDark);
                                       },
-                                      icon: Icon(Icons.more_vert),
+                                      icon: Icon(
+                                        Icons.more_vert_rounded,
+                                        color: isDark
+                                            ? AppColors.warmWhite
+                                            : AppColors.lightTextPrimary,
+                                      ),
                                     ),
                                   )
                                 : null,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: AppSpacing.xxl),
                       ],
                     ),
                   ),
@@ -88,27 +99,43 @@ class _CashOutScreenState extends State<CashOutScreen> {
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return CommonLoading();
+                      return const CommonLoading();
+                    }
+
+                    if (controller.cashOutWalletsList.isEmpty ||
+                        controller.wallet.value == null) {
+                      return Center(
+                        child: EcardoEmptyState(
+                          title: localizations.cashOutWalletsNotFound,
+                          description: localizations.allControllerLoadError,
+                          primaryActionLabel:
+                              localizations.noInternetConnectionRetryButton,
+                          onPrimaryAction: () {
+                            controller.fetchWallets();
+                            controller.fetchUser();
+                          },
+                        ),
+                      );
                     }
 
                     return controller.currentStep.value == 0
-                        ? Padding(
-                            padding: const EdgeInsetsDirectional.symmetric(
-                              horizontal: 18,
+                        ? const Padding(
+                            padding: EdgeInsetsDirectional.symmetric(
+                              horizontal: AppSpacing.page,
                             ),
                             child: Column(
                               children: [
                                 CashOutWalletsSection(),
-                                SizedBox(height: 30),
+                                SizedBox(height: AppSpacing.xxl),
                                 CashOutAmountStepSection(),
                               ],
                             ),
                           )
                         : controller.currentStep.value == 1
-                        ? CashOutReviewStepSection()
+                        ? const CashOutReviewStepSection()
                         : controller.currentStep.value == 2
-                        ? CashOutSuccessStepSection()
-                        : SizedBox();
+                        ? const CashOutSuccessStepSection()
+                        : const SizedBox.shrink();
                   }),
                 ),
               ],
@@ -118,7 +145,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
                 visible:
                     controller.isCashOutLoading.value ||
                     controller.isBeneficiaryLoading.value,
-                child: CommonLoading(),
+                child: const CommonLoading(),
               ),
             ),
           ],
@@ -127,27 +154,28 @@ class _CashOutScreenState extends State<CashOutScreen> {
     );
   }
 
-  void _buildHistoryNavigation() {
+  void _buildHistoryNavigation(bool isDark) {
     final localizations = AppLocalizations.of(context)!;
 
     Get.bottomSheet(
       AnimatedContainer(
         width: double.infinity,
-        duration: const Duration(milliseconds: 300),
+        duration: AppDurations.normal,
         curve: Curves.easeOutQuart,
         height: 160,
-        margin: const EdgeInsetsDirectional.symmetric(horizontal: 12),
+        margin: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.md,
+        ),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: isDark ? AppColors.darkCard : AppColors.lightCard,
           borderRadius: const BorderRadiusDirectional.only(
-            topStart: Radius.circular(20),
-            topEnd: Radius.circular(20),
+            topStart: Radius.circular(AppSpacing.radiusXl),
+            topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.06),
-              blurRadius: 40,
-              spreadRadius: 0,
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: AppSpacing.xxl,
               offset: Offset.zero,
             ),
           ],
@@ -155,17 +183,18 @@ class _CashOutScreenState extends State<CashOutScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Container(
               width: 40,
               height: 5,
               decoration: BoxDecoration(
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(30),
+                color: isDark
+                    ? AppColors.darkTextSecondary.withValues(alpha: 0.3)
+                    : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
               ),
             ),
-            const SizedBox(height: 16),
-
+            const SizedBox(height: AppSpacing.lg),
             Expanded(
               child: ListView.builder(
                 itemCount: 1,
@@ -175,25 +204,39 @@ class _CashOutScreenState extends State<CashOutScreen> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
+                        HapticFeedback.lightImpact();
                         Get.back();
-
                         if (index == 0) {
                           Get.toNamed(BaseRoute.cashOutHistory);
                         }
                       },
                       child: Padding(
                         padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 18,
-                          vertical: 10,
+                          horizontal: AppSpacing.page,
+                          vertical: AppSpacing.md,
                         ),
-                        child: Text(
-                          items[index],
-                          style: TextStyle(
-                            letterSpacing: 0,
-                            color: AppColors.lightTextPrimary,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                          ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.history_rounded,
+                              size: AppSpacing.iconSm,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Text(
+                              items[index],
+                              style: TextStyle(
+                                letterSpacing: 0,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

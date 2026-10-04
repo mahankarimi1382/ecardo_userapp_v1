@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart';
@@ -41,6 +44,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return PopScope(
       canPop: false,
@@ -50,7 +54,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
         }
       },
       child: Scaffold(
-        appBar: CommonDefaultAppBar(),
+        appBar: const CommonDefaultAppBar(),
         body: Stack(
           children: [
             Column(
@@ -62,7 +66,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                         controller.currentStep.value == 1,
                     child: Column(
                       children: [
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.lg),
                         Obx(
                           () => CommonAppBar(
                             title: localization.makePaymentScreenTitle,
@@ -71,24 +75,41 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                             },
                             isBackLogicApply: true,
                             rightSideWidget: controller.currentStep.value == 0
-                                ? GestureDetector(
-                                    onTap: () => Get.toNamed(
-                                      BaseRoute.makePaymentHistory,
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.only(
-                                        end: 18,
+                                ? Semantics(
+                                    label: localization.makePaymentHistoryScreenTitle,
+                                    button: true,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusSm,
                                       ),
-                                      child: Image.asset(
-                                        PngAssets.commonHistoryIcon,
-                                        width: 30,
+                                      onTap: () {
+                                        HapticFeedback.lightImpact();
+                                        Get.toNamed(
+                                          BaseRoute.makePaymentHistory,
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsetsDirectional.only(
+                                          end: AppSpacing.page,
+                                          start: AppSpacing.sm,
+                                          top: AppSpacing.sm,
+                                          bottom: AppSpacing.sm,
+                                        ),
+                                        child: Image.asset(
+                                          PngAssets.commonHistoryIcon,
+                                          width: AppSpacing.iconLg,
+                                          color: isDark
+                                              ? AppColors.warmWhite
+                                              : null,
+                                        ),
                                       ),
                                     ),
                                   )
                                 : null,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: AppSpacing.xxl),
                       ],
                     ),
                   ),
@@ -96,7 +117,20 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return CommonLoading();
+                      return const CommonLoading();
+                    }
+
+                    if (controller.paymentWalletsList.isEmpty ||
+                        controller.wallet.value == null) {
+                      return Center(
+                        child: EcardoEmptyState(
+                          title: localization.makePaymentScreenWalletsNotFound,
+                          description: localization.allControllerLoadError,
+                          primaryActionLabel:
+                              localization.noInternetConnectionRetryButton,
+                          onPrimaryAction: loadData,
+                        ),
+                      );
                     }
 
                     return controller.currentStep.value == 0
@@ -105,35 +139,49 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 16),
+                                const SizedBox(height: AppSpacing.md),
                                 Padding(
-                                  padding: const EdgeInsetsDirectional.symmetric(
-                                    horizontal: 18,
+                                  padding:
+                                      const EdgeInsetsDirectional.symmetric(
+                                    horizontal: AppSpacing.page,
                                   ),
-                                  child: _buildWallet(),
+                                  child: _buildWallet(isDark),
                                 ),
-                                const SizedBox(height: 30),
+                                const SizedBox(height: AppSpacing.xxl),
                                 Container(
-                                  margin: EdgeInsetsDirectional.symmetric(
-                                    horizontal: 18,
+                                  margin: const EdgeInsetsDirectional.symmetric(
+                                    horizontal: AppSpacing.page,
                                   ),
-                                  padding: EdgeInsetsDirectional.only(
-                                    start: 20,
-                                    end: 20,
-                                    top: 2,
+                                  padding: const EdgeInsetsDirectional.only(
+                                    start: AppSpacing.page,
+                                    end: AppSpacing.page,
+                                    top: AppSpacing.xs,
                                   ),
                                   constraints: BoxConstraints(
                                     minHeight:
                                         MediaQuery.of(context).size.height *
-                                        0.8,
+                                        0.6,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.white,
+                                    color: isDark
+                                        ? AppColors.darkCard
+                                        : AppColors.lightCard,
                                     borderRadius:
-                                        BorderRadiusDirectional.only(
-                                      topStart: Radius.circular(30),
-                                      topEnd: Radius.circular(30),
+                                        const BorderRadiusDirectional.only(
+                                      topStart:
+                                          Radius.circular(AppSpacing.radiusXl),
+                                      topEnd:
+                                          Radius.circular(AppSpacing.radiusXl),
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: isDark
+                                            ? AppColors.darkShadow
+                                            : AppColors.lightShadow,
+                                        blurRadius: AppSpacing.lg,
+                                        offset: const Offset(0, -2),
+                                      ),
+                                    ],
                                   ),
                                   child: const MakePaymentAmountStepSection(),
                                 ),
@@ -144,7 +192,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                         ? const MakePaymentReviewStepSection()
                         : controller.currentStep.value == 2
                         ? const MakePaymentSuccessStepSection()
-                        : const SizedBox();
+                        : const SizedBox.shrink();
                   }),
                 ),
               ],
@@ -155,7 +203,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                     controller.isMakePaymentLoading.value ||
                     controller.isPaymentSettingsLoading.value ||
                     controller.isBeneficiaryLoading.value,
-                child: CommonLoading(),
+                child: const CommonLoading(),
               ),
             ),
           ],
@@ -164,17 +212,20 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
     );
   }
 
-  Widget _buildWallet() {
+  Widget _buildWallet(bool isDark) {
     final localization = AppLocalizations.of(context)!;
+    final currentWallet = controller.wallet.value!;
 
     return InkWell(
+      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
       onTap: () {
+        HapticFeedback.lightImpact();
         Get.bottomSheet(
           CommonDropdownWalletBottomSheet(
             notFoundText: localization.makePaymentScreenWalletsNotFound,
             dropdownItems: controller.paymentWalletsList,
             bottomSheetHeight: 450,
-            currentlySelectedValue: controller.wallet.value!.name,
+            currentlySelectedValue: currentWallet.name,
             onItemSelected: (value) async {
               final selectedWallet = controller.paymentWalletsList.firstWhere(
                 (w) => w.name == value,
@@ -187,85 +238,149 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(PngAssets.addMoneyFrame),
-            fit: BoxFit.cover,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          gradient: LinearGradient(
+            colors: isDark
+                ? [
+                    const Color(0xFF1E2836),
+                    const Color(0xFF151C26),
+                  ]
+                : [
+                    AppColors.deepBlack,
+                    const Color(0xFF2A2A28),
+                  ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.mainSoftBlue.withValues(alpha: 0.25),
+            width: 1.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: AppSpacing.md,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                controller.wallet.value!.isDefault == true
-                    ? Container(
-                        alignment: Alignment.center,
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Text(
-                          controller.wallet.value!.symbol!,
-                          style: TextStyle(
+                Container(
+                  alignment: Alignment.center,
+                  width: AppSpacing.iconLg,
+                  height: AppSpacing.iconLg,
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.white.withValues(alpha: 0.25),
+                      width: 1,
+                    ),
+                  ),
+                  child: currentWallet.isDefault == true ||
+                          currentWallet.icon == null ||
+                          currentWallet.icon!.isEmpty
+                      ? Text(
+                          currentWallet.symbol ?? currentWallet.code ?? r'$',
+                          style: const TextStyle(
                             letterSpacing: 0,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: AppColors.lightPrimary,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15,
+                            color: AppColors.white,
+                          ),
+                        )
+                      : ClipOval(
+                          child: Image.network(
+                            currentWallet.icon!,
+                            width: AppSpacing.iconLg,
+                            height: AppSpacing.iconLg,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Text(
+                                currentWallet.symbol ?? r'$',
+                                style: const TextStyle(
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 15,
+                                  color: AppColors.white,
+                                ),
+                              );
+                            },
                           ),
                         ),
-                      )
-                    : Container(
-                        alignment: Alignment.center,
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Image.network(
-                          controller.wallet.value!.icon!,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              PngAssets.commonErrorIcon,
-                              color: AppColors.error.withValues(alpha: 0.7),
-                            );
-                          },
-                        ),
-                      ),
-                SizedBox(width: 10),
-                Text(
-                  controller.wallet.value!.name!,
-                  style: TextStyle(
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20,
-                    color: AppColors.white,
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(
+                    currentWallet.name ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
-                SizedBox(width: 16),
-                Image.asset(PngAssets.commonArrowDownIcon, width: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        currentWallet.code ?? "",
+                        style: const TextStyle(
+                          color: AppColors.warmWhite,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: AppColors.warmWhite,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.xl),
             Text(
               localization.makePaymentScreenBalance,
               style: TextStyle(
                 letterSpacing: 0,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-                color: AppColors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: AppColors.warmWhite.withValues(alpha: 0.70),
               ),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: AppSpacing.xs),
             Text(
-              "${controller.wallet.value!.formattedBalance} ${controller.wallet.value!.code}",
-              style: TextStyle(
-                letterSpacing: 0,
+              "${currentWallet.formattedBalance} ${currentWallet.code}",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                letterSpacing: -0.5,
                 fontWeight: FontWeight.w900,
-                fontSize: 30,
+                fontSize: 28,
                 color: AppColors.white,
               ),
             ),

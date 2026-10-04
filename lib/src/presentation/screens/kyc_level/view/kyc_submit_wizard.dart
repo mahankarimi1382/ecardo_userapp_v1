@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/helper/upload_helper.dart';
@@ -15,13 +17,8 @@ import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_le
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/view/kyc_labels.dart';
 
-/// KycSubmitWizard — جادوگر مرحله‌به‌مرحله ارسال مدارک KYC
-///
-/// مراحل:
-///   ۱. نمایش مدارک لازم برای سطح هدف
-///   ۲. آپلود هر مدرک (image picker)
-///   ۳. بررسی و تأیید
-///   ۴. ارسال
+/// KycSubmitWizard — Step-by-step document submission wizard
+/// Complete tokenization, dark mode support, RTL correctness, and 4 states.
 class KycSubmitWizard extends StatefulWidget {
   final int targetLevel;
 
@@ -52,6 +49,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   }
 
   void _handleBack() {
+    HapticFeedback.lightImpact();
     if (_currentStep > 0) {
       setState(() => _currentStep--);
     } else {
@@ -68,6 +66,11 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
     return PopScope(
       canPop: _currentStep == 0 && Navigator.canPop(context),
       onPopInvokedWithResult: (didPop, _) {
@@ -75,129 +78,164 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
         _handleBack();
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightSurface,
+        backgroundColor: bgColor,
         appBar: AppBar(
-          backgroundColor: AppColors.lightSurface,
+          backgroundColor: bgColor,
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
+            icon: Icon(Icons.arrow_back, color: primaryTextColor),
             onPressed: _handleBack,
           ),
           title: Text(
-          localization?.kycSubmitWizardTitleForLevel(_targetLevel) ??
-              'Verification — level $_targetLevel',
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
-        ),
-      ),
-      body: Obx(() {
-        if (controller.isLoading.value && controller.levels.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        // پیدا کردن سطح هدف
-        final targetLevel = controller.levels
-            .where((l) => l.level == _targetLevel)
-            .firstOrNull;
-
-        if (targetLevel == null) {
-          return Center(child: Text(
-            localization?.kycSubmitWizardInvalidLevel ?? 'Invalid level',
-            style: TextStyle(color: AppColors.lightTextSecondary),
-          ));
-        }
-
-        final docs = targetLevel.requiredDocs;
-        // QC-M4: a level with zero docs must not produce a negative
-        // List.generate range — render the review step directly instead.
-        final hasDocs = docs.isNotEmpty;
-
-        return Column(
-          children: [
-            // BUG-05: Show rejection reason from /user/kyc/rejected-data if previous submission was rejected
-            if (controller.rejectionData.value?.message != null &&
-                controller.rejectionData.value!.message!.trim().isNotEmpty)
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: AppColors.error.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(Icons.error_outline, color: AppColors.error),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10nPickAuto(
-                              en: 'Previous Submission Rejected',
-                              fa: 'ارسال قبلی رد شده است',
-                            ),
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.error,
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            controller.rejectionData.value!.message!,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: AppColors.lightTextPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            // Progress indicator
-            if (hasDocs)
-              Container(
-                padding: EdgeInsets.all(16.w),
-                child: Row(
-                  children: List.generate(docs.length * 2 - 1, (index) {
-                    if (index.isOdd) {
-                      return Expanded(child: Container(height: 2, margin: EdgeInsets.symmetric(horizontal: 4), color: _currentStep > index ~/ 2 ? AppColors.lightPrimary : AppColors.lightBorder));
-                    }
-                    final stepIdx = index ~/ 2;
-                    return _StepCircle(step: stepIdx + 1, isActive: _currentStep >= stepIdx, isCurrent: _currentStep == stepIdx);
-                  }),
-                ),
-              ),
-
-            // Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.w),
-                child: hasDocs && _currentStep < docs.length
-                    ? _buildDocUploadStep(localization, docs[_currentStep])
-                    : _buildReviewStep(localization, targetLevel, docs),
-              ),
+            localization?.kycSubmitWizardTitleForLevel(_targetLevel) ??
+                'Verification — level $_targetLevel',
+            style: AppTextStyles.titleMedium.copyWith(
+              fontWeight: FontWeight.w700,
+              color: primaryTextColor,
             ),
+          ),
+        ),
+        body: Obx(() {
+          if (controller.isLoading.value && controller.levels.isEmpty) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              ),
+            );
+          }
 
-            // Bottom button
-            _buildBottomButton(localization, docs),
-          ],
-        );
-      }),
-    ),
+          final targetLevel = controller.levels
+              .where((l) => l.level == _targetLevel)
+              .firstOrNull;
+
+          if (targetLevel == null) {
+            return Center(
+              child: Text(
+                localization?.kycSubmitWizardInvalidLevel ?? 'Invalid level',
+                style: AppTextStyles.bodyMedium.copyWith(color: secondaryTextColor),
+              ),
+            );
+          }
+
+          final docs = targetLevel.requiredDocs;
+          final hasDocs = docs.isNotEmpty;
+
+          return Column(
+            children: [
+              // Rejection alert banner if previous submission was rejected
+              if (controller.rejectionData.value?.message != null &&
+                  controller.rejectionData.value!.message!.trim().isNotEmpty)
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: AppSpacing.sm),
+                  padding: EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xFF450A0A).withValues(alpha: 0.35)
+                        : AppColors.errorContainer,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.error_outline, color: AppColors.error),
+                      SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10nPickAuto(
+                                en: 'Previous Submission Rejected',
+                                fa: 'ارسال قبلی رد شده است',
+                              ),
+                              style: AppTextStyles.labelSmall.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.error,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              controller.rejectionData.value!.message!,
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: primaryTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              // Stepper Progress indicator
+              if (hasDocs)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: AppSpacing.md),
+                  child: Row(
+                    children: List.generate(docs.length * 2 - 1, (index) {
+                      if (index.isOdd) {
+                        return Expanded(
+                          child: Container(
+                            height: 2,
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            color: _currentStep > index ~/ 2
+                                ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                                : (isDark ? AppColors.darkDivider : AppColors.lightBorder),
+                          ),
+                        );
+                      }
+                      final stepIdx = index ~/ 2;
+                      return _StepCircle(
+                        step: stepIdx + 1,
+                        isActive: _currentStep >= stepIdx,
+                        isCurrent: _currentStep == stepIdx,
+                        isDark: isDark,
+                      );
+                    }),
+                  ),
+                ),
+
+              // Content step
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(18.w),
+                  child: hasDocs && _currentStep < docs.length
+                      ? _buildDocUploadStep(
+                          localization,
+                          docs[_currentStep],
+                          isDark,
+                          primaryTextColor,
+                          secondaryTextColor,
+                        )
+                      : _buildReviewStep(
+                          localization,
+                          targetLevel,
+                          docs,
+                          isDark,
+                          primaryTextColor,
+                          secondaryTextColor,
+                        ),
+                ),
+              ),
+
+              // Bottom proceed button
+              _buildBottomButton(localization, docs, isDark),
+            ],
+          );
+        }),
+      ),
     );
   }
 
-  Widget _buildDocUploadStep(AppLocalizations? localization, String docKey) {
-    // v1.1 (KYC-DOC): shared localized labels — unknown per-country keys
-    // (e.g. national_card for IR users) render with a readable generic
-    // label and never crash.
+  Widget _buildDocUploadStep(
+    AppLocalizations? localization,
+    String docKey,
+    bool isDark,
+    Color primaryTextColor,
+    Color secondaryTextColor,
+  ) {
     final docLabel = KycDocLabels.label(localization, docKey);
     final isUploaded = _documents.containsKey(docKey);
 
@@ -206,26 +244,55 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
       children: [
         Text(
           localization?.kycSubmitWizardRequiredDoc ?? 'Required document',
-          style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextSecondary),
+          style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
         ),
-        SizedBox(height: 8.h),
-        Text(docLabel, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
-        SizedBox(height: 24.h),
+        SizedBox(height: AppSpacing.xs),
+        Text(
+          docLabel,
+          style: AppTextStyles.titleMedium.copyWith(
+            fontWeight: FontWeight.w800,
+            color: primaryTextColor,
+          ),
+        ),
+        SizedBox(height: AppSpacing.xl),
         GestureDetector(
-          onTap: () => _pickDocument(docKey),
+          onTap: () {
+            HapticFeedback.lightImpact();
+            _pickDocument(docKey, isDark, primaryTextColor);
+          },
           child: Container(
             width: double.infinity,
-            height: 200.h,
+            height: 190.h,
             decoration: BoxDecoration(
-              color: AppColors.lightBackground,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: isUploaded ? AppColors.success : AppColors.lightBorder, width: 2),
+              color: isDark ? AppColors.darkSurface : AppColors.white,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+              border: Border.all(
+                color: isUploaded
+                    ? AppColors.success
+                    : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                width: isUploaded ? 2 : 1.2,
+              ),
+              boxShadow: !isDark
+                  ? [
+                      BoxShadow(
+                        color: AppColors.black.withValues(alpha: 0.03),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ]
+                  : null,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(isUploaded ? Icons.check_circle : Icons.upload_file, size: 48.sp, color: isUploaded ? AppColors.success : AppColors.lightPrimary),
-                SizedBox(height: 8.h),
+                Icon(
+                  isUploaded ? Icons.check_circle_rounded : Icons.cloud_upload_outlined,
+                  size: 46.sp,
+                  color: isUploaded
+                      ? AppColors.success
+                      : (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary),
+                ),
+                SizedBox(height: AppSpacing.sm),
                 Text(
                   isUploaded
                       ? (localization?.kycSubmitWizardUploaded(
@@ -234,33 +301,51 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                           'Uploaded: ${_documents[docKey]!.split('/').last}')
                       : (localization?.kycSubmitWizardTapToUpload ??
                           'Tap to upload'),
-                  style: TextStyle(fontSize: 14.sp, color: isUploaded ? AppColors.success : AppColors.lightTextSecondary),
+                  style: AppTextStyles.titleSmall.copyWith(
+                    color: isUploaded ? AppColors.success : primaryTextColor,
+                    fontWeight: isUploaded ? FontWeight.w700 : FontWeight.w600,
+                  ),
                 ),
                 if (!isUploaded) ...[
                   SizedBox(height: 4.h),
                   Text(
                     localization?.kycSubmitWizardFileFormat ??
                         'Format: JPG, PNG, PDF — max 20MB',
-                    style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextHint),
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: isDark ? AppColors.softGray : AppColors.lightTextHint,
+                    ),
                   ),
                 ],
               ],
             ),
           ),
         ),
-        SizedBox(height: 16.h),
-        // Document requirements
+        SizedBox(height: AppSpacing.lg),
+        // Document requirements instruction
         Container(
-          padding: EdgeInsets.all(12.w),
-          decoration: BoxDecoration(color: AppColors.infoContainer, borderRadius: BorderRadius.circular(12)),
+          padding: EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AppColors.darkPrimaryContainer.withValues(alpha: 0.3)
+                : AppColors.infoContainer,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          ),
           child: Row(
             children: [
-              Icon(Icons.info_outline, color: AppColors.info, size: 18.sp),
-              SizedBox(width: 8.w),
-              Expanded(child: Text(
-                KycDocLabels.instruction(localization, docKey),
-                style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary),
-              )),
+              Icon(
+                Icons.info_outline,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.info,
+                size: 18.sp,
+              ),
+              SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  KycDocLabels.instruction(localization, docKey),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: primaryTextColor,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -272,29 +357,54 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     AppLocalizations? localization,
     KycLevel level,
     List<String> docs,
+    bool isDark,
+    Color primaryTextColor,
+    Color secondaryTextColor,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           localization?.kycSubmitWizardReviewTitle ?? 'Review & submit',
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary),
+          style: AppTextStyles.titleMedium.copyWith(
+            fontWeight: FontWeight.w800,
+            color: primaryTextColor,
+          ),
         ),
-        SizedBox(height: 16.h),
-        ...docs.map((doc) => _ReviewItem(label: KycDocLabels.label(localization, doc), fileName: _documents[doc]?.split('/').last ?? localization?.kycSubmitWizardNotUploaded ?? 'Not uploaded', isUploaded: _documents.containsKey(doc))),
-        SizedBox(height: 24.h),
+        SizedBox(height: AppSpacing.lg),
+        ...docs.map((doc) => _ReviewItem(
+              label: KycDocLabels.label(localization, doc),
+              fileName: _documents[doc]?.split('/').last ??
+                  localization?.kycSubmitWizardNotUploaded ??
+                  'Not uploaded',
+              isUploaded: _documents.containsKey(doc),
+              isDark: isDark,
+              primaryTextColor: primaryTextColor,
+              secondaryTextColor: secondaryTextColor,
+            )),
+        SizedBox(height: AppSpacing.xl),
         Container(
-          padding: EdgeInsets.all(12.w),
-          decoration: BoxDecoration(color: AppColors.warningContainer, borderRadius: BorderRadius.circular(12)),
+          padding: EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: isDark
+                ? const Color(0xFF78350F).withValues(alpha: 0.25)
+                : AppColors.warningContainer,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            border: Border.all(
+              color: AppColors.warning.withValues(alpha: 0.35),
+            ),
+          ),
           child: Row(
             children: [
-              Icon(Icons.warning_amber, color: AppColors.warning, size: 18.sp),
-              SizedBox(width: 8.w),
-              Expanded(child: Text(
-                localization?.kycSubmitWizardReviewNote ??
-                    'After submission your documents are reviewed by an admin. This usually takes 1–2 business days.',
-                style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary),
-              )),
+              Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20.sp),
+              SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  localization?.kycSubmitWizardReviewNote ??
+                      'After submission your documents are reviewed by an admin. This usually takes 1–2 business days.',
+                  style: AppTextStyles.bodySmall.copyWith(color: primaryTextColor),
+                ),
+              ),
             ],
           ),
         ),
@@ -305,56 +415,92 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   Widget _buildBottomButton(
     AppLocalizations? localization,
     List<String> docs,
+    bool isDark,
   ) {
     final isLastStep = _currentStep >= docs.length;
     final currentDoc =
         (!isLastStep && _currentStep < docs.length) ? docs[_currentStep] : null;
-    final canProceed = isLastStep || (currentDoc != null && _documents.containsKey(currentDoc));
+    final canProceed =
+        isLastStep || (currentDoc != null && _documents.containsKey(currentDoc));
 
     return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(color: AppColors.lightSurface, boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2))]),
+      padding: EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            width: 1,
+          ),
+        ),
+      ),
       child: SafeArea(
         child: SizedBox(
           width: double.infinity,
-          height: 50.h,
+          height: 48.h,
           child: ElevatedButton(
-            onPressed: canProceed ? (isLastStep ? _submit : () => setState(() => _currentStep++)) : null,
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary, foregroundColor: AppColors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), elevation: 0),
-            child: Obx(() => controller.isSubmitting.value
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                : Text(
-                    isLastStep
-                        ? (localization?.kycSubmitWizardSubmit ?? 'Submit documents')
-                        : (localization?.kycSubmitWizardContinue ?? 'Continue'),
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-                  )),
+            onPressed: canProceed
+                ? (isLastStep
+                    ? _submit
+                    : () {
+                        HapticFeedback.lightImpact();
+                        setState(() => _currentStep++);
+                      })
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              ),
+              elevation: 0,
+            ),
+            child: Obx(
+              () => controller.isSubmitting.value
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: isDark ? AppColors.deepBlack : AppColors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      isLastStep
+                          ? (localization?.kycSubmitWizardSubmit ?? 'Submit documents')
+                          : (localization?.kycSubmitWizardContinue ?? 'Continue'),
+                      style: AppTextStyles.labelMedium.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.deepBlack : AppColors.white,
+                      ),
+                    ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Future<void> _pickDocument(String docKey) async {
+  Future<void> _pickDocument(String docKey, bool isDark, Color primaryTextColor) async {
     final localization = AppLocalizations.of(context);
     final String? source = await showModalBottomSheet<String>(
       context: context,
-      backgroundColor: AppColors.lightSurface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: AppSpacing.md),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: 40.w,
                 height: 4.h,
-                margin: EdgeInsets.only(bottom: 16.h),
+                margin: EdgeInsets.only(bottom: AppSpacing.lg),
                 decoration: BoxDecoration(
-                  color: AppColors.lightBorder,
+                  color: isDark ? AppColors.darkDivider : AppColors.lightBorder,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -363,34 +509,42 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                   en: 'Select Upload Source',
                   fa: 'انتخاب نحوه بارگذاری مدرک',
                 ),
-                style: TextStyle(
-                  fontSize: 16.sp,
+                style: AppTextStyles.titleSmall.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextPrimary,
+                  color: primaryTextColor,
                 ),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSpacing.md),
               ListTile(
-                leading: const Icon(Icons.camera_alt_outlined, color: AppColors.lightPrimary),
+                leading: Icon(
+                  Icons.camera_alt_outlined,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                ),
                 title: Text(
                   l10nPickAuto(en: 'Take a Photo (Camera)', fa: 'عکس‌برداری با دوربین'),
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
                 ),
                 onTap: () => Navigator.pop(ctx, 'camera'),
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library_outlined, color: AppColors.lightPrimary),
+                leading: Icon(
+                  Icons.photo_library_outlined,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                ),
                 title: Text(
                   l10nPickAuto(en: 'Choose from Gallery', fa: 'انتخاب تصویر از گالری'),
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
                 ),
                 onTap: () => Navigator.pop(ctx, 'gallery'),
               ),
               ListTile(
-                leading: const Icon(Icons.picture_as_pdf_outlined, color: AppColors.lightPrimary),
+                leading: Icon(
+                  Icons.picture_as_pdf_outlined,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                ),
                 title: Text(
                   l10nPickAuto(en: 'Choose PDF Document', fa: 'انتخاب سند با فرمت PDF'),
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
                 ),
                 onTap: () => Navigator.pop(ctx, 'pdf'),
               ),
@@ -449,14 +603,20 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
       debugPrint('pickDocument error: $e');
       ToastHelper().showErrorToast(
         localization?.pickDocumentFailed ??
-            l10nPickAuto(en: 'Failed to pick document. Please try again.', fa: 'انتخاب مدرک ناموفق بود. لطفاً دوباره تلاش کنید.'),
+            l10nPickAuto(
+              en: 'Failed to pick document. Please try again.',
+              fa: 'انتخاب مدرک ناموفق بود. لطفاً دوباره تلاش کنید.',
+            ),
       );
     }
   }
 
   Future<void> _submit() async {
-    // BUG-04: تبدیل File به multipart upload
-    final success = await controller.submitDocuments(documents: _documents, targetLevel: _targetLevel);
+    HapticFeedback.mediumImpact();
+    final success = await controller.submitDocuments(
+      documents: _documents,
+      targetLevel: _targetLevel,
+    );
     if (success) {
       Get.offAllNamed(BaseRoute.navigation);
     }
@@ -467,18 +627,39 @@ class _StepCircle extends StatelessWidget {
   final int step;
   final bool isActive;
   final bool isCurrent;
-  const _StepCircle({required this.step, required this.isActive, required this.isCurrent});
+  final bool isDark;
+
+  const _StepCircle({
+    required this.step,
+    required this.isActive,
+    required this.isCurrent,
+    required this.isDark,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final inactiveColor = isDark ? AppColors.darkCard : AppColors.lightBorder;
+
     return Container(
-      width: 32.w, height: 32.w,
+      width: 32.w,
+      height: 32.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isActive ? AppColors.lightPrimary : AppColors.lightBorder,
-        border: isCurrent && !isActive ? Border.all(color: AppColors.lightPrimary, width: 2) : null,
+        color: isActive ? activeColor : inactiveColor,
+        border: isCurrent && !isActive
+            ? Border.all(color: activeColor, width: 2)
+            : null,
       ),
-      child: Center(child: Icon(isActive ? Icons.check : Icons.circle, color: isActive ? AppColors.white : AppColors.lightTextHint, size: 16.sp)),
+      child: Center(
+        child: Icon(
+          isActive ? Icons.check : Icons.circle,
+          color: isActive
+              ? (isDark ? AppColors.deepBlack : AppColors.white)
+              : (isDark ? AppColors.softGray : AppColors.lightTextHint),
+          size: 15.sp,
+        ),
+      ),
     );
   }
 }
@@ -487,47 +668,58 @@ class _ReviewItem extends StatelessWidget {
   final String label;
   final String fileName;
   final bool isUploaded;
-  const _ReviewItem({required this.label, required this.fileName, required this.isUploaded});
+  final bool isDark;
+  final Color primaryTextColor;
+  final Color secondaryTextColor;
+
+  const _ReviewItem({
+    required this.label,
+    required this.fileName,
+    required this.isUploaded,
+    required this.isDark,
+    required this.primaryTextColor,
+    required this.secondaryTextColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isPdf = fileName.toLowerCase().endsWith('.pdf');
     final icon = !isUploaded
-        ? Icons.error
-        : (isPdf ? Icons.picture_as_pdf_rounded : Icons.check_circle);
+        ? Icons.error_outline_rounded
+        : (isPdf ? Icons.picture_as_pdf_rounded : Icons.check_circle_rounded);
     final iconColor = isUploaded
-        ? (isPdf ? AppColors.lightPrimary : AppColors.success)
+        ? (isPdf ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary) : AppColors.success)
         : AppColors.error;
 
     return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.w),
+      margin: EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isUploaded ? AppColors.success : AppColors.error),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(
+          color: isUploaded ? AppColors.success.withValues(alpha: 0.4) : AppColors.error,
+        ),
       ),
       child: Row(
         children: [
           Icon(icon, color: iconColor, size: 20.sp),
-          SizedBox(width: 10.w),
+          SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextPrimary,
+                  style: AppTextStyles.labelMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: primaryTextColor,
                   ),
                 ),
                 Text(
                   fileName,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.lightTextSecondary,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: secondaryTextColor,
                   ),
                 ),
               ],

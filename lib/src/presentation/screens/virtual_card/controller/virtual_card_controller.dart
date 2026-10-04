@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_
 class VirtualCardController extends GetxController {
   // Global Variable
   final RxBool isLoading = false.obs;
+  final RxBool isError = false.obs;
   final RxList<RxBool> showAccountNumberList = <RxBool>[].obs;
   final RxString cardBackgroundImage = ''.obs;
 
@@ -32,24 +33,33 @@ class VirtualCardController extends GetxController {
   // Fetch Virtual Cards
   Future<void> fetchVirtualCards() async {
     isLoading.value = true;
+    isError.value = false;
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.getVirtualCardsEndpoint,
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         final virtualCardModel = VirtualCardsModel.fromJson(response.data!);
         virtualCardList.clear();
-        virtualCardList.assignAll(virtualCardModel.data!);
-        showAccountNumberList.assignAll(
-          List.generate(virtualCardList.length, (_) => false.obs),
-        );
+        if (virtualCardModel.data != null) {
+          virtualCardList.assignAll(virtualCardModel.data!);
+          showAccountNumberList.assignAll(
+            List.generate(virtualCardList.length, (_) => false.obs),
+          );
+        }
+      } else {
+        isError.value = true;
       }
     } catch (e, stackTrace) {
+      isError.value = true;
       debugPrint('❌ fetchVirtualCards() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      final ctx = Get.context;
+      if (ctx != null && ctx.mounted) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(ctx)!.allControllerLoadError,
+        );
+      }
     } finally {
       isLoading.value = false;
     }

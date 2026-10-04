@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../widgets/commercial_document_checklist.dart';
@@ -111,8 +112,10 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(
@@ -125,17 +128,17 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
-            color: AppColors.lightTextPrimary,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: AppColors.lightPrimary,
-          unselectedLabelColor: AppColors.lightTextTertiary,
-          indicatorColor: AppColors.lightPrimary,
+          labelColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+          unselectedLabelColor: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+          indicatorColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
           indicatorWeight: 3.h,
           isScrollable: false,
           tabs: [
@@ -166,29 +169,61 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
           controller: _tabController,
           children: [
             // Tab 1: Equity & Crowdfunding Projects
-            ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
-              itemCount: _projects.length + 1,
-              itemBuilder: (context, index) {
-                if (index == 0) return const _EquityNotAvailableNotice();
-                final project = _projects[index - 1];
-                return EquityProjectCard(
-                  project: project,
-                  onInvestTap: () {
-                    InvestmentCalculatorSheet.show(
-                      context,
-                      project: project,
-                    );
-                  },
-                );
-              },
-            ),
+            _projects.isEmpty
+                ? Center(
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.all(AppSpacing.xxl.r),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.business_center_outlined,
+                            size: 56.sp,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'No Projects Available',
+                              fa: 'پروژه‌ای در دسترس نیست',
+                              ar: 'لا توجد مشاريع متاحة',
+                              zh: '暂无可投资项目',
+                            ),
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, AppSpacing.lg.h, AppSpacing.lg.w, AppSpacing.xxl.h),
+                    itemCount: _projects.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) return const _EquityNotAvailableNotice();
+                      final project = _projects[index - 1];
+                      return EquityProjectCard(
+                        project: project,
+                        onInvestTap: () {
+                          InvestmentCalculatorSheet.show(
+                            context,
+                            project: project,
+                          );
+                        },
+                      );
+                    },
+                  ),
 
             // Tab 2: Commercial Document Checklist
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
+              padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, AppSpacing.lg.h, AppSpacing.lg.w, AppSpacing.xxl.h),
               child: CommercialDocumentChecklist(
                 documents: _documents,
                 onUploadTap: (doc) {
@@ -214,12 +249,14 @@ class _EquityNotAvailableNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: AppColors.warning.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(AppSpacing.radius.r),
         border: Border.all(color: AppColors.warning.withValues(alpha: 0.6), width: 1.2),
       ),
       child: Column(
@@ -241,8 +278,8 @@ class _EquityNotAvailableNotice extends StatelessWidget {
                     ar: 'قريباً',
                     zh: '即将上线',
                   ),
-                  style: TextStyle(
-                    fontSize: 10.sp,
+                  style: const TextStyle(
+                    fontSize: 10,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
                   ),
@@ -261,7 +298,7 @@ class _EquityNotAvailableNotice extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -279,7 +316,7 @@ class _EquityNotAvailableNotice extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               height: 1.6,
-              color: AppColors.lightTextSecondary,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
@@ -169,13 +170,13 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
       title: AppLocalizations.of(context)!.hotel_hotel_filters,
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsets.all(AppSpacing.lg.r),
           child: FilledButton(
             onPressed: () => Navigator.of(
               context,
             ).pop(value.copyWith(name: nameController.text.trim())),
             style: FilledButton.styleFrom(
-              backgroundColor: TravelTheme.purple,
+              backgroundColor: TravelTheme.primaryFor(context),
               minimumSize: const Size.fromHeight(52),
             ),
             child: Text(

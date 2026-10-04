@@ -452,16 +452,10 @@ class _SeatSelectionMapState extends State<SeatSelectionMap> {
               // Fuselage Body with Cabin Walls & Seats
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: TravelTheme.cardSurfaceFor(context),
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: TravelTheme.border, width: 1.5.w),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 16,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
+                  border: Border.all(color: TravelTheme.borderFor(context), width: 1.5.w),
+                  boxShadow: TravelTheme.shadowFor(context),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 8.w),
                 child: Column(
@@ -473,7 +467,7 @@ class _SeatSelectionMapState extends State<SeatSelectionMap> {
                     ),
 
                     SizedBox(height: 10.h),
-                    const Divider(height: 1, color: TravelTheme.border),
+                    Divider(height: 1, color: TravelTheme.borderFor(context)),
                     SizedBox(height: 10.h),
 
                     // Rows
@@ -529,16 +523,20 @@ class _CabinClassTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final tabsBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F3F5);
+
     return Container(
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
+        color: tabsBg,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
           Expanded(
             child: _tabButton(
+              context: context,
               title: isRtl ? 'کلاس بیزینس (۲-۲)' : 'Business (2-2)',
               subtitle: isRtl ? 'صندلی‌های عریض‌تر' : 'Wide Recliner',
               icon: Icons.airline_seat_flat_rounded,
@@ -549,6 +547,7 @@ class _CabinClassTabs extends StatelessWidget {
           SizedBox(width: 4.w),
           Expanded(
             child: _tabButton(
+              context: context,
               title: isRtl ? 'کلاس اقتصادی (۳-۳)' : 'Economy (3-3)',
               subtitle: isRtl ? 'کابین اصلی' : 'Main Cabin',
               icon: Icons.airline_seat_recline_normal_rounded,
@@ -562,14 +561,20 @@ class _CabinClassTabs extends StatelessWidget {
   }
 
   Widget _tabButton({
+    required BuildContext context,
     required String title,
     required String subtitle,
     required IconData icon,
     required bool isActive,
     required VoidCallback onTap,
   }) {
+    final activeBg = TravelTheme.cardSurfaceFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
+
     return Material(
-      color: isActive ? Colors.white : Colors.transparent,
+      color: isActive ? activeBg : Colors.transparent,
       borderRadius: BorderRadius.circular(12.r),
       elevation: isActive ? 2 : 0,
       shadowColor: Colors.black.withValues(alpha: 0.08),
@@ -586,7 +591,7 @@ class _CabinClassTabs extends StatelessWidget {
                   Icon(
                     icon,
                     size: 16.r,
-                    color: isActive ? AppColors.lightPrimary : TravelTheme.muted,
+                    color: isActive ? textPrimary : textSecondary,
                   ),
                   SizedBox(width: 6.w),
                   Text(
@@ -594,7 +599,7 @@ class _CabinClassTabs extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
-                      color: isActive ? AppColors.lightPrimary : TravelTheme.muted,
+                      color: isActive ? textPrimary : textSecondary,
                     ),
                   ),
                 ],
@@ -605,8 +610,8 @@ class _CabinClassTabs extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10.sp,
                   color: isActive
-                      ? TravelTheme.blue
-                      : TravelTheme.muted.withValues(alpha: 0.8),
+                      ? brandColor
+                      : textSecondary.withValues(alpha: 0.8),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -629,64 +634,71 @@ class _SeatLegendRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final borderColor = TravelTheme.borderFor(context);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: TravelTheme.background,
+        color: TravelTheme.backgroundFor(context),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: TravelTheme.border),
+        border: Border.all(color: borderColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _legendItem(
+            context: context,
             label: isRtl ? 'در دسترس' : 'Available',
             child: Container(
               width: 18.w,
               height: 18.w,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: TravelTheme.cardSurfaceFor(context),
                 borderRadius: BorderRadius.circular(4.r),
-                border: Border.all(color: TravelTheme.border, width: 1.2.w),
+                border: Border.all(color: borderColor, width: 1.2.w),
               ),
             ),
           ),
           _legendItem(
+            context: context,
             label: isRtl ? 'انتخاب شده' : 'Selected',
             child: Container(
               width: 18.w,
               height: 18.w,
               decoration: BoxDecoration(
-                color: AppColors.lightPrimary,
+                color: TravelTheme.primaryFor(context),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: Icon(Icons.check_rounded, size: 12.r, color: Colors.white),
+              child: const Icon(Icons.check_rounded, size: 12, color: AppColors.white),
             ),
           ),
           _legendItem(
+            context: context,
             label: isRtl ? 'رزرو شده' : 'Reserved',
             child: Container(
               width: 18.w,
               height: 18.w,
               decoration: BoxDecoration(
-                color: const Color(0xFFE4E7EB),
+                color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFE4E7EB),
                 borderRadius: BorderRadius.circular(4.r),
-                border: Border.all(color: const Color(0xFFD0D5DD)),
+                border: Border.all(color: isDark ? borderColor : const Color(0xFFD0D5DD)),
               ),
-              child: Icon(Icons.close_rounded, size: 12.r, color: TravelTheme.muted),
+              child: Icon(Icons.close_rounded, size: 12, color: TravelTheme.textSecondaryFor(context)),
             ),
           ),
           _legendItem(
+            context: context,
             label: isRtl ? 'فضای پا' : 'Legroom',
             child: Container(
               width: 18.w,
               height: 18.w,
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF9E6),
+                color: isDark ? const Color(0xFF332A00) : const Color(0xFFFFF9E6),
                 borderRadius: BorderRadius.circular(4.r),
                 border: Border.all(color: const Color(0xFFF2C94C), width: 1.3.w),
               ),
-              child: Icon(Icons.star_rounded, size: 12.r, color: const Color(0xFFD4AF37)),
+              child: const Icon(Icons.star_rounded, size: 12, color: Color(0xFFD4AF37)),
             ),
           ),
         ],
@@ -694,7 +706,11 @@ class _SeatLegendRow extends StatelessWidget {
     );
   }
 
-  Widget _legendItem({required String label, required Widget child}) {
+  Widget _legendItem({
+    required BuildContext context,
+    required String label,
+    required Widget child,
+  }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -705,7 +721,7 @@ class _SeatLegendRow extends StatelessWidget {
           style: TextStyle(
             fontSize: 10.5.sp,
             fontWeight: FontWeight.w600,
-            color: TravelTheme.ink,
+            color: TravelTheme.textPrimaryFor(context),
           ),
         ),
       ],
@@ -728,6 +744,20 @@ class _VehicleNoseHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final airGradient = isDark
+        ? [const Color(0xFF1E2E42), AppColors.darkSurface]
+        : const [Color(0xFFE2EDFC), Color(0xFFF4F7FB)];
+    final trainGradient = isDark
+        ? [const Color(0xFF1A3828), AppColors.darkSurface]
+        : const [Color(0xFFE0F2E9), Color(0xFFF2F9F5)];
+    final frontIndicatorColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : const Color(0xFFF4F7FB);
+    final trainIndicatorColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : const Color(0xFFF2F9F5);
+
     if (vehicleType == SeatVehicleType.aircraft) {
       return Center(
         child: SizedBox(
@@ -738,13 +768,10 @@ class _VehicleNoseHeader extends StatelessWidget {
               Container(
                 height: 48.h,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFFE2EDFC),
-                      Color(0xFFF4F7FB),
-                    ],
+                    colors: airGradient,
                   ),
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(50.r),
@@ -756,9 +783,9 @@ class _VehicleNoseHeader extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // Cockpit Windows
-                      _cockpitWindow(),
+                      _cockpitWindow(isDark),
                       SizedBox(width: 8.w),
-                      _cockpitWindow(),
+                      _cockpitWindow(isDark),
                     ],
                   ),
                 ),
@@ -766,18 +793,18 @@ class _VehicleNoseHeader extends StatelessWidget {
               // Front indicator & Emergency Exits
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                color: const Color(0xFFF4F7FB),
+                color: frontIndicatorColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _exitBadge(left: true),
+                    _exitBadge(left: true, isDark: isDark),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.arrow_upward_rounded,
                           size: 14.r,
-                          color: TravelTheme.blue,
+                          color: TravelTheme.primaryFor(context),
                         ),
                         SizedBox(width: 4.w),
                         Text(
@@ -785,13 +812,13 @@ class _VehicleNoseHeader extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w700,
-                            color: TravelTheme.blue,
+                            color: TravelTheme.primaryFor(context),
                             letterSpacing: 0.3,
                           ),
                         ),
                       ],
                     ),
-                    _exitBadge(left: false),
+                    _exitBadge(left: false, isDark: isDark),
                   ],
                 ),
               ),
@@ -809,13 +836,10 @@ class _VehicleNoseHeader extends StatelessWidget {
               Container(
                 height: 46.h,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFFE0F2E9),
-                      Color(0xFFF2F9F5),
-                    ],
+                    colors: trainGradient,
                   ),
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(30.r),
@@ -840,7 +864,7 @@ class _VehicleNoseHeader extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                color: const Color(0xFFF2F9F5),
+                color: trainIndicatorColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -868,40 +892,40 @@ class _VehicleNoseHeader extends StatelessWidget {
     }
   }
 
-  Widget _cockpitWindow() {
+  Widget _cockpitWindow(bool isDark) {
     return Container(
       width: 26.w,
       height: 14.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF263238),
+        color: isDark ? const Color(0xFF0F172A) : const Color(0xFF263238),
         borderRadius: BorderRadius.circular(4.r),
       ),
     );
   }
 
-  Widget _exitBadge({required bool left}) {
+  Widget _exitBadge({required bool left, required bool isDark}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F5E9),
+        color: isDark ? const Color(0xFF1E3A24) : const Color(0xFFE8F5E9),
         borderRadius: BorderRadius.circular(4.r),
-        border: Border.all(color: const Color(0xFF81C784)),
+        border: Border.all(color: isDark ? const Color(0xFF2E7D32) : const Color(0xFF81C784)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (left)
-            Icon(Icons.chevron_left_rounded, size: 10.r, color: const Color(0xFF2E7D32)),
+            Icon(Icons.chevron_left_rounded, size: 10.r, color: isDark ? const Color(0xFF81C784) : const Color(0xFF2E7D32)),
           Text(
             isRtl ? 'خروج' : 'EXIT',
             style: TextStyle(
               fontSize: 8.5.sp,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF2E7D32),
+              color: isDark ? const Color(0xFF81C784) : const Color(0xFF2E7D32),
             ),
           ),
           if (!left)
-            Icon(Icons.chevron_right_rounded, size: 10.r, color: const Color(0xFF2E7D32)),
+            Icon(Icons.chevron_right_rounded, size: 10.r, color: isDark ? const Color(0xFF81C784) : const Color(0xFF2E7D32)),
         ],
       ),
     );
@@ -923,6 +947,8 @@ class _ColumnHeaders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
     final isBusiness = cabinClass == SeatCabinClass.business;
     final leftCols = isBusiness ? ['A', 'C'] : ['A', 'B', 'C'];
     final rightCols = isBusiness ? ['D', 'F'] : ['D', 'E', 'F'];
@@ -944,7 +970,7 @@ class _ColumnHeaders extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w800,
-                            color: TravelTheme.ink,
+                            color: textPrimary,
                           ),
                         ),
                       ),
@@ -961,7 +987,7 @@ class _ColumnHeaders extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 9.sp,
                   fontWeight: FontWeight.w800,
-                  color: TravelTheme.muted,
+                  color: textSecondary,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -979,7 +1005,7 @@ class _ColumnHeaders extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w800,
-                            color: TravelTheme.ink,
+                            color: textPrimary,
                           ),
                         ),
                       ),
@@ -1017,6 +1043,7 @@ class _SeatRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
     final isBusiness = cabinClass == SeatCabinClass.business;
     final leftCols = isBusiness ? ['A', 'C'] : ['A', 'B', 'C'];
     final rightCols = isBusiness ? ['D', 'F'] : ['D', 'E', 'F'];
@@ -1041,7 +1068,7 @@ class _SeatRowWidget extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF9E6),
+                  color: isDark ? const Color(0xFF332A00) : const Color(0xFFFFF9E6),
                   borderRadius: BorderRadius.circular(6.r),
                   border: Border.all(color: const Color(0xFFF2C94C), width: 1.w),
                 ),
@@ -1049,14 +1076,14 @@ class _SeatRowWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.warning_amber_rounded,
-                        size: 11.r, color: const Color(0xFF8A6D00)),
+                        size: 11.r, color: isDark ? const Color(0xFFFFD54F) : const Color(0xFF8A6D00)),
                     SizedBox(width: 4.w),
                     Text(
                       isRtl ? 'ردیف خروج اضطراری · فضای پای بیشتر' : 'Emergency Exit Row · Extra Legroom',
                       style: TextStyle(
                         fontSize: 9.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF8A6D00),
+                        color: isDark ? const Color(0xFFFFD54F) : const Color(0xFF8A6D00),
                       ),
                     ),
                   ],
@@ -1097,12 +1124,12 @@ class _SeatRowWidget extends StatelessWidget {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: isExitRow
-                            ? const Color(0xFFFFF3CD)
-                            : TravelTheme.background,
+                            ? (isDark ? const Color(0xFF332A00) : const Color(0xFFFFF3CD))
+                            : TravelTheme.backgroundFor(context),
                         shape: BoxShape.circle,
                         border: isExitRow
                             ? Border.all(color: const Color(0xFFF2C94C), width: 1.w)
-                            : null,
+                            : Border.all(color: TravelTheme.borderFor(context)),
                       ),
                       child: Text(
                         '$rowNum',
@@ -1110,8 +1137,8 @@ class _SeatRowWidget extends StatelessWidget {
                           fontSize: 10.5.sp,
                           fontWeight: FontWeight.w800,
                           color: isExitRow
-                              ? const Color(0xFF856404)
-                              : TravelTheme.muted,
+                              ? (isDark ? const Color(0xFFFFD54F) : const Color(0xFF856404))
+                              : TravelTheme.textSecondaryFor(context),
                         ),
                       ),
                     ),
@@ -1163,7 +1190,12 @@ class _SeatItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
     final status = seat.status;
+    final primaryColor = TravelTheme.primaryFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
 
     // Styling based on seat status
     final Color bgColor;
@@ -1172,23 +1204,23 @@ class _SeatItemCard extends StatelessWidget {
 
     switch (status) {
       case SeatStatus.selected:
-        bgColor = AppColors.lightPrimary;
-        border = Border.all(color: AppColors.lightPrimary, width: 1.5.w);
+        bgColor = primaryColor;
+        border = Border.all(color: primaryColor, width: 1.5.w);
         shadows = [
           BoxShadow(
-            color: AppColors.lightPrimary.withValues(alpha: 0.3),
+            color: primaryColor.withValues(alpha: 0.3),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ];
         break;
       case SeatStatus.reserved:
-        bgColor = const Color(0xFFECEFF1);
-        border = Border.all(color: const Color(0xFFD3D8DC), width: 1.w);
+        bgColor = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFECEFF1);
+        border = Border.all(color: isDark ? borderColor : const Color(0xFFD3D8DC), width: 1.w);
         shadows = null;
         break;
       case SeatStatus.premium:
-        bgColor = const Color(0xFFFFFBEB);
+        bgColor = isDark ? const Color(0xFF332A00) : const Color(0xFFFFFBEB);
         border = Border.all(color: const Color(0xFFD4AF37), width: 1.4.w);
         shadows = [
           BoxShadow(
@@ -1199,8 +1231,8 @@ class _SeatItemCard extends StatelessWidget {
         ];
         break;
       case SeatStatus.available:
-        bgColor = Colors.white;
-        border = Border.all(color: TravelTheme.border, width: 1.2.w);
+        bgColor = TravelTheme.cardSurfaceFor(context);
+        border = Border.all(color: borderColor, width: 1.2.w);
         shadows = [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -1237,12 +1269,12 @@ class _SeatItemCard extends StatelessWidget {
                     width: width * 0.5,
                     decoration: BoxDecoration(
                       color: status == SeatStatus.selected
-                          ? Colors.white.withValues(alpha: 0.3)
+                          ? AppColors.white.withValues(alpha: 0.3)
                           : status == SeatStatus.reserved
-                              ? const Color(0xFFCFD8DC)
+                              ? (isDark ? AppColors.darkCard : const Color(0xFFCFD8DC))
                               : status == SeatStatus.premium
                                   ? const Color(0xFFD4AF37).withValues(alpha: 0.4)
-                                  : TravelTheme.border,
+                                  : borderColor,
                       borderRadius: BorderRadius.vertical(
                         bottom: Radius.circular(3.r),
                       ),
@@ -1252,7 +1284,7 @@ class _SeatItemCard extends StatelessWidget {
 
                 // Center Seat Icon / Letter / Status
                 Center(
-                  child: _buildSeatContent(status),
+                  child: _buildSeatContent(status, textPrimary, textSecondary, isDark),
                 ),
 
                 // Premium Star Badge
@@ -1274,19 +1306,24 @@ class _SeatItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSeatContent(SeatStatus status) {
+  Widget _buildSeatContent(
+    SeatStatus status,
+    Color textPrimary,
+    Color textSecondary,
+    bool isDark,
+  ) {
     switch (status) {
       case SeatStatus.selected:
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.check_rounded, size: 14.r, color: Colors.white),
+            const Icon(Icons.check_rounded, size: 14, color: AppColors.white),
             Text(
               seat.code,
               style: TextStyle(
                 fontSize: 8.5.sp,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppColors.white,
               ),
             ),
           ],
@@ -1294,8 +1331,8 @@ class _SeatItemCard extends StatelessWidget {
       case SeatStatus.reserved:
         return Icon(
           Icons.close_rounded,
-          size: 14.r,
-          color: const Color(0xFF90A4AE),
+          size: 14,
+          color: isDark ? AppColors.softGray : const Color(0xFF90A4AE),
         );
       case SeatStatus.premium:
         return Text(
@@ -1303,7 +1340,7 @@ class _SeatItemCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 11.5.sp,
             fontWeight: FontWeight.w800,
-            color: const Color(0xFF8A6D00),
+            color: isDark ? const Color(0xFFFFD54F) : const Color(0xFF8A6D00),
           ),
         );
       case SeatStatus.available:
@@ -1312,7 +1349,7 @@ class _SeatItemCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 11.5.sp,
             fontWeight: FontWeight.w700,
-            color: TravelTheme.ink,
+            color: textPrimary,
           ),
         );
     }
@@ -1344,18 +1381,18 @@ class _SeatSummaryBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final count = selectedSeats.length;
     final isSelectionReady = count > 0;
+    final isDark = TravelTheme.isDark(context);
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: const Border(top: BorderSide(color: TravelTheme.border)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 16,
-            offset: const Offset(0, -4),
-          ),
-        ],
+        color: cardBg,
+        border: Border(top: BorderSide(color: borderColor)),
+        boxShadow: TravelTheme.shadowFor(context),
       ),
       padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 14.h),
       child: SafeArea(
@@ -1375,7 +1412,7 @@ class _SeatSummaryBar extends StatelessWidget {
                           Icon(
                             Icons.airline_seat_recline_extra_rounded,
                             size: 16.r,
-                            color: TravelTheme.blue,
+                            color: brandColor,
                           ),
                           SizedBox(width: 6.w),
                           Text(
@@ -1383,7 +1420,7 @@ class _SeatSummaryBar extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w700,
-                              color: TravelTheme.muted,
+                              color: textSecondary,
                             ),
                           ),
                           SizedBox(width: 6.w),
@@ -1393,7 +1430,7 @@ class _SeatSummaryBar extends StatelessWidget {
                               vertical: 1.h,
                             ),
                             decoration: BoxDecoration(
-                              color: TravelTheme.background,
+                              color: TravelTheme.backgroundFor(context),
                               borderRadius: BorderRadius.circular(6.r),
                             ),
                             child: Text(
@@ -1401,7 +1438,7 @@ class _SeatSummaryBar extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.bold,
-                                color: TravelTheme.ink,
+                                color: textPrimary,
                               ),
                             ),
                           ),
@@ -1415,7 +1452,7 @@ class _SeatSummaryBar extends StatelessWidget {
                               : 'Select your seat(s) on the cabin map',
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: TravelTheme.muted,
+                            color: textSecondary,
                           ),
                         )
                       else
@@ -1429,11 +1466,15 @@ class _SeatSummaryBar extends StatelessWidget {
                                 vertical: 2.h,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.lightPrimaryContainer
-                                    .withValues(alpha: 0.3),
+                                color: isDark
+                                    ? AppColors.darkPrimaryContainer
+                                    : AppColors.lightPrimaryContainer
+                                        .withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(6.r),
                                 border: Border.all(
-                                  color: AppColors.mutedBlue.withValues(alpha: 0.4),
+                                  color: isDark
+                                      ? AppColors.darkPrimary.withValues(alpha: 0.4)
+                                      : AppColors.mutedBlue.withValues(alpha: 0.4),
                                 ),
                               ),
                               child: Text(
@@ -1441,7 +1482,9 @@ class _SeatSummaryBar extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.lightPrimary,
+                                  color: isDark
+                                      ? AppColors.darkPrimary
+                                      : AppColors.lightPrimary,
                                 ),
                               ),
                             );
@@ -1459,7 +1502,7 @@ class _SeatSummaryBar extends StatelessWidget {
                       isRtl ? 'هزینه اضافی' : 'Seat Fee',
                       style: TextStyle(
                         fontSize: 10.5.sp,
-                        color: TravelTheme.muted,
+                        color: textSecondary,
                       ),
                     ),
                     Text(
@@ -1471,7 +1514,7 @@ class _SeatSummaryBar extends StatelessWidget {
                         fontWeight: FontWeight.w900,
                         color: totalExtraFees > 0
                             ? TravelTheme.green
-                            : TravelTheme.ink,
+                            : textPrimary,
                       ),
                     ),
                   ],

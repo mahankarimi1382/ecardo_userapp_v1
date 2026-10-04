@@ -21,6 +21,7 @@ import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/refe
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/sign_up_bonus_pop_up.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/top_header_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/dashboard_sliver_header.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/balance_hero_section.dart';
 
 /// Dashboard structure (v1.0.60):
 /// CustomScrollView
@@ -68,19 +69,28 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (_, _) {
         showExitApplicationAlertDialog();
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
+        value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          systemNavigationBarColor:
+              isDark ? AppColors.darkBackground : AppColors.lightBackground,
+          systemNavigationBarIconBrightness:
+              isDark ? Brightness.light : Brightness.dark,
+        ),
         child: Scaffold(
-          backgroundColor: AppColors.lightBackground,
+          backgroundColor: theme.scaffoldBackgroundColor,
           body: Stack(
             children: [
               Obx(() {
@@ -94,23 +104,42 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.cloud_off_rounded,
-                              size: 48, color: AppColors.lightPrimary),
+                          Icon(
+                            Icons.cloud_off_rounded,
+                            size: 48,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary,
+                          ),
                           const SizedBox(height: 12),
                           Text(
                             homeController.loadError.value,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                           const SizedBox(height: 16),
                           TextButton.icon(
                             onPressed: () => homeController.loadData(),
                             icon: const Icon(Icons.refresh_rounded),
+                            style: TextButton.styleFrom(
+                              foregroundColor: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary,
+                            ),
                             label: Text(
-                              l10nPick(context, en: 'Retry', fa: 'تلاش مجدد', ar: 'إعادة المحاولة', zh: '重试'),
+                              l10nPick(
+                                context,
+                                en: 'Retry',
+                                fa: 'تلاش مجدد',
+                                ar: 'إعادة المحاولة',
+                                zh: '重试',
+                              ),
                             ),
                           ),
                         ],
@@ -119,7 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
                 return RefreshIndicator(
-                  color: AppColors.lightPrimary,
+                  color: theme.colorScheme.primary,
+                  backgroundColor:
+                      isDark ? AppColors.darkSurface : AppColors.lightSurface,
                   onRefresh: () => homeController.loadData(),
                   child: CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -132,8 +163,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           topInset: MediaQuery.paddingOf(context).top,
                         ),
                       ),
-                      // --- purple UID + action buttons (unchanged section) ---
+                      // --- TopHeader (UID only) ---
                       const SliverToBoxAdapter(child: TopHeaderSection()),
+                      const SliverToBoxAdapter(
+                        child: SizedBox(height: AppSpacing.sectionGap),
+                      ),
+                      // --- Balance Hero (replaces old action buttons) ---
+                      const SliverToBoxAdapter(child: BalanceHeroSection()),
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),

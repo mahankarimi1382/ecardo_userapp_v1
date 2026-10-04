@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_error_view.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../controllers/escrow_controller.dart';
 import '../models/escrow_models.dart';
@@ -15,6 +19,7 @@ class EscrowListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EscrowController controller = Get.put(EscrowController());
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final filterTabs = [
       {'key': 'ALL', 'label': l10nPick(context, fa: 'همه معاملات', en: 'All')},
@@ -26,69 +31,101 @@ class EscrowListScreen extends StatelessWidget {
       {'key': 'DISPUTED', 'label': l10nPick(context, fa: 'در اختلاف', en: 'Disputed')},
     ];
 
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-          onPressed: () => Get.back(),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size: AppSpacing.iconSm.sp,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            Get.back();
+          },
         ),
         title: Text(
           l10nPick(context, fa: 'معاملات امانی (Escrow)', en: 'Escrow Transactions'),
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w900, color: AppColors.lightTextPrimary),
+          style: AppTextStyles.titleMedium.copyWith(
+            fontWeight: FontWeight.w900,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: () => controller.loadOrders(refresh: true),
+            icon: Icon(
+              Icons.refresh_rounded,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: l10nPick(context, fa: 'تازه‌سازی', en: 'Refresh'),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              controller.loadOrders(refresh: true);
+            },
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppColors.lightPrimary,
+        backgroundColor: primaryAccent,
+        foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
         elevation: 4,
-        onPressed: () => Get.to(() => const EscrowCreateScreen()),
-        icon: const Icon(Icons.add_rounded, color: Colors.white),
+        onPressed: () {
+          HapticFeedback.lightImpact();
+          Get.to(() => const EscrowCreateScreen());
+        },
+        icon: const Icon(Icons.add_rounded),
         label: Text(
           l10nPick(context, fa: 'ایجاد معامله جدید', en: 'New Deal'),
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: Colors.white),
+          style: AppTextStyles.labelLarge.copyWith(
+            fontWeight: FontWeight.w800,
+            color: isDark ? AppColors.deepBlack : AppColors.white,
+          ),
         ),
       ),
       body: Column(
         children: [
           // Filter Tabs (Horizontal scroll)
           Container(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: 10.h),
+            color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            padding: EdgeInsetsDirectional.symmetric(vertical: AppSpacing.sm.h),
             child: SizedBox(
-              height: 36.h,
+              height: 42.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w),
                 itemCount: filterTabs.length,
-                separatorBuilder: (_, _) => SizedBox(width: 8.w),
+                separatorBuilder: (_, _) => SizedBox(width: AppSpacing.sm.w),
                 itemBuilder: (ctx, i) {
                   final tab = filterTabs[i];
                   return Obx(() {
                     final isSel = controller.selectedFilter.value == tab['key'];
                     return InkWell(
-                      onTap: () => controller.setFilter(tab['key']!),
-                      borderRadius: BorderRadius.circular(18.r),
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        controller.setFilter(tab['key']!);
+                      },
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                        padding: EdgeInsetsDirectional.symmetric(horizontal: 14.w, vertical: 8.h),
                         decoration: BoxDecoration(
-                          color: isSel ? AppColors.lightPrimary : Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(18.r),
+                          color: isSel
+                              ? primaryAccent
+                              : (isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9)),
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                         ),
                         child: Center(
                           child: Text(
                             tab['label']!,
-                            style: TextStyle(
-                              fontSize: 11.sp,
+                            style: AppTextStyles.labelSmall.copyWith(
                               fontWeight: isSel ? FontWeight.w800 : FontWeight.w600,
-                              color: isSel ? Colors.white : Colors.grey.shade700,
+                              color: isSel
+                                  ? (isDark ? AppColors.deepBlack : AppColors.white)
+                                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                             ),
                           ),
                         ),
@@ -99,53 +136,79 @@ class EscrowListScreen extends StatelessWidget {
               ),
             ),
           ),
-          const Divider(height: 1),
+          Divider(
+            height: 1,
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
 
-          // Main list
+          // Main list & States
           Expanded(
             child: Obx(() {
+              // 1. Loading State
               if (controller.isLoading.value && controller.orders.isEmpty) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.lightPrimary));
+                return const EscrowSkeletonLoader();
               }
 
-              if (controller.orders.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32.w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.gavel_rounded, size: 54.w, color: Colors.grey.shade300),
-                        SizedBox(height: 14.h),
-                        Text(
-                          l10nPick(context, fa: 'معامله امانی یافت نشد', en: 'No Escrow Deals Found'),
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800, color: AppColors.lightTextPrimary),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          l10nPick(
-                            context,
-                            fa: 'با ایجاد معامله امانی جدید، وجه معامله تا زمان تایید تحویل کالا نزد پلتفرم با امنیت کامل قفل می‌ماند.',
-                            en: 'Create a deal to secure funds until buyer delivery approval.',
-                          ),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
-                        ),
-                      ],
+              // 2. Error State
+              if (controller.errorMessage.value.isNotEmpty && controller.orders.isEmpty) {
+                return RefreshIndicator(
+                  onRefresh: () => controller.loadOrders(refresh: true),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsetsDirectional.all(AppSpacing.xl.w),
+                    child: EcardoErrorView(
+                      title: l10nPick(context, fa: 'خطا در بارگذاری معاملات', en: 'Failed to Load Deals'),
+                      message: controller.errorMessage.value,
+                      onRetry: () {
+                        HapticFeedback.lightImpact();
+                        controller.loadOrders(refresh: true);
+                      },
                     ),
                   ),
                 );
               }
 
+              // 3. Empty State
+              if (controller.orders.isEmpty) {
+                return RefreshIndicator(
+                  onRefresh: () => controller.loadOrders(refresh: true),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsetsDirectional.all(AppSpacing.xl.w),
+                    child: EcardoEmptyState(
+                      iconData: Icons.gavel_rounded,
+                      title: l10nPick(context, fa: 'معامله امانی یافت نشد', en: 'No Escrow Deals Found'),
+                      description: l10nPick(
+                        context,
+                        fa: 'با ایجاد معامله امانی جدید، وجه معامله تا زمان تایید تحویل کالا نزد پلتفرم با امنیت کامل قفل می‌ماند.',
+                        en: 'Create a deal to secure funds until buyer delivery approval.',
+                      ),
+                      primaryActionLabel: l10nPick(context, fa: 'ایجاد معامله جدید', en: 'New Escrow Deal'),
+                      onPrimaryAction: () {
+                        HapticFeedback.lightImpact();
+                        Get.to(() => const EscrowCreateScreen());
+                      },
+                    ),
+                  ),
+                );
+              }
+
+              // 4. Content State
               return RefreshIndicator(
                 onRefresh: () => controller.loadOrders(refresh: true),
                 child: ListView.separated(
-                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 80.h),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                    AppSpacing.page.w,
+                    AppSpacing.page.h,
+                    AppSpacing.page.w,
+                    80.h,
+                  ),
                   itemCount: controller.orders.length,
-                  separatorBuilder: (_, _) => SizedBox(height: 12.h),
+                  separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
                   itemBuilder: (ctx, idx) {
                     final deal = controller.orders[idx];
-                    return _buildDealCard(context, deal);
+                    return _buildDealCard(context, deal, isDark, primaryAccent);
                   },
                 ),
               );
@@ -156,21 +219,29 @@ class EscrowListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDealCard(BuildContext context, EscrowOrderModel deal) {
+  Widget _buildDealCard(
+    BuildContext context,
+    EscrowOrderModel deal,
+    bool isDark,
+    Color primaryAccent,
+  ) {
     return InkWell(
       onTap: () {
+        HapticFeedback.lightImpact();
         Get.to(() => EscrowDetailScreen(orderId: deal.id));
       },
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
       child: Container(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: Colors.grey.shade200),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -185,66 +256,107 @@ class EscrowListScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.verified_outlined, size: 16.w, color: AppColors.lightPrimary),
-                    SizedBox(width: 6.w),
+                    Icon(
+                      Icons.verified_outlined,
+                      size: AppSpacing.iconXs.sp,
+                      color: primaryAccent,
+                    ),
+                    SizedBox(width: AppSpacing.xs.w),
                     Text(
                       deal.contractNo,
-                      style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, fontFamily: 'monospace'),
+                      style: AppTextStyles.labelMedium.copyWith(
+                        fontFamily: 'monospace',
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
                     ),
                   ],
                 ),
                 EscrowStatusBadge(status: deal.status, label: deal.statusLabel),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: AppSpacing.sm.h),
 
             // Title
             Text(
               deal.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: AppColors.lightTextPrimary),
+              style: AppTextStyles.titleMedium.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 6.h),
+            SizedBox(height: AppSpacing.sm.h),
 
-            // Parties: Buyer / Seller
+            // Parties: Buyer / Seller monograms
             Row(
               children: [
                 Expanded(
-                  child: Text(
-                    'خریدار: ${deal.buyer?.name ?? "..."}',
-                    style: TextStyle(fontSize: 11.sp, color: Colors.grey.shade600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  child: EscrowCounterpartyAvatar(
+                    name: deal.buyer?.name ?? '...',
+                    role: l10nPick(context, fa: 'خریدار', en: 'Buyer'),
+                    isBuyer: true,
                   ),
                 ),
+                SizedBox(width: AppSpacing.sm.w),
                 Expanded(
-                  child: Text(
-                    'فروشنده: ${deal.seller?.name ?? "..."}',
-                    style: TextStyle(fontSize: 11.sp, color: Colors.grey.shade600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  child: EscrowCounterpartyAvatar(
+                    name: deal.seller?.name ?? '...',
+                    role: l10nPick(context, fa: 'فروشنده', en: 'Seller'),
+                    isBuyer: false,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 12.h),
+            SizedBox(height: AppSpacing.md.h),
 
-            // Amount & Currency
+            // Divider
+            Divider(
+              height: 1,
+              color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            ),
+            SizedBox(height: AppSpacing.sm.h),
+
+            // Amount & Currency + View Details CTA
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${deal.amount.toStringAsFixed(0)} ${deal.currency}',
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w900, color: AppColors.lightPrimary),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10nPick(context, fa: 'مبلغ امانی', en: 'Escrow Amount'),
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                    Text(
+                      '${deal.amount.toStringAsFixed(0)} ${deal.currency}',
+                      style: AppTextStyles.titleMedium.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: primaryAccent,
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       l10nPick(context, fa: 'مشاهده جزئیات', en: 'View Details'),
-                      style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+                      style: AppTextStyles.labelSmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      ),
                     ),
-                    Icon(Icons.chevron_left_rounded, size: 18.w, color: Colors.grey.shade400),
+                    SizedBox(width: 4.w),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 14.sp,
+                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                    ),
                   ],
                 ),
               ],

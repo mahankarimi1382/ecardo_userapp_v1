@@ -1,3 +1,5 @@
+import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
+
 class TransactionsModel {
   String? status;
   String? message;
@@ -87,6 +89,64 @@ class Transactions {
     trxCurrency = json['trx_currency'];
     trxCurrencySymbol = json['trx_currency_symbol'];
     trxCurrencyCode = json['trx_currency_code'];
+  }
+
+  /// Resolved currency code or symbol
+  String? get currency => trxCurrencyCode ?? trxCurrency ?? '';
+
+  /// Parsed DateTime from [createdAt] timestamp
+  DateTime? get parsedDate => JalaliDateHelper.tryParse(createdAt);
+
+  /// Normalized lowercase status string
+  String get normalizedStatus => (status ?? '').trim().toLowerCase();
+
+  /// Whether the transaction is in a successful state
+  bool get isSuccess =>
+      normalizedStatus == 'success' ||
+      normalizedStatus == 'approved' ||
+      normalizedStatus == 'completed' ||
+      normalizedStatus == 'complete' ||
+      normalizedStatus == '1';
+
+  /// Whether the transaction is currently pending/processing
+  bool get isPending =>
+      normalizedStatus == 'pending' ||
+      normalizedStatus == 'processing' ||
+      normalizedStatus == '2';
+
+  /// Whether the transaction has failed/rejected/cancelled
+  bool get isFailed =>
+      !isSuccess &&
+      !isPending &&
+      normalizedStatus.isNotEmpty &&
+      normalizedStatus != '0';
+
+  /// Monogram initials (1-2 characters) from description, counterparty or type.
+  String get initials {
+    final text = (description ?? '').trim();
+    if (text.isNotEmpty) {
+      final words =
+          text.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+      if (words.length >= 2) {
+        final firstChar = words[0].isNotEmpty ? words[0].substring(0, 1) : '';
+        final secondChar = words[1].isNotEmpty ? words[1].substring(0, 1) : '';
+        return '$firstChar$secondChar'.toUpperCase();
+      } else if (words.isNotEmpty && words[0].isNotEmpty) {
+        return words[0].substring(0, 1).toUpperCase();
+      }
+    }
+    final t = (type ?? '').trim();
+    if (t.isNotEmpty) {
+      return t.substring(0, 1).toUpperCase();
+    }
+    return 'TX';
+  }
+
+  /// Parsed numerical amount
+  double get numericAmount {
+    if (amount == null) return 0.0;
+    final cleaned = amount!.replaceAll(',', '').trim();
+    return double.tryParse(cleaned) ?? 0.0;
   }
 }
 

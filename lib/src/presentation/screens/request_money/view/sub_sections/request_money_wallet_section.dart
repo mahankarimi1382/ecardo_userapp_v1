@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
 
@@ -13,17 +14,23 @@ class RequestMoneyWalletSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final RequestMoneyController controller = Get.find();
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Obx(
-      () => InkWell(
+    return Obx(() {
+      final currentWallet = controller.wallet.value;
+      if (currentWallet == null) return const SizedBox.shrink();
+
+      return InkWell(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         onTap: () {
+          HapticFeedback.lightImpact();
           Get.bottomSheet(
             CommonDropdownWalletBottomSheet(
               notFoundText:
                   localization.requestMoneyWalletSectionWalletsNotFound,
               dropdownItems: controller.requestMoneyWalletsList,
               bottomSheetHeight: 450,
-              currentlySelectedValue: controller.wallet.value!.name,
+              currentlySelectedValue: currentWallet.name,
               onItemSelected: (value) async {
                 final selectedWallet = controller.requestMoneyWalletsList
                     .firstWhere((w) => w.name == value);
@@ -35,92 +42,156 @@ class RequestMoneyWalletSection extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(PngAssets.addMoneyFrame),
-              fit: BoxFit.cover,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            gradient: LinearGradient(
+              colors: isDark
+                  ? [
+                      const Color(0xFF1E2836),
+                      const Color(0xFF151C26),
+                    ]
+                  : [
+                      AppColors.deepBlack,
+                      const Color(0xFF2A2A28),
+                    ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isDark
+                  ? AppColors.darkBorder
+                  : AppColors.mainSoftBlue.withValues(alpha: 0.25),
+              width: 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                blurRadius: AppSpacing.md,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppSpacing.xl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  controller.wallet.value!.isDefault == true
-                      ? Container(
-                          alignment: Alignment.center,
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Text(
-                            controller.wallet.value!.symbol!,
-                            style: TextStyle(
+                  Container(
+                    alignment: Alignment.center,
+                    width: AppSpacing.iconLg,
+                    height: AppSpacing.iconLg,
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.white.withValues(alpha: 0.25),
+                        width: 1,
+                      ),
+                    ),
+                    child: currentWallet.isDefault == true ||
+                            currentWallet.icon == null ||
+                            currentWallet.icon!.isEmpty
+                        ? Text(
+                            currentWallet.symbol ?? currentWallet.code ?? r'$',
+                            style: const TextStyle(
                               letterSpacing: 0,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: AppColors.lightPrimary,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                              color: AppColors.white,
+                            ),
+                          )
+                        : ClipOval(
+                            child: Image.network(
+                              currentWallet.icon!,
+                              width: AppSpacing.iconLg,
+                              height: AppSpacing.iconLg,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Text(
+                                  currentWallet.symbol ?? r'$',
+                                  style: const TextStyle(
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 15,
+                                    color: AppColors.white,
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        )
-                      : Container(
-                          alignment: Alignment.center,
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Image.network(
-                            controller.wallet.value!.icon!,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                PngAssets.commonErrorIcon,
-                                color: AppColors.error.withValues(alpha: 0.7),
-                              );
-                            },
-                          ),
-                        ),
-                  SizedBox(width: 10),
-                  Text(
-                    controller.wallet.value!.name!,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20,
-                      color: AppColors.white,
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Text(
+                      currentWallet.name ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 18,
+                        color: AppColors.white,
+                      ),
                     ),
                   ),
-                  SizedBox(width: 16),
-                  Image.asset(PngAssets.commonArrowDownIcon, width: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          currentWallet.code ?? "",
+                          style: const TextStyle(
+                            color: AppColors.warmWhite,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: AppColors.warmWhite,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
               Text(
                 localization.requestMoneyWalletSectionBalance,
                 style: TextStyle(
                   letterSpacing: 0,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  color: AppColors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: AppColors.warmWhite.withValues(alpha: 0.70),
                 ),
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.xs),
               Text(
-                "${controller.wallet.value!.formattedBalance} ${controller.wallet.value!.code}",
-                style: TextStyle(
-                  letterSpacing: 0,
+                "${currentWallet.formattedBalance} ${currentWallet.code}",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  letterSpacing: -0.5,
                   fontWeight: FontWeight.w900,
-                  fontSize: 30,
+                  fontSize: 28,
                   color: AppColors.white,
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

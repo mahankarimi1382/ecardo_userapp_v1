@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 import '../core/models/travel_models.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -107,9 +108,9 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
               onChanged: _search,
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.hotel_search_by_city_or_hotel_name,
-                prefixIcon: const Icon(
+                prefixIcon: Icon(
                   Icons.search_rounded,
-                  color: TravelTheme.purple,
+                  color: TravelTheme.primaryFor(context),
                 ),
                 suffixIcon: queryController.text.isEmpty
                     ? null
@@ -135,13 +136,15 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
               ),
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.sm.h),
           Expanded(
             child: loading
-                ? const Center(child: CircularProgressIndicator())
+                ? const TravelShimmerLoading(type: TravelShimmerType.tile, count: 6)
                 : visible.isEmpty
                 ? TravelEmptyState(
-                    message: AppLocalizations.of(context)!.hotel_no_matching_city_or_hotel_was_found,
+                    icon: Icons.location_city_rounded,
+                    title: AppLocalizations.of(context)!.hotel_no_matching_city_or_hotel_was_found,
+                    message: AppLocalizations.of(context)!.hotel_search_by_city_or_hotel_name,
                   )
                 : ListView.separated(
                     controller: scrollController,
@@ -149,7 +152,10 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                     itemCount:
                         visible.length +
                         (visible.length < suggestions.length ? 1 : 0),
-                    separatorBuilder: (_, _) => const Divider(height: 1),
+                    separatorBuilder: (_, _) => Divider(
+                      height: 1,
+                      color: TravelTheme.borderFor(context),
+                    ),
                     itemBuilder: (context, index) {
                       if (index == visible.length) {
                         return const Padding(
@@ -164,26 +170,37 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                       return ListTile(
                         contentPadding: EdgeInsets.symmetric(vertical: 5.h),
                         leading: CircleAvatar(
-                          backgroundColor: TravelTheme.purple.withValues(
+                          backgroundColor: TravelTheme.primaryFor(context).withValues(
                             alpha: .1,
                           ),
                           child: Icon(
                             suggestion.kind == 'hotel'
                                 ? Icons.hotel_rounded
                                 : Icons.location_city_rounded,
-                            color: TravelTheme.purple,
+                            color: TravelTheme.primaryFor(context),
                           ),
                         ),
                         title: TravelBidiText(
                           suggestion.title,
-                          style: const TextStyle(fontWeight: FontWeight.w900),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: TravelTheme.textPrimaryFor(context),
+                          ),
                         ),
                         subtitle: hotelCount == null
                             ? (suggestion.subtitle.isEmpty
                                   ? null
-                                  : TravelBidiText(suggestion.subtitle))
+                                  : TravelBidiText(
+                                      suggestion.subtitle,
+                                      style: TextStyle(
+                                        color: TravelTheme.textSecondaryFor(context),
+                                      ),
+                                    ))
                             : Text(
                                 AppLocalizations.of(context)!.hotelHotelsCount(hotelCount.toString()),
+                                style: TextStyle(
+                                  color: TravelTheme.textSecondaryFor(context),
+                                ),
                               ),
                         trailing: const Icon(Icons.chevron_right_rounded),
                         onTap: () => Navigator.of(context).pop(suggestion),
@@ -256,7 +273,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
       title: AppLocalizations.of(context)!.hotel_select_stay_dates,
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsets.all(AppSpacing.lg.r),
           child: FilledButton(
             onPressed: start != null && end != null && end.isAfter(start)
                 ? () => Navigator.of(
@@ -264,7 +281,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                   ).pop(DateTimeRange(start: start, end: end))
                 : null,
             style: FilledButton.styleFrom(
-              backgroundColor: TravelTheme.purple,
+              backgroundColor: TravelTheme.primaryFor(context),
               minimumSize: const Size.fromHeight(52),
             ),
             child: Text(
@@ -321,8 +338,8 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                     SizedBox(height: 10.h),
                     Text(
                       AppLocalizations.of(context)!.hotelNightsCount(end.difference(start).inDays),
-                      style: const TextStyle(
-                        color: TravelTheme.purple,
+                      style: TextStyle(
+                        color: TravelTheme.primaryFor(context),
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -338,8 +355,8 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                 calendarViewMode: CalendarDatePicker2Mode.scroll,
                 firstDate: DateUtils.dateOnly(DateTime.now()),
                 lastDate: DateTime.now().add(const Duration(days: 730)),
-                selectedDayHighlightColor: TravelTheme.purple,
-                selectedRangeHighlightColor: TravelTheme.purple.withValues(
+                selectedDayHighlightColor: TravelTheme.primaryFor(context),
+                selectedRangeHighlightColor: TravelTheme.primaryFor(context).withValues(
                   alpha: .16,
                 ),
                 rangeBidirectional: true,

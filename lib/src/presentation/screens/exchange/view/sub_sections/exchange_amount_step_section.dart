@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
@@ -11,14 +12,21 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pairs_store.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_swap_card.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/live_rate_badge.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
 
-/// Step 0 — Amount entry. Renders the unified swap card with the amount
-/// input baked into the FROM side, the live rate badge below it, the fee
-/// summary row, min/max hint, and the Continue button (disabled when the
-/// amount is invalid — no toast on first tap).
+/// Step 0 — Amount entry.
+///
+/// Features:
+///   - Hero swap card with animated 180° rotation on tap and haptic feedback
+///   - Real-time live rate badge
+///   - Recent pairs chip row
+///   - Quick percentage chips (25%, 50%, 75%, Max) with haptics
+///   - Fee & limits summary breakdown
+///   - Recoverable error card with retry button
+///   - Theme-adaptive design tokens and RTL support
 class ExchangeAmountStepSection extends StatefulWidget {
   const ExchangeAmountStepSection({super.key});
 
@@ -50,8 +58,6 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
-    // WAVE-REVIEW: اگر لیست کیف‌ها شکست خورد/خالی ماند، به‌جای کارت مردهٔ
-    // «Wallets Not Found» بدون دکمه، کارت خطا + Retry نشان بده.
     return Obx(() {
       if (controller.walletLoadError.value ||
           (!controller.isLoading.value &&
@@ -65,17 +71,15 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
   Widget _normalContent(AppLocalizations loc) {
     return SingleChildScrollView(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8),
-          // WAVE-REVIEW: قبلاً `Obx(() => ExchangeSwapCard(...))` arrow-form
-          // بود — بیلدرش Rx مستقیم می‌خواند و ثبت می‌شد، ولی در v1.0.103
-          // improper use از این Obx هم آمد؛ فرم بلاک با خواندن صریح امن‌تر.
+          const SizedBox(height: AppSpacing.sm),
+          // Hero From ⇄ To Swap Card
           Obx(() {
-              return ExchangeSwapCard(
+            return ExchangeSwapCard(
               fromWallet: controller.fromWallet.value,
               toWallet: controller.toWallet.value,
               fromWalletsList: controller.fromExchangeWalletsList,
@@ -96,8 +100,8 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
               isCalculating: controller.isCalculateExchangeRateLoading.value,
             );
           }),
-          const SizedBox(height: 16),
-          // Live rate badge
+          const SizedBox(height: AppSpacing.lg),
+          // Live rate badge strip
           Obx(() {
             final rateService = controller.rateService;
             return Padding(
@@ -117,37 +121,37 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
               ),
             );
           }),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           // Recent pairs — horizontal scrollable chip row. Hidden if empty.
-          // WAVE-REVIEW: خواندن .value صریح — isEmpty روی RxList در GetX 4.7
-          // از طریق proxy ثبت نمی‌شود و Obx «improper use» پرتاب می‌کرد
-          // (یکی از دو کارت خطای صفحهٔ اکسچنج).
           Obx(() {
-            final recentPairs = controller.recentPairs.value;
-            if (recentPairs.isEmpty) return const SizedBox();
+            final recentPairs = controller.recentPairs;
+            if (recentPairs.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(bottom: 8),
+                    padding: const EdgeInsetsDirectional.only(
+                      bottom: AppSpacing.sm,
+                    ),
                     child: Text(
                       loc.exchangeRecentPairs,
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.4,
-                        color: AppColors.lightTextTertiary,
+                        color: ExchangeDesignTokens.textTertiary(context),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 32,
+                    height: 34,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: recentPairs.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: 8),
+                      separatorBuilder: (_, _) =>
+                          const SizedBox(width: AppSpacing.sm),
                       itemBuilder: (_, index) {
                         final pair = recentPairs[index];
                         return _RecentPairChip(
@@ -161,20 +165,18 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
               ),
             );
           }),
-          const SizedBox(height: 16),
-          // UI-QC 1.0.47: hide inert Rate Alert until backend API exists.
-          // The Rate Alert widget was removed as dead code (no references).
-          const SizedBox.shrink(),
-          const SizedBox(height: 16),
-          // Quick percent chips
+          // Quick percent chips (25%, 50%, 75%, Max) with haptics
           Obx(() {
             final from = controller.fromWallet.value;
-            if (from == null) return const SizedBox();
+            if (from == null) return const SizedBox.shrink();
             final balance = double.tryParse(from.balance ?? '0') ?? 0.0;
             final fee = controller.charge.value;
             final maxSpendable = (balance - fee > 0) ? (balance - fee) : 0.0;
             return Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+              padding: const EdgeInsetsDirectional.symmetric(
+                horizontal: 18,
+                vertical: AppSpacing.sm,
+              ),
               child: QuickAmountSelector(
                 textController: controller.amountController,
                 availableBalance: balance,
@@ -183,51 +185,62 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
                 currencyCode: from.code,
                 maxLabel: loc.exchangeQuickMax,
                 labelBuilder: (percent) {
-                  if ((percent - 0.25).abs() < 1e-4) return loc.exchangeQuickPercent25;
-                  if ((percent - 0.50).abs() < 1e-4) return loc.exchangeQuickPercent50;
-                  if ((percent - 0.75).abs() < 1e-4) return loc.exchangeQuickPercent75;
+                  if ((percent - 0.25).abs() < 1e-4) {
+                    return loc.exchangeQuickPercent25;
+                  }
+                  if ((percent - 0.50).abs() < 1e-4) {
+                    return loc.exchangeQuickPercent50;
+                  }
+                  if ((percent - 0.75).abs() < 1e-4) {
+                    return loc.exchangeQuickPercent75;
+                  }
                   if ((percent - 1.0).abs() < 1e-4) return loc.exchangeQuickMax;
                   return '${(percent * 100).round()}%';
                 },
                 onAmountChanged: (amount) {
+                  HapticFeedback.selectionClick();
                   controller.onAmountChanged(controller.amountController.text);
                 },
               ),
             );
           }),
-          const SizedBox(height: 16),
-          // Fee summary + min/max
-          // WAVE-REVIEW: قبلاً `Obx(() => _FeeAndLimitsSummary(...))` بود —
-          // بیلدر هیچ Rx مستقیمی نمی‌خواند (خواندن‌ها در build فرزندِ بعدی
-          // بودند، خارج از scope) → GetX «improper use» پرتاب می‌کرد و
-          // خلاصهٔ کارمزد/حدود هیچ‌وقت رندر نمی‌شد (کارت خطا به‌جای اعداد).
-          // حالا خواندن‌ها مستقیم داخل scope همین Obx است.
+          const SizedBox(height: AppSpacing.md),
+          // Fee summary + min/max limits
           Obx(() {
             final fromWallet = controller.fromWallet.value;
-            if (fromWallet == null) return const SizedBox();
+            if (fromWallet == null) return const SizedBox.shrink();
             return _FeeAndLimitsSummary(
               controller: controller,
               fromWallet: fromWallet,
             );
           }),
-          const SizedBox(height: 24),
-          // Continue button (disabled state when amount invalid)
+          const SizedBox(height: AppSpacing.xxl),
+          // Continue button (disabled state when amount is invalid)
           Padding(
             padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
             child: Obx(() {
               final isValid = controller.isAmountValid;
+              final isDark = ExchangeDesignTokens.isDark(context);
+              final activeBtnBg =
+                  isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+              final activeBtnText =
+                  isDark ? AppColors.deepBlack : AppColors.white;
+
               return CommonButton(
-                borderRadius: 16,
+                borderRadius: AppSpacing.radius,
                 width: double.infinity,
                 text: loc.exchangeContinue,
                 backgroundColor: isValid
-                    ? AppColors.lightPrimary
-                    : AppColors.lightPrimary.withValues(alpha: 0.30),
+                    ? activeBtnBg
+                    : activeBtnBg.withValues(alpha: 0.30),
                 textColor: isValid
-                    ? AppColors.white
-                    : AppColors.white.withValues(alpha: 0.70),
+                    ? activeBtnText
+                    : activeBtnText.withValues(alpha: 0.60),
                 onPressed: isValid
-                    ? () => controller.nextStepWithValidation()
+                    ? () {
+                        HapticFeedback.lightImpact();
+                        controller.nextStepWithValidation();
+                      }
                     : () {
                         HapticFeedback.lightImpact();
                         controller.isContinueInvalid.value = true;
@@ -238,11 +251,16 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
           ),
           // Inline error hint shown only after a failed attempt
           Obx(() {
-            if (!controller.isContinueInvalid.value) return const SizedBox();
-            if (controller.isAmountValid) return const SizedBox();
+            if (!controller.isContinueInvalid.value) {
+              return const SizedBox.shrink();
+            }
+            if (controller.isAmountValid) return const SizedBox.shrink();
             return Padding(
-              padding:
-                  const EdgeInsetsDirectional.only(top: 8, start: 18, end: 18),
+              padding: const EdgeInsetsDirectional.only(
+                top: AppSpacing.sm,
+                start: 18,
+                end: 18,
+              ),
               child: Text(
                 _validationHint(controller, loc),
                 style: const TextStyle(
@@ -253,7 +271,7 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
               ),
             );
           }),
-          const SizedBox(height: 40),
+          const SizedBox(height: AppSpacing.huge),
         ],
       ),
     );
@@ -266,7 +284,7 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
         double.tryParse(c.fromWallet.value?.exchangeLimit?.min ?? '0') ?? 0.0;
     final max =
         double.tryParse(c.fromWallet.value?.exchangeLimit?.max ?? '0') ??
-        double.infinity;
+            double.infinity;
     if (amount < min) {
       return loc.exchangeValidationAmountMinimum(
         min.toStringAsFixed(
@@ -299,21 +317,21 @@ class _RecentPairChip extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
         onTap: () {
           HapticFeedback.selectionClick();
           onTap();
         },
         child: Container(
           padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: 12,
-            vertical: 6,
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.xs + 2,
           ),
           decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16),
+            color: ExchangeDesignTokens.cardSurface(context),
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
             border: Border.all(
-              color: AppColors.lightPrimary.withValues(alpha: 0.18),
+              color: ExchangeDesignTokens.cardBorder(context),
             ),
           ),
           child: Row(
@@ -321,18 +339,18 @@ class _RecentPairChip extends StatelessWidget {
             children: [
               Icon(
                 Icons.history_rounded,
-                size: 12,
-                color: AppColors.lightPrimary,
+                size: 13,
+                color: ExchangeDesignTokens.textPrimary(context),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.xs),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.lightPrimary,
+                  color: ExchangeDesignTokens.textPrimary(context),
                   letterSpacing: 0.3,
-                  fontFeatures: [FontFeature.tabularFigures()],
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
             ],
@@ -376,15 +394,16 @@ class _FeeAndLimitsSummary extends StatelessWidget {
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
       child: Container(
         padding: const EdgeInsetsDirectional.symmetric(
-          horizontal: 16,
-          vertical: 14,
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md + 2,
         ),
         decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(14),
+          color: ExchangeDesignTokens.cardSurface(context),
+          borderRadius: BorderRadius.circular(AppSpacing.radius),
           border: Border.all(
-            color: AppColors.lightTextPrimary.withValues(alpha: 0.06),
+            color: ExchangeDesignTokens.cardBorder(context),
           ),
+          boxShadow: ExchangeDesignTokens.cardShadow(context),
         ),
         child: Column(
           children: [
@@ -397,7 +416,7 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextTertiary,
+                    color: ExchangeDesignTokens.textTertiary(context),
                     letterSpacing: 0,
                   ),
                 ),
@@ -405,25 +424,25 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                   amount: controller.charge.value,
                   decimals: decimals,
                   currencyCode: fromWallet.code,
-                  integerStyle: const TextStyle(
+                  integerStyle: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
-                    color: AppColors.lightTextPrimary,
+                    color: ExchangeDesignTokens.textPrimary(context),
                   ),
                   decimalStyle: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
-                    color: AppColors.lightTextTertiary,
+                    color: ExchangeDesignTokens.textTertiary(context),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.sm + 2),
             Divider(
               height: 0,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.06),
+              color: ExchangeDesignTokens.divider(context),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.sm + 2),
             // Total row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -433,7 +452,7 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextPrimary,
+                    color: ExchangeDesignTokens.textPrimary(context),
                     letterSpacing: 0,
                   ),
                 ),
@@ -442,8 +461,7 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                   decimals: decimals,
                   currencyCode: fromWallet.code,
                   integerColor: AppColors.success,
-                  decimalColor:
-                      AppColors.success.withValues(alpha: 0.55),
+                  decimalColor: AppColors.success.withValues(alpha: 0.55),
                   integerStyle: const TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 16,
@@ -457,23 +475,23 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            // Min / max — neutral grey, not red
+            const SizedBox(height: AppSpacing.md),
+            // Min / max row
             Row(
               children: [
                 Icon(
                   Icons.info_outline_rounded,
                   size: 14,
-                  color: AppColors.lightTextTertiary,
+                  color: ExchangeDesignTokens.textTertiary(context),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSpacing.xs + 2),
                 Expanded(
                   child: Text(
                     '${loc.exchangeMinHint} $minStr ${fromWallet.code ?? ''}  •  ${loc.exchangeMaxHint} $maxStr ${fromWallet.code ?? ''}',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.lightTextTertiary,
+                      color: ExchangeDesignTokens.textTertiary(context),
                       letterSpacing: 0,
                     ),
                   ),
@@ -487,8 +505,8 @@ class _FeeAndLimitsSummary extends StatelessWidget {
   }
 }
 
-/// WAVE-REVIEW: کارت خطا + Retry — وقتی کیف‌ها لود نشدند، به‌جای فرم مردهٔ
-/// «Wallets Not Found» بدون دکمه، این کارت نمایش داده می‌شود.
+/// Error Card shown when wallet list could not be retrieved.
+/// Allows recovery with Retry CTA.
 class _WalletLoadErrorCard extends StatelessWidget {
   const _WalletLoadErrorCard({required this.onRetry});
 
@@ -506,16 +524,27 @@ class _WalletLoadErrorCard extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xxl,
+          vertical: AppSpacing.huge,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 44,
-              color: AppColors.error,
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: AppColors.errorContainer,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.error_outline_rounded,
+                size: 34,
+                color: AppColors.error,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               pick(
                 en: 'Could not load your wallets',
@@ -524,14 +553,18 @@ class _WalletLoadErrorCard extends StatelessWidget {
                 zh: '钱包加载失败',
               ),
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 15,
+                fontSize: 16,
+                color: ExchangeDesignTokens.textPrimary(context),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             CommonButton(
-              onPressed: onRetry,
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                onRetry();
+              },
               width: 180,
               text: pick(
                 en: 'Try again',

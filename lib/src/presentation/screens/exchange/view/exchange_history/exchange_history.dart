@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_history_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/view/exchange_history/sub_sections/exchange_transaction_filter_bottom_sheet.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
 import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
@@ -51,6 +54,7 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
   }
 
   Future<void> refreshData() async {
+    HapticFeedback.lightImpact();
     controller.isLoading.value = true;
     await controller.fetchTransactions();
     controller.isLoading.value = false;
@@ -67,41 +71,55 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = ExchangeDesignTokens.isDark(context);
+    final bgColor = ExchangeDesignTokens.screenBackground(context);
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: CommonDefaultAppBar(),
       body: Obx(
         () => Stack(
           children: [
             Column(
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 CommonAppBar(
                   title: localizations.exchangeHistoryTitle,
-                  rightSideWidget: GestureDetector(
-                    onTap: () {
-                      Get.bottomSheet(
-                        const ExchangeTransactionFilterBottomSheet(),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsetsDirectional.only(end: 18),
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(
-                          color: AppColors.lightTextPrimary.withValues(
-                            alpha: 0.16,
+                  rightSideWidget: Semantics(
+                    button: true,
+                    label: 'Filter exchange history',
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        Get.bottomSheet(
+                          const ExchangeTransactionFilterBottomSheet(),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        margin: const EdgeInsetsDirectional.only(end: 18),
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: ExchangeDesignTokens.cardSurface(context),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusSm),
+                          border: Border.all(
+                            color: ExchangeDesignTokens.cardBorder(context),
+                          ),
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            PngAssets.commonFilterIcon,
+                            color: ExchangeDesignTokens.textPrimary(context),
                           ),
                         ),
                       ),
-                      child: Image.asset(PngAssets.commonFilterIcon),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
@@ -109,8 +127,8 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
                     }
                     return Column(
                       children: [
-                        const SizedBox(height: 16),
-                        _buildTransactionsList(),
+                        const SizedBox(height: AppSpacing.lg),
+                        _buildTransactionsList(isDark),
                       ],
                     );
                   }),
@@ -120,15 +138,17 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
             Visibility(
               visible: controller.isTransactionsLoading.value ||
                   controller.isPageLoading.value,
-              child: const Center(
+              child: Center(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 24),
+                  padding: const EdgeInsets.only(top: AppSpacing.xxl),
                   child: SizedBox(
-                    width: 22,
-                    height: 22,
+                    width: 24,
+                    height: 24,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
                     ),
                   ),
                 ),
@@ -140,7 +160,7 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
     );
   }
 
-  Widget _buildTransactionsList() {
+  Widget _buildTransactionsList(bool isDark) {
     final transactions =
         controller.transactionsModel.value.data?.transactions ?? [];
 
@@ -150,110 +170,136 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
 
     return Expanded(
       child: RefreshIndicator(
-        color: AppColors.lightPrimary,
+        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
         onRefresh: () => refreshData(),
         child: Container(
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: AppColors.white,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+            color: ExchangeDesignTokens.cardSurface(context),
+            border: Border.all(
+              color: ExchangeDesignTokens.cardBorder(context),
+            ),
+            boxShadow: ExchangeDesignTokens.cardShadow(context),
           ),
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
             controller: _scrollController,
-            padding: const EdgeInsetsDirectional.symmetric(vertical: 12),
+            padding: const EdgeInsetsDirectional.symmetric(
+              vertical: AppSpacing.md,
+            ),
             itemBuilder: (context, index) {
               final Transactions transaction = transactions[index];
 
-              return GestureDetector(
-                onTap: () {
-                  Get.bottomSheet(
-                    RecentTransactionDetails(transaction: transaction),
-                  );
-                },
-                child: Container(
-                  color: AppColors.transparent,
-                  padding: const EdgeInsetsDirectional.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 46,
-                              height: 46,
-                              decoration: BoxDecoration(
-                                color:
-                                    TransactionDynamicColor.getTransactionColor(
-                                  transaction.type,
-                                ),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Image.asset(
-                                  TransactionDynamicIcon.getTransactionIcon(
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    Get.bottomSheet(
+                      RecentTransactionDetails(transaction: transaction),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsetsDirectional.symmetric(
+                      vertical: AppSpacing.sm,
+                      horizontal: AppSpacing.lg,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 46,
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color:
+                                      TransactionDynamicColor.getTransactionColor(
                                     transaction.type,
                                   ),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusLg,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset(
+                                    TransactionDynamicIcon.getTransactionIcon(
+                                      transaction.type,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.md),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            transaction.type ?? "",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              letterSpacing: 0,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 15.5,
+                                              color: ExchangeDesignTokens
+                                                  .textPrimary(context),
+                                            ),
+                                          ),
+                                        ),
+                                        if (transaction.isCrypto == true) ...[
+                                          const SizedBox(width: AppSpacing.sm),
+                                          const _CryptoMiniBadge(),
+                                        ],
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      (transaction.createdAt ?? '')
+                                          .split(",")
+                                          .first,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        letterSpacing: 0,
+                                        fontSize: 13,
+                                        color:
+                                            ExchangeDesignTokens.textTertiary(
+                                          context,
+                                        ),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Transform.translate(
+                              offset: const Offset(0, -2),
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                transaction.isPlus == true ? "+" : "-",
+                                style: TextStyle(
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 15,
+                                  color: transaction.isPlus == true
+                                      ? AppColors.success
+                                      : AppColors.error,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          transaction.type ?? "",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            letterSpacing: 0,
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 15.5,
-                                            color:
-                                                AppColors.lightTextPrimary,
-                                          ),
-                                        ),
-                                      ),
-                                      if (transaction.isCrypto == true) ...[
-                                        const SizedBox(width: 8),
-                                        const _CryptoMiniBadge(),
-                                      ],
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    transaction.createdAt!
-                                        .split(",")
-                                        .first,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      letterSpacing: 0,
-                                      fontSize: 14,
-                                      color: AppColors.lightTextTertiary,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Transform.translate(
-                            offset: const Offset(0, -2),
-                            child: Text(
+                            Text(
                               textAlign: TextAlign.center,
-                              transaction.isPlus == true ? "+" : "-",
+                              "${transaction.isCrypto == true ? "" : transaction.trxCurrencySymbol}",
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w900,
@@ -263,48 +309,36 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
                                     : AppColors.error,
                               ),
                             ),
-                          ),
-                          Text(
-                            textAlign: TextAlign.center,
-                            "${transaction.isCrypto == true ? "" : transaction.trxCurrencySymbol}",
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15,
-                              color: transaction.isPlus == true
-                                  ? AppColors.success
-                                  : AppColors.error,
+                            Text(
+                              transaction.isCrypto == true
+                                  ? "${transaction.amount} ${transaction.trxCurrencyCode}"
+                                  : "${transaction.amount}",
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                letterSpacing: 0,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 15,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
+                                color: transaction.isPlus == true
+                                    ? AppColors.success
+                                    : AppColors.error,
+                              ),
                             ),
-                          ),
-                          Text(
-                            transaction.isCrypto == true
-                                ? "${transaction.amount} ${transaction.trxCurrencyCode}"
-                                : "${transaction.amount}",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                              color: transaction.isPlus == true
-                                  ? AppColors.success
-                                  : AppColors.error,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
             },
             separatorBuilder: (context, index) {
               return Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
                 child: Divider(
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.10),
+                  color: ExchangeDesignTokens.divider(context),
                   height: 0,
                 ),
               );
@@ -328,8 +362,8 @@ class _CryptoMiniBadge extends StatelessWidget {
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        color: AppColors.lightSecondary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(6),
+        color: AppColors.lightSecondary.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
       ),
       child: const Text(
         'CRYPTO',
@@ -344,44 +378,49 @@ class _CryptoMiniBadge extends StatelessWidget {
   }
 }
 
-/// Skeleton loader shaped to match the actual list rows — gives the user
-/// a sense of what's coming instead of an opaque spinner.
+/// Skeleton loader shaped to match the actual list rows.
 class _HistorySkeleton extends StatelessWidget {
   const _HistorySkeleton();
 
   @override
   Widget build(BuildContext context) {
+    final isDark = ExchangeDesignTokens.isDark(context);
+
     return Shimmer.fromColors(
-      baseColor: AppColors.lightTextPrimary.withValues(alpha: 0.06),
-      highlightColor: AppColors.lightTextPrimary.withValues(alpha: 0.12),
+      baseColor: isDark
+          ? AppColors.darkSurfaceVariant
+          : AppColors.lightTextPrimary.withValues(alpha: 0.06),
+      highlightColor: isDark
+          ? AppColors.darkCard
+          : AppColors.lightTextPrimary.withValues(alpha: 0.12),
       child: ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsetsDirectional.symmetric(
           horizontal: 18,
-          vertical: 12,
+          vertical: AppSpacing.md,
         ),
         itemCount: 8,
-        separatorBuilder: (_, _) => const SizedBox(height: 14),
+        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
         itemBuilder: (_, _) => Container(
           padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: 16,
-            vertical: 12,
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(12),
+            color: isDark ? AppColors.darkCard : AppColors.white,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           ),
           child: Row(
             children: [
               Container(
                 width: 46,
                 height: 46,
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,13 +428,15 @@ class _HistorySkeleton extends StatelessWidget {
                     Container(
                       height: 14,
                       width: 120,
-                      color: AppColors.white,
+                      color:
+                          isDark ? AppColors.darkSurfaceVariant : AppColors.white,
                     ),
                     const SizedBox(height: 6),
                     Container(
                       height: 10,
                       width: 80,
-                      color: AppColors.white,
+                      color:
+                          isDark ? AppColors.darkSurfaceVariant : AppColors.white,
                     ),
                   ],
                 ),
@@ -403,7 +444,7 @@ class _HistorySkeleton extends StatelessWidget {
               Container(
                 height: 14,
                 width: 60,
-                color: AppColors.white,
+                color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
               ),
             ],
           ),

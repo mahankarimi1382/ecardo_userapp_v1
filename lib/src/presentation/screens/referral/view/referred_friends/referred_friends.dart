@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
@@ -16,50 +19,52 @@ class ReferredFriends extends StatefulWidget {
 }
 
 class _ReferredFriendsState extends State<ReferredFriends> {
-  final ReferredFriendsController controller = Get.find();
+  final ReferredFriendsController controller = Get.find<ReferredFriendsController>();
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Column(
         children: [
-          SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           CommonAppBar(title: localization.referredFriendsScreenTitle),
-          SizedBox(height: 30),
+          const SizedBox(height: AppSpacing.md),
           Expanded(
             child: RefreshIndicator(
-              color: AppColors.lightPrimary,
+              color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
               onRefresh: () => controller.fetchReferredFriends(),
-              child: ReferredFriendList(),
+              child: const ReferredFriendList(),
             ),
           ),
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsetsDirectional.only(bottom: 40),
+        padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.xxl),
         child: SizedBox(
           height: 48,
-          width: 130,
-          child: FloatingActionButton(
+          child: FloatingActionButton.extended(
             heroTag: null,
-            elevation: 0,
+            elevation: 2,
             onPressed: () {
+              HapticFeedback.lightImpact();
               Get.toNamed(BaseRoute.referralTree);
             },
-            backgroundColor: AppColors.lightPrimary,
+            backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+            foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             ),
-            child: Text(
+            icon: const Icon(Icons.account_tree_outlined, size: 20),
+            label: Text(
               localization.referredFriendsScreenReferralTreeButton,
-              style: TextStyle(
-                color: AppColors.white,
-                fontWeight: FontWeight.w900,
-                fontSize: 15.5,
-                letterSpacing: 0,
+              style: AppTextStyles.labelLarge.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.deepBlack : AppColors.white,
               ),
             ),
           ),

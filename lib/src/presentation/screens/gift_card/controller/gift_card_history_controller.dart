@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/gift_card/model/gift_card_h
 class GiftCardHistoryController extends GetxController {
   // Global Variable
   final RxBool isLoading = false.obs;
+  final RxBool isError = false.obs;
   final RxBool isPageLoading = false.obs;
   final RxBool isGiftCardHistoryLoading = false.obs;
   final RxBool isFilter = false.obs;
@@ -60,6 +61,7 @@ class GiftCardHistoryController extends GetxController {
     searchController.clear();
     try {
       isLoading.value = true;
+      isError.value = false;
       currentPage.value = 1;
       hasMorePages.value = true;
 
@@ -68,21 +70,29 @@ class GiftCardHistoryController extends GetxController {
             '${ApiPath.getGiftCardPurchasedHistoryEndpoint}?page=${currentPage.value}&per_page=15',
       );
 
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         giftCardHistoryModel.value = GiftCardHistoryModel.fromJson(
           response.data!,
         );
-        if (giftCardHistoryModel.value.data!.giftCards!.length <
-            giftCardHistoryModel.value.data!.meta!.perPage!) {
+        if (giftCardHistoryModel.value.data?.giftCards != null &&
+            giftCardHistoryModel.value.data?.meta?.perPage != null &&
+            giftCardHistoryModel.value.data!.giftCards!.length <
+                giftCardHistoryModel.value.data!.meta!.perPage!) {
           hasMorePages.value = false;
         }
+      } else {
+        isError.value = true;
       }
     } catch (e, stackTrace) {
+      isError.value = true;
       debugPrint('❌ fetchGiftCardHistory() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      final ctx = Get.context;
+      if (ctx != null && ctx.mounted) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(ctx)!.allControllerLoadError,
+        );
+      }
     } finally {
       isLoading.value = false;
     }
@@ -123,9 +133,12 @@ class GiftCardHistoryController extends GetxController {
       currentPage.value--;
       debugPrint('❌ loadMoreGiftCardHistory() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      final ctx = Get.context;
+      if (ctx != null && ctx.mounted) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(ctx)!.allControllerLoadError,
+        );
+      }
     } finally {
       isPageLoading.value = false;
     }
@@ -163,9 +176,12 @@ class GiftCardHistoryController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchDynamicGiftCardHistory() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      final ctx = Get.context;
+      if (ctx != null && ctx.mounted) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(ctx)!.allControllerLoadError,
+        );
+      }
     } finally {
       isGiftCardHistoryLoading.value = false;
       isFilter.value = false;

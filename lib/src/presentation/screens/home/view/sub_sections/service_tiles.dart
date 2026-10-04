@@ -190,6 +190,10 @@ class _PagedServiceTilesGridState extends State<PagedServiceTilesGrid> {
     final rows = ((pages.first.length) / 4).ceil();
     final double dynamicHeight = rows * 82.0 + (rows - 1) * 8.0;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+
     return Column(
       children: [
         SizedBox(
@@ -229,8 +233,8 @@ class _PagedServiceTilesGridState extends State<PagedServiceTilesGrid> {
                 width: _currentPage == index ? 18 : 6,
                 decoration: BoxDecoration(
                   color: _currentPage == index
-                      ? AppColors.lightPrimary
-                      : AppColors.lightPrimary.withValues(alpha: 0.20),
+                      ? primaryColor
+                      : primaryColor.withValues(alpha: 0.20),
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
@@ -252,6 +256,9 @@ class ServiceTileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final tile = resolved.tile;
     final disabled = resolved.state != TileState.available;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
     return InkWell(
       borderRadius: BorderRadius.circular(8),
@@ -270,12 +277,12 @@ class ServiceTileView extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: AppColors.lightPrimary.withValues(alpha: .08),
+                      color: primaryColor.withValues(alpha: isDark ? .16 : .08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       tile.iconData as IconData,
-                      color: AppColors.lightPrimary,
+                      color: primaryColor,
                       size: 22,
                     ),
                   )
@@ -285,7 +292,9 @@ class ServiceTileView extends StatelessWidget {
                     width: 36,
                     height: 36,
                     color: disabled
-                        ? AppColors.black.withValues(alpha: 0.30)
+                        ? (isDark
+                            ? AppColors.white.withValues(alpha: 0.30)
+                            : AppColors.black.withValues(alpha: 0.30))
                         : null,
                   ),
                 if (resolved.state == TileState.kycLocked ||
@@ -296,16 +305,20 @@ class ServiceTileView extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(2.5),
                       decoration: BoxDecoration(
-                        color: AppColors.white,
+                        color: isDark ? AppColors.darkGray : AppColors.white,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppColors.black.withValues(alpha: 0.08),
+                          color: isDark
+                              ? AppColors.warmWhite.withValues(alpha: 0.15)
+                              : AppColors.black.withValues(alpha: 0.08),
                         ),
                       ),
                       child: Icon(
                         Icons.lock_rounded,
                         size: 9,
-                        color: AppColors.lightTextTertiary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextTertiary,
                       ),
                     ),
                   ),
@@ -321,8 +334,11 @@ class ServiceTileView extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 11.5,
-                  color: const Color(0xFF2D2D2D).withValues(
-                    alpha: disabled ? 0.35 : 0.70,
+                  color: (isDark
+                          ? AppColors.darkTextPrimary
+                          : const Color(0xFF2D2D2D))
+                      .withValues(
+                    alpha: disabled ? 0.35 : (isDark ? 0.85 : 0.70),
                   ),
                   fontWeight: FontWeight.w700,
                 ),

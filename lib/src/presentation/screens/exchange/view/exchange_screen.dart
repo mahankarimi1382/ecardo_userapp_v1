@@ -1,8 +1,10 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -11,16 +13,17 @@ import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchang
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_review_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_success_step_section.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_step_indicator.dart';
 
-/// Exchange screen — full-bleed, German-minimalist layout.
+/// Exchange screen — full-bleed, German-minimalist fintech layout.
 ///
 /// Hierarchy (top to bottom):
-///   1. Bare non-leading AppBar shell + CommonAppBar (single back — WAVE-REVIEW)
-///      row with back button + history menu
-///   2. Step indicator — pinned under app bar, always visible
+///   1. Non-leading AppBar shell + CommonAppBar (single back button)
+///      row with back button + history menu on Step 0.
+///   2. Step indicator — pinned under app bar, always visible.
 ///   3. Step content — fills the remaining viewport with horizontal
-///      page transitions (SharedAxisTransition)
+///      page transitions (SharedAxisTransition).
 class ExchangeScreen extends StatefulWidget {
   const ExchangeScreen({super.key});
 
@@ -34,36 +37,25 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final bgColor = ExchangeDesignTokens.screenBackground(context);
 
     return Scaffold(
-      // Full-bleed: app bar + step indicator handle their own safe area.
+      backgroundColor: bgColor,
       body: SafeArea(
         top: false,
         child: Stack(
           children: [
             Column(
               children: [
-                // v1.0.21+21 — Add top padding equal to the status bar
-                // height so the AppBar row doesn't overlap with the
-                // status bar icons. SafeArea(top: false) above means
-                // the system status bar insets are NOT applied here,
-                // so we apply them manually via MediaQuery.paddingOf.
-                // Using EdgeInsetsDirectional only would be wrong here
-                // because the status bar is always on TOP regardless
-                // of LTR/RTL — so EdgeInsets.only(top:) is correct.
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.paddingOf(context).top,
                   ),
                   child: Column(
                     children: [
-                      // WAVE-REVIEW: قبلاً CommonDefaultAppBar (با دکمه برگشت
-                      // ضمنی) + CommonAppBar (با دکمه برگشت خودش) پشت هم رندر
-                      // می‌شدند → دو دکمه برگشت. حالا فقط پوستهٔ بدون-برگشت +
-                      // CommonAppBar با یک دکمه برگشت.
                       AppBar(
-                        backgroundColor: AppColors.lightBackground,
-                        surfaceTintColor: AppColors.lightBackground,
+                        backgroundColor: bgColor,
+                        surfaceTintColor: bgColor,
                         automaticallyImplyLeading: false,
                         elevation: 0,
                       ),
@@ -74,7 +66,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                           rightSideWidget: controller.currentStep.value == 0
                               ? Padding(
                                   padding: const EdgeInsetsDirectional.only(
-                                    end: 8,
+                                    end: AppSpacing.sm,
                                   ),
                                   child: Tooltip(
                                     message: l10nPick(
@@ -90,16 +82,20 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                         minHeight: 44,
                                       ),
                                       onPressed: _showHistoryMenu,
-                                      icon: const Icon(Icons.more_vert),
+                                      icon: Icon(
+                                        Icons.more_vert,
+                                        color: ExchangeDesignTokens.textPrimary(
+                                          context,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 )
                               : null,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      // Step indicator — always visible so the user sees
-                      // progress even on Success.
+                      const SizedBox(height: AppSpacing.sm),
+                      // Step indicator — always visible so user sees progress
                       Obx(
                         () => ExchangeStepIndicator(
                           currentStep: controller.currentStep.value,
@@ -149,33 +145,43 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
   Widget _stepWidget(int step) {
     switch (step) {
       case 0:
-        return ExchangeAmountStepSection(key: const ValueKey('amount'));
+        return const ExchangeAmountStepSection(key: ValueKey('amount'));
       case 1:
-        return ExchangeReviewStepSection(key: const ValueKey('review'));
+        return const ExchangeReviewStepSection(key: ValueKey('review'));
       default:
-        return ExchangeSuccessStepSection(key: const ValueKey('success'));
+        return const ExchangeSuccessStepSection(key: ValueKey('success'));
     }
   }
 
   void _showHistoryMenu() {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = ExchangeDesignTokens.isDark(context);
+
+    HapticFeedback.lightImpact();
 
     Get.bottomSheet(
       AnimatedContainer(
         width: double.infinity,
-        duration: const Duration(milliseconds: 300),
+        duration: AppSpacing.normal,
         curve: Curves.easeOutQuart,
         height: 160,
-        margin: const EdgeInsetsDirectional.symmetric(horizontal: 12),
+        margin: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.md,
+        ),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: ExchangeDesignTokens.cardSurface(context),
           borderRadius: const BorderRadiusDirectional.only(
-            topStart: Radius.circular(20),
-            topEnd: Radius.circular(20),
+            topStart: Radius.circular(AppSpacing.radiusXl),
+            topEnd: Radius.circular(AppSpacing.radiusXl),
+          ),
+          border: Border.all(
+            color: ExchangeDesignTokens.cardBorder(context),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.06),
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.5)
+                  : AppColors.black.withValues(alpha: 0.08),
               blurRadius: 40,
               spreadRadius: 0,
               offset: Offset.zero,
@@ -185,16 +191,17 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Container(
               width: 40,
               height: 5,
               decoration: BoxDecoration(
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(30),
+                color: ExchangeDesignTokens.textPrimary(context)
+                    .withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             Expanded(
               child: ListView.builder(
                 itemCount: 1,
@@ -204,6 +211,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
+                        HapticFeedback.selectionClick();
                         Get.back();
                         if (index == 0) {
                           Get.toNamed(BaseRoute.exchangeHistory);
@@ -211,18 +219,28 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                       },
                       child: Padding(
                         padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 18,
-                          vertical: 10,
+                          horizontal: AppSpacing.lg,
+                          vertical: AppSpacing.md,
                         ),
-                        child: Text(
-                          items[index],
-                          style: const TextStyle(
-                            letterSpacing: 0,
-                            color: AppColors.lightTextPrimary,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                            fontFamily: 'Plus Jakarta Sans',
-                          ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.history_rounded,
+                              size: 20,
+                              color: ExchangeDesignTokens.textPrimary(context),
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Text(
+                              items[index],
+                              style: TextStyle(
+                                letterSpacing: 0,
+                                color: ExchangeDesignTokens.textPrimary(context),
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                                fontFamily: 'Plus Jakarta Sans',
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

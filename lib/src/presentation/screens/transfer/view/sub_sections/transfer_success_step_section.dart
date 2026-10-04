@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_success_celebration.dart';
 
 class TransferSuccessStepSection extends StatefulWidget {
   const TransferSuccessStepSection({super.key});
@@ -27,253 +30,157 @@ class _TransferSuccessStepSectionState
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final currentWallet = controller.wallet.value;
+    final walletCode = currentWallet?.code ?? 'USD';
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      // phase2-fix: decimals derive from the currency CODE, not the wallet
-      // display name (they diverge for non-2-decimal base currencies).
-      currencyCode: controller.wallet.value!.code!,
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      )!,
-      isCrypto: controller.wallet.value!.isCrypto!,
+      currencyCode: walletCode,
+      siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
+      isCrypto: currentWallet?.isCrypto ?? false,
     );
 
-    final finalAmount = controller
-        .successTransferData
-        .value?["sender_transaction"]?["final_amount"];
-    final amount = double.tryParse(finalAmount.toString()) ?? 0.0;
+    final senderTx =
+        controller.successTransferData.value?["sender_transaction"];
 
-    return Obx(
-      () => controller.isTransferAmountLoading.value
-          ? CommonLoading()
-          : SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 30),
+    final rawFinalAmount = senderTx?["final_amount"] ??
+        controller.amountController.text;
+    final amount = double.tryParse(rawFinalAmount.toString()) ?? 0.0;
 
-                    Container(
-                      width: double.infinity,
-                      height: 192,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(PngAssets.pendingAndSuccessFrame),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Image.asset(PngAssets.commonSuccessIcon, width: 80),
-                          SizedBox(height: 16),
-                          Text(
-                            textAlign: TextAlign.center,
-                            localization.transferSuccessStepSectionTitle,
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 24,
-                              color: AppColors.lightTextPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 60),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        children: [
-                          _buildSuccessDynamicContent(
-                            title:
-                                localization.transferSuccessStepSectionAmount,
-                            content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ''}",
-                            contentColor: AppColors.lightTextPrimary,
-                          ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildSuccessDynamicContent(
-                            title: localization
-                                .transferSuccessStepSectionTransactionId,
-                            content: controller
-                                .successTransferData
-                                .value!["sender_transaction"]["tnx"],
-                            contentColor: AppColors.lightTextPrimary,
-                          ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          Obx(
-                            () => _buildSuccessDynamicContent(
-                              title: localization
-                                  .transferSuccessStepSectionWalletName,
-                              content: controller.wallet.value!.name!,
-                              contentColor: AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          Obx(
-                            () => _buildSuccessDynamicContent(
-                              title: localization
-                                  .transferSuccessStepSectionPaymentMethod,
-                              content: controller.wallet.value!.code!,
-                              contentColor: AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          Obx(
-                            () => _buildSuccessDynamicContent(
-                              title: localization
-                                  .transferSuccessStepSectionDateTime,
-                              content:
-                                  "${controller.successTransferData.value!["sender_transaction"]["created_at"]}",
+    final tnxId = senderTx?["tnx"]?.toString() ?? 'TRX-ECAR-${DateTime.now().millisecondsSinceEpoch}';
+    final createdAt = senderTx?["created_at"]?.toString() ?? '';
+    final description = senderTx?["description"]?.toString() ?? '';
+    final rawCharge = senderTx?["charge"];
+    final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? controller.charge.value;
 
-                              contentColor: AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildSuccessDynamicContent(
-                            title: localization.transferSuccessStepSectionName,
-                            content:
-                                "${controller.successTransferData.value!["sender_transaction"]["description"]}",
-                            contentColor: AppColors.lightTextPrimary,
-                          ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          Obx(
-                            () => _buildSuccessDynamicContent(
-                              title:
-                                  localization.transferSuccessStepSectionCharge,
-                              content:
-                                  "${double.tryParse(controller.successTransferData.value!["sender_transaction"]["charge"].toString())!.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                              contentColor: AppColors.error,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildSuccessDynamicContent(
-                            title: localization
-                                .transferSuccessStepSectionTotalAmount,
-                            content:
-                                "${amount.toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ''}",
-                            contentColor: AppColors.success,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    CommonButton(
-                      onPressed: () async {
-                        controller.currentStep.value = 0;
-                        controller.clearFields();
-                        controller.fetchTransferWallets();
-                      },
-                      width: double.infinity,
+    final recipientAccount = controller.recipientUidController.text.trim();
+    final matchedBeneficiary = controller.findBeneficiaryByAccount(recipientAccount);
+    final recipientName = matchedBeneficiary?.nickname ??
+        matchedBeneficiary?.receiver?.name ??
+        recipientAccount;
 
-                      text: localization
-                          .transferSuccessStepSectionTransferAgainButton,
-                    ),
-                    const SizedBox(height: 20),
-                    CommonButton(
-                      onPressed: () async {
-                        Get.find<HomeController>().selectedIndex.value = 0;
-                        Get.toNamed(BaseRoute.navigation);
-                        await Get.find<HomeController>().loadData();
-                      },
-                      width: double.infinity,
-                      text:
-                          localization.transferSuccessStepSectionBackHomeButton,
-                      backgroundColor: AppColors.lightPrimary.withValues(
-                        alpha: 0.06,
-                      ),
-                      borderColor: AppColors.lightPrimary.withValues(
-                        alpha: 0.60,
-                      ),
-                      borderWidth: 2,
-                      textColor: AppColors.lightTextPrimary,
-                    ),
-                    const SizedBox(height: 80),
-                  ],
-                ),
+    return Obx(() {
+      if (controller.isTransferAmountLoading.value) {
+        return const CommonLoading();
+      }
+
+      return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Column(
+            children: [
+              const SizedBox(height: AppSpacing.md),
+
+              // 1. Celebratory Success Animation
+              TransferSuccessCelebration(
+                title: localization.transferSuccessStepSectionTitle,
+                subtitle: 'Your money was successfully transferred',
+                dateTime: createdAt.isNotEmpty ? createdAt : null,
               ),
-            ),
-    );
-  }
 
-  static Widget _buildSuccessDynamicContent({
-    required String title,
-    required String content,
-    required Color contentColor,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              content,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 15,
-                color: contentColor,
+              const SizedBox(height: AppSpacing.xl),
+
+              // 2. Ultra-Premium Digital Receipt (Design System)
+              EcardoDigitalReceipt(
+                title: 'Transfer Receipt',
+                transactionReference: tnxId,
+                formattedTimestamp: createdAt.isNotEmpty ? createdAt : null,
+                primaryAmount: amount,
+                primaryCurrency: walletCode,
+                primaryDecimals: calculateDecimals,
+                status: EcardoReceiptStatus.success,
+                items: [
+                  EcardoReceiptItem(
+                    label: localization.transferReviewStepSectionRecipientAccount,
+                    value: recipientAccount,
+                    isCopyable: true,
+                    copyText: recipientAccount,
+                  ),
+                  EcardoReceiptItem(
+                    label: 'From Wallet',
+                    value: currentWallet?.name ?? 'Wallet',
+                  ),
+                  EcardoReceiptItem(
+                    label: 'To',
+                    value: recipientName,
+                  ),
+                  EcardoReceiptItem(
+                    label: localization.transferSuccessStepSectionPaymentMethod,
+                    value: '$walletCode (${currentWallet?.name ?? "Wallet"})',
+                  ),
+                  if (description.isNotEmpty)
+                    EcardoReceiptItem(
+                      label: localization.transferSuccessStepSectionName,
+                      value: description,
+                    ),
+                  EcardoReceiptItem(
+                    label: 'Fee / Charge',
+                    amount: chargeVal,
+                    currency: walletCode,
+                    decimals: calculateDecimals,
+                  ),
+                  EcardoReceiptItem(
+                    label: localization.transferSuccessStepSectionTotalAmount,
+                    amount: amount + chargeVal,
+                    currency: walletCode,
+                    decimals: calculateDecimals,
+                    isHighlighted: true,
+                    valueColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                  ),
+                ],
+                note: 'Powered by eCardo Secure Network',
+                showBarcode: true,
+                showWatermark: true,
               ),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-            ),
+
+              const SizedBox(height: AppSpacing.xxl),
+
+              // 3. Action Buttons
+              CommonButton(
+                onPressed: () async {
+                  HapticFeedback.lightImpact();
+                  controller.currentStep.value = 0;
+                  controller.clearFields();
+                  controller.fetchTransferWallets();
+                },
+                borderRadius: AppSpacing.radiusLg,
+                width: double.infinity,
+                height: 52,
+                text: localization.transferSuccessStepSectionTransferAgainButton,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              CommonButton(
+                onPressed: () async {
+                  HapticFeedback.lightImpact();
+                  Get.find<HomeController>().selectedIndex.value = 0;
+                  Get.toNamed(BaseRoute.navigation);
+                  await Get.find<HomeController>().loadData();
+                },
+                borderRadius: AppSpacing.radiusLg,
+                width: double.infinity,
+                height: 50,
+                text: localization.transferSuccessStepSectionBackHomeButton,
+                backgroundColor: isDark
+                    ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
+                    : colorScheme.primary.withValues(alpha: 0.06),
+                borderColor: isDark
+                    ? colorScheme.outlineVariant.withValues(alpha: 0.4)
+                    : colorScheme.primary.withValues(alpha: 0.2),
+                borderWidth: 1.5,
+                textColor: colorScheme.onSurface,
+              ),
+
+              const SizedBox(height: AppSpacing.huge),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }

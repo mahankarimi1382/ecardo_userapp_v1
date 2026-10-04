@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
+import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../bookings/travel_checkout_screen.dart';
@@ -76,40 +78,48 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
     return TravelPage(
       title: localization.travelFlightSearch,
       child: ListView(
-        padding: EdgeInsets.all(20.r),
+        padding: EdgeInsets.all(AppSpacing.xl.r),
         children: [
-          Container(
-            height: 170.h,
-            padding: EdgeInsets.all(22.r),
-            decoration: BoxDecoration(
-              borderRadius: TravelTheme.radius,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0D47A1), TravelTheme.blue],
-              ),
-            ),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Icon(
-                    Icons.flight_takeoff_rounded,
-                    size: 110.r,
-                    color: Colors.white.withValues(alpha: 0.16),
+          Builder(
+            builder: (context) {
+              final isDark = TravelTheme.isDark(context);
+              return Container(
+                height: 170.h,
+                padding: EdgeInsets.all(AppSpacing.xxl.r),
+                decoration: BoxDecoration(
+                  borderRadius: TravelTheme.radius,
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? const [Color(0xFF0A1E36), Color(0xFF1E3A5F)]
+                        : const [Color(0xFF0D47A1), TravelTheme.blue],
                   ),
+                  boxShadow: TravelTheme.shadowFor(context),
                 ),
-                Align(
-                  alignment: AlignmentDirectional.bottomStart,
-                  child: Text(
-                    heroTitle,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w900,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Icon(
+                        Icons.flight_takeoff_rounded,
+                        size: 110.r,
+                        color: Colors.white.withValues(alpha: 0.16),
+                      ),
                     ),
-                  ),
+                    Align(
+                      alignment: AlignmentDirectional.bottomStart,
+                      child: Text(
+                        heroTitle,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
           SizedBox(height: 22.h),
           TravelCard(
@@ -274,9 +284,10 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                   () => CommonButton(
                     width: double.infinity,
                     text: localization.travelSearchFlights,
-                    backgroundColor: TravelTheme.blue,
+                    backgroundColor: TravelTheme.primaryFor(context),
                     isLoading: controller.isLoading.value,
                     onPressed: () async {
+                      AppHaptics.light();
                       final origin = originController.text.trim().toUpperCase();
                       final destination = destinationController.text
                           .trim()
@@ -631,7 +642,10 @@ class _FlightResultsScreenState extends State<FlightResultsScreen> {
               SizedBox(height: 16.h),
             ],
             if (controller.isLoading.value)
-              const Center(child: CircularProgressIndicator())
+              const TravelShimmerLoading(
+                type: TravelShimmerType.flightCard,
+                count: 4,
+              )
             else if (offers.isEmpty) ...[
               _FlightResultsEmptyState(
                 hasError: controller.searchError.value != null,
@@ -824,24 +838,26 @@ class _FlightOfferCard extends StatelessWidget {
                 width: 48.r,
                 height: 48.r,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEAF3FF),
-                  borderRadius: BorderRadius.circular(15.r),
+                  color: TravelTheme.isDark(context)
+                      ? AppColors.darkSurfaceVariant
+                      : const Color(0xFFEAF3FF),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                 ),
                 child: offer.imageUrl.isEmpty
-                    ? const Icon(Icons.flight_rounded, color: TravelTheme.blue)
+                    ? Icon(Icons.flight_rounded, color: TravelTheme.primaryFor(context))
                     : ClipRRect(
-                        borderRadius: BorderRadius.circular(15.r),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                         child: Image.network(
                           offer.imageUrl,
                           fit: BoxFit.contain,
-                          errorBuilder: (_, _, _) => const Icon(
+                          errorBuilder: (_, _, _) => Icon(
                             Icons.flight_rounded,
-                            color: TravelTheme.blue,
+                            color: TravelTheme.primaryFor(context),
                           ),
                         ),
                       ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: AppSpacing.md.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -851,6 +867,7 @@ class _FlightOfferCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,
+                        color: TravelTheme.textPrimaryFor(context),
                       ),
                     ),
                     SizedBox(height: 3.h),
@@ -861,7 +878,7 @@ class _FlightOfferCard extends StatelessWidget {
                           travelLocalizedKey(localization, offer.badgeKey),
                       ].join(' • '),
                       style: TextStyle(
-                        color: TravelTheme.blue,
+                        color: TravelTheme.primaryFor(context),
                         fontSize: 10.sp,
                       ),
                     ),
@@ -873,7 +890,7 @@ class _FlightOfferCard extends StatelessWidget {
                 child: Text(
                   travelMoney(context, offer.total),
                   style: TextStyle(
-                    color: TravelTheme.blue,
+                    color: TravelTheme.primaryFor(context),
                     fontWeight: FontWeight.w900,
                     fontSize: 13.sp,
                   ),
@@ -887,12 +904,12 @@ class _FlightOfferCard extends StatelessWidget {
                     isCompared
                         ? Icons.library_add_check_rounded
                         : Icons.library_add_outlined,
-                    color: isCompared ? TravelTheme.blue : TravelTheme.muted,
+                    color: isCompared ? TravelTheme.primaryFor(context) : TravelTheme.textSecondaryFor(context),
                   ),
                 ),
             ],
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: AppSpacing.xl.h),
           Directionality(
             textDirection: TextDirection.ltr,
             child: Row(
@@ -908,15 +925,15 @@ class _FlightOfferCard extends StatelessWidget {
                       Text(
                         duration,
                         style: TextStyle(
-                          color: TravelTheme.muted,
+                          color: TravelTheme.textSecondaryFor(context),
                           fontSize: 10.sp,
                         ),
                       ),
-                      const Divider(color: TravelTheme.blue),
+                      Divider(color: TravelTheme.primaryFor(context).withValues(alpha: 0.4)),
                       Text(
                         localization.travelDirect,
                         style: TextStyle(
-                          color: TravelTheme.muted,
+                          color: TravelTheme.textSecondaryFor(context),
                           fontSize: 9.sp,
                         ),
                       ),
@@ -1404,29 +1421,23 @@ class _FlightResultsEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    if (hasError) {
+      return TravelErrorState(
+        message: localization.allControllerLoadError,
+        onRetry: onRetry,
+      );
+    }
     return Column(
       children: [
         TravelEmptyState(
-          message: hasError
-              ? localization.allControllerLoadError
-              : localization.travelNoFlightResults,
-        ),
-        SizedBox(height: 16.h),
-        if (hasError && onRetry != null)
-          CommonButton(
-            width: double.infinity,
-            text: localization.noInternetConnectionRetryButton,
-            backgroundColor: TravelTheme.blue,
-            onPressed: onRetry,
-          ),
-        SizedBox(height: 10.h),
-        TextButton.icon(
-          onPressed: onEdit,
-          icon: const Icon(Icons.edit_outlined),
-          label: Text(localization.travelSearchFlights),
+          icon: Icons.flight_takeoff_rounded,
+          title: localization.travelNoFlightResults,
+          message: localization.travelOfferUnavailable,
+          actionText: localization.travelSearchFlights,
+          onAction: onEdit,
         ),
         if (onNotify != null) ...[
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.sm.h),
           FilledButton.icon(
             onPressed: onNotify,
             icon: const Icon(Icons.notifications_active_outlined),
@@ -1457,7 +1468,7 @@ class _FlightTime extends StatelessWidget {
     return Column(
       children: [
         Text(time, style: const TextStyle(fontWeight: FontWeight.w900)),
-        Text(code, style: const TextStyle(color: TravelTheme.muted)),
+        Text(code, style: TextStyle(color: TravelTheme.textSecondaryFor(context))),
         if (city.isNotEmpty)
           SizedBox(
             width: 92.w,

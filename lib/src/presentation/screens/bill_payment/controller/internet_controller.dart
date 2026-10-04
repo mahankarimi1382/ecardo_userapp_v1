@@ -18,6 +18,10 @@ class InternetController extends GetxController {
   final RxDouble payableAmount = 0.0.obs;
   final RxString chargeText = "".obs;
   final RxString rateText = "".obs;
+  // Provider & Target selection
+  final RxString selectedOperatorId = "irancell".obs;
+  final RxString selectedOperatorName = "ایرانسل".obs;
+  final RxString targetAccountNumber = "".obs;
   // PAYMENT-FIX (P-2): raw backend response body of the last successful
   // pay-bill call (pass-through, no client model). Surfaced by the result
   // step so a backend "pending" payment no longer looks like a success.

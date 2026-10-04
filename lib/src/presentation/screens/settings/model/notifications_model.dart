@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class NotificationsModel {
   String? status;
   String? message;
@@ -39,6 +41,14 @@ class Notificationss {
   String? type;
   bool? isRead;
   String? createdAt;
+  // NOTIF-LINK: optional server-provided deep link. When the backend
+  // includes it, tapping the notification navigates straight to the source
+  // (route name like '/support_tickets_route' or a full URL) instead of
+  // relying on keyword guessing.
+  String? link;
+  // NOTIF-LINK: free-form payload the backend may attach (e.g. a ticket or
+  // transaction uuid) — passed through to the router.
+  String? payload;
 
   Notificationss({
     this.id,
@@ -47,6 +57,8 @@ class Notificationss {
     this.type,
     this.isRead,
     this.createdAt,
+    this.link,
+    this.payload,
   });
 
   Notificationss.fromJson(Map<String, dynamic> json) {
@@ -56,6 +68,10 @@ class Notificationss {
     type = json['type'];
     isRead = json['is_read'];
     createdAt = json['created_at'];
+    link = json['link'] ?? json['url'] ?? json['route'];
+    payload = json['payload'] is Map
+        ? jsonEncode(json['payload'])
+        : json['payload']?.toString();
   }
 }
 

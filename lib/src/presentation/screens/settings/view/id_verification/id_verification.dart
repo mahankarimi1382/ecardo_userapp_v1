@@ -39,6 +39,8 @@ class _IdVerificationState extends State<IdVerification> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final canPop = Navigator.canPop(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
 
     return PopScope(
       canPop: canPop,
@@ -47,7 +49,8 @@ class _IdVerificationState extends State<IdVerification> {
         _handleBack();
       },
       child: Scaffold(
-        appBar: CommonDefaultAppBar(),
+        backgroundColor: bgColor,
+        appBar: const CommonDefaultAppBar(),
         body: Column(
           children: [
             const SizedBox(height: 16),
@@ -60,55 +63,55 @@ class _IdVerificationState extends State<IdVerification> {
                 rightSideWidget: CommonButton(
                   onPressed: () => Get.toNamed(BaseRoute.kycHistory),
                   width: 120,
-                  height: 40,
+                  height: 38,
                   text: localization.idVerificationHistoryButton,
                   borderRadius: 10,
-                  fontSize: 14,
+                  fontSize: 13,
                 ),
               ),
             ),
             Expanded(
-            child: Obx(() {
-              if (controller.isLoading.value) {
-                return const CommonLoading();
-              }
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const CommonLoading();
+                }
 
-              return RefreshIndicator(
-                color: AppColors.lightPrimary,
-                onRefresh: () => refreshData(),
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 30),
-                            // v1.0.5: KYC Level Roadmap (نسخه جدید — نمایش سطوح بصری)
-              KycLevelRoadmap(
-                onLevelTap: () {
-                  // v56 BUG-K017: هدایت به صفحه‌ی ارسال مدارک KYC
-                  final kycController = Get.find<KycLevelController>();
-                  final nextLevel = kycController.nextLevel?.level ?? 2;
-                  Get.toNamed(BaseRoute.kycSubmitWizard,
-                      arguments: {'target_level': nextLevel});
-                },
-              ),
-                          ],
+                return RefreshIndicator(
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  onRefresh: () => refreshData(),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              KycLevelRoadmap(
+                                onLevelTap: () {
+                                  final kycController = Get.find<KycLevelController>();
+                                  final nextLevel = kycController.nextLevel?.level ?? 2;
+                                  Get.toNamed(
+                                    BaseRoute.kycSubmitWizard,
+                                    arguments: {'target_level': nextLevel},
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 30),
+                            ],
+                          ),
                         ),
-                      ),
-
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }),
-          ),
-        ],
+                );
+              }),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 
 }

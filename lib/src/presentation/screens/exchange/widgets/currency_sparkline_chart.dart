@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'exchange_design_tokens.dart';
 
 /// A lightweight custom-painted sparkline chart visualizing a 24-hour currency
 /// rate trend.
@@ -11,8 +12,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 /// - Negative trend: [AppColors.error] (red)
 /// - Recessive baseline indicating starting reference rate
 /// - Smooth cubic bezier spline with subtle vertical gradient area fill
-/// - Accepts an explicit [rates] list or synthesizes realistic 24h trend points
-///   from [changePercent] and [baseRate] using a deterministic Brownian bridge.
+/// - Theme-adaptive marker ring and baseline
 class CurrencySparklineChart extends StatelessWidget {
   const CurrencySparklineChart({
     super.key,
@@ -25,6 +25,7 @@ class CurrencySparklineChart extends StatelessWidget {
     this.showGradientFill = true,
     this.showLatestPointDot = true,
     this.customLineColor,
+    this.surfaceColor,
     this.strokeWidth = 2.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
   });
@@ -57,6 +58,9 @@ class CurrencySparklineChart extends StatelessWidget {
   /// Optional color override. Defaults to [AppColors.success] for positive
   /// trends and [AppColors.error] for negative trends.
   final Color? customLineColor;
+
+  /// Optional surface background color used to separate the marker dot from the line.
+  final Color? surfaceColor;
 
   /// Line thickness. Defaults to 2.0 per dataviz specs.
   final double strokeWidth;
@@ -140,6 +144,9 @@ class CurrencySparklineChart extends StatelessWidget {
     final Color trendColor = customLineColor ??
         (isPositive ? AppColors.success : AppColors.error);
 
+    final effectiveSurfaceColor = surfaceColor ??
+        ExchangeDesignTokens.cardSurface(context);
+
     return SizedBox(
       width: width,
       height: height,
@@ -148,6 +155,7 @@ class CurrencySparklineChart extends StatelessWidget {
         painter: _SparklinePainter(
           points: points,
           trendColor: trendColor,
+          surfaceColor: effectiveSurfaceColor,
           showBaseline: showBaseline,
           showGradientFill: showGradientFill,
           showLatestPointDot: showLatestPointDot,
@@ -163,6 +171,7 @@ class _SparklinePainter extends CustomPainter {
   const _SparklinePainter({
     required this.points,
     required this.trendColor,
+    required this.surfaceColor,
     required this.showBaseline,
     required this.showGradientFill,
     required this.showLatestPointDot,
@@ -172,6 +181,7 @@ class _SparklinePainter extends CustomPainter {
 
   final List<double> points;
   final Color trendColor;
+  final Color surfaceColor;
   final bool showBaseline;
   final bool showGradientFill;
   final bool showLatestPointDot;
@@ -203,7 +213,6 @@ class _SparklinePainter extends CustomPainter {
       final double normalized = range > 1e-12
           ? (points[i] - minVal) / range
           : 0.5;
-      // Invert Y so higher rates are visually higher on canvas
       final double y = padding.top + (1.0 - normalized) * availableHeight;
       offsets.add(Offset(x, y));
     }
@@ -212,7 +221,7 @@ class _SparklinePainter extends CustomPainter {
     if (showBaseline) {
       final double baselineY = offsets.first.dy;
       final Paint baselinePaint = Paint()
-        ..color = AppColors.lightTextTertiary.withValues(alpha: 0.22)
+        ..color = AppColors.softGray.withValues(alpha: 0.22)
         ..strokeWidth = 1.0;
 
       const double dashWidth = 3.0;
@@ -294,9 +303,9 @@ class _SparklinePainter extends CustomPainter {
         ..color = trendColor.withValues(alpha: 0.25);
       canvas.drawCircle(latest, 4.5, haloPaint);
 
-      // White surface ring (2px separation)
+      // Surface ring (separates line from dot)
       final Paint ringPaint = Paint()
-        ..color = AppColors.white
+        ..color = surfaceColor
         ..style = PaintingStyle.fill;
       canvas.drawCircle(latest, 3.2, ringPaint);
 
@@ -312,6 +321,7 @@ class _SparklinePainter extends CustomPainter {
   bool shouldRepaint(covariant _SparklinePainter oldDelegate) {
     return oldDelegate.points != points ||
         oldDelegate.trendColor != trendColor ||
+        oldDelegate.surfaceColor != surfaceColor ||
         oldDelegate.showBaseline != showBaseline ||
         oldDelegate.showGradientFill != showGradientFill ||
         oldDelegate.showLatestPointDot != showLatestPointDot ||

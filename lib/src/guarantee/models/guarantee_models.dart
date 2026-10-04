@@ -1,4 +1,5 @@
 /// Bank Guarantee & LC Service models — Bank-Guarantee-Service-Flow.md
+library;
 
 class GuaranteeInstrumentModel {
   final int id;

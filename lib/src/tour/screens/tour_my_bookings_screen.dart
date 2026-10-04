@@ -1,7 +1,10 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';
 import '../controllers/tour_controller.dart';
@@ -35,18 +38,28 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: TravelTheme.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(context, en: 'My Tour Bookings', fa: 'رزروهای تور من'),
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800, color: TravelTheme.ink),
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w800,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: TravelTheme.ink),
+          icon: Icon(
+            Icons.arrow_back_ios_rounded,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            size: AppSpacing.iconSm.r,
+          ),
           onPressed: () => Get.back(),
         ),
       ),
@@ -54,15 +67,15 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
         children: [
           // Filter Horizontal Chips
           Container(
-            color: Colors.white,
+            color: isDark ? AppColors.darkSurface : AppColors.white,
             padding: EdgeInsets.symmetric(vertical: 10.h),
             child: SizedBox(
               height: 36.h,
               child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
                 scrollDirection: Axis.horizontal,
                 itemCount: filters.length,
-                separatorBuilder: (_, _) => SizedBox(width: 8.w),
+                separatorBuilder: (_, _) => SizedBox(width: AppSpacing.sm.w),
                 itemBuilder: (context, index) {
                   final f = filters[index];
                   final isSelected = currentStatus == f['status'];
@@ -73,16 +86,24 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                        color: isSelected ? Colors.white : TravelTheme.ink,
+                        color: isSelected
+                            ? AppColors.white
+                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
                       ),
                     ),
-                    backgroundColor: TravelTheme.background,
-                    selectedColor: TravelTheme.blue,
+                    backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                    selectedColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                    checkmarkColor: AppColors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                      side: BorderSide(color: isSelected ? TravelTheme.blue : TravelTheme.border),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                      side: BorderSide(
+                        color: isSelected
+                            ? (isDark ? AppColors.darkPrimary : TravelTheme.blue)
+                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                      ),
                     ),
                     onSelected: (val) {
+                      HapticFeedback.lightImpact();
                       setState(() => currentStatus = f['status']!);
                       controller.loadMyBookings(status: currentStatus.isEmpty ? null : currentStatus);
                     },
@@ -91,66 +112,125 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
               ),
             ),
           ),
+          Divider(
+            height: 1,
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
 
-          // Bookings List
+          // Bookings List (4 States)
           Expanded(
             child: Obx(() {
+              // 1. Loading Shimmer
               if (controller.isLoadingBookings.value && controller.myBookings.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
+                return _buildBookingsSkeleton(isDark);
               }
 
+              // 2. Empty State
               if (controller.myBookings.isEmpty) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.confirmation_number_outlined, size: 64.r, color: TravelTheme.muted),
-                      SizedBox(height: 12.h),
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'No bookings found',
-                          fa: 'رزروی در این بخش یافت نشد',
-                          ar: 'لم يتم العثور على أي حجوزات',
-                          zh: '未找到预订记录',
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(AppSpacing.xxxl.r),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(AppSpacing.xl.r),
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.confirmation_number_outlined,
+                            size: 48.r,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                          ),
                         ),
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(height: 6.h),
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'Your booked tours will appear here after payment confirmation.',
-                          fa: 'رزروهای قطعی شما پس از پرداخت در این بخش نمایش داده می‌شوند.',
-                          ar: 'ستظهر حجوزاتك المؤكدة هنا بعد إتمام الدفع.',
-                          zh: '支付确认后，您的旅游预订将显示在此处。',
+                        SizedBox(height: AppSpacing.md.h),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'No bookings found',
+                            fa: 'رزروی در این بخش یافت نشد',
+                            ar: 'لم يتم العثور على أي حجوزات',
+                            zh: '未找到预订记录',
+                          ),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11.5.sp, color: TravelTheme.muted),
-                      ),
-                    ],
+                        SizedBox(height: AppSpacing.xs.h),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Your booked tours will appear here after payment confirmation.',
+                            fa: 'رزروهای قطعی شما پس از پرداخت در این بخش نمایش داده می‌شوند.',
+                            ar: 'ستظهر حجوزاتك المؤكدة هنا بعد إتمام الدفع.',
+                            zh: '支付确认后，您的旅游预订将显示在此处。',
+                          ),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                          ),
+                        ),
+                        SizedBox(height: AppSpacing.lg.h),
+                        OutlinedButton(
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            Get.back();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: isDark ? AppColors.darkPrimary : TravelTheme.blue),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                          ),
+                          child: Text(
+                            l10nPick(context, en: 'Explore Tours', fa: 'مشاهده تورها'),
+                            style: TextStyle(
+                              color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
 
+              // 3. Content State
               return RefreshIndicator(
-                color: TravelTheme.blue,
+                color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
                 onRefresh: () => controller.loadMyBookings(
                   status: currentStatus.isEmpty ? null : currentStatus,
                 ),
                 child: ListView.separated(
-                  padding: EdgeInsets.all(16.r),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg.w,
+                    vertical: AppSpacing.lg.h,
+                  ),
                   itemCount: controller.myBookings.length,
-                  separatorBuilder: (_, _) => SizedBox(height: 14.h),
+                  separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
                   itemBuilder: (context, index) {
                     final booking = controller.myBookings[index];
                     return _BookingCard(
                       booking: booking,
+                      isDark: isDark,
                       onViewVoucher: () {
+                        HapticFeedback.lightImpact();
                         Get.to(() => TourVoucherScreen(booking: booking));
                       },
-                      onPayRemainder: () => _showPayRemainderDialog(booking),
-                      onCancel: () => _confirmCancelBooking(booking),
+                      onPayRemainder: () {
+                        HapticFeedback.lightImpact();
+                        _showPayRemainderDialog(booking, isDark);
+                      },
+                      onCancel: () {
+                        HapticFeedback.lightImpact();
+                        _confirmCancelBooking(booking, isDark);
+                      },
                     );
                   },
                 ),
@@ -162,10 +242,32 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
     );
   }
 
-  void _showPayRemainderDialog(TourBookingModel booking) {
+  Widget _buildBookingsSkeleton(bool isDark) {
+    final baseColor = isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300;
+    final highlightColor = isDark ? AppColors.darkSurface : Colors.grey.shade100;
+
+    return Shimmer.fromColors(
+      baseColor: baseColor,
+      highlightColor: highlightColor,
+      child: ListView.separated(
+        padding: EdgeInsets.all(AppSpacing.lg.r),
+        itemCount: 3,
+        separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+        itemBuilder: (_, _) => Container(
+          height: 160.h,
+          decoration: BoxDecoration(
+            color: baseColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showPayRemainderDialog(TourBookingModel booking, bool isDark) {
     Get.dialog(
       AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
         title: Text(
           l10nPick(context, en: 'Settle Remaining Balance', fa: 'تسویه باقیمانده مبلغ تور'),
           style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
@@ -178,19 +280,22 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
               '${booking.tourTitle} (${booking.bookingNo})',
               style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: AppSpacing.sm.h),
             Text(
               '${l10nPick(context, en: 'Remaining Balance:', fa: 'مانده قابل پرداخت:')} ${booking.remainingBalance.toInt()} ${booking.currency}',
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: TravelTheme.green),
+              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: AppColors.success),
             ),
-            SizedBox(height: 6.h),
+            SizedBox(height: AppSpacing.xs.h),
             Text(
               l10nPick(
                 context,
                 en: 'Amount will be deducted from your eCardo main wallet.',
                 fa: 'مبلغ باقیمانده از کیف پول اصلی eCardo شما کسر خواهد شد.',
               ),
-              style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+              ),
             ),
           ],
         ),
@@ -201,9 +306,9 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: TravelTheme.green,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              backgroundColor: AppColors.success,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
             ),
             onPressed: () async {
               Get.back();
@@ -216,10 +321,10 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
     );
   }
 
-  void _confirmCancelBooking(TourBookingModel booking) {
+  void _confirmCancelBooking(TourBookingModel booking, bool isDark) {
     Get.dialog(
       AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
         title: Text(
           l10nPick(context, en: 'Cancel Booking?', fa: 'آیا از لغو رزرو اطمینان دارید؟'),
           style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
@@ -230,7 +335,10 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
             en: 'Your seat reservation will be released.',
             fa: 'صندلی‌های قفل‌شده برای این تور آزاد خواهد شد.',
           ),
-          style: TextStyle(fontSize: 12.sp, color: TravelTheme.muted),
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+          ),
         ),
         actions: [
           TextButton(
@@ -239,9 +347,9 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: TravelTheme.red,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              backgroundColor: AppColors.error,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
             ),
             onPressed: () async {
               Get.back();
@@ -257,12 +365,14 @@ class _TourMyBookingsScreenState extends State<TourMyBookingsScreen> {
 
 class _BookingCard extends StatelessWidget {
   final TourBookingModel booking;
+  final bool isDark;
   final VoidCallback onViewVoucher;
   final VoidCallback onPayRemainder;
   final VoidCallback onCancel;
 
   const _BookingCard({
     required this.booking,
+    required this.isDark,
     required this.onViewVoucher,
     required this.onPayRemainder,
     required this.onCancel,
@@ -282,12 +392,20 @@ class _BookingCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18.r),
-        boxShadow: TravelTheme.shadow,
-        border: Border.all(color: TravelTheme.border.withValues(alpha: 0.6)),
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+        boxShadow: [
+          BoxShadow(
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(AppSpacing.lg.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -296,24 +414,38 @@ class _BookingCard extends StatelessWidget {
             children: [
               Text(
                 booking.bookingNo,
-                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: TravelTheme.blue),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                ),
               ),
-              _buildStatusBadge(booking.status, booking.statusLabel),
+              _buildStatusBadge(context, booking.status, booking.statusLabel, isDark),
             ],
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.sm.h),
           Text(
             booking.tourTitle,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: TravelTheme.ink),
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w800,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
           ),
           SizedBox(height: 4.h),
           Text(
             '${booking.tourCity} • حرکت: ${booking.departDate ?? 'نامشخص'} • ${booking.travelersCount} نفر',
-            style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
           ),
-          SizedBox(height: 12.h),
-          const Divider(height: 1),
-          SizedBox(height: 10.h),
+          SizedBox(height: AppSpacing.md.h),
+          Divider(
+            height: 1,
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
+          SizedBox(height: AppSpacing.sm.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -322,12 +454,19 @@ class _BookingCard extends StatelessWidget {
                 children: [
                   Text(
                     l10nPick(context, en: 'Total Amount:', fa: 'مبلغ کل:'),
-                    style: TextStyle(fontSize: 10.sp, color: TravelTheme.muted),
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     '${booking.totalPrice.toInt()} ${booking.currency}',
-                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                      fontSize: 13.5.sp,
+                      fontWeight: FontWeight.w900,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    ),
                   ),
                 ],
               ),
@@ -337,18 +476,25 @@ class _BookingCard extends StatelessWidget {
                   children: [
                     Text(
                       l10nPick(context, en: 'Remaining:', fa: 'مانده:'),
-                      style: TextStyle(fontSize: 10.sp, color: TravelTheme.muted),
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      ),
                     ),
                     SizedBox(height: 2.h),
                     Text(
                       '${booking.remainingBalance.toInt()} ${booking.currency}',
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: TravelTheme.red),
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.error,
+                      ),
                     ),
                   ],
                 ),
             ],
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: AppSpacing.md.h),
           Row(
             children: [
               if (canViewVoucher) ...[
@@ -357,41 +503,40 @@ class _BookingCard extends StatelessWidget {
                     icon: const Icon(Icons.qr_code_rounded, size: 16),
                     label: Text(l10nPick(context, en: 'View Voucher', fa: 'مشاهده واچر')),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: TravelTheme.blue,
-                      foregroundColor: Colors.white,
+                      backgroundColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                      foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
                       padding: EdgeInsets.symmetric(vertical: 10.h),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
                     ),
                     onPressed: onViewVoucher,
                   ),
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: AppSpacing.sm.w),
               ],
               if (hasRemainder) ...[
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: TravelTheme.green,
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppColors.success,
+                      foregroundColor: AppColors.white,
                       padding: EdgeInsets.symmetric(vertical: 10.h),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
                     ),
                     onPressed: onPayRemainder,
                     child: Text(l10nPick(context, en: 'Pay Remainder', fa: 'تسویه باقیمانده')),
                   ),
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: AppSpacing.sm.w),
               ],
               if (canCancel)
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: TravelTheme.red,
-                    side: const BorderSide(color: TravelTheme.red),
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                    foregroundColor: AppColors.error,
+                    side: const BorderSide(color: AppColors.error),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
                   ),
                   onPressed: onCancel,
-                  child: Text(l10nPick(context, en: 'Cancel', fa: 'لغو رزرو')),
+                  child: Text(l10nPick(context, en: 'Cancel', fa: 'لغو')),
                 ),
             ],
           ),
@@ -400,37 +545,36 @@ class _BookingCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(String status, String label) {
-    Color bg = Colors.grey.shade100;
-    Color fg = Colors.grey.shade800;
+  Widget _buildStatusBadge(BuildContext context, String status, String label, bool isDark) {
+    Color bg;
+    Color fg;
 
-    switch (status) {
+    switch (status.toUpperCase()) {
       case 'CONFIRMED':
       case 'VOUCHER_ISSUED':
       case 'COMPLETED':
-        bg = Colors.green.shade50;
-        fg = Colors.green.shade800;
+        bg = isDark ? AppColors.success.withValues(alpha: 0.2) : AppColors.successContainer;
+        fg = AppColors.success;
         break;
       case 'DEPOSIT_PAID':
-        bg = Colors.blue.shade50;
-        fg = Colors.blue.shade800;
-        break;
-      case 'DRAFT':
-      case 'PENDING_PAYMENT':
-        bg = Colors.amber.shade50;
-        fg = Colors.amber.shade900;
+        bg = isDark ? AppColors.mutedBlue.withValues(alpha: 0.2) : AppColors.infoContainer;
+        fg = isDark ? AppColors.mainSoftBlue : TravelTheme.blue;
         break;
       case 'CANCELLED':
-        bg = Colors.red.shade50;
-        fg = Colors.red.shade800;
+      case 'EXPIRED':
+        bg = isDark ? AppColors.error.withValues(alpha: 0.2) : AppColors.errorContainer;
+        fg = AppColors.error;
         break;
+      default:
+        bg = isDark ? AppColors.warning.withValues(alpha: 0.2) : AppColors.warningContainer;
+        fg = AppColors.warning;
     }
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(6.r),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
       ),
       child: Text(
         label,
@@ -439,4 +583,3 @@ class _BookingCard extends StatelessWidget {
     );
   }
 }
-

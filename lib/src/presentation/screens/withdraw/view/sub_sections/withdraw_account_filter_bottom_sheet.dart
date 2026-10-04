@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
@@ -22,42 +24,44 @@ class _WithdrawAccountFilterBottomSheetState
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: AppDurations.normal,
       curve: Curves.easeOutQuart,
       height: 280,
-      margin: EdgeInsets.symmetric(horizontal: 18),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+        color: isDark ? AppColors.darkCard : AppColors.lightCard,
+        borderRadius: const BorderRadiusDirectional.only(
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
-            blurRadius: 40,
-            spreadRadius: 0,
-            offset: Offset(0, 0),
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+            blurRadius: AppSpacing.xxl,
+            offset: Offset.zero,
           ),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 18),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               Container(
                 width: 40,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(30),
+                  color: isDark
+                      ? AppColors.darkTextSecondary.withValues(alpha: 0.3)
+                      : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: AppSpacing.xxl),
               CommonRequiredLabelAndDynamicField(
                 labelText: localization.withdrawAccountFilterMethodName,
                 isLabelRequired: false,
@@ -71,17 +75,18 @@ class _WithdrawAccountFilterBottomSheetState
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: AppSpacing.xxxl),
               CommonButton(
                 onPressed: () {
+                  HapticFeedback.lightImpact();
                   controller.fetchDynamicWithdrawAccounts();
                   controller.methodNameController.clear();
                   Get.back();
                 },
                 width: double.infinity,
-
                 text: localization.withdrawAccountFilterApplyButton,
               ),
+              const SizedBox(height: AppSpacing.xl),
             ],
           ),
         ),

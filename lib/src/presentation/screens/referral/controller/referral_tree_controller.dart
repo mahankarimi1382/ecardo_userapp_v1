@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/referral/model/referral_tre
 class ReferralTreeController extends GetxController {
   // Global
   final RxBool isLoading = false.obs;
+  final RxBool isError = false.obs;
   final Rx<ReferralTreeModel> referralTreeModel = ReferralTreeModel().obs;
 
   @override
@@ -21,19 +22,26 @@ class ReferralTreeController extends GetxController {
   // Fetch Referral Tree
   Future<void> fetchReferralTree() async {
     isLoading.value = true;
+    isError.value = false;
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.referralTreeEndpoint,
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         referralTreeModel.value = ReferralTreeModel.fromJson(response.data!);
+      } else {
+        isError.value = true;
       }
     } catch (e, stackTrace) {
+      isError.value = true;
       debugPrint('❌ fetchReferralTree() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      final ctx = Get.context;
+      if (ctx != null && ctx.mounted) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(ctx)!.allControllerLoadError,
+        );
+      }
     } finally {
       isLoading.value = false;
     }

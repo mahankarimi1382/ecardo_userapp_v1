@@ -39,32 +39,32 @@ class AppLocalizationsTr extends AppLocalizations {
   String get comment_common_exit_application => '==== Exit Application ====';
 
   @override
-  String get exitApplicationTitle => 'Exit Application';
+  String get exitApplicationTitle => 'Uygulamadan Çıkış';
 
   @override
   String get exitApplicationMessage =>
-      'Are you sure you want to exit the application?';
+      'Uygulamadan çıkmak istediğinize emin misiniz?';
 
   @override
   String get comment_common_dropdown => '==== Common Dropdown ====';
 
   @override
-  String get commonDropdownSelectGender => 'Select Gender';
+  String get commonDropdownSelectGender => 'Cinsiyet Seçin';
 
   @override
-  String get commonDropdownGender => 'Gender';
+  String get commonDropdownGender => 'Cinsiyet';
 
   @override
-  String get commonDropdownGenderNotFound => 'Gender not found';
+  String get commonDropdownGenderNotFound => 'Cinsiyet bulunamadı';
 
   @override
-  String get commonDropdownMale => 'Male';
+  String get commonDropdownMale => 'Erkek';
 
   @override
-  String get commonDropdownFemale => 'Female';
+  String get commonDropdownFemale => 'Kadın';
 
   @override
-  String get commonDropdownOther => 'Other';
+  String get commonDropdownOther => 'Diğer';
 
   @override
   String get comment_welcome => '==== Welcome Screen ====';
@@ -111,915 +111,919 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get signInBiometricErrorFirstTime =>
-      'First Sign In with Email and Password';
+      'İlk girişte e-posta ve parola ile giriş yapın';
 
   @override
-  String get signInBiometricErrorNotEnabled => 'Your biometric is not enabled';
+  String get signInBiometricErrorNotEnabled =>
+      'Biyometrik doğrulama etkin değil';
 
   @override
-  String get signInRegistrationDisabled => 'Registration is disabled';
+  String get signInRegistrationDisabled => 'Kayıt devre dışı bırakılmış';
 
   @override
-  String get signInValidationEmailRequired => 'The email field is required';
+  String get signInValidationEmailRequired => 'E-posta alanı zorunludur';
 
   @override
-  String get signInValidationPasswordRequired =>
-      'The password field is required';
+  String get signInValidationPasswordRequired => 'Parola alanı zorunludur';
 
   @override
   String get comment_two_factor_auth =>
       '==== Two Factor Authentication Screen ====';
 
   @override
-  String get twoFactorAuthTitle => 'Verify Two FA';
+  String get twoFactorAuthTitle => 'İki Adımlı Doğrulamayı Onayla';
 
   @override
-  String get twoFactorAuthSubtitle => 'Enter code via google authenticator app';
+  String get twoFactorAuthSubtitle =>
+      'Kodu Google Authenticator uygulaması üzerinden girin';
 
   @override
-  String get twoFactorAuthEnterOtp => 'Enter OTP';
+  String get twoFactorAuthEnterOtp => 'OTP Girin';
 
   @override
-  String get twoFactorAuthVerifyButton => 'Verify';
+  String get twoFactorAuthVerifyButton => 'Doğrula';
 
   @override
-  String get twoFactorAuthBackTo => 'Back to? ';
+  String get twoFactorAuthBackTo => 'Geri dönülecek sayfa? ';
 
   @override
-  String get twoFactorAuthSignIn => 'Sign In';
+  String get twoFactorAuthSignIn => 'Giriş Yap';
 
   @override
-  String get twoFactorAuthOtpRequired => 'The otp field is required';
+  String get twoFactorAuthOtpRequired => 'OTP alanı zorunludur';
 
   @override
   String get comment_forgot_password => '==== Forgot Password Screen ====';
 
   @override
-  String get forgotPasswordTitle => 'Reset Your Password';
+  String get forgotPasswordTitle => 'Parolanızı Sıfırlayın';
 
   @override
   String get forgotPasswordSubtitle =>
-      'Don\'t worry! It happens. Enter your email to reset your password.';
+      'Endişelenmeyin, olur. Parolanızı sıfırlamak için e-posta adresinizi girin.';
 
   @override
-  String get forgotPasswordEmail => 'Email';
+  String get forgotPasswordEmail => 'E-posta';
 
   @override
-  String get forgotPasswordButton => 'Forgot Password';
+  String get forgotPasswordButton => 'Parolamı Unuttum';
 
   @override
-  String get forgotPasswordBackTo => 'Back to? ';
+  String get forgotPasswordBackTo => 'Geri dönülecek sayfa? ';
 
   @override
-  String get forgotPasswordSignIn => 'Sign In';
+  String get forgotPasswordSignIn => 'Giriş Yap';
 
   @override
-  String get forgotPasswordEmailRequired => 'The email field is required';
+  String get forgotPasswordEmailRequired => 'E-posta alanı zorunludur';
 
   @override
   String get comment_forgot_password_pin_verification =>
       '==== Forgot Password Pin Verification Screen ====';
 
   @override
-  String get forgotPasswordPinVerifyTitle => 'Verify Email';
+  String get forgotPasswordPinVerifyTitle => 'E-postayı Doğrula';
 
   @override
-  String get forgotPasswordPinOtpSent => 'OTP sent to ';
+  String get forgotPasswordPinOtpSent => 'OTP şuraya gönderildi: ';
 
   @override
-  String get forgotPasswordPinEnterOtp => 'Enter OTP';
+  String get forgotPasswordPinEnterOtp => 'OTP Girin';
 
   @override
-  String get forgotPasswordPinOtpCountdown => 'OTP in';
+  String get forgotPasswordPinOtpCountdown => 'Kalan süre';
 
   @override
-  String get forgotPasswordPinVerifyButton => 'Verify OTP';
+  String get forgotPasswordPinVerifyButton => 'OTP\'yi Doğrula';
 
   @override
-  String get forgotPasswordPinDidNotReceive => 'Didn\'t receive the code? ';
+  String get forgotPasswordPinDidNotReceive => 'Kodu almadınız mı? ';
 
   @override
-  String get forgotPasswordPinResend => 'Resend';
+  String get forgotPasswordPinResend => 'Yeniden Gönder';
 
   @override
-  String get forgotPasswordPinOtpRequired => 'The otp field is required';
+  String get forgotPasswordPinOtpRequired => 'OTP alanı zorunludur';
 
   @override
   String get comment_reset_password => '==== Reset Password Screen ====';
 
   @override
-  String get resetPasswordTitle => 'Reset Password';
+  String get resetPasswordTitle => 'Parolayı Sıfırla';
 
   @override
   String get resetPasswordSubtitle =>
-      'Write your password and confirm password.';
+      'Parolanızı yazın ve parola onayını girin.';
 
   @override
-  String get resetPasswordPassword => 'Password';
+  String get resetPasswordPassword => 'Parola';
 
   @override
-  String get resetPasswordConfirmPassword => 'Confirm Password';
+  String get resetPasswordConfirmPassword => 'Parolayı Onayla';
 
   @override
-  String get resetPasswordButton => 'Reset';
+  String get resetPasswordButton => 'Sıfırla';
 
   @override
-  String get resetPasswordAlreadyHaveAccount => 'Already have an account? ';
+  String get resetPasswordAlreadyHaveAccount => 'Zaten hesabınız var mı? ';
 
   @override
-  String get resetPasswordSignIn => 'Sign In';
+  String get resetPasswordSignIn => 'Giriş Yap';
 
   @override
-  String get resetPasswordValidationRequired => 'Password is required';
+  String get resetPasswordValidationRequired => 'Parola zorunludur';
 
   @override
   String get resetPasswordValidationMinLength =>
-      'Password must be at least 8 characters';
+      'Parola en az 8 karakter olmalıdır';
 
   @override
   String get resetPasswordValidationConfirmRequired =>
-      'Please confirm your password';
+      'Lütfen parolanızı onaylayın';
 
   @override
-  String get resetPasswordValidationMismatch => 'Passwords don\'t match';
+  String get resetPasswordValidationMismatch => 'Parolalar eşleşmiyor';
 
   @override
   String get comment_auth_id_verification =>
       '==== Auth ID Verification Screen ====';
 
   @override
-  String get authIdVerificationInvalidFieldType => 'Invalid field type';
+  String get authIdVerificationInvalidFieldType => 'Geçersiz alan türü';
 
   @override
-  String get authIdVerificationUnknownFieldType => 'Unknown field type: ';
+  String get authIdVerificationUnknownFieldType => 'Bilinmeyen alan türü: ';
 
   @override
   String get comment_camera_type_section => '==== Camera Type Section ====';
 
   @override
-  String get cameraTypeBack => 'Back';
+  String get cameraTypeBack => 'Geri';
 
   @override
-  String get cameraTypeNotAvailable => 'N/A';
+  String get cameraTypeNotAvailable => 'Yok';
 
   @override
-  String get cameraTypeButton => 'Camera';
+  String get cameraTypeButton => 'Kamera';
 
   @override
-  String get cameraTypeSkip => 'Skip';
+  String get cameraTypeSkip => 'Atla';
 
   @override
   String get comment_file_type_section => '==== File Type Section ====';
 
   @override
-  String get fileTypeBack => 'Back';
+  String get fileTypeBack => 'Geri';
 
   @override
-  String get fileTypeNotAvailable => 'N/A';
+  String get fileTypeNotAvailable => 'Yok';
 
   @override
-  String get fileTypeChooseFile => 'Choose File';
+  String get fileTypeChooseFile => 'Dosya Seç';
 
   @override
-  String get fileTypeSkip => 'Skip';
+  String get fileTypeSkip => 'Atla';
 
   @override
   String get comment_front_camera_type_section =>
       '==== Front Camera Type Section ====';
 
   @override
-  String get frontCameraTypeBack => 'Back';
+  String get frontCameraTypeBack => 'Geri';
 
   @override
-  String get frontCameraTypeNotAvailable => 'N/A';
+  String get frontCameraTypeNotAvailable => 'Yok';
 
   @override
-  String get frontCameraTypeButton => 'Front Camera';
+  String get frontCameraTypeButton => 'Ön Kamera';
 
   @override
-  String get frontCameraTypeSkip => 'Skip';
+  String get frontCameraTypeSkip => 'Atla';
 
   @override
   String get comment_kyc_submission_section =>
       '==== KYC Submission Section ====';
 
   @override
-  String get kycSubmissionIdVerification => 'ID Verification';
+  String get kycSubmissionIdVerification => 'Kimlik Doğrulama';
 
   @override
-  String get kycSubmissionSubmit => 'Submit';
+  String get kycSubmissionSubmit => 'Gönder';
 
   @override
-  String get kycSubmissionNext => 'Next';
+  String get kycSubmissionNext => 'İleri';
 
   @override
-  String get kycSubmissionReUpload => 'Re Upload';
+  String get kycSubmissionReUpload => 'Yeniden Yükle';
 
   @override
-  String get kycSubmissionRetake => 'Retake';
+  String get kycSubmissionRetake => 'Yeniden Çek';
 
   @override
   String get comment_email_screen => '==== Email Screen ====';
 
   @override
-  String get emailScreenCreateAccount => 'Create Your Account';
+  String get emailScreenCreateAccount => 'Hesabınızı Oluşturun';
 
   @override
   String get emailScreenSubtitle =>
-      'Join and take control of your finances today';
+      'Bugün katılın ve mali durumunuzun kontrolünü elinize alın';
 
   @override
-  String get emailScreenEmail => 'Email';
+  String get emailScreenEmail => 'E-posta';
 
   @override
-  String get emailScreenContinue => 'Continue';
+  String get emailScreenContinue => 'Devam Et';
 
   @override
-  String get emailScreenAlreadyHaveAccount => 'Already have an account? ';
+  String get emailScreenAlreadyHaveAccount => 'Zaten hesabınız var mı? ';
 
   @override
-  String get emailScreenSignIn => 'Sign In';
+  String get emailScreenSignIn => 'Giriş Yap';
 
   @override
-  String get emailScreenEmailRequired => 'Please enter an email';
+  String get emailScreenEmailRequired => 'Lütfen bir e-posta adresi girin';
 
   @override
   String get comment_personal_info_screen => '==== Personal Info Screen ====';
 
   @override
-  String get personalInfoTitle => 'Your Information';
+  String get personalInfoTitle => 'Bilgileriniz';
 
   @override
   String get personalInfoSubtitle =>
-      'Enter your legal information to continue.';
+      'Devam etmek için kimlik bilgilerinizi girin.';
 
   @override
-  String get personalInfoFirstName => 'First Name';
+  String get personalInfoFirstName => 'Ad';
 
   @override
-  String get personalInfoLastName => 'Last Name';
+  String get personalInfoLastName => 'Soyad';
 
   @override
-  String get personalInfoUserName => 'User Name';
+  String get personalInfoUserName => 'Kullanıcı Adı';
 
   @override
-  String get personalInfoCountry => 'Country';
+  String get personalInfoCountry => 'Ülke';
 
   @override
-  String get personalInfoSelectCountry => 'Select Country';
+  String get personalInfoSelectCountry => 'Ülke Seçin';
 
   @override
-  String get personalInfoPhoneNo => 'Phone No';
+  String get personalInfoPhoneNo => 'Telefon No';
 
   @override
-  String get personalInfoReferralCode => 'Referral Code';
+  String get personalInfoReferralCode => 'Davet Kodu';
 
   @override
-  String get personalInfoContinue => 'Continue';
+  String get personalInfoContinue => 'Devam Et';
 
   @override
-  String get personalInfoValidationFirstNameRequired =>
-      'First name is required';
+  String get personalInfoValidationFirstNameRequired => 'Ad zorunludur';
 
   @override
-  String get personalInfoValidationLastNameRequired => 'Last name is required';
+  String get personalInfoValidationLastNameRequired => 'Soyad zorunludur';
 
   @override
-  String get personalInfoValidationUserNameRequired => 'Username is required';
+  String get personalInfoValidationUserNameRequired =>
+      'Kullanıcı adı zorunludur';
 
   @override
-  String get personalInfoValidationCountryRequired => 'Country is required';
+  String get personalInfoValidationCountryRequired => 'Ülke zorunludur';
 
   @override
-  String get personalInfoValidationPhoneRequired => 'Phone number is required';
+  String get personalInfoValidationPhoneRequired =>
+      'Telefon numarası zorunludur';
 
   @override
   String get personalInfoValidationReferralCodeRequired =>
-      'Referral code is required';
+      'Davet kodu zorunludur';
 
   @override
-  String get personalInfoValidationGenderRequired => 'Gender is required';
+  String get personalInfoValidationGenderRequired => 'Cinsiyet zorunludur';
 
   @override
   String get comment_setup_password_screen => '==== Setup Password Screen ====';
 
   @override
-  String get setupPasswordTitle => 'Setup Password';
+  String get setupPasswordTitle => 'Parola Oluştur';
 
   @override
-  String get setupPasswordSubtitle => 'Create a strong password and confirm it';
+  String get setupPasswordSubtitle => 'Güçlü bir parola oluşturun ve onaylayın';
 
   @override
-  String get setupPasswordPassword => 'Password';
+  String get setupPasswordPassword => 'Parola';
 
   @override
-  String get setupPasswordConfirmPassword => 'Confirm Password';
+  String get setupPasswordConfirmPassword => 'Parolayı Onayla';
 
   @override
-  String get setupPasswordAgreeTerms => 'I agree with the ';
+  String get setupPasswordAgreeTerms => 'Kabul ediyorum: ';
 
   @override
-  String get setupPasswordTermsConditions => 'Terms & Conditions';
+  String get setupPasswordTermsConditions => 'Şartlar ve Koşullar';
 
   @override
-  String get setupPasswordButton => 'Setup Password';
+  String get setupPasswordButton => 'Parola Oluştur';
 
   @override
-  String get setupPasswordValidationRequired => 'Password is required';
+  String get setupPasswordValidationRequired => 'Parola zorunludur';
 
   @override
   String get setupPasswordValidationMinLength =>
-      'Password must be at least 8 characters';
+      'Parola en az 8 karakter olmalıdır';
 
   @override
   String get setupPasswordValidationConfirmRequired =>
-      'Please confirm your password';
+      'Lütfen parolanızı onaylayın';
 
   @override
-  String get setupPasswordValidationMismatch => 'Passwords don\'t match';
+  String get setupPasswordValidationMismatch => 'Parolalar eşleşmiyor';
 
   @override
   String get setupPasswordValidationTermsRequired =>
-      'Please accept terms and conditions';
+      'Lütfen şartları ve koşulları kabul edin';
 
   @override
   String get comment_sign_up_status_screen => '==== Sign Up Status Screen ====';
 
   @override
-  String get signUpStatusTitle => 'Your Current Status';
+  String get signUpStatusTitle => 'Mevcut Durumunuz';
 
   @override
   String get signUpStatusSubtitle =>
-      'A Quick 4-Step Process to Keep Your eCardo Account Secure';
+      'eCardo Hesabınızı Güvende Tutmak İçin Hızlı 4 Adımlı Süreç';
 
   @override
-  String get signUpStatusStep => 'Step';
+  String get signUpStatusStep => 'Adım';
 
   @override
-  String get signUpStatusEmailVerification => 'Email Verification';
+  String get signUpStatusEmailVerification => 'E-posta Doğrulama';
 
   @override
-  String get signUpStatusSetupPassword => 'Setup Password';
+  String get signUpStatusSetupPassword => 'Parola Oluştur';
 
   @override
-  String get signUpStatusPersonalInfo => 'Personal Info';
+  String get signUpStatusPersonalInfo => 'Kişisel Bilgiler';
 
   @override
-  String get signUpStatusVerification => 'Verification';
+  String get signUpStatusVerification => 'Doğrulama';
 
   @override
-  String get signUpStatusInReview => 'In Review';
+  String get signUpStatusInReview => 'İncelemede';
 
   @override
-  String get signUpStatusRejected => 'Rejected';
+  String get signUpStatusRejected => 'Reddedildi';
 
   @override
-  String get signUpStatusNoReason => 'No reason provided';
+  String get signUpStatusNoReason => 'Neden belirtilmedi';
 
   @override
-  String get signUpStatusNextStep => 'Next Step';
+  String get signUpStatusNextStep => 'Sonraki Adım';
 
   @override
-  String get signUpStatusSubmitAgain => 'Submit Again';
+  String get signUpStatusSubmitAgain => 'Yeniden Gönder';
 
   @override
-  String get signUpStatusDashboard => 'Dashboard';
+  String get signUpStatusDashboard => 'Ana Sayfa';
 
   @override
-  String get signUpStatusBack => 'Back';
+  String get signUpStatusBack => 'Geri';
 
   @override
   String get signUpStatusErrorProcessing =>
-      'Error processing next step. Please try again.';
+      'Sonraki adım işlenirken hata oluştu. Lütfen tekrar deneyin.';
 
   @override
-  String get signUpStatusVerificationTypeEmpty => 'Verification Type Is Empty!';
+  String get signUpStatusVerificationTypeEmpty => 'Doğrulama Türü Boş!';
 
   @override
   String get signUpStatusErrorLoadingTypes =>
-      'Error loading verification types. Please try again.';
+      'Doğrulama türleri yüklenirken hata oluştu. Lütfen tekrar deneyin.';
 
   @override
   String get signUpStatusDropdownTwoVerificationNotFound =>
-      'Verification Type Not Found';
+      'Doğrulama Türü Bulunamadı';
 
   @override
   String get comment_verify_email_screen => '==== Verify Email Screen ====';
 
   @override
-  String get verifyEmailTitle => 'Verify Email';
+  String get verifyEmailTitle => 'E-postayı Doğrula';
 
   @override
-  String get verifyEmailOtpSent => 'OTP sent to ';
+  String get verifyEmailOtpSent => 'OTP şuraya gönderildi: ';
 
   @override
-  String get verifyEmailEnterOtp => 'Enter OTP';
+  String get verifyEmailEnterOtp => 'OTP Girin';
 
   @override
-  String get verifyEmailResendAvailable => 'Resend available in';
+  String get verifyEmailResendAvailable => 'Yeniden gönderime kalan süre';
 
   @override
-  String get verifyEmailRequestNewOtp => 'You can request a new OTP now';
+  String get verifyEmailRequestNewOtp =>
+      'Artık yeni bir OTP talep edebilirsiniz';
 
   @override
-  String get verifyEmailButton => 'Verify Email';
+  String get verifyEmailButton => 'E-postayı Doğrula';
 
   @override
-  String get verifyEmailDidNotReceive => 'Didn\'t receive the code? ';
+  String get verifyEmailDidNotReceive => 'Kodu almadınız mı? ';
 
   @override
-  String get verifyEmailResend => 'Resend';
+  String get verifyEmailResend => 'Yeniden Gönder';
 
   @override
-  String get verifyEmailOtpRequired => 'The otp field is required';
+  String get verifyEmailOtpRequired => 'OTP alanı zorunludur';
 
   @override
   String get comment_add_money_screen => '==== Add Money Screen ====';
 
   @override
-  String get addMoneyTitle => 'Add Money';
+  String get addMoneyTitle => 'Para Ekle';
 
   @override
-  String get addMoneyBalance => 'Balance';
+  String get addMoneyBalance => 'Bakiye';
 
   @override
-  String get addMoneyHistory => 'Add Money History';
+  String get addMoneyHistory => 'Para Ekleme Geçmişi';
 
   @override
-  String get addMoneyWalletsNotFound => 'Wallets Not Found';
+  String get addMoneyWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get comment_add_money_amount_step => '==== Add Money Amount Step ====';
 
   @override
-  String get addMoneyGateway => 'Gateway';
+  String get addMoneyGateway => 'Ağ Geçidi';
 
   @override
-  String get addMoneyGatewayNotFound => 'Gateway not found';
+  String get addMoneyGatewayNotFound => 'Ağ geçidi bulunamadı';
 
   @override
-  String get addMoneySelectGateway => 'Select Gateway';
+  String get addMoneySelectGateway => 'Ağ Geçidi Seçin';
 
   @override
-  String get addMoneyCharge => 'Charge:';
+  String get addMoneyCharge => 'Ücret:';
 
   @override
-  String get addMoneyAmount => 'Amount';
+  String get addMoneyAmount => 'Tutar';
 
   @override
-  String get addMoneyMin => 'Minimum';
+  String get addMoneyMin => 'Asgari';
 
   @override
-  String get addMoneyMax => 'and Maximum';
+  String get addMoneyMax => 've Maksimum';
 
   @override
-  String get addMoneyWriteHere => 'Write here...';
+  String get addMoneyWriteHere => 'Buraya yazın...';
 
   @override
-  String get addMoneyAddMoneyButton => 'Add Money';
+  String get addMoneyAddMoneyButton => 'Para Ekle';
 
   @override
   String get comment_add_money_pending_step =>
       '==== Add Money Pending Step ====';
 
   @override
-  String get addMoneyPendingTitle => 'Your Deposit Process Is\nPending';
+  String get addMoneyPendingTitle => 'Yatırma İşleminiz\nBeklemede';
 
   @override
-  String get addMoneyPendingAmount => 'Amount';
+  String get addMoneyPendingAmount => 'Tutar';
 
   @override
-  String get addMoneyPendingTransactionId => 'Transaction ID';
+  String get addMoneyPendingTransactionId => 'İşlem No';
 
   @override
-  String get addMoneyPendingWalletName => 'Wallet Name';
+  String get addMoneyPendingWalletName => 'Cüzdan Adı';
 
   @override
-  String get addMoneyPendingPaymentMethod => 'Payment Method';
+  String get addMoneyPendingPaymentMethod => 'Ödeme Yöntemi';
 
   @override
-  String get addMoneyPendingCharge => 'Charge';
+  String get addMoneyPendingCharge => 'Ücret';
 
   @override
-  String get addMoneyPendingType => 'Type';
+  String get addMoneyPendingType => 'Tür';
 
   @override
-  String get addMoneyPendingFinalAmount => 'Final Amount';
+  String get addMoneyPendingFinalAmount => 'Toplam Tutar';
 
   @override
-  String get addMoneyPendingDepositAgain => 'Deposit Again';
+  String get addMoneyPendingDepositAgain => 'Yeniden Yatır';
 
   @override
-  String get addMoneyPendingBackHome => 'Back Home';
+  String get addMoneyPendingBackHome => 'Ana Sayfaya Dön';
 
   @override
   String get comment_add_money_review_step => '==== Add Money Review Step ====';
 
   @override
-  String get addMoneyReviewTitle => 'Review Details';
+  String get addMoneyReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get addMoneyReviewAmount => 'Amount';
+  String get addMoneyReviewAmount => 'Tutar';
 
   @override
-  String get addMoneyReviewWalletName => 'Wallet Name';
+  String get addMoneyReviewWalletName => 'Cüzdan Adı';
 
   @override
-  String get addMoneyReviewPaymentMethod => 'Payment Method';
+  String get addMoneyReviewPaymentMethod => 'Ödeme Yöntemi';
 
   @override
-  String get addMoneyReviewCharge => 'Charge';
+  String get addMoneyReviewCharge => 'Ücret';
 
   @override
-  String get addMoneyReviewTotal => 'Total';
+  String get addMoneyReviewTotal => 'Toplam';
 
   @override
-  String get addMoneyReviewBack => 'Back';
+  String get addMoneyReviewBack => 'Geri';
 
   @override
-  String get addMoneyReviewConfirm => 'Confirm';
+  String get addMoneyReviewConfirm => 'Onayla';
 
   @override
-  String get addMoneyReviewNoFileUploaded => 'No file uploaded';
+  String get addMoneyReviewNoFileUploaded => 'Dosya yüklenmedi';
 
   @override
   String get comment_add_money_success_step =>
       '==== Add Money Success Step ====';
 
   @override
-  String get addMoneySuccessTitle => 'Deposit Money Success!';
+  String get addMoneySuccessTitle => 'Para Yatırma Başarılı!';
 
   @override
-  String get addMoneySuccessAmount => 'Amount';
+  String get addMoneySuccessAmount => 'Tutar';
 
   @override
-  String get addMoneySuccessTransactionId => 'Transection ID';
+  String get addMoneySuccessTransactionId => 'İşlem No';
 
   @override
-  String get addMoneySuccessCharge => 'Charge';
+  String get addMoneySuccessCharge => 'Ücret';
 
   @override
-  String get addMoneySuccessTransactionType => 'Transaction Type';
+  String get addMoneySuccessTransactionType => 'İşlem Türü';
 
   @override
-  String get addMoneySuccessFinalAmount => 'Final Amount';
+  String get addMoneySuccessFinalAmount => 'Toplam Tutar';
 
   @override
-  String get addMoneySuccessAddMoneyAgain => 'Add Money Again';
+  String get addMoneySuccessAddMoneyAgain => 'Tekrar Para Ekle';
 
   @override
-  String get addMoneySuccessBackHome => 'Back Home';
+  String get addMoneySuccessBackHome => 'Ana Sayfaya Dön';
 
   @override
   String get comment_add_money_history => '==== Add Money History ====';
 
   @override
-  String get addMoneyHistoryTitle => 'Add Money History';
+  String get addMoneyHistoryTitle => 'Para Ekleme Geçmişi';
 
   @override
   String get comment_add_money_filter_bottom_sheet =>
       '==== Add Money Filter Bottom Sheet ====';
 
   @override
-  String get addMoneyFilterTransactionId => 'Transactions ID';
+  String get addMoneyFilterTransactionId => 'İşlem No';
 
   @override
-  String get addMoneyFilterStatus => 'Status';
+  String get addMoneyFilterStatus => 'Durum';
 
   @override
-  String get addMoneyFilterSuccess => 'Success';
+  String get addMoneyFilterSuccess => 'Başarılı';
 
   @override
-  String get addMoneyFilterPending => 'Pending';
+  String get addMoneyFilterPending => 'Beklemede';
 
   @override
-  String get addMoneyFilterFailed => 'Failed';
+  String get addMoneyFilterFailed => 'Başarısız';
 
   @override
-  String get addMoneyFilterButton => 'Filter';
+  String get addMoneyFilterButton => 'Filtrele';
 
   @override
-  String get addMoneyFilterReset => 'Reset';
+  String get addMoneyFilterReset => 'Sıfırla';
 
   @override
   String get comment_create_beneficiary_screen =>
       '==== Create Beneficiary Screen ====';
 
   @override
-  String get createBeneficiaryTitle => 'Create New';
+  String get createBeneficiaryTitle => 'Yeni Oluştur';
 
   @override
-  String get createBeneficiaryAccountNumber => 'Account Number';
+  String get createBeneficiaryAccountNumber => 'Hesap Numarası';
 
   @override
-  String get createBeneficiaryNickName => 'Nick Name';
+  String get createBeneficiaryNickName => 'Takma Ad';
 
   @override
-  String get createBeneficiaryCreateButton => 'Create';
+  String get createBeneficiaryCreateButton => 'Oluştur';
 
   @override
   String get createBeneficiaryValidationAccountNumber =>
-      'Fill up account number';
+      'Hesap numarasını doldurun';
 
   @override
-  String get createBeneficiaryValidationNickName => 'Fill up nick name';
+  String get createBeneficiaryValidationNickName => 'Takma adı doldurun';
 
   @override
   String get comment_update_beneficiary_screen =>
       '==== Update Beneficiary Screen ====';
 
   @override
-  String get updateBeneficiaryTitle => 'Update';
+  String get updateBeneficiaryTitle => 'Güncelle';
 
   @override
-  String get updateBeneficiaryNickName => 'Nick Name';
+  String get updateBeneficiaryNickName => 'Takma Ad';
 
   @override
-  String get updateBeneficiaryUpdateButton => 'Update';
+  String get updateBeneficiaryUpdateButton => 'Güncelle';
 
   @override
-  String get updateBeneficiaryValidationNickName => 'Fill up nick name';
+  String get updateBeneficiaryValidationNickName => 'Takma adı doldurun';
 
   @override
   String get comment_account_user_types => '==== Account User Types ====';
 
   @override
-  String get accountUserMerchant => 'Merchant';
+  String get accountUserMerchant => 'Satıcı';
 
   @override
-  String get accountUserBeneficiary => 'Beneficiary';
+  String get accountUserBeneficiary => 'Alıcı';
 
   @override
-  String get accountUserAgent => 'Agent';
+  String get accountUserAgent => 'Ajan';
 
   @override
   String get comment_cash_out_screen => '==== Cash Out Screen ====';
 
   @override
-  String get cashOutTitle => 'Cash Out From Agent';
+  String get cashOutTitle => 'Ajan Üzerinden Para Çekme';
 
   @override
-  String get cashOutHistory => 'Cash Out History';
+  String get cashOutHistory => 'Para Çekme Geçmişi';
 
   @override
   String get comment_cash_out_amount_step => '==== Cash Out Amount Step ====';
 
   @override
-  String get cashOutAgentId => 'Agent ID';
+  String get cashOutAgentId => 'Ajan No';
 
   @override
-  String get cashOutAmount => 'Amount';
+  String get cashOutAmount => 'Tutar';
 
   @override
-  String get cashOutMin => 'Minimum';
+  String get cashOutMin => 'Asgari';
 
   @override
-  String get cashOutMax => 'and Maximum';
+  String get cashOutMax => 've Maksimum';
 
   @override
-  String get cashOutButton => 'Cash Out';
+  String get cashOutButton => 'Para Çek';
 
   @override
-  String get cashOutSavedAgents => 'Saved Agents';
+  String get cashOutSavedAgents => 'Kayıtlı Ajanlar';
 
   @override
-  String get cashOutAgents => 'Agents';
+  String get cashOutAgents => 'Ajanlar';
 
   @override
-  String get cashOutAddAgent => 'Add Agent';
+  String get cashOutAddAgent => 'Ajan Ekle';
 
   @override
   String get cashOutAid => 'AID:';
 
   @override
   String get cashOutQrInvalidDigits =>
-      'Invalid QR code. Agent AID must be digits only.';
+      'Geçersiz QR kodu. Ajan AID yalnızca rakamlardan oluşmalıdır.';
 
   @override
-  String get cashOutQrInvalidPrefix => 'Invalid QR code. AID prefix not found.';
+  String get cashOutQrInvalidPrefix =>
+      'Geçersiz QR kodu. AID öneki bulunamadı.';
 
   @override
-  String get cashOutDeleteConfirm => 'Are you sure?';
+  String get cashOutDeleteConfirm => 'Emin misiniz?';
 
   @override
-  String get cashOutDeleteMessage => 'You want to delete this agent?';
+  String get cashOutDeleteMessage => 'Bu ajanı silmek istiyor musunuz?';
 
   @override
-  String get cashOutDeleteButton => 'Delete';
+  String get cashOutDeleteButton => 'Sil';
 
   @override
-  String get cashOutCancelButton => 'Cancel';
+  String get cashOutCancelButton => 'İptal';
 
   @override
   String get comment_cash_out_review_step => '==== Cash Out Review Step ====';
 
   @override
-  String get cashOutReviewTitle => 'Review Details';
+  String get cashOutReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get cashOutReviewAmount => 'Amount';
+  String get cashOutReviewAmount => 'Tutar';
 
   @override
-  String get cashOutReviewWallet => 'Wallet';
+  String get cashOutReviewWallet => 'Cüzdan';
 
   @override
-  String get cashOutReviewAgentAccount => 'Agent Account';
+  String get cashOutReviewAgentAccount => 'Ajan Hesabı';
 
   @override
-  String get cashOutReviewCharge => 'Charge';
+  String get cashOutReviewCharge => 'Ücret';
 
   @override
-  String get cashOutReviewTotalAmount => 'Total Amount';
+  String get cashOutReviewTotalAmount => 'Toplam Tutar';
 
   @override
-  String get cashOutReviewBack => 'Back';
+  String get cashOutReviewBack => 'Geri';
 
   @override
-  String get cashOutReviewConfirm => 'Confirm';
+  String get cashOutReviewConfirm => 'Onayla';
 
   @override
   String get comment_cash_out_success_step => '==== Cash Out Success Step ====';
 
   @override
-  String get cashOutSuccessTitle => 'Cash Out Success!';
+  String get cashOutSuccessTitle => 'Para Çekme Başarılı!';
 
   @override
-  String get cashOutSuccessAmount => 'Amount';
+  String get cashOutSuccessAmount => 'Tutar';
 
   @override
-  String get cashOutSuccessTransactionId => 'Transection ID';
+  String get cashOutSuccessTransactionId => 'İşlem No';
 
   @override
-  String get cashOutSuccessWalletName => 'Wallet Name';
+  String get cashOutSuccessWalletName => 'Cüzdan Adı';
 
   @override
-  String get cashOutSuccessPaymentMethod => 'Payment Method';
+  String get cashOutSuccessPaymentMethod => 'Ödeme Yöntemi';
 
   @override
-  String get cashOutSuccessCharge => 'Charge';
+  String get cashOutSuccessCharge => 'Ücret';
 
   @override
-  String get cashOutSuccessType => 'Type';
+  String get cashOutSuccessType => 'Tür';
 
   @override
-  String get cashOutSuccessFinalAmount => 'Final Amount';
+  String get cashOutSuccessFinalAmount => 'Toplam Tutar';
 
   @override
-  String get cashOutSuccessCashOutAgain => 'Cash Out Again';
+  String get cashOutSuccessCashOutAgain => 'Tekrar Para Çek';
 
   @override
-  String get cashOutSuccessBackHome => 'Back Home';
+  String get cashOutSuccessBackHome => 'Ana Sayfaya Dön';
 
   @override
   String get comment_cash_out_wallets_section =>
       '==== Cash Out Wallets Section ====';
 
   @override
-  String get cashOutWalletsBalance => 'Balance';
+  String get cashOutWalletsBalance => 'Bakiye';
 
   @override
-  String get cashOutWalletsNotFound => 'Wallets Not Found';
+  String get cashOutWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get comment_cash_out_history => '==== Cash Out History ====';
 
   @override
-  String get cashOutHistoryTitle => 'Cash Out History';
+  String get cashOutHistoryTitle => 'Para Çekme Geçmişi';
 
   @override
   String get comment_cash_out_filter_bottom_sheet =>
       '==== Cash Out Filter Bottom Sheet ====';
 
   @override
-  String get cashOutFilterTransactionId => 'Transactions ID';
+  String get cashOutFilterTransactionId => 'İşlem No';
 
   @override
-  String get cashOutFilterStatus => 'Status';
+  String get cashOutFilterStatus => 'Durum';
 
   @override
-  String get cashOutFilterButton => 'Filter';
+  String get cashOutFilterButton => 'Filtrele';
 
   @override
-  String get cashOutFilterReset => 'Reset';
+  String get cashOutFilterReset => 'Sıfırla';
 
   @override
   String get comment_exchange_screen => '==== Exchange Screen ====';
 
   @override
-  String get exchangeTitle => 'Exchange Wallet';
+  String get exchangeTitle => 'Döviz Çevir';
 
   @override
-  String get exchangeHistory => 'Exchange History';
+  String get exchangeHistory => 'Döviz Çevirme Geçmişi';
 
   @override
   String get comment_exchange_amount_step => '==== Exchange Amount Step ====';
 
   @override
-  String get exchangeAmount => 'Amount';
+  String get exchangeAmount => 'Tutar';
 
   @override
-  String get exchangeMin => 'Minimum';
+  String get exchangeMin => 'Asgari';
 
   @override
-  String get exchangeMax => 'and Maximum';
+  String get exchangeMax => 've Maksimum';
 
   @override
-  String get exchangeButton => 'Exchange';
+  String get exchangeButton => 'Döviz Çevir';
 
   @override
   String get comment_exchange_review_step => '==== Exchange Review Step ====';
 
   @override
-  String get exchangeReviewTitle => 'Review Details';
+  String get exchangeReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get exchangeReviewAmount => 'Amount';
+  String get exchangeReviewAmount => 'Tutar';
 
   @override
-  String get exchangeReviewFromWallet => 'From Wallet';
+  String get exchangeReviewFromWallet => 'Kaynak Cüzdan';
 
   @override
-  String get exchangeReviewCharge => 'Charge';
+  String get exchangeReviewCharge => 'Ücret';
 
   @override
-  String get exchangeReviewTotalAmount => 'Total Amount';
+  String get exchangeReviewTotalAmount => 'Toplam Tutar';
 
   @override
-  String get exchangeReviewToWallet => 'To Wallet';
+  String get exchangeReviewToWallet => 'Hedef Cüzdan';
 
   @override
-  String get exchangeReviewExchangeRate => 'Exchange Rate';
+  String get exchangeReviewExchangeRate => 'Döviz Kuru';
 
   @override
-  String get exchangeReviewExchangeAmount => 'Exchange Amount';
+  String get exchangeReviewExchangeAmount => 'Çevrilecek Tutar';
 
   @override
-  String get exchangeReviewBack => 'Back';
+  String get exchangeReviewBack => 'Geri';
 
   @override
-  String get exchangeReviewConfirm => 'Confirm';
+  String get exchangeReviewConfirm => 'Onayla';
 
   @override
   String get comment_exchange_success_step => '==== Exchange Success Step ====';
 
   @override
-  String get exchangeSuccessTitle => 'Exchange Success!';
+  String get exchangeSuccessTitle => 'Döviz Çevirme Başarılı!';
 
   @override
-  String get exchangeSuccessAmount => 'Amount';
+  String get exchangeSuccessAmount => 'Tutar';
 
   @override
-  String get exchangeSuccessTransactionId => 'Transaction ID';
+  String get exchangeSuccessTransactionId => 'İşlem No';
 
   @override
-  String get exchangeSuccessPayAmount => 'Pay Amount';
+  String get exchangeSuccessPayAmount => 'Ödenen Tutar';
 
   @override
-  String get exchangeSuccessConvertedAmount => 'Converted Amount';
+  String get exchangeSuccessConvertedAmount => 'Çevrilen Tutar';
 
   @override
-  String get exchangeSuccessCharge => 'Charge';
+  String get exchangeSuccessCharge => 'Ücret';
 
   @override
-  String get exchangeSuccessDate => 'Date';
+  String get exchangeSuccessDate => 'Tarih';
 
   @override
-  String get exchangeSuccessFinalAmount => 'Final Amount';
+  String get exchangeSuccessFinalAmount => 'Toplam Tutar';
 
   @override
-  String get exchangeSuccessExchangeAgain => 'Exchange Again';
+  String get exchangeSuccessExchangeAgain => 'Tekrar Çevir';
 
   @override
-  String get exchangeSuccessBackHome => 'Back Home';
+  String get exchangeSuccessBackHome => 'Ana Sayfaya Dön';
 
   @override
   String get comment_exchange_wallet_section =>
       '==== Exchange Wallet Section ====';
 
   @override
-  String get exchangeWalletBalance => 'Balance';
+  String get exchangeWalletBalance => 'Bakiye';
 
   @override
-  String get exchangeWalletsNotFound => 'Wallets Not Found';
+  String get exchangeWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get comment_exchange_wallet_to_wallet =>
       '==== Exchange Wallet To Wallet ====';
 
   @override
-  String get exchangeWalletToWallet => 'Wallet to Wallet';
+  String get exchangeWalletToWallet => 'Cüzdandan Cüzdana';
 
   @override
-  String get exchangeFromWallet => 'From Wallet';
+  String get exchangeFromWallet => 'Kaynak Cüzdan';
 
   @override
-  String get exchangeToWallet => 'To Wallet';
+  String get exchangeToWallet => 'Hedef Cüzdan';
 
   @override
-  String get exchangeRate => 'Exchange Rate: ';
+  String get exchangeRate => 'Döviz Kuru: ';
 
   @override
-  String get exchangeWalletToWalletWalletsNotFound => 'Wallets Not Found';
+  String get exchangeWalletToWalletWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get exchangeWalletSectionFiat => 'Fiat para birimleri';
@@ -1049,7 +1053,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exchangeQuickMax => 'Maks';
 
   @override
-  String get exchangeMinHint => 'Min';
+  String get exchangeMinHint => 'Asgari';
 
   @override
   String get exchangeMaxHint => 'Maks';
@@ -1120,198 +1124,198 @@ class AppLocalizationsTr extends AppLocalizations {
   String get comment_exchange_history => '==== Exchange History ====';
 
   @override
-  String get exchangeHistoryTitle => 'Exchange History';
+  String get exchangeHistoryTitle => 'Döviz Çevirme Geçmişi';
 
   @override
   String get comment_exchange_filter_bottom_sheet =>
       '==== Exchange Filter Bottom Sheet ====';
 
   @override
-  String get exchangeFilterTransactionId => 'Transactions ID';
+  String get exchangeFilterTransactionId => 'İşlem No';
 
   @override
-  String get exchangeFilterStatus => 'Status';
+  String get exchangeFilterStatus => 'Durum';
 
   @override
-  String get exchangeFilterButton => 'Filter';
+  String get exchangeFilterButton => 'Filtrele';
 
   @override
-  String get exchangeFilterReset => 'Reset';
+  String get exchangeFilterReset => 'Sıfırla';
 
   @override
   String get comment_gift_code_screen => '==== Gift Code Screen ====';
 
   @override
-  String get giftCodeTitle => 'Gift Code';
+  String get giftCodeTitle => 'Hediye Kodu';
 
   @override
-  String get giftCodeCreateGift => 'Create Gift';
+  String get giftCodeCreateGift => 'Hediye Oluştur';
 
   @override
   String get comment_create_gift_amount_step =>
       '==== Create Gift Amount Step ====';
 
   @override
-  String get createGiftAmount => 'Amount';
+  String get createGiftAmount => 'Tutar';
 
   @override
-  String get createGiftMin => 'Minimum';
+  String get createGiftMin => 'Asgari';
 
   @override
-  String get createGiftMax => 'and Maximum';
+  String get createGiftMax => 've Maksimum';
 
   @override
-  String get createGiftButton => 'Create Gift';
+  String get createGiftButton => 'Hediye Oluştur';
 
   @override
   String get comment_create_gift_review_section =>
       '==== Create Gift Review Section ====';
 
   @override
-  String get createGiftReviewTitle => 'Review Details';
+  String get createGiftReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get createGiftReviewAmount => 'Amount';
+  String get createGiftReviewAmount => 'Tutar';
 
   @override
-  String get createGiftReviewWalletName => 'Wallet Name';
+  String get createGiftReviewWalletName => 'Cüzdan Adı';
 
   @override
-  String get createGiftReviewCharge => 'Charge';
+  String get createGiftReviewCharge => 'Ücret';
 
   @override
-  String get createGiftReviewTotalAmount => 'Total Amount';
+  String get createGiftReviewTotalAmount => 'Toplam Tutar';
 
   @override
-  String get createGiftReviewBack => 'Back';
+  String get createGiftReviewBack => 'Geri';
 
   @override
-  String get createGiftReviewConfirm => 'Confirm';
+  String get createGiftReviewConfirm => 'Onayla';
 
   @override
   String get comment_create_gift_success_step =>
       '==== Create Gift Success Step ====';
 
   @override
-  String get createGiftSuccessTitle => 'Create Gift Success!';
+  String get createGiftSuccessTitle => 'Hediye Oluşturma Başarılı!';
 
   @override
-  String get createGiftSuccessAmount => 'Amount';
+  String get createGiftSuccessAmount => 'Tutar';
 
   @override
-  String get createGiftSuccessCharge => 'Charge';
+  String get createGiftSuccessCharge => 'Ücret';
 
   @override
-  String get createGiftSuccessFinalAmount => 'Final Amount';
+  String get createGiftSuccessFinalAmount => 'Toplam Tutar';
 
   @override
-  String get createGiftSuccessCreatedAt => 'Created At';
+  String get createGiftSuccessCreatedAt => 'Oluşturulma Tarihi';
 
   @override
-  String get createGiftSuccessCreateAgain => 'Create Gift Code Again';
+  String get createGiftSuccessCreateAgain => 'Tekrar Hediye Kodu Oluştur';
 
   @override
-  String get createGiftSuccessBackHome => 'Back Home';
+  String get createGiftSuccessBackHome => 'Ana Sayfaya Dön';
 
   @override
   String get comment_create_gift_wallet_section =>
       '==== Create Gift Wallet Section ====';
 
   @override
-  String get createGiftWalletBalance => 'Balance';
+  String get createGiftWalletBalance => 'Bakiye';
 
   @override
-  String get createGiftWalletWalletsNotFound => 'Wallets Not Found';
+  String get createGiftWalletWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get comment_gift_code_header_section =>
       '==== Gift Code Header Section ====';
 
   @override
-  String get giftCodeHeaderTitle => 'Gift Code';
+  String get giftCodeHeaderTitle => 'Hediye Kodu';
 
   @override
-  String get giftCodeHeaderGiftRedeem => 'Gift Redeem';
+  String get giftCodeHeaderGiftRedeem => 'Hediye Kullanımı';
 
   @override
-  String get giftCodeHeaderMyGift => 'My Gift';
+  String get giftCodeHeaderMyGift => 'Hediyelerim';
 
   @override
-  String get giftCodeHeaderGiftRedeemHistory => 'Gift Redeem History';
+  String get giftCodeHeaderGiftRedeemHistory => 'Hediye Kullanım Geçmişi';
 
   @override
   String get comment_gift_history => '==== Gift History ====';
 
   @override
-  String get giftHistoryCreatedAt => 'Created At:';
+  String get giftHistoryCreatedAt => 'Oluşturulma Tarihi:';
 
   @override
-  String get giftHistoryStatus => 'Status: ';
+  String get giftHistoryStatus => 'Durum: ';
 
   @override
-  String get giftHistoryClaimed => 'Claimed';
+  String get giftHistoryClaimed => 'Talep Edildi';
 
   @override
-  String get giftHistoryClaimable => 'Claimable';
+  String get giftHistoryClaimable => 'Talep Edilebilir';
 
   @override
-  String get giftHistoryCodeCopied => 'Gift Code Copied';
+  String get giftHistoryCodeCopied => 'Hediye Kodu Kopyalandı';
 
   @override
   String get comment_gift_history_filter_bottom_sheet =>
       '==== Gift History Filter Bottom Sheet ====';
 
   @override
-  String get giftHistoryFilterGiftCode => 'Gift Code';
+  String get giftHistoryFilterGiftCode => 'Hediye Kodu';
 
   @override
-  String get giftHistoryFilterButton => 'Filter';
+  String get giftHistoryFilterButton => 'Filtrele';
 
   @override
   String get comment_gift_redeem_section => '==== Gift Redeem Section ====';
 
   @override
-  String get giftRedeemGiftCode => 'Gift Code';
+  String get giftRedeemGiftCode => 'Hediye Kodu';
 
   @override
-  String get giftRedeemButton => 'Redeem';
+  String get giftRedeemButton => 'Kullan';
 
   @override
-  String get giftRedeemValidation => 'Please enter an gift code';
+  String get giftRedeemValidation => 'Lütfen bir hediye kodu girin';
 
   @override
   String get comment_gift_redeem_history => '==== Gift Redeem History ====';
 
   @override
-  String get giftRedeemHistoryTitle => 'My Redeem History';
+  String get giftRedeemHistoryTitle => 'Kullanım Geçmişim';
 
   @override
-  String get giftRedeemHistoryCreatedAt => 'Created At:';
+  String get giftRedeemHistoryCreatedAt => 'Oluşturulma Tarihi:';
 
   @override
-  String get giftRedeemHistoryStatus => 'Status: ';
+  String get giftRedeemHistoryStatus => 'Durum: ';
 
   @override
-  String get giftRedeemHistoryClaimed => 'Claimed';
+  String get giftRedeemHistoryClaimed => 'Talep Edildi';
 
   @override
-  String get giftRedeemHistoryClaimable => 'Claimable';
+  String get giftRedeemHistoryClaimable => 'Talep Edilebilir';
 
   @override
-  String get giftRedeemHistoryCodeCopied => 'Gift Code Copied';
+  String get giftRedeemHistoryCodeCopied => 'Hediye Kodu Kopyalandı';
 
   @override
   String get comment_gift_redeem_filter_bottom_sheet =>
       '==== Gift Redeem Filter Bottom Sheet ====';
 
   @override
-  String get giftRedeemFilterCode => 'Code';
+  String get giftRedeemFilterCode => 'Kod';
 
   @override
-  String get giftRedeemFilterButton => 'Filter';
+  String get giftRedeemFilterButton => 'Filtrele';
 
   @override
-  String get giftRedeemFilterReset => 'Reset';
+  String get giftRedeemFilterReset => 'Sıfırla';
 
   @override
   String get comment_drawer_section => '==== Drawer Section ====';
@@ -1347,113 +1351,115 @@ class AppLocalizationsTr extends AppLocalizations {
   String get drawerTransfer => 'Transfer';
 
   @override
-  String get drawerWithdraw => 'Withdraw';
+  String get drawerWithdraw => 'Para Çek';
 
   @override
-  String get drawerExchange => 'Exchange';
+  String get drawerExchange => 'Döviz Çevir';
 
   @override
-  String get drawerInviting => 'Inviting';
+  String get drawerInviting => 'Davet';
 
   @override
-  String get drawerGiftCard => 'Gift Card';
+  String get drawerGiftCard => 'Hediye Kartı';
 
   @override
-  String get drawerP2pTrading => 'P2P Trading';
+  String get drawerP2pTrading => 'P2P İşlem';
 
   @override
-  String get drawerKycVerification => 'Please verify your KYC!';
+  String get drawerKycVerification => 'Lütfen KYC\'nizi doğrulayın!';
 
   @override
   String get comment_end_drawer_section => '==== End Drawer Section ====';
 
   @override
-  String get endDrawerProfileSettings => 'Profile Settings';
+  String get endDrawerProfileSettings => 'Profil Ayarları';
 
   @override
-  String get endDrawerChangePassword => 'Change Password';
+  String get endDrawerChangePassword => 'Parola Değiştir';
 
   @override
-  String get endDrawerAllNotification => 'All Notification';
+  String get endDrawerAllNotification => 'Tüm Bildirimler';
 
   @override
-  String get endDrawerHelpSupport => 'Help & Support';
+  String get endDrawerHelpSupport => 'Yardım ve Destek';
 
   @override
-  String get endDrawerLanguage => 'Language';
+  String get endDrawerLanguage => 'Dil';
 
   @override
-  String get endDrawerBiometric => 'Biometric';
+  String get endDrawerBiometric => 'Biyometrik';
 
   @override
-  String get endDrawerSignOut => 'Sign Out';
+  String get endDrawerSignOut => 'Çıkış Yap';
 
   @override
-  String get endDrawerLanguageNotFound => 'Language not found';
+  String get endDrawerLanguageNotFound => 'Dil bulunamadı';
 
   @override
-  String get endDrawerChooseLanguage => 'Choose Language';
+  String get endDrawerChooseLanguage => 'Dil Seçin';
 
   @override
   String get comment_recent_transaction_details =>
       '==== Recent Transaction Details ====';
 
   @override
-  String get transactionDetailsTitle => 'Transaction Details';
+  String get transactionDetailsTitle => 'İşlem Detayları';
 
   @override
-  String get transactionDetailsWallet => 'Wallet';
+  String get transactionDetailsWallet => 'Cüzdan';
 
   @override
-  String get transactionDetailsCharge => 'Charge';
+  String get transactionDetailsCharge => 'Ücret';
 
   @override
-  String get transactionDetailsTransactionId => 'Transaction ID';
+  String get transactionDetailsTransactionId => 'İşlem No';
 
   @override
-  String get transactionDetailsMethod => 'Method';
+  String get transactionDetailsMethod => 'Yöntem';
 
   @override
-  String get transactionDetailsTotalAmount => 'Total Amount';
+  String get transactionDetailsTotalAmount => 'Toplam Tutar';
 
   @override
-  String get transactionDetailsStatus => 'Status';
+  String get transactionDetailsStatus => 'Durum';
 
   @override
-  String get transactionDetailsDescription => 'Description';
+  String get transactionDetailsDescription => 'Açıklama';
 
   @override
-  String get transactionStatusSuccess => 'Success';
+  String get transactionStatusSuccess => 'Başarılı';
 
   @override
-  String get transactionStatusPending => 'Pending';
+  String get transactionStatusPending => 'Beklemede';
 
   @override
-  String get transactionStatusFailed => 'Failed';
+  String get transactionStatusFailed => 'Başarısız';
 
   @override
   String get comment_wallet_details => '==== Wallet Details ====';
 
   @override
-  String get walletDetailsHistory => 'History';
+  String get walletDetailsHistory => 'Geçmiş';
 
   @override
-  String get walletDetailsAvailableBalance => 'AVAILABLE BALANCE';
+  String get walletDetailsAvailableBalance => 'KULLANILABİLİR BAKİYE';
 
   @override
-  String get walletDetailsTopUp => 'Top Up';
+  String get walletDetailsTopUp => 'Yükle';
 
   @override
-  String get walletDetailsWithdraw => 'Withdraw';
+  String get walletDetailsWithdraw => 'Para Çek';
 
   @override
-  String get walletDetailsUserDepositNotEnabled => 'User Deposit Not Enabled';
+  String get walletDetailsUserDepositNotEnabled =>
+      'Kullanıcı Para Yatırma Etkin Değil';
 
   @override
-  String get walletDetailsUserWithdrawNotEnabled => 'User Withdraw Not Enabled';
+  String get walletDetailsUserWithdrawNotEnabled =>
+      'Kullanıcı Para Çekme Etkin Değil';
 
   @override
-  String get walletDetailsWalletsNotFound => 'Wallets Not Found';
+  String get walletDetailsWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get comment_action_button_section => '==== Action Button Section ====';
@@ -1462,89 +1468,95 @@ class AppLocalizationsTr extends AppLocalizations {
   String get actionButtonTransfer => 'Transfer';
 
   @override
-  String get actionButtonWithdraw => 'Withdraw';
+  String get actionButtonWithdraw => 'Para Çek';
 
   @override
-  String get actionButtonPayment => 'Payment';
+  String get actionButtonPayment => 'Ödeme';
 
   @override
-  String get actionButtonExchange => 'Exchange';
+  String get actionButtonExchange => 'Döviz Çevir';
 
   @override
-  String get actionButtonUserTransferNotEnabled => 'User Transfer Not Enabled';
+  String get actionButtonUserTransferNotEnabled =>
+      'Kullanıcı için Transfer Etkin Değil';
 
   @override
-  String get actionButtonUserWithdrawNotEnabled => 'User Withdraw Not Enabled';
+  String get actionButtonUserWithdrawNotEnabled =>
+      'Kullanıcı için Para Çekme Etkin Değil';
 
   @override
-  String get actionButtonUserPaymentNotEnabled => 'User Payment Not Enabled';
+  String get actionButtonUserPaymentNotEnabled =>
+      'Kullanıcı için Ödeme Etkin Değil';
 
   @override
-  String get actionButtonUserExchangeNotEnabled => 'User Exchange Not Enabled';
+  String get actionButtonUserExchangeNotEnabled =>
+      'Kullanıcı için Döviz Çevirme Etkin Değil';
 
   @override
   String get comment_my_wallet_section => '==== My Wallet Section ====';
 
   @override
-  String get myWalletSectionTitle => 'My Wallets';
+  String get myWalletSectionTitle => 'Cüzdanlarım';
 
   @override
-  String get myWalletTopUp => 'Top Up';
+  String get myWalletTopUp => 'Yükle';
 
   @override
-  String get myWalletWithdraw => 'Withdraw';
+  String get myWalletWithdraw => 'Para Çek';
 
   @override
-  String get myWalletUserDepositNotEnabled => 'User Deposit Not Enabled';
+  String get myWalletUserDepositNotEnabled =>
+      'Kullanıcı Para Yatırma Etkin Değil';
 
   @override
-  String get myWalletUserWithdrawNotEnabled => 'User Withdraw Not Enabled';
+  String get myWalletUserWithdrawNotEnabled =>
+      'Kullanıcı Para Çekme Etkin Değil';
 
   @override
   String get comment_other_services_section =>
       '==== Other Services Section ====';
 
   @override
-  String get otherServicesTitle => 'Other Services';
+  String get otherServicesTitle => 'Diğer Hizmetler';
 
   @override
-  String get dynamicPasswordTitle => 'Dynamic Password';
+  String get dynamicPasswordTitle => 'Dinamik Şifre';
 
   @override
-  String get dynamicPasswordDesc => '6-digit code for wallet payment';
+  String get dynamicPasswordDesc => 'Cüzdan ödemesi için 6 haneli kod';
 
   @override
-  String get otherServicesQrCode => 'QR Code';
+  String get otherServicesQrCode => 'QR Kod';
 
   @override
-  String get otherServicesAddMoney => 'Add Money';
+  String get otherServicesAddMoney => 'Para Ekle';
 
   @override
-  String get otherServicesCashOut => 'Cash Out';
+  String get otherServicesCashOut => 'Para Çekme';
 
   @override
-  String get otherServicesMakePayment => 'Make Payment';
+  String get otherServicesMakePayment => 'Ödeme Yap';
 
   @override
-  String get otherServicesTransactions => 'Transactions';
+  String get otherServicesTransactions => 'İşlemler';
 
   @override
-  String get otherServicesInvoice => 'Invoice';
+  String get otherServicesInvoice => 'Fatura';
 
   @override
-  String get otherServicesRequestMoney => 'Request Money';
+  String get otherServicesRequestMoney => 'Para Talep Et';
 
   @override
-  String get otherServicesGift => 'Gift';
+  String get otherServicesGift => 'Hediye';
 
   @override
-  String get otherServicesWallets => 'Wallets';
+  String get otherServicesWallets => 'Cüzdanlar';
 
   @override
-  String get otherServicesWithdraw => 'Withdraw';
+  String get otherServicesWithdraw => 'Para Çek';
 
   @override
-  String get otherServicesExchange => 'Exchange';
+  String get otherServicesExchange => 'Döviz Çevir';
 
   @override
   String get otherServicesTransfer => 'Transfer';
@@ -1556,259 +1568,262 @@ class AppLocalizationsTr extends AppLocalizations {
   String get commonComingSoon => 'Yakında';
 
   @override
-  String get otherServicesInvite => 'Invite';
+  String get otherServicesInvite => 'Davet Et';
 
   @override
-  String get otherServicesBillPayment => 'Bill Payment';
+  String get otherServicesBillPayment => 'Fatura Ödeme';
 
   @override
-  String get otherServicesVirtualCard => 'Virtual Cards';
+  String get otherServicesVirtualCard => 'Sanal Kartlar';
 
   @override
-  String get otherServicesGiftCards => 'Gift Cards';
+  String get otherServicesGiftCards => 'Hediye Kartları';
 
   @override
-  String get otherServicesP2pTrading => 'P2P Trading';
+  String get otherServicesP2pTrading => 'P2P İşlem';
 
   @override
-  String get otherServicesPaymentLinks => 'Payment Links';
+  String get otherServicesPaymentLinks => 'Ödeme Bağlantıları';
 
   @override
-  String get otherServicesKycVerification => 'Please verify your KYC!';
+  String get otherServicesKycVerification => 'Lütfen KYC\'nizi doğrulayın!';
 
   @override
-  String get otherServicesUserGiftNotEnabled => 'User Gift Not Enabled';
+  String get otherServicesUserGiftNotEnabled => 'Kullanıcı Hediye Etkin Değil';
 
   @override
-  String get otherServicesUserDepositNotEnabled => 'User Deposit Not Enabled';
+  String get otherServicesUserDepositNotEnabled =>
+      'Kullanıcı Para Yatırma Etkin Değil';
 
   @override
-  String get otherServicesUserCashOutNotEnabled => 'User Cash Out Not Enabled';
+  String get otherServicesUserCashOutNotEnabled =>
+      'Kullanıcı Para Çekme Etkin Değil';
 
   @override
-  String get otherServicesUserPaymentNotEnabled => 'User Payment Not Enabled';
+  String get otherServicesUserPaymentNotEnabled =>
+      'Kullanıcı Ödeme Etkin Değil';
 
   @override
   String get otherServicesUserRequestMoneyNotEnabled =>
-      'User Request Money Not Enabled';
+      'Kullanıcı Para Talebi Etkin Değil';
 
   @override
   String get otherServicesUserInvoiceNotEnabled =>
-      'User Invoice Money Not Enabled';
+      'Kullanıcı Fatura Etkin Değil';
 
   @override
   String get comment_recent_transactions_section =>
       '==== Recent Transactions Section ====';
 
   @override
-  String get recentTransactionsTitle => 'Recent';
+  String get recentTransactionsTitle => 'Son İşlemler';
 
   @override
   String get comment_section_header => '==== Section Header ====';
 
   @override
-  String get sectionHeaderSeeAll => 'See All';
+  String get sectionHeaderSeeAll => 'Tümünü Gör';
 
   @override
   String get comment_sign_up_bonus_popup => '==== Sign Up Bonus Popup ====';
 
   @override
-  String get signUpBonusCongratulations => 'Congratulations!';
+  String get signUpBonusCongratulations => 'Tebrikler!';
 
   @override
-  String get signUpBonusReceived => 'You have received bonus';
+  String get signUpBonusReceived => 'Bonus aldınız';
 
   @override
   String get comment_user_profile_section => '==== User Profile Section ====';
 
   @override
-  String get userProfileHello => 'Hello, 👋';
+  String get userProfileHello => 'Merhaba, 👋';
 
   @override
   String get userProfileUid => 'UID:';
 
   @override
-  String get userProfileCopied => 'Copied';
+  String get userProfileCopied => 'Kopyalandı';
 
   @override
   String get comment_invoice_screen => '==== Invoice Screen ====';
 
   @override
-  String get invoiceTitle => 'Invoice';
+  String get invoiceTitle => 'Fatura';
 
   @override
-  String get invoiceCreateInvoice => 'Create Invoice';
+  String get invoiceCreateInvoice => 'Fatura Oluştur';
 
   @override
-  String get invoiceAmount => 'Amount:';
+  String get invoiceAmount => 'Tutar:';
 
   @override
-  String get invoiceCharge => 'Charge:';
+  String get invoiceCharge => 'Ücret:';
 
   @override
-  String get invoiceStatus => 'Status: ';
+  String get invoiceStatus => 'Durum: ';
 
   @override
-  String get invoicePublished => 'Published';
+  String get invoicePublished => 'Yayınlandı';
 
   @override
-  String get invoiceDraft => 'Draft';
+  String get invoiceDraft => 'Taslak';
 
   @override
-  String get invoiceView => 'View';
+  String get invoiceView => 'Görüntüle';
 
   @override
-  String get invoicePaid => 'Paid';
+  String get invoicePaid => 'Ödendi';
 
   @override
-  String get invoiceUnpaid => 'Unpaid';
+  String get invoiceUnpaid => 'Ödenmedi';
 
   @override
   String get comment_update_invoice => '==== Update Invoice ====';
 
   @override
-  String get updateInvoiceTitle => 'Update Invoice';
+  String get updateInvoiceTitle => 'Faturayı Güncelle';
 
   @override
-  String get updateInvoiceItems => 'Invoice Items';
+  String get updateInvoiceItems => 'Fatura Kalemleri';
 
   @override
-  String get updateInvoiceAddItem => 'Add Item';
+  String get updateInvoiceAddItem => 'Kalem Ekle';
 
   @override
-  String get updateInvoiceButton => 'Update Invoice';
+  String get updateInvoiceButton => 'Faturayı Güncelle';
 
   @override
   String get comment_update_invoice_add_item =>
       '==== Update Invoice Add Item ====';
 
   @override
-  String get updateInvoiceItemName => 'Item Name';
+  String get updateInvoiceItemName => 'Kalem Adı';
 
   @override
-  String get updateInvoiceQuantity => 'Quantity';
+  String get updateInvoiceQuantity => 'Adet';
 
   @override
-  String get updateInvoiceUnitPrice => 'Unit Price';
+  String get updateInvoiceUnitPrice => 'Birim Fiyat';
 
   @override
-  String get updateInvoiceSubTotal => 'Sub Total';
+  String get updateInvoiceSubTotal => 'Ara Toplam';
 
   @override
   String get comment_update_invoice_information =>
       '==== Update Invoice Information ====';
 
   @override
-  String get updateInvoiceInformationTitle => 'Invoice Information';
+  String get updateInvoiceInformationTitle => 'Fatura Bilgileri';
 
   @override
-  String get updateInvoiceTo => 'Invoice To';
+  String get updateInvoiceTo => 'Alıcı Bilgileri';
 
   @override
-  String get updateInvoiceEmailAddress => 'Email Address';
+  String get updateInvoiceEmailAddress => 'E-posta Adresi';
 
   @override
-  String get updateInvoiceAddress => 'Address';
+  String get updateInvoiceAddress => 'Adres';
 
   @override
-  String get updateInvoiceWallet => 'Wallet';
+  String get updateInvoiceWallet => 'Cüzdan';
 
   @override
-  String get updateInvoiceStatus => 'Status';
+  String get updateInvoiceStatus => 'Durum';
 
   @override
-  String get updateInvoiceIssueDate => 'Issue Date';
+  String get updateInvoiceIssueDate => 'Düzenleme Tarihi';
 
   @override
-  String get updateInvoicePaymentStatus => 'Payment Status';
+  String get updateInvoicePaymentStatus => 'Ödeme Durumu';
 
   @override
-  String get updateInvoiceSelectWallet => 'Select Wallet';
+  String get updateInvoiceSelectWallet => 'Cüzdan Seçin';
 
   @override
-  String get updateInvoiceSelectStatus => 'Select Status';
+  String get updateInvoiceSelectStatus => 'Durum Seçin';
 
   @override
-  String get updateInvoiceSelectPaymentStatus => 'Select Payment Status';
+  String get updateInvoiceSelectPaymentStatus => 'Ödeme Durumu Seçin';
 
   @override
-  String get updateInvoiceWalletNotFound => 'Wallet not found';
+  String get updateInvoiceWalletNotFound => 'Cüzdan bulunamadı';
 
   @override
-  String get updateInvoiceStatusNotFound => 'Status not found';
+  String get updateInvoiceStatusNotFound => 'Durum bulunamadı';
 
   @override
-  String get updateInvoicePaymentStatusNotFound => 'Payment status not found';
+  String get updateInvoicePaymentStatusNotFound => 'Ödeme durumu bulunamadı';
 
   @override
   String get comment_invoice_status_options =>
       '==== Invoice Status Options ====';
 
   @override
-  String get invoiceStatusDraft => 'Draft';
+  String get invoiceStatusDraft => 'Taslak';
 
   @override
-  String get invoiceStatusPublished => 'Published';
+  String get invoiceStatusPublished => 'Yayınlandı';
 
   @override
-  String get invoiceStatusPaid => 'Paid';
+  String get invoiceStatusPaid => 'Ödendi';
 
   @override
-  String get invoiceStatusUnpaid => 'Unpaid';
+  String get invoiceStatusUnpaid => 'Ödenmedi';
 
   @override
   String get comment_invoice_details => '==== Invoice Details ====';
 
   @override
-  String get invoiceDetailsTitle => 'Invoice';
+  String get invoiceDetailsTitle => 'Fatura';
 
   @override
   String get invoiceDetailsReference => 'Ref:';
 
   @override
-  String get invoiceDetailsIssued => 'Issued:';
+  String get invoiceDetailsIssued => 'Düzenleme Tarihi:';
 
   @override
-  String get invoiceDetailsName => 'Name';
+  String get invoiceDetailsName => 'Ad';
 
   @override
-  String get invoiceDetailsEmail => 'Email';
+  String get invoiceDetailsEmail => 'E-posta';
 
   @override
-  String get invoiceDetailsCharge => 'Charge';
+  String get invoiceDetailsCharge => 'Ücret';
 
   @override
-  String get invoiceDetailsAddress => 'Address';
+  String get invoiceDetailsAddress => 'Adres';
 
   @override
-  String get invoiceDetailsTotalAmount => 'Total Amount';
+  String get invoiceDetailsTotalAmount => 'Toplam Tutar';
 
   @override
-  String get invoiceDetailsStatus => 'Status';
+  String get invoiceDetailsStatus => 'Durum';
 
   @override
-  String get invoiceDetailsItemName => 'Item Name';
+  String get invoiceDetailsItemName => 'Kalem Adı';
 
   @override
-  String get invoiceDetailsQuantity => 'Quantity';
+  String get invoiceDetailsQuantity => 'Adet';
 
   @override
-  String get invoiceDetailsUnitPrice => 'Unit Price';
+  String get invoiceDetailsUnitPrice => 'Birim Fiyat';
 
   @override
-  String get invoiceDetailsSubTotal => 'Sub Total';
+  String get invoiceDetailsSubTotal => 'Ara Toplam';
 
   @override
-  String get invoiceDetailsPayNow => 'Pay Now';
+  String get invoiceDetailsPayNow => 'Şimdi Öde';
 
   @override
-  String get invoiceDetailsPrintInvoice => 'Print Invoice';
+  String get invoiceDetailsPrintInvoice => 'Faturayı Yazdır';
 
   @override
-  String get invoiceDetailsPaid => 'Paid';
+  String get invoiceDetailsPaid => 'Ödendi';
 
   @override
-  String get invoiceDetailsUnpaid => 'Unpaid';
+  String get invoiceDetailsUnpaid => 'Ödenmedi';
 
   @override
   String get comment_invoice_pdf => '==== Invoice PDF ====';
@@ -1817,589 +1832,588 @@ class AppLocalizationsTr extends AppLocalizations {
   String get invoicePdfReference => 'Ref:';
 
   @override
-  String get invoicePdfIssued => 'Issued:';
+  String get invoicePdfIssued => 'Düzenleme Tarihi:';
 
   @override
-  String get invoicePdfPaid => 'Paid';
+  String get invoicePdfPaid => 'Ödendi';
 
   @override
-  String get invoicePdfUnpaid => 'Unpaid';
+  String get invoicePdfUnpaid => 'Ödenmedi';
 
   @override
-  String get invoicePdfTotalAmount => 'Total Amount:';
+  String get invoicePdfTotalAmount => 'Toplam Tutar:';
 
   @override
-  String get invoicePdfAmount => 'Amount:';
+  String get invoicePdfAmount => 'Tutar:';
 
   @override
-  String get invoicePdfCharge => 'Charge:';
+  String get invoicePdfCharge => 'Ücret:';
 
   @override
-  String get invoicePdfItemName => 'Item Name';
+  String get invoicePdfItemName => 'Kalem Adı';
 
   @override
-  String get invoicePdfQuantity => 'Quantity';
+  String get invoicePdfQuantity => 'Adet';
 
   @override
-  String get invoicePdfUnitPrice => 'Unit Price';
+  String get invoicePdfUnitPrice => 'Birim Fiyat';
 
   @override
-  String get invoicePdfSubtotal => 'Subtotal';
+  String get invoicePdfSubtotal => 'Ara Toplam';
 
   @override
-  String get invoicePdfSubtotalLabel => 'Subtotal: ';
+  String get invoicePdfSubtotalLabel => 'Ara Toplam: ';
 
   @override
-  String get invoicePdfChargeLabel => 'Charge: ';
+  String get invoicePdfChargeLabel => 'Ücret: ';
 
   @override
-  String get invoicePdfTotalAmountLabel => 'Total Amount: ';
+  String get invoicePdfTotalAmountLabel => 'Toplam Tutar: ';
 
   @override
-  String get invoicePdfThanks => 'Thanks for the purchase.';
+  String get invoicePdfThanks => 'Satın almanız için teşekkürler.';
 
   @override
   String get comment_create_invoice => '==== Create Invoice ====';
 
   @override
-  String get createInvoiceTitle => 'Create Invoice';
+  String get createInvoiceTitle => 'Fatura Oluştur';
 
   @override
-  String get createInvoiceItems => 'Invoice Items';
+  String get createInvoiceItems => 'Fatura Kalemleri';
 
   @override
-  String get createInvoiceAddItem => 'Add Item';
+  String get createInvoiceAddItem => 'Kalem Ekle';
 
   @override
-  String get createInvoiceButton => 'Create Invoice';
+  String get createInvoiceButton => 'Fatura Oluştur';
 
   @override
-  String get createInvoiceStatusDraft => 'Draft';
+  String get createInvoiceStatusDraft => 'Taslak';
 
   @override
   String get comment_create_invoice_add_item_section =>
       '==== Create Invoice Add Item Section ====';
 
   @override
-  String get createInvoiceAddItemSectionItemName => 'Item Name';
+  String get createInvoiceAddItemSectionItemName => 'Kalem Adı';
 
   @override
-  String get createInvoiceAddItemSectionQuantity => 'Quantity';
+  String get createInvoiceAddItemSectionQuantity => 'Adet';
 
   @override
-  String get createInvoiceAddItemSectionUnitPrice => 'Unit Price';
+  String get createInvoiceAddItemSectionUnitPrice => 'Birim Fiyat';
 
   @override
-  String get createInvoiceAddItemSectionSubTotal => 'Sub Total';
+  String get createInvoiceAddItemSectionSubTotal => 'Ara Toplam';
 
   @override
   String get comment_create_invoice_information_section =>
       '==== Create Invoice Information Section ====';
 
   @override
-  String get createInvoiceInformationSectionTitle => 'Invoice Information';
+  String get createInvoiceInformationSectionTitle => 'Fatura Bilgileri';
 
   @override
-  String get createInvoiceInformationSectionInvoiceTo => 'Invoice To';
+  String get createInvoiceInformationSectionInvoiceTo => 'Alıcı Bilgileri';
 
   @override
-  String get createInvoiceInformationSectionEmailAddress => 'Email Address';
+  String get createInvoiceInformationSectionEmailAddress => 'E-posta Adresi';
 
   @override
-  String get createInvoiceInformationSectionAddress => 'Address';
+  String get createInvoiceInformationSectionAddress => 'Adres';
 
   @override
-  String get createInvoiceInformationSectionWallet => 'Wallet';
+  String get createInvoiceInformationSectionWallet => 'Cüzdan';
 
   @override
-  String get createInvoiceInformationSectionStatus => 'Status';
+  String get createInvoiceInformationSectionStatus => 'Durum';
 
   @override
-  String get createInvoiceInformationSectionIssueDate => 'Issue Date';
+  String get createInvoiceInformationSectionIssueDate => 'Düzenleme Tarihi';
 
   @override
   String get createInvoiceInformationSectionWalletNotFound =>
-      'Wallets Not Found';
+      'Cüzdan Bulunamadı';
 
   @override
-  String get createInvoiceInformationSectionWalletHint => 'Select Wallet';
+  String get createInvoiceInformationSectionWalletHint => 'Cüzdan Seçin';
 
   @override
-  String get createInvoiceInformationSectionStatusTitle => 'Status';
+  String get createInvoiceInformationSectionStatusTitle => 'Durum';
 
   @override
   String get createInvoiceInformationSectionStatusNotFound =>
-      'Status not found';
+      'Durum bulunamadı';
 
   @override
-  String get createInvoiceInformationSectionStatusDraft => 'Draft';
+  String get createInvoiceInformationSectionStatusDraft => 'Taslak';
 
   @override
-  String get createInvoiceInformationSectionStatusPublished => 'Published';
+  String get createInvoiceInformationSectionStatusPublished => 'Yayınlandı';
 
   @override
   String get comment_make_payment_screen => '==== Make Payment Screen ====';
 
   @override
-  String get makePaymentScreenTitle => 'Make Payment';
+  String get makePaymentScreenTitle => 'Ödeme Yap';
 
   @override
-  String get makePaymentScreenWalletsNotFound => 'Wallets Not Found';
+  String get makePaymentScreenWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
-  String get makePaymentScreenBalance => 'Balance';
+  String get makePaymentScreenBalance => 'Bakiye';
 
   @override
-  String get makePaymentScreenHistory => 'Make Payment History';
+  String get makePaymentScreenHistory => 'Ödeme Geçmişi';
 
   @override
   String get comment_make_payment_amount_step_section =>
       '==== Make Payment Amount Step Section ====';
 
   @override
-  String get makePaymentAmountStepSectionMerchantId => 'Merchant ID';
+  String get makePaymentAmountStepSectionMerchantId => 'Satıcı No';
 
   @override
-  String get makePaymentAmountStepSectionAmount => 'Amount';
+  String get makePaymentAmountStepSectionAmount => 'Tutar';
 
   @override
-  String get makePaymentAmountStepSectionMinLimit => 'Minimum';
+  String get makePaymentAmountStepSectionMinLimit => 'Asgari limit';
 
   @override
-  String get makePaymentAmountStepSectionMaxLimit => 'and Maximum';
+  String get makePaymentAmountStepSectionMaxLimit => 've Maksimum';
 
   @override
-  String get makePaymentAmountStepSectionMakePaymentButton => 'Make Payment';
+  String get makePaymentAmountStepSectionMakePaymentButton => 'Ödeme Yap';
 
   @override
   String get makePaymentAmountStepSectionSavedMerchantsButton =>
-      'Saved Merchants';
+      'Kayıtlı Satıcılar';
 
   @override
   String get makePaymentAmountStepSectionInvalidQrCodeDigits =>
-      'Invalid QR code. Merchant MID must be digits only.';
+      'Geçersiz QR kodu. Satıcı MID yalnızca rakamlardan oluşmalıdır.';
 
   @override
   String get makePaymentAmountStepSectionInvalidQrCodePrefix =>
-      'Invalid QR code. MID prefix not found.';
+      'Geçersiz QR kodu. MID öneki bulunamadı.';
 
   @override
-  String get makePaymentAmountStepSectionMerchantsTitle => 'Merchants';
+  String get makePaymentAmountStepSectionMerchantsTitle => 'Satıcılar';
 
   @override
-  String get makePaymentAmountStepSectionAddMerchant => 'Add Merchant';
+  String get makePaymentAmountStepSectionAddMerchant => 'Satıcı Ekle';
 
   @override
   String get makePaymentAmountStepSectionMidLabel => 'MID:';
 
   @override
   String get makePaymentAmountStepSectionDeleteConfirmationTitle =>
-      'Are you sure?';
+      'Emin misiniz?';
 
   @override
   String get makePaymentAmountStepSectionDeleteConfirmationMessage =>
-      'You want to delete this merchant?';
+      'Bu satıcıyı silmek istiyor musunuz?';
 
   @override
-  String get makePaymentAmountStepSectionDeleteButton => 'Delete';
+  String get makePaymentAmountStepSectionDeleteButton => 'Sil';
 
   @override
-  String get makePaymentAmountStepSectionCancelButton => 'Cancel';
+  String get makePaymentAmountStepSectionCancelButton => 'İptal';
 
   @override
   String get comment_make_payment_review_step_section =>
       '==== Make Payment Review Step Section ====';
 
   @override
-  String get makePaymentReviewStepSectionTitle => 'Review Details';
+  String get makePaymentReviewStepSectionTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get makePaymentReviewStepSectionAmount => 'Amount';
+  String get makePaymentReviewStepSectionAmount => 'Tutar';
 
   @override
-  String get makePaymentReviewStepSectionWallet => 'Wallet';
+  String get makePaymentReviewStepSectionWallet => 'Cüzdan';
 
   @override
-  String get makePaymentReviewStepSectionMerchantAccount => 'Merchant Account';
+  String get makePaymentReviewStepSectionMerchantAccount => 'Satıcı Hesabı';
 
   @override
-  String get makePaymentReviewStepSectionCharge => 'Charge';
+  String get makePaymentReviewStepSectionCharge => 'Ücret';
 
   @override
-  String get makePaymentReviewStepSectionTotalAmount => 'Total Amount';
+  String get makePaymentReviewStepSectionTotalAmount => 'Toplam Tutar';
 
   @override
-  String get makePaymentReviewStepSectionBackButton => 'Back';
+  String get makePaymentReviewStepSectionBackButton => 'Geri';
 
   @override
-  String get makePaymentReviewStepSectionConfirmButton => 'Confirm';
+  String get makePaymentReviewStepSectionConfirmButton => 'Onayla';
 
   @override
   String get comment_make_payment_success_step_section =>
       '==== Make Payment Success Step Section ====';
 
   @override
-  String get makePaymentSuccessStepSectionTitle => 'Payment Success!';
+  String get makePaymentSuccessStepSectionTitle => 'Ödeme Başarılı!';
 
   @override
-  String get makePaymentSuccessStepSectionAmount => 'Amount';
+  String get makePaymentSuccessStepSectionAmount => 'Tutar';
 
   @override
-  String get makePaymentSuccessStepSectionTransactionId => 'Transection ID';
+  String get makePaymentSuccessStepSectionTransactionId => 'İşlem No';
 
   @override
-  String get makePaymentSuccessStepSectionWalletName => 'Wallet Name';
+  String get makePaymentSuccessStepSectionWalletName => 'Cüzdan Adı';
 
   @override
-  String get makePaymentSuccessStepSectionPaymentMethod => 'Payment Method';
+  String get makePaymentSuccessStepSectionPaymentMethod => 'Ödeme Yöntemi';
 
   @override
-  String get makePaymentSuccessStepSectionCharge => 'Charge';
+  String get makePaymentSuccessStepSectionCharge => 'Ücret';
 
   @override
-  String get makePaymentSuccessStepSectionType => 'Type';
+  String get makePaymentSuccessStepSectionType => 'Tür';
 
   @override
-  String get makePaymentSuccessStepSectionFinalAmount => 'Final Amount';
+  String get makePaymentSuccessStepSectionFinalAmount => 'Toplam Tutar';
 
   @override
-  String get makePaymentSuccessStepSectionPaymentAgainButton => 'Payment Again';
+  String get makePaymentSuccessStepSectionPaymentAgainButton => 'Tekrar Öde';
 
   @override
-  String get makePaymentSuccessStepSectionBackHomeButton => 'Back Home';
+  String get makePaymentSuccessStepSectionBackHomeButton => 'Ana Sayfaya Dön';
 
   @override
   String get comment_make_payment_history_screen =>
       '==== Make Payment History Screen ====';
 
   @override
-  String get makePaymentHistoryScreenTitle => 'Payment History';
+  String get makePaymentHistoryScreenTitle => 'Ödeme Geçmişi';
 
   @override
   String get comment_make_payment_filter_bottom_sheet =>
       '==== Make Payment Filter Bottom Sheet ====';
 
   @override
-  String get makePaymentFilterTransactionId => 'Transactions ID';
+  String get makePaymentFilterTransactionId => 'İşlem No';
 
   @override
-  String get makePaymentFilterStatus => 'Status';
+  String get makePaymentFilterStatus => 'Durum';
 
   @override
-  String get makePaymentFilterApplyButton => 'Filter';
+  String get makePaymentFilterApplyButton => 'Filtrele';
 
   @override
-  String get makePaymentFilterResetButton => 'Reset';
+  String get makePaymentFilterResetButton => 'Sıfırla';
 
   @override
   String get comment_qr_code_screen => '==== QR Code Screen ====';
 
   @override
-  String get qrCodeScreenTitle => 'My QR Code';
+  String get qrCodeScreenTitle => 'QR Kodum';
 
   @override
-  String get qrCodeScreenDownloadButton => 'Download';
+  String get qrCodeScreenDownloadButton => 'İndir';
 
   @override
   String get qrCodeScreenPermissionRequired =>
-      'Permission is required. Please allow it in settings.';
+      'İzin gereklidir. Lütfen ayarlardan izin verin.';
 
   @override
-  String get qrCodeScreenDownloadSuccess => 'Downloaded successfully!';
+  String get qrCodeScreenDownloadSuccess => 'Başarıyla indirildi!';
 
   @override
   String get comment_referral_screen => '==== Referral Screen ====';
 
   @override
-  String get referralScreenTitle => 'Referral';
+  String get referralScreenTitle => 'Davet';
 
   @override
-  String get referralScreenEarnAmount => 'Earn';
+  String get referralScreenEarnAmount => 'Kazanç';
 
   @override
-  String get referralScreenAfterInviting => 'After Inviting';
+  String get referralScreenAfterInviting => 'Davet Sonrası';
 
   @override
-  String get referralScreenOneMember => 'One Member';
+  String get referralScreenOneMember => 'Bir Üye';
 
   @override
-  String get referralScreenNoCode => 'No Code';
+  String get referralScreenNoCode => 'Kod Yok';
 
   @override
-  String get referralScreenCodeCopied => 'Code Copied';
+  String get referralScreenCodeCopied => 'Kod Kopyalandı';
 
   @override
-  String get referralScreenShareButton => 'Share';
+  String get referralScreenShareButton => 'Paylaş';
 
   @override
-  String get referralScreenReferredFriends => 'Referred Friends';
+  String get referralScreenReferredFriends => 'Davet Edilen Arkadaşlar';
 
   @override
   String get comment_referred_friends_screen =>
       '==== Referred Friends Screen ====';
 
   @override
-  String get referredFriendsScreenTitle => 'Referred Friends';
+  String get referredFriendsScreenTitle => 'Davet Edilen Arkadaşlar';
 
   @override
-  String get referredFriendsScreenReferralTreeButton => 'Referral Tree';
+  String get referredFriendsScreenReferralTreeButton => 'Davet Ağacı';
 
   @override
   String get comment_referred_friend_list => '==== Referred Friend List ====';
 
   @override
-  String get referredFriendListJoinedOn => 'Joined on';
+  String get referredFriendListJoinedOn => 'Katılma tarihi';
 
   @override
-  String get referredFriendListActive => 'Active';
+  String get referredFriendListActive => 'Aktif';
 
   @override
-  String get referredFriendListInactive => 'Inactive';
+  String get referredFriendListInactive => 'Pasif';
 
   @override
   String get comment_referral_tree_screen => '==== Referral Tree Screen ====';
 
   @override
-  String get referralTreeScreenTitle => 'Referral Tree';
+  String get referralTreeScreenTitle => 'Davet Ağacı';
 
   @override
   String get comment_request_money_screen => '==== Request Money Screen ====';
 
   @override
-  String get requestMoneyScreenTitle => 'Request Money';
+  String get requestMoneyScreenTitle => 'Para Talep Et';
 
   @override
   String get comment_request_money_amount_step_section =>
       '==== Request Money Amount Step Section ====';
 
   @override
-  String get requestMoneyAmountStepSectionRecipientId => 'Recipient ID';
+  String get requestMoneyAmountStepSectionRecipientId => 'Alıcı No';
 
   @override
-  String get requestMoneyAmountStepSectionRequestAmount => 'Request Amount';
+  String get requestMoneyAmountStepSectionRequestAmount => 'Talep Tutarı';
 
   @override
-  String get requestMoneyAmountStepSectionMin => 'Minimum';
+  String get requestMoneyAmountStepSectionMin => 'Asgari';
 
   @override
-  String get requestMoneyAmountStepSectionMax => 'and Maximum';
+  String get requestMoneyAmountStepSectionMax => 've Maksimum';
 
   @override
-  String get requestMoneyAmountStepSectionNote => 'Note';
+  String get requestMoneyAmountStepSectionNote => 'Not';
 
   @override
-  String get requestMoneyAmountStepSectionRequestMoneyButton => 'Request Money';
+  String get requestMoneyAmountStepSectionRequestMoneyButton => 'Para Talep Et';
 
   @override
   String get requestMoneyAmountStepSectionInvalidQrCodeDigits =>
-      'Invalid QR code. Recipient UID must be digits only.';
+      'Geçersiz QR kodu. Alıcı UID yalnızca rakamlardan oluşmalıdır.';
 
   @override
   String get requestMoneyAmountStepSectionInvalidQrCodePrefix =>
-      'Invalid QR code. UID prefix not found.';
+      'Geçersiz QR kodu. UID öneki bulunamadı.';
 
   @override
   String get comment_request_money_header_section =>
       '==== Request Money Header Section ====';
 
   @override
-  String get requestMoneyHeaderSectionTitle => 'Request Money';
+  String get requestMoneyHeaderSectionTitle => 'Para Talep Et';
 
   @override
-  String get requestMoneyHeaderSectionRequestMoneyButton => 'Request Money';
+  String get requestMoneyHeaderSectionRequestMoneyButton => 'Para Talep Et';
 
   @override
-  String get requestMoneyHeaderSectionReceivedRequestButton =>
-      'Received Request';
+  String get requestMoneyHeaderSectionReceivedRequestButton => 'Gelen Talepler';
 
   @override
-  String get requestMoneyHeaderSectionHistory => 'Request Money History';
+  String get requestMoneyHeaderSectionHistory => 'Para Talebi Geçmişi';
 
   @override
   String get comment_request_money_review_step_section =>
       '==== Request Money Review Step Section ====';
 
   @override
-  String get requestMoneyReviewStepSectionTitle => 'Review Details';
+  String get requestMoneyReviewStepSectionTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get requestMoneyReviewStepSectionAmount => 'Amount';
+  String get requestMoneyReviewStepSectionAmount => 'Tutar';
 
   @override
-  String get requestMoneyReviewStepSectionWalletName => 'Wallet Name';
+  String get requestMoneyReviewStepSectionWalletName => 'Cüzdan Adı';
 
   @override
-  String get requestMoneyReviewStepSectionRecipientUid => 'Recipient UID';
+  String get requestMoneyReviewStepSectionRecipientUid => 'Alıcı UID';
 
   @override
-  String get requestMoneyReviewStepSectionBackButton => 'Back';
+  String get requestMoneyReviewStepSectionBackButton => 'Geri';
 
   @override
-  String get requestMoneyReviewStepSectionConfirmButton => 'Confirm';
+  String get requestMoneyReviewStepSectionConfirmButton => 'Onayla';
 
   @override
   String get comment_request_money_success_step_section =>
       '==== Request Money Success Step Section ====';
 
   @override
-  String get requestMoneySuccessStepSectionTitle => 'Request Money Success!';
+  String get requestMoneySuccessStepSectionTitle => 'Para Talebi Başarılı!';
 
   @override
-  String get requestMoneySuccessStepSectionAmount => 'Amount';
+  String get requestMoneySuccessStepSectionAmount => 'Tutar';
 
   @override
-  String get requestMoneySuccessStepSectionRecipientName => 'Recipient Name';
+  String get requestMoneySuccessStepSectionRecipientName => 'Alıcı Adı';
 
   @override
   String get requestMoneySuccessStepSectionRequestWalletName =>
-      'Request Wallet Name';
+      'Talep Edilen Cüzdan Adı';
 
   @override
-  String get requestMoneySuccessStepSectionCharge => 'Charge';
+  String get requestMoneySuccessStepSectionCharge => 'Ücret';
 
   @override
-  String get requestMoneySuccessStepSectionFinalAmount => 'Final Amount';
+  String get requestMoneySuccessStepSectionFinalAmount => 'Toplam Tutar';
 
   @override
-  String get requestMoneySuccessStepSectionStatus => 'Status';
+  String get requestMoneySuccessStepSectionStatus => 'Durum';
 
   @override
   String get requestMoneySuccessStepSectionRequestAgainButton =>
-      'Request Again';
+      'Tekrar Talep Et';
 
   @override
-  String get requestMoneySuccessStepSectionBackHomeButton => 'Back Home';
+  String get requestMoneySuccessStepSectionBackHomeButton => 'Ana Sayfaya Dön';
 
   @override
   String get comment_request_money_wallet_section =>
       '==== Request Money Wallet Section ====';
 
   @override
-  String get requestMoneyWalletSectionBalance => 'Balance';
+  String get requestMoneyWalletSectionBalance => 'Bakiye';
 
   @override
-  String get requestMoneyWalletSectionWalletsNotFound => 'Wallets Not Found';
+  String get requestMoneyWalletSectionWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get comment_request_money_history_screen =>
       '==== Request Money History Screen ====';
 
   @override
-  String get requestMoneyHistoryScreenTitle => 'Request Money History';
+  String get requestMoneyHistoryScreenTitle => 'Para Talebi Geçmişi';
 
   @override
-  String get requestMoneyHistoryRequestedAt => 'Requested At:';
+  String get requestMoneyHistoryRequestedAt => 'Talep Tarihi:';
 
   @override
-  String get requestMoneyHistoryStatus => 'Status: ';
+  String get requestMoneyHistoryStatus => 'Durum: ';
 
   @override
   String get comment_request_money_history_details =>
       '==== Request Money History Details ====';
 
   @override
-  String get requestMoneyHistoryDetailsRequestEmail => 'Request Email';
+  String get requestMoneyHistoryDetailsRequestEmail => 'Talep Edenin E-postası';
 
   @override
-  String get requestMoneyHistoryDetailsCurrency => 'Currency';
+  String get requestMoneyHistoryDetailsCurrency => 'Para Birimi';
 
   @override
-  String get requestMoneyHistoryDetailsCharge => 'Charge';
+  String get requestMoneyHistoryDetailsCharge => 'Ücret';
 
   @override
-  String get requestMoneyHistoryDetailsFinalAmount => 'Final Amount';
+  String get requestMoneyHistoryDetailsFinalAmount => 'Toplam Tutar';
 
   @override
-  String get requestMoneyHistoryDetailsRequestAt => 'Request At';
+  String get requestMoneyHistoryDetailsRequestAt => 'Talep Tarihi';
 
   @override
-  String get requestMoneyHistoryDetailsStatus => 'Status';
+  String get requestMoneyHistoryDetailsStatus => 'Durum';
 
   @override
   String get comment_received_request_screen =>
       '==== Received Request Screen ====';
 
   @override
-  String get receivedRequestRequestedAt => 'Requested At:';
+  String get receivedRequestRequestedAt => 'Talep Tarihi:';
 
   @override
-  String get receivedRequestStatus => 'Status: ';
+  String get receivedRequestStatus => 'Durum: ';
 
   @override
-  String get receivedRequestRejectButton => 'Reject';
+  String get receivedRequestRejectButton => 'Reddet';
 
   @override
-  String get receivedRequestAcceptButton => 'Accept';
+  String get receivedRequestAcceptButton => 'Onayla';
 
   @override
   String get comment_accept_request_dropdown =>
       '==== Accept Request Dropdown ====';
 
   @override
-  String get acceptRequestDropdownTitle => 'Are You Sure?';
+  String get acceptRequestDropdownTitle => 'Emin misiniz?';
 
   @override
   String get acceptRequestDropdownMessage =>
-      'Do you want to accept this money request?';
+      'Bu para talebini kabul etmek istiyor musunuz?';
 
   @override
-  String get acceptRequestDropdownPayableAmount => 'Payable Amount:';
+  String get acceptRequestDropdownPayableAmount => 'Ödenecek Tutar:';
 
   @override
-  String get acceptRequestDropdownPayWallet => 'Pay Wallet:';
+  String get acceptRequestDropdownPayWallet => 'Ödenecek Cüzdan:';
 
   @override
-  String get acceptRequestDropdownRequesterNote => 'Requester Note:';
+  String get acceptRequestDropdownRequesterNote => 'Talep Edenin Notu:';
 
   @override
-  String get acceptRequestDropdownNoteNotFound => 'Note Not Found';
+  String get acceptRequestDropdownNoteNotFound => 'Not Bulunamadı';
 
   @override
-  String get acceptRequestDropdownAcceptButton => 'Accept';
+  String get acceptRequestDropdownAcceptButton => 'Onayla';
 
   @override
-  String get acceptRequestDropdownCancelButton => 'Cancel';
+  String get acceptRequestDropdownCancelButton => 'İptal';
 
   @override
   String get comment_received_request_details =>
       '==== Received Request Details ====';
 
   @override
-  String get receivedRequestDetailsRequestEmail => 'Request Email';
+  String get receivedRequestDetailsRequestEmail => 'Talep Edenin E-postası';
 
   @override
-  String get receivedRequestDetailsCurrency => 'Currency';
+  String get receivedRequestDetailsCurrency => 'Para Birimi';
 
   @override
-  String get receivedRequestDetailsCharge => 'Charge';
+  String get receivedRequestDetailsCharge => 'Ücret';
 
   @override
-  String get receivedRequestDetailsFinalAmount => 'Final Amount';
+  String get receivedRequestDetailsFinalAmount => 'Toplam Tutar';
 
   @override
-  String get receivedRequestDetailsRequestAt => 'Request At';
+  String get receivedRequestDetailsRequestAt => 'Talep Tarihi';
 
   @override
-  String get receivedRequestDetailsStatus => 'Status';
+  String get receivedRequestDetailsStatus => 'Durum';
 
   @override
   String get comment_change_password_screen =>
       '==== Change Password Screen ====';
 
   @override
-  String get changePasswordScreenTitle => 'Change Password';
+  String get changePasswordScreenTitle => 'Parola Değiştir';
 
   @override
-  String get changePasswordCurrentPassword => 'Current Password';
+  String get changePasswordCurrentPassword => 'Mevcut Parola';
 
   @override
-  String get changePasswordNewPassword => 'New Password';
+  String get changePasswordNewPassword => 'Yeni Parola';
 
   @override
-  String get changePasswordConfirmPassword => 'Confirm Password';
+  String get changePasswordConfirmPassword => 'Parolayı Onayla';
 
   @override
-  String get changePasswordSaveChangesButton => 'Save Changes';
+  String get changePasswordSaveChangesButton => 'Değişiklikleri Kaydet';
 
   @override
   String get comment_id_verification_screen =>
@@ -2409,415 +2423,412 @@ class AppLocalizationsTr extends AppLocalizations {
   String get idVerificationScreenTitle => 'KYC';
 
   @override
-  String get idVerificationHistoryButton => 'KYC History';
+  String get idVerificationHistoryButton => 'KYC Geçmişi';
 
   @override
-  String get idVerificationCenterTitle => 'Verification Center';
+  String get idVerificationCenterTitle => 'Doğrulama Merkezi';
 
   @override
-  String get idVerificationNothingToSubmit => 'You have nothing to submit';
+  String get idVerificationNothingToSubmit => 'Gönderilecek belge yok';
 
   @override
-  String get kycStatusVerified =>
-      'You have submitted your documents and it is verified';
+  String get kycStatusVerified => 'Belgelerinizi gönderdiniz ve doğrulandı';
 
   @override
-  String get kycStatusPending =>
-      'You have submitted your documents and it is awaiting for the approval';
+  String get kycStatusPending => 'Belgelerinizi gönderdiniz ve onay bekliyor';
 
   @override
   String get kycStatusRejected =>
-      'Your KYC verification has failed. Please resubmit the documents.';
+      'KYC doğrulamanız başarısız oldu. Lütfen belgeleri yeniden gönderin.';
 
   @override
-  String get kycStatusNotSubmitted =>
-      'You have not submitted any KYC documents yet';
+  String get kycStatusNotSubmitted => 'Henüz hiçbir KYC belgesi göndermediniz';
 
   @override
   String get comment_kyc_history_screen => '==== KYC History Screen ====';
 
   @override
-  String get kycHistoryScreenTitle => 'KYC History';
+  String get kycHistoryScreenTitle => 'KYC Geçmişi';
 
   @override
-  String get kycHistoryDate => 'Date:';
+  String get kycHistoryDate => 'Tarih:';
 
   @override
-  String get kycHistoryStatus => 'Status: ';
+  String get kycHistoryStatus => 'Durum: ';
 
   @override
-  String get kycHistoryStatusPending => 'Pending';
+  String get kycHistoryStatusPending => 'Beklemede';
 
   @override
-  String get kycHistoryStatusApproved => 'Approved';
+  String get kycHistoryStatusApproved => 'Onaylandı';
 
   @override
-  String get kycHistoryStatusRejected => 'Rejected';
+  String get kycHistoryStatusRejected => 'Reddedildi';
 
   @override
-  String get kycHistoryViewButton => 'View';
+  String get kycHistoryViewButton => 'Görüntüle';
 
   @override
   String get comment_kyc_details_bottom_sheet =>
       '==== KYC Details Bottom Sheet ====';
 
   @override
-  String get kycDetailsTitle => 'KYC Details';
+  String get kycDetailsTitle => 'KYC Detayları';
 
   @override
-  String get kycDetailsStatus => 'Status:';
+  String get kycDetailsStatus => 'Durum:';
 
   @override
-  String get kycDetailsCreatedAt => 'Created At:';
+  String get kycDetailsCreatedAt => 'Oluşturulma Tarihi:';
 
   @override
-  String get kycDetailsMessageFromAdmin => 'Message From Admin:';
+  String get kycDetailsMessageFromAdmin => 'Yönetici Mesajı:';
 
   @override
-  String get kycDetailsSubmittedData => 'Submitted Data';
+  String get kycDetailsSubmittedData => 'Gönderilen Bilgiler';
 
   @override
-  String get kycDetailsStatusPending => 'Pending';
+  String get kycDetailsStatusPending => 'Beklemede';
 
   @override
-  String get kycDetailsStatusApproved => 'Approved';
+  String get kycDetailsStatusApproved => 'Onaylandı';
 
   @override
-  String get kycDetailsStatusRejected => 'Rejected';
+  String get kycDetailsStatusRejected => 'Reddedildi';
 
   @override
   String get comment_notifications_screen => '==== Notifications Screen ====';
 
   @override
-  String get notificationsScreenTitle => 'All Notification';
+  String get notificationsScreenTitle => 'Tüm Bildirimler';
 
   @override
-  String get notificationsMarkAllReadButton => 'Mark All Read';
+  String get notificationsMarkAllReadButton => 'Tümünü Okundu İşaretle';
 
   @override
   String get comment_profile_settings_screen =>
       '==== Profile Settings Screen ====';
 
   @override
-  String get profileSettingsScreenTitle => 'Profile Settings';
+  String get profileSettingsScreenTitle => 'Profil Ayarları';
 
   @override
-  String get profileSettingsFirstName => 'First Name';
+  String get profileSettingsFirstName => 'Ad';
 
   @override
-  String get profileSettingsLastName => 'Last Name';
+  String get profileSettingsLastName => 'Soyad';
 
   @override
-  String get profileSettingsUserName => 'User Name';
+  String get profileSettingsUserName => 'Kullanıcı Adı';
 
   @override
-  String get profileSettingsGender => 'Gender';
+  String get profileSettingsGender => 'Cinsiyet';
 
   @override
-  String get profileSettingsDateOfBirth => 'Date of Birth';
+  String get profileSettingsDateOfBirth => 'Doğum Tarihi';
 
   @override
-  String get profileSettingsEmailAddress => 'Email Address';
+  String get profileSettingsEmailAddress => 'E-posta Adresi';
 
   @override
-  String get profileSettingsPhone => 'Phone';
+  String get profileSettingsPhone => 'Telefon';
 
   @override
-  String get profileSettingsCountry => 'Country';
+  String get profileSettingsCountry => 'Ülke';
 
   @override
-  String get profileSettingsCity => 'City';
+  String get profileSettingsCity => 'Şehir';
 
   @override
-  String get profileSettingsZipCode => 'Zip Code';
+  String get profileSettingsZipCode => 'Posta Kodu';
 
   @override
-  String get profileSettingsJoiningDate => 'Joining Date';
+  String get profileSettingsJoiningDate => 'Katılma Tarihi';
 
   @override
-  String get profileSettingsAddress => 'Address';
+  String get profileSettingsAddress => 'Adres';
 
   @override
-  String get profileSettingsGenderTitle => 'Gender';
+  String get profileSettingsGenderTitle => 'Cinsiyet';
 
   @override
-  String get profileSettingsGenderNotFound => 'Gender not found';
+  String get profileSettingsGenderNotFound => 'Cinsiyet bulunamadı';
 
   @override
-  String get profileSettingsGenderMale => 'Male';
+  String get profileSettingsGenderMale => 'Erkek';
 
   @override
-  String get profileSettingsGenderFemale => 'Female';
+  String get profileSettingsGenderFemale => 'Kadın';
 
   @override
-  String get profileSettingsGenderOther => 'Other';
+  String get profileSettingsGenderOther => 'Diğer';
 
   @override
-  String get profileSettingsSelectGender => 'Select Gender';
+  String get profileSettingsSelectGender => 'Cinsiyet Seçin';
 
   @override
-  String get profileSettingsCountryTitle => 'Country';
+  String get profileSettingsCountryTitle => 'Ülke';
 
   @override
-  String get profileSettingsCountryNotFound => 'Country not found';
+  String get profileSettingsCountryNotFound => 'Ülke bulunamadı';
 
   @override
-  String get profileSettingsSelectCountry => 'Select Country';
+  String get profileSettingsSelectCountry => 'Ülke Seçin';
 
   @override
-  String get profileSettingsSaveChangesButton => 'Save Changes';
+  String get profileSettingsSaveChangesButton => 'Değişiklikleri Kaydet';
 
   @override
   String get comment_support_tickets_screen =>
       '==== Support Tickets Screen ====';
 
   @override
-  String get supportTicketsScreenTitle => 'Support Ticket';
+  String get supportTicketsScreenTitle => 'Destek Talebi';
 
   @override
-  String get supportTicketsCreateTicketButton => 'Create Ticket';
+  String get supportTicketsCreateTicketButton => 'Talep Oluştur';
 
   @override
-  String get supportTicketsLastUpdate => 'Last Update';
+  String get supportTicketsLastUpdate => 'Son Güncelleme';
 
   @override
-  String get supportTicketsRequestedAt => 'Requested At';
+  String get supportTicketsRequestedAt => 'Talep Tarihi';
 
   @override
-  String get supportTicketsPriorityHigh => 'High';
+  String get supportTicketsPriorityHigh => 'Yüksek';
 
   @override
-  String get supportTicketsPriorityMedium => 'Medium';
+  String get supportTicketsPriorityMedium => 'Orta';
 
   @override
-  String get supportTicketsPriorityLow => 'Low';
+  String get supportTicketsPriorityLow => 'Düşük';
 
   @override
-  String get supportTicketsStatus => 'Status: ';
+  String get supportTicketsStatus => 'Durum: ';
 
   @override
-  String get supportTicketsStatusOpen => 'Open';
+  String get supportTicketsStatusOpen => 'Açık';
 
   @override
-  String get supportTicketsStatusClose => 'Close';
+  String get supportTicketsStatusClose => 'Kapat';
 
   @override
-  String get supportTicketsStatusInProgress => 'In Progress';
+  String get supportTicketsStatusInProgress => 'Devam Ediyor';
 
   @override
-  String get supportTicketsStatusWaitingUser => 'Waiting for You';
+  String get supportTicketsStatusWaitingUser => 'Sizi Bekliyor';
 
   @override
-  String get supportTicketsStatusResolved => 'Resolved';
+  String get supportTicketsStatusResolved => 'Çözüldü';
 
   @override
-  String get supportTicketsStatusClosed => 'Closed';
+  String get supportTicketsStatusClosed => 'Kapatıldı';
 
   @override
-  String get supportTicketsStatusArchived => 'Archived';
+  String get supportTicketsStatusArchived => 'Arşivlendi';
 
   @override
-  String get supportTicketsReplyButton => 'Reply';
+  String get supportTicketsReplyButton => 'Yanıtla';
 
   @override
   String get comment_ticket_details => '==== Ticket Details ====';
 
   @override
-  String get ticketDetailsTitle => 'Ticket Details';
+  String get ticketDetailsTitle => 'Talep Detayları';
 
   @override
-  String get ticketDetailsTicketId => 'Ticket ID';
+  String get ticketDetailsTicketId => 'Talep No';
 
   @override
-  String get ticketDetailsCategory => 'Category';
+  String get ticketDetailsCategory => 'Kategori';
 
   @override
-  String get ticketDetailsPriority => 'Priority';
+  String get ticketDetailsPriority => 'Öncelik';
 
   @override
-  String get ticketDetailsCreatedOn => 'Created On';
+  String get ticketDetailsCreatedOn => 'Oluşturulma Tarihi';
 
   @override
-  String get ticketDetailsLastUpdated => 'Last Updated';
+  String get ticketDetailsLastUpdated => 'Son Güncelleme';
 
   @override
-  String get ticketDetailsPriorityHigh => 'High';
+  String get ticketDetailsPriorityHigh => 'Yüksek';
 
   @override
-  String get ticketDetailsPriorityMedium => 'Medium';
+  String get ticketDetailsPriorityMedium => 'Orta';
 
   @override
-  String get ticketDetailsPriorityLow => 'Low';
+  String get ticketDetailsPriorityLow => 'Düşük';
 
   @override
   String get comment_replay_ticket_screen => '==== Replay Ticket Screen ====';
 
   @override
-  String get replayTicketMarkAsClosedButton => 'Mark As Closed';
+  String get replayTicketMarkAsClosedButton => 'Kapatıldı Olarak İşaretle';
 
   @override
-  String get replayTicketMessageHint => 'Type your message...';
+  String get replayTicketMessageHint => 'Mesajınızı yazın...';
 
   @override
-  String get replayTicketEmptyMessageError => 'Please enter an message';
+  String get replayTicketEmptyMessageError => 'Lütfen bir mesaj girin';
 
   @override
-  String get replayTicketAttachmentsLabel => 'Attachments:';
+  String get replayTicketAttachmentsLabel => 'Ekler:';
 
   @override
-  String get replayTicketUnknownFile => 'Unknown file';
+  String get replayTicketUnknownFile => 'Bilinmeyen dosya';
 
   @override
-  String get replayTicketAttachmentPreviewTitle => 'Attachment Preview';
+  String get replayTicketAttachmentPreviewTitle => 'Ek Önizlemesi';
 
   @override
-  String get replayTicketAttachmentError => 'Something went wrong!';
+  String get replayTicketAttachmentError => 'Bir şeyler ters gitti!';
 
   @override
   String get comment_add_new_ticket_screen => '==== Add New Ticket Screen ====';
 
   @override
-  String get addNewTicketScreenTitle => 'Create Ticket';
+  String get addNewTicketScreenTitle => 'Talep Oluştur';
 
   @override
-  String get addNewTicketTitle => 'Title';
+  String get addNewTicketTitle => 'Başlık';
 
   @override
-  String get addNewTicketDescription => 'Description';
+  String get addNewTicketDescription => 'Açıklama';
 
   @override
-  String get addNewTicketAttachments => 'Attachments';
+  String get addNewTicketAttachments => 'Ekler';
 
   @override
-  String get addNewTicketAttachFile => 'Attach File';
+  String get addNewTicketAttachFile => 'Dosya Ekle';
 
   @override
-  String get addNewTicketAddButton => 'Add Ticket';
+  String get addNewTicketAddButton => 'Talep Ekle';
 
   @override
   String get comment_two_factor_authentication_screen =>
       '==== Two Factor Authentication Screen ====';
 
   @override
-  String get twoFactorAuthenticationScreenTitle => '2FA Authentication';
+  String get twoFactorAuthenticationScreenTitle => '2FA Doğrulaması';
 
   @override
   String get comment_disable_2fa_section => '==== Disable 2FA Section ====';
 
   @override
-  String get disable2FaSectionTitle => '2FA Authentication';
+  String get disable2FaSectionTitle => '2FA Doğrulaması';
 
   @override
   String get disable2FaSectionDescription => 'noInternetConnectionRetryButton';
 
   @override
-  String get disable2FaSectionDisableButton => 'Disable 2FA';
+  String get disable2FaSectionDisableButton => '2FA\'yı Kapat';
 
   @override
-  String get disable2FaSectionPasswordRequired => 'Please enter an password';
+  String get disable2FaSectionPasswordRequired => 'Lütfen bir parola girin';
 
   @override
   String get comment_enable_2fa_section => '==== Enable 2FA Section ====';
 
   @override
-  String get enable2FaSectionTitle => '2FA Authentication';
+  String get enable2FaSectionTitle => '2FA Doğrulaması';
 
   @override
   String get enable2FaSectionDescription =>
-      'Scan the QR code with Google Authenticator\nApp to enable 2FA';
+      '2FA\'yı etkinleştirmek için QR kodunu Google\nAuthenticator uygulamasıyla tarayın';
 
   @override
   String get enable2FaSectionPinLabel =>
-      'The PIN From Google Authenticator App';
+      'Google Authenticator Uygulamasındaki PIN';
 
   @override
-  String get enable2FaSectionEnableButton => 'Enable 2FA';
+  String get enable2FaSectionEnableButton => '2FA\'yı Etkinleştir';
 
   @override
   String get enable2FaSectionPinRequired =>
-      'Please enter an google authentication pin';
+      'Lütfen Google kimlik doğrulama PIN\'ini girin';
 
   @override
   String get comment_generate_2fa_section => '==== Generate 2FA Section ====';
 
   @override
-  String get generate2FaSectionTitle => '2FA Authentication';
+  String get generate2FaSectionTitle => '2FA Doğrulaması';
 
   @override
   String get generate2FaSectionDescription =>
-      'Enhance your account security with two-factor authentication';
+      'Hesap güvenliğinizi iki adımlı doğrulama ile artırın';
 
   @override
-  String get generate2FaSectionGenerateButton => 'Generate 2FA';
+  String get generate2FaSectionGenerateButton => '2FA Oluştur';
 
   @override
   String get comment_settings_screen => '==== Settings Screen ====';
 
   @override
-  String get settingsScreenTitle => 'Settings';
+  String get settingsScreenTitle => 'Ayarlar';
 
   @override
-  String get settingsProfileSettings => 'Profile Settings';
+  String get settingsProfileSettings => 'Profil Ayarları';
 
   @override
-  String get settingsChangePassword => 'Change Password';
+  String get settingsChangePassword => 'Parola Değiştir';
 
   @override
-  String get settingsAllNotification => 'All Notification';
+  String get settingsAllNotification => 'Tüm Bildirimler';
 
   @override
-  String get settingsTwoFactorAuthentication => '2FA Authentication';
+  String get settingsTwoFactorAuthentication => '2FA Doğrulaması';
 
   @override
-  String get settingsIdVerification => 'ID Verification';
+  String get settingsIdVerification => 'Kimlik Doğrulama';
 
   @override
-  String get settingsSupport => 'Support';
+  String get settingsSupport => 'Destek';
 
   @override
-  String get settingsSignOut => 'Sign Out';
+  String get settingsSignOut => 'Çıkış Yap';
 
   @override
-  String get settingsKycVerified => 'Verified';
+  String get settingsKycVerified => 'Doğrulandı';
 
   @override
-  String get settingsKycPending => 'Pending';
+  String get settingsKycPending => 'Beklemede';
 
   @override
-  String get settingsKycFailed => 'Failed';
+  String get settingsKycFailed => 'Başarısız';
 
   @override
-  String get settingsKycNotSubmitted => 'Not Submitted';
+  String get settingsKycNotSubmitted => 'Gönderilmedi';
 
   @override
   String get comment_transactions_screen => '==== Transactions Screen ====';
 
   @override
-  String get transactionsScreenTitle => 'My Transactions';
+  String get transactionsScreenTitle => 'İşlemlerim';
 
   @override
   String get comment_transactions_popup => '==== Transactions Popup ====';
 
   @override
-  String get transactionsPopupDate => 'Date';
+  String get transactionsPopupDate => 'Tarih';
 
   @override
-  String get transactionsPopupTransactionId => 'Transaction ID';
+  String get transactionsPopupTransactionId => 'İşlem No';
 
   @override
-  String get transactionsPopupWalletName => 'Wallet Name';
+  String get transactionsPopupWalletName => 'Cüzdan Adı';
 
   @override
-  String get transactionsPopupAmount => 'Amount';
+  String get transactionsPopupAmount => 'Tutar';
 
   @override
-  String get transactionsPopupCharge => 'Charge';
+  String get transactionsPopupCharge => 'Ücret';
 
   @override
-  String get transactionsPopupFinalAmount => 'Final Amount';
+  String get transactionsPopupFinalAmount => 'Toplam Tutar';
 
   @override
-  String get transactionsPopupStatus => 'Status';
+  String get transactionsPopupStatus => 'Durum';
 
   @override
   String get transactionsPopupClose => 'Kapat';
@@ -2839,638 +2850,636 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Transaction Filter Bottom Sheet ====';
 
   @override
-  String get transactionFilterTransactionId => 'Transactions ID';
+  String get transactionFilterTransactionId => 'İşlem No';
 
   @override
-  String get transactionFilterStatus => 'Status';
+  String get transactionFilterStatus => 'Durum';
 
   @override
-  String get transactionFilterApplyButton => 'Filter';
+  String get transactionFilterApplyButton => 'Filtrele';
 
   @override
-  String get transactionFilterResetButton => 'Reset';
+  String get transactionFilterResetButton => 'Sıfırla';
 
   @override
   String get comment_transfer_screen => '==== Transfer Screen ====';
 
   @override
-  String get transferScreenTitle => 'Transfer Money';
+  String get transferScreenTitle => 'Para Gönder';
 
   @override
-  String get transferHistoryTransferHistory => 'Transfer History';
+  String get transferHistoryTransferHistory => 'Transfer Geçmişi';
 
   @override
-  String get transferHistoryReceivedHistory => 'Received History';
+  String get transferHistoryReceivedHistory => 'Gelen Transferler';
 
   @override
   String get comment_transfer_received_history_screen =>
       '==== Transfer Received History Screen ====';
 
   @override
-  String get transferReceivedHistoryScreenTitle => 'Received History';
+  String get transferReceivedHistoryScreenTitle => 'Gelen Transferler';
 
   @override
   String get comment_transfer_received_filter_bottom_sheet =>
       '==== Transfer Received Filter Bottom Sheet ====';
 
   @override
-  String get transferReceivedFilterTransactionId => 'Transactions ID';
+  String get transferReceivedFilterTransactionId => 'İşlem No';
 
   @override
-  String get transferReceivedFilterStatus => 'Status';
+  String get transferReceivedFilterStatus => 'Durum';
 
   @override
-  String get transferReceivedFilterApplyButton => 'Filter';
+  String get transferReceivedFilterApplyButton => 'Filtrele';
 
   @override
-  String get transferReceivedFilterResetButton => 'Reset';
+  String get transferReceivedFilterResetButton => 'Sıfırla';
 
   @override
   String get comment_transfer_history_screen =>
       '==== Transfer History Screen ====';
 
   @override
-  String get transferHistoryScreenTitle => 'Transfer History';
+  String get transferHistoryScreenTitle => 'Transfer Geçmişi';
 
   @override
   String get comment_transfer_transaction_filter_bottom_sheet =>
       '==== Transfer Transaction Filter Bottom Sheet ====';
 
   @override
-  String get transferTransactionFilterTransactionId => 'Transactions ID';
+  String get transferTransactionFilterTransactionId => 'İşlem No';
 
   @override
-  String get transferTransactionFilterStatus => 'Status';
+  String get transferTransactionFilterStatus => 'Durum';
 
   @override
-  String get transferTransactionFilterApplyButton => 'Filter';
+  String get transferTransactionFilterApplyButton => 'Filtrele';
 
   @override
-  String get transferTransactionFilterResetButton => 'Reset';
+  String get transferTransactionFilterResetButton => 'Sıfırla';
 
   @override
   String get comment_transfer_amount_step_section =>
       '==== Transfer Amount Step Section ====';
 
   @override
-  String get transferAmountStepSectionRecipientUid => 'Recipient UID';
+  String get transferAmountStepSectionRecipientUid => 'Alıcı UID';
 
   @override
-  String get transferAmountStepSectionAmount => 'Amount';
+  String get transferAmountStepSectionAmount => 'Tutar';
 
   @override
-  String get transferAmountStepSectionMin => 'Minimum';
+  String get transferAmountStepSectionMin => 'Asgari';
 
   @override
-  String get transferAmountStepSectionMax => 'and Maximum';
+  String get transferAmountStepSectionMax => 've Maksimum';
 
   @override
-  String get transferAmountStepSectionTransferMoneyButton => 'Transfer Money';
+  String get transferAmountStepSectionTransferMoneyButton => 'Para Gönder';
 
   @override
   String get transferAmountStepSectionSavedBeneficiaryButton =>
-      'Saved Beneficiary';
+      'Kayıtlı Alıcılar';
 
   @override
   String get transferAmountStepSectionInvalidQrCodeDigits =>
-      'Invalid QR code. Recipient UID must be digits only.';
+      'Geçersiz QR kodu. Alıcı UID yalnızca rakamlardan oluşmalıdır.';
 
   @override
   String get transferAmountStepSectionInvalidQrCodePrefix =>
-      'Invalid QR code. UID prefix not found.';
+      'Geçersiz QR kodu. UID öneki bulunamadı.';
 
   @override
-  String get transferAmountStepSectionBeneficiariesTitle => 'Beneficiaries';
+  String get transferAmountStepSectionBeneficiariesTitle => 'Alıcılar';
 
   @override
-  String get transferAmountStepSectionAddBeneficiary => 'Add Beneficiary';
+  String get transferAmountStepSectionAddBeneficiary => 'Alıcı Ekle';
 
   @override
   String get transferAmountStepSectionUidLabel => 'UID:';
 
   @override
   String get transferAmountStepSectionDeleteConfirmationTitle =>
-      'Are you sure?';
+      'Emin misiniz?';
 
   @override
   String get transferAmountStepSectionDeleteConfirmationMessage =>
-      'You want to delete this beneficiary?';
+      'Bu alıcıyı silmek istiyor musunuz?';
 
   @override
-  String get transferAmountStepSectionDeleteButton => 'Delete';
+  String get transferAmountStepSectionDeleteButton => 'Sil';
 
   @override
-  String get transferAmountStepSectionCancelButton => 'Cancel';
+  String get transferAmountStepSectionCancelButton => 'İptal';
 
   @override
   String get comment_transfer_review_step_section =>
       '==== Transfer Review Step Section ====';
 
   @override
-  String get transferReviewStepSectionTitle => 'Review Details';
+  String get transferReviewStepSectionTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get transferReviewStepSectionAmount => 'Amount';
+  String get transferReviewStepSectionAmount => 'Tutar';
 
   @override
-  String get transferReviewStepSectionWallet => 'Wallet';
+  String get transferReviewStepSectionWallet => 'Cüzdan';
 
   @override
-  String get transferReviewStepSectionRecipientAccount => 'Recipient Account';
+  String get transferReviewStepSectionRecipientAccount => 'Alıcı Hesabı';
 
   @override
-  String get transferReviewStepSectionCharge => 'Charge';
+  String get transferReviewStepSectionCharge => 'Ücret';
 
   @override
-  String get transferReviewStepSectionTotalAmount => 'Total Amount';
+  String get transferReviewStepSectionTotalAmount => 'Toplam Tutar';
 
   @override
-  String get transferReviewStepSectionBackButton => 'Back';
+  String get transferReviewStepSectionBackButton => 'Geri';
 
   @override
-  String get transferReviewStepSectionConfirmButton => 'Confirm';
+  String get transferReviewStepSectionConfirmButton => 'Onayla';
 
   @override
   String get comment_transfer_success_step_section =>
       '==== Transfer Success Step Section ====';
 
   @override
-  String get transferSuccessStepSectionTitle => 'Transfer Money Success!';
+  String get transferSuccessStepSectionTitle => 'Para Gönderme Başarılı!';
 
   @override
-  String get transferSuccessStepSectionAmount => 'Amount';
+  String get transferSuccessStepSectionAmount => 'Tutar';
 
   @override
-  String get transferSuccessStepSectionTransactionId => 'Transection ID';
+  String get transferSuccessStepSectionTransactionId => 'İşlem No';
 
   @override
-  String get transferSuccessStepSectionWalletName => 'Wallet Name';
+  String get transferSuccessStepSectionWalletName => 'Cüzdan Adı';
 
   @override
-  String get transferSuccessStepSectionPaymentMethod => 'Payment Method';
+  String get transferSuccessStepSectionPaymentMethod => 'Ödeme Yöntemi';
 
   @override
-  String get transferSuccessStepSectionDateTime => 'Date & Time';
+  String get transferSuccessStepSectionDateTime => 'Tarih ve Saat';
 
   @override
-  String get transferSuccessStepSectionName => 'Name';
+  String get transferSuccessStepSectionName => 'Ad';
 
   @override
-  String get transferSuccessStepSectionCharge => 'Charge';
+  String get transferSuccessStepSectionCharge => 'Ücret';
 
   @override
-  String get transferSuccessStepSectionTotalAmount => 'Total Amount';
+  String get transferSuccessStepSectionTotalAmount => 'Toplam Tutar';
 
   @override
-  String get transferSuccessStepSectionTransferAgainButton => 'Transfer Again';
+  String get transferSuccessStepSectionTransferAgainButton => 'Tekrar Gönder';
 
   @override
-  String get transferSuccessStepSectionBackHomeButton => 'Back Home';
+  String get transferSuccessStepSectionBackHomeButton => 'Ana Sayfaya Dön';
 
   @override
   String get comment_transfer_wallet_section =>
       '==== Transfer Wallet Section ====';
 
   @override
-  String get transferWalletSectionBalance => 'Balance';
+  String get transferWalletSectionBalance => 'Bakiye';
 
   @override
-  String get transferWalletSectionWalletsNotFound => 'Wallets Not Found';
+  String get transferWalletSectionWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
   String get comment_wallets_screen => '==== Wallets Screen ====';
 
   @override
-  String get walletsScreenTitle => 'My Wallets';
+  String get walletsScreenTitle => 'Cüzdanlarım';
 
   @override
   String get comment_delete_wallet_bottom_sheet =>
       '==== Delete Wallet Bottom Sheet ====';
 
   @override
-  String get deleteWalletBottomSheetTitle => 'Are you sure?';
+  String get deleteWalletBottomSheetTitle => 'Emin misiniz?';
 
   @override
   String get deleteWalletBottomSheetMessage =>
-      'You want to delete this wallet?';
+      'Bu cüzdanı silmek istiyor musunuz?';
 
   @override
-  String get deleteWalletBottomSheetDeleteButton => 'Delete';
+  String get deleteWalletBottomSheetDeleteButton => 'Sil';
 
   @override
-  String get deleteWalletBottomSheetCancelButton => 'Cancel';
+  String get deleteWalletBottomSheetCancelButton => 'İptal';
 
   @override
   String get comment_wallet_list_section => '==== Wallet List Section ====';
 
   @override
-  String get walletListSectionTopUpButton => 'Top Up';
+  String get walletListSectionTopUpButton => 'Yükle';
 
   @override
-  String get walletListSectionWithdrawButton => 'Withdraw';
+  String get walletListSectionWithdrawButton => 'Para Çek';
 
   @override
   String get walletListSectionUserDepositNotEnabled =>
-      'User Deposit Not Enabled';
+      'Kullanıcı Para Yatırma Etkin Değil';
 
   @override
   String get walletListSectionUserWithdrawNotEnabled =>
-      'User Withdraw Not Enabled';
+      'Kullanıcı Para Çekme Etkin Değil';
 
   @override
   String get comment_create_new_wallet_screen =>
       '==== Create New Wallet Screen ====';
 
   @override
-  String get createNewWalletScreenTitle => 'Create New Wallet';
+  String get createNewWalletScreenTitle => 'Yeni Cüzdan Oluştur';
 
   @override
-  String get createNewWalletCurrency => 'Currency';
+  String get createNewWalletCurrency => 'Para Birimi';
 
   @override
-  String get createNewWalletSelectCurrency => 'Select Currency';
+  String get createNewWalletSelectCurrency => 'Para Birimi Seçin';
 
   @override
-  String get createNewWalletCurrencyNotFound => 'Currency not found';
+  String get createNewWalletCurrencyNotFound => 'Para birimi bulunamadı';
 
   @override
-  String get createNewWalletCreateButton => 'Create';
+  String get createNewWalletCreateButton => 'Oluştur';
 
   @override
   String get comment_withdraw_screen => '==== Withdraw Screen ====';
 
   @override
-  String get withdrawScreenTitle => 'Withdraw Money';
+  String get withdrawScreenTitle => 'Para Çek';
 
   @override
-  String get withdrawScreenAddAccountButton => 'Add Account';
+  String get withdrawScreenAddAccountButton => 'Hesap Ekle';
 
   @override
   String get comment_withdraw_history_screen =>
       '==== Withdraw History Screen ====';
 
   @override
-  String get withdrawHistoryScreenTitle => 'Withdraw History';
+  String get withdrawHistoryScreenTitle => 'Para Çekme Geçmişi';
 
   @override
   String get comment_withdraw_transaction_filter_bottom_sheet =>
       '==== Withdraw Transaction Filter Bottom Sheet ====';
 
   @override
-  String get withdrawTransactionFilterTransactionId => 'Transactions ID';
+  String get withdrawTransactionFilterTransactionId => 'İşlem No';
 
   @override
-  String get withdrawTransactionFilterStatus => 'Status';
+  String get withdrawTransactionFilterStatus => 'Durum';
 
   @override
-  String get withdrawTransactionFilterApplyButton => 'Filter';
+  String get withdrawTransactionFilterApplyButton => 'Filtrele';
 
   @override
-  String get withdrawTransactionFilterResetButton => 'Reset';
+  String get withdrawTransactionFilterResetButton => 'Sıfırla';
 
   @override
   String get comment_delete_account_dropdown_section =>
       '==== Delete Account Dropdown Section ====';
 
   @override
-  String get deleteAccountDropdownTitle => 'Are you sure?';
+  String get deleteAccountDropdownTitle => 'Emin misiniz?';
 
   @override
-  String get deleteAccountDropdownMessage => 'You want to delete this account?';
+  String get deleteAccountDropdownMessage =>
+      'Bu hesabı silmek istiyor musunuz?';
 
   @override
-  String get deleteAccountDropdownDeleteButton => 'Delete';
+  String get deleteAccountDropdownDeleteButton => 'Sil';
 
   @override
-  String get deleteAccountDropdownCancelButton => 'Cancel';
+  String get deleteAccountDropdownCancelButton => 'İptal';
 
   @override
   String get comment_withdraw_account_filter_bottom_sheet =>
       '==== Withdraw Account Filter Bottom Sheet ====';
 
   @override
-  String get withdrawAccountFilterMethodName => 'Method Name';
+  String get withdrawAccountFilterMethodName => 'Yöntem Adı';
 
   @override
-  String get withdrawAccountFilterApplyButton => 'Filter';
+  String get withdrawAccountFilterApplyButton => 'Filtrele';
 
   @override
   String get comment_withdraw_account_section =>
       '==== Withdraw Account Section ====';
 
   @override
-  String get withdrawAccountSectionTitle => 'All Account';
+  String get withdrawAccountSectionTitle => 'Tüm Hesaplar';
 
   @override
   String get comment_withdraw_amount_step_section =>
       '==== Withdraw Amount Step Section ====';
 
   @override
-  String get withdrawAmountStepSectionWithdrawAccount => 'Withdraw Account';
+  String get withdrawAmountStepSectionWithdrawAccount => 'Para Çekme Hesabı';
 
   @override
-  String get withdrawAmountStepSectionAmount => 'Amount';
+  String get withdrawAmountStepSectionAmount => 'Tutar';
 
   @override
-  String get withdrawAmountStepSectionMin => 'Minimum';
+  String get withdrawAmountStepSectionMin => 'Asgari';
 
   @override
-  String get withdrawAmountStepSectionMax => 'and Maximum';
+  String get withdrawAmountStepSectionMax => 've Maksimum';
 
   @override
-  String get withdrawAmountStepSectionWithdrawMoneyButton => 'Withdraw Money';
+  String get withdrawAmountStepSectionWithdrawMoneyButton => 'Para Çek';
 
   @override
   String get withdrawAmountStepSectionWithdrawAccountTitle =>
-      'Withdraw Account';
+      'Para Çekme Hesabı';
 
   @override
   String get withdrawAmountStepSectionNoAccountsFound =>
-      'No withdraw accounts found';
+      'Para çekme hesabı bulunamadı';
 
   @override
-  String get withdrawAmountStepSectionCurrencyLabel => 'Currency:';
+  String get withdrawAmountStepSectionCurrencyLabel => 'Para Birimi:';
 
   @override
-  String get withdrawAmountStepSectionMinDescription => 'Min:';
+  String get withdrawAmountStepSectionMinDescription => 'Asgari:';
 
   @override
-  String get withdrawAmountStepSectionMaxDescription => 'Max:';
+  String get withdrawAmountStepSectionMaxDescription => 'Maks:';
 
   @override
   String get comment_withdraw_header_section =>
       '==== Withdraw Header Section ====';
 
   @override
-  String get withdrawHeaderSectionTitle => 'Withdraw Money';
+  String get withdrawHeaderSectionTitle => 'Para Çek';
 
   @override
-  String get withdrawHeaderSectionWithdrawButton => 'Withdraw';
+  String get withdrawHeaderSectionWithdrawButton => 'Para Çek';
 
   @override
-  String get withdrawHeaderSectionWithdrawAccountButton => 'Withdraw Account';
+  String get withdrawHeaderSectionWithdrawAccountButton => 'Para Çekme Hesabı';
 
   @override
-  String get withdrawHeaderSectionHistory => 'Withdraw History';
+  String get withdrawHeaderSectionHistory => 'Para Çekme Geçmişi';
 
   @override
   String get comment_withdraw_review_step_section =>
       '==== Withdraw Review Step Section ====';
 
   @override
-  String get withdrawReviewStepSectionTitle => 'Review Details';
+  String get withdrawReviewStepSectionTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get withdrawReviewStepSectionAmount => 'Amount';
+  String get withdrawReviewStepSectionAmount => 'Tutar';
 
   @override
-  String get withdrawReviewStepSectionCharge => 'Charge';
+  String get withdrawReviewStepSectionCharge => 'Ücret';
 
   @override
-  String get withdrawReviewStepSectionTotalAmount => 'Total Amount';
+  String get withdrawReviewStepSectionTotalAmount => 'Toplam Tutar';
 
   @override
-  String get withdrawReviewStepSectionBackButton => 'Back';
+  String get withdrawReviewStepSectionBackButton => 'Geri';
 
   @override
-  String get withdrawReviewStepSectionConfirmButton => 'Confirm';
+  String get withdrawReviewStepSectionConfirmButton => 'Onayla';
 
   @override
   String get comment_withdraw_success_step_section =>
       '==== Withdraw Success Step Section ====';
 
   @override
-  String get withdrawSuccessStepSectionTitle => 'Withdraw Money Success!';
+  String get withdrawSuccessStepSectionTitle => 'Para Çekme Başarılı!';
 
   @override
-  String get withdrawSuccessStepSectionAmount => 'Amount';
+  String get withdrawSuccessStepSectionAmount => 'Tutar';
 
   @override
-  String get withdrawSuccessStepSectionTransactionId => 'Transection ID';
+  String get withdrawSuccessStepSectionTransactionId => 'İşlem No';
 
   @override
-  String get withdrawSuccessStepSectionCharge => 'Charge';
+  String get withdrawSuccessStepSectionCharge => 'Ücret';
 
   @override
-  String get withdrawSuccessStepSectionTransactionType => 'Transaction Type';
+  String get withdrawSuccessStepSectionTransactionType => 'İşlem Türü';
 
   @override
-  String get withdrawSuccessStepSectionFinalAmount => 'Final Amount';
+  String get withdrawSuccessStepSectionFinalAmount => 'Toplam Tutar';
 
   @override
-  String get withdrawSuccessStepSectionWithdrawAgainButton =>
-      'Withdraw Money Again';
+  String get withdrawSuccessStepSectionWithdrawAgainButton => 'Tekrar Para Çek';
 
   @override
-  String get withdrawSuccessStepSectionBackHomeButton => 'Back Home';
+  String get withdrawSuccessStepSectionBackHomeButton => 'Ana Sayfaya Dön';
 
   @override
   String get comment_edit_withdraw_account_screen =>
       '==== Edit Withdraw Account Screen ====';
 
   @override
-  String get editWithdrawAccountTitle => 'Update Withdraw Account';
+  String get editWithdrawAccountTitle => 'Para Çekme Hesabını Güncelle';
 
   @override
-  String get editWithdrawAccountMethodName => 'Method Name';
+  String get editWithdrawAccountMethodName => 'Yöntem Adı';
 
   @override
-  String get editWithdrawAccountMethodNameHint => 'Enter method name';
+  String get editWithdrawAccountMethodNameHint => 'Yöntem adını girin';
 
   @override
-  String get editWithdrawAccountFieldHint => 'Write here...';
+  String get editWithdrawAccountFieldHint => 'Buraya yazın...';
 
   @override
-  String get editWithdrawAccountGenericFieldHint => 'Enter';
+  String get editWithdrawAccountGenericFieldHint => 'Girin';
 
   @override
-  String get editWithdrawAccountUpdateButton => 'Update Account';
+  String get editWithdrawAccountUpdateButton => 'Hesabı Güncelle';
 
   @override
   String get comment_create_withdraw_account_screen =>
       '==== Create Withdraw Account Screen ====';
 
   @override
-  String get createWithdrawAccountTitle => 'Create Withdraw Account';
+  String get createWithdrawAccountTitle => 'Para Çekme Hesabı Oluştur';
 
   @override
-  String get createWithdrawAccountWallet => 'Wallet';
+  String get createWithdrawAccountWallet => 'Cüzdan';
 
   @override
-  String get createWithdrawAccountWithdrawMethod => 'Withdraw Method';
+  String get createWithdrawAccountWithdrawMethod => 'Para Çekme Yöntemi';
 
   @override
-  String get createWithdrawAccountMethodName => 'Method Name';
+  String get createWithdrawAccountMethodName => 'Yöntem Adı';
 
   @override
-  String get createWithdrawAccountCreateButton => 'Create Account';
+  String get createWithdrawAccountCreateButton => 'Hesap Oluştur';
 
   @override
-  String get createWithdrawAccountWalletsNotFound => 'Wallets Not Found';
+  String get createWithdrawAccountWalletsNotFound => 'Cüzdan Bulunamadı';
 
   @override
-  String get createWithdrawAccountWithdrawMethodTitle => 'Withdraw Method';
+  String get createWithdrawAccountWithdrawMethodTitle => 'Para Çekme Yöntemi';
 
   @override
   String get createWithdrawAccountWithdrawMethodNotFound =>
-      'Withdraw method not found';
+      'Para çekme yöntemi bulunamadı';
 
   @override
-  String get createWithdrawAccountFieldHint => 'Write here...';
+  String get createWithdrawAccountFieldHint => 'Buraya yazın...';
 
   @override
   String get comment_dynamic_attachment_preview =>
       '==== Dynamic Attachment Preview ====';
 
   @override
-  String get dynamicAttachmentPreviewTitle => 'Attachment Preview';
+  String get dynamicAttachmentPreviewTitle => 'Ek Önizlemesi';
 
   @override
   String get comment_no_internet_connection =>
       '==== No Internet Connection ====';
 
   @override
-  String get noInternetConnectionTitle => 'No Internet Connection';
+  String get noInternetConnectionTitle => 'İnternet Bağlantısı Yok';
 
   @override
   String get noInternetConnectionMessage =>
-      'Please check your network settings';
+      'Lütfen ağ ayarlarınızı kontrol edin';
 
   @override
-  String get noInternetConnectionRetryButton => 'Retry';
+  String get noInternetConnectionRetryButton => 'Tekrar Dene';
 
   @override
   String get comment_qr_scanner_screen => '==== QR Scanner Screen ====';
 
   @override
   String get qrScannerScreenInstruction =>
-      'Place QR code within the frame to scan';
+      'Taramak için QR kodunu çerçeve içine yerleştirin';
 
   @override
-  String get qrScannerScreenProcessing => 'Processing...';
+  String get qrScannerScreenProcessing => 'İşleniyor...';
 
   @override
   String get comment_webview_screen => '==== WebView Screen ====';
 
   @override
-  String get webViewScreenPaymentSuccessful => 'Payment Successful!';
+  String get webViewScreenPaymentSuccessful => 'Ödeme Başarılı!';
 
   @override
-  String get webViewScreenPaymentFailed => 'Payment Failed!';
+  String get webViewScreenPaymentFailed => 'Ödeme Başarısız!';
 
   @override
-  String get webViewScreenPaymentCancelled => 'Payment was cancelled!';
+  String get webViewScreenPaymentCancelled => 'Ödeme iptal edildi!';
 
   @override
   String get comment_common_country_dropdown_bottom_sheet =>
       '==== Common Country Dropdown Bottom Sheet ====';
 
   @override
-  String get commonCountryDropdownSearchHint => 'Search';
+  String get commonCountryDropdownSearchHint => 'Ara';
 
   @override
-  String get commonCountryDropdownNotFound => 'Country not found';
+  String get commonCountryDropdownNotFound => 'Ülke bulunamadı';
 
   @override
   String get comment_common_dropdown_bottom_sheet =>
       '==== Common Dropdown Bottom Sheet ====';
 
   @override
-  String get commonDropdownSearchHint => 'Search';
+  String get commonDropdownSearchHint => 'Ara';
 
   @override
   String get comment_common_dropdown_bottom_sheet_three =>
       '==== Common Dropdown Bottom Sheet Three ====';
 
   @override
-  String get commonDropdownThreeSearchHint => 'Search';
+  String get commonDropdownThreeSearchHint => 'Ara';
 
   @override
   String get comment_common_dropdown_bottom_sheet_two =>
       '==== Common Dropdown Bottom Sheet Two ====';
 
   @override
-  String get commonDropdownTwoSearchHint => 'Search';
+  String get commonDropdownTwoSearchHint => 'Ara';
 
   @override
   String get comment_common_dropdown_wallet_bottom_sheet =>
       '==== Common Dropdown Wallet Bottom Sheet ====';
 
   @override
-  String get commonDropdownWalletTitle => 'Select Wallet';
+  String get commonDropdownWalletTitle => 'Cüzdan Seçin';
 
   @override
   String get comment_image_picker_dropdown_bottom_sheet =>
       '==== Image Picker Dropdown Bottom Sheet ====';
 
   @override
-  String get imagePickerDropdownTitle => 'Select Image Source';
+  String get imagePickerDropdownTitle => 'Görsel Kaynağı Seçin';
 
   @override
-  String get imagePickerDropdownCamera => 'Camera';
+  String get imagePickerDropdownCamera => 'Kamera';
 
   @override
-  String get imagePickerDropdownGallery => 'Gallery';
+  String get imagePickerDropdownGallery => 'Galeri';
 
   @override
   String get comment_multiple_image_picker_dropdown_bottom_sheet =>
       '==== Multiple Image Picker Dropdown Bottom Sheet ====';
 
   @override
-  String get multipleImagePickerDropdownTitle => 'Image Source';
+  String get multipleImagePickerDropdownTitle => 'Görsel Kaynağı';
 
   @override
-  String get multipleImagePickerDropdownCamera => 'Camera';
+  String get multipleImagePickerDropdownCamera => 'Kamera';
 
   @override
-  String get multipleImagePickerDropdownGallery => 'Gallery';
+  String get multipleImagePickerDropdownGallery => 'Galeri';
 
   @override
   String get comment_navigation_screen => '==== Navigation Screen ====';
 
   @override
-  String get bottomNavHome => 'Home';
+  String get bottomNavHome => 'Ana Sayfa';
 
   @override
   String get bottomNavTransfer => 'Transfer';
 
   @override
-  String get bottomNavGift => 'Gift';
+  String get bottomNavGift => 'Hediye';
 
   @override
-  String get bottomNavSettings => 'Settings';
+  String get bottomNavSettings => 'Ayarlar';
 
   @override
   String get qrInvalidFormat =>
-      'Invalid QR format. Only AID, MID, or UID codes are accepted.';
+      'Geçersiz QR biçimi. Yalnızca AID, MID veya UID kodları kabul edilir.';
 
   @override
-  String get userTransferNotEnabled => 'User Transfer Not Enabled';
+  String get userTransferNotEnabled => 'Kullanıcı Transfer Etkin Değil';
 
   @override
-  String get userGiftNotEnabled => 'User Gift Not Enabled';
+  String get userGiftNotEnabled => 'Kullanıcı Hediye Etkin Değil';
 
   @override
   String get comment_image_picker_controller =>
       '==== Image Picker Controller ====';
 
   @override
-  String get imagePickerGalleryError => 'Failed to pick image from gallery';
+  String get imagePickerGalleryError => 'Galeriden görsel seçilemedi';
 
   @override
-  String get imagePickerCameraError => 'Failed to pick image from camera';
+  String get imagePickerCameraError => 'Kameradan görsel seçilemedi';
 
   @override
   String get comment_multiple_image_picker_controller =>
       '==== Multiple Image Picker Controller ====';
 
   @override
-  String get multipleImagePickerGalleryError =>
-      'Failed to pick image from gallery';
+  String get multipleImagePickerGalleryError => 'Galeriden görsel seçilemedi';
 
   @override
-  String get multipleImagePickerCameraError =>
-      'Failed to pick image from camera';
+  String get multipleImagePickerCameraError => 'Kameradan görsel seçilemedi';
 
   @override
   String get comment_biometric_auth_service =>
@@ -3478,25 +3487,26 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get biometricDeviceNotSupported =>
-      'This device does not support biometrics.';
+      'Bu cihaz biyometrik kimlik doğrulamayı desteklemiyor.';
 
   @override
   String get biometricNotEnrolled =>
-      'No biometric enrolled. Please set up fingerprint';
+      'Kayıtlı biyometrik veri yok. Lütfen parmak izini ayarlayın';
 
   @override
   String get biometricUnavailable =>
-      'Biometric features are currently unavailable.';
+      'Biyometrik özellikler şu anda kullanılamıyor.';
 
   @override
   String get biometricAuthenticationFailed =>
-      'Biometric authentication failed.';
+      'Biyometrik kimlik doğrulama başarısız oldu.';
 
   @override
-  String get biometricCheckFailed => 'Unable to check biometric availability.';
+  String get biometricCheckFailed =>
+      'Biyometrik kullanılabilirliği kontrol edilemedi.';
 
   @override
-  String get biometricAuthReason => 'Authenticate to log in';
+  String get biometricAuthReason => 'Giriş yapmak için kimlik doğrulayın';
 
   @override
   String get comment_network_service => '==== Network Service ====';
@@ -3523,61 +3533,61 @@ class AppLocalizationsTr extends AppLocalizations {
   String get comment_add_money_controller => '==== Add Money Controller ====';
 
   @override
-  String get addMoneySuccess => 'Money added successfully';
+  String get addMoneySuccess => 'Para başarıyla eklendi';
 
   @override
-  String get addMoneyValidationSelectWallet => 'Please select a wallet';
+  String get addMoneyValidationSelectWallet => 'Lütfen bir cüzdan seçin';
 
   @override
-  String get addMoneyValidationSelectGateway => 'Please select a gateway';
+  String get addMoneyValidationSelectGateway => 'Lütfen bir ağ geçidi seçin';
 
   @override
-  String get addMoneyValidationEnterAmount => 'Please enter an amount';
+  String get addMoneyValidationEnterAmount => 'Lütfen bir tutar girin';
 
   @override
   String get addMoneyValidationAmountGreaterThanZero =>
-      'Amount must be greater than 0';
+      'Tutar 0\'dan büyük olmalıdır';
 
   @override
   String addMoneyValidationAmountMinimum(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Tutar $amount değerinden az olamaz';
   }
 
   @override
   String addMoneyValidationAmountMaximum(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Tutar $amount değerini aşamaz';
   }
 
   @override
   String addMoneyValidationUploadFile(Object fieldName) {
-    return 'Please upload a file for $fieldName';
+    return 'Lütfen $fieldName için bir dosya yükleyin';
   }
 
   @override
   String addMoneyValidationFillField(Object fieldName) {
-    return 'Please fill in the $fieldName field';
+    return 'Lütfen $fieldName alanını doldurun';
   }
 
   @override
   String get comment_cash_out_controller => '==== Cash Out Controller ====';
 
   @override
-  String get cashOutValidationSelectWallet => 'Please select a wallet';
+  String get cashOutValidationSelectWallet => 'Lütfen bir cüzdan seçin';
 
   @override
-  String get cashOutValidationEnterAgentAid => 'Please enter an Agent AID';
+  String get cashOutValidationEnterAgentAid => 'Lütfen bir Ajan AID girin';
 
   @override
-  String get cashOutValidationEnterAmount => 'Please enter an amount';
+  String get cashOutValidationEnterAmount => 'Lütfen bir tutar girin';
 
   @override
   String cashOutValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Minimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String cashOutValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Maksimum tutar $amount $currency olmalıdır';
   }
 
   @override
@@ -3585,92 +3595,94 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get exchangeValidationSelectFromWallet =>
-      'Please select a from wallet';
+      'Lütfen kaynak cüzdanı seçin';
 
   @override
-  String get exchangeValidationSelectToWallet => 'Please select a to wallet';
+  String get exchangeValidationSelectToWallet => 'Lütfen hedef cüzdanı seçin';
 
   @override
-  String get exchangeValidationEnterAmount => 'Please enter an amount';
+  String get exchangeValidationEnterAmount => 'Lütfen bir tutar girin';
 
   @override
   String exchangeValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Minimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String exchangeValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Maksimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String exchangeValidationInsufficientBalance(Object amount, Object currency) {
-    return 'Insufficient balance — available: $amount $currency';
+    return 'Yetersiz bakiye — mevcut: $amount $currency';
   }
 
   @override
   String get exchangeValidationSameWallet =>
-      'From and to currencies must be different.';
+      'Kaynak ve hedef para birimleri farklı olmalıdır.';
 
   @override
-  String get dashboardReferralInvited => 'Invited';
+  String get dashboardReferralInvited => 'Davet Edilen';
 
   @override
-  String get dashboardReferralBonus => 'Referral bonus';
+  String get dashboardReferralBonus => 'Davet Bonusu';
 
   @override
   String get comment_create_gift_controller =>
       '==== Create Gift Controller ====';
 
   @override
-  String get createGiftValidationSelectWallet => 'Please select a wallet';
+  String get createGiftValidationSelectWallet => 'Lütfen bir cüzdan seçin';
 
   @override
-  String get createGiftValidationEnterAmount => 'Please enter an amount';
+  String get createGiftValidationEnterAmount => 'Lütfen bir tutar girin';
 
   @override
   String createGiftValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Minimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String createGiftValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Maksimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String get comment_home_controller => '==== Home Controller ====';
 
   @override
-  String get homeLanguageChangeFailed => 'Failed to change language';
+  String get homeLanguageChangeFailed => 'Dil değiştirilemedi';
 
   @override
   String get homeBiometricDeviceNotSupported =>
-      'This device does not support biometrics.';
+      'Bu cihaz biyometrik kimlik doğrulamayı desteklemiyor.';
 
   @override
   String get homeBiometricAuthenticationFailed =>
-      'Authentication failed. Biometric setting not changed.';
+      'Kimlik doğrulama başarısız oldu. Biyometrik ayarı değiştirilmedi.';
 
   @override
-  String get homeBiometricEnabledSuccess => 'Biometric enabled successfully';
+  String get homeBiometricEnabledSuccess =>
+      'Biyometrik kimlik doğrulama başarıyla etkinleştirildi';
 
   @override
-  String get homeBiometricDisabledSuccess => 'Biometric disabled successfully';
+  String get homeBiometricDisabledSuccess =>
+      'Biyometrik kimlik doğrulama başarıyla kapatıldı';
 
   @override
-  String get homeBiometricNotFoundTitle => 'Biometric Not Found';
+  String get homeBiometricNotFoundTitle => 'Biyometrik Veri Bulunamadı';
 
   @override
   String get homeBiometricNotFoundDescription =>
-      'No fingerprint or biometric is enrolled on this device. You can set it up from the system settings.';
+      'Bu cihazda kayıtlı parmak izi veya biyometrik veri yok. Sistem ayarlarından kurulum yapabilirsiniz.';
 
   @override
-  String get homeBiometricOpenSettings => 'Open Security Settings';
+  String get homeBiometricOpenSettings => 'Güvenlik Ayarlarını Aç';
 
   @override
   String get homeIosBiometricSetup =>
-      'Please go to Settings > Face ID & Passcode to set up biometrics.';
+      'Biyometrik doğrulamayı kurmak için lütfen Ayarlar > Face ID & Şifre bölümüne gidin.';
 
   @override
   String get comment_create_invoice_controller =>
@@ -3678,40 +3690,40 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get createInvoiceValidationEnterInvoiceTo =>
-      'Please enter an invoice to';
+      'Lütfen alıcı bilgilerini girin';
 
   @override
   String get createInvoiceValidationEnterEmailAddress =>
-      'Please enter an email address';
+      'Lütfen bir e-posta adresi girin';
 
   @override
-  String get createInvoiceValidationEnterAddress => 'Please enter an address';
+  String get createInvoiceValidationEnterAddress => 'Lütfen bir adres girin';
 
   @override
-  String get createInvoiceValidationSelectWallet => 'Please select a wallet';
+  String get createInvoiceValidationSelectWallet => 'Lütfen bir cüzdan seçin';
 
   @override
-  String get createInvoiceValidationSelectStatus => 'Please select a status';
+  String get createInvoiceValidationSelectStatus => 'Lütfen bir durum seçin';
 
   @override
   String get createInvoiceValidationSelectIssueDate =>
-      'Please select an issue date';
+      'Lütfen bir düzenleme tarihi seçin';
 
   @override
   String createInvoiceValidationItemNameRequired(Object itemNumber) {
-    return 'Item $itemNumber: Name is required';
+    return 'Kalem $itemNumber: Ad zorunludur';
   }
 
   @override
   String createInvoiceValidationItemQuantityGreaterThanZero(Object itemNumber) {
-    return 'Item $itemNumber: Quantity must be greater than 0';
+    return 'Kalem $itemNumber: Adet 0\'dan büyük olmalıdır';
   }
 
   @override
   String createInvoiceValidationItemUnitPriceGreaterThanZero(
     Object itemNumber,
   ) {
-    return 'Item $itemNumber: Unit Price must be greater than 0';
+    return 'Kalem $itemNumber: Birim Fiyat 0\'dan büyük olmalıdır';
   }
 
   @override
@@ -3719,23 +3731,22 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Make Payment Controller ====';
 
   @override
-  String get makePaymentValidationSelectWallet => 'Please select a wallet';
+  String get makePaymentValidationSelectWallet => 'Lütfen bir cüzdan seçin';
 
   @override
-  String get makePaymentValidationEnterMerchantMid =>
-      'Please enter an merchant mid';
+  String get makePaymentValidationEnterMerchantMid => 'Lütfen satıcı MID girin';
 
   @override
-  String get makePaymentValidationEnterAmount => 'Please enter an amount';
+  String get makePaymentValidationEnterAmount => 'Lütfen bir tutar girin';
 
   @override
   String makePaymentValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Minimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String makePaymentValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Maksimum tutar $amount $currency olmalıdır';
   }
 
   @override
@@ -3743,24 +3754,24 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Request Money Controller ====';
 
   @override
-  String get requestMoneyValidationSelectWallet => 'Please select a wallet';
+  String get requestMoneyValidationSelectWallet => 'Lütfen bir cüzdan seçin';
 
   @override
   String get requestMoneyValidationEnterRecipientUid =>
-      'Please enter an recipient uid';
+      'Lütfen alıcı UID girin';
 
   @override
   String get requestMoneyValidationEnterRequestAmount =>
-      'Please enter an request amount';
+      'Lütfen talep tutarını girin';
 
   @override
   String requestMoneyValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Minimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String requestMoneyValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Maksimum tutar $amount $currency olmalıdır';
   }
 
   @override
@@ -3768,13 +3779,13 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Add New Ticket Controller ====';
 
   @override
-  String get addNewTicketSuccess => 'Ticket created successfully';
+  String get addNewTicketSuccess => 'Talep başarıyla oluşturuldu';
 
   @override
-  String get addNewValidationEnterTitle => 'Please enter a title';
+  String get addNewValidationEnterTitle => 'Lütfen bir başlık girin';
 
   @override
-  String get addNewValidationEnterDescription => 'Please enter a description';
+  String get addNewValidationEnterDescription => 'Lütfen bir açıklama girin';
 
   @override
   String get comment_change_password_controller =>
@@ -3782,45 +3793,44 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get changePasswordValidationEnterCurrentPassword =>
-      'Please enter an current password';
+      'Lütfen mevcut parolanızı girin';
 
   @override
   String get changePasswordValidationEnterNewPassword =>
-      'Please enter an new password';
+      'Lütfen yeni parolanızı girin';
 
   @override
   String get changePasswordValidationPasswordMinLength =>
-      'Password must be at least 8 characters';
+      'Parola en az 8 karakter olmalıdır';
 
   @override
   String get changePasswordValidationEnterConfirmPassword =>
-      'Please enter an confirm password';
+      'Lütfen parola onayını girin';
 
   @override
   String get changePasswordValidationPasswordsDoNotMatch =>
-      'Passwords do not match';
+      'Parolalar eşleşmiyor';
 
   @override
   String get comment_transfer_controller => '==== Transfer Controller ====';
 
   @override
-  String get transferValidationSelectWallet => 'Please select a wallet';
+  String get transferValidationSelectWallet => 'Lütfen bir cüzdan seçin';
 
   @override
-  String get transferValidationEnterRecipientUid =>
-      'Please enter an recipient uid';
+  String get transferValidationEnterRecipientUid => 'Lütfen alıcı UID girin';
 
   @override
-  String get transferValidationEnterAmount => 'Please enter an amount';
+  String get transferValidationEnterAmount => 'Lütfen bir tutar girin';
 
   @override
   String transferValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Minimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String transferValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Maksimum tutar $amount $currency olmalıdır';
   }
 
   @override
@@ -3829,34 +3839,34 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String createWithdrawAccountFileRequiredError(Object fieldName) {
-    return 'File required for $fieldName';
+    return '$fieldName için dosya gereklidir';
   }
 
   @override
   String createWithdrawAccountFieldRequiredError(Object fieldName) {
-    return 'Field $fieldName is required';
+    return '$fieldName alanı zorunludur';
   }
 
   @override
   String get createWithdrawAccountValidationSelectWallet =>
-      'Please select a wallet';
+      'Lütfen bir cüzdan seçin';
 
   @override
   String get createWithdrawAccountValidationSelectWithdrawMethod =>
-      'Please select a withdraw method';
+      'Lütfen bir para çekme yöntemi seçin';
 
   @override
   String get createWithdrawAccountValidationEnterMethodName =>
-      'Please enter an method name';
+      'Lütfen bir yöntem adı girin';
 
   @override
   String createWithdrawAccountValidationUploadFile(Object fieldName) {
-    return 'Please upload a file for $fieldName';
+    return 'Lütfen $fieldName için bir dosya yükleyin';
   }
 
   @override
   String createWithdrawAccountValidationFillField(Object fieldName) {
-    return 'Please fill in the $fieldName field';
+    return 'Lütfen $fieldName alanını doldurun';
   }
 
   @override
@@ -3864,79 +3874,79 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get withdrawValidationSelectWithdrawAccount =>
-      'Please select a withdraw account';
+      'Lütfen bir para çekme hesabı seçin';
 
   @override
-  String get withdrawValidationEnterAmount => 'Please enter an amount';
+  String get withdrawValidationEnterAmount => 'Lütfen bir tutar girin';
 
   @override
   String withdrawValidationAmountMinimum(Object amount, Object currency) {
-    return 'Minimum amount should be $amount $currency';
+    return 'Minimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String withdrawValidationAmountMaximum(Object amount, Object currency) {
-    return 'Maximum amount should be $amount $currency';
+    return 'Maksimum tutar $amount $currency olmalıdır';
   }
 
   @override
   String get comment_airtime_controller => '==== Airtime Controller ====';
 
   @override
-  String get airtimeCountryRequired => 'Please select a Country';
+  String get airtimeCountryRequired => 'Lütfen bir ülke seçin';
 
   @override
-  String get airtimeServiceRequired => 'Please select a service';
+  String get airtimeServiceRequired => 'Lütfen bir hizmet seçin';
 
   @override
-  String get airtimeAmountRequired => 'Please enter an amount';
+  String get airtimeAmountRequired => 'Lütfen bir tutar girin';
 
   @override
-  String get airtimeAmountValid => 'Please enter a valid amount';
+  String get airtimeAmountValid => 'Lütfen geçerli bir tutar girin';
 
   @override
   String airtimeDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Lütfen $fieldName girin';
   }
 
   @override
   String get comment_cable_controller => '==== Cable Controller ====';
 
   @override
-  String get cableCountryRequired => 'Please select a Country';
+  String get cableCountryRequired => 'Lütfen bir ülke seçin';
 
   @override
-  String get cableServiceRequired => 'Please select a service';
+  String get cableServiceRequired => 'Lütfen bir hizmet seçin';
 
   @override
-  String get cableAmountRequired => 'Please enter an amount';
+  String get cableAmountRequired => 'Lütfen bir tutar girin';
 
   @override
-  String get cableAmountValid => 'Please enter a valid amount';
+  String get cableAmountValid => 'Lütfen geçerli bir tutar girin';
 
   @override
   String cableDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Lütfen $fieldName girin';
   }
 
   @override
   String get comment_toll_controller => '==== Toll Controller ====';
 
   @override
-  String get tollCountryRequired => 'Please select a Country';
+  String get tollCountryRequired => 'Lütfen bir ülke seçin';
 
   @override
-  String get tollServiceRequired => 'Please select a service';
+  String get tollServiceRequired => 'Lütfen bir hizmet seçin';
 
   @override
-  String get tollAmountRequired => 'Please enter an amount';
+  String get tollAmountRequired => 'Lütfen bir tutar girin';
 
   @override
-  String get tollAmountValid => 'Please enter a valid amount';
+  String get tollAmountValid => 'Lütfen geçerli bir tutar girin';
 
   @override
   String tollDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Lütfen $fieldName girin';
   }
 
   @override
@@ -3944,40 +3954,40 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Electricity Controller ====';
 
   @override
-  String get electricityCountryRequired => 'Please select a Country';
+  String get electricityCountryRequired => 'Lütfen bir ülke seçin';
 
   @override
-  String get electricityServiceRequired => 'Please select a service';
+  String get electricityServiceRequired => 'Lütfen bir hizmet seçin';
 
   @override
-  String get electricityAmountRequired => 'Please enter an amount';
+  String get electricityAmountRequired => 'Lütfen bir tutar girin';
 
   @override
-  String get electricityAmountValid => 'Please enter a valid amount';
+  String get electricityAmountValid => 'Lütfen geçerli bir tutar girin';
 
   @override
   String electricityDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Lütfen $fieldName girin';
   }
 
   @override
   String get comment_internet_controller => '==== Internet Controller ====';
 
   @override
-  String get internetCountryRequired => 'Please select a Country';
+  String get internetCountryRequired => 'Lütfen bir ülke seçin';
 
   @override
-  String get internetServiceRequired => 'Please select a service';
+  String get internetServiceRequired => 'Lütfen bir hizmet seçin';
 
   @override
-  String get internetAmountRequired => 'Please enter an amount';
+  String get internetAmountRequired => 'Lütfen bir tutar girin';
 
   @override
-  String get internetAmountValid => 'Please enter a valid amount';
+  String get internetAmountValid => 'Lütfen geçerli bir tutar girin';
 
   @override
   String internetDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Lütfen $fieldName girin';
   }
 
   @override
@@ -3985,521 +3995,520 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Data Bundle Controller ====';
 
   @override
-  String get dataBundleCountryRequired => 'Please select a Country';
+  String get dataBundleCountryRequired => 'Lütfen bir ülke seçin';
 
   @override
-  String get dataBundleServiceRequired => 'Please select a service';
+  String get dataBundleServiceRequired => 'Lütfen bir hizmet seçin';
 
   @override
-  String get dataBundleAmountRequired => 'Please enter an amount';
+  String get dataBundleAmountRequired => 'Lütfen bir tutar girin';
 
   @override
-  String get dataBundleAmountValid => 'Please enter a valid amount';
+  String get dataBundleAmountValid => 'Lütfen geçerli bir tutar girin';
 
   @override
   String dataBundleDynamicFieldRequired(Object fieldName) {
-    return 'Please enter $fieldName';
+    return 'Lütfen $fieldName girin';
   }
 
   @override
   String get comment_airtime_screen => '==== Airtime Screen ====';
 
   @override
-  String get airtimeAppBarTitle => 'Airtime';
+  String get airtimeAppBarTitle => 'Kontör';
 
   @override
   String get comment_airtime_amount_section =>
       '==== Airtime Amount Step Section ====';
 
   @override
-  String get airtimeCountryLabel => 'Country';
+  String get airtimeCountryLabel => 'Ülke';
 
   @override
-  String get airtimeCountryHint => 'Select Country';
+  String get airtimeCountryHint => 'Ülke Seçin';
 
   @override
-  String get airtimeCountrySelectTitle => 'Select Country';
+  String get airtimeCountrySelectTitle => 'Ülke Seçin';
 
   @override
-  String get airtimeCountryNotFound => 'Country Not Found';
+  String get airtimeCountryNotFound => 'Ülke Bulunamadı';
 
   @override
-  String get airtimeServiceLabel => 'Service';
+  String get airtimeServiceLabel => 'Hizmet';
 
   @override
-  String get airtimeServiceHint => 'Select Service';
+  String get airtimeServiceHint => 'Hizmet Seçin';
 
   @override
-  String get airtimeServiceSelectTitle => 'Select Service';
+  String get airtimeServiceSelectTitle => 'Hizmet Seçin';
 
   @override
-  String get airtimeServiceNotFound => 'Service Not Found';
+  String get airtimeServiceNotFound => 'Hizmet Bulunamadı';
 
   @override
-  String get airtimeAmountLabel => 'Amount';
+  String get airtimeAmountLabel => 'Tutar';
 
   @override
-  String get airtimePayButton => 'Pay Now';
+  String get airtimePayButton => 'Şimdi Öde';
 
   @override
   String get comment_airtime_review_section =>
       '==== Airtime Review Step Section ====';
 
   @override
-  String get airtimeReviewTitle => 'Review Details';
+  String get airtimeReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get airtimeReviewAmountLabel => 'Amount';
+  String get airtimeReviewAmountLabel => 'Tutar';
 
   @override
-  String get airtimeReviewChargeLabel => 'Charge';
+  String get airtimeReviewChargeLabel => 'Ücret';
 
   @override
-  String get airtimeReviewConversionRateLabel => 'Conversion Rate';
+  String get airtimeReviewConversionRateLabel => 'Dönüşüm Oranı';
 
   @override
-  String get airtimeReviewPayableAmountLabel => 'Payable Amount';
+  String get airtimeReviewPayableAmountLabel => 'Ödenecek Tutar';
 
   @override
-  String get airtimeReviewBackButton => 'Back';
+  String get airtimeReviewBackButton => 'Geri';
 
   @override
-  String get airtimeReviewConfirmButton => 'Confirm';
+  String get airtimeReviewConfirmButton => 'Onayla';
 
   @override
   String get comment_bill_payment_history => '==== Bill Payment History ====';
 
   @override
-  String get billPaymentHistoryTitle => 'Bill Payment History';
+  String get billPaymentHistoryTitle => 'Fatura Ödeme Geçmişi';
 
   @override
   String get comment_bill_payment_details =>
       '==== Bill Payment Details Sheet ====';
 
   @override
-  String get billPaymentDetailsTitle => 'Bill Payment Details';
+  String get billPaymentDetailsTitle => 'Fatura Ödeme Detayları';
 
   @override
-  String get billPaymentDetailsTime => 'Time';
+  String get billPaymentDetailsTime => 'Saat';
 
   @override
-  String get billPaymentDetailsAmount => 'Amount';
+  String get billPaymentDetailsAmount => 'Tutar';
 
   @override
-  String get billPaymentDetailsCharge => 'Charge';
+  String get billPaymentDetailsCharge => 'Ücret';
 
   @override
-  String get billPaymentDetailsMethod => 'Method';
+  String get billPaymentDetailsMethod => 'Yöntem';
 
   @override
-  String get billPaymentDetailsStatus => 'Status';
+  String get billPaymentDetailsStatus => 'Durum';
 
   @override
   String get comment_cable_screen => '==== Cable Screen ====';
 
   @override
-  String get cableTitle => 'Cable';
+  String get cableTitle => 'Kablo TV';
 
   @override
   String get comment_cable_amount_section =>
       '==== Cable Amount Step Section ====';
 
   @override
-  String get cableCountryLabel => 'Country';
+  String get cableCountryLabel => 'Ülke';
 
   @override
-  String get cableCountryHint => 'Select Country';
+  String get cableCountryHint => 'Ülke Seçin';
 
   @override
-  String get cableCountrySelectTitle => 'Select Country';
+  String get cableCountrySelectTitle => 'Ülke Seçin';
 
   @override
-  String get cableCountryNotFound => 'Country Not Found';
+  String get cableCountryNotFound => 'Ülke Bulunamadı';
 
   @override
-  String get cableServiceLabel => 'Service';
+  String get cableServiceLabel => 'Hizmet';
 
   @override
-  String get cableServiceHint => 'Select Service';
+  String get cableServiceHint => 'Hizmet Seçin';
 
   @override
-  String get cableServiceSelectTitle => 'Select Service';
+  String get cableServiceSelectTitle => 'Hizmet Seçin';
 
   @override
-  String get cableServiceNotFound => 'Service Not Found';
+  String get cableServiceNotFound => 'Hizmet Bulunamadı';
 
   @override
-  String get cableAmountLabel => 'Amount';
+  String get cableAmountLabel => 'Tutar';
 
   @override
-  String get cablePayButton => 'Pay Now';
+  String get cablePayButton => 'Şimdi Öde';
 
   @override
   String get comment_cable_review_section =>
       '==== Cable Review Step Section ====';
 
   @override
-  String get cableReviewTitle => 'Review Details';
+  String get cableReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get cableReviewAmountLabel => 'Amount';
+  String get cableReviewAmountLabel => 'Tutar';
 
   @override
-  String get cableReviewChargeLabel => 'Charge';
+  String get cableReviewChargeLabel => 'Ücret';
 
   @override
-  String get cableReviewConversionRateLabel => 'Conversion Rate';
+  String get cableReviewConversionRateLabel => 'Dönüşüm Oranı';
 
   @override
-  String get cableReviewPayableAmountLabel => 'Payable Amount';
+  String get cableReviewPayableAmountLabel => 'Ödenecek Tutar';
 
   @override
-  String get cableReviewBackButton => 'Back';
+  String get cableReviewBackButton => 'Geri';
 
   @override
-  String get cableReviewConfirmButton => 'Confirm';
+  String get cableReviewConfirmButton => 'Onayla';
 
   @override
   String get comment_toll_screen => '==== Toll Screen ====';
 
   @override
-  String get tollTitle => 'Toll';
+  String get tollTitle => 'Otoyol';
 
   @override
   String get comment_toll_amount_section =>
       '==== Toll Amount Step Section ====';
 
   @override
-  String get tollCountryLabel => 'Country';
+  String get tollCountryLabel => 'Ülke';
 
   @override
-  String get tollCountryHint => 'Select Country';
+  String get tollCountryHint => 'Ülke Seçin';
 
   @override
-  String get tollCountrySelectTitle => 'Select Country';
+  String get tollCountrySelectTitle => 'Ülke Seçin';
 
   @override
-  String get tollCountryNotFound => 'Country Not Found';
+  String get tollCountryNotFound => 'Ülke Bulunamadı';
 
   @override
-  String get tollServiceLabel => 'Service';
+  String get tollServiceLabel => 'Hizmet';
 
   @override
-  String get tollServiceHint => 'Select Service';
+  String get tollServiceHint => 'Hizmet Seçin';
 
   @override
-  String get tollServiceSelectTitle => 'Select Service';
+  String get tollServiceSelectTitle => 'Hizmet Seçin';
 
   @override
-  String get tollServiceNotFound => 'Service Not Found';
+  String get tollServiceNotFound => 'Hizmet Bulunamadı';
 
   @override
-  String get tollAmountLabel => 'Amount';
+  String get tollAmountLabel => 'Tutar';
 
   @override
-  String get tollPayButton => 'Pay Now';
+  String get tollPayButton => 'Şimdi Öde';
 
   @override
   String get comment_toll_review_section =>
       '==== Toll Review Step Section ====';
 
   @override
-  String get tollReviewTitle => 'Review Details';
+  String get tollReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get tollReviewAmountLabel => 'Amount';
+  String get tollReviewAmountLabel => 'Tutar';
 
   @override
-  String get tollReviewChargeLabel => 'Charge';
+  String get tollReviewChargeLabel => 'Ücret';
 
   @override
-  String get tollReviewConversionRateLabel => 'Conversion Rate';
+  String get tollReviewConversionRateLabel => 'Dönüşüm Oranı';
 
   @override
-  String get tollReviewPayableAmountLabel => 'Payable Amount';
+  String get tollReviewPayableAmountLabel => 'Ödenecek Tutar';
 
   @override
-  String get tollReviewBackButton => 'Back';
+  String get tollReviewBackButton => 'Geri';
 
   @override
-  String get tollReviewConfirmButton => 'Confirm';
+  String get tollReviewConfirmButton => 'Onayla';
 
   @override
   String get comment_electricity_screen => '==== Electricity Screen ====';
 
   @override
-  String get electricityTitle => 'Electricity';
+  String get electricityTitle => 'Elektrik';
 
   @override
   String get comment_electricity_amount_section =>
       '==== Electricity Amount Step Section ====';
 
   @override
-  String get electricityCountryLabel => 'Country';
+  String get electricityCountryLabel => 'Ülke';
 
   @override
-  String get electricityCountryHint => 'Select Country';
+  String get electricityCountryHint => 'Ülke Seçin';
 
   @override
-  String get electricityCountrySelectTitle => 'Select Country';
+  String get electricityCountrySelectTitle => 'Ülke Seçin';
 
   @override
-  String get electricityCountryNotFound => 'Country Not Found';
+  String get electricityCountryNotFound => 'Ülke Bulunamadı';
 
   @override
-  String get electricityServiceLabel => 'Service';
+  String get electricityServiceLabel => 'Hizmet';
 
   @override
-  String get electricityServiceHint => 'Select Service';
+  String get electricityServiceHint => 'Hizmet Seçin';
 
   @override
-  String get electricityServiceSelectTitle => 'Select Service';
+  String get electricityServiceSelectTitle => 'Hizmet Seçin';
 
   @override
-  String get electricityServiceNotFound => 'Service Not Found';
+  String get electricityServiceNotFound => 'Hizmet Bulunamadı';
 
   @override
-  String get electricityAmountLabel => 'Amount';
+  String get electricityAmountLabel => 'Tutar';
 
   @override
-  String get electricityPayButton => 'Pay Now';
+  String get electricityPayButton => 'Şimdi Öde';
 
   @override
   String get comment_electricity_review_section =>
       '==== Electricity Review Step Section ====';
 
   @override
-  String get electricityReviewTitle => 'Review Details';
+  String get electricityReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get electricityReviewAmountLabel => 'Amount';
+  String get electricityReviewAmountLabel => 'Tutar';
 
   @override
-  String get electricityReviewChargeLabel => 'Charge';
+  String get electricityReviewChargeLabel => 'Ücret';
 
   @override
-  String get electricityReviewConversionRateLabel => 'Conversion Rate';
+  String get electricityReviewConversionRateLabel => 'Dönüşüm Oranı';
 
   @override
-  String get electricityReviewPayableAmountLabel => 'Payable Amount';
+  String get electricityReviewPayableAmountLabel => 'Ödenecek Tutar';
 
   @override
-  String get electricityReviewBackButton => 'Back';
+  String get electricityReviewBackButton => 'Geri';
 
   @override
-  String get electricityReviewConfirmButton => 'Confirm';
+  String get electricityReviewConfirmButton => 'Onayla';
 
   @override
   String get comment_internet_screen => '==== Internet Screen ====';
 
   @override
-  String get internetTitle => 'Internet';
+  String get internetTitle => 'İnternet';
 
   @override
   String get comment_internet_amount_section =>
       '==== Internet Amount Step Section ====';
 
   @override
-  String get internetCountryLabel => 'Country';
+  String get internetCountryLabel => 'Ülke';
 
   @override
-  String get internetCountryHint => 'Select Country';
+  String get internetCountryHint => 'Ülke Seçin';
 
   @override
-  String get internetCountrySelectTitle => 'Select Country';
+  String get internetCountrySelectTitle => 'Ülke Seçin';
 
   @override
-  String get internetCountryNotFound => 'Country Not Found';
+  String get internetCountryNotFound => 'Ülke Bulunamadı';
 
   @override
-  String get internetServiceLabel => 'Service';
+  String get internetServiceLabel => 'Hizmet';
 
   @override
-  String get internetServiceHint => 'Select Service';
+  String get internetServiceHint => 'Hizmet Seçin';
 
   @override
-  String get internetServiceSelectTitle => 'Select Service';
+  String get internetServiceSelectTitle => 'Hizmet Seçin';
 
   @override
-  String get internetServiceNotFound => 'Service Not Found';
+  String get internetServiceNotFound => 'Hizmet Bulunamadı';
 
   @override
-  String get internetAmountLabel => 'Amount';
+  String get internetAmountLabel => 'Tutar';
 
   @override
-  String get internetPayButton => 'Pay Now';
+  String get internetPayButton => 'Şimdi Öde';
 
   @override
   String get comment_internet_review_section =>
       '==== Internet Review Step Section ====';
 
   @override
-  String get internetReviewTitle => 'Review Details';
+  String get internetReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get internetReviewAmountLabel => 'Amount';
+  String get internetReviewAmountLabel => 'Tutar';
 
   @override
-  String get internetReviewChargeLabel => 'Charge';
+  String get internetReviewChargeLabel => 'Ücret';
 
   @override
-  String get internetReviewConversionRateLabel => 'Conversion Rate';
+  String get internetReviewConversionRateLabel => 'Dönüşüm Oranı';
 
   @override
-  String get internetReviewPayableAmountLabel => 'Payable Amount';
+  String get internetReviewPayableAmountLabel => 'Ödenecek Tutar';
 
   @override
-  String get internetReviewBackButton => 'Back';
+  String get internetReviewBackButton => 'Geri';
 
   @override
-  String get internetReviewConfirmButton => 'Confirm';
+  String get internetReviewConfirmButton => 'Onayla';
 
   @override
   String get comment_data_bundle_screen => '==== Data Bundle Screen ====';
 
   @override
-  String get dataBundleTitle => 'Data Bundle';
+  String get dataBundleTitle => 'İnternet Paketi';
 
   @override
   String get comment_data_bundle_amount_section =>
       '==== Data Bundle Amount Step Section ====';
 
   @override
-  String get dataBundleCountryLabel => 'Country';
+  String get dataBundleCountryLabel => 'Ülke';
 
   @override
-  String get dataBundleCountryHint => 'Select Country';
+  String get dataBundleCountryHint => 'Ülke Seçin';
 
   @override
-  String get dataBundleCountrySelectTitle => 'Select Country';
+  String get dataBundleCountrySelectTitle => 'Ülke Seçin';
 
   @override
-  String get dataBundleCountryNotFound => 'Country Not Found';
+  String get dataBundleCountryNotFound => 'Ülke Bulunamadı';
 
   @override
-  String get dataBundleServiceLabel => 'Service';
+  String get dataBundleServiceLabel => 'Hizmet';
 
   @override
-  String get dataBundleServiceHint => 'Select Service';
+  String get dataBundleServiceHint => 'Hizmet Seçin';
 
   @override
-  String get dataBundleServiceSelectTitle => 'Select Service';
+  String get dataBundleServiceSelectTitle => 'Hizmet Seçin';
 
   @override
-  String get dataBundleServiceNotFound => 'Service Not Found';
+  String get dataBundleServiceNotFound => 'Hizmet Bulunamadı';
 
   @override
-  String get dataBundleAmountLabel => 'Amount';
+  String get dataBundleAmountLabel => 'Tutar';
 
   @override
-  String get dataBundlePayButton => 'Pay Now';
+  String get dataBundlePayButton => 'Şimdi Öde';
 
   @override
   String get comment_data_bundle_review_section =>
       '==== Data Bundle Review Step Section ====';
 
   @override
-  String get dataBundleReviewTitle => 'Review Details';
+  String get dataBundleReviewTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get dataBundleReviewAmountLabel => 'Amount';
+  String get dataBundleReviewAmountLabel => 'Tutar';
 
   @override
-  String get dataBundleReviewChargeLabel => 'Charge';
+  String get dataBundleReviewChargeLabel => 'Ücret';
 
   @override
-  String get dataBundleReviewConversionRateLabel => 'Conversion Rate';
+  String get dataBundleReviewConversionRateLabel => 'Dönüşüm Oranı';
 
   @override
-  String get dataBundleReviewPayableAmountLabel => 'Payable Amount';
+  String get dataBundleReviewPayableAmountLabel => 'Ödenecek Tutar';
 
   @override
-  String get dataBundleReviewBackButton => 'Back';
+  String get dataBundleReviewBackButton => 'Geri';
 
   @override
-  String get dataBundleReviewConfirmButton => 'Confirm';
+  String get dataBundleReviewConfirmButton => 'Onayla';
 
   @override
   String get comment_bill_payment_screen =>
       '==== Bill Payment Main Screen ====';
 
   @override
-  String get billPaymentScreenTitle => 'Bill Payments';
+  String get billPaymentScreenTitle => 'Fatura Ödemeleri';
 
   @override
-  String get billPaymentAirtime => 'Airtime';
+  String get billPaymentAirtime => 'Kontör';
 
   @override
-  String get billPaymentElectricity => 'Electricity';
+  String get billPaymentElectricity => 'Elektrik';
 
   @override
-  String get billPaymentInternet => 'Internet';
+  String get billPaymentInternet => 'İnternet';
 
   @override
-  String get billPaymentDataBundle => 'Data Bundle';
+  String get billPaymentDataBundle => 'İnternet Paketi';
 
   @override
-  String get billPaymentCables => 'Cables';
+  String get billPaymentCables => 'Kablo TV';
 
   @override
-  String get billPaymentToll => 'Toll';
+  String get billPaymentToll => 'Otoyol';
 
   @override
   String get comment_create_virtual_card_controller =>
       '==== Create Virtual Card Controller ====';
 
   @override
-  String get createCardProviderRequired => 'Please select card provider';
+  String get createCardProviderRequired => 'Lütfen kart sağlayıcısı seçin';
 
   @override
-  String get createCardHolderRequired => 'Please select card holder';
+  String get createCardHolderRequired => 'Lütfen kart sahibi seçin';
 
   @override
-  String get createNameRequired => 'Please enter name';
+  String get createNameRequired => 'Lütfen ad girin';
 
   @override
-  String get createEmailRequired => 'Please enter email';
+  String get createEmailRequired => 'Lütfen e-posta girin';
 
   @override
-  String get createEmailInvalid => 'Please enter a valid email';
+  String get createEmailInvalid => 'Lütfen geçerli bir e-posta adresi girin';
 
   @override
-  String get createPhoneNumberRequired => 'Please enter phone number';
+  String get createPhoneNumberRequired => 'Lütfen telefon numarası girin';
 
   @override
-  String get createCountryRequired => 'Please select country';
+  String get createCountryRequired => 'Lütfen ülke seçin';
 
   @override
-  String get createCityRequired => 'Please enter city';
+  String get createCityRequired => 'Lütfen şehir girin';
 
   @override
-  String get createStateRequired => 'Please enter state';
+  String get createStateRequired => 'Lütfen eyalet girin';
 
   @override
-  String get createPostalCodeRequired => 'Please enter postal code';
+  String get createPostalCodeRequired => 'Lütfen posta kodu girin';
 
   @override
-  String get createAddressRequired => 'Please enter address';
+  String get createAddressRequired => 'Lütfen adres girin';
 
   @override
   String get comment_virtual_card_details_controller =>
       '==== Virtual Card Details Controller ====';
 
   @override
-  String get cardDetailsEnterAmount => 'Please enter an amount';
+  String get cardDetailsEnterAmount => 'Lütfen bir tutar girin';
 
   @override
-  String get cardDetailsAmountGreaterThanZero =>
-      'Amount must be greater than 0';
+  String get cardDetailsAmountGreaterThanZero => 'Tutar 0\'dan büyük olmalıdır';
 
   @override
   String cardDetailsAmountMinimumLimit(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Tutar $amount değerinden az olamaz';
   }
 
   @override
   String cardDetailsAmountMaximumLimit(Object amount) {
-    return 'Amount must not exceed $amount';
+    return 'Tutar $amount değerini aşamaz';
   }
 
   @override
@@ -4507,192 +4516,193 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Card Holder Tab Section ====';
 
   @override
-  String get cardHolderTabExistingCardholders => 'Existing Cardholders';
+  String get cardHolderTabExistingCardholders => 'Mevcut Kart Sahipleri';
 
   @override
-  String get cardHolderTabCreateCardholder => 'Create Cardholder';
+  String get cardHolderTabCreateCardholder => 'Kart Sahibi Oluştur';
 
   @override
   String get comment_choose_card_holder_section =>
       '==== Choose Card Holder Section ====';
 
   @override
-  String get chooseCardHolderLabel => 'Card Holder';
+  String get chooseCardHolderLabel => 'Kart Sahibi';
 
   @override
-  String get chooseCardHolderDropdownNotFound => 'Card holder not found';
+  String get chooseCardHolderDropdownNotFound => 'Kart sahibi bulunamadı';
 
   @override
-  String get chooseCardHolderDropdownTitle => 'Select Card Holder';
+  String get chooseCardHolderDropdownTitle => 'Kart Sahibi Seçin';
 
   @override
-  String get chooseCardHolderButtonCreate => 'Create Now';
+  String get chooseCardHolderButtonCreate => 'Şimdi Oluştur';
 
   @override
   String get comment_choose_card_provider_section =>
       '==== Choose Card Provider Section ====';
 
   @override
-  String get chooseCardProviderLabel => 'Card Provider';
+  String get chooseCardProviderLabel => 'Kart Sağlayıcısı';
 
   @override
-  String get chooseCardProviderDropdownNotFound => 'Card provider not found';
+  String get chooseCardProviderDropdownNotFound =>
+      'Kart sağlayıcısı bulunamadı';
 
   @override
-  String get chooseCardProviderDropdownTitle => 'Select Card Provider';
+  String get chooseCardProviderDropdownTitle => 'Kart Sağlayıcısı Seçin';
 
   @override
   String get comment_create_new_card_holder_section =>
       '==== Create New Card Holder Section ====';
 
   @override
-  String get createCardHolderLabelName => 'Name';
+  String get createCardHolderLabelName => 'Ad';
 
   @override
-  String get createCardHolderLabelEmail => 'Email';
+  String get createCardHolderLabelEmail => 'E-posta';
 
   @override
-  String get createCardHolderLabelPhoneNumber => 'Phone Number';
+  String get createCardHolderLabelPhoneNumber => 'Telefon Numarası';
 
   @override
-  String get createCardHolderLabelCountry => 'Country';
+  String get createCardHolderLabelCountry => 'Ülke';
 
   @override
-  String get createCardHolderDropdownCountryNotFound => 'Country not found';
+  String get createCardHolderDropdownCountryNotFound => 'Ülke bulunamadı';
 
   @override
-  String get createCardHolderDropdownCountryTitle => 'Select Country';
+  String get createCardHolderDropdownCountryTitle => 'Ülke Seçin';
 
   @override
-  String get createCardHolderLabelCity => 'City';
+  String get createCardHolderLabelCity => 'Şehir';
 
   @override
-  String get createCardHolderLabelState => 'State';
+  String get createCardHolderLabelState => 'Eyalet';
 
   @override
-  String get createCardHolderLabelPostalCode => 'Postal Code';
+  String get createCardHolderLabelPostalCode => 'Posta Kodu';
 
   @override
-  String get createCardHolderLabelAddress => 'Address';
+  String get createCardHolderLabelAddress => 'Adres';
 
   @override
-  String get createCardHolderButtonCreate => 'Create Now';
+  String get createCardHolderButtonCreate => 'Şimdi Oluştur';
 
   @override
   String get comment_create_virtual_card_screen =>
       '==== Create Virtual Card Screen ====';
 
   @override
-  String get createVirtualCardAppBarTitle => 'Create New Card';
+  String get createVirtualCardAppBarTitle => 'Yeni Kart Oluştur';
 
   @override
   String get comment_get_card_info_screen => '==== Get Card Info Screen ====';
 
   @override
-  String get getCardInfoAppBarTitle => 'Get Card';
+  String get getCardInfoAppBarTitle => 'Kart Al';
 
   @override
-  String get getCardInfoBenefitsTitle => 'Benefits of virtual cards';
+  String get getCardInfoBenefitsTitle => 'Sanal kartların avantajları';
 
   @override
-  String get getCardInfoBenefitSecurityTitle => 'Better Security';
+  String get getCardInfoBenefitSecurityTitle => 'Daha Güvenli';
 
   @override
   String get getCardInfoBenefitSecuritySubtitle =>
-      'Your real card number stays hidden';
+      'Gerçek kart numaranız gizli kalır';
 
   @override
-  String get getCardInfoBenefitShoppingTitle => 'Safe Online Shopping';
+  String get getCardInfoBenefitShoppingTitle => 'Güvenli Çevrimiçi Alışveriş';
 
   @override
   String get getCardInfoBenefitShoppingSubtitle =>
-      'Create virtual cards only for online purchases';
+      'Yalnızca çevrimiçi alışverişler için sanal kartlar oluşturun';
 
   @override
-  String get getCardInfoBenefitActivationTitle => 'Fast & Easy Activation';
+  String get getCardInfoBenefitActivationTitle => 'Hızlı ve Kolay Aktivasyon';
 
   @override
   String get getCardInfoBenefitActivationSubtitle =>
-      'No physical delivery needed';
+      'Fiziksel teslimat gerekmez';
 
   @override
-  String get getCardInfoButtonContinue => 'Continue';
+  String get getCardInfoButtonContinue => 'Devam Et';
 
   @override
   String get comment_card_details_info => '==== Card Details Info ====';
 
   @override
-  String get cardDetailsInfoTitle => 'Card Details';
+  String get cardDetailsInfoTitle => 'Kart Detayları';
 
   @override
-  String get cardDetailsCardTypeLabel => 'Card Type';
+  String get cardDetailsCardTypeLabel => 'Kart Türü';
 
   @override
-  String get cardDetailsCardTypeValue => 'Virtual';
+  String get cardDetailsCardTypeValue => 'Sanal';
 
   @override
-  String get cardDetailsBillingAddressLabel => 'Billing Address';
+  String get cardDetailsBillingAddressLabel => 'Fatura Adresi';
 
   @override
-  String get cardDetailsCardCurrencyLabel => 'Card Currency';
+  String get cardDetailsCardCurrencyLabel => 'Kart Para Birimi';
 
   @override
   String get bsicardsCardDetailsCurrencyValue => 'USD';
 
   @override
-  String get cardDetailsCardCreatedLabel => 'Card Created';
+  String get cardDetailsCardCreatedLabel => 'Kart Oluşturulma Tarihi';
 
   @override
-  String get cardDetailsStatusButtonActive => 'Active';
+  String get cardDetailsStatusButtonActive => 'Aktif';
 
   @override
-  String get cardDetailsStatusButtonInactive => 'Inactive';
+  String get cardDetailsStatusButtonInactive => 'Pasif';
 
   @override
   String get comment_card_top_up_bottom_sheet =>
       '==== Card Top Up Bottom Sheet ====';
 
   @override
-  String get cardTopUpTitle => 'Card Balance Top Up';
+  String get cardTopUpTitle => 'Kart Bakiyesi Yükleme';
 
   @override
-  String get cardTopUpMainWalletBalance => 'Main Wallet Balance';
+  String get cardTopUpMainWalletBalance => 'Ana Cüzdan Bakiyesi';
 
   @override
-  String get cardTopUpLabelAmount => 'Amount';
+  String get cardTopUpLabelAmount => 'Tutar';
 
   @override
   String cardTopUpAmountLimits(Object currency, Object max, Object min) {
-    return 'Minimum $min $currency Maximum $max $currency';
+    return 'Minimum $min $currency Maksimum $max $currency';
   }
 
   @override
-  String get cardTopUpReviewTopupAmount => 'Topup Amount';
+  String get cardTopUpReviewTopupAmount => 'Yükleme Tutarı';
 
   @override
-  String get cardTopUpReviewTopupCharge => 'Topup Charge';
+  String get cardTopUpReviewTopupCharge => 'Yükleme Ücreti';
 
   @override
-  String get cardTopUpReviewTotalTopupBalance => 'Total Amount';
+  String get cardTopUpReviewTotalTopupBalance => 'Toplam Tutar';
 
   @override
-  String get cardTopUpButtonTopupNow => 'Topup Now';
+  String get cardTopUpButtonTopupNow => 'Şimdi Yükle';
 
   @override
   String get bsicardsTopUpInfoMessage =>
-      'Please send your funds to the provided crypto address. Once your transaction is confirmed, the balance will be added to your card.';
+      'Lütfen varlıklarınızı belirtilen kripto adresine gönderin. İşleminiz onaylandıktan sonra bakiye kartınıza eklenecektir.';
 
   @override
-  String get bsicardsTopUpCopyButton => 'Copy';
+  String get bsicardsTopUpCopyButton => 'Kopyala';
 
   @override
-  String get bsicardsTopUpCopySuccess => 'Address copied';
+  String get bsicardsTopUpCopySuccess => 'Adres kopyalandı';
 
   @override
   String get comment_virtual_card_display => '==== Virtual Card Display ====';
 
   @override
-  String get virtualCardExpiryDateLabel => 'Expiry Date';
+  String get virtualCardExpiryDateLabel => 'Son Kullanma Tarihi';
 
   @override
   String get virtualCardCvcLabel => 'CVC';
@@ -4702,160 +4712,159 @@ class AppLocalizationsTr extends AppLocalizations {
       '==== Virtual Card Details Screen ====';
 
   @override
-  String get virtualCardDetailsAppBarTitle => 'Virtual Card Details';
+  String get virtualCardDetailsAppBarTitle => 'Sanal Kart Detayları';
 
   @override
-  String get virtualCardDetailsFloatingButton => 'Add Balance';
+  String get virtualCardDetailsFloatingButton => 'Bakiye Ekle';
 
   @override
   String get comment_virtual_card_transaction_screen =>
       '==== Virtual Card Transaction Screen ====';
 
   @override
-  String get virtualCardTransactionAppBarTitle => 'Card Transactions';
+  String get virtualCardTransactionAppBarTitle => 'Kart İşlemleri';
 
   @override
-  String get virtualCardTransactionSyncButton => 'Sync';
+  String get virtualCardTransactionSyncButton => 'Eşitle';
 
   @override
   String get comment_virtual_card_screen => '==== Virtual Card Screen ====';
 
   @override
-  String get virtualCardScreenAppBarTitle => 'Virtual Cards';
+  String get virtualCardScreenAppBarTitle => 'Sanal Kartlar';
 
   @override
-  String get virtualCardCardExpiryDateLabel => 'Expiry Date';
+  String get virtualCardCardExpiryDateLabel => 'Son Kullanma Tarihi';
 
   @override
   String get virtualCardCardCvcLabel => 'CVC';
 
   @override
   String get virtualCardCreateCardTitle =>
-      'Create your virtual card to get started';
+      'Başlamak için sanal kartınızı oluşturun';
 
   @override
-  String get virtualCardCreateCardButton => 'Create Card';
+  String get virtualCardCreateCardButton => 'Kart Oluştur';
 
   @override
   String get comment_verify_passcode_controller =>
       '==== Verify Passcode Controller ====';
 
   @override
-  String get verifyPasscodeValidationEnterPasscode =>
-      'Please enter your passcode';
+  String get verifyPasscodeValidationEnterPasscode => 'Lütfen şifrenizi girin';
 
   @override
   String get comment_change_passcode_bottom_sheet =>
       '==== Change Passcode Bottom Sheet ====';
 
   @override
-  String get changePasscodeTitle => 'Change Passcode';
+  String get changePasscodeTitle => 'Şifre Değiştir';
 
   @override
-  String get changePasscodeLabelOldPasscode => 'Old Passcode';
+  String get changePasscodeLabelOldPasscode => 'Eski Şifre';
 
   @override
-  String get changePasscodeLabelNewPasscode => 'New Passcode';
+  String get changePasscodeLabelNewPasscode => 'Yeni Şifre';
 
   @override
-  String get changePasscodeLabelConfirmPasscode => 'Confirm Passcode';
+  String get changePasscodeLabelConfirmPasscode => 'Şifreyi Onayla';
 
   @override
-  String get changePasscodeButtonChange => 'Change Passcode';
+  String get changePasscodeButtonChange => 'Şifre Değiştir';
 
   @override
   String get comment_disable_and_change_passcode_section =>
       '==== Disable and Change Passcode Section ====';
 
   @override
-  String get disableChangePasscodeTitle => 'Passcode';
+  String get disableChangePasscodeTitle => 'Şifre';
 
   @override
-  String get disableChangePasscodeButtonChange => 'Change Passcode';
+  String get disableChangePasscodeButtonChange => 'Şifre Değiştir';
 
   @override
-  String get disableChangePasscodeButtonDisable => 'Disable Passcode';
+  String get disableChangePasscodeButtonDisable => 'Şifreyi Kapat';
 
   @override
   String get comment_disable_passcode_bottom_sheet =>
       '==== Disable Passcode Bottom Sheet ====';
 
   @override
-  String get disablePasscodeTitle => 'Disable Passcode';
+  String get disablePasscodeTitle => 'Şifreyi Kapat';
 
   @override
-  String get disablePasscodeLabelPassword => 'Password';
+  String get disablePasscodeLabelPassword => 'Parola';
 
   @override
-  String get disablePasscodeButtonDisable => 'Disable Passcode';
+  String get disablePasscodeButtonDisable => 'Şifreyi Kapat';
 
   @override
   String get comment_generate_passcode_bottom_sheet =>
       '==== Generate Passcode Bottom Sheet ====';
 
   @override
-  String get generatePasscodeTitle => 'Add Passcode';
+  String get generatePasscodeTitle => 'Şifre Ekle';
 
   @override
-  String get generatePasscodeLabelPasscode => 'Passcode';
+  String get generatePasscodeLabelPasscode => 'Şifre';
 
   @override
-  String get generatePasscodeLabelConfirmPasscode => 'Confirm Passcode';
+  String get generatePasscodeLabelConfirmPasscode => 'Şifreyi Onayla';
 
   @override
-  String get generatePasscodeButtonConfirm => 'Confirm';
+  String get generatePasscodeButtonConfirm => 'Onayla';
 
   @override
   String get comment_generate_passcode_section =>
       '==== Generate Passcode Section ====';
 
   @override
-  String get generatePasscodeSectionTitle => 'Passcode';
+  String get generatePasscodeSectionTitle => 'Şifre';
 
   @override
   String get generatePasscodeSectionDescription =>
-      'Create a secure passcode for quick access to your account';
+      'Hesabınıza hızlı erişim için güvenli bir şifre oluşturun';
 
   @override
-  String get generatePasscodeSectionButtonGenerate => 'Generate Passcode';
+  String get generatePasscodeSectionButtonGenerate => 'Şifre Oluştur';
 
   @override
   String get comment_verify_passcode_bottom_sheet =>
       '==== Verify Passcode Bottom Sheet ====';
 
   @override
-  String get verifyPasscodeTitle => 'Confirm Your Passcode';
+  String get verifyPasscodeTitle => 'Şifrenizi Onaylayın';
 
   @override
-  String get verifyPasscodeLabelPasscode => 'Passcode';
+  String get verifyPasscodeLabelPasscode => 'Şifre';
 
   @override
-  String get verifyPasscodeButtonConfirm => 'Confirm';
+  String get verifyPasscodeButtonConfirm => 'Onayla';
 
   @override
   String get comment_payment_links_amount_section =>
       '==== Payment Links Amount Section ====';
 
   @override
-  String get paymentLinksAmountSectionTitle => 'Amount';
+  String get paymentLinksAmountSectionTitle => 'Tutar';
 
   @override
-  String get paymentLinksCurrencyLabel => 'Currency';
+  String get paymentLinksCurrencyLabel => 'Para Birimi';
 
   @override
-  String get paymentLinksCurrencyHint => 'Select Currency';
+  String get paymentLinksCurrencyHint => 'Para Birimi Seçin';
 
   @override
-  String get paymentLinksCurrencyDropdownTitle => 'Currency';
+  String get paymentLinksCurrencyDropdownTitle => 'Para Birimi';
 
   @override
-  String get paymentLinksCurrencyNotFound => 'Currency Not Found';
+  String get paymentLinksCurrencyNotFound => 'Para Birimi Bulunamadı';
 
   @override
-  String get paymentLinksNoteLabel => 'Note';
+  String get paymentLinksNoteLabel => 'Not';
 
   @override
-  String get paymentLinksCreateLinkButton => 'Create Link';
+  String get paymentLinksCreateLinkButton => 'Bağlantı Oluştur';
 
   @override
   String get comment_payment_links_create_section =>
@@ -4863,190 +4872,191 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get paymentLinksInstructionText =>
-      'You can create a payment link without specifying an amount or currency. The payer can fill up account, currency while making the payment.';
+      'Tutar veya para birimi belirtmeden ödeme bağlantısı oluşturabilirsiniz. Ödeyen kişi, ödeme sırasında hesabı ve para birimini doldurabilir.';
 
   @override
   String get comment_payment_links_header_section =>
       '==== Payment Links Header Section ====';
 
   @override
-  String get paymentLinksAppBarTitle => 'Payment Links';
+  String get paymentLinksAppBarTitle => 'Ödeme Bağlantıları';
 
   @override
-  String get paymentLinksTabList => 'List';
+  String get paymentLinksTabList => 'Liste';
 
   @override
-  String get paymentLinksTabCreate => 'Create';
+  String get paymentLinksTabCreate => 'Oluştur';
 
   @override
   String get comment_payment_links_history_filter_bottom_sheet =>
       '==== Payment Links History Filter Bottom Sheet ====';
 
   @override
-  String get paymentLinksFilterNumberLabel => 'Number';
+  String get paymentLinksFilterNumberLabel => 'Numara';
 
   @override
-  String get paymentLinksFilterButton => 'Filter';
+  String get paymentLinksFilterButton => 'Filtrele';
 
   @override
   String get comment_payment_links_list_section =>
       '==== Payment Links List Section ====';
 
   @override
-  String get paymentLinksListItemCreatedAt => 'Create At: ';
+  String get paymentLinksListItemCreatedAt => 'Oluşturulma Tarihi: ';
 
   @override
-  String get paymentLinksListItemStatus => 'Status: ';
+  String get paymentLinksListItemStatus => 'Durum: ';
 
   @override
-  String get paymentLinksStatusPaid => 'Paid';
+  String get paymentLinksStatusPaid => 'Ödendi';
 
   @override
-  String get paymentLinksStatusUnpaid => 'Unpaid';
+  String get paymentLinksStatusUnpaid => 'Ödenmedi';
 
   @override
-  String get paymentLinksCopySuccessToast => 'Payment Link Code Copied';
+  String get paymentLinksCopySuccessToast => 'Ödeme Bağlantı Kodu Kopyalandı';
 
   @override
   String get comment_gift_card_header_section =>
       '---- Gift Card Header Section ----';
 
   @override
-  String get giftCardHeaderTitle => 'Gift Card';
+  String get giftCardHeaderTitle => 'Hediye Kartı';
 
   @override
-  String get giftCardHeaderTabCards => 'Cards';
+  String get giftCardHeaderTabCards => 'Kartlar';
 
   @override
-  String get giftCardHeaderTabHistory => 'History';
+  String get giftCardHeaderTabHistory => 'Geçmiş';
 
   @override
   String get comment_gift_card_history_filter_bottom_sheet =>
       '---- Gift Card History Filter Bottom Sheet ----';
 
   @override
-  String get giftCardHistoryFilterSearchLabel => 'Search';
+  String get giftCardHistoryFilterSearchLabel => 'Ara';
 
   @override
-  String get giftCardHistoryFilterSearchButton => 'Search';
+  String get giftCardHistoryFilterSearchButton => 'Ara';
 
   @override
   String get comment_gift_card_filter_bottom_sheet =>
       '---- Gift Card Filter Bottom Sheet ----';
 
   @override
-  String get giftCardFilterGiftCardLabel => 'Gift Card';
+  String get giftCardFilterGiftCardLabel => 'Hediye Kartı';
 
   @override
-  String get giftCardFilterCountryLabel => 'Country';
+  String get giftCardFilterCountryLabel => 'Ülke';
 
   @override
-  String get giftCardFilterCountrySelectTitle => 'Select Country';
+  String get giftCardFilterCountrySelectTitle => 'Ülke Seçin';
 
   @override
-  String get giftCardFilterAllOption => 'All';
+  String get giftCardFilterAllOption => 'Tümü';
 
   @override
-  String get giftCardFilterCountryNotFound => 'Country not found';
+  String get giftCardFilterCountryNotFound => 'Ülke bulunamadı';
 
   @override
-  String get giftCardFilterCategoryLabel => 'Category';
+  String get giftCardFilterCategoryLabel => 'Kategori';
 
   @override
-  String get giftCardFilterCategorySelectTitle => 'Select Category';
+  String get giftCardFilterCategorySelectTitle => 'Kategori Seçin';
 
   @override
-  String get giftCardFilterCategoryNotFound => 'Category not found';
+  String get giftCardFilterCategoryNotFound => 'Kategori bulunamadı';
 
   @override
-  String get giftCardFilterSearchButton => 'Search';
+  String get giftCardFilterSearchButton => 'Ara';
 
   @override
   String get comment_gift_card_history_details =>
       '---- Gift Card History Details ----';
 
   @override
-  String get giftCardHistoryDetailsTitle => 'Transaction Details';
+  String get giftCardHistoryDetailsTitle => 'İşlem Detayları';
 
   @override
   String giftCardHistoryQtyLabel(Object qty) {
-    return 'QTY : $qty';
+    return 'Adet: $qty';
   }
 
   @override
-  String get giftCardTransactionIdLabel => 'Transaction ID';
+  String get giftCardTransactionIdLabel => 'İşlem No';
 
   @override
-  String get giftCardProductNameLabel => 'Product Name';
+  String get giftCardProductNameLabel => 'Ürün Adı';
 
   @override
-  String get giftCardSenderNameLabel => 'Sender Name';
+  String get giftCardSenderNameLabel => 'Gönderen Adı';
 
   @override
-  String get giftCardRecipientEmailLabel => 'Recipient Email';
+  String get giftCardRecipientEmailLabel => 'Alıcı E-postası';
 
   @override
-  String get giftCardRecipientPhoneLabel => 'Recipient Phone';
+  String get giftCardRecipientPhoneLabel => 'Alıcı Telefonu';
 
   @override
-  String get giftCardUnitPriceLabel => 'Unit Price';
+  String get giftCardUnitPriceLabel => 'Birim Fiyat';
 
   @override
-  String get giftCardTotalAmountLabel => 'Total Amount';
+  String get giftCardTotalAmountLabel => 'Toplam Tutar';
 
   @override
   String get comment_gift_card_review_details =>
       '---- Gift Card Review Details ----';
 
   @override
-  String get giftCardReviewDetailsTitle => 'Review Details';
+  String get giftCardReviewDetailsTitle => 'Detayları Gözden Geçir';
 
   @override
-  String get giftCardSubTotalLabel => 'Sub Total';
+  String get giftCardSubTotalLabel => 'Ara Toplam';
 
   @override
-  String get giftCardTotalFeeLabel => 'Total Fee';
+  String get giftCardTotalFeeLabel => 'Toplam Ücret';
 
   @override
-  String get giftCardTotalLabel => 'Total';
+  String get giftCardTotalLabel => 'Toplam';
 
   @override
-  String get giftCardReviewBackButton => 'Back';
+  String get giftCardReviewBackButton => 'Geri';
 
   @override
-  String get giftCardReviewPayNowButton => 'Pay Now';
+  String get giftCardReviewPayNowButton => 'Şimdi Öde';
 
   @override
   String get comment_gift_card_success_section =>
       '---- Gift Card Success Section ----';
 
   @override
-  String get giftCardSuccessTitle => 'Gift Card Order Successfully Placed!';
+  String get giftCardSuccessTitle =>
+      'Hediye Kartı Siparişi Başarıyla Oluşturuldu!';
 
   @override
-  String get giftCardSuccessGiftCardsButton => 'Gift Cards';
+  String get giftCardSuccessGiftCardsButton => 'Hediye Kartları';
 
   @override
-  String get giftCardSuccessBackHomeButton => 'Back Home';
+  String get giftCardSuccessBackHomeButton => 'Ana Sayfaya Dön';
 
   @override
   String get comment_gift_card_amount_validation =>
       '---- Gift Card Controller Amount Validation ----';
 
   @override
-  String get giftCardAmountRequired => 'Please enter an amount';
+  String get giftCardAmountRequired => 'Lütfen bir tutar girin';
 
   @override
-  String get giftCardAmountInvalid => 'Amount must be greater than zero';
+  String get giftCardAmountInvalid => 'Tutar sıfırdan büyük olmalıdır';
 
   @override
   String giftCardAmountMinError(Object min) {
-    return 'Amount must not exceed $min';
+    return 'Tutar $min değerinden az olamaz';
   }
 
   @override
   String giftCardAmountMaxError(Object max) {
-    return 'Amount must not exceed $max';
+    return 'Tutar $max değerini aşamaz';
   }
 
   @override
@@ -5054,212 +5064,212 @@ class AppLocalizationsTr extends AppLocalizations {
       '---- Gift Card Controller User Validation ----';
 
   @override
-  String get giftCardEmailRequired => 'Please enter an email';
+  String get giftCardEmailRequired => 'Lütfen bir e-posta adresi girin';
 
   @override
-  String get giftCardEmailInvalid => 'Please enter a valid email';
+  String get giftCardEmailInvalid => 'Lütfen geçerli bir e-posta adresi girin';
 
   @override
-  String get giftCardCountryRequired => 'Please select a country';
+  String get giftCardCountryRequired => 'Lütfen bir ülke seçin';
 
   @override
-  String get giftCardPhoneRequired => 'Please enter a phone';
+  String get giftCardPhoneRequired => 'Lütfen bir telefon numarası girin';
 
   @override
-  String get giftCardNameRequired => 'Please enter a name';
+  String get giftCardNameRequired => 'Lütfen bir ad girin';
 
   @override
   String get comment_gift_card_details_section =>
       '---- Gift Card Details Section ----';
 
   @override
-  String get giftCardDetailsTitle => 'Gift Card Details';
+  String get giftCardDetailsTitle => 'Hediye Kartı Detayları';
 
   @override
-  String get giftCardAmountLabel => 'Amount';
+  String get giftCardAmountLabel => 'Tutar';
 
   @override
   String giftCardAmountBetweenLabel(Object currency, Object max, Object min) {
-    return 'Amount between $min $currency and $max $currency';
+    return 'Tutar $min $currency ile $max $currency arasında';
   }
 
   @override
-  String get giftCardEmailLabel => 'Email';
+  String get giftCardEmailLabel => 'E-posta';
 
   @override
-  String get giftCardCountryLabel => 'Country';
+  String get giftCardCountryLabel => 'Ülke';
 
   @override
-  String get giftCardSelectCountryTitle => 'Select Country';
+  String get giftCardSelectCountryTitle => 'Ülke Seçin';
 
   @override
-  String get giftCardCountryNotFound => 'Country not found';
+  String get giftCardCountryNotFound => 'Ülke bulunamadı';
 
   @override
-  String get giftCardPhoneLabel => 'Phone';
+  String get giftCardPhoneLabel => 'Telefon';
 
   @override
-  String get giftCardYourNameLabel => 'Your Name';
+  String get giftCardYourNameLabel => 'Adınız';
 
   @override
-  String get giftCardQuantityLabel => 'Quantity';
+  String get giftCardQuantityLabel => 'Adet';
 
   @override
-  String get giftCardBuyNowButton => 'Buy Now';
+  String get giftCardBuyNowButton => 'Şimdi Satın Al';
 
   @override
-  String get giftCardRedeemInstructionTitle => 'Redeem Instruction';
+  String get giftCardRedeemInstructionTitle => 'Kullanım Talimatı';
 
   @override
   String get comment_p2p => '==== P2P ====';
 
   @override
-  String get p2pMyOrder => 'My Order';
+  String get p2pMyOrder => 'Siparişim';
 
   @override
-  String get p2pPaymentAccount => 'Payment Account';
+  String get p2pPaymentAccount => 'Ödeme Hesabı';
 
   @override
-  String get p2pCreateAd => 'Create Ad';
+  String get p2pCreateAd => 'İlan Oluştur';
 
   @override
-  String get p2pApplyVerification => 'Apply Verification';
+  String get p2pApplyVerification => 'Doğrulama Başvurusu Yap';
 
   @override
   String get p2pP2p => 'P2P';
 
   @override
-  String get p2pMyOrders => 'My Orders';
+  String get p2pMyOrders => 'Siparişlerim';
 
   @override
-  String get p2pPaymentAccounts => 'Payment Accounts';
+  String get p2pPaymentAccounts => 'Ödeme Hesapları';
 
   @override
-  String get p2pMyAds => 'My Ads';
+  String get p2pMyAds => 'İlanlarım';
 
   @override
-  String get p2pSelectAsset => 'Select Asset';
+  String get p2pSelectAsset => 'Varlık Seçin';
 
   @override
-  String get p2pSelectFiat => 'Select Fiat';
+  String get p2pSelectFiat => 'Fiat Seçin';
 
   @override
-  String get p2pBuy => 'Buy';
+  String get p2pBuy => 'Al';
 
   @override
-  String get p2pSell => 'Sell';
+  String get p2pSell => 'Sat';
 
   @override
-  String get p2pAmount => 'Amount';
+  String get p2pAmount => 'Tutar';
 
   @override
-  String get p2pPayment => 'Payment';
+  String get p2pPayment => 'Ödeme';
 
   @override
-  String get p2pOrders => 'Orders';
+  String get p2pOrders => 'Siparişler';
 
   @override
-  String get p2pCompletion => 'Completion';
+  String get p2pCompletion => 'Tamamlanma Oranı';
 
   @override
   String get p2pLimit => 'Limit';
 
   @override
-  String get p2pAvailable => 'Available';
+  String get p2pAvailable => 'Mevcut';
 
   @override
-  String get p2pOrderDetails => 'Order Details';
+  String get p2pOrderDetails => 'Sipariş Detayları';
 
   @override
-  String get p2pNoOrderDetailsFound => 'No order details found';
+  String get p2pNoOrderDetailsFound => 'Sipariş detayı bulunamadı';
 
   @override
-  String get p2pNoAdDetailsFound => 'No ad details found';
+  String get p2pNoAdDetailsFound => 'İlan detayı bulunamadı';
 
   @override
-  String get p2pPrice => 'Price';
+  String get p2pPrice => 'Fiyat';
 
   @override
-  String get p2pOrderLimit => 'Order Limit';
+  String get p2pOrderLimit => 'Sipariş Limiti';
 
   @override
-  String get p2pYouPay => 'You Pay';
+  String get p2pYouPay => 'Ödeyeceğiniz';
 
   @override
-  String get p2pYouSell => 'You Sell';
+  String get p2pYouSell => 'Sattığınız';
 
   @override
-  String get p2pYouReceive => 'You Receive';
+  String get p2pYouReceive => 'Alacağınız';
 
   @override
-  String get p2pPaymentMethods => 'Payment Methods';
+  String get p2pPaymentMethods => 'Ödeme Yöntemleri';
 
   @override
-  String get p2pLoadingPaymentMethods => 'Loading payment methods...';
+  String get p2pLoadingPaymentMethods => 'Ödeme yöntemleri yükleniyor...';
 
   @override
-  String get p2pSelectPaymentMethod => 'Select Payment Method';
+  String get p2pSelectPaymentMethod => 'Ödeme Yöntemi Seçin';
 
   @override
-  String get p2pNoPaymentMethodFound => 'No payment method found';
+  String get p2pNoPaymentMethodFound => 'Ödeme yöntemi bulunamadı';
 
   @override
   String get p2pAdvertisersTerms =>
-      'Advertisers\' Terms (Please read carefully)';
+      'İlan Verenlerin Şartları (Lütfen dikkatlice okuyun)';
 
   @override
-  String get p2pPaymentTimeLimit => 'Payment Time Limit';
+  String get p2pPaymentTimeLimit => 'Ödeme Süre Limiti';
 
   @override
-  String get p2pAvgReleaseTime => 'Avg. Release Time';
+  String get p2pAvgReleaseTime => 'Ort. Serbest Bırakma Süresi';
 
   @override
-  String get p2pNoTermsProvided => 'No terms provided';
+  String get p2pNoTermsProvided => 'Şart belirtilmedi';
 
   @override
-  String get p2pOrderNumber => 'Order number';
+  String get p2pOrderNumber => 'Sipariş numarası';
 
   @override
-  String get p2pSearchOrderNumber => 'Search Order number';
+  String get p2pSearchOrderNumber => 'Sipariş numarası ara';
 
   @override
-  String get p2pOrderNumberCopied => 'Order number copied';
+  String get p2pOrderNumberCopied => 'Sipariş numarası kopyalandı';
 
   @override
-  String get p2pCopied => 'Copied';
+  String get p2pCopied => 'Kopyalandı';
 
   @override
-  String get p2pOrderCreated => 'Order Created';
+  String get p2pOrderCreated => 'Sipariş Oluşturuldu';
 
   @override
-  String get p2pFiatAmount => 'Fiat Amount';
+  String get p2pFiatAmount => 'Fiat Tutarı';
 
   @override
-  String get p2pReceiveQuantity => 'Receive Quantity';
+  String get p2pReceiveQuantity => 'Alınacak Miktar';
 
   @override
-  String get p2pPaymentMethod => 'Payment Method';
+  String get p2pPaymentMethod => 'Ödeme Yöntemi';
 
   @override
-  String get p2pChange => 'Change';
+  String get p2pChange => 'Değiştir';
 
   @override
-  String get p2pRecipient => 'Recipient';
+  String get p2pRecipient => 'Alıcı';
 
   @override
-  String get p2pView => 'View';
+  String get p2pView => 'Görüntüle';
 
   @override
-  String get p2pFilterAmount => 'Filter Amount';
+  String get p2pFilterAmount => 'Tutarı Filtrele';
 
   @override
-  String get p2pEnterAmount => 'Enter Amount';
+  String get p2pEnterAmount => 'Tutar Girin';
 
   @override
-  String get p2pFilterPaymentMethod => 'Filter Payment Method';
+  String get p2pFilterPaymentMethod => 'Ödeme Yöntemini Filtrele';
 
   @override
-  String get p2pUnableToLoadImage => 'Unable to load image';
+  String get p2pUnableToLoadImage => 'Görsel yüklenemedi';
 
   @override
   String get p2pFieldRequired => 'Bu alan zorunludur';
@@ -5283,7 +5293,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get p2pInPerson => 'Yüz yüze değişim';
 
   @override
-  String get p2pMinutes => 'Minutes';
+  String get p2pMinutes => 'Dakika';
 
   @override
   String get p2pNoPaymentMethodFound2 => 'Ödeme yöntemi bulunamadı';
@@ -5304,482 +5314,485 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get p2pUnableToLoadAttachment => 'Unable to load attachment';
+  String get p2pUnableToLoadAttachment => 'Ek yüklenemedi';
 
   @override
-  String get p2pTransferredNotifySeller => 'Transferred, Notify Seller';
+  String get p2pTransferredNotifySeller => 'Aktarıldı, Satıcıyı Bilgilendir';
 
   @override
-  String get p2pCancelOrder => 'Cancel Order';
+  String get p2pCancelOrder => 'Siparişi İptal Et';
 
   @override
-  String get p2pDisputeOrder => 'Dispute Order';
+  String get p2pDisputeOrder => 'İtiraz Et';
 
   @override
-  String get p2pPaymentReceived => 'Payment Received';
+  String get p2pPaymentReceived => 'Ödeme Alındı';
 
   @override
-  String get p2pEnterDisputeReason => 'Enter Dispute Reason';
+  String get p2pEnterDisputeReason => 'İtiraz Nedenini Girin';
 
   @override
-  String get p2pWriteYourReason => 'Write your reason...';
+  String get p2pWriteYourReason => 'Nedeninizi yazın...';
 
   @override
-  String get p2pEnterReason => 'Enter Reason';
+  String get p2pEnterReason => 'Nedeni Girin';
 
   @override
-  String get p2pReasonIsRequired => 'Reason is required';
+  String get p2pReasonIsRequired => 'Neden zorunludur';
 
   @override
   String get p2pCancelOrderConfirmation =>
-      'Are you sure you want to cancel this order?';
+      'Bu siparişi iptal etmek istediğinize emin misiniz?';
 
   @override
-  String get p2pOrderCompleted => 'Order Completed';
+  String get p2pOrderCompleted => 'Sipariş Tamamlandı';
 
   @override
-  String get p2pOrderCancelled => 'Order Cancelled';
+  String get p2pOrderCancelled => 'Sipariş İptal Edildi';
 
   @override
-  String get p2pPendingRelease => 'Pending Release';
+  String get p2pPendingRelease => 'Serbest Bırakma Beklemede';
 
   @override
-  String get p2pOrderDisputed => 'Order Disputed';
+  String get p2pOrderDisputed => 'Siparişe İtiraz Edildi';
 
   @override
-  String get p2pOrderExpired => 'Order Expired';
+  String get p2pOrderExpired => 'Siparişin Süresi Doldu';
 
   @override
-  String get p2pBuyerMarkedAsPaid => 'Buyer Marked as Paid';
+  String get p2pBuyerMarkedAsPaid => 'Alıcı Ödeme Yaptı Olarak İşaretlendi';
 
   @override
   String get p2pOrderCreatedPayTheSellerWithin =>
-      'Order Created, Pay the Seller within';
+      'Sipariş Oluşturuldu, Satıcıya şu süre içinde ödeme yapın:';
 
   @override
   String get p2pBuyerHasNotPaidYetPaymentDueWithin =>
-      'Buyer has not paid yet. Payment due within';
+      'Alıcı henüz ödeme yapmadı. Kalan ödeme süresi';
 
   @override
   String get p2pSellerFundsLockedInEscrow =>
-      'The seller\'s funds are locked in escrow. Our support team will review the evidence and respond shortly.';
+      'Satıcının varlıkları emanet hesabında kilitli. Destek ekibimiz kanıtları inceleyecek ve kısa süre içinde yanıt verecektir.';
 
   @override
   String get p2pYourLockedAssetsInEscrow =>
-      'Your locked assets are in escrow. Our support team will review this dispute shortly.';
+      'Kilitli varlıklarınız emanet hesabında. Destek ekibimiz bu itirazı kısa süre içinde inceleyecektir.';
 
   @override
   String get p2pPaymentNotCompletedInAllowedTime =>
-      'You did not complete the payment within the allowed time.';
+      'Ödemeyi izin verilen süre içinde tamamlamadınız.';
 
   @override
   String get p2pBuyerDidNotCompletePaymentInAllowedTime =>
-      'Buyer did not complete payment in allowed time.';
+      'Alıcı, izin verilen süre içinde ödemeyi tamamlamadı.';
 
   @override
   String p2pConfirmPaymentFrom(Object name) {
-    return 'Confirm that the payment is from (buyer by: $name)';
+    return 'Ödemenin (alıcı: $name) tarafından yapıldığını onaylayın';
   }
 
   @override
   String get p2pVerifyAmountAndSender =>
-      'Please verify the amount and sender details in your account, then continue with release action.';
+      'Lütfen hesabınızdaki tutarı ve gönderen bilgilerini doğrulayın, ardından serbest bırakma işlemine devam edin.';
 
   @override
   String get p2pTransferFundsToSeller =>
-      'Transfer the funds to the seller\'s account provided below.';
+      'Varlıkları aşağıda belirtilen satıcı hesabına aktarın.';
 
   @override
-  String get p2pNotifySeller => 'Notify Seller';
+  String get p2pNotifySeller => 'Satıcıyı Bilgilendir';
 
   @override
-  String get p2pConfirmPaymentReceived => 'Confirm Payment received';
+  String get p2pConfirmPaymentReceived => 'Ödemenin Alındığını Onayla';
 
   @override
   String get p2pConfirmPaymentReceivedDescription =>
-      'After confirming that payment has been received, click the \"Payment Received\" button below.';
+      'Ödemenin alındığını onayladıktan sonra aşağıdaki \"Ödeme Alındı\" düğmesine dokunun.';
 
   @override
   String get p2pNotifySellerDescription =>
-      'After payment, remember to click the \'Transferred, Notify Seller\' button to facilitate the crypto release by the seller.';
+      'Ödeme sonrasında, satıcının kriptoyu serbest bırakmasını kolaylaştırmak için \'Aktarıldı, Satıcıyı Bilgilendir\' düğmesine dokunmayı unutmayın.';
 
   @override
-  String get p2pAllAccount => 'All Account';
+  String get p2pAllAccount => 'Tüm Hesaplar';
 
   @override
-  String get p2pAddPaymentMethod => 'Add Payment Method';
+  String get p2pAddPaymentMethod => 'Ödeme Yöntemi Ekle';
 
   @override
-  String get p2pEdit => 'Edit';
+  String get p2pEdit => 'Düzenle';
 
   @override
-  String get p2pEditPaymentAccount => 'Edit Payment Account';
+  String get p2pEditPaymentAccount => 'Ödeme Hesabını Düzenle';
 
   @override
-  String get p2pUpdateAccount => 'Update Account';
+  String get p2pUpdateAccount => 'Hesabı Güncelle';
 
   @override
-  String get p2pCancel => 'Cancel';
+  String get p2pCancel => 'İptal';
 
   @override
-  String get p2pSubmit => 'Submit';
+  String get p2pSubmit => 'Gönder';
 
   @override
-  String get p2pBack => 'Back';
+  String get p2pBack => 'Geri';
 
   @override
-  String get p2pNext => 'Next';
+  String get p2pNext => 'İleri';
 
   @override
-  String get p2pDone => 'Done';
+  String get p2pDone => 'Tamam';
 
   @override
-  String get p2pIWantToBuy => 'I want to Buy';
+  String get p2pIWantToBuy => 'Almak İstiyorum';
 
   @override
-  String get p2pIWantToSell => 'I want to Sell';
+  String get p2pIWantToSell => 'Satmak İstiyorum';
 
   @override
-  String get p2pAsset => 'Asset';
+  String get p2pAsset => 'Varlık';
 
   @override
-  String get p2pWithFiat => 'With Fiat';
+  String get p2pWithFiat => 'Fiat ile';
 
   @override
-  String get p2pPriceType => 'Price Type';
+  String get p2pPriceType => 'Fiyat Türü';
 
   @override
-  String get p2pYourPrice => 'Your Price';
+  String get p2pYourPrice => 'Fiyatınız';
 
   @override
-  String get p2pHighestOrderPrice => 'Highest Order Price';
+  String get p2pHighestOrderPrice => 'En Yüksek Sipariş Fiyatı';
 
   @override
-  String get p2pTotalAmount => 'Total Amount';
+  String get p2pTotalAmount => 'Toplam Tutar';
 
   @override
   String get p2pSelectAtLeastOnePaymentMethod =>
-      'Select at least one payment method';
+      'En az bir ödeme yöntemi seçin';
 
   @override
-  String get p2pAdd => 'Add';
+  String get p2pAdd => 'Ekle';
 
   @override
-  String get p2pTerms => 'Terms';
+  String get p2pTerms => 'Şartlar';
 
   @override
-  String get p2pAutomaticReply => 'Automatic Reply';
+  String get p2pAutomaticReply => 'Otomatik Yanıt';
 
   @override
-  String get p2pFixed => 'Fixed';
+  String get p2pFixed => 'Sabit';
 
   @override
-  String get p2pFloat => 'Float';
+  String get p2pFloat => 'Değişken';
 
   @override
-  String get p2pSelectPriceType => 'Select Price Type';
+  String get p2pSelectPriceType => 'Fiyat Türü Seçin';
 
   @override
-  String get p2pNoAssetsFound => 'No assets found';
+  String get p2pNoAssetsFound => 'Varlık bulunamadı';
 
   @override
-  String get p2pNoFiatCurrenciesFound => 'No fiat currencies found';
+  String get p2pNoFiatCurrenciesFound => 'Fiat para birimi bulunamadı';
 
   @override
-  String get p2pNoPriceTypeFound => 'No price type found';
+  String get p2pNoPriceTypeFound => 'Fiyat türü bulunamadı';
 
   @override
-  String get p2pAdSuccessfullyPosted => 'Ad Successfully Posted';
+  String get p2pAdSuccessfullyPosted => 'İlan Başarıyla Yayınlandı';
 
   @override
-  String get p2pAdsSubmittedUnderReview => 'Ads submitted and under reviewing.';
+  String get p2pAdsSubmittedUnderReview =>
+      'İlanlar gönderildi ve inceleme altında.';
 
   @override
   String get p2pAdPublishedDescription =>
-      'Your Ad has been published and users can now place order. Please pay attention to the prompt for new orders.';
+      'İlanınız yayınlandı ve kullanıcılar artık sipariş verebilir. Yeni siparişler için bildirimlere dikkat edin.';
 
   @override
   String get p2pAdUnderReviewDescription =>
-      'Your Ad is under review. Once approved, it will be published and users can place order. Please pay attention to the prompt for new orders.';
+      'İlanınız inceleme altında. Onaylandıktan sonra yayınlanacak ve kullanıcılar sipariş verebilecek. Yeni siparişler için bildirimlere dikkat edin.';
 
   @override
-  String get p2pAdNumber => 'Ad number';
+  String get p2pAdNumber => 'İlan numarası';
 
   @override
-  String get p2pMethod => 'Method';
+  String get p2pMethod => 'Yöntem';
 
   @override
-  String get p2pGoToMyAds => 'Go To My Ads';
+  String get p2pGoToMyAds => 'İlanlarıma Git';
 
   @override
-  String get p2pEligibilityValidationFailed => 'Eligibility Validation Failed';
+  String get p2pEligibilityValidationFailed => 'Uygunluk Doğrulaması Başarısız';
 
   @override
   String get p2pPleaseFulfillRequirements =>
-      'Please fulfill the following requirements:';
+      'Lütfen aşağıdaki gereksinimleri karşılayın:';
 
   @override
   String get p2pNotEligibleCreateAd =>
-      'You are currently not eligible to create an ad.';
+      'Şu anda ilan oluşturmaya uygun değilsiniz.';
 
   @override
-  String get p2pCompletedTradeQty => 'Completed Trade QTY';
+  String get p2pCompletedTradeQty => 'Tamamlanan İşlem Adedi';
 
   @override
-  String get p2pStatus => 'Status';
+  String get p2pStatus => 'Durum';
 
   @override
-  String get p2pAdsView => 'Ads View';
+  String get p2pAdsView => 'İlan Görünümü';
 
   @override
-  String get p2pAdNumberTitle => 'Ad Number';
+  String get p2pAdNumberTitle => 'İlan Numarası';
 
   @override
-  String get p2pType => 'Type';
+  String get p2pType => 'Tür';
 
   @override
-  String get p2pAssetFiat => 'Asset/Fiat';
+  String get p2pAssetFiat => 'Varlık/Fiat';
 
   @override
-  String get p2pPriceExchangeRate => 'Price\nExchange Rate';
+  String get p2pPriceExchangeRate => 'Fiyat\nDöviz Kuru';
 
   @override
-  String get p2pLastUpdated => 'Last Updated';
+  String get p2pLastUpdated => 'Son Güncelleme';
 
   @override
-  String get p2pCreateTime => 'Create Time';
+  String get p2pCreateTime => 'Oluşturulma Tarihi';
 
   @override
   String get p2pDeleteAdConfirmation =>
-      'Are you sure you want to delete this ad?';
+      'Bu ilanı silmek istediğinize emin misiniz?';
 
   @override
   String get p2pFiat => 'Fiat';
 
   @override
-  String get p2pCryptoAmount => 'Crypto Amount';
+  String get p2pCryptoAmount => 'Kripto Tutarı';
 
   @override
-  String get p2pCounterparty => 'Counterparty';
+  String get p2pCounterparty => 'Karşı Taraf';
 
   @override
-  String get p2pChat => 'Chat';
+  String get p2pChat => 'Sohbet';
 
   @override
-  String get p2pNoMessagesYet => 'No messages yet';
+  String get p2pNoMessagesYet => 'Henüz mesaj yok';
 
   @override
-  String get p2pTypeYourMessage => 'Type your message...';
+  String get p2pTypeYourMessage => 'Mesajınızı yazın...';
 
   @override
-  String get p2pCamera => 'Camera';
+  String get p2pCamera => 'Kamera';
 
   @override
-  String get p2pGallery => 'Gallery';
+  String get p2pGallery => 'Galeri';
 
   @override
-  String get p2pAttachment => 'Attachment';
+  String get p2pAttachment => 'Ek';
 
   @override
-  String get p2pUser => 'User';
+  String get p2pUser => 'Kullanıcı';
 
   @override
-  String get p2pYouAreVerifiedTrader => 'You are a verified trader';
+  String get p2pYouAreVerifiedTrader => 'Doğrulanmış bir tüccarsınız';
 
   @override
   String get p2pVerifiedTraderStatusActive =>
-      'Your verified trader status is active.';
+      'Doğrulanmış tüccar durumunuz aktif.';
 
   @override
-  String get p2pVerificationUnderReview => 'Verification under review';
+  String get p2pVerificationUnderReview => 'Doğrulama inceleme altında';
 
   @override
   String get p2pVerificationRequestUnderReview =>
-      'Your verification request is currently under review.';
+      'Doğrulama başvurunuz şu anda inceleme altında.';
 
   @override
-  String get p2pSubmittedOn => 'Submitted on';
+  String get p2pSubmittedOn => 'Gönderilme tarihi';
 
   @override
-  String get p2pVerificationDataUnavailable => 'Verification data unavailable';
+  String get p2pVerificationDataUnavailable =>
+      'Doğrulama verileri kullanılamıyor';
 
   @override
-  String get p2pPleaseRefreshAndTryAgain => 'Please refresh and try again.';
+  String get p2pPleaseRefreshAndTryAgain =>
+      'Lütfen yenileyin ve tekrar deneyin.';
 
   @override
   String get p2pPreviousVerificationRejected =>
-      'Previous verification request was rejected';
+      'Önceki doğrulama başvurusu reddedildi';
 
   @override
-  String get p2pReason => 'Reason';
+  String get p2pReason => 'Neden';
 
   @override
   String get p2pCorrectInformationApplyAgain =>
-      'Please correct the information and apply again.';
+      'Lütfen bilgileri düzeltin ve yeniden başvurun.';
 
   @override
-  String get p2pApplyVerificationTitle => 'Apply Verification';
+  String get p2pApplyVerificationTitle => 'Doğrulama Başvurusu';
 
   @override
   String get p2pFillRequiredFieldsVerification =>
-      'Fill out all required fields to submit verification.';
+      'Doğrulama başvurusunu göndermek için tüm zorunlu alanları doldurun.';
 
   @override
   String get p2pNoVerificationFormFieldsFound =>
-      'No verification form fields found.';
+      'Doğrulama formu alanı bulunamadı.';
 
   @override
-  String get p2pSubmitVerification => 'Submit Verification';
+  String get p2pSubmitVerification => 'Doğrulamayı Gönder';
 
   @override
   String p2pEnterField(Object field) {
-    return 'Enter $field';
+    return '$field girin';
   }
 
   @override
-  String get edit_my_ad => 'Edit My Ad';
+  String get edit_my_ad => 'İlanımı Düzenle';
 
   @override
-  String get amount => 'Amount';
+  String get amount => 'Tutar';
 
   @override
-  String get total_amount => 'Total Amount';
+  String get total_amount => 'Toplam Tutar';
 
   @override
-  String get min_amount => 'Min Amount';
+  String get min_amount => 'Minimum Tutar';
 
   @override
-  String get max_amount => 'Max Amount';
+  String get max_amount => 'Maksimum Tutar';
 
   @override
-  String get payment_duration => 'Payment duration';
+  String get payment_duration => 'Ödeme süresi';
 
   @override
-  String get payment_method => 'Payment Method';
+  String get payment_method => 'Ödeme Yöntemi';
 
   @override
-  String get no_payment_method => 'No payment method found';
+  String get no_payment_method => 'Ödeme yöntemi bulunamadı';
 
   @override
-  String get terms => 'Terms';
+  String get terms => 'Şartlar';
 
   @override
-  String get auto_response => 'Auto Response Message';
+  String get auto_response => 'Otomatik Yanıt Mesajı';
 
   @override
-  String get update => 'Update';
+  String get update => 'Güncelle';
 
   @override
-  String get error_ad_invalid => 'Ad data is invalid';
+  String get error_ad_invalid => 'İlan verileri geçersiz';
 
   @override
-  String get error_amount_zero => 'Amount can not be zero';
+  String get error_amount_zero => 'Tutar sıfır olamaz';
 
   @override
-  String get error_total_amount_zero => 'Total amount can not be zero';
+  String get error_total_amount_zero => 'Toplam tutar sıfır olamaz';
 
   @override
-  String get error_min_zero => 'Min amount can not be zero';
+  String get error_min_zero => 'Minimum tutar sıfır olamaz';
 
   @override
-  String get error_max_zero => 'Max amount can not be zero';
+  String get error_max_zero => 'Maksimum tutar sıfır olamaz';
 
   @override
   String get error_min_greater =>
-      'Min amount can not be greater than max amount';
+      'Minimum tutar maksimum tutardan büyük olamaz';
 
   @override
-  String get error_payment_duration_zero => 'Payment duration can not be zero';
+  String get error_payment_duration_zero => 'Ödeme süresi sıfır olamaz';
 
   @override
-  String get error_select_payment => 'Please select payment method';
+  String get error_select_payment => 'Lütfen ödeme yöntemi seçin';
 
   @override
-  String get error_terms_empty => 'Terms can not be empty';
+  String get error_terms_empty => 'Şartlar boş olamaz';
 
   @override
-  String get error_select_asset => 'Please select asset';
+  String get error_select_asset => 'Lütfen varlık seçin';
 
   @override
-  String get error_select_fiat => 'Please select fiat';
+  String get error_select_fiat => 'Lütfen fiat para birimi seçin';
 
   @override
-  String get error_select_price_type => 'Please select price type';
+  String get error_select_price_type => 'Lütfen fiyat türü seçin';
 
   @override
-  String get error_price_zero => 'Price can not be zero';
+  String get error_price_zero => 'Fiyat sıfır olamaz';
 
   @override
-  String get error_enter_total_amount => 'Please enter total amount';
+  String get error_enter_total_amount => 'Lütfen toplam tutarı girin';
 
   @override
-  String get error_enter_min_order => 'Please enter minimum order limit';
+  String get error_enter_min_order => 'Lütfen minimum sipariş limitini girin';
 
   @override
-  String get error_enter_max_order => 'Please enter maximum order limit';
+  String get error_enter_max_order => 'Lütfen maksimum sipariş limitini girin';
 
   @override
-  String get error_payment_time_zero => 'Payment time can not be zero';
+  String get error_payment_time_zero => 'Ödeme zamanı sıfır olamaz';
 
   @override
-  String get error_enter_terms => 'Please enter terms';
+  String get error_enter_terms => 'Lütfen şartları girin';
 
   @override
-  String get filterMyAds => 'Filter My Ads';
+  String get filterMyAds => 'İlanlarımı Filtrele';
 
   @override
-  String get status => 'Status';
+  String get status => 'Durum';
 
   @override
-  String get type => 'Type';
+  String get type => 'Tür';
 
   @override
-  String get fiatCurrency => 'Fiat Currency';
+  String get fiatCurrency => 'Fiat Para Birimi';
 
   @override
-  String get assetCurrency => 'Asset Currency';
+  String get assetCurrency => 'Varlık Para Birimi';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Sıfırla';
 
   @override
-  String get search => 'Search';
+  String get search => 'Ara';
 
   @override
-  String get select => 'Select';
+  String get select => 'Seç';
 
   @override
-  String get selectStatus => 'Select Status';
+  String get selectStatus => 'Durum Seçin';
 
   @override
-  String get selectType => 'Select Type';
+  String get selectType => 'Tür Seçin';
 
   @override
-  String get selectFiatCurrency => 'Select Fiat Currency';
+  String get selectFiatCurrency => 'Fiat Para Birimi Seçin';
 
   @override
-  String get selectAssetCurrency => 'Select Asset Currency';
+  String get selectAssetCurrency => 'Varlık Para Birimi Seçin';
 
   @override
-  String get noStatusFound => 'No status found';
+  String get noStatusFound => 'Durum bulunamadı';
 
   @override
-  String get noTypeFound => 'No type found';
+  String get noTypeFound => 'Tür bulunamadı';
 
   @override
-  String get noDataFound => 'No Data found';
+  String get noDataFound => 'Veri bulunamadı';
 
   @override
-  String get noFiatCurrencyFound => 'No fiat currency found';
+  String get noFiatCurrencyFound => 'Fiat para birimi bulunamadı';
 
   @override
-  String get noAssetCurrencyFound => 'No asset currency found';
+  String get noAssetCurrencyFound => 'Varlık para birimi bulunamadı';
 
   @override
-  String get filterPaymentAccount => 'Filter Payment Account';
+  String get filterPaymentAccount => 'Ödeme Hesabını Filtrele';
 
   @override
-  String get filterMyOrder => 'Filter My Order';
+  String get filterMyOrder => 'Siparişlerimi Filtrele';
 
   @override
   String get comment_travel => '==== eCardo Travel ====';
@@ -5788,561 +5801,566 @@ class AppLocalizationsTr extends AppLocalizations {
   String get travelTitle => 'eCardo Travel';
 
   @override
-  String get travelHeroEyebrow => 'A better travel experience';
+  String get travelHeroEyebrow => 'Daha iyi bir seyahat deneyimi';
 
   @override
-  String get travelHeroTitle => 'Book your next journey today';
+  String get travelHeroTitle => 'Bir sonraki yolculuğunuzu bugün planlayın';
 
   @override
-  String get travelFlights => 'Flights';
+  String get travelFlights => 'Uçuşlar';
 
   @override
-  String get travelHotels => 'Hotels';
+  String get travelHotels => 'Oteller';
 
   @override
   String get travelEsim => 'eSIM';
 
   @override
-  String get travelRecentActivity => 'Recent activity';
+  String get travelRecentActivity => 'Son hareketler';
 
   @override
-  String get travelViewAll => 'View all';
+  String get travelViewAll => 'Tümünü gör';
 
   @override
-  String get travelMainWallet => 'Main eCardo wallet';
+  String get travelMainWallet => 'Ana eCardo cüzdanı';
 
   @override
   String get travelWalletSharedDescription =>
-      'The same secure wallet you use across eCardo';
+      'eCardo genelinde kullandığınız aynı güvenli cüzdan';
 
   @override
-  String get travelHotelSearch => 'Hotel search';
+  String get travelHotelSearch => 'Otel arama';
 
   @override
-  String get travelHotelHero => 'Stay somewhere unforgettable';
+  String get travelHotelHero => 'Unutulmaz bir yerde konaklayın';
 
   @override
-  String get travelDestinationCountry => 'Destination country';
+  String get travelDestinationCountry => 'Varış ülkesi';
 
   @override
-  String get travelDestinationCity => 'City';
+  String get travelDestinationCity => 'Şehir';
 
   @override
-  String get travelCheckIn => 'Check-in';
+  String get travelCheckIn => 'Giriş';
 
   @override
-  String get travelCheckOut => 'Check-out';
+  String get travelCheckOut => 'Çıkış';
 
   @override
-  String get travelGuests => 'Guests';
+  String get travelGuests => 'Misafir';
 
   @override
-  String get travelSearchHotels => 'Search hotels';
+  String get travelSearchHotels => 'Otel ara';
 
   @override
-  String get travelRecentSearches => 'Recent searches';
+  String get travelRecentSearches => 'Son aramalar';
 
   @override
-  String get travelHotelResults => 'Hotel results';
+  String get travelHotelResults => 'Otel sonuçları';
 
   @override
-  String get travelNoHotelResults => 'No matching hotels were found.';
+  String get travelNoHotelResults => 'Eşleşen otel bulunamadı.';
 
   @override
-  String get travelStartingPrice => 'Starting price per stay';
+  String get travelStartingPrice => 'Konaklama başlangıç fiyatı';
 
   @override
-  String get travelViewDetails => 'View details';
+  String get travelViewDetails => 'Detayları gör';
 
   @override
-  String get travelHotelDetails => 'Hotel details';
+  String get travelHotelDetails => 'Otel detayları';
 
   @override
-  String get travelOfferUnavailable => 'This offer is no longer available.';
+  String get travelOfferUnavailable => 'Bu teklif artık kullanılamıyor.';
 
   @override
-  String get travelReserveHotel => 'Reserve hotel';
+  String get travelReserveHotel => 'Oteli rezerve et';
 
   @override
-  String get travelIncluded => 'Included';
+  String get travelIncluded => 'Dahil';
 
   @override
-  String get travelFree => 'Free';
+  String get travelFree => 'Ücretsiz';
 
   @override
-  String get travelAboutHotel => 'About the hotel';
+  String get travelAboutHotel => 'Otel hakkında';
 
   @override
   String get travelHotelDescription =>
-      'A refined city stay with comfortable rooms, attentive service and convenient access to major attractions. Final room content and policies will be supplied by the eCardo Travel API.';
+      'Konforlu odalar, özenli hizmet ve önemli turistik noktalara kolay erişim sunan zarif bir şehir konaklaması. Nihai oda içeriği ve politikalar eCardo Travel API\'si tarafından sağlanacaktır.';
 
   @override
-  String get travelPolicies => 'Policies';
+  String get travelPolicies => 'Politikalar';
 
   @override
-  String get travelCancellation => 'Cancellation';
+  String get travelCancellation => 'İptal';
 
   @override
   String get travelCancellationSummary =>
-      'Free cancellation before the stated deadline';
+      'Belirtilen son tarihe kadar ücretsiz iptal';
 
   @override
-  String get travelFlightSearch => 'Flight search';
+  String get travelFlightSearch => 'Uçuş arama';
 
   @override
-  String get travelFlightHero => 'Your dream journey starts here';
+  String get travelFlightHero => 'Rüya yolculuğunuz burada başlıyor';
 
   @override
-  String get travelOrigin => 'Origin';
+  String get travelOrigin => 'Kalkış noktası';
 
   @override
-  String get travelDestination => 'Destination';
+  String get travelDestination => 'Varış noktası';
 
   @override
-  String get travelDepartureDate => 'Departure date';
+  String get travelDepartureDate => 'Kalkış tarihi';
 
   @override
-  String get travelReturnDate => 'Return date';
+  String get travelReturnDate => 'Dönüş tarihi';
 
   @override
-  String get travelOneWay => 'One-way';
+  String get travelOneWay => 'Tek yön';
 
   @override
-  String get travelRoundTrip => 'Round trip';
+  String get travelRoundTrip => 'Gidiş-dönüş';
 
   @override
-  String get travelAdults => 'Adults';
+  String get travelAdults => 'Yetişkin';
 
   @override
-  String get travelChildren => 'Children';
+  String get travelChildren => 'Çocuk';
 
   @override
-  String get travelInfants => 'Infants';
+  String get travelInfants => 'Bebek';
 
   @override
-  String get travelCabinClass => 'Cabin class';
+  String get travelCabinClass => 'Kabin sınıfı';
 
   @override
-  String get travelEconomy => 'Economy';
+  String get travelEconomy => 'Ekonomi';
 
   @override
   String get travelBusiness => 'Business';
 
   @override
-  String get travelSearchFlights => 'Search flights';
+  String get travelSearchFlights => 'Uçuş ara';
 
   @override
-  String get travelFlightResults => 'Flight results';
+  String get travelFlightResults => 'Uçuş sonuçları';
 
   @override
-  String get travelNoFlightResults => 'No matching flights were found.';
+  String get travelNoFlightResults => 'Eşleşen uçuş bulunamadı.';
 
   @override
-  String get travelAlternativeFlights => 'Alternative flights.';
+  String get travelAlternativeFlights => 'Alternatif uçuşlar.';
 
   @override
   String get travelAlternativeFlightsDescription =>
-      'Your exact search has no matches. These upcoming options are shown as alternatives; edit the search to change route or date.';
+      'Aradığınıza birebir uyan sonuç yok. Bu yaklaşan seçenekler alternatif olarak gösteriliyor; rotayı veya tarihi değiştirmek için aramayı düzenleyin.';
 
   @override
-  String get travelSelectFlight => 'Select flight';
+  String get travelSelectFlight => 'Uçuş seçin';
 
   @override
-  String get travelSelectReturnFlight => 'Select return flight';
+  String get travelSelectReturnFlight => 'Dönüş uçuşunu seçin';
 
   @override
-  String get travelOutboundFlight => 'Outbound flight';
+  String get travelOutboundFlight => 'Gidiş uçuşu';
 
   @override
-  String get travelReturnFlight => 'Return flight';
+  String get travelReturnFlight => 'Dönüş uçuşu';
 
   @override
-  String get travelFlightDetails => 'Flight and passenger details';
+  String get travelFlightDetails => 'Uçuş ve yolcu bilgileri';
 
   @override
-  String get travelContinueToPayment => 'Continue to payment';
+  String get travelContinueToPayment => 'Ödemeye devam et';
 
   @override
-  String get travelPassengerReview => 'Passenger review';
+  String get travelPassengerReview => 'Yolcu bilgilerini kontrol';
 
   @override
-  String get travelPrimaryPassenger => 'Primary passenger';
+  String get travelPrimaryPassenger => 'Ana yolcu';
 
   @override
   String get travelPassengerFromProfile =>
-      'Details are shared from your eCardo profile';
+      'Bilgiler eCardo profilinizden paylaşılır';
 
   @override
-  String get travelFareDetails => 'Fare details';
+  String get travelFareDetails => 'Ücret detayları';
 
   @override
-  String get travelBaseFare => 'Base fare';
+  String get travelBaseFare => 'Temel ücret';
 
   @override
-  String get travelTaxesAndFees => 'Taxes and fees';
+  String get travelTaxesAndFees => 'Vergiler ve ücretler';
 
   @override
-  String get travelTotal => 'Total';
+  String get travelTotal => 'Toplam';
 
   @override
-  String get travelBrowseEsimPackages => 'Browse eSIM packages';
+  String get travelBrowseEsimPackages => 'eSIM paketlerine göz atın';
 
   @override
-  String get travelEsimIntroTitle => 'Stay connected wherever you travel';
+  String get travelEsimIntroTitle =>
+      'Seyahat ettiğiniz her yerde bağlantıda kalın';
 
   @override
   String get travelEsimIntroDescription =>
-      'Choose a digital data package, pay from your main eCardo wallet and activate it without replacing your physical SIM.';
+      'Dijital bir veri paketi seçin, ana eCardo cüzdanınızdan ödeyin ve fiziksel SIM\'inizi değiştirmeden etkinleştirin.';
 
   @override
-  String get travelEsimInstantTitle => 'Instant delivery';
+  String get travelEsimInstantTitle => 'Anında teslimat';
 
   @override
   String get travelEsimInstantDescription =>
-      'Activation details are available immediately after payment.';
+      'Aktivasyon bilgileri ödeme sonrası hemen kullanılabilir.';
 
   @override
-  String get travelEsimCoverageTitle => 'Travel-ready coverage';
+  String get travelEsimCoverageTitle => 'Seyahate hazır kapsama';
 
   @override
   String get travelEsimCoverageDescription =>
-      'Choose local or global packages for your destination.';
+      'Varış noktanız için yerel veya global paketler seçin.';
 
   @override
-  String get travelEsimTransparentTitle => 'Transparent pricing';
+  String get travelEsimTransparentTitle => 'Şeffaf fiyatlandırma';
 
   @override
   String get travelEsimTransparentDescription =>
-      'See the backend-confirmed total before you pay.';
+      'Ödemeden önce altyapı tarafından onaylanan toplam tutarı görün.';
 
   @override
-  String get travelEsimPackages => 'eSIM packages';
+  String get travelEsimPackages => 'eSIM paketleri';
 
   @override
-  String get travelNoEsimPackages => 'No matching eSIM packages were found.';
+  String get travelNoEsimPackages => 'Eşleşen eSIM paketi bulunamadı.';
 
   @override
-  String get travelChoosePackage => 'Choose a package';
+  String get travelChoosePackage => 'Bir paket seçin';
 
   @override
-  String get travelMostPopular => 'Most popular';
+  String get travelMostPopular => 'En popüler';
 
   @override
-  String get travelSelect => 'Select';
+  String get travelSelect => 'Seç';
 
   @override
   String travelValidityDays(int days) {
-    return '$days days validity';
+    return '$days gün geçerli';
   }
 
   @override
-  String get travelWalletCheckout => 'Wallet checkout';
+  String get travelWalletCheckout => 'Cüzdan ile ödeme';
 
   @override
-  String get travelBackendConfirmedPrice => 'Price confirmed by eCardo Travel';
+  String get travelBackendConfirmedPrice =>
+      'eCardo Travel tarafından onaylanan fiyat';
 
   @override
-  String get travelPaymentMethod => 'Payment method';
+  String get travelPaymentMethod => 'Ödeme yöntemi';
 
   @override
-  String get travelAvailableBalance => 'Available balance';
+  String get travelAvailableBalance => 'Kullanılabilir bakiye';
 
   @override
   String get travelInsufficientBalance =>
-      'Your main wallet balance is insufficient. Add money, then return to refresh checkout.';
+      'Ana cüzdan bakiyeniz yetersiz. Para ekleyin ve ödeme adımını yenilemek için geri dönün.';
 
   @override
-  String get travelPriceSummary => 'Price summary';
+  String get travelPriceSummary => 'Fiyat özeti';
 
   @override
-  String get travelSubtotal => 'Subtotal';
+  String get travelSubtotal => 'Ara Toplam';
 
   @override
-  String get travelWalletPayment => 'Wallet payment';
+  String get travelWalletPayment => 'Cüzdan ödemesi';
 
   @override
   String get travelCheckoutSafetyNote =>
-      'Payment is submitted once using an idempotent booking request.';
+      'Ödeme, idempotent bir rezervasyon isteğiyle yalnızca bir kez gönderilir.';
 
   @override
-  String get travelPayFromWallet => 'Pay from wallet';
+  String get travelPayFromWallet => 'Cüzdandan öde';
 
   @override
-  String get travelAddMoney => 'Add money';
+  String get travelAddMoney => 'Para ekle';
 
   @override
-  String get travelPaymentFailed => 'Payment was not completed';
+  String get travelPaymentFailed => 'Ödeme tamamlanmadı';
 
   @override
   String get travelPaymentFailedDescription =>
-      'Your wallet was not treated as paid. Please review the booking and try again.';
+      'Cüzdanınızdan ödeme alınmadı. Lütfen rezervasyonu gözden geçirin ve tekrar deneyin.';
 
   @override
-  String get travelHotelVoucher => 'Hotel voucher';
+  String get travelHotelVoucher => 'Otel kuponu';
 
   @override
-  String get travelFlightTicket => 'Flight ticket';
+  String get travelFlightTicket => 'Uçak bileti';
 
   @override
-  String get travelEsimActivation => 'eSIM activation';
+  String get travelEsimActivation => 'eSIM aktivasyonu';
 
   @override
-  String get travelVoucherReady => 'Your confirmed hotel voucher is ready.';
+  String get travelVoucherReady => 'Onaylanmış otel kuponunuz hazır.';
 
   @override
-  String get travelTicketReady => 'Your issued flight ticket is ready.';
+  String get travelTicketReady => 'Düzenlenen uçak biletiniz hazır.';
 
   @override
-  String get travelEsimReady => 'Your eSIM is active and ready to install.';
+  String get travelEsimReady => 'eSIM\'iniz aktif ve kuruluma hazır.';
 
   @override
-  String get travelPurchaseSuccessful => 'Purchase successful';
+  String get travelPurchaseSuccessful => 'Satın alma başarılı';
 
   @override
-  String get travelReference => 'Reference';
+  String get travelReference => 'Referans';
 
   @override
-  String get travelStatus => 'Status';
+  String get travelStatus => 'Durum';
 
   @override
-  String get travelActive => 'Active';
+  String get travelActive => 'Aktif';
 
   @override
-  String get travelConfirmed => 'Confirmed';
+  String get travelConfirmed => 'Onaylandı';
 
   @override
-  String get travelCompleted => 'Completed';
+  String get travelCompleted => 'Tamamlandı';
 
   @override
-  String get travelRefunded => 'Refunded';
+  String get travelRefunded => 'İade Edildi';
 
   @override
-  String get travelFailed => 'Failed';
+  String get travelFailed => 'Başarısız';
 
   @override
-  String get travelBookingFailed => 'Booking failed';
+  String get travelBookingFailed => 'Rezervasyon başarısız oldu';
 
   @override
   String get travelBookingFailedDescription =>
-      'This booking did not complete. Review the order status before trying another payment.';
+      'Bu rezervasyon tamamlanamadı. Başka bir ödeme denemeden önce sipariş durumunu kontrol edin.';
 
   @override
-  String get travelBookingRefunded => 'Booking refunded';
+  String get travelBookingRefunded => 'Rezervasyon iade edildi';
 
   @override
   String get travelBookingRefundedDescription =>
-      'The payment for this booking has been returned to the wallet.';
+      'Bu rezervasyonun ödemesi cüzdana iade edildi.';
 
   @override
-  String get travelPendingConfirmation => 'Pending confirmation';
+  String get travelPendingConfirmation => 'Onay bekliyor';
 
   @override
-  String get travelHotelBookingSubmitted => 'Hotel booking submitted';
+  String get travelHotelBookingSubmitted => 'Otel rezervasyonu gönderildi';
 
   @override
   String get travelHotelPendingConfirmationDescription =>
-      'Payment was received. eCardo Travel is confirming the hotel with the authorized supplier before issuing your voucher.';
+      'Ödeme alındı. eCardo Travel, kuponunuzu düzenlemeden önce oteli yetkili tedarikçiyle teyit ediyor.';
 
   @override
-  String get travelPaidAmount => 'Paid amount';
+  String get travelPaidAmount => 'Ödenen tutar';
 
   @override
-  String get travelActivationDetails => 'Activation details';
+  String get travelActivationDetails => 'Aktivasyon detayları';
 
   @override
   String get travelActivationInstructions =>
-      'Open your device cellular settings, add an eSIM and use the secure installation details returned by the eCardo backend.';
+      'Cihazınızın hücresel ayarlarını açın, bir eSIM ekleyin ve eCardo altyapısından dönen güvenli kurulum bilgilerini kullanın.';
 
   @override
-  String get travelViewMyBookings => 'View my bookings';
+  String get travelViewMyBookings => 'Rezervasyonlarımı gör';
 
   @override
-  String get travelMyBookings => 'My bookings';
+  String get travelMyBookings => 'Rezervasyonlarım';
 
   @override
-  String get travelAllBookings => 'All bookings';
+  String get travelAllBookings => 'Tüm rezervasyonlar';
 
   @override
-  String get travelMyHotels => 'My hotels';
+  String get travelMyHotels => 'Otellerim';
 
   @override
-  String get travelMyFlights => 'My flights';
+  String get travelMyFlights => 'Uçuşlarım';
 
   @override
-  String get travelMyEsims => 'My eSIMs';
+  String get travelMyEsims => 'eSIM\'lerim';
 
   @override
-  String get travelMyHotelsDescription => 'Confirmed stays and hotel vouchers';
+  String get travelMyHotelsDescription =>
+      'Onaylanmış konaklamalar ve otel kuponları';
 
   @override
-  String get travelMyFlightsDescription => 'Booked flights and issued tickets';
+  String get travelMyFlightsDescription =>
+      'Rezerve edilen uçuşlar ve düzenlenen biletler';
 
   @override
-  String get travelMyEsimsDescription => 'Active and previous data packages';
+  String get travelMyEsimsDescription => 'Aktif ve geçmiş veri paketleri';
 
   @override
-  String get travelNoBookings => 'You do not have any travel bookings yet.';
+  String get travelNoBookings => 'Henüz hiçbir seyahat rezervasyonunuz yok.';
 
   @override
-  String get travelNoHotels => 'You do not have any hotel bookings yet.';
+  String get travelNoHotels => 'Henüz hiçbir otel rezervasyonunuz yok.';
 
   @override
-  String get travelNoFlights => 'You do not have any flight bookings yet.';
+  String get travelNoFlights => 'Henüz hiçbir uçuş rezervasyonunuz yok.';
 
   @override
-  String get travelNoEsims => 'You do not have any eSIM purchases yet.';
+  String get travelNoEsims => 'Henüz hiçbir eSIM satın alımınız yok.';
 
   @override
-  String get travelSavedTravelers => 'Saved travelers';
+  String get travelSavedTravelers => 'Kayıtlı yolcular';
 
   @override
-  String get travelNoTravelers => 'No saved travelers are available yet.';
+  String get travelNoTravelers => 'Henüz kayıtlı yolcu bulunmuyor.';
 
   @override
-  String get travelAddTraveler => 'Add traveler';
+  String get travelAddTraveler => 'Yolcu ekle';
 
   @override
-  String get travelEditTraveler => 'Edit traveler';
+  String get travelEditTraveler => 'Yolcuyu düzenle';
 
   @override
-  String get travelTravelerFullName => 'Full name';
+  String get travelTravelerFullName => 'Ad Soyad';
 
   @override
-  String get travelFirstName => 'First name';
+  String get travelFirstName => 'Ad';
 
   @override
-  String get travelLastName => 'Last name';
+  String get travelLastName => 'Soyad';
 
   @override
-  String get travelBirthDate => 'Date of birth';
+  String get travelBirthDate => 'Doğum tarihi';
 
   @override
-  String get travelPassportExpiry => 'Passport expiry';
+  String get travelPassportExpiry => 'Pasaport geçerlilik tarihi';
 
   @override
-  String get travelGender => 'Gender';
+  String get travelGender => 'Cinsiyet';
 
   @override
-  String get travelMale => 'Male';
+  String get travelMale => 'Erkek';
 
   @override
-  String get travelFemale => 'Female';
+  String get travelFemale => 'Kadın';
 
   @override
-  String get travelNotificationContact => 'Booking notifications';
+  String get travelNotificationContact => 'Rezervasyon bildirimleri';
 
   @override
-  String get travelPhone => 'Mobile number';
+  String get travelPhone => 'Cep telefonu numarası';
 
   @override
-  String get travelEmail => 'Email address';
+  String get travelEmail => 'E-posta adresi';
 
   @override
   String get travelPassengerDetailsRequired =>
-      'Complete every passenger and add a mobile number or email for booking updates.';
+      'Tüm yolcuları tamamlayın ve rezervasyon güncellemeleri için bir cep telefonu numarası veya e-posta ekleyin.';
 
   @override
-  String get travelAdultPassenger => 'Adult passenger';
+  String get travelAdultPassenger => 'Yetişkin yolcu';
 
   @override
-  String get travelChildPassenger => 'Child passenger';
+  String get travelChildPassenger => 'Çocuk yolcu';
 
   @override
-  String get travelInfantPassenger => 'Infant passenger';
+  String get travelInfantPassenger => 'Bebek yolcu';
 
   @override
-  String get travelCompleteTravelerDetails => 'Complete traveler details';
+  String get travelCompleteTravelerDetails => 'Yolcu bilgilerini tamamlayın';
 
   @override
-  String get travelPassportNumber => 'Passport number';
+  String get travelPassportNumber => 'Pasaport numarası';
 
   @override
-  String get travelNationalityCode => 'Nationality code';
+  String get travelNationalityCode => 'Uyruk kodu';
 
   @override
-  String get travelNationalityCodeInvalid => 'Enter a two-letter country code';
+  String get travelNationalityCodeInvalid => 'İki harfli bir ülke kodu girin';
 
   @override
-  String get travelFieldRequired => 'This field is required';
+  String get travelFieldRequired => 'Bu alan zorunludur';
 
   @override
-  String get travelSaveTraveler => 'Save traveler';
+  String get travelSaveTraveler => 'Yolcuyu kaydet';
 
   @override
-  String get travelAccount => 'Travel account';
+  String get travelAccount => 'Seyahat hesabı';
 
   @override
-  String get travelAccountHolder => 'eCardo member';
+  String get travelAccountHolder => 'eCardo üyesi';
 
   @override
   String get travelMemberDescription =>
-      'Shared profile, wallet and traveler information';
+      'Paylaşılan profil, cüzdan ve yolcu bilgileri';
 
   @override
-  String get travelMyBookingsDescription => 'Hotels, flights and active eSIMs';
+  String get travelMyBookingsDescription =>
+      'Oteller, uçuşlar ve aktif eSIM\'ler';
 
   @override
   String get travelSavedTravelersDescription =>
-      'Reuse passenger details securely';
+      'Yolcu bilgilerini güvenle yeniden kullanın';
 
   @override
-  String get travelPersonalInformation => 'Personal information';
+  String get travelPersonalInformation => 'Kişisel bilgiler';
 
   @override
   String get travelPersonalInformationDescription =>
-      'Manage details shared with Travel';
+      'Travel ile paylaşılan bilgileri yönetin';
 
   @override
-  String get travelHistory => 'Travel and wallet history';
+  String get travelHistory => 'Seyahat ve cüzdan geçmişi';
 
   @override
   String get travelHistoryDescription =>
-      'View purchases and wallet activity together';
+      'Satın alımları ve cüzdan hareketlerini birlikte görüntüleyin';
 
   @override
-  String get travelNoActivity => 'No travel or wallet activity is available.';
+  String get travelNoActivity => 'Seyahat veya cüzdan hareketi bulunmuyor.';
 
   @override
-  String get travelMockIran => 'Iran';
+  String get travelMockIran => 'İran';
 
   @override
-  String get travelMockTehran => 'Tehran';
+  String get travelMockTehran => 'Tahran';
 
   @override
-  String get travelMockGuests => '2 adults, 1 child';
+  String get travelMockGuests => '2 yetişkin, 1 çocuk';
 
   @override
-  String get travelMockTehranHotels => 'Hotels in Tehran';
+  String get travelMockTehranHotels => 'Tahran\'daki oteller';
 
   @override
   String get travelMockHotelEspinas => 'Espinas Palace Hotel';
 
   @override
-  String get travelMockHotelEspinasLocation => 'Saadat Abad, Tehran';
+  String get travelMockHotelEspinasLocation => 'Saadet Abad, Tahran';
 
   @override
   String get travelMockHotelParsian => 'Parsian International Hotel';
 
   @override
-  String get travelMockHotelParsianLocation => 'Valiasr Street, Tehran';
+  String get travelMockHotelParsianLocation => 'Valiasr Caddesi, Tahran';
 
   @override
   String get travelMockHotelVisteria => 'Visteria Hotel';
 
   @override
-  String get travelMockHotelVisteriaLocation => 'Tajrish, Tehran';
+  String get travelMockHotelVisteriaLocation => 'Taciş, Tahran';
 
   @override
-  String get travelMockTehranAirport => 'Tehran (THR)';
+  String get travelMockTehranAirport => 'Tahran (THR)';
 
   @override
-  String get travelMockIstanbulAirport => 'Istanbul (IST)';
+  String get travelMockIstanbulAirport => 'İstanbul (IST)';
 
   @override
-  String get travelMockRouteTehranIstanbul => 'Tehran → Istanbul';
+  String get travelMockRouteTehranIstanbul => 'Tahran → İstanbul';
 
   @override
-  String get travelMockFlightTehranIstanbul => 'Tehran to Istanbul';
+  String get travelMockFlightTehranIstanbul => 'Tahran - İstanbul';
 
   @override
   String get travelMockAirlineOne => 'eCardo Air';
@@ -6351,423 +6369,425 @@ class AppLocalizationsTr extends AppLocalizations {
   String get travelMockAirlineTwo => 'Atlas Airways';
 
   @override
-  String get travelEsimTurkey => 'Turkey eSIM';
+  String get travelEsimTurkey => 'Türkiye eSIM';
 
   @override
-  String get travelRecommended => 'Recommended';
+  String get travelRecommended => 'Önerilen';
 
   @override
-  String get travelBestValue => 'Best value';
+  String get travelBestValue => 'En avantajlı';
 
   @override
-  String get travelLuxury => 'Luxury';
+  String get travelLuxury => 'Lüks';
 
   @override
-  String get travelDirect => 'Direct';
+  String get travelDirect => 'Aktarmasız';
 
   @override
-  String get travelLowestPrice => 'Lowest price';
+  String get travelLowestPrice => 'En düşük fiyat';
 
   @override
-  String get travelFeatureBreakfast => 'Breakfast';
+  String get travelFeatureBreakfast => 'Kahvaltı';
 
   @override
-  String get travelFeaturePool => 'Pool';
+  String get travelFeaturePool => 'Havuz';
 
   @override
   String get travelFeatureWifi => 'Wi-Fi';
 
   @override
-  String get travelFeatureParking => 'Parking';
+  String get travelFeatureParking => 'Otopark';
 
   @override
-  String get travelFeatureAirportTransfer => 'Airport transfer';
+  String get travelFeatureAirportTransfer => 'Havalimanı transferi';
 
   @override
-  String get travelFeatureCabinBag => 'Cabin bag';
+  String get travelFeatureCabinBag => 'Kabin bagajı';
 
   @override
-  String get travelFeatureRefundable => 'Refundable';
+  String get travelFeatureRefundable => 'İade edilebilir';
 
   @override
-  String get travelActivityFlightPurchase => 'Flight purchase';
+  String get travelActivityFlightPurchase => 'Uçak bileti satın alma';
 
   @override
-  String get travelActivityEsimPurchase => 'eSIM purchase';
+  String get travelActivityEsimPurchase => 'eSIM satın alma';
 
   @override
-  String get travelActivityWalletTopUp => 'Wallet top-up';
+  String get travelActivityWalletTopUp => 'Cüzdan yükleme';
 
   @override
-  String get travelDemoOffer => 'Demo offer';
+  String get travelDemoOffer => 'Demo teklif';
 
   @override
-  String get travelRequiresConfirmation => 'Confirmation required';
+  String get travelRequiresConfirmation => 'Onay gerekiyor';
 
   @override
-  String get travelHotelBooking => 'Hotel booking';
+  String get travelHotelBooking => 'Otel rezervasyonu';
 
   @override
-  String get travelReviewStep => 'Review';
+  String get travelReviewStep => 'Gözden Geçir';
 
   @override
-  String get travelConfirmationStep => 'Confirmation';
+  String get travelConfirmationStep => 'Onay';
 
   @override
-  String get travelReviewConfirmation => 'I reviewed and confirm these details';
+  String get travelReviewConfirmation =>
+      'Bu bilgileri inceledim ve onaylıyorum';
 
   @override
   String get travelReviewConfirmationDescription =>
-      'Confirm the traveler, product, total, and wallet before creating the reservation.';
+      'Rezervasyon koşulunu oluşturmadan önce yolcuyu, ürünü, toplam tutarı ve cüzdanı onaylayın.';
 
   @override
   String get travelReservationHoldActive =>
-      'Complete payment before this reservation expires';
+      'Bu rezervasyon koşulunun süresi dolmadan önce ödemeyi tamamlayın';
 
   @override
   String get travelReservationExpired =>
-      'Reservation expired. Start again to create a new hold.';
+      'Rezervasyon koşulunun süresi doldu. Yeni bir koşul oluşturmak için yeniden başlayın.';
 
   @override
-  String get travelNeedsAttention => 'Needs attention';
+  String get travelNeedsAttention => 'Dikkat gerektiriyor';
 
   @override
-  String get travelUpcomingAndActive => 'Upcoming and active';
+  String get travelUpcomingAndActive => 'Yaklaşan ve aktif';
 
   @override
-  String get travelCancellationsAndRefunds => 'Cancellations and refunds';
+  String get travelCancellationsAndRefunds => 'İptal ve iadeler';
 
   @override
-  String get travelPaymentPending => 'Payment pending';
+  String get travelPaymentPending => 'Ödeme beklemede';
 
   @override
-  String get travelPaymentProcessing => 'Payment processing';
+  String get travelPaymentProcessing => 'Ödeme işleniyor';
 
   @override
-  String get travelVoucherIssued => 'Voucher issued';
+  String get travelVoucherIssued => 'Kupon düzenlendi';
 
   @override
-  String get travelCancellationRequested => 'Cancellation requested';
+  String get travelCancellationRequested => 'İptal talebi alındı';
 
   @override
-  String get travelRefundInReview => 'Refund in review';
+  String get travelRefundInReview => 'İade incelemede';
 
   @override
-  String get travelCancelled => 'Cancelled';
+  String get travelCancelled => 'İptal Edildi';
 
   @override
-  String get travelExpired => 'Expired';
+  String get travelExpired => 'Süresi Doldu';
 
   @override
-  String get travelStatusUnavailable => 'Status unavailable';
+  String get travelStatusUnavailable => 'Durum kullanılamıyor';
 
   @override
-  String get travelBookingCancelled => 'Booking cancelled';
+  String get travelBookingCancelled => 'Rezervasyon iptal edildi';
 
   @override
-  String get travelBookingExpired => 'Booking expired';
+  String get travelBookingExpired => 'Rezervasyonun süresi doldu';
 
   @override
-  String get travelCompletePayment => 'Complete payment';
+  String get travelCompletePayment => 'Ödemeyi tamamla';
 
   @override
-  String get travelPaymentIsProcessing => 'Payment is processing';
+  String get travelPaymentIsProcessing => 'Ödeme işleniyor';
 
   @override
-  String get travelFlightRequestSubmitted => 'Flight request submitted';
+  String get travelFlightRequestSubmitted => 'Uçuş talebi gönderildi';
 
   @override
-  String get travelEsimRequestSubmitted => 'eSIM request submitted';
+  String get travelEsimRequestSubmitted => 'eSIM talebi gönderildi';
 
   @override
-  String get travelBookingStatusUnavailable => 'Booking status unavailable';
+  String get travelBookingStatusUnavailable =>
+      'Rezervasyon durumu kullanılamıyor';
 
   @override
   String get travelBookingCancelledDescription =>
-      'This booking is cancelled. No active voucher is available.';
+      'Bu rezervasyon iptal edildi. Aktif bir kupon bulunmuyor.';
 
   @override
   String get travelBookingExpiredDescription =>
-      'The booking hold expired before it reached a confirmed state.';
+      'Rezervasyon koşulu, onaylanmış duruma ulaşmadan önce sona erdi.';
 
   @override
   String get travelCancellationRequestedDescription =>
-      'Your cancellation request is awaiting an authoritative supplier review.';
+      'İptal talebiniz yetkili tedarikçi incelemesini bekliyor.';
 
   @override
   String get travelRefundInReviewDescription =>
-      'Your refund request is under review. The final amount and timing are not confirmed yet.';
+      'İade talebiniz inceleme altında. Nihai tutar ve zamanlama henüz teyit edilmedi.';
 
   @override
   String get travelPaymentPendingDescription =>
-      'Payment has not been confirmed for this booking.';
+      'Bu rezervasyon için ödeme henüz onaylanmadı.';
 
   @override
   String get travelPaymentProcessingDescription =>
-      'The wallet result is still being verified. Do not submit another payment.';
+      'Cüzdan sonucu hâlâ doğrulanıyor. Lütfen başka bir ödeme göndermeyin.';
 
   @override
   String get travelSupplierPendingDescription =>
-      'Payment was received, but supplier confirmation or the travel document is not ready yet.';
+      'Ödeme alındı, ancak tedarikçi teyidi veya seyahat belgesi henüz hazır değil.';
 
   @override
   String get travelUnknownStatusDescription =>
-      'The latest booking state could not be recognized. Refresh My Bookings before taking further action.';
+      'En son rezervasyon durumu tanınamadı. Başka bir işlem yapmadan önce Rezervasyonlarım\'ı yenileyin.';
 
   @override
   String get travelConfirmedArtifactPendingDescription =>
-      'The booking is confirmed, but its voucher or ticket is not available yet.';
+      'Rezervasyon onaylandı, ancak kuponu veya bileti henüz hazır değil.';
 
   @override
-  String get travelStatusReference => 'Status reference';
+  String get travelStatusReference => 'Durum referansı';
 
   @override
-  String get travelRequestRefund => 'Request refund';
+  String get travelRequestRefund => 'İade talep et';
 
   @override
-  String get travelCancelBooking => 'Cancel booking';
+  String get travelCancelBooking => 'Rezervasyonu iptal et';
 
   @override
-  String get travelPurchaseDate => 'Purchase date';
+  String get travelPurchaseDate => 'Satın alma tarihi';
 
   @override
-  String get travelSupplierReference => 'Supplier reference';
+  String get travelSupplierReference => 'Tedarikçi referansı';
 
   @override
-  String get travelBookingNumber => 'Booking number';
+  String get travelBookingNumber => 'Rezervasyon numarası';
 
   @override
-  String get travelVoucherNumber => 'Voucher number';
+  String get travelVoucherNumber => 'Kupon numarası';
 
   @override
-  String get travelRoom => 'Room';
+  String get travelRoom => 'Oda';
 
   @override
-  String get travelRooms => 'Rooms';
+  String get travelRooms => 'Odalar';
 
   @override
-  String get travelBoard => 'Board';
+  String get travelBoard => 'Kalkış';
 
   @override
-  String get travelCancellationPolicy => 'Cancellation policy';
+  String get travelCancellationPolicy => 'İptal politikası';
 
   @override
-  String get travelBeneficiary => 'Passenger or beneficiary';
+  String get travelBeneficiary => 'Yolcu veya alıcı';
 
   @override
-  String get travelDeparture => 'Departure';
+  String get travelDeparture => 'Kalkış';
 
   @override
-  String get travelArrival => 'Arrival';
+  String get travelArrival => 'Varış';
 
   @override
-  String get travelFlightNumber => 'Flight number';
+  String get travelFlightNumber => 'Uçuş numarası';
 
   @override
-  String get travelAirline => 'Airline';
+  String get travelAirline => 'Havayolu';
 
   @override
-  String get travelCabin => 'Cabin';
+  String get travelCabin => 'Kabin';
 
   @override
-  String get travelBaggage => 'Baggage';
+  String get travelBaggage => 'Bagaj';
 
   @override
   String get travelRefundReviewNotice =>
-      'This sends a request for review. Cancellation and refund are not immediate, and supplier penalties may apply.';
+      'Bu işlem bir inceleme talebi gönderir. İptal ve iade anında gerçekleşmez ve tedarikçi cezaları uygulanabilir.';
 
   @override
-  String get travelReason => 'Reason';
+  String get travelReason => 'Neden';
 
   @override
-  String get travelReasonPlansChanged => 'Travel plans changed';
+  String get travelReasonPlansChanged => 'Seyahat planları değişti';
 
   @override
-  String get travelReasonBookingMistake => 'Booking mistake';
+  String get travelReasonBookingMistake => 'Rezervasyon hatası';
 
   @override
-  String get travelReasonPersonal => 'Personal reason';
+  String get travelReasonPersonal => 'Kişisel neden';
 
   @override
-  String get travelAdditionalNoteOptional => 'Additional note (optional)';
+  String get travelAdditionalNoteOptional => 'Ek not (isteğe bağlı)';
 
   @override
-  String get travelKeepBooking => 'Keep booking';
+  String get travelKeepBooking => 'Rezervasyonu koru';
 
   @override
-  String get travelSubmitRequest => 'Submit request';
+  String get travelSubmitRequest => 'Talebi gönder';
 
   @override
   String get travelCancellationUnavailable =>
-      'The booking cannot be cancelled from its current state.';
+      'Rezervasyon mevcut durumundan iptal edilemiyor.';
 
   @override
   String get travelRefundRequestAwaitingReview =>
-      'Your cancellation and refund request is awaiting review.';
+      'İptal ve iade talebiniz incelemeyi bekliyor.';
 
   @override
-  String get travelPriceLowToHigh => 'Price: low to high';
+  String get travelPriceLowToHigh => 'Fiyat: düşükten yükseğe';
 
   @override
-  String get travelPriceHighToLow => 'Price: high to low';
+  String get travelPriceHighToLow => 'Fiyat: yüksekten düşüğe';
 
   @override
-  String get travelRatingHighToLow => 'Rating: high to low';
+  String get travelRatingHighToLow => 'Puan: yüksekten düşüğe';
 
   @override
-  String get travelAllRatings => 'All ratings';
+  String get travelAllRatings => 'Tüm puanlar';
 
   @override
-  String get travelRating => 'Rating';
+  String get travelRating => 'Puan';
 
   @override
-  String get travelSortAndFilter => 'Sort and filter';
+  String get travelSortAndFilter => 'Sırala ve filtrele';
 
   @override
-  String get travelShortestDuration => 'Shortest duration';
+  String get travelShortestDuration => 'En kısa süre';
 
   @override
-  String get travelNonRefundable => 'Non-refundable';
+  String get travelNonRefundable => 'İade edilemez';
 
   @override
-  String get travelEsimDeviceReadinessTitle => 'Check device compatibility';
+  String get travelEsimDeviceReadinessTitle =>
+      'Cihaz uyumluluğunu kontrol edin';
 
   @override
   String get travelEsimDeviceReadinessDescription =>
-      'Before purchase, confirm that your device supports eSIM and is unlocked for another mobile plan.';
+      'Satın almadan önce cihazınızın eSIM\'i desteklediğinden ve başka bir mobil hat için kilidinin açık olduğundan emin olun.';
 
   @override
   String get travelEsimCompatibilityNotice =>
-      'Package purchase does not guarantee device compatibility. Installation details appear only after the backend marks the eSIM ready.';
+      'Paket satın alımı cihaz uyumluluğunu garanti etmez. Kurulum bilgileri yalnızca altyapı eSIM\'i hazır olarak işaretledikten sonra görünür.';
 
   @override
-  String get travelEsimValidity => 'Validity';
+  String get travelEsimValidity => 'Geçerlilik';
 
   @override
-  String get travelEsimActivationReady =>
-      'Your eSIM installation details are ready.';
+  String get travelEsimActivationReady => 'eSIM kurulum bilgileriniz hazır.';
 
   @override
-  String get travelPaymentReceived => 'Payment received';
+  String get travelPaymentReceived => 'Ödeme alındı';
 
   @override
   String get travelPaymentReceivedDescription =>
-      'Payment was received. eCardo Travel is completing supplier confirmation before issuing the final document.';
+      'Ödeme alındı. eCardo Travel, nihai belgeyi düzenlemeden önce tedarikçi teyidini tamamlıyor.';
 
   @override
   String get travelSearchFailedDescription =>
-      'Search did not complete. Previous results are still shown when available; edit the search or try again.';
+      'Arama tamamlanamadı. Mümkünse önceki sonuçlar gösterilmeye devam eder; aramayı düzenleyin veya tekrar deneyin.';
 
   @override
   String get travelReservationFailedDescription =>
-      'Reservation could not be created. Your wallet was not charged by this app session.';
+      'Rezervasyon koşulu oluşturulamadı. Cüzdanınız bu uygulama oturumu tarafından tahsil edilmedi.';
 
   @override
   String get travelRefundFailedDescription =>
-      'The cancellation or refund request was not submitted. Please review the booking and try again.';
+      'İptal veya iade talebi gönderilemedi. Lütfen rezervasyonu gözden geçirin ve tekrar deneyin.';
 
   @override
   String get travelNoPaymentAttemptedAfterExpiry =>
-      'No payment was attempted or charged in this app session for this expired hold.';
+      'Bu süresi dolmuş rezervasyon koşulu için bu uygulama oturumunda ödeme denenmedi veya tahsil edilmedi.';
 
   @override
-  String get travelLastUpdated => 'Last updated';
+  String get travelLastUpdated => 'Son güncelleme';
 
   @override
-  String get travelJourneySearch => 'Search';
+  String get travelJourneySearch => 'Ara';
 
   @override
-  String get travelJourneyCompare => 'Compare';
+  String get travelJourneyCompare => 'Karşılaştır';
 
   @override
-  String get travelJourneyReview => 'Review';
+  String get travelJourneyReview => 'Gözden Geçir';
 
   @override
-  String get travelJourneyPay => 'Pay';
+  String get travelJourneyPay => 'Öde';
 
   @override
   String get travelHotelSearchGuidance =>
-      'Choose the destination, dates, and occupancy. Results and availability always come from the Travel backend.';
+      'Varış noktasını, tarihleri ve kapasiteyi seçin. Sonuçlar ve uygunluk her zaman Travel altyapısından gelir.';
 
   @override
   String get travelHotelResultsGuidance =>
-      'Compare backend-provided price, rating, facilities, location, rooms, and policies before opening an option.';
+      'Bir seçeneği açmadan önce altyapının sağladığı fiyatı, puanı, olanakları, konumu, odaları ve politikaları karşılaştırın.';
 
   @override
   String get travelHotelDetailsGuidance =>
-      'Review the property, room facts, occupancy, price, and cancellation rules before continuing.';
+      'Devam etmeden önce tesisi, oda bilgilerini, kapasiteyi, fiyatı ve iptal kurallarını gözden geçirin.';
 
   @override
   String get travelFlightSearchGuidance =>
-      'Choose the route, date, and passenger count. Flight availability and fares always come from the Travel backend.';
+      'Rotayı, tarihi ve yolcu sayısını seçin. Uçuş uygunluğu ve ücretler her zaman Travel altyapısından gelir.';
 
   @override
   String get travelFlightResultsGuidance =>
-      'Compare backend-provided times, airline, cabin, baggage, fare, and refundability before selecting.';
+      'Seçim yapmadan önce altyapının sağladığı saatleri, havayolunu, kabinini, bagajı, ücreti ve iade edilebilirliği karşılaştırın.';
 
   @override
   String get travelFlightDetailsGuidance =>
-      'Review the flight, fare components, baggage, passenger count, and cancellation rules before continuing.';
+      'Devam etmeden önce uçuşu, ücret bileşenlerini, bagajı, yolcu sayısını ve iptal kurallarını gözden geçirin.';
 
   @override
   String travelSelectedForComparison(int count) {
-    return '$count selected';
+    return '$count seçildi';
   }
 
   @override
-  String get travelCompare => 'Compare';
+  String get travelCompare => 'Karşılaştır';
 
   @override
   String get travelCompareLimit =>
-      'You can compare up to three options at a time.';
+      'Aynı anda en fazla üç seçeneği karşılaştırabilirsiniz.';
 
   @override
-  String get travelCompareHotels => 'Compare hotels';
+  String get travelCompareHotels => 'Otelleri karşılaştır';
 
   @override
-  String get travelCompareFlights => 'Compare flights';
+  String get travelCompareFlights => 'Uçuşları karşılaştır';
 
   @override
   String get travelComparisonUsesBackendFacts =>
-      'Only facts returned by the backend are shown. Missing facts are not inferred.';
+      'Yalnızca altyapıdan dönen bilgiler gösterilir. Eksik bilgiler tahmin edilmez.';
 
   @override
-  String get travelAddress => 'Address';
+  String get travelAddress => 'Adres';
 
   @override
-  String get travelAircraft => 'Aircraft';
+  String get travelAircraft => 'Uçak';
 
   @override
-  String get travelDescription => 'Description';
+  String get travelDescription => 'Açıklama';
 
   @override
-  String get travelDuration => 'Duration';
+  String get travelDuration => 'Süre';
 
   @override
-  String get travelRefundPolicy => 'Refund policy';
+  String get travelRefundPolicy => 'İade politikası';
 
   @override
   String get travelPostPurchaseGuidance =>
-      'Keep the reference available, refresh My Bookings for status changes, and use only issued backend artifacts for travel.';
+      'Referansı saklayın, durum değişiklikleri için Rezervasyonlarım\'ı yenileyin ve seyahat için yalnızca altyapı tarafından düzenlenen belgeleri kullanın.';
 
   @override
-  String get remittanceTitle => 'International Remittance';
+  String get remittanceTitle => 'Uluslararası Havale';
 
   @override
-  String get remittanceHistoryTitle => 'Remittance History';
+  String get remittanceHistoryTitle => 'Havale Geçmişi';
 
   @override
-  String get remittanceDetailsTitle => 'Remittance Details';
+  String get remittanceDetailsTitle => 'Havale Detayları';
 
   @override
-  String get remittanceSelectPayoutMethod => 'Select Payout Method';
+  String get remittanceSelectPayoutMethod => 'Ödeme Çıkış Yöntemi Seçin';
 
   @override
   String get remittanceNoMethods =>
-      'No remittance methods available.\nPlease try again later.';
+      'Kullanılabilir havale yöntemi yok.\nLütfen daha sonra tekrar deneyin.';
 
   @override
-  String get remittanceSendAmount => 'Send Amount';
+  String get remittanceSendAmount => 'Gönderilecek Tutar';
 
   @override
   String get remittanceSendCurrency => 'Gönderim Para Birimi';
@@ -6782,155 +6802,154 @@ class AppLocalizationsTr extends AppLocalizations {
   String get remittanceNoCurrencies => 'Kullanılabilir para birimi yok';
 
   @override
-  String get remittanceEnterAmount => 'Enter amount';
+  String get remittanceEnterAmount => 'Tutar girin';
 
   @override
-  String get remittanceUnknownMethod => 'Unknown';
+  String get remittanceUnknownMethod => 'Bilinmiyor';
 
   @override
   String remittanceRateLocked(int seconds) {
-    return 'Rate locked: ${seconds}s';
+    return 'Kur kilitlendi: $seconds sn';
   }
 
   @override
-  String get remittanceExchangeRate => 'Exchange Rate';
+  String get remittanceExchangeRate => 'Döviz Kuru';
 
   @override
-  String get remittanceReceiveAmount => 'Receive Amount';
+  String get remittanceReceiveAmount => 'Alınan Tutar';
 
   @override
-  String get remittanceSystemFee => 'System Fee';
+  String get remittanceSystemFee => 'Sistem Ücreti';
 
   @override
-  String get remittanceTotalPayable => 'Total Payable';
+  String get remittanceTotalPayable => 'Ödenecek Toplam';
 
   @override
-  String get remittanceGetQuote => 'Get Quote';
+  String get remittanceGetQuote => 'Teklif Al';
 
   @override
-  String get remittanceStepAmount => 'Amount';
+  String get remittanceStepAmount => 'Tutar';
 
   @override
-  String get remittanceStepSender => 'Sender';
+  String get remittanceStepSender => 'Gönderen';
 
   @override
-  String get remittanceStepReceiver => 'Receiver';
+  String get remittanceStepReceiver => 'Alıcı';
 
   @override
-  String get remittanceStepReview => 'Review';
+  String get remittanceStepReview => 'Gözden Geçir';
 
   @override
-  String get remittanceStepDone => 'Done';
+  String get remittanceStepDone => 'Tamamlandı';
 
   @override
-  String get remittanceSenderInfo => 'Sender Information';
+  String get remittanceSenderInfo => 'Gönderen Bilgileri';
 
   @override
-  String get remittanceSelectCountry => 'Select country';
+  String get remittanceSelectCountry => 'Ülke seçin';
 
   @override
-  String get remittanceSenderTypeIndividual => 'Individual';
+  String get remittanceSenderTypeIndividual => 'Bireysel';
 
   @override
-  String get remittanceSenderTypeBusiness => 'Business';
+  String get remittanceSenderTypeBusiness => 'Kurumsal';
 
   @override
-  String get remittanceSenderName => 'Full Name';
+  String get remittanceSenderName => 'Ad Soyad';
 
   @override
-  String get remittanceSenderPhone => 'Phone Number';
+  String get remittanceSenderPhone => 'Telefon Numarası';
 
   @override
-  String get remittanceSenderIdNumber => 'ID Number';
+  String get remittanceSenderIdNumber => 'Kimlik Numarası';
 
   @override
-  String get remittanceReceiverInfo => 'Receiver Information';
+  String get remittanceReceiverInfo => 'Alıcı Bilgileri';
 
   @override
-  String get remittancePayoutDetails => 'Payout Details';
+  String get remittancePayoutDetails => 'Ödeme Çıkış Detayları';
 
   @override
   String get remittancePayoutDetailsHint =>
-      'Fill in the fields relevant to the selected payout method.';
+      'Seçilen ödeme çıkış yöntemine ait alanları doldurun.';
 
   @override
-  String get remittanceReceiverName => 'Full Name';
+  String get remittanceReceiverName => 'Ad Soyad';
 
   @override
-  String get remittanceReceiverPhone => 'Phone Number';
+  String get remittanceReceiverPhone => 'Telefon Numarası';
 
   @override
-  String get remittanceBankName => 'Bank Name';
+  String get remittanceBankName => 'Banka Adı';
 
   @override
-  String get remittanceAccountNumber => 'Account Number';
+  String get remittanceAccountNumber => 'Hesap Numarası';
 
   @override
   String get remittanceIban => 'IBAN';
 
   @override
-  String get remittanceAlipayAccount => 'Alipay Account';
+  String get remittanceAlipayAccount => 'Alipay Hesabı';
 
   @override
-  String get remittanceWechatAccount => 'WeChat Account';
+  String get remittanceWechatAccount => 'WeChat Hesabı';
 
   @override
-  String get remittanceReviewConfirm => 'Review & Confirm';
+  String get remittanceReviewConfirm => 'Gözden Geçir ve Onayla';
 
   @override
   String get remittanceReviewHint =>
-      'Please review all details before submitting your remittance request.';
+      'Havale talebinizi göndermeden önce lütfen tüm detayları gözden geçirin.';
 
   @override
   String get remittanceTermsNotice =>
-      'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.';
+      'Göndererek havale şartlarımızı kabul etmiş olursunuz. Kur 15 dakika boyunca kilitlenir. Gönderimden sonra KYC belgelerini ve ödeme makbuzunu yüklemeniz gerekecektir.';
 
   @override
-  String get remittanceReviewSender => 'Sender';
+  String get remittanceReviewSender => 'Gönderen';
 
   @override
-  String get remittanceReviewReceiver => 'Receiver';
+  String get remittanceReviewReceiver => 'Alıcı';
 
   @override
-  String get remittanceReviewPayment => 'Payment';
+  String get remittanceReviewPayment => 'Ödeme';
 
   @override
-  String get remittanceRequestSubmitted => 'Request Submitted!';
+  String get remittanceRequestSubmitted => 'Talep Gönderildi!';
 
   @override
-  String get remittanceRequestCreated =>
-      'Your remittance request has been created.';
+  String get remittanceRequestCreated => 'Havale talebiniz oluşturuldu.';
 
   @override
-  String get remittanceUploadDocuments => 'Upload Documents';
+  String get remittanceUploadDocuments => 'Belgeleri Yükle';
 
   @override
   String get remittanceUploadHint =>
-      'Upload your KYC documents and payment receipt to proceed.';
+      'Devam etmek için KYC belgelerinizi ve ödeme makbuzunuzu yükleyin.';
 
   @override
-  String get remittanceAddDocument => 'Add Document';
+  String get remittanceAddDocument => 'Belge Ekle';
 
   @override
-  String get remittanceDocumentType => 'Document Type';
+  String get remittanceDocumentType => 'Belge Türü';
 
   @override
-  String get remittanceDocTypeKyc => 'KYC Document';
+  String get remittanceDocTypeKyc => 'KYC Belgesi';
 
   @override
-  String get remittanceDocTypePaymentReceipt => 'Payment Receipt';
+  String get remittanceDocTypePaymentReceipt => 'Ödeme Makbuzu';
 
   @override
-  String get remittanceDocTypePayoutReceipt => 'Payout Receipt';
+  String get remittanceDocTypePayoutReceipt => 'Ödeme Çıkış Makbuzu';
 
   @override
-  String get remittanceDocTypeOther => 'Other';
+  String get remittanceDocTypeOther => 'Diğer';
 
   @override
-  String get remittanceCancel => 'Cancel';
+  String get remittanceCancel => 'İptal';
 
   @override
-  String get remittanceAdd => 'Add';
+  String get remittanceAdd => 'Ekle';
 
   @override
   String get remittanceTakePhoto => 'Fotoğraf Çek';
@@ -6952,159 +6971,162 @@ class AppLocalizationsTr extends AppLocalizations {
       'Yüklenecek geçerli dosya yok. Lütfen belgelerinizi yeniden seçin.';
 
   @override
-  String get remittanceContinue => 'Continue';
+  String get remittanceContinue => 'Devam Et';
 
   @override
-  String get remittanceSubmitRequest => 'Submit Request';
+  String get remittanceSubmitRequest => 'Talebi Gönder';
 
   @override
-  String get remittanceUploading => 'Uploading...';
+  String get remittanceUploading => 'Yükleniyor...';
 
   @override
-  String get remittanceRefresh => 'Refresh';
+  String get remittanceRefresh => 'Yenile';
 
   @override
-  String get remittanceNoHistory => 'No remittances yet';
+  String get remittanceNoHistory => 'Henüz havale yok';
 
   @override
   String get remittanceNoHistoryHint =>
-      'Your remittance history will appear here.';
+      'Havale geçmişiniz burada görünecektir.';
 
   @override
-  String get remittanceSend => 'Send';
+  String get remittanceSend => 'Gönder';
 
   @override
-  String get remittanceReceive => 'Receive';
+  String get remittanceReceive => 'Alınan';
 
   @override
-  String get remittanceDate => 'Date';
+  String get remittanceDate => 'Tarih';
 
   @override
-  String get remittanceNotFound => 'Remittance not found';
+  String get remittanceNotFound => 'Havale bulunamadı';
 
   @override
-  String get remittanceStatusFinalized => 'This request is finalized.';
+  String get remittanceStatusFinalized => 'Bu talep kesinleştirildi.';
 
   @override
-  String get remittanceStatusProcessing => 'Your request is being processed.';
+  String get remittanceStatusProcessing => 'Talebiniz işleniyor.';
 
   @override
   String get remittanceStatusActionNeeded =>
-      'Please complete the required steps.';
+      'Lütfen gerekli adımları tamamlayın.';
 
   @override
-  String get remittanceDetailsSectionSender => 'Sender Information';
+  String get remittanceDetailsSectionSender => 'Gönderen Bilgileri';
 
   @override
-  String get remittanceDetailsSectionReceiver => 'Receiver Information';
+  String get remittanceDetailsSectionReceiver => 'Alıcı Bilgileri';
 
   @override
-  String get remittanceDetailsSectionPayment => 'Payment Details';
+  String get remittanceDetailsSectionPayment => 'Ödeme Detayları';
 
   @override
-  String get remittanceDetailsSectionTimeline => 'Status Timeline';
+  String get remittanceDetailsSectionTimeline => 'Durum Zaman Çizelgesi';
 
   @override
-  String get remittanceErrLoadMethods => 'Failed to load methods';
+  String get remittanceErrLoadMethods => 'Yöntemler yüklenemedi';
 
   @override
-  String get remittanceErrSelectPayout => 'Please select a payout method';
+  String get remittanceErrSelectPayout =>
+      'Lütfen bir ödeme çıkış yöntemi seçin';
 
   @override
-  String get remittanceErrInvalidAmount => 'Please enter a valid amount';
+  String get remittanceErrInvalidAmount => 'Lütfen geçerli bir tutar girin';
 
   @override
-  String get remittanceErrSelectSendCurrency => 'Please select a send currency';
+  String get remittanceErrSelectSendCurrency =>
+      'Lütfen bir gönderim para birimi seçin';
 
   @override
-  String get remittanceErrQuoteFailed => 'Quote failed';
+  String get remittanceErrQuoteFailed => 'Teklif alınamadı';
 
   @override
-  String get remittanceErrRequestQuoteFirst => 'Please request a quote first';
+  String get remittanceErrRequestQuoteFirst => 'Lütfen önce bir teklif isteyin';
 
   @override
   String get remittanceErrQuoteExpired =>
-      'Quote expired. Please request a new one.';
+      'Teklifin süresi doldu. Lütfen yeni bir teklif isteyin.';
 
   @override
-  String get remittanceErrSenderInfo => 'Please complete sender information';
+  String get remittanceErrSenderInfo =>
+      'Lütfen gönderen bilgilerini tamamlayın';
 
   @override
-  String get remittanceErrReceiverInfo =>
-      'Please complete receiver information';
+  String get remittanceErrReceiverInfo => 'Lütfen alıcı bilgilerini tamamlayın';
 
   @override
-  String get remittanceErrSubmissionFailed => 'Submission failed';
+  String get remittanceErrSubmissionFailed => 'Gönderim başarısız oldu';
 
   @override
-  String get remittanceErrNoRemittance => 'No remittance to upload to';
+  String get remittanceErrNoRemittance => 'Yüklenecek havale bulunamadı';
 
   @override
-  String get remittanceErrAddDocument => 'Please add at least one document';
+  String get remittanceErrAddDocument => 'Lütfen en az bir belge ekleyin';
 
   @override
-  String get remittanceErrUploadFailed => 'Upload failed';
+  String get remittanceErrUploadFailed => 'Yükleme başarısız oldu';
 
   @override
-  String get remittanceErrLoadDetails => 'Failed to load details';
+  String get remittanceErrLoadDetails => 'Detaylar yüklenemedi';
 
   @override
-  String get remittanceErrCompleteSender => 'Please complete all sender fields';
+  String get remittanceErrCompleteSender =>
+      'Lütfen tüm gönderen alanlarını doldurun';
 
   @override
   String get remittanceErrCompleteReceiver =>
-      'Please complete all receiver fields';
+      'Lütfen tüm alıcı alanlarını doldurun';
 
   @override
-  String get remittanceSuccessUploaded => 'Documents uploaded successfully';
+  String get remittanceSuccessUploaded => 'Belgeler başarıyla yüklendi';
 
   @override
-  String get remittanceError => 'Error';
+  String get remittanceError => 'Hata';
 
   @override
-  String get remittanceStatusDraft => 'Draft';
+  String get remittanceStatusDraft => 'Taslak';
 
   @override
-  String get remittanceStatusWaitingInformation => 'Waiting Information';
+  String get remittanceStatusWaitingInformation => 'Bilgi Bekleniyor';
 
   @override
-  String get remittanceStatusWaitingDocuments => 'Waiting Documents';
+  String get remittanceStatusWaitingDocuments => 'Belge Bekleniyor';
 
   @override
-  String get remittanceStatusWaitingPayment => 'Waiting Payment';
+  String get remittanceStatusWaitingPayment => 'Ödeme Bekleniyor';
 
   @override
-  String get remittanceStatusPaymentReviewing => 'Payment Reviewing';
+  String get remittanceStatusPaymentReviewing => 'Ödeme İnceleniyor';
 
   @override
-  String get remittanceStatusInProcess => 'In Process';
+  String get remittanceStatusInProcess => 'İşlemde';
 
   @override
-  String get remittanceStatusDestinationProcessing => 'Destination Processing';
+  String get remittanceStatusDestinationProcessing => 'Hedef İşleniyor';
 
   @override
-  String get remittanceStatusDestinationPaid => 'Destination Paid';
+  String get remittanceStatusDestinationPaid => 'Hedefe Ödeme Yapıldı';
 
   @override
-  String get remittanceStatusCompleted => 'Completed';
+  String get remittanceStatusCompleted => 'Tamamlandı';
 
   @override
-  String get remittanceStatusRejected => 'Rejected';
+  String get remittanceStatusRejected => 'Reddedildi';
 
   @override
-  String get remittanceStatusExpired => 'Expired';
+  String get remittanceStatusExpired => 'Süresi Doldu';
 
   @override
-  String get remittanceStatusCancelled => 'Cancelled';
+  String get remittanceStatusCancelled => 'İptal Edildi';
 
   @override
-  String get remittanceStatusRefundRequested => 'Refund Requested';
+  String get remittanceStatusRefundRequested => 'İade Talep Edildi';
 
   @override
-  String get remittanceStatusRefundCompleted => 'Refund Completed';
+  String get remittanceStatusRefundCompleted => 'İade Tamamlandı';
 
   @override
-  String get remittanceStatusUnknown => 'Unknown';
+  String get remittanceStatusUnknown => 'Bilinmiyor';
 
   @override
   String get remittanceRetry => 'Tekrar dene';
@@ -7694,7 +7716,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get kycLimitPaycardoTopup => 'PayCardo yükleme';
 
   @override
-  String get kycLimitMeasureMin => 'min';
+  String get kycLimitMeasureMin => 'dk';
 
   @override
   String get kycLimitMeasureMax => 'maks';
@@ -8214,22 +8236,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get webViewLinkCannotOpen => 'Bu bağlantı uygulamada açılamıyor.';
 
   @override
-  String get networkReconnected => 'You are back online';
+  String get networkReconnected => 'Tekrar çevrimiçisiniz';
 
   @override
   String get vpnHintBanner =>
-      'VPN detected — turn it off for a more stable experience';
+      'VPN algılandı — daha stabil bir deneyim için kapatın';
 
   @override
-  String get signInWithTelegram => 'Continue with Telegram';
+  String get signInWithTelegram => 'Telegram ile Devam Et';
 
   @override
   String get signInTelegramUnavailable =>
-      'Telegram sign-in will be available once enabled on the server.';
+      'Telegram ile giriş, sunucuda etkinleştirildiğinde kullanılabilir olacaktır.';
 
   @override
   String get sessionExpiredMessage =>
-      'Your session has expired. Please sign in again.';
+      'Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.';
 
   @override
   String get travelFromPrice => 'Başlangıç';

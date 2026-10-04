@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart' as image_picker;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -21,30 +23,23 @@ class EditWithdrawAccount extends StatefulWidget {
 }
 
 class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
-  final EditWithdrawAccountController controller = Get.put(
-    EditWithdrawAccountController(),
-  );
+  final EditWithdrawAccountController controller = Get.find();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.methodNameController.clear();
-      controller.dynamicFieldControllers.clear();
-      controller.selectedImages.clear();
-      controller.isMethodNameFocused.value = false;
-      controller.initializeFields(widget.account);
-    });
+    controller.initializeFields(widget.account);
   }
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -54,28 +49,40 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                   letterSpacing: 0,
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: Container(
-                  padding: EdgeInsetsDirectional.only(
-                    start: 18,
-                    end: 18,
-                    top: 2,
+                  padding: const EdgeInsetsDirectional.only(
+                    start: AppSpacing.page,
+                    end: AppSpacing.page,
+                    top: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadiusDirectional.only(
-                      topStart: Radius.circular(30),
-                      topEnd: Radius.circular(30),
+                    color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                    borderRadius: const BorderRadiusDirectional.only(
+                      topStart: Radius.circular(AppSpacing.radiusXl),
+                      topEnd: Radius.circular(AppSpacing.radiusXl),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDark
+                            ? AppColors.darkShadow
+                            : AppColors.lightShadow,
+                        blurRadius: AppSpacing.lg,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
                   ),
                   child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       children: [
-                        SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.lg),
                         CommonRequiredLabelAndDynamicField(
                           labelText: localization.editWithdrawAccountMethodName,
                           isLabelRequired: true,
@@ -86,6 +93,7 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                               controller: controller.methodNameController,
                               hintText: localization
                                   .editWithdrawAccountMethodNameHint,
+                              borderRadius: AppSpacing.radiusLg,
                               backgroundColor: AppColors.transparent,
                             ),
                           ),
@@ -94,7 +102,7 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                           () => Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 16),
+                              const SizedBox(height: AppSpacing.lg),
                               ...controller.dynamicFieldControllers.entries.map((
                                 entry,
                               ) {
@@ -124,8 +132,11 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                                               title: fieldName,
                                               fieldName: fieldName,
                                               existingValue: existingValue,
+                                              isDark: isDark,
                                             )
                                           : CommonTextInputField(
+                                              borderRadius:
+                                                  AppSpacing.radiusLg,
                                               backgroundColor:
                                                   AppColors.transparent,
                                               hintText: isTextArea
@@ -139,23 +150,26 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                                                   : TextInputType.text,
                                             ),
                                     ),
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: AppSpacing.lg),
                                   ],
                                 );
                               }),
                             ],
                           ),
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: AppSpacing.xxxl),
                         CommonButton(
-                          onPressed: () => controller.updateWithdrawAccount(
-                            accountId: widget.account.id.toString(),
-                          ),
+                          borderRadius: AppSpacing.radiusLg,
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            controller.updateWithdrawAccount(
+                              accountId: widget.account.id.toString(),
+                            );
+                          },
                           width: double.infinity,
-
                           text: localization.editWithdrawAccountUpdateButton,
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: AppSpacing.huge),
                       ],
                     ),
                   ),
@@ -167,7 +181,7 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
         Obx(
           () => Visibility(
             visible: controller.isLoading.value,
-            child: CommonLoading(),
+            child: const CommonLoading(),
           ),
         ),
       ],
@@ -178,6 +192,7 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
     required String title,
     required String fieldName,
     String? existingValue,
+    required bool isDark,
   }) {
     return Obx(() {
       final selectedImage = controller.selectedImages[fieldName];
@@ -187,15 +202,18 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
           existingValue.toLowerCase() != 'null';
       return GestureDetector(
         onTap: () {
+          HapticFeedback.lightImpact();
           controller.pickImage(fieldName, image_picker.ImageSource.gallery);
         },
         child: Container(
           width: double.infinity,
-          height: selectedImage != null || hasExistingValue == true ? 120 : 120,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+          height: 120,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          ),
           child: selectedImage != null
               ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   child: Image.file(
                     selectedImage,
                     fit: BoxFit.cover,
@@ -204,7 +222,7 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                 )
               : hasExistingValue == true
               ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   child: Image.network(
                     existingValue!,
                     width: double.infinity,
@@ -214,45 +232,54 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                       child: Icon(
                         Icons.broken_image,
                         size: 40,
-                        color: AppColors.lightTextTertiary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextTertiary,
                       ),
                     ),
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return CommonLoading();
-                    },
                   ),
                 )
-              : Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      PngAssets.attachFileTwo,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
+              : Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.xl,
+                    horizontal: AppSpacing.lg,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightBackground,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          PngAssets.commonUploadIcon,
-                          width: 20,
-                          fit: BoxFit.contain,
-                          color: AppColors.lightTextTertiary,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        PngAssets.commonUploadIcon,
+                        width: AppSpacing.iconMd,
+                        fit: BoxFit.contain,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextTertiary,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextTertiary,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: AppColors.lightTextTertiary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
         ),
       );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -15,25 +17,33 @@ class VisaIntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
           child: CommonAppBar(
             title: l10nPick(
               context,
-              fa: 'ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â®ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§ÃƒËœÃ‚Â®ÃƒËœÃ‚Â° Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§',
+              fa: 'راهنمای خدمات اخذ ویزا',
               en: 'Visa & Consular Services',
-              ar: 'ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã…Â Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â®ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚ÂªÃƒËœÃ‚Â£ÃƒËœÃ‚Â´Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Å¡Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚ÂµÃƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â©',
-              zh: 'ÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¨Ã‚Â¯Ã‚ÂÃƒÂ¤Ã‚Â¸Ã…Â½ÃƒÂ©Ã‚Â¢Ã¢â‚¬Â ÃƒÂ¤Ã‚ÂºÃ¢â‚¬Â¹ÃƒÂ¦Ã…â€œÃ‚ÂÃƒÂ¥Ã…Â Ã‚Â¡ÃƒÂ¦Ã…â€™Ã¢â‚¬Â¡ÃƒÂ¥Ã‚ÂÃ¢â‚¬â€',
+              ar: 'دليل خدمات التأشيرات والقنصلية',
+              zh: '签证与领事事务指南',
             ),
             rightSideWidget: Padding(
               padding: EdgeInsetsDirectional.only(end: 16.w),
               child: IconButton(
-                icon: const Icon(Icons.history_rounded),
-                tooltip: l10nPick(context, fa: 'ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â ', en: 'My Visas', ar: 'ÃƒËœÃ‚ÂªÃƒËœÃ‚Â£ÃƒËœÃ‚Â´Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚ÂªÃƒâ„¢Ã…Â ', zh: 'ÃƒÂ¦Ã‹â€ Ã¢â‚¬ËœÃƒÂ§Ã…Â¡Ã¢â‚¬Å¾ÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¨Ã‚Â¯Ã‚Â'),
-                onPressed: () => Get.to(() => const VisaListScreen()),
+                icon: Icon(
+                  Icons.history_rounded,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
+                ),
+                tooltip: l10nPick(context, fa: 'درخواست‌های من', en: 'My Visas', ar: 'تأشيراتي', zh: '我的签证'),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Get.to(() => const VisaListScreen());
+                },
               ),
             ),
           ),
@@ -41,37 +51,44 @@ class VisaIntroScreen extends StatelessWidget {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsets.all(AppSpacing.lg.r),
           child: CommonButton(
             width: double.infinity,
             text: l10nPick(
               context,
-              fa: 'Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â´ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â§ÃƒËœÃ‚ÂªÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã‹â€ ÃƒÅ¡Ã‚Â¯ ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â±Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â«ÃƒËœÃ‚Â¨ÃƒËœÃ‚Âª ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â®Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª',
+              fa: 'مشاهده کاتالوگ کشورها و ثبت درخواست',
               en: 'Explore Countries & Apply',
-              ar: 'ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¹ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¶ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾ Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚ÂªÃƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚Â¯Ãƒâ„¢Ã…Â Ãƒâ„¢Ã¢â‚¬Â¦ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â·Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â¨',
-              zh: 'ÃƒÂ¦Ã‚ÂµÃ‚ÂÃƒÂ¨Ã‚Â§Ã‹â€ ÃƒÂ§Ã¢â‚¬ÂºÃ‚Â®ÃƒÂ§Ã…Â¡Ã¢â‚¬Å¾ÃƒÂ¥Ã…â€œÃ‚Â°ÃƒÂ¥Ã¢â‚¬ÂºÃ‚Â½ÃƒÂ¥Ã‚Â®Ã‚Â¶ÃƒÂ¥Ã‚Â¹Ã‚Â¶ÃƒÂ§Ã¢â‚¬ÂÃ‚Â³ÃƒÂ¨Ã‚Â¯Ã‚Â·',
+              ar: 'استعراض الدول وتقديم الطلب',
+              zh: '浏览目的地国家并申请',
             ),
-            backgroundColor: AppColors.lightPrimary,
-            onPressed: () => Get.to(() => const VisaCatalogScreen()),
+            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+            textColor: isDark ? AppColors.deepBlack : AppColors.white,
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Get.to(() => const VisaCatalogScreen());
+            },
           ),
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg.w,
+          vertical: AppSpacing.md.h,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Hero
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(20.r),
+              padding: EdgeInsets.all(AppSpacing.xl.r),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [AppColors.deepBlack, AppColors.darkGray],
                   begin: AlignmentDirectional.topStart,
                   end: AlignmentDirectional.bottomEnd,
                 ),
-                borderRadius: BorderRadius.circular(20.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,36 +96,36 @@ class VisaIntroScreen extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(10.r),
+                        padding: EdgeInsets.all(AppSpacing.sm.r),
                         decoration: BoxDecoration(
                           color: AppColors.mainSoftBlue.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(Icons.flight_takeoff_rounded, color: AppColors.mainSoftBlue, size: 26.sp),
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Text(
                           l10nPick(
                             context,
-                            fa: 'ÃƒËœÃ‚ÂµÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚ÂªÃƒËœÃ‚Â±Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ÃƒÅ¡Ã‚Â© (e-Visa) Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â®ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â³Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ€ºÃ…â€™',
+                            fa: 'صدور ویزای الکترونیک (e-Visa) و خدمات کنسولی',
                             en: 'Electronic Visa & Consular Desk',
-                            ar: 'ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚ÂªÃƒËœÃ‚Â£ÃƒËœÃ‚Â´Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â¥Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã†â€™ÃƒËœÃ‚ÂªÃƒËœÃ‚Â±Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â© Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â®ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Å¡Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚ÂµÃƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â©',
-                            zh: 'ÃƒÂ§Ã¢â‚¬ÂÃ‚ÂµÃƒÂ¥Ã‚Â­Ã‚ÂÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¨Ã‚Â¯Ã‚ÂÃƒÂ¯Ã‚Â¼Ã‹â€ e-VisaÃƒÂ¯Ã‚Â¼Ã¢â‚¬Â°ÃƒÂ¤Ã‚Â¸Ã…Â½ÃƒÂ©Ã‚Â¢Ã¢â‚¬Â ÃƒÂ¤Ã‚ÂºÃ¢â‚¬Â¹ÃƒÂ¥Ã‚Â®Ã…Â¾ÃƒÂ¥Ã…Â Ã‚Â¡',
+                            ar: 'التأشيرات الإلكترونية والخدمات القنصلية',
+                            zh: '电子签证（e-Visa）与领事実务',
                           ),
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: Colors.white),
+                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.white),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: AppSpacing.md.h),
                   Text(
                     l10nPick(
                       context,
-                      fa: 'Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â´ÃƒËœÃ‚ÂªÃƒâ€ºÃ…â€™ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚ÂªÃƒËœÃ‚Â®ÃƒËœÃ‚ÂµÃƒËœÃ‚ÂµÃƒâ€ºÃ…â€™ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â² ÃƒËœÃ‚Â§ÃƒËœÃ‚Â®ÃƒËœÃ‚Â° Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¨Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â´ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â² Ãƒâ€ºÃ‚Â±Ãƒâ€ºÃ‚Â²Ãƒâ€ºÃ‚Â° ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± ÃƒËœÃ‚Â¬Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â . ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â±ÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒÅ¡Ã‚Â© ÃƒËœÃ‚ÂªÃƒâ„¢Ã‹â€ ÃƒËœÃ‚Â³ÃƒËœÃ‚Â· ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â´Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± ÃƒËœÃ‚Â¨Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¨ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â³Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Âª Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚ÂªÃƒËœÃ‚Â­Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¬Ãƒâ€ºÃ…â€™ÃƒËœÃ‚ÂªÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§.',
+                      fa: 'پشتیبانی تخصصی از اخذ ویزای بیش از ۱۲۰ کشور جهان. بررسی مدارک توسط کارشناسان امور بین‌الملل، نوبت‌دهی سفارت و تحویل دیجیتال ویزا.',
                       en: 'Specialized visa processing for 120+ destinations. Expert document pre-check, embassy scheduling, and digital e-visa issuance.',
-                      ar: 'Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¹ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â© ÃƒËœÃ‚ÂªÃƒËœÃ‚Â£ÃƒËœÃ‚Â´Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â£Ãƒâ„¢Ã†â€™ÃƒËœÃ‚Â«ÃƒËœÃ‚Â± Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â  Ãƒâ„¢Ã‚Â¡Ãƒâ„¢Ã‚Â¢Ãƒâ„¢Ã‚Â  Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¬Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â© ÃƒËœÃ‚Â¹ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â© Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¹ ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Å¡Ãƒâ„¢Ã…Â Ãƒâ„¢Ã¢â‚¬Å¡ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â«ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¦Ãƒâ„¢Ã¢â‚¬Å¡ Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â­ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â² Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¹Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â¯ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â³Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª.',
-                      zh: 'ÃƒÂ¨Ã‚Â¦Ã¢â‚¬Â ÃƒÂ§Ã¢â‚¬ÂºÃ¢â‚¬â€œÃƒÂ¥Ã¢â‚¬Â¦Ã‚Â¨ÃƒÂ§Ã‚ÂÃ†â€™120ÃƒÂ¥Ã‚Â¤Ã…Â¡ÃƒÂ¤Ã‚Â¸Ã‚ÂªÃƒÂ§Ã¢â‚¬ÂºÃ‚Â®ÃƒÂ§Ã…Â¡Ã¢â‚¬Å¾ÃƒÂ¥Ã…â€œÃ‚Â°ÃƒÂ§Ã…Â¡Ã¢â‚¬Å¾ÃƒÂ¤Ã‚Â¸Ã¢â‚¬Å“ÃƒÂ¤Ã‚Â¸Ã…Â¡ÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¨Ã‚Â¯Ã‚ÂÃƒÂ¤Ã‚Â»Ã‚Â£ÃƒÂ¥Ã…Â Ã…Â¾ÃƒÂ¦Ã…â€œÃ‚ÂÃƒÂ¥Ã…Â Ã‚Â¡ÃƒÂ¯Ã‚Â¼Ã…â€™ÃƒÂ¦Ã‚ÂÃ‚ÂÃƒÂ¤Ã‚Â¾Ã¢â‚¬ÂºÃƒÂ¦Ã‚ÂÃ†â€™ÃƒÂ¥Ã‚Â¨Ã‚ÂÃƒÂ¦Ã¢â‚¬â€œÃ¢â‚¬Â¡ÃƒÂ¤Ã‚Â»Ã‚Â¶ÃƒÂ©Ã‚Â¢Ã¢â‚¬Å¾ÃƒÂ¥Ã‚Â®Ã‚Â¡ÃƒÂ£Ã¢â€šÂ¬Ã‚ÂÃƒÂ¤Ã‚Â½Ã‚Â¿ÃƒÂ©Ã‚Â¦Ã¢â‚¬Â ÃƒÂ©Ã‚Â¢Ã¢â‚¬Å¾ÃƒÂ§Ã‚ÂºÃ‚Â¦ÃƒÂ¥Ã‚ÂÃ…Â ÃƒÂ§Ã¢â‚¬ÂÃ‚ÂµÃƒÂ¥Ã‚Â­Ã‚ÂÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¨Ã‚Â¯Ã‚ÂÃƒÂ¥Ã‚Â¿Ã‚Â«ÃƒÂ©Ã¢â€šÂ¬Ã…Â¸ÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¥Ã‚ÂÃ¢â‚¬ËœÃƒÂ£Ã¢â€šÂ¬Ã¢â‚¬Å¡',
+                      ar: 'معالجة تأشيرات لأكثر من ۱۲۰ وجهة عالمية مع تدقيق الوثائق وحجز مواعيد السفارات.',
+                      zh: '覆盖全球120多个目的地的专业签证代办服务，提供权威文件预审、使馆预约及电子签证快速签发。',
                     ),
                     style: TextStyle(
                       fontSize: 12.sp,
@@ -120,72 +137,85 @@ class VisaIntroScreen extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: AppSpacing.xl.h),
 
             // Visa Types
             Text(
               l10nPick(
                 context,
-                fa: 'ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¹ Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â®ÃƒËœÃ‚Â°',
+                fa: 'انواع ویزاهای قابل اخذ',
                 en: 'Available Visa Categories',
-                ar: 'ÃƒËœÃ‚Â£Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¹ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚ÂªÃƒËœÃ‚Â£ÃƒËœÃ‚Â´Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚ÂªÃƒËœÃ‚Â§ÃƒËœÃ‚Â­ÃƒËœÃ‚Â©',
-                zh: 'ÃƒÂ¥Ã‚ÂÃ‚Â¯ÃƒÂ§Ã¢â‚¬ÂÃ‚Â³ÃƒÂ¨Ã‚Â¯Ã‚Â·ÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¨Ã‚Â¯Ã‚ÂÃƒÂ§Ã‚Â±Ã‚Â»ÃƒÂ¥Ã‹â€ Ã‚Â«',
+                ar: 'أنواع التأشيرات المتاحة',
+                zh: '可申请签证类别',
               ),
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: AppSpacing.sm.h),
             _buildTypeCard(
               context,
+              isDark: isDark,
               icon: Icons.beach_access_rounded,
-              titleFa: 'Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚ÂªÃƒâ„¢Ã‹â€ ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€  ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â´ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ (Tourist eVisa)',
+              titleFa: 'ویزای توریستی و گردشگری (Tourist eVisa)',
               titleEn: 'Tourist eVisa',
-              descFa: 'ÃƒËœÃ‚ÂµÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± ÃƒËœÃ‚Â³ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¹ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚ÂªÃƒËœÃ‚Â±Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ÃƒÅ¡Ã‚Â©Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Â  Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â§ÃƒËœÃ‚Â² ÃƒËœÃ‚Â¨Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â³ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ Ãƒâ„¢Ã‚ÂÃƒâ€ºÃ…â€™ÃƒËœÃ‚Â²Ãƒâ€ºÃ…â€™ÃƒÅ¡Ã‚Â©Ãƒâ€ºÃ…â€™ ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â°ÃƒËœÃ‚Â±Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚Â§ÃƒËœÃ‚ÂµÃƒËœÃ‚Â¯ Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚ÂªÃƒËœÃ‚Â®ÃƒËœÃ‚Â¨.',
+              descFa: 'صدور سریع الکترونیکی بدون نیاز به ارسال فیزیکی گذرنامه برای مقاصد منتخب.',
               descEn: 'Instant electronic issuance with zero passport mailing for qualifying countries.',
             ),
             _buildTypeCard(
               context,
+              isDark: isDark,
               icon: Icons.business_center_rounded,
-              titleFa: 'Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¬ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ÃƒËœÃ‚Â²ÃƒËœÃ‚Â±ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ (Business Visa)',
+              titleFa: 'ویزای تجاری و بازرگانی (Business Visa)',
               titleEn: 'Business & Commercial Visa',
-              descFa: 'ÃƒËœÃ‚Â§ÃƒËœÃ‚Â®ÃƒËœÃ‚Â° ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â¹Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™ÃƒËœÃ…â€™ Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â´ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¬Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â³ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ÃƒËœÃ‚Â²ÃƒËœÃ‚Â±ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¨Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ€ºÃ…â€™.',
+              descFa: 'اخذ دعوت‌نامه رسمی، ویزای نمایشگاهی و جلسات بازرگانی بین‌المللی.',
               descEn: 'Official business invitation letters, trade expo entry, and corporate meetings.',
             ),
             _buildTypeCard(
               context,
+              isDark: isDark,
               icon: Icons.school_rounded,
-              titleFa: 'Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚ÂªÃƒËœÃ‚Â­ÃƒËœÃ‚ÂµÃƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¬Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™Ãƒâ€ºÃ…â€™ (Student Visa)',
+              titleFa: 'ویزای تحصیلی و دانشجویی (Student Visa)',
               titleEn: 'Study & Student Visa',
-              descFa: 'Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â´ÃƒËœÃ‚Â§Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â±Ãƒâ„¢Ã¢â‚¬Â¡ Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â°Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â±ÃƒËœÃ‚Â´ ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â´ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ€ºÃ…â€™ÃƒËœÃ…â€™ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¹Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦ ÃƒËœÃ‚Â³Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Âª Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â±ÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚ÂªÃƒâ„¢Ã¢â‚¬Â¦ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â  Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚ÂªÃƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¶Ãƒâ€ºÃ…â€™.',
+              descFa: 'مشاوره پذیرش دانشگاهی، استعلام سفارت و بررسی تمکن مالی متقاضی.',
               descEn: 'University admission advisory, embassy interview prep, and financial proofing.',
             ),
             _buildTypeCard(
               context,
+              isDark: isDark,
               icon: Icons.work_outline_rounded,
-              titleFa: 'Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â¢Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â± (Work Permit)',
+              titleFa: 'ویزای کاری و جاب‌آفر (Work Permit)',
               titleEn: 'Work & Employment Permit',
-              descFa: 'ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â²Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â®ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â®ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¬Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€  Ãƒâ„¢Ã‚Â¾Ãƒâ€ºÃ…â€™ÃƒÅ¡Ã‚Â¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚ÂªÃƒËœÃ‚Â£Ãƒâ€ºÃ…â€™Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±Ãƒâ„¢Ã¢â‚¬Â¡ Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â±ÃƒËœÃ‚Âª ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚ÂµÃƒËœÃ‚Â¯.',
+              descFa: 'ارزیابی قراردادهای استخدامی خارجی و پیگیری تأییدیه اداره مهاجرت کشور مقصد.',
               descEn: 'Overseas employment contract evaluation and destination immigration approval.',
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: AppSpacing.xl.h),
 
             // Steps
             Text(
               l10nPick(
                 context,
-                fa: 'Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â­Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â«ÃƒËœÃ‚Â¨ÃƒËœÃ‚Âª Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Âª Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§',
+                fa: 'مراحل ثبت و دریافت ویزا',
                 en: 'Application Workflow',
-                ar: 'ÃƒËœÃ‚Â®ÃƒËœÃ‚Â·Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â®ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¬ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚ÂªÃƒËœÃ‚Â£ÃƒËœÃ‚Â´Ãƒâ„¢Ã…Â ÃƒËœÃ‚Â±ÃƒËœÃ‚Â©',
-                zh: 'ÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¨Ã‚Â¯Ã‚ÂÃƒÂ¥Ã…Â Ã…Â¾ÃƒÂ§Ã‚ÂÃ¢â‚¬Â ÃƒÂ¦Ã‚ÂµÃ‚ÂÃƒÂ§Ã‚Â¨Ã¢â‚¬Â¹',
+                ar: 'خطوات استخراج التأشيرة',
+                zh: '签证办理流程',
               ),
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-            SizedBox(height: 10.h),
-            _buildStepRow(context, step: 'Ãƒâ€ºÃ‚Â±', titleFa: 'ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚ÂªÃƒËœÃ‚Â®ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨ ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚ÂµÃƒËœÃ‚Â¯ Ãƒâ„¢Ã‹â€  Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¹ Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²ÃƒËœÃ‚Â§', titleEn: 'Select Destination & Type'),
-            _buildStepRow(context, step: 'Ãƒâ€ºÃ‚Â²', titleFa: 'ÃƒËœÃ‚ÂªÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Å¾ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â´ÃƒËœÃ‚Â®ÃƒËœÃ‚ÂµÃƒËœÃ‚Â§ÃƒËœÃ‚Âª Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â³ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â± Ãƒâ„¢Ã‹â€  Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³Ãƒâ„¢Ã‚Â¾Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â±ÃƒËœÃ‚Âª', titleEn: 'Enter Passenger Details'),
-            _buildStepRow(context, step: 'Ãƒâ€ºÃ‚Â³', titleFa: 'ÃƒËœÃ‚Â¢Ãƒâ„¢Ã‚Â¾Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒÅ¡Ã‚Â© Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚ÂªÃƒâ€ºÃ…â€™ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚Â¹ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â³ Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ€ºÃ…â€™', titleEn: 'Upload Passport & Documents'),
-            _buildStepRow(context, step: 'Ãƒâ€ºÃ‚Â´', titleFa: 'Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ÃƒËœÃ‚Â®ÃƒËœÃ‚Âª ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â  Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â²Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â³Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â² Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Âª', titleEn: 'Secure Wallet Payment'),
-            _buildStepRow(context, step: 'Ãƒâ€ºÃ‚Âµ', titleFa: 'ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â±ÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™ ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â´Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ Ãƒâ„¢Ã‹â€  ÃƒËœÃ‚ÂµÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â± Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ€ºÃ…â€™ e-Visa', titleEn: 'Consultant Audit & e-Visa Issue'),
+            SizedBox(height: AppSpacing.sm.h),
+            _buildStepRow(context, isDark: isDark, step: '۱', titleFa: 'انتخاب کشور مقصد و نوع ویزا', titleEn: 'Select Destination & Type'),
+            _buildStepRow(context, isDark: isDark, step: '۲', titleFa: 'تکمیل مشخصات مسافر و پاسپورت', titleEn: 'Enter Passenger Details'),
+            _buildStepRow(context, isDark: isDark, step: '۳', titleFa: 'آپلود مدارک هویتی و عکس پرسنلی', titleEn: 'Upload Passport & Documents'),
+            _buildStepRow(context, isDark: isDark, step: '۴', titleFa: 'پرداخت امن هزینه کنسولی از والت', titleEn: 'Secure Wallet Payment'),
+            _buildStepRow(context, isDark: isDark, step: '۵', titleFa: 'بررسی کارشناس و صدور نهایی e-Visa', titleEn: 'Consultant Audit & e-Visa Issue'),
+            SizedBox(height: AppSpacing.xxxl.h),
           ],
         ),
       ),
@@ -194,6 +224,7 @@ class VisaIntroScreen extends StatelessWidget {
 
   Widget _buildTypeCard(
     BuildContext context, {
+    required bool isDark,
     required IconData icon,
     required String titleFa,
     required String titleEn,
@@ -201,37 +232,49 @@ class VisaIntroScreen extends StatelessWidget {
     required String descEn,
   }) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.r),
+      margin: EdgeInsets.only(bottom: AppSpacing.sm.h),
+      padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.lightBorder),
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(8.r),
+            padding: EdgeInsets.all(AppSpacing.sm.r),
             decoration: BoxDecoration(
-              color: AppColors.lightSecondary.withValues(alpha: 0.1),
+              color: (isDark ? AppColors.darkPrimary : AppColors.lightSecondary).withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: AppColors.lightSecondary, size: 20.sp),
+            child: Icon(
+              icon,
+              color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+              size: AppSpacing.iconSm.r,
+            ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: AppSpacing.md.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   l10nPick(context, fa: titleFa, en: titleEn),
-                  style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800),
+                  style: TextStyle(
+                    fontSize: 12.5.sp,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
                 ),
                 SizedBox(height: 3.h),
                 Text(
                   l10nPick(context, fa: descFa, en: descEn),
-                  style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary, height: 1.4),
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
@@ -241,7 +284,13 @@ class VisaIntroScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStepRow(BuildContext context, {required String step, required String titleFa, required String titleEn}) {
+  Widget _buildStepRow(
+    BuildContext context, {
+    required bool isDark,
+    required String step,
+    required String titleFa,
+    required String titleEn,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
@@ -250,16 +299,29 @@ class VisaIntroScreen extends StatelessWidget {
             width: 24.w,
             height: 24.w,
             alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.lightSecondary,
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
               shape: BoxShape.circle,
             ),
-            child: Text(step, style: TextStyle(color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.bold)),
+            child: Text(
+              step,
+              style: TextStyle(
+                color: isDark ? AppColors.deepBlack : AppColors.white,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
           ),
-          SizedBox(width: 10.w),
-          Text(
-            l10nPick(context, fa: titleFa, en: titleEn),
-            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+          SizedBox(width: AppSpacing.md.w),
+          Expanded(
+            child: Text(
+              l10nPick(context, fa: titleFa, en: titleEn),
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
+            ),
           ),
         ],
       ),

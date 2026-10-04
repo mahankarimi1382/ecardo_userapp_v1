@@ -81,22 +81,21 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     final stages = _generateStages(checkInDate, isRtl);
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: TravelTheme.border.withValues(alpha: 0.8),
+          color: borderColor.withValues(alpha: 0.8),
           width: 1.w,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10.r,
-            offset: Offset(0, 3.h),
-          ),
-        ],
+        boxShadow: TravelTheme.shadowFor(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +129,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
-                          color: TravelTheme.ink,
+                          color: textPrimary,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -140,7 +139,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                             : 'Instant eCardo Wallet deposit with zero fees',
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: TravelTheme.muted,
+                          color: textSecondary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -152,7 +151,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                     icon: Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 14.sp,
-                      color: TravelTheme.purple,
+                      color: brandColor,
                     ),
                     onPressed: onTap ??
                         () => showCancellationPolicyTimelineModal(
@@ -172,7 +171,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
               children: [
                 for (var i = 0; i < stages.length; i++) ...[
                   Expanded(
-                    child: _buildStagePreviewPill(stages[i], isRtl),
+                    child: _buildStagePreviewPill(context, stages[i], isRtl),
                   ),
                   if (i < stages.length - 1)
                     Padding(
@@ -182,7 +181,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                             ? Icons.chevron_left_rounded
                             : Icons.chevron_right_rounded,
                         size: 16.sp,
-                        color: TravelTheme.muted.withValues(alpha: 0.5),
+                        color: textSecondary.withValues(alpha: 0.5),
                       ),
                     ),
                 ],
@@ -195,10 +194,10 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
             margin: EdgeInsets.all(16.r),
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: TravelTheme.purple.withValues(alpha: 0.05),
+              color: brandColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: TravelTheme.purple.withValues(alpha: 0.15),
+                color: brandColor.withValues(alpha: 0.15),
               ),
             ),
             child: Row(
@@ -206,7 +205,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                 Icon(
                   Icons.account_balance_wallet_rounded,
                   size: 18.sp,
-                  color: TravelTheme.purple,
+                  color: brandColor,
                 ),
                 SizedBox(width: 10.w),
                 Expanded(
@@ -216,7 +215,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                         : 'Refunds deposit directly to your eCardo Wallet within 1-24 hours.',
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: TravelTheme.ink,
+                      color: textPrimary,
                       fontWeight: FontWeight.w600,
                       height: 1.3,
                     ),
@@ -239,7 +238,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w800,
-                      color: TravelTheme.purple,
+                      color: brandColor,
                     ),
                   ),
                 ),
@@ -251,11 +250,12 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStagePreviewPill(CancellationPolicyStage stage, bool isRtl) {
+  Widget _buildStagePreviewPill(BuildContext context, CancellationPolicyStage stage, bool isRtl) {
+    final isDark = TravelTheme.isDark(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: stage.containerColor,
+        color: isDark ? stage.primaryColor.withValues(alpha: 0.18) : stage.containerColor,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(
           color: stage.primaryColor.withValues(alpha: 0.3),
@@ -292,7 +292,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.w600,
-              color: TravelTheme.ink,
+              color: TravelTheme.textPrimaryFor(context),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -319,13 +319,18 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
   Widget build(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     final stages = _generateStages(checkInDate, isRtl);
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
 
     return Container(
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.88,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: Column(
@@ -336,7 +341,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
             width: 44.w,
             height: 4.h,
             decoration: BoxDecoration(
-              color: TravelTheme.border,
+              color: borderColor,
               borderRadius: BorderRadius.circular(4.r),
             ),
           ),
@@ -350,13 +355,13 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
-                    color: TravelTheme.purple.withValues(alpha: 0.1),
+                    color: brandColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
                     Icons.timeline_rounded,
                     size: 20.sp,
-                    color: TravelTheme.purple,
+                    color: brandColor,
                   ),
                 ),
                 SizedBox(width: 10.w),
@@ -368,7 +373,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w900,
-                      color: TravelTheme.ink,
+                      color: textPrimary,
                     ),
                   ),
                 ),
@@ -380,7 +385,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
             ),
           ),
 
-          Divider(color: TravelTheme.border, height: 16.h),
+          Divider(color: borderColor, height: 16.h),
 
           // Scrollable Content
           Expanded(
@@ -391,10 +396,12 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
-                    color: TravelTheme.background,
+                    color: TravelTheme.isDark(context)
+                        ? AppColors.darkSurfaceVariant
+                        : TravelTheme.backgroundFor(context),
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
-                      color: TravelTheme.border.withValues(alpha: 0.7),
+                      color: borderColor.withValues(alpha: 0.7),
                     ),
                   ),
                   child: Row(
@@ -402,7 +409,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                       Icon(
                         Icons.info_outline_rounded,
                         size: 20.sp,
-                        color: TravelTheme.purple,
+                        color: brandColor,
                       ),
                       SizedBox(width: 10.w),
                       Expanded(
@@ -412,7 +419,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                               : 'Cancellation policy is calculated relative to official hotel check-in time. All times in destination local time.',
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: TravelTheme.muted,
+                            color: textSecondary,
                             fontWeight: FontWeight.w500,
                             height: 1.35,
                           ),
@@ -430,13 +437,14 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w800,
-                    color: TravelTheme.ink,
+                    color: textPrimary,
                   ),
                 ),
                 SizedBox(height: 12.h),
 
                 for (var index = 0; index < stages.length; index++) ...[
                   _buildTimelineStageNode(
+                    context: context,
                     stage: stages[index],
                     isLast: index == stages.length - 1,
                     isRtl: isRtl,
@@ -446,7 +454,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 SizedBox(height: 20.h),
 
                 // Plain-Language Wallet Deposit Rules Section
-                _buildWalletRulesSection(isRtl),
+                _buildWalletRulesSection(context, isRtl),
 
                 SizedBox(height: 16.h),
 
@@ -456,10 +464,10 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
-                      color: TravelTheme.purple.withValues(alpha: 0.04),
+                      color: brandColor.withValues(alpha: 0.04),
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: TravelTheme.purple.withValues(alpha: 0.2),
+                        color: brandColor.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Column(
@@ -470,7 +478,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w700,
-                            color: TravelTheme.purple,
+                            color: brandColor,
                           ),
                         ),
                         SizedBox(height: 4.h),
@@ -478,7 +486,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                           customPolicySummary!,
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: TravelTheme.ink,
+                            color: textPrimary,
                           ),
                         ),
                       ],
@@ -499,8 +507,8 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: TravelTheme.purple,
-                    foregroundColor: Colors.white,
+                    backgroundColor: brandColor,
+                    foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14.r),
                     ),
@@ -523,10 +531,17 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
   }
 
   Widget _buildTimelineStageNode({
+    required BuildContext context,
     required CancellationPolicyStage stage,
     required bool isLast,
     required bool isRtl,
   }) {
+    final isDark = TravelTheme.isDark(context);
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -539,7 +554,9 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 width: 32.r,
                 height: 32.r,
                 decoration: BoxDecoration(
-                  color: stage.containerColor,
+                  color: isDark
+                      ? stage.primaryColor.withValues(alpha: 0.18)
+                      : stage.containerColor,
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: stage.primaryColor,
@@ -561,7 +578,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                     width: 2.w,
                     margin: EdgeInsets.symmetric(vertical: 4.h),
                     decoration: BoxDecoration(
-                      color: TravelTheme.border,
+                      color: borderColor,
                       borderRadius: BorderRadius.circular(1.r),
                     ),
                   ),
@@ -577,19 +594,13 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
               margin: EdgeInsets.only(bottom: isLast ? 0 : 16.h),
               padding: EdgeInsets.all(14.r),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? AppColors.darkSurfaceVariant : cardBg,
                 borderRadius: BorderRadius.circular(14.r),
                 border: Border.all(
                   color: stage.primaryColor.withValues(alpha: 0.25),
                   width: 1.w,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.02),
-                    blurRadius: 6.r,
-                    offset: Offset(0, 2.h),
-                  ),
-                ],
+                boxShadow: TravelTheme.shadowFor(context),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -603,7 +614,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
-                            color: TravelTheme.ink,
+                            color: textPrimary,
                           ),
                         ),
                       ),
@@ -613,7 +624,9 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                           vertical: 3.h,
                         ),
                         decoration: BoxDecoration(
-                          color: stage.containerColor,
+                          color: isDark
+                              ? stage.primaryColor.withValues(alpha: 0.18)
+                              : stage.containerColor,
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                         child: Text(
@@ -636,7 +649,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                       Icon(
                         Icons.access_time_rounded,
                         size: 13.sp,
-                        color: TravelTheme.muted,
+                        color: textSecondary,
                       ),
                       SizedBox(width: 5.w),
                       Expanded(
@@ -659,7 +672,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                     stage.localizedDetails(isRtl),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: TravelTheme.muted,
+                      color: textSecondary,
                       height: 1.4,
                       fontWeight: FontWeight.w500,
                     ),
@@ -673,14 +686,19 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
     );
   }
 
-  Widget _buildWalletRulesSection(bool isRtl) {
+  Widget _buildWalletRulesSection(BuildContext context, bool isRtl) {
+    final isDark = TravelTheme.isDark(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final borderColor = TravelTheme.borderFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
+
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.infoContainer.withValues(alpha: 0.5),
+        color: isDark ? AppColors.darkSurfaceVariant : AppColors.infoContainer.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: TravelTheme.blue.withValues(alpha: 0.25),
+          color: isDark ? borderColor : brandColor.withValues(alpha: 0.25),
         ),
       ),
       child: Column(
@@ -691,13 +709,13 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(6.r),
                 decoration: BoxDecoration(
-                  color: TravelTheme.blue.withValues(alpha: 0.15),
+                  color: brandColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.account_balance_wallet_rounded,
                   size: 18.sp,
-                  color: TravelTheme.blue,
+                  color: brandColor,
                 ),
               ),
               SizedBox(width: 8.w),
@@ -708,7 +726,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w800,
-                  color: TravelTheme.ink,
+                  color: textPrimary,
                 ),
               ),
             ],
@@ -716,6 +734,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
           SizedBox(height: 12.h),
 
           _buildRuleItem(
+            context: context,
             icon: Icons.flash_on_rounded,
             title: isRtl ? 'واریز مستقیم و آنی' : 'Fast Direct Credit',
             description: isRtl
@@ -726,6 +745,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
           SizedBox(height: 10.h),
 
           _buildRuleItem(
+            context: context,
             icon: Icons.money_off_rounded,
             title: isRtl ? 'بدون کارمزد اضافه' : 'Zero Processing Fees',
             description: isRtl
@@ -736,6 +756,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
           SizedBox(height: 10.h),
 
           _buildRuleItem(
+            context: context,
             icon: Icons.sync_alt_rounded,
             title: isRtl ? 'قابلیت استفاده مجدد یا برداشت' : 'Reusable or Withdrawable',
             description: isRtl
@@ -749,6 +770,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
   }
 
   Widget _buildRuleItem({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String description,
@@ -760,7 +782,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
         Icon(
           icon,
           size: 16.sp,
-          color: TravelTheme.blue,
+          color: TravelTheme.primaryFor(context),
         ),
         SizedBox(width: 8.w),
         Expanded(
@@ -772,7 +794,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w700,
-                  color: TravelTheme.ink,
+                  color: TravelTheme.textPrimaryFor(context),
                 ),
               ),
               SizedBox(height: 2.h),
@@ -780,7 +802,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                 description,
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: TravelTheme.muted,
+                  color: TravelTheme.textSecondaryFor(context),
                   height: 1.35,
                 ),
               ),

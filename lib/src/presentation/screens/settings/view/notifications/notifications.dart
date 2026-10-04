@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -11,14 +12,19 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/responsive.dart';
 import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/notification_controller.dart';
-import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/model/notifications_model.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/settings_screen.dart';
 import 'package:ecardo_user/src/presentation/widgets/notification_dynamic_icon.dart';
 
 enum _NotifFilter { all, unread, financial, system }
+
+enum _DateGroup { today, yesterday, thisWeek, older }
 
 class Notifications extends StatefulWidget {
   const Notifications({super.key});
@@ -69,6 +75,63 @@ class _NotificationsState extends State<Notifications>
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  _DateGroup _classifyDate(DateTime dt) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final target = DateTime(dt.year, dt.month, dt.day);
+    final diffDays = today.difference(target).inDays;
+
+    if (diffDays == 0) return _DateGroup.today;
+    if (diffDays == 1) return _DateGroup.yesterday;
+    if (diffDays < 7) return _DateGroup.thisWeek;
+    return _DateGroup.older;
+  }
+
+  String _dateGroupLabel(BuildContext context, _DateGroup group) {
+    switch (group) {
+      case _DateGroup.today:
+        return l10nPick(
+          context,
+          en: 'Today',
+          fa: 'امروز',
+          ar: 'اليوم',
+          tr: 'Bugün',
+          ru: 'Сегодня',
+          zh: '今天',
+        );
+      case _DateGroup.yesterday:
+        return l10nPick(
+          context,
+          en: 'Yesterday',
+          fa: 'دیروز',
+          ar: 'أمس',
+          tr: 'Dün',
+          ru: 'Вчера',
+          zh: '昨天',
+        );
+      case _DateGroup.thisWeek:
+        return l10nPick(
+          context,
+          en: 'Earlier this week',
+          fa: 'اوایل این هفته',
+          ar: 'خلال هذا الأسبوع',
+          tr: 'Bu hafta',
+          ru: 'На этой неделе',
+          zh: '本周更早',
+        );
+      case _DateGroup.older:
+        return l10nPick(
+          context,
+          en: 'Older',
+          fa: 'پیشین',
+          ar: 'أقدم',
+          tr: 'Daha eski',
+          ru: 'Ранее',
+          zh: '较早前',
+        );
+    }
   }
 
   String _relativeTime(BuildContext context, DateTime at) {
@@ -122,22 +185,41 @@ class _NotificationsState extends State<Notifications>
 
   IconData _typeIcon(String type) => NotificationRouter.typeIcon(type);
 
-  Widget _chevronIcon(BuildContext context) {
+  Widget _chevronIcon(BuildContext context, bool isDark) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Icon(
       isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
       size: 20,
-      color: AppColors.lightTextPrimary.withValues(alpha: 0.35),
+      color: SettingsIconTokens.chevronColor(isDark: isDark),
     );
   }
 
-  void _handleNotificationTap(String title, String message, String type) {
+  void _handleNotificationTap(String title, String message, String type,
+      {String? link, String? payload}) {
+    HapticFeedback.lightImpact();
     NotificationRouter.route(
       context,
       title: title,
       message: message,
       type: type,
+      link: link,
+      payload: payload,
     );
+  }
+
+  Future<void> _markAllAsRead(NotificationHistoryService? history) async {
+    HapticFeedback.mediumImpact();
+    final toastMsg = l10nPick(
+      context,
+      en: 'All notifications marked as read',
+      fa: 'همه اعلان‌ها به عنوان خوانده‌شده علامت‌گذاری شدند',
+    );
+    await controller.markAsReadNotification();
+    await history?.markAllRead();
+    if (Get.isRegistered<AppBadgeService>()) {
+      await Get.find<AppBadgeService>().clear();
+    }
+    ToastHelper().showSuccessToast(toastMsg);
   }
 
   @override
@@ -147,66 +229,92 @@ class _NotificationsState extends State<Notifications>
     final history = Get.isRegistered<NotificationHistoryService>()
         ? Get.find<NotificationHistoryService>()
         : null;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: const CommonDefaultAppBar(),
       body: Stack(
         children: [
           Column(
             children: [
-              const SizedBox(height: 12),
+              SizedBox(height: AppSpacing.cardGap),
               CommonAppBar(
                 title: localization.notificationsScreenTitle,
                 rightSideWidget: Padding(
                   padding: EdgeInsetsDirectional.only(end: pad),
-                  child: CommonButton(
-                    onPressed: () async {
-                      await controller.markAsReadNotification();
-                      await history?.markAllRead();
-                      if (Get.isRegistered<AppBadgeService>()) {
-                        await Get.find<AppBadgeService>().clear();
-                      }
-                    },
-                    width: 100,
-                    height: 36,
-                    fontSize: 12,
-                    text: localization.notificationsMarkAllReadButton,
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        side: BorderSide(
+                          color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                              .withValues(alpha: 0.35),
+                        ),
+                      ),
+                    ),
+                    onPressed: () => _markAllAsRead(history),
+                    icon: const Icon(Icons.done_all_rounded, size: 16),
+                    label: Text(
+                      localization.notificationsMarkAllReadButton,
+                      style: AppTextStyles.labelSmall.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSpacing.sm),
+              // Category filter pills
               SizedBox(
-                height: 40,
+                height: 42,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: pad),
                   children: [
-                    _chip(l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', tr: 'Tümü', ru: 'Все', zh: '全部'), _NotifFilter.all),
-                    _chip(l10nPick(context, en: 'Unread', fa: 'خوانده‌نشده', ar: 'غير مقروءة', tr: 'Okunmamış', ru: 'Непрочитанные', zh: '未读'), _NotifFilter.unread),
-                    _chip(l10nPick(context, en: 'Financial', fa: 'مالی', ar: 'مالي', tr: 'Finansal', ru: 'Финансовые', zh: '财务'), _NotifFilter.financial),
-                    _chip(l10nPick(context, en: 'System', fa: 'سیستمی', ar: 'النظام', tr: 'Sistem', ru: 'Системные', zh: '系统'), _NotifFilter.system),
+                    _chip(
+                      l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', tr: 'Tümü', ru: 'Все', zh: '全部'),
+                      _NotifFilter.all,
+                      isDark,
+                    ),
+                    _chip(
+                      l10nPick(context, en: 'Unread', fa: 'خوانده‌نشده', ar: 'غير مقروءة', tr: 'Okunmamış', ru: 'Непрочитанные', zh: '未读'),
+                      _NotifFilter.unread,
+                      isDark,
+                    ),
+                    _chip(
+                      l10nPick(context, en: 'Financial', fa: 'مالی', ar: 'مالي', tr: 'Finansal', ru: 'Финансовые', zh: '财务'),
+                      _NotifFilter.financial,
+                      isDark,
+                    ),
+                    _chip(
+                      l10nPick(context, en: 'System', fa: 'سیستمی', ar: 'النظام', tr: 'Sistem', ru: 'Системные', zh: '系统'),
+                      _NotifFilter.system,
+                      isDark,
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: RefreshIndicator(
-                  color: AppColors.lightPrimary,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                   onRefresh: refreshData,
                   child: Obx(() {
-                    // Touch history for reactivity
                     final localItems = history?.items.toList() ?? const [];
                     final server = controller
                             .notificationModel.value.data?.notifications ??
                         const [];
 
-                    final showLocal = _filter != _NotifFilter.all ||
-                        localItems.isNotEmpty;
-
                     if (controller.isLoading.value &&
                         server.isEmpty &&
                         localItems.isEmpty) {
-                      return const Center(child: CommonLoading());
+                      return _buildLoadingSkeleton(isDark);
                     }
 
                     final filteredLocal = localItems.where((e) {
@@ -237,39 +345,54 @@ class _NotificationsState extends State<Notifications>
                       return ListView(
                         physics: const AlwaysScrollableScrollPhysics(),
                         children: [
-                          EmptyView(
-                            icon: Icons.notifications_none_rounded,
-                            title: l10nPick(
-                              context,
-                              en: 'No notifications yet',
-                              fa: 'هنوز اعلانی نداری',
-                              ar: 'لا توجد إشعارات بعد',
-                              tr: 'Henüz bildirim yok',
-                              ru: 'Пока нет уведомлений',
-                              zh: '暂无通知',
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40),
+                            child: EcardoEmptyState(
+                              animateGlow: false,
+                              iconData: Icons.notifications_none_rounded,
+                              title: l10nPick(
+                                context,
+                                en: 'No notifications yet',
+                                fa: 'هنوز اعلانی نداری',
+                                ar: 'لا توجد إشعارات بعد',
+                                tr: 'Henüz bildirim yok',
+                                ru: 'Пока нет уведомлений',
+                                zh: '暂无通知',
+                              ),
+                              description: l10nPick(
+                                context,
+                                en: 'Important financial updates and system notices will appear here.',
+                                fa: 'اعلان‌های مهم مالی و پیام‌های سیستم اینجا نمایش داده می‌شوند.',
+                                ar: 'ستظهر الإشعارات المهمة هنا.',
+                                tr: 'Önemli bildirimler burada görünecektir.',
+                                ru: 'Важные уведомления появятся здесь.',
+                                zh: '重要通知将在此显示。',
+                              ),
+                              primaryActionLabel: l10nPick(
+                                context,
+                                en: 'Refresh',
+                                fa: 'بروزرسانی',
+                                ar: 'تحديث',
+                                tr: 'Yenile',
+                                ru: 'Обновить',
+                                zh: '刷新',
+                              ),
+                              onPrimaryAction: refreshData,
                             ),
-                            subtitle: l10nPick(
-                              context,
-                              en: 'Important notifications will appear here.',
-                              fa: 'اعلان‌های مهم اینجا نشون داده میشن.',
-                              ar: 'ستظهر الإشعارات المهمة هنا.',
-                              tr: 'Önemli bildirimler burada görünecektir.',
-                              ru: 'Важные уведомления появятся здесь.',
-                              zh: '重要通知将在此显示。',
-                            ),
-                            ctaLabel: l10nPick(
-                              context,
-                              en: 'Refresh',
-                              fa: 'بروزرسانی',
-                              ar: 'تحديث',
-                              tr: 'Yenile',
-                              ru: 'Обновить',
-                              zh: '刷新',
-                            ),
-                            onCta: refreshData,
                           ),
                         ],
                       );
+                    }
+
+                    // Group Server notifications by date
+                    final Map<_DateGroup, List<Notificationss>> groupedServer = {};
+                    for (final n in filteredServer) {
+                      DateTime dt = DateTime.now();
+                      try {
+                        if (n.createdAt != null) dt = DateTime.parse(n.createdAt!);
+                      } catch (_) {}
+                      final group = _classifyDate(dt);
+                      groupedServer.putIfAbsent(group, () => []).add(n);
                     }
 
                     return ListView(
@@ -277,179 +400,42 @@ class _NotificationsState extends State<Notifications>
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: EdgeInsets.symmetric(horizontal: pad),
                       children: [
-                        if (showLocal && filteredLocal.isNotEmpty) ...[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8, bottom: 6),
-                            child: Text(
-                              l10nPick(
-                                context,
-                                en: 'Recent notifications (device)',
-                                fa: 'اعلان‌های اخیر (دستگاه)',
-                                ar: 'الإشعارات الأخيرة (الجهاز)',
-                                tr: 'Son bildirimler (cihaz)',
-                                ru: 'Недавние уведомления (устройство)',
-                                zh: '最近通知 (设备)',
-                              ),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13,
-                              ),
+                        // Local/Device notifications section if present
+                        if (filteredLocal.isNotEmpty) ...[
+                          _buildSectionHeader(
+                            context,
+                            title: l10nPick(
+                              context,
+                              en: 'Recent device alerts',
+                              fa: 'اعلان‌های اخیر دستگاه',
+                              ar: 'تنبيهات الجهاز الأخيرة',
+                              zh: '设备即时通知',
                             ),
+                            count: filteredLocal.length,
+                            isDark: isDark,
                           ),
                           ...filteredLocal.map((item) {
-                            return _localTile(item, history);
+                            return _localTile(item, history, isDark);
                           }),
                         ],
+
+                        // Server notifications grouped chronologically
                         if (showServer && filteredServer.isNotEmpty) ...[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 12, bottom: 6),
-                            child: Text(
-                              l10nPick(
+                          for (final group in _DateGroup.values)
+                            if (groupedServer[group] != null &&
+                                groupedServer[group]!.isNotEmpty) ...[
+                              _buildSectionHeader(
                                 context,
-                                en: 'Account notifications',
-                                fa: 'اعلان‌های حساب',
-                                ar: 'إشعارات الحساب',
-                                tr: 'Hesap bildirimleri',
-                                ru: 'Уведомления аккаунта',
-                                zh: '账户通知',
+                                title: _dateGroupLabel(context, group),
+                                count: groupedServer[group]!.length,
+                                isDark: isDark,
                               ),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                          ...filteredServer.map((n) {
-                            final isUnread = n.isRead == false;
-                            return InkWell(
-                              borderRadius: BorderRadius.circular(14),
-                              onTap: () {
-                                _handleNotificationTap(
-                                  n.title ?? '',
-                                  n.message ?? '',
-                                  n.type ?? '',
-                                );
-                              },
-                              child: Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: isUnread
-                                          ? AppColors.lightPrimary
-                                              .withValues(alpha: 0.05)
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 6,
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 44,
-                                          height: 44,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.lightPrimary
-                                                .withValues(alpha: 0.12),
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Image.asset(
-                                              NotificationDynamicIcon
-                                                  .getNotificationIcon(
-                                                n.type,
-                                              ),
-                                              errorBuilder: (_, _, _) =>
-                                                  const Icon(
-                                                Icons.notifications_none,
-                                                color: AppColors.lightPrimary,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                n.title ?? n.message ?? '',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 14.5,
-                                                ),
-                                              ),
-                                              if ((n.message ?? '').isNotEmpty)
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(top: 4),
-                                                  child: Text(
-                                                    n.message!,
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: AppColors
-                                                          .lightTextPrimary
-                                                          .withValues(alpha: 0.6),
-                                                    ),
-                                                  ),
-                                                ),
-                                              const SizedBox(height: 6),
-                                              Text(
-                                                JalaliDateHelper.format(n.createdAt),
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppColors
-                                                      .lightTextPrimary
-                                                      .withValues(alpha: 0.45),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 4),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              if (isUnread)
-                                                Container(
-                                                  width: 8,
-                                                  height: 8,
-                                                  margin:
-                                                      const EdgeInsetsDirectional
-                                                          .only(end: 6),
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color:
-                                                        AppColors.lightPrimary,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              _chevronIcon(context),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    height: 1,
-                                    color: AppColors.lightTextPrimary
-                                        .withValues(alpha: 0.08),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
+                              ...groupedServer[group]!.map((n) {
+                                return _serverTile(n, isDark, primaryTextColor);
+                              }),
+                            ],
                         ],
-                        SizedBox(height: AppSpacing.bottomSafe(context, 24)),
+                        SizedBox(height: AppSpacing.bottomSafe(context, AppSpacing.xxl)),
                       ],
                     );
                   }),
@@ -469,7 +455,105 @@ class _NotificationsState extends State<Notifications>
     );
   }
 
-  Widget _chip(String label, _NotifFilter f) {
+  Widget _buildLoadingSkeleton(bool isDark) {
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      children: List.generate(
+        4,
+        (index) => Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSurface : AppColors.white,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              width: 0.8,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkPrimaryContainer.withValues(alpha: 0.3)
+                      : AppColors.lightPrimary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 140,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkCard : AppColors.lightWarmGray.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkCard : AppColors.lightWarmGray.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required String title,
+    required int count,
+    required bool isDark,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 14, bottom: 8, left: 4, right: 4),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: AppTextStyles.titleSmall.copyWith(
+              fontWeight: FontWeight.w800,
+              color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+            decoration: BoxDecoration(
+              color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                  .withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+            ),
+            child: Text(
+              '$count',
+              style: AppTextStyles.labelSmall.copyWith(
+                fontWeight: FontWeight.bold,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _chip(String label, _NotifFilter f, bool isDark) {
     final selected = _filter == f;
     return Padding(
       padding: const EdgeInsetsDirectional.only(end: 8),
@@ -477,11 +561,146 @@ class _NotificationsState extends State<Notifications>
         label: Text(label),
         selected: selected,
         onSelected: (_) => setState(() => _filter = f),
-        selectedColor: AppColors.lightPrimary.withValues(alpha: 0.18),
-        labelStyle: TextStyle(
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
+        selectedColor: isDark
+            ? AppColors.mainSoftBlue.withValues(alpha: 0.25)
+            : AppColors.lightPrimary.withValues(alpha: 0.14),
+        side: BorderSide(
+          color: selected
+              ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          width: selected ? 1.2 : 0.8,
+        ),
+        labelStyle: AppTextStyles.labelSmall.copyWith(
           fontWeight: FontWeight.w700,
-          fontSize: 12,
-          color: selected ? AppColors.lightPrimary : null,
+          color: selected
+              ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+              : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+        ),
+      ),
+    );
+  }
+
+  Widget _serverTile(
+    Notificationss n,
+    bool isDark,
+    Color primaryTextColor,
+  ) {
+    final isUnread = n.isRead == false;
+    final cardBg = isDark
+        ? (isUnread
+            ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
+            : AppColors.darkSurface)
+        : (isUnread
+            ? AppColors.lightSecondaryContainer.withValues(alpha: 0.45)
+            : AppColors.white);
+
+    final borderColor = isUnread
+        ? (isDark ? AppColors.mainSoftBlue.withValues(alpha: 0.4) : AppColors.lightPrimary.withValues(alpha: 0.3))
+        : (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(color: borderColor, width: isUnread ? 1.2 : 0.8),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          onTap: () {
+            _handleNotificationTap(
+              n.title ?? '',
+              n.message ?? '',
+              n.type ?? '',
+              link: n.link,
+              payload: n.payload,
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Unread indicator dot on start edge
+                if (isUnread)
+                  Container(
+                    width: 7,
+                    height: 7,
+                    margin: const EdgeInsetsDirectional.only(top: 14, end: 8),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+
+                // Icon container
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        .withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Image.asset(
+                      NotificationDynamicIcon.getNotificationIcon(n.type),
+                      errorBuilder: (_, _, _) => Icon(
+                        Icons.notifications_none,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+
+                // Title & message
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        n.title ?? n.message ?? '',
+                        style: AppTextStyles.titleSmall.copyWith(
+                          fontWeight: isUnread ? FontWeight.w800 : FontWeight.w600,
+                          color: primaryTextColor,
+                        ),
+                      ),
+                      if ((n.message ?? '').isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            n.message!,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 6),
+                      Text(
+                        JalaliDateHelper.format(n.createdAt),
+                        style: AppTextStyles.labelSmall.copyWith(
+                          fontSize: 11,
+                          color: isDark ? AppColors.softGray.withValues(alpha: 0.7) : AppColors.lightTextTertiary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: _chevronIcon(context, isDark),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -490,87 +709,115 @@ class _NotificationsState extends State<Notifications>
   Widget _localTile(
     NotificationHistoryItem item,
     NotificationHistoryService? history,
+    bool isDark,
   ) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(14),
-      onTap: () async {
-        await history?.markRead(item.id);
-        if (Get.isRegistered<AppBadgeService>() && history != null) {
-          await Get.find<AppBadgeService>().update(history.unreadCount);
-        }
-        _handleNotificationTap(item.title, item.body, item.type);
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: item.read
-              ? Theme.of(context).cardColor
-              : AppColors.lightPrimary.withValues(alpha: 0.06),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: item.read
-                ? AppColors.lightPrimary.withValues(alpha: 0.08)
-                : AppColors.lightPrimary.withValues(alpha: 0.24),
-          ),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.12),
-              child: Icon(_typeIcon(item.type), color: AppColors.lightPrimary),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                    ),
-                  ),
-                  if (item.body.isNotEmpty)
-                    Text(
-                      item.body,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12.5,
-                        color: AppColors.lightTextPrimary.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _relativeTime(context, item.at),
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      color: AppColors.lightTextPrimary.withValues(alpha: 0.45),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Row(
-              mainAxisSize: MainAxisSize.min,
+    final cardBg = isDark
+        ? (!item.read
+            ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
+            : AppColors.darkSurface)
+        : (!item.read
+            ? AppColors.lightSecondaryContainer.withValues(alpha: 0.45)
+            : AppColors.white);
+
+    final borderColor = !item.read
+        ? (isDark ? AppColors.mainSoftBlue.withValues(alpha: 0.4) : AppColors.lightPrimary.withValues(alpha: 0.3))
+        : (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(color: borderColor, width: !item.read ? 1.2 : 0.8),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          onTap: () async {
+            await history?.markRead(item.id);
+            if (Get.isRegistered<AppBadgeService>() && history != null) {
+              await Get.find<AppBadgeService>().update(history.unreadCount);
+            }
+            // NOTIF-LINK: local history items carry the FCM payload — route
+            // through it instead of discarding it.
+            _handleNotificationTap(item.title, item.body, item.type,
+                payload: item.payload);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (!item.read)
                   Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsetsDirectional.only(end: 6),
-                    decoration: const BoxDecoration(
-                      color: AppColors.lightPrimary,
+                    width: 7,
+                    height: 7,
+                    margin: const EdgeInsetsDirectional.only(top: 14, end: 8),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                       shape: BoxShape.circle,
                     ),
                   ),
-                _chevronIcon(context),
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        .withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  ),
+                  child: Icon(
+                    _typeIcon(item.type),
+                    color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.title,
+                        style: AppTextStyles.titleSmall.copyWith(
+                          fontWeight: !item.read ? FontWeight.w800 : FontWeight.w600,
+                          color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                        ),
+                      ),
+                      if (item.body.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            item.body,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 6),
+                      Text(
+                        _relativeTime(context, item.at),
+                        style: AppTextStyles.labelSmall.copyWith(
+                          fontSize: 11,
+                          color: isDark ? AppColors.softGray.withValues(alpha: 0.7) : AppColors.lightTextTertiary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: _chevronIcon(context, isDark),
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -581,11 +828,11 @@ class NotificationRouter {
   static String _normalize(String s) {
     return s
         .toLowerCase()
-        .replaceAll('ي', 'ی') // Arabic Yeh -> Persian Yeh
-        .replaceAll('ى', 'ی') // Alef Maksura -> Persian Yeh
-        .replaceAll('ك', 'ک') // Arabic Kaf -> Persian Keheh
-        .replaceAll('ة', 'ه') // Teh Marbuta -> Heh
-        .replaceAll('‌', ' ')     // ZWNJ -> space
+        .replaceAll('ي', 'ی')
+        .replaceAll('ى', 'ی')
+        .replaceAll('ك', 'ک')
+        .replaceAll('ة', 'ه')
+        .replaceAll('‌', ' ')
         .trim();
   }
 
@@ -621,11 +868,31 @@ class NotificationRouter {
     required String title,
     required String message,
     required String type,
+    String? link,
+    String? payload,
   }) {
+    // NOTIF-LINK: honor a server-provided deep link before any keyword
+    // guessing. Accepts either a bare route name ('/support_tickets_route')
+    // or a full URL (http/https opens via external handling is NOT done
+    // here — a URL that isn't an app route falls through to the keyword
+    // router below for safety).
+    if (link != null && link.isNotEmpty) {
+      final isRoute =
+          link.startsWith('/') || Get.routeTree.routes.any((r) => r.name == link);
+      if (isRoute) {
+        Get.toNamed(link);
+        return;
+      }
+    }
+
     final t = _normalize(title);
     final m = _normalize(message);
     final combined = '$t $m';
     final tp = _normalize(type);
+
+    // NOTIF-LINK: server-supplied payload (e.g. ticket uuid) may carry
+    // structured hints; currently passed through to keyword routing when
+    // no explicit link exists.
 
     // 1. Ticket / Support
     final isTicket = tp.contains('ticket') ||
@@ -663,7 +930,7 @@ class NotificationRouter {
       return;
     }
 
-    // 3. KYC / Verification (check before app update so "KYC tier upgrade" routes to KYC)
+    // 3. KYC / Verification
     final isKyc = tp.contains('kyc') ||
         tp.contains('id_verification') ||
         tp.contains('verification') ||
@@ -823,14 +1090,14 @@ class NotificationRouter {
             maxHeight: MediaQuery.of(ctx).size.height * 0.75,
           ),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
           ),
           padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 12,
-            bottom: AppSpacing.bottomSafe(ctx, 20),
+            left: AppSpacing.xl,
+            right: AppSpacing.xl,
+            top: AppSpacing.md,
+            bottom: AppSpacing.bottomSafe(ctx, AppSpacing.xl),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -842,7 +1109,8 @@ class NotificationRouter {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.3),
+                    color: (isDark ? AppColors.warmWhite : AppColors.deepBlack)
+                        .withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -853,12 +1121,13 @@ class NotificationRouter {
                     width: 42,
                     height: 42,
                     decoration: BoxDecoration(
-                      color: AppColors.lightPrimary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(12),
+                      color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     ),
                     child: Icon(
                       typeIcon(type),
-                      color: AppColors.lightPrimary,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                       size: 22,
                     ),
                   ),
@@ -874,9 +1143,8 @@ class NotificationRouter {
                         ru: 'Детали уведомления',
                         zh: '通知详情',
                       ),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
+                      style: AppTextStyles.titleMedium.copyWith(
+                        color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
                       ),
                     ),
                   ),
@@ -894,22 +1162,19 @@ class NotificationRouter {
                     children: [
                       SelectableText(
                         displayTitle,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                        style: AppTextStyles.titleSmall.copyWith(
+                          color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
                         ),
                       ),
                       if (message.trim().isNotEmpty) ...[
                         const SizedBox(height: 12),
                         SelectableText(
                           message.trim(),
-                          style: TextStyle(
-                            fontSize: 14,
-                            height: 1.5,
+                          style: AppTextStyles.bodyMedium.copyWith(
                             color: isDark
-                                ? Colors.white70
-                                : AppColors.lightTextPrimary
-                                    .withValues(alpha: 0.8),
+                                ? AppColors.warmWhite.withValues(alpha: 0.8)
+                                : AppColors.lightTextPrimary.withValues(alpha: 0.85),
+                            height: 1.5,
                           ),
                         ),
                       ],

@@ -8,6 +8,8 @@ import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/settings_screen.dart';
 
 /// Supported physical device forms for active sessions.
 enum DeviceType {
@@ -239,7 +241,7 @@ class _DeviceSessionsSecurityScreenState
         deviceName: 'iPad Pro 12.9"',
         deviceType: DeviceType.tablet,
         operatingSystem: 'iPadOS 17.5',
-        browser: 'Mobile Safari 17.5',
+        browser: 'Mobile Safari 17.4',
         ipAddress: '2.188.75.140',
         location: 'اصفهان، ایران',
         lastActive: DateTime.now().subtract(const Duration(days: 1, hours: 4)),
@@ -328,29 +330,25 @@ class _DeviceSessionsSecurityScreenState
   }
 
   Future<void> _refresh() async {
+    HapticFeedback.lightImpact();
     setState(() => _loading = true);
-    await Future.delayed(const Duration(milliseconds: 650));
+    await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     setState(() {
       _currentDevice = _currentDevice.copyWith(lastActive: DateTime.now());
       _loading = false;
     });
-    Get.snackbar(
-      l10nPick(context, en: 'Security Status', fa: 'وضعیت امنیت'),
+    ToastHelper().showSuccessToast(
       l10nPick(
         context,
         en: 'Active sessions and device security refreshed',
         fa: 'اطلاعات نشست‌ها و امنیت دستگاه به‌روزرسانی شد',
       ),
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 2),
-      margin: EdgeInsets.all(12.w),
-      backgroundColor: AppColors.white,
-      colorText: AppColors.black,
     );
   }
 
   Future<void> _toggleBio(bool value) async {
+    HapticFeedback.lightImpact();
     if (value) {
       final ok = await _bio.enable();
       if (ok && mounted) {
@@ -381,7 +379,7 @@ class _DeviceSessionsSecurityScreenState
           ),
           description: l10nPick(
             context,
-            en: 'Biometric unlock disabled on this device',
+            en: 'Biometric unlock turned off',
             fa: 'ورود با اثر انگشت یا چهره غیرفعال شد',
           ),
           type: SecurityAuditType.pinChange,
@@ -391,73 +389,122 @@ class _DeviceSessionsSecurityScreenState
   }
 
   Future<void> _changePin() async {
-    final c1 = TextEditingController();
-    final c2 = TextEditingController();
-    final ok = await Get.dialog<bool>(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
-        title: Row(
-          children: [
-            Icon(Icons.pin_rounded, color: AppColors.lightPrimary, size: 24.sp),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: Text(
-                l10nPick(
-                  context,
-                  en: 'App Lock PIN (4 digits)',
-                  fa: 'PIN قفل دستگاه (۴ رقم)',
-                  ar: 'رمز قفل التطبيق (4 أرقام)',
-                  zh: '应用锁定PIN (4位)',
-                ),
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+    HapticFeedback.lightImpact();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+
+    if (_hasPinSet && _appLock != null) {
+      final cOld = TextEditingController();
+      final okOld = await Get.dialog<bool>(
+        AlertDialog(
+          backgroundColor: surfaceColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
+          title: Text(
+            l10nPick(context, en: 'Enter Current PIN', fa: 'ورود PIN فعلی'),
+            style: AppTextStyles.titleMedium.copyWith(color: textColor),
+          ),
+          content: TextField(
+            controller: cOld,
+            keyboardType: TextInputType.number,
+            obscureText: true,
+            maxLength: 4,
+            autofocus: true,
+            style: AppTextStyles.titleLarge.copyWith(color: textColor, letterSpacing: 8),
+            decoration: InputDecoration(
+              hintText: '••••',
+              hintStyle: TextStyle(color: isDark ? AppColors.softGray : AppColors.lightTextHint),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف')),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
               ),
+              onPressed: () => Get.back(result: true),
+              child: Text(l10nPick(context, en: 'Confirm', fa: 'تأیید')),
             ),
           ],
         ),
+      );
+      if (okOld != true || !mounted) return;
+      final valid = await _appLock!.verifyPin(cOld.text);
+      if (!valid) {
+        if (!mounted) return;
+        ToastHelper().showErrorToast(
+          l10nPick(context, en: 'Incorrect PIN', fa: 'PIN فعلی نادرست است'),
+        );
+        return;
+      }
+    }
+
+    if (!mounted) return;
+    await _setAppPin();
+  }
+
+  Future<void> _setAppPin() async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+
+    final c1 = TextEditingController();
+    final c2 = TextEditingController();
+
+    // Pre-capture localized strings before any async gap
+    final dialogTitle = l10nPick(context, en: 'Set 4-digit App Lock PIN', fa: 'تنظیم PIN ۴ رقمی قفل اپ');
+    final pinLabel1 = l10nPick(context, en: 'New 4-digit PIN', fa: 'PIN جدید (۴ رقم)');
+    final pinLabel2 = l10nPick(context, en: 'Repeat PIN', fa: 'تکرار PIN');
+    final cancelLabel = l10nPick(context, en: 'Cancel', fa: 'انصراف');
+    final saveLabel = l10nPick(context, en: 'Save', fa: 'ذخیره');
+    final auditTitle = l10nPick(context, en: 'App Lock PIN Updated', fa: 'تغییر PIN قفل اپ');
+    final auditDesc = l10nPick(
+      context,
+      en: 'Device unlock passcode was set / updated',
+      fa: 'رمز عبور قفل محلی دستگاه با موفقیت تنظیم یا تغییر یافت',
+    );
+    final snackSaved = l10nPick(context, en: 'PIN saved successfully', fa: 'PIN با موفقیت ذخیره شد');
+    final snackMismatch = l10nPick(
+      context,
+      en: 'The PIN must be 4 digits and match',
+      fa: 'PIN باید ۴ رقم و یکسان باشد',
+    );
+
+    final ok = await Get.dialog<bool>(
+      AlertDialog(
+        backgroundColor: surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
+        title: Text(dialogTitle, style: AppTextStyles.titleMedium.copyWith(color: textColor)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              l10nPick(
-                context,
-                en: 'This PIN is only used locally to unlock the app on this phone.',
-                fa: 'این پین‌کد تنها برای باز کردن قفل اپلیکیشن در این دستگاه کاربرد دارد.',
-                ar: 'يُستخدم هذا الرمز محليًا فقط لفتح التطبيق على هذا الجهاز.',
-                zh: '此PIN仅在本地用于解锁此设备上的应用。',
-              ),
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.lightTextSecondary,
-              ),
-            ),
-            SizedBox(height: 16.h),
             TextField(
               controller: c1,
               keyboardType: TextInputType.number,
-              maxLength: 4,
               obscureText: true,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              maxLength: 4,
+              autofocus: true,
+              style: AppTextStyles.titleMedium.copyWith(color: textColor, letterSpacing: 6),
               decoration: InputDecoration(
-                labelText: l10nPick(context, en: 'New PIN', fa: 'PIN جدید'),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                prefixIcon: const Icon(Icons.lock_outline_rounded),
+                labelText: pinLabel1,
+                labelStyle: TextStyle(color: isDark ? AppColors.softGray : AppColors.lightTextSecondary),
               ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm),
             TextField(
               controller: c2,
               keyboardType: TextInputType.number,
-              maxLength: 4,
               obscureText: true,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              maxLength: 4,
+              style: AppTextStyles.titleMedium.copyWith(color: textColor, letterSpacing: 6),
               decoration: InputDecoration(
-                labelText: l10nPick(context, en: 'Repeat PIN', fa: 'تکرار PIN'),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                prefixIcon: const Icon(Icons.lock_reset_rounded),
+                labelText: pinLabel2,
+                labelStyle: TextStyle(color: isDark ? AppColors.softGray : AppColors.lightTextSecondary),
               ),
             ),
           ],
@@ -465,18 +512,18 @@ class _DeviceSessionsSecurityScreenState
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف')),
+            child: Text(cancelLabel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.lightPrimary,
-              foregroundColor: AppColors.white,
+              backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               ),
             ),
             onPressed: () => Get.back(result: true),
-            child: Text(l10nPick(context, en: 'Save', fa: 'ذخیره')),
+            child: Text(saveLabel),
           ),
         ],
       ),
@@ -490,41 +537,37 @@ class _DeviceSessionsSecurityScreenState
       if (_settings != null) {
         await _settings!.setAppPin('set');
       }
+      if (!mounted) return;
       setState(() => _hasPinSet = true);
       _addAudit(
-        title: l10nPick(context, en: 'App Lock PIN Updated', fa: 'تغییر PIN قفل اپ'),
-        description: l10nPick(
-          context,
-          en: 'Device unlock passcode was set / updated',
-          fa: 'رمز عبور قفل محلی دستگاه با موفقیت تنظیم یا تغییر یافت',
-        ),
+        title: auditTitle,
+        description: auditDesc,
         type: SecurityAuditType.pinChange,
       );
-      Get.snackbar(
-        'PIN',
-        l10nPick(context, en: 'PIN saved successfully', fa: 'PIN با موفقیت ذخیره شد'),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      ToastHelper().showSuccessToast(snackSaved);
     } else if (ok == true) {
-      Get.snackbar(
-        'PIN',
-        l10nPick(
-          context,
-          en: 'The PIN must be 4 digits and match',
-          fa: 'PIN باید ۴ رقم و یکسان باشد',
-        ),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error.withValues(alpha: 0.1),
-        colorText: AppColors.error,
-      );
+      ToastHelper().showErrorToast(snackMismatch);
     }
   }
 
   Future<void> _chooseAutoLock() async {
+    HapticFeedback.lightImpact();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+
+    // Pre-capture localized strings before any async gap
+    final snackMsg = l10nPick(
+      context,
+      en: 'Auto-lock duration updated',
+      fa: 'زمان‌بندی قفل خودکار تنظیم شد',
+    );
+
     final v = await showModalBottomSheet<int>(
       context: context,
+      backgroundColor: surfaceColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
       ),
       builder: (ctx) => SafeArea(
         child: Column(
@@ -532,7 +575,7 @@ class _DeviceSessionsSecurityScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(20.w, 16.h, 20.w, 8.h),
+              padding: EdgeInsetsDirectional.fromSTEB(AppSpacing.xl, AppSpacing.lg, AppSpacing.xl, AppSpacing.sm),
               child: Text(
                 l10nPick(
                   context,
@@ -541,14 +584,10 @@ class _DeviceSessionsSecurityScreenState
                   ar: 'مدة القفل التلقائي',
                   zh: '自动锁定时间',
                 ),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.lightPrimary,
-                ),
+                style: AppTextStyles.titleMedium.copyWith(color: textColor),
               ),
             ),
-            Divider(height: 1, color: AppColors.lightDivider),
+            Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
             for (final e in {
               -1: l10nPick(
                 context,
@@ -561,13 +600,13 @@ class _DeviceSessionsSecurityScreenState
               0: l10nPick(context, en: 'Never', fa: 'هرگز'),
             }.entries)
               ListTile(
-                title: Text(e.value, style: TextStyle(fontSize: 14.sp)),
+                title: Text(e.value, style: AppTextStyles.bodyMedium.copyWith(color: textColor)),
                 trailing: _lockMinutes == e.key
                     ? Icon(Icons.check_circle_rounded, color: AppColors.success, size: 20.sp)
                     : null,
                 onTap: () => Navigator.pop(ctx, e.key),
               ),
-            SizedBox(height: 12.h),
+            SizedBox(height: AppSpacing.md),
           ],
         ),
       ),
@@ -577,16 +616,9 @@ class _DeviceSessionsSecurityScreenState
       if (_settings != null) {
         await _settings!.setAppLockMinutes(v);
       }
+      if (!mounted) return;
       setState(() => _lockMinutes = v);
-      Get.snackbar(
-        l10nPick(context, en: 'App Lock', fa: 'قفل اپ'),
-        l10nPick(
-          context,
-          en: 'Auto-lock duration updated',
-          fa: 'زمان‌بندی قفل خودکار تنظیم شد',
-        ),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      ToastHelper().showSuccessToast(snackMsg);
     }
   }
 
@@ -614,13 +646,31 @@ class _DeviceSessionsSecurityScreenState
   }
 
   Future<void> _revokeSession(DeviceSessionItem session) async {
+    HapticFeedback.lightImpact();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+
+    // Pre-capture localized strings
+    final auditTitle = l10nPick(
+      context,
+      en: 'Device Session Terminated',
+      fa: 'نشست دستگاه باطل شد',
+    );
+    final toastSuccess = l10nPick(
+      context,
+      en: 'Session on "${session.deviceName}" was revoked.',
+      fa: 'نشست دستگاه «${session.deviceName}» با موفقیت پایان یافت.',
+    );
+
     final confirm = await Get.dialog<bool>(
       AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        backgroundColor: surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
         title: Row(
           children: [
             Icon(Icons.logout_rounded, color: AppColors.error, size: 22.sp),
-            SizedBox(width: 8.w),
+            SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
                 l10nPick(
@@ -630,7 +680,7 @@ class _DeviceSessionsSecurityScreenState
                   ar: 'تسجيل الخروج من هذا الجهاز؟',
                   zh: '退出此设备登录？',
                 ),
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                style: AppTextStyles.titleMedium.copyWith(color: textColor),
               ),
             ),
           ],
@@ -646,7 +696,10 @@ class _DeviceSessionsSecurityScreenState
                 'سيتم إنهاء الجلسة فورًا وسيتطلب تسجيل الدخول مجددًا.',
             zh: '确定要注销设备“${session.deviceName}”吗？\n该会话将立即撤销，需重新凭证登录。',
           ),
-          style: TextStyle(fontSize: 13.sp, height: 1.4, color: AppColors.black),
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: isDark ? AppColors.warmWhite.withValues(alpha: 0.85) : AppColors.deepBlack,
+            height: 1.45,
+          ),
         ),
         actions: [
           TextButton(
@@ -658,7 +711,7 @@ class _DeviceSessionsSecurityScreenState
               backgroundColor: AppColors.error,
               foregroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               ),
             ),
             onPressed: () => Get.back(result: true),
@@ -681,55 +734,60 @@ class _DeviceSessionsSecurityScreenState
         _otherSessions.removeWhere((item) => item.id == session.id);
       });
       _addAudit(
-        title: l10nPick(
-          context,
-          en: 'Device Session Terminated',
-          fa: 'نشست دستگاه باطل شد',
-        ),
+        title: auditTitle,
         description: '${session.deviceName} • ${session.ipAddress} • ${session.location}',
         type: SecurityAuditType.sessionRevoked,
         ipAddress: session.ipAddress,
         location: session.location,
       );
-      Get.snackbar(
-        l10nPick(context, en: 'Device Terminated', fa: 'خاتمه نشست'),
-        l10nPick(
-          context,
-          en: 'Session on "${session.deviceName}" was revoked.',
-          fa: 'نشست دستگاه «${session.deviceName}» با موفقیت پایان یافت.',
-        ),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.white,
-        colorText: AppColors.black,
-      );
+      ToastHelper().showSuccessToast(toastSuccess);
     }
   }
 
   Future<void> _terminateAllOtherSessions() async {
+    HapticFeedback.mediumImpact();
     final count = _otherSessions.length;
     if (count == 0) return;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+
+    // Pre-capture localized strings
+    final auditTitle = l10nPick(
+      context,
+      en: 'Emergency Revocation Executed',
+      fa: 'خروج اضطراری از تمام نشست‌ها اجرا شد',
+    );
+    final auditDesc = l10nPick(
+      context,
+      en: '$count active session(s) were terminated immediately.',
+      fa: '$count نشست فعال دیگر به صورت اضطراری لغو و مسدود شدند.',
+    );
+    final toastSuccess = l10nPick(
+      context,
+      en: 'All other active sessions have been terminated.',
+      fa: 'تمامی نشست‌های فعال دیگر با موفقیت مسدود و خارج شدند.',
+    );
+
     final confirm = await Get.dialog<bool>(
       AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        backgroundColor: surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
         title: Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 24.sp),
-            SizedBox(width: 8.w),
+            SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
                 l10nPick(
                   context,
-                  en: 'Terminate All Other Sessions',
-                  fa: 'خروج اضطراری از تمام نشست‌ها',
-                  ar: 'إنهاء جميع الجلسات الأخرى',
-                  zh: '终止所有其他会话',
+                  en: 'Terminate All Other Sessions?',
+                  fa: 'خروج اضطراری از تمام نشست‌ها؟',
+                  ar: 'إنهاء كل الجلسات الأخرى فورًا؟',
+                  zh: '终止所有其他在线会话？',
                 ),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.error,
-                ),
+                style: AppTextStyles.titleMedium.copyWith(color: textColor),
               ),
             ),
           ],
@@ -741,18 +799,14 @@ class _DeviceSessionsSecurityScreenState
             Text(
               l10nPick(
                 context,
-                en: 'Are you sure you want to terminate all other $count active session(s)?',
-                fa: 'آیا از خروج اضطراری از تمامی $count نشست فعال دیگر اطمینان دارید؟',
-                ar: 'هل أنت متأكد من إنهاء جميع الجلسات الأخرى ($count)؟',
-                zh: '确定要紧急终止其他全部 $count 个活动会话吗？',
+                en: '$count active device(s) will be logged out immediately.',
+                fa: '$count نشست فعال دیگر بلافاصله مسدود و خارج می‌شوند.',
+                ar: 'سيتم إنهاء $count جلسة نشطة فورًا.',
+                zh: '将立即退出其他 $count 台设备的登录状态。',
               ),
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
+              style: AppTextStyles.titleSmall.copyWith(color: textColor),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm),
             Text(
               l10nPick(
                 context,
@@ -763,10 +817,9 @@ class _DeviceSessionsSecurityScreenState
                 ar: 'سيتم إلغاء جميع الجلسات النشطة على الأجهزة الأخرى فورًا.',
                 zh: '除当前设备外的所有活动会话将立即撤销，保障账户资金安全。',
               ),
-              style: TextStyle(
-                fontSize: 12.sp,
+              style: AppTextStyles.bodySmall.copyWith(
                 height: 1.45,
-                color: AppColors.lightTextSecondary,
+                color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -781,7 +834,7 @@ class _DeviceSessionsSecurityScreenState
               backgroundColor: AppColors.error,
               foregroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               ),
             ),
             onPressed: () => Get.back(result: true),
@@ -804,29 +857,11 @@ class _DeviceSessionsSecurityScreenState
         _otherSessions.clear();
       });
       _addAudit(
-        title: l10nPick(
-          context,
-          en: 'Emergency Revocation Executed',
-          fa: 'خروج اضطراری از تمام نشست‌ها اجرا شد',
-        ),
-        description: l10nPick(
-          context,
-          en: '$count active session(s) were terminated immediately.',
-          fa: '$count نشست فعال دیگر به صورت اضطراری لغو و مسدود شدند.',
-        ),
+        title: auditTitle,
+        description: auditDesc,
         type: SecurityAuditType.sessionRevoked,
       );
-      Get.snackbar(
-        l10nPick(context, en: 'Emergency Revocation', fa: 'خروج اضطراری'),
-        l10nPick(
-          context,
-          en: 'All other active sessions have been terminated.',
-          fa: 'تمامی نشست‌های فعال دیگر با موفقیت مسدود و خارج شدند.',
-        ),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.white,
-        colorText: AppColors.black,
-      );
+      ToastHelper().showSuccessToast(toastSuccess);
     }
   }
 
@@ -868,8 +903,12 @@ class _DeviceSessionsSecurityScreenState
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(
           l10nPick(
@@ -879,14 +918,10 @@ class _DeviceSessionsSecurityScreenState
             ar: 'الأجهزة والجلسات النشطة',
             zh: '设备与活动会话',
           ),
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.black,
-          ),
+          style: AppTextStyles.titleMedium.copyWith(color: primaryTextColor),
         ),
-        backgroundColor: AppColors.lightBackground,
-        foregroundColor: AppColors.black,
+        backgroundColor: bgColor,
+        foregroundColor: primaryTextColor,
         elevation: 0,
         actions: [
           IconButton(
@@ -897,55 +932,81 @@ class _DeviceSessionsSecurityScreenState
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? _buildLoadingSkeleton(isDark)
           : RefreshIndicator(
               onRefresh: _refresh,
-              color: AppColors.lightPrimary,
+              color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsetsDirectional.fromSTEB(
                   AppSpacing.page,
-                  10.h,
+                  AppSpacing.sm,
                   AppSpacing.page,
-                  AppSpacing.bottomSafe(context, 32.h),
+                  AppSpacing.bottomSafe(context, AppSpacing.xxxl),
                 ),
                 children: [
                   // 1. "This Device" Hero Card
-                  _buildThisDeviceHeroCard(),
+                  _buildThisDeviceHeroCard(isDark),
 
-                  SizedBox(height: 20.h),
+                  SizedBox(height: AppSpacing.xl),
 
                   // 2. "Other Active Devices" Section
-                  _buildOtherDevicesSection(),
+                  _buildOtherDevicesSection(isDark),
 
-                  SizedBox(height: 16.h),
+                  SizedBox(height: AppSpacing.lg),
 
                   // 3. Emergency Revoke Button (Terminate all other sessions)
-                  _buildTerminateAllButton(),
+                  _buildTerminateAllButton(isDark),
 
-                  SizedBox(height: 24.h),
+                  SizedBox(height: AppSpacing.xxl),
 
                   // 4. Biometric App Lock & PIN Quick Settings Section
-                  _buildBiometricAndLockSection(),
+                  _buildBiometricAndLockSection(isDark),
 
-                  SizedBox(height: 24.h),
+                  SizedBox(height: AppSpacing.xxl),
 
                   // 5. Security Activity Audit Log
-                  _buildSecurityAuditLogSection(),
+                  _buildSecurityAuditLogSection(isDark),
                 ],
               ),
             ),
     );
   }
 
+  Widget _buildLoadingSkeleton(bool isDark) {
+    return ListView(
+      padding: EdgeInsets.all(AppSpacing.page),
+      children: [
+        Container(
+          height: 160.h,
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSurface : AppColors.white,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          ),
+          child: Center(
+            child: CircularProgressIndicator(
+              color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              strokeWidth: 2.5,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   // ==========================================
   // 1. "This Device" Hero Card
   // ==========================================
-  Widget _buildThisDeviceHeroCard() {
+  Widget _buildThisDeviceHeroCard(bool isDark) {
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final iconStyle = SettingsIconTokens.deviceSessions(isDark: isDark);
+
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: Border.all(
           color: AppColors.success.withValues(alpha: 0.25),
           width: 1.2,
@@ -958,7 +1019,7 @@ class _DeviceSessionsSecurityScreenState
           ),
         ],
       ),
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -967,10 +1028,10 @@ class _DeviceSessionsSecurityScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
                 decoration: BoxDecoration(
-                  color: AppColors.success.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20.r),
+                  color: AppColors.success.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -979,7 +1040,7 @@ class _DeviceSessionsSecurityScreenState
                       color: AppColors.success,
                       size: 9.0,
                     ),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: AppSpacing.sm),
                     Text(
                       l10nPick(
                         context,
@@ -988,17 +1049,13 @@ class _DeviceSessionsSecurityScreenState
                         ar: 'نشط الآن (هذا الجهاز)',
                         zh: '当前在线（本机）',
                       ),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.success,
-                      ),
+                      style: AppTextStyles.labelMedium.copyWith(color: AppColors.success),
                     ),
                   ],
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(6.w),
+                padding: EdgeInsets.all(AppSpacing.xs),
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
@@ -1012,7 +1069,7 @@ class _DeviceSessionsSecurityScreenState
             ],
           ),
 
-          SizedBox(height: 14.h),
+          SizedBox(height: AppSpacing.md),
 
           // Device info main row
           Row(
@@ -1021,35 +1078,28 @@ class _DeviceSessionsSecurityScreenState
                 width: 48.w,
                 height: 48.w,
                 decoration: BoxDecoration(
-                  color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(12.r),
+                  color: iconStyle.backgroundColor,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
                 child: Icon(
                   _currentDevice.icon,
-                  color: AppColors.lightPrimary,
+                  color: iconStyle.iconColor,
                   size: 26.sp,
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       _currentDevice.deviceName,
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.black,
-                      ),
+                      style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: AppSpacing.xs),
                     Text(
                       '${_currentDevice.localizedType(context)} • ${_currentDevice.operatingSystem}',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.lightTextSecondary,
-                      ),
+                      style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
                     ),
                   ],
                 ),
@@ -1057,35 +1107,46 @@ class _DeviceSessionsSecurityScreenState
             ],
           ),
 
-          SizedBox(height: 14.h),
-          const Divider(height: 1),
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSpacing.md),
+          Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+          SizedBox(height: AppSpacing.md),
 
           // Metadata row: IP, Location, App version
           Row(
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.language_rounded,
-                      size: 15.sp,
-                      color: AppColors.lightTextSecondary,
-                    ),
-                    SizedBox(width: 6.w),
-                    Flexible(
-                      child: Text(
-                        'IP: ${_currentDevice.ipAddress}',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontFamily: 'monospace',
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w600,
+                child: InkWell(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: _currentDevice.ipAddress));
+                    ToastHelper().showSuccessToast(
+                      l10nPick(context, en: 'IP copied to clipboard', fa: 'آدرس IP کپی شد'),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.h),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.language_rounded,
+                          size: 15.sp,
+                          color: secondaryTextColor,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                        SizedBox(width: 6.w),
+                        Flexible(
+                          child: Text(
+                            'IP: ${_currentDevice.ipAddress}',
+                            style: AppTextStyles.labelSmall.copyWith(
+                              fontFamily: 'monospace',
+                              color: primaryTextColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
               Expanded(
@@ -1094,16 +1155,13 @@ class _DeviceSessionsSecurityScreenState
                     Icon(
                       Icons.place_outlined,
                       size: 15.sp,
-                      color: AppColors.lightTextSecondary,
+                      color: secondaryTextColor,
                     ),
                     SizedBox(width: 6.w),
                     Flexible(
                       child: Text(
                         _currentDevice.location,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppColors.black,
-                        ),
+                        style: AppTextStyles.bodySmall.copyWith(color: primaryTextColor),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -1113,22 +1171,24 @@ class _DeviceSessionsSecurityScreenState
             ],
           ),
 
-          SizedBox(height: 10.h),
+          SizedBox(height: AppSpacing.sm),
 
           // Security check assurance banner
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 7.h),
             decoration: BoxDecoration(
-              color: AppColors.lightPrimary.withValues(alpha: 0.04),
-              borderRadius: BorderRadius.circular(8.r),
+              color: isDark
+                  ? AppColors.darkPrimaryContainer.withValues(alpha: 0.3)
+                  : AppColors.lightPrimary.withValues(alpha: 0.04),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.shield_outlined,
                   size: 14.sp,
-                  color: AppColors.lightPrimary,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                 ),
                 SizedBox(width: 6.w),
                 Expanded(
@@ -1140,10 +1200,9 @@ class _DeviceSessionsSecurityScreenState
                       ar: 'جلسة موثقة ومشفرة من طرف إلى طرف.',
                       zh: '经设备指纹端到端认证的安全会话。',
                     ),
-                    style: TextStyle(
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                       fontSize: 11.sp,
-                      color: AppColors.lightPrimary,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -1158,12 +1217,14 @@ class _DeviceSessionsSecurityScreenState
   // ==========================================
   // 2. "Other Active Devices" Section
   // ==========================================
-  Widget _buildOtherDevicesSection() {
+  Widget _buildOtherDevicesSection(bool isDark) {
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsetsDirectional.only(start: 4.w, bottom: 8.h),
+          padding: EdgeInsetsDirectional.only(start: 4.w, bottom: AppSpacing.sm),
           child: Row(
             children: [
               Text(
@@ -1174,29 +1235,26 @@ class _DeviceSessionsSecurityScreenState
                   ar: 'الأجهزة النشطة الأخرى',
                   zh: '其他活动设备',
                 ),
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13.sp,
-                  color: AppColors.lightPrimary,
-                ),
+                style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
               ),
-              SizedBox(width: 8.w),
+              SizedBox(width: AppSpacing.sm),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 2.h),
                 decoration: BoxDecoration(
                   color: _otherSessions.isNotEmpty
-                      ? AppColors.lightPrimary.withValues(alpha: 0.12)
-                      : AppColors.greyLight.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(12.r),
+                      ? (isDark
+                          ? AppColors.mainSoftBlue.withValues(alpha: 0.2)
+                          : AppColors.lightPrimary.withValues(alpha: 0.12))
+                      : (isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.5)),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
                 child: Text(
                   '${_otherSessions.length}',
-                  style: TextStyle(
-                    fontSize: 11.sp,
+                  style: AppTextStyles.labelSmall.copyWith(
                     fontWeight: FontWeight.bold,
                     color: _otherSessions.isNotEmpty
-                        ? AppColors.lightPrimary
-                        : AppColors.greyDark,
+                        ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        : (isDark ? AppColors.softGray : AppColors.greyDark),
                   ),
                 ),
               ),
@@ -1204,38 +1262,39 @@ class _DeviceSessionsSecurityScreenState
           ),
         ),
         if (_otherSessions.isEmpty)
-          _buildEmptyOtherSessionsCard()
+          _buildEmptyOtherSessionsCard(isDark)
         else
           Column(
             children: _otherSessions
-                .map((session) => _buildDeviceSessionCard(session))
+                .map((session) => _buildDeviceSessionCard(session, isDark))
                 .toList(),
           ),
       ],
     );
   }
 
-  Widget _buildEmptyOtherSessionsCard() {
+  Widget _buildEmptyOtherSessionsCard(bool isDark) {
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 0.8,
+        ),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xxl),
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(AppSpacing.md),
             decoration: BoxDecoration(
-              color: AppColors.success.withValues(alpha: 0.1),
+              color: AppColors.success.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -1244,7 +1303,7 @@ class _DeviceSessionsSecurityScreenState
               size: 32.sp,
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: AppSpacing.md),
           Text(
             l10nPick(
               context,
@@ -1253,13 +1312,9 @@ class _DeviceSessionsSecurityScreenState
               ar: 'لا توجد جلسات نشطة أخرى',
               zh: '无其他活动会话',
             ),
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.black,
-            ),
+            style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: AppSpacing.xs),
           Text(
             l10nPick(
               context,
@@ -1269,31 +1324,30 @@ class _DeviceSessionsSecurityScreenState
               zh: '您的账户目前仅在此设备上登录。',
             ),
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.lightTextSecondary,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDeviceSessionCard(DeviceSessionItem session) {
+  Widget _buildDeviceSessionCard(DeviceSessionItem session, bool isDark) {
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final iconStyle = SettingsIconTokens.deviceSessions(isDark: isDark);
+
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
+      margin: EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 0.8,
+        ),
       ),
-      padding: EdgeInsets.all(14.w),
+      padding: EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1304,35 +1358,28 @@ class _DeviceSessionsSecurityScreenState
                 width: 44.w,
                 height: 44.w,
                 decoration: BoxDecoration(
-                  color: AppColors.greyLight.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(12.r),
+                  color: iconStyle.backgroundColor,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
                 child: Icon(
                   session.icon,
-                  color: AppColors.black,
+                  color: iconStyle.iconColor,
                   size: 22.sp,
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       session.deviceName,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.black,
-                      ),
+                      style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
                     ),
                     SizedBox(height: 3.h),
                     Text(
                       '${session.operatingSystem} • ${session.browser}',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.lightTextSecondary,
-                      ),
+                      style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
                     ),
                   ],
                 ),
@@ -1345,9 +1392,9 @@ class _DeviceSessionsSecurityScreenState
                     color: AppColors.error.withValues(alpha: 0.35),
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6.h),
                   visualDensity: VisualDensity.compact,
                 ),
                 icon: Icon(Icons.logout_rounded, size: 14.sp),
@@ -1359,45 +1406,49 @@ class _DeviceSessionsSecurityScreenState
                     ar: 'إنهاء',
                     zh: '登出',
                   ),
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold),
+                  style: AppTextStyles.labelSmall.copyWith(color: AppColors.error),
                 ),
                 onPressed: () => _revokeSession(session),
               ),
             ],
           ),
-          SizedBox(height: 10.h),
-          Divider(height: 1, color: AppColors.lightDivider),
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.md),
+          Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+          SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               Icon(
                 Icons.language_rounded,
                 size: 13.sp,
-                color: AppColors.lightTextSecondary,
+                color: secondaryTextColor,
               ),
               SizedBox(width: 4.w),
-              Text(
-                session.ipAddress,
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  fontFamily: 'monospace',
-                  color: AppColors.lightTextSecondary,
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: session.ipAddress));
+                  ToastHelper().showSuccessToast(
+                    l10nPick(context, en: 'IP copied', fa: 'IP کپی شد'),
+                  );
+                },
+                child: Text(
+                  session.ipAddress,
+                  style: AppTextStyles.labelSmall.copyWith(
+                    fontFamily: 'monospace',
+                    color: secondaryTextColor,
+                  ),
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: AppSpacing.md),
               Icon(
                 Icons.place_outlined,
                 size: 13.sp,
-                color: AppColors.lightTextSecondary,
+                color: secondaryTextColor,
               ),
               SizedBox(width: 4.w),
               Expanded(
                 child: Text(
                   session.location,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.lightTextSecondary,
-                  ),
+                  style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -1405,15 +1456,12 @@ class _DeviceSessionsSecurityScreenState
               Icon(
                 Icons.access_time_rounded,
                 size: 13.sp,
-                color: AppColors.lightTextSecondary,
+                color: secondaryTextColor,
               ),
               SizedBox(width: 4.w),
               Text(
                 _formatRelativeTime(session.lastActive),
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: AppColors.lightTextSecondary,
-                ),
+                style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
               ),
             ],
           ),
@@ -1425,48 +1473,42 @@ class _DeviceSessionsSecurityScreenState
   // ==========================================
   // 3. Destructive Action: Terminate All Other Sessions
   // ==========================================
-  Widget _buildTerminateAllButton() {
+  Widget _buildTerminateAllButton(bool isDark) {
     final hasOthers = _otherSessions.isNotEmpty;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: Border.all(
           color: hasOthers
               ? AppColors.error.withValues(alpha: 0.3)
-              : AppColors.lightBorder,
+              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
           width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: hasOthers
-                ? AppColors.error.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
-      padding: EdgeInsets.all(14.w),
+      padding: EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(8.w),
+                padding: EdgeInsets.all(AppSpacing.sm),
                 decoration: BoxDecoration(
-                  color: (hasOthers ? AppColors.error : AppColors.grey)
-                      .withValues(alpha: 0.1),
+                  color: (hasOthers ? AppColors.error : AppColors.softGray)
+                      .withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.power_settings_new_rounded,
-                  color: hasOthers ? AppColors.error : AppColors.grey,
+                  color: hasOthers ? AppColors.error : AppColors.softGray,
                   size: 20.sp,
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1479,10 +1521,8 @@ class _DeviceSessionsSecurityScreenState
                         ar: 'خروج اضطراري من جميع الجلسات',
                         zh: '紧急终止所有其他会话',
                       ),
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold,
-                        color: hasOthers ? AppColors.error : AppColors.greyDark,
+                      style: AppTextStyles.titleSmall.copyWith(
+                        color: hasOthers ? AppColors.error : (isDark ? AppColors.softGray : AppColors.greyDark),
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -1494,17 +1534,14 @@ class _DeviceSessionsSecurityScreenState
                         ar: 'إنهاء الجلسات فورًا على جميع الأجهزة الأخرى.',
                         zh: '立即注销其他所有电脑和手机上的登录状态。',
                       ),
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: AppColors.lightTextSecondary,
-                      ),
+                      style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSpacing.md),
           SizedBox(
             width: double.infinity,
             height: 42.h,
@@ -1512,12 +1549,13 @@ class _DeviceSessionsSecurityScreenState
               style: ElevatedButton.styleFrom(
                 backgroundColor: hasOthers
                     ? AppColors.error
-                    : AppColors.greyLight.withValues(alpha: 0.8),
-                foregroundColor:
-                    hasOthers ? AppColors.white : AppColors.greyDark,
+                    : (isDark ? AppColors.darkSurfaceVariant : AppColors.greyLight.withValues(alpha: 0.8)),
+                foregroundColor: hasOthers
+                    ? AppColors.white
+                    : (isDark ? AppColors.softGray : AppColors.greyDark),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 ),
               ),
               icon: Icon(Icons.no_accounts_rounded, size: 18.sp),
@@ -1529,7 +1567,7 @@ class _DeviceSessionsSecurityScreenState
                   ar: 'إنهاء كل الجلسات الأخرى',
                   zh: '终止所有其他设备',
                 ),
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
+                style: AppTextStyles.labelMedium,
               ),
               onPressed: hasOthers ? _terminateAllOtherSessions : null,
             ),
@@ -1542,12 +1580,20 @@ class _DeviceSessionsSecurityScreenState
   // ==========================================
   // 4. Biometric App Lock & PIN Quick Settings Section
   // ==========================================
-  Widget _buildBiometricAndLockSection() {
+  Widget _buildBiometricAndLockSection(bool isDark) {
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
+    final bioStyle = SettingsIconTokens.biometric(isDark: isDark);
+    final autoLockStyle = SettingsIconTokens.autoAppLock(isDark: isDark);
+    final pinStyle = SettingsIconTokens.appLockPin(isDark: isDark);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsetsDirectional.only(start: 4.w, bottom: 8.h),
+          padding: EdgeInsetsDirectional.only(start: 4.w, bottom: AppSpacing.sm),
           child: Text(
             l10nPick(
               context,
@@ -1556,26 +1602,19 @@ class _DeviceSessionsSecurityScreenState
               ar: 'قفل التطبيق والمصادقة البيومترية',
               zh: '生物识别与应用锁定',
             ),
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 13.sp,
-              color: AppColors.lightPrimary,
-            ),
+            style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            color: cardBg,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              width: 0.8,
+            ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6.h),
           child: Column(
             children: [
               // Biometric toggle
@@ -1583,14 +1622,14 @@ class _DeviceSessionsSecurityScreenState
                 SwitchListTile.adaptive(
                   contentPadding: EdgeInsets.zero,
                   secondary: Container(
-                    padding: EdgeInsets.all(8.w),
+                    padding: EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
-                      color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(10.r),
+                      color: bioStyle.backgroundColor,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                     ),
                     child: Icon(
                       Icons.fingerprint_rounded,
-                      color: AppColors.lightPrimary,
+                      color: bioStyle.iconColor,
                       size: 22.sp,
                     ),
                   ),
@@ -1602,10 +1641,7 @@ class _DeviceSessionsSecurityScreenState
                       ar: 'الدخول بالبصمة أو الوجه',
                       zh: '指纹或面容快速解锁',
                     ),
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
                   ),
                   subtitle: Text(
                     _bioEnabled
@@ -1619,27 +1655,24 @@ class _DeviceSessionsSecurityScreenState
                             en: 'Sign in with your fingerprint or face',
                             fa: 'قفل‌گشایی سریع با بیومتریک این دستگاه',
                           ),
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: AppColors.lightTextSecondary,
-                    ),
+                    style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
                   ),
                   value: _bioEnabled,
-                  activeTrackColor: AppColors.lightPrimary,
+                  activeTrackColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                   onChanged: _toggleBio,
                 )
               else
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: Container(
-                    padding: EdgeInsets.all(8.w),
+                    padding: EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
-                      color: AppColors.greyLight.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(10.r),
+                      color: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                     ),
                     child: Icon(
                       Icons.fingerprint_rounded,
-                      color: AppColors.grey,
+                      color: AppColors.softGray,
                       size: 22.sp,
                     ),
                   ),
@@ -1649,7 +1682,7 @@ class _DeviceSessionsSecurityScreenState
                       en: 'Biometric Authentication',
                       fa: 'احراز هویت بیومتریک',
                     ),
-                    style: TextStyle(fontSize: 13.sp, color: AppColors.greyDark),
+                    style: AppTextStyles.titleSmall.copyWith(color: isDark ? AppColors.softGray : AppColors.greyDark),
                   ),
                   subtitle: Text(
                     l10nPick(
@@ -1657,24 +1690,24 @@ class _DeviceSessionsSecurityScreenState
                       en: 'Not supported or not configured on this hardware',
                       fa: 'سخت‌افزار بیومتریک روی این دستگاه فعال نیست',
                     ),
-                    style: TextStyle(fontSize: 11.sp, color: AppColors.grey),
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.softGray),
                   ),
                 ),
 
-              Divider(height: 1, color: AppColors.lightDivider),
+              Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
 
               // Auto App Lock duration
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Container(
-                  padding: EdgeInsets.all(8.w),
+                  padding: EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(10.r),
+                    color: autoLockStyle.backgroundColor,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
                   child: Icon(
                     Icons.timer_outlined,
-                    color: AppColors.lightPrimary,
+                    color: autoLockStyle.iconColor,
                     size: 22.sp,
                   ),
                 ),
@@ -1686,30 +1719,27 @@ class _DeviceSessionsSecurityScreenState
                     ar: 'قفل التطبيق التلقائي',
                     zh: '应用自动锁定',
                   ),
-                  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
                 ),
                 subtitle: Text(
                   _lockLabel(_lockMinutes),
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.lightTextSecondary,
-                  ),
+                  style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       _lockLabel(_lockMinutes),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.lightPrimary,
+                      style: AppTextStyles.labelMedium.copyWith(
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                       ),
                     ),
                     SizedBox(width: 4.w),
                     Icon(
-                      Icons.chevron_left_rounded,
-                      color: AppColors.grey,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.chevron_left_rounded
+                          : Icons.chevron_right_rounded,
+                      color: isDark ? AppColors.softGray : AppColors.grey,
                       size: 20.sp,
                     ),
                   ],
@@ -1717,20 +1747,20 @@ class _DeviceSessionsSecurityScreenState
                 onTap: _chooseAutoLock,
               ),
 
-              Divider(height: 1, color: AppColors.lightDivider),
+              Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
 
               // App Lock PIN
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Container(
-                  padding: EdgeInsets.all(8.w),
+                  padding: EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(10.r),
+                    color: pinStyle.backgroundColor,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
                   child: Icon(
                     Icons.pin_outlined,
-                    color: AppColors.lightPrimary,
+                    color: pinStyle.iconColor,
                     size: 22.sp,
                   ),
                 ),
@@ -1742,7 +1772,7 @@ class _DeviceSessionsSecurityScreenState
                     ar: 'رمز قفل التطبيق',
                     zh: '应用锁定PIN',
                   ),
-                  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
                 ),
                 subtitle: Text(
                   _hasPinSet
@@ -1756,11 +1786,8 @@ class _DeviceSessionsSecurityScreenState
                           en: 'Not configured • Tap to set 4 digits',
                           fa: 'تنظیم نشده • برای تعیین ۴ رقم کلیک کنید',
                         ),
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: _hasPinSet
-                        ? AppColors.success
-                        : AppColors.lightTextSecondary,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: _hasPinSet ? AppColors.success : secondaryTextColor,
                   ),
                 ),
                 trailing: Row(
@@ -1768,14 +1795,14 @@ class _DeviceSessionsSecurityScreenState
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
+                        horizontal: AppSpacing.sm,
                         vertical: 2.h,
                       ),
                       decoration: BoxDecoration(
                         color: _hasPinSet
-                            ? AppColors.success.withValues(alpha: 0.1)
-                            : AppColors.warning.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8.r),
+                            ? AppColors.success.withValues(alpha: 0.12)
+                            : AppColors.warning.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                       ),
                       child: Text(
                         _hasPinSet
@@ -1785,19 +1812,18 @@ class _DeviceSessionsSecurityScreenState
                                 en: 'Not set',
                                 fa: 'تنظیم نشده',
                               ),
-                        style: TextStyle(
-                          fontSize: 11.sp,
+                        style: AppTextStyles.labelSmall.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: _hasPinSet
-                              ? AppColors.success
-                              : AppColors.warning,
+                          color: _hasPinSet ? AppColors.success : AppColors.warning,
                         ),
                       ),
                     ),
                     SizedBox(width: 4.w),
                     Icon(
-                      Icons.chevron_left_rounded,
-                      color: AppColors.grey,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.chevron_left_rounded
+                          : Icons.chevron_right_rounded,
+                      color: isDark ? AppColors.softGray : AppColors.grey,
                       size: 20.sp,
                     ),
                   ],
@@ -1814,7 +1840,11 @@ class _DeviceSessionsSecurityScreenState
   // ==========================================
   // 5. Security Activity Audit Log
   // ==========================================
-  Widget _buildSecurityAuditLogSection() {
+  Widget _buildSecurityAuditLogSection(bool isDark) {
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1828,15 +1858,11 @@ class _DeviceSessionsSecurityScreenState
               ar: 'سجل تدقيق النشاط الأمني',
               zh: '安全活动审计日志',
             ),
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 13.sp,
-              color: AppColors.lightPrimary,
-            ),
+            style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
           ),
         ),
         Padding(
-          padding: EdgeInsetsDirectional.only(start: 4.w, bottom: 10.h),
+          padding: EdgeInsetsDirectional.only(start: 4.w, bottom: AppSpacing.sm),
           child: Text(
             l10nPick(
               context,
@@ -1845,31 +1871,25 @@ class _DeviceSessionsSecurityScreenState
               ar: 'آخر عمليات تسجيل الدخول وتغييرات كلمة المرور على حسابك.',
               zh: '账户最近的登录记录、密码修改与安全事件。',
             ),
-            style: TextStyle(
-              fontSize: 11.sp,
-              color: AppColors.lightTextSecondary,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            color: cardBg,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              width: 0.8,
+            ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
           child: Column(
             children: [
               for (int i = 0; i < _auditLogs.length; i++) ...[
-                _buildAuditLogTile(_auditLogs[i]),
+                _buildAuditLogTile(_auditLogs[i], isDark),
                 if (i < _auditLogs.length - 1)
-                  Divider(height: 1, color: AppColors.lightDivider),
+                  Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
               ],
             ],
           ),
@@ -1878,17 +1898,20 @@ class _DeviceSessionsSecurityScreenState
     );
   }
 
-  Widget _buildAuditLogTile(SecurityAuditLogItem item) {
+  Widget _buildAuditLogTile(SecurityAuditLogItem item, bool isDark) {
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(8.w),
+            padding: EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
               color: item.iconColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             ),
             child: Icon(
               item.icon,
@@ -1896,7 +1919,7 @@ class _DeviceSessionsSecurityScreenState
               size: 18.sp,
             ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1906,18 +1929,14 @@ class _DeviceSessionsSecurityScreenState
                     Expanded(
                       child: Text(
                         item.title,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.black,
-                        ),
+                        style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
                       ),
                     ),
                     Text(
                       _formatRelativeTime(item.timestamp),
-                      style: TextStyle(
+                      style: AppTextStyles.bodySmall.copyWith(
                         fontSize: 10.sp,
-                        color: AppColors.lightTextSecondary,
+                        color: secondaryTextColor,
                       ),
                     ),
                   ],
@@ -1925,32 +1944,31 @@ class _DeviceSessionsSecurityScreenState
                 SizedBox(height: 4.h),
                 Text(
                   item.description,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.lightTextSecondary,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: secondaryTextColor,
                     height: 1.35,
                   ),
                 ),
                 if (item.ipAddress != null || item.location != null) ...[
                   SizedBox(height: 4.h),
                   Wrap(
-                    spacing: 8.w,
+                    spacing: AppSpacing.sm,
                     children: [
                       if (item.ipAddress != null)
                         Text(
                           'IP: ${item.ipAddress}',
-                          style: TextStyle(
+                          style: AppTextStyles.bodySmall.copyWith(
                             fontSize: 10.sp,
                             fontFamily: 'monospace',
-                            color: AppColors.lightTextTertiary,
+                            color: secondaryTextColor,
                           ),
                         ),
                       if (item.location != null)
                         Text(
                           item.location!,
-                          style: TextStyle(
+                          style: AppTextStyles.bodySmall.copyWith(
                             fontSize: 10.sp,
-                            color: AppColors.lightTextTertiary,
+                            color: secondaryTextColor,
                           ),
                         ),
                     ],
@@ -2015,15 +2033,12 @@ class _PulsingIndicatorState extends State<_PulsingIndicator>
             builder: (context, child) {
               final scale = _animation.value;
               final opacity = (1.0 - (scale - 1.0) / 1.1).clamp(0.0, 1.0);
-              return Transform.scale(
-                scale: scale,
-                child: Container(
-                  width: widget.size,
-                  height: widget.size,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: widget.color.withValues(alpha: opacity * 0.45),
-                  ),
+              return Container(
+                width: widget.size * scale,
+                height: widget.size * scale,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: widget.color.withValues(alpha: opacity * 0.4),
                 ),
               );
             },
@@ -2034,13 +2049,6 @@ class _PulsingIndicatorState extends State<_PulsingIndicator>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: widget.color,
-              boxShadow: [
-                BoxShadow(
-                  color: widget.color.withValues(alpha: 0.5),
-                  blurRadius: 4,
-                  spreadRadius: 1,
-                ),
-              ],
             ),
           ),
         ],

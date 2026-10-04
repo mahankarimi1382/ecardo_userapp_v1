@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/model/beneficiary_model.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
@@ -11,6 +12,7 @@ import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/controller/update_beneficiary_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/beneficiary/widgets/monogram_avatar.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
@@ -24,56 +26,165 @@ class UpdateBeneficiaryScreen extends StatefulWidget {
 }
 
 class _UpdateBeneficiaryScreenState extends State<UpdateBeneficiaryScreen> {
-  // Binding already registers the controller — avoid duplicate Get.put.
-  final UpdateBeneficiaryController controller =
-      Get.find<UpdateBeneficiaryController>();
-  final String accountUser = Get.arguments?["account_user"] ?? "";
-  final String beneficiaryId = Get.arguments?["beneficiary_id"] ?? "";
-  final Beneficiaries beneficiaryData = Get.arguments["beneficiary_data"];
+  late final UpdateBeneficiaryController controller;
+  late final String accountUser;
+  late final String beneficiaryId;
+  late final Beneficiaries beneficiaryData;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.find<UpdateBeneficiaryController>();
+    accountUser = Get.arguments?["account_user"] ?? "";
+    beneficiaryId = Get.arguments?["beneficiary_id"] ?? "";
+    beneficiaryData = Get.arguments["beneficiary_data"];
     controller.nickNameController.text = beneficiaryData.nickname ?? "";
+    controller.nickNameController.addListener(_onTextChanged);
+  }
+
+  @override
+  void dispose() {
+    controller.nickNameController.removeListener(_onTextChanged);
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final String displayName = controller.nickNameController.text.trim().isEmpty
+        ? (beneficiaryData.nickname ?? accountUser)
+        : controller.nickNameController.text.trim();
+    final String accountNumber = beneficiaryData.accountNumber ?? "";
+
+    final String titleSuffix = accountUser == "Merchant"
+        ? localizations.accountUserMerchant
+        : accountUser == "Beneficiary"
+        ? localizations.accountUserBeneficiary
+        : accountUser == "Agent"
+        ? localizations.accountUserAgent
+        : "";
 
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
+      appBar: const CommonDefaultAppBar(),
       body: Stack(
         children: [
           Column(
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               CommonAppBar(
-                title:
-                    "${localizations.updateBeneficiaryTitle} ${accountUser == "Merchant"
-                        ? localizations.accountUserMerchant
-                        : accountUser == "Beneficiary"
-                        ? localizations.accountUserBeneficiary
-                        : accountUser == "Agent"
-                        ? localizations.accountUserAgent
-                        : ""}",
+                title: "${localizations.updateBeneficiaryTitle} $titleSuffix",
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: AppSpacing.xxl),
               Expanded(
                 child: Container(
-                  margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadiusDirectional.only(
-                      topStart: Radius.circular(30),
-                      topEnd: Radius.circular(30),
-                    ),
+                  margin: const EdgeInsetsDirectional.symmetric(
+                    horizontal: AppSpacing.page,
                   ),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 18),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                    borderRadius: const BorderRadiusDirectional.only(
+                      topStart: Radius.circular(AppSpacing.radiusXl),
+                      topEnd: Radius.circular(AppSpacing.radiusXl),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                        blurRadius: AppSpacing.lg,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsetsDirectional.symmetric(
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.xl,
+                    ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 30),
+                        // Live Monogram Hero Preview Card
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(AppSpacing.lg),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: isDark
+                                  ? [
+                                      AppColors.darkSurfaceVariant,
+                                      AppColors.darkSurface,
+                                    ]
+                                  : [
+                                      AppColors.lightSecondaryContainer,
+                                      AppColors.lightSurfaceVariant,
+                                    ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusLg,
+                            ),
+                            border: Border.all(
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              MonogramAvatar(
+                                name: displayName,
+                                imageUrl: beneficiaryData.receiver?.avatar,
+                                size: 54,
+                                isVerified: true,
+                              ),
+                              const SizedBox(width: AppSpacing.md),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      displayName,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 0,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
+                                      ),
+                                    ),
+                                    if (accountNumber.isNotEmpty) ...[
+                                      const SizedBox(height: AppSpacing.xs),
+                                      Text(
+                                        accountNumber,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.5,
+                                          color: isDark
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
                         CommonRequiredLabelAndDynamicField(
                           labelText: localizations.updateBeneficiaryNickName,
                           isLabelRequired: true,
@@ -82,7 +193,7 @@ class _UpdateBeneficiaryScreenState extends State<UpdateBeneficiaryScreen> {
                             controller: controller.nickNameController,
                           ),
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: AppSpacing.xxxl),
                         CommonButton(
                           onPressed: () {
                             if (controller.nickNameController.text.isEmpty) {
@@ -111,6 +222,7 @@ class _UpdateBeneficiaryScreenState extends State<UpdateBeneficiaryScreen> {
                           width: double.infinity,
                           text: localizations.updateBeneficiaryUpdateButton,
                         ),
+                        const SizedBox(height: AppSpacing.xl),
                       ],
                     ),
                   ),
@@ -121,7 +233,7 @@ class _UpdateBeneficiaryScreenState extends State<UpdateBeneficiaryScreen> {
           Obx(
             () => Visibility(
               visible: controller.isBeneficiaryUpdateLoading.value,
-              child: CommonLoading(),
+              child: const CommonLoading(),
             ),
           ),
         ],

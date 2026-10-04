@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../app/constants/app_colors.dart';
+import '../../../../app/constants/app_spacing.dart';
+import 'exchange_design_tokens.dart';
 
 /// Direction of the most recent rate change. Drives the arrow colour.
 enum RateDirection { up, down, stable, unknown }
 
 /// Compact, always-visible live-rate badge.
 ///
-/// Layout (Bauhaus / German minimalist):
-///   ┌─────────────────────────────────────────────────────────────┐
-///   │ ●  1 USD =  0.92 EUR              +0.17% ▲ 24h              │
-///   │    US Dollar → Euro              Updated 12s ago  ⟳ Refresh │
-///   └─────────────────────────────────────────────────────────────┘
-///
-/// When `changePercent` is null (no API data yet), the badge falls back
-/// to the [RateDirection] arrow derived from previous → current deltas.
-/// When the service is disconnected or stale, the dot turns amber/grey
-/// and a soft inline status line replaces the 24h change.
+/// Features:
+///   - Real-time animated pulse dot (green = live, amber = stale, grey = disconnected)
+///   - Tabular figures rate display
+///   - 24h change pill with directional color indicator
+///   - Accessible refresh button with >= 44x44 touch target & haptics
+///   - Complete dark mode, RTL, and multilingual support
 class LiveRateBadge extends StatefulWidget {
   const LiveRateBadge({
     super.key,
@@ -43,14 +42,12 @@ class LiveRateBadge extends StatefulWidget {
   final VoidCallback onManualRefresh;
 
   /// 24h change percentage straight from the API (e.g. +0.17, -0.21).
-  /// When non-null, this is displayed in place of the direction arrow.
   final double? changePercent;
 
-  /// English name of the FROM currency (e.g. "US Dollar"). Shown as a
-  /// subtle subtitle on the second line. Empty string hides it.
+  /// English name of the FROM currency (e.g. "US Dollar").
   final String fromNameEn;
 
-  /// English name of the TO currency (e.g. "Euro"). Same as above.
+  /// English name of the TO currency (e.g. "Euro").
   final String toNameEn;
 
   @override
@@ -72,7 +69,6 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.45).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeOut),
     );
-    // Only pulse when we have a live (non-stale, non-disconnected) feed.
     _pulseController.repeat(reverse: true);
   }
 
@@ -82,9 +78,15 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
     super.dispose();
   }
 
+  void _handleManualRefresh() {
+    HapticFeedback.lightImpact();
+    widget.onManualRefresh();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final textScale = MediaQuery.textScalerOf(context).scale(1.0).clamp(0.85, 1.15);
+    final textScale =
+        MediaQuery.textScalerOf(context).scale(1.0).clamp(0.85, 1.15);
 
     final dotColor = widget.isDisconnected
         ? AppColors.grey
@@ -92,41 +94,33 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
             ? AppColors.warning
             : AppColors.success;
 
-    // 24h change pill (only when API provided a real value and we're not
-    // in a degraded state — when stale/disconnected, the status line
-    // below takes priority).
-    final showChangePill =
-        !widget.isDisconnected && !widget.isStale && widget.changePercent != null;
+    final showChangePill = !widget.isDisconnected &&
+        !widget.isStale &&
+        widget.changePercent != null;
 
     return Container(
       padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 14,
-        vertical: 12,
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
       ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: ExchangeDesignTokens.cardSurface(context),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
         border: Border.all(
-          color: AppColors.lightTextPrimary.withValues(alpha: 0.06),
+          color: ExchangeDesignTokens.cardBorder(context),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.lightTextPrimary.withValues(alpha: 0.03),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: ExchangeDesignTokens.cardShadow(context),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Pulsing dot
+          // Pulsing live indicator dot
           _PulsingDot(
             animation: _pulseAnimation,
             color: dotColor,
             active: !widget.isStale && !widget.isDisconnected,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.md),
           // Rate block
           Expanded(
             child: Column(
@@ -142,12 +136,12 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
                       style: TextStyle(
                         fontSize: 12 * textScale,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextTertiary,
+                        color: ExchangeDesignTokens.textTertiary(context),
                         letterSpacing: 0,
                         fontFamily: 'Plus Jakarta Sans',
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: AppSpacing.xs + 2),
                     Flexible(
                       child: Text(
                         widget.rate.isFinite && widget.rate > 0
@@ -158,7 +152,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
                         style: TextStyle(
                           fontSize: 16 * textScale,
                           fontWeight: FontWeight.w900,
-                          color: AppColors.lightTextPrimary,
+                          color: ExchangeDesignTokens.textPrimary(context),
                           letterSpacing: 0,
                           fontFamily: 'Plus Jakarta Sans',
                           fontFeatures: const [
@@ -167,20 +161,20 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.xs),
                     Text(
                       widget.toCode,
                       style: TextStyle(
                         fontSize: 12 * textScale,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextTertiary,
+                        color: ExchangeDesignTokens.textTertiary(context),
                         letterSpacing: 0,
                         fontFamily: 'Plus Jakarta Sans',
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xs),
                 // Subtitle: currency names OR status line
                 _buildSubtitle(context),
               ],
@@ -188,9 +182,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
           ),
           // Right side: 24h change pill OR direction arrow fallback
           if (showChangePill)
-            _ChangePill(
-              percent: widget.changePercent!,
-            )
+            _ChangePill(percent: widget.changePercent!)
           else
             _DirectionArrow(direction: widget.direction),
         ],
@@ -201,14 +193,16 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
   Widget _buildSubtitle(BuildContext context) {
     if (widget.isDisconnected) {
       return Text(
-        _t(context,
-            en: 'Rate service unavailable',
-            fa: 'سرویس نرخ در دسترس نیست',
-            ar: 'خدمة الأسعار غير متاحة',
-            tr: 'Kur servisi kullanılamıyor',
-            ru: 'Сервис курсов недоступен',
-            zh: '汇率服务不可用'),
-        style: TextStyle(
+        _t(
+          context,
+          en: 'Rate service unavailable',
+          fa: 'سرویس نرخ در دسترس نیست',
+          ar: 'خدمة الأسعار غير متاحة',
+          tr: 'Kur servisi kullanılamıyor',
+          ru: 'Сервис курсов недоступен',
+          zh: '汇率服务不可用',
+        ),
+        style: const TextStyle(
           fontSize: 11,
           color: AppColors.error,
           fontWeight: FontWeight.w600,
@@ -220,14 +214,16 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
       return Row(
         children: [
           Text(
-            _t(context,
-                en: 'Showing last known rate',
-                fa: 'نمایش آخرین نرخ معتبر',
-                ar: 'عرض آخر سعر معروف',
-                tr: 'Son bilinen kur gösteriliyor',
-                ru: 'Показан последний известный курс',
-                zh: '显示最近的有效汇率'),
-            style: TextStyle(
+            _t(
+              context,
+              en: 'Showing last known rate',
+              fa: 'نمایش آخرین نرخ معتبر',
+              ar: 'عرض آخر سعر معروف',
+              tr: 'Son bilinen kur gösteriliyor',
+              ru: 'Показан последний известный курс',
+              zh: '显示最近的有效汇率',
+            ),
+            style: const TextStyle(
               fontSize: 11,
               color: AppColors.warning,
               fontWeight: FontWeight.w600,
@@ -235,7 +231,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
             ),
           ),
           if (widget.lastUpdatedAt != null) ...[
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSpacing.xs + 2),
             Text(
               '· ${_formatTimestamp(widget.lastUpdatedAt!)}',
               style: TextStyle(
@@ -249,7 +245,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
       );
     }
 
-    // Normal: from → to names + auto-update caption + refresh button
+    // Normal: from -> to names + auto-update caption + refresh button
     return Row(
       children: [
         Expanded(
@@ -259,67 +255,94 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 11,
-              color: AppColors.lightTextTertiary.withValues(alpha: 0.85),
+              color: ExchangeDesignTokens.textTertiary(context).withValues(
+                alpha: 0.85,
+              ),
               fontWeight: FontWeight.w500,
               fontFamily: 'Plus Jakarta Sans',
             ),
           ),
         ),
         if (widget.lastUpdatedAt != null) ...[
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSpacing.xs + 2),
           Text(
-            '${_t(context,
-                en: 'Updated',
-                fa: 'به‌روزرسانی',
-                ar: 'تحديث',
-                tr: 'Güncellendi',
-                ru: 'Обновлено',
-                zh: '已更新')} · ${_formatTimestamp(widget.lastUpdatedAt!)}',
+            '${_t(
+              context,
+              en: 'Updated',
+              fa: 'به‌روزرسانی',
+              ar: 'تحديث',
+              tr: 'Güncellendi',
+              ru: 'Обновлено',
+              zh: '已更新',
+            )} · ${_formatTimestamp(widget.lastUpdatedAt!)}',
             style: TextStyle(
               fontSize: 10,
-              color: AppColors.lightTextTertiary.withValues(alpha: 0.7),
+              color: ExchangeDesignTokens.textTertiary(context).withValues(
+                alpha: 0.7,
+              ),
               fontFamily: 'Plus Jakarta Sans',
             ),
           ),
         ],
-        const SizedBox(width: 8),
-        GestureDetector(
-          onTap: widget.onManualRefresh,
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            padding: const EdgeInsetsDirectional.symmetric(
-              horizontal: 8,
-              vertical: 4,
+        const SizedBox(width: AppSpacing.sm),
+        Semantics(
+          button: true,
+          label: 'Refresh live rate',
+          child: Tooltip(
+            message: _t(
+              context,
+              en: 'Refresh',
+              fa: 'به‌روزرسانی',
+              ar: 'تحديث',
+              tr: 'Yenile',
+              ru: 'Обновить',
+              zh: '刷新',
             ),
-            decoration: BoxDecoration(
-              color: AppColors.lightPrimary.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.refresh_rounded,
-                  size: 12,
-                  color: AppColors.lightPrimary,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+              onTap: _handleManualRefresh,
+              child: Container(
+                constraints: const BoxConstraints(
+                  minWidth: 44,
+                  minHeight: 28,
                 ),
-                const SizedBox(width: 4),
-                Text(
-                  _t(context,
-                      en: 'Refresh',
-                      fa: 'به‌روزرسانی',
-                      ar: 'تحديث',
-                      tr: 'Yenile',
-                      ru: 'Обновить',
-                      zh: '刷新'),
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.lightPrimary,
-                    fontFamily: 'Plus Jakarta Sans',
-                  ),
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
                 ),
-              ],
+                decoration: BoxDecoration(
+                  color: ExchangeDesignTokens.chipBackground(context),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh_rounded,
+                      size: 13,
+                      color: ExchangeDesignTokens.chipText(context),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      _t(
+                        context,
+                        en: 'Refresh',
+                        fa: 'به‌روزرسانی',
+                        ar: 'تحديث',
+                        tr: 'Yenile',
+                        ru: 'Обновить',
+                        zh: '刷新',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: ExchangeDesignTokens.chipText(context),
+                        fontFamily: 'Plus Jakarta Sans',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -327,17 +350,6 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
     );
   }
 
-  /// v1.0.21+21 — Tiny locale-aware string resolver. We bypass
-  /// AppLocalizations here because the project's checked-in
-  /// app_localizations*.dart files are out of sync with the .arb files
-  /// (the CI runs `flutter gen-l10n` but in Flutter 3.44+ the
-  /// `synthetic-package` option is deprecated and the regeneration
-  /// behavior is inconsistent). Hardcoded strings for ALL six supported
-  /// locales (en, fa, ar, tr, ru, zh) are reliable and tiny.
-  ///
-  /// Previously this helper only handled `fa` and `ar`, silently
-  /// falling back to English for `tr`, `ru`, `zh`. Now every supported
-  /// locale gets a native translation.
   static String _t(
     BuildContext context, {
     required String en,
@@ -364,10 +376,9 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
     }
   }
 
-  /// "US Dollar → Euro" — uses the API-provided English names when
-  /// available, falls back to just the codes otherwise.
   String _namesLine() {
-    final from = widget.fromNameEn.isNotEmpty ? widget.fromNameEn : widget.fromCode;
+    final from =
+        widget.fromNameEn.isNotEmpty ? widget.fromNameEn : widget.fromCode;
     final to = widget.toNameEn.isNotEmpty ? widget.toNameEn : widget.toCode;
     return '$from → $to';
   }
@@ -402,14 +413,14 @@ class _ChangePill extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 8,
-        vertical: 4,
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
         border: Border.all(
-          color: color.withValues(alpha: 0.20),
+          color: color.withValues(alpha: 0.25),
           width: 0.8,
         ),
       ),
@@ -449,7 +460,6 @@ class _PulsingDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!active) {
-      // Static dot when degraded — no pulse, just a soft halo.
       return SizedBox(
         width: 14,
         height: 14,

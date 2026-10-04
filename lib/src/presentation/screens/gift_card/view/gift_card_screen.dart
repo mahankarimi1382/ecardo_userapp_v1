@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_card/controller/gift_card_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_header_section.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_history_section.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_card/view/sub_sections/gift_card_list_section.dart';
-
-import '../../../../app/constants/app_colors.dart';
 
 class GiftCardScreen extends StatefulWidget {
   const GiftCardScreen({super.key});
@@ -15,7 +15,7 @@ class GiftCardScreen extends StatefulWidget {
 }
 
 class _GiftCardScreenState extends State<GiftCardScreen> {
-  final GiftCardController controller = Get.find();
+  final GiftCardController controller = Get.find<GiftCardController>();
 
   @override
   void initState() {
@@ -26,25 +26,30 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.white, AppColors.lightBackground],
+            colors: isDark
+                ? [AppColors.darkSurface, AppColors.darkBackground]
+                : [AppColors.white, AppColors.lightBackground],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            stops: [0.26, 0.31],
+            stops: const [0.26, 0.31],
           ),
         ),
         child: Column(
           children: [
-            GiftCardHeaderSection(),
+            const GiftCardHeaderSection(),
             Obx(
               () => controller.selectedScreen.value == 0
-                  ? GiftCardListSection()
+                  ? const GiftCardListSection()
                   : controller.selectedScreen.value == 1
-                  ? GiftCardHistorySection()
-                  : SizedBox.shrink(),
+                  ? const GiftCardHistorySection()
+                  : const SizedBox.shrink(),
             ),
           ],
         ),

@@ -1,7 +1,9 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';
 import '../controllers/tour_controller.dart';
@@ -80,31 +82,48 @@ class _TourBookScreenState extends State<TourBookScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     return Scaffold(
-      backgroundColor: TravelTheme.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(context, en: 'Book Tour', fa: 'رزرو تور مسافرتی'),
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800, color: TravelTheme.ink),
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w800,
+            color: textPrimary,
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: TravelTheme.ink),
+          icon: Icon(Icons.arrow_back_ios_rounded, color: textPrimary, size: AppSpacing.iconSm.r),
           onPressed: () => Get.back(),
         ),
       ),
       body: ListView(
-        padding: EdgeInsets.all(16.r),
+        padding: EdgeInsets.all(AppSpacing.lg.r),
         children: [
           // Tour Header Info
           Container(
-            padding: EdgeInsets.all(14.r),
+            padding: EdgeInsets.all(AppSpacing.md.r),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: TravelTheme.shadow,
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+              border: Border.all(color: borderColor),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
             child: Row(
               children: [
@@ -112,24 +131,32 @@ class _TourBookScreenState extends State<TourBookScreen> {
                   width: 50.r,
                   height: 50.r,
                   decoration: BoxDecoration(
-                    color: TravelTheme.blue.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12.r),
+                    color: (isDark ? AppColors.darkPrimary : TravelTheme.blue).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   ),
-                  child: const Icon(Icons.travel_explore_rounded, color: TravelTheme.blue),
+                  child: Icon(
+                    Icons.travel_explore_rounded,
+                    color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                    size: AppSpacing.iconMd.r,
+                  ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: AppSpacing.md.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.tour.title,
-                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w800,
+                          color: textPrimary,
+                        ),
                       ),
                       SizedBox(height: 4.h),
                       Text(
                         '${widget.tour.city}, ${widget.tour.countryCode} • ${widget.tour.durationDays} ${l10nPick(context, en: 'Days', fa: 'روز')}',
-                        style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
+                        style: TextStyle(fontSize: 11.sp, color: textSecondary),
                       ),
                     ],
                   ),
@@ -137,29 +164,42 @@ class _TourBookScreenState extends State<TourBookScreen> {
               ],
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: AppSpacing.lg.h),
 
           // 1. Departure Date Selection
-          _SectionTitle(title: l10nPick(context, en: '1. Select Departure Date', fa: '۱. انتخاب تاریخ حرکت')),
-          SizedBox(height: 8.h),
+          _SectionTitle(
+            title: l10nPick(context, en: '1. Select Departure Date', fa: '۱. انتخاب تاریخ حرکت'),
+            textColor: textPrimary,
+          ),
+          SizedBox(height: AppSpacing.sm.h),
           if (widget.tour.departures.isEmpty)
-            Text(l10nPick(context, en: 'No departures available', fa: 'تاریخ حرکتی موجود نیست'))
+            Text(
+              l10nPick(context, en: 'No departures available', fa: 'تاریخ حرکتی موجود نیست'),
+              style: TextStyle(color: textSecondary),
+            )
           else
             Column(
               children: widget.tour.departures.map((dep) {
                 final isSelected = selectedDeparture?.id == dep.id;
                 return Padding(
-                  padding: EdgeInsets.only(bottom: 8.h),
+                  padding: EdgeInsets.only(bottom: AppSpacing.sm.h),
                   child: InkWell(
-                    onTap: () => setState(() => selectedDeparture = dep),
-                    borderRadius: BorderRadius.circular(12.r),
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      setState(() => selectedDeparture = dep);
+                    },
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                     child: Container(
-                      padding: EdgeInsets.all(12.r),
+                      padding: EdgeInsets.all(AppSpacing.md.r),
                       decoration: BoxDecoration(
-                        color: isSelected ? TravelTheme.blue.withValues(alpha: 0.08) : Colors.white,
-                        borderRadius: BorderRadius.circular(12.r),
+                        color: isSelected
+                            ? (isDark ? AppColors.darkPrimaryContainer : TravelTheme.blue.withValues(alpha: 0.08))
+                            : surfaceColor,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                         border: Border.all(
-                          color: isSelected ? TravelTheme.blue : TravelTheme.border,
+                          color: isSelected
+                              ? (isDark ? AppColors.darkPrimary : TravelTheme.blue)
+                              : borderColor,
                           width: isSelected ? 2 : 1,
                         ),
                       ),
@@ -170,20 +210,28 @@ class _TourBookScreenState extends State<TourBookScreen> {
                             children: [
                               Icon(
                                 isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
-                                color: isSelected ? TravelTheme.blue : TravelTheme.muted,
+                                color: isSelected
+                                    ? (isDark ? AppColors.darkPrimary : TravelTheme.blue)
+                                    : textSecondary,
                                 size: 20.r,
                               ),
-                              SizedBox(width: 10.w),
+                              SizedBox(width: AppSpacing.sm.w),
                               Text(
                                 '${dep.departDate} تا ${dep.returnDate}',
-                                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: textPrimary,
+                                ),
                               ),
                             ],
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                             decoration: BoxDecoration(
-                              color: dep.availableSeats > 3 ? Colors.green.shade50 : Colors.red.shade50,
+                              color: dep.availableSeats > 3
+                                  ? (isDark ? AppColors.success.withValues(alpha: 0.2) : Colors.green.shade50)
+                                  : (isDark ? AppColors.error.withValues(alpha: 0.2) : Colors.red.shade50),
                               borderRadius: BorderRadius.circular(6.r),
                             ),
                             child: Text(
@@ -191,7 +239,7 @@ class _TourBookScreenState extends State<TourBookScreen> {
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w700,
-                                color: dep.availableSeats > 3 ? Colors.green.shade700 : Colors.red.shade700,
+                                color: dep.availableSeats > 3 ? AppColors.success : AppColors.error,
                               ),
                             ),
                           ),
@@ -202,39 +250,55 @@ class _TourBookScreenState extends State<TourBookScreen> {
                 );
               }).toList(),
             ),
-          SizedBox(height: 16.h),
+          SizedBox(height: AppSpacing.lg.h),
 
           // 2. Hotel Tier Selection
-          _SectionTitle(title: l10nPick(context, en: '2. Hotel Accommodation Tier', fa: '۲. درجه هتل و اقامت')),
-          SizedBox(height: 8.h),
+          _SectionTitle(
+            title: l10nPick(context, en: '2. Hotel Accommodation Tier', fa: '۲. درجه هتل و اقامت'),
+            textColor: textPrimary,
+          ),
+          SizedBox(height: AppSpacing.sm.h),
           Row(
             children: [
-              _buildTierOption('ECO', 'اکونومی', Icons.eco_rounded),
-              SizedBox(width: 8.w),
-              _buildTierOption('STD', 'استاندارد', Icons.hotel_rounded),
-              SizedBox(width: 8.w),
-              _buildTierOption('LUX', 'لوکس VIP', Icons.diamond_rounded),
+              _buildTierOption('ECO', 'اکونومی', Icons.eco_rounded, isDark, surfaceColor, borderColor),
+              SizedBox(width: AppSpacing.sm.w),
+              _buildTierOption('STD', 'استاندارد', Icons.hotel_rounded, isDark, surfaceColor, borderColor),
+              SizedBox(width: AppSpacing.sm.w),
+              _buildTierOption('LUX', 'لوکس VIP', Icons.diamond_rounded, isDark, surfaceColor, borderColor),
             ],
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: AppSpacing.lg.h),
 
           // 3. Travelers Count
-          _SectionTitle(title: l10nPick(context, en: '3. Number of Travelers', fa: '۳. تعداد مسافران')),
-          SizedBox(height: 8.h),
+          _SectionTitle(
+            title: l10nPick(context, en: '3. Number of Travelers', fa: '۳. تعداد مسافران'),
+            textColor: textPrimary,
+          ),
+          SizedBox(height: AppSpacing.sm.h),
           Container(
-            padding: EdgeInsets.all(14.r),
+            padding: EdgeInsets.all(AppSpacing.md.r),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: TravelTheme.shadow,
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+              border: Border.all(color: borderColor),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
             child: Column(
               children: [
                 _buildCounterRow(
                   title: l10nPick(context, en: 'Adults (12+ years)', fa: 'بزرگسال (۱۲ سال به بالا)'),
                   count: adultsCount,
+                  isDark: isDark,
+                  textPrimary: textPrimary,
                   onMinus: adultsCount > 1
                       ? () {
+                          HapticFeedback.lightImpact();
                           setState(() {
                             adultsCount--;
                             _syncTravelerForms();
@@ -243,6 +307,7 @@ class _TourBookScreenState extends State<TourBookScreen> {
                       : null,
                   onPlus: adultsCount < 10
                       ? () {
+                          HapticFeedback.lightImpact();
                           setState(() {
                             adultsCount++;
                             _syncTravelerForms();
@@ -250,12 +315,15 @@ class _TourBookScreenState extends State<TourBookScreen> {
                         }
                       : null,
                 ),
-                const Divider(),
+                Divider(color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                 _buildCounterRow(
                   title: l10nPick(context, en: 'Children (2-12 years)', fa: 'کودک (۲ تا ۱۲ سال)'),
                   count: childrenCount,
+                  isDark: isDark,
+                  textPrimary: textPrimary,
                   onMinus: childrenCount > 0
                       ? () {
+                          HapticFeedback.lightImpact();
                           setState(() {
                             childrenCount--;
                             _syncTravelerForms();
@@ -264,6 +332,7 @@ class _TourBookScreenState extends State<TourBookScreen> {
                       : null,
                   onPlus: childrenCount < 6
                       ? () {
+                          HapticFeedback.lightImpact();
                           setState(() {
                             childrenCount++;
                             _syncTravelerForms();
@@ -274,21 +343,31 @@ class _TourBookScreenState extends State<TourBookScreen> {
               ],
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: AppSpacing.lg.h),
 
           // 4. Passenger Information
-          _SectionTitle(title: l10nPick(context, en: '4. Travelers Passport Information', fa: '۴. مشخصات گذرنامه مسافران')),
-          SizedBox(height: 8.h),
+          _SectionTitle(
+            title: l10nPick(context, en: '4. Travelers Passport Information', fa: '۴. مشخصات گذرنامه مسافران'),
+            textColor: textPrimary,
+          ),
+          SizedBox(height: AppSpacing.sm.h),
           ...List.generate(travelerControllers.length, (index) {
             final isAdult = index < adultsCount;
             final map = travelerControllers[index];
             return Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              padding: EdgeInsets.all(14.r),
+              margin: EdgeInsets.only(bottom: AppSpacing.cardGap.h),
+              padding: EdgeInsets.all(AppSpacing.md.r),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: TravelTheme.shadow,
+                color: surfaceColor,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                border: Border.all(color: borderColor),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,37 +376,46 @@ class _TourBookScreenState extends State<TourBookScreen> {
                     children: [
                       CircleAvatar(
                         radius: 12.r,
-                        backgroundColor: TravelTheme.blue,
-                        child: Text('${index + 1}', style: const TextStyle(color: Colors.white, fontSize: 11)),
+                        backgroundColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                        child: Text(
+                          '${index + 1}',
+                          style: TextStyle(
+                            color: isDark ? AppColors.deepBlack : AppColors.white,
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 8.w),
+                      SizedBox(width: AppSpacing.sm.w),
                       Text(
                         '${l10nPick(context, en: 'Passenger', fa: 'مسافر')} ${index + 1} (${isAdult ? l10nPick(context, en: 'Adult', fa: 'بزرگسال') : l10nPick(context, en: 'Child', fa: 'کودک')})',
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
+                        style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800, color: textPrimary),
                       ),
                     ],
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: AppSpacing.md.h),
                   Row(
                     children: [
                       Expanded(
                         child: TextField(
                           controller: map['first_name'],
+                          style: TextStyle(fontSize: 12.5.sp, color: textPrimary),
                           decoration: InputDecoration(
                             labelText: l10nPick(context, en: 'First Name (Latin)', fa: 'نام لاتین (مطابق پاسپورت)'),
-                            labelStyle: TextStyle(fontSize: 11.sp),
+                            labelStyle: TextStyle(fontSize: 11.sp, color: textSecondary),
                             border: const OutlineInputBorder(),
                             isDense: true,
                           ),
                         ),
                       ),
-                      SizedBox(width: 8.w),
+                      SizedBox(width: AppSpacing.sm.w),
                       Expanded(
                         child: TextField(
                           controller: map['last_name'],
+                          style: TextStyle(fontSize: 12.5.sp, color: textPrimary),
                           decoration: InputDecoration(
                             labelText: l10nPick(context, en: 'Last Name (Latin)', fa: 'نام خانوادگی لاتین'),
-                            labelStyle: TextStyle(fontSize: 11.sp),
+                            labelStyle: TextStyle(fontSize: 11.sp, color: textSecondary),
                             border: const OutlineInputBorder(),
                             isDense: true,
                           ),
@@ -335,12 +423,13 @@ class _TourBookScreenState extends State<TourBookScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: AppSpacing.sm.h),
                   TextField(
                     controller: map['passport'],
+                    style: TextStyle(fontSize: 12.5.sp, color: textPrimary),
                     decoration: InputDecoration(
                       labelText: l10nPick(context, en: 'Passport Number', fa: 'شماره گذرنامه (مثلاً A12345678)'),
-                      labelStyle: TextStyle(fontSize: 11.sp),
+                      labelStyle: TextStyle(fontSize: 11.sp, color: textSecondary),
                       border: const OutlineInputBorder(),
                       isDense: true,
                     ),
@@ -352,12 +441,15 @@ class _TourBookScreenState extends State<TourBookScreen> {
         ],
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.xl.w,
+          vertical: AppSpacing.md.h,
+        ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: surfaceColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
               blurRadius: 16,
               offset: const Offset(0, -4),
             ),
@@ -373,7 +465,7 @@ class _TourBookScreenState extends State<TourBookScreen> {
                   children: [
                     Text(
                       l10nPick(context, en: 'Total payable:', fa: 'مجموع کل رزرو:'),
-                      style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
+                      style: TextStyle(fontSize: 11.sp, color: textSecondary),
                     ),
                     SizedBox(height: 2.h),
                     Text(
@@ -381,7 +473,7 @@ class _TourBookScreenState extends State<TourBookScreen> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
-                        color: TravelTheme.green,
+                        color: AppColors.success,
                       ),
                     ),
                   ],
@@ -389,19 +481,19 @@ class _TourBookScreenState extends State<TourBookScreen> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: TravelTheme.blue,
-                  foregroundColor: Colors.white,
+                  backgroundColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                  foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.r),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.w, vertical: 14.h),
                 ),
                 onPressed: _onProceedToPayment,
                 child: Obx(() => controller.isBookingAction.value
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2),
                       )
                     : Text(
                         l10nPick(context, en: 'Continue to Payment', fa: 'مرحله بعد: پرداخت'),
@@ -415,32 +507,48 @@ class _TourBookScreenState extends State<TourBookScreen> {
     );
   }
 
-  Widget _buildTierOption(String tier, String label, IconData icon) {
+  Widget _buildTierOption(
+    String tier,
+    String label,
+    IconData icon,
+    bool isDark,
+    Color surfaceColor,
+    Color borderColor,
+  ) {
     final isSelected = selectedTier == tier;
+    final primaryColor = isDark ? AppColors.darkPrimary : TravelTheme.blue;
+
     return Expanded(
       child: InkWell(
-        onTap: () => setState(() => selectedTier = tier),
-        borderRadius: BorderRadius.circular(12.r),
+        onTap: () {
+          HapticFeedback.lightImpact();
+          setState(() => selectedTier = tier);
+        },
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.md.h, horizontal: 8.w),
           decoration: BoxDecoration(
-            color: isSelected ? TravelTheme.blue.withValues(alpha: 0.1) : Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            color: isSelected
+                ? (isDark ? AppColors.darkPrimaryContainer : TravelTheme.blue.withValues(alpha: 0.1))
+                : surfaceColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
             border: Border.all(
-              color: isSelected ? TravelTheme.blue : TravelTheme.border,
+              color: isSelected ? primaryColor : borderColor,
               width: isSelected ? 2 : 1,
             ),
           ),
           child: Column(
             children: [
-              Icon(icon, color: isSelected ? TravelTheme.blue : TravelTheme.muted, size: 22.r),
+              Icon(icon, color: isSelected ? primaryColor : (isDark ? AppColors.darkTextSecondary : AppColors.softGray), size: 22.r),
               SizedBox(height: 4.h),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                  color: isSelected ? TravelTheme.blue : TravelTheme.ink,
+                  color: isSelected
+                      ? primaryColor
+                      : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
                 ),
               ),
             ],
@@ -453,28 +561,33 @@ class _TourBookScreenState extends State<TourBookScreen> {
   Widget _buildCounterRow({
     required String title,
     required int count,
+    required bool isDark,
+    required Color textPrimary,
     required VoidCallback? onMinus,
     required VoidCallback? onPlus,
   }) {
+    final buttonColor = isDark ? AppColors.darkPrimary : TravelTheme.blue;
+    final disabledColor = isDark ? AppColors.darkBorder : Colors.grey.shade400;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700)),
+        Text(title, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textPrimary)),
         Row(
           children: [
             IconButton(
               icon: const Icon(Icons.remove_circle_outline_rounded),
               onPressed: onMinus,
-              color: onMinus != null ? TravelTheme.blue : Colors.grey.shade300,
+              color: onMinus != null ? buttonColor : disabledColor,
             ),
             Text(
               '$count',
-              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900),
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: textPrimary),
             ),
             IconButton(
               icon: const Icon(Icons.add_circle_outline_rounded),
               onPressed: onPlus,
-              color: onPlus != null ? TravelTheme.blue : Colors.grey.shade300,
+              color: onPlus != null ? buttonColor : disabledColor,
             ),
           ],
         ),
@@ -483,6 +596,7 @@ class _TourBookScreenState extends State<TourBookScreen> {
   }
 
   Future<void> _onProceedToPayment() async {
+    HapticFeedback.lightImpact();
     if (selectedDeparture == null) {
       Get.snackbar(
         l10nPick(context, en: 'Error', fa: 'خطا'),
@@ -519,8 +633,11 @@ class _TourBookScreenState extends State<TourBookScreen> {
       tier: selectedTier,
     );
 
+    if (!mounted) return;
+
     if (booking != null) {
       await controller.submitTravelers(booking.id, travelers);
+      if (!mounted) return;
       Get.to(() => TourPaymentScreen(bookingId: booking.id));
     } else {
       Get.snackbar(
@@ -533,7 +650,9 @@ class _TourBookScreenState extends State<TourBookScreen> {
 
 class _SectionTitle extends StatelessWidget {
   final String title;
-  const _SectionTitle({required this.title});
+  final Color textColor;
+
+  const _SectionTitle({required this.title, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -542,9 +661,8 @@ class _SectionTitle extends StatelessWidget {
       style: TextStyle(
         fontSize: 13.sp,
         fontWeight: FontWeight.w900,
-        color: TravelTheme.ink,
+        color: textColor,
       ),
     );
   }
 }
-

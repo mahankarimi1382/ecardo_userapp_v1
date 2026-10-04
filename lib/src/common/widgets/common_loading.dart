@@ -4,11 +4,20 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 
 class CommonLoading extends StatelessWidget {
   final bool? isColorShow;
+  final Color? color;
+  final double size;
 
-  const CommonLoading({super.key, this.isColorShow = false});
+  const CommonLoading({
+    super.key,
+    this.isColorShow = false,
+    this.color,
+    this.size = 50,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor = color ?? Theme.of(context).colorScheme.primary;
+
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -17,8 +26,8 @@ class CommonLoading extends StatelessWidget {
           : null,
       child: Center(
         child: LoadingAnimationWidget.staggeredDotsWave(
-          color: AppColors.lightPrimary,
-          size: 50,
+          color: effectiveColor,
+          size: size,
         ),
       ),
     );

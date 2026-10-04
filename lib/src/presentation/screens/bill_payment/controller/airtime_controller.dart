@@ -19,6 +19,10 @@ class AirtimeController extends GetxController {
   final RxDouble payableAmount = 0.0.obs;
   final RxString chargeText = "".obs;
   final RxString rateText = "".obs;
+  // Operator & Phone selection
+  final RxString selectedOperatorId = "mci".obs;
+  final RxString selectedOperatorName = "همراه اول".obs;
+  final RxString targetPhoneNumber = "".obs;
   // PAYMENT-FIX (P-2): raw backend response body of the last successful
   // pay-bill call (pass-through, no client model). Surfaced by the result
   // step so a backend "pending" payment no longer looks like a success.

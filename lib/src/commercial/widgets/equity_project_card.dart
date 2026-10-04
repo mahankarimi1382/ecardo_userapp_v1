@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class EquityProjectItem {
@@ -52,17 +53,19 @@ class EquityProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18.r),
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radius.r),
         border: Border.all(
-          color: AppColors.lightTextPrimary.withValues(alpha: 0.08),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -71,9 +74,9 @@ class EquityProjectCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with sector badge & yield highlight
+          // Header with sector badge & yield highlight (ROI Chip)
           Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 10.h),
+            padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, AppSpacing.lg.h, AppSpacing.lg.w, AppSpacing.sm.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -81,8 +84,8 @@ class EquityProjectCard extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                     decoration: BoxDecoration(
-                      color: AppColors.lightPrimary.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(8.r),
+                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                     ),
                     child: Text(
                       project.sector,
@@ -91,18 +94,22 @@ class EquityProjectCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.lightPrimary,
+                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: AppSpacing.sm.w),
+                // Glowing ROI Chip
                 Flexible(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                     decoration: BoxDecoration(
-                      color: AppColors.success.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8.r),
+                      color: AppColors.success.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      border: Border.all(
+                        color: AppColors.success.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -131,7 +138,7 @@ class EquityProjectCard extends StatelessWidget {
 
           // Title & Location
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -142,14 +149,18 @@ class EquityProjectCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     height: 1.3,
                   ),
                 ),
                 SizedBox(height: 4.h),
                 Row(
                   children: [
-                    Icon(Icons.location_on_outlined, size: 13.sp, color: AppColors.lightTextTertiary),
+                    Icon(
+                      Icons.location_on_outlined,
+                      size: 13.sp,
+                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                    ),
                     SizedBox(width: 4.w),
                     Expanded(
                       child: Text(
@@ -158,7 +169,7 @@ class EquityProjectCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: AppColors.lightTextTertiary,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -169,11 +180,11 @@ class EquityProjectCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 14.h),
+          SizedBox(height: AppSpacing.md.h),
 
-          // Progress Bar & Funding Numbers
+          // Progress Bar & Funding Numbers (Progress Meter)
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
             child: Column(
               children: [
                 Row(
@@ -195,41 +206,51 @@ class EquityProjectCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.lightPrimary,
+                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                         ),
                       ),
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      // Sample value: there is no live funding round behind
-                      // this project, so a countdown would be a fabricated
-                      // urgency promise.
-                      l10nPick(
-                        context,
-                        en: 'Sample project',
-                        fa: 'پروژه نمونه',
-                        ar: 'مشروع نموذجي',
-                        zh: '示例项目',
-                      ),
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.lightTextTertiary,
+                    SizedBox(width: AppSpacing.sm.w),
+                    Flexible(
+                      child: Text(
+                        // Sample value: there is no live funding round behind
+                        // this project, so a countdown would be a fabricated
+                        // urgency promise.
+                        l10nPick(
+                          context,
+                          en: 'Sample project',
+                          fa: 'پروژه نمونه',
+                          ar: 'مشروع نموذجي',
+                          zh: '示例项目',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 6.h),
+                // Smooth rounded Progress Meter
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(6.r),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
                   child: LinearProgressIndicator(
                     value: project.progressRatio,
                     minHeight: 7.h,
-                    backgroundColor: AppColors.lightBorder.withValues(alpha: 0.5),
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.lightPrimary),
+                    backgroundColor: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightBorder.withValues(alpha: 0.5),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    ),
                   ),
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: AppSpacing.sm.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -241,11 +262,11 @@ class EquityProjectCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: AppSpacing.sm.w),
                     Flexible(
                       child: Text(
                         '${l10nPick(context, en: 'Sample target', fa: 'نمونه هدف', ar: 'الهدف النموذجي', zh: '示例目标')}: ${project.currency} ${_formatCompact(project.targetAmount)}',
@@ -255,7 +276,7 @@ class EquityProjectCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextSecondary,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
@@ -265,12 +286,17 @@ class EquityProjectCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 14.h),
-          Divider(height: 1, color: AppColors.lightBorder.withValues(alpha: 0.6)),
+          SizedBox(height: AppSpacing.md.h),
+          Divider(
+            height: 1,
+            color: isDark
+                ? AppColors.darkDivider
+                : AppColors.lightBorder.withValues(alpha: 0.6),
+          ),
 
           // Bottom Bar: Min Ticket & Invest Button
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -290,7 +316,7 @@ class EquityProjectCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: AppColors.lightTextTertiary,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -304,26 +330,26 @@ class EquityProjectCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.lightTextPrimary,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: AppSpacing.md.w),
                 ElevatedButton(
                   onPressed: () {
                     HapticFeedback.selectionClick();
                     onInvestTap();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.lightPrimary,
-                    foregroundColor: Colors.white,
+                    backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.deepBlack : Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.sm.h),
                     elevation: 0,
                   ),
                   child: Text(

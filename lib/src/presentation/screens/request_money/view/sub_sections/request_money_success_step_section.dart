@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -27,6 +29,8 @@ class _RequestMoneySuccessStepSectionState
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: controller.wallet.value!.name!,
       siteCurrencyCode: settingsService.getSetting("site_currency")!,
@@ -36,11 +40,6 @@ class _RequestMoneySuccessStepSectionState
       isCrypto: controller.wallet.value!.isCrypto!,
     );
 
-    // M-8 — `charge` / `final_amount` arrive from the backend success payload
-    // as dynamic values; the previous `double.tryParse(x.toString())!` chain
-    // crashed the success step whenever either was null or non-numeric.
-    // Safe-parse with a 0.0 fallback instead — valid values render exactly
-    // as before.
     final dynamic requestData = controller.successPaymentData.value?["request"];
     final double successChargeValue =
         double.tryParse(requestData?["charge"]?.toString() ?? '') ?? 0.0;
@@ -49,168 +48,193 @@ class _RequestMoneySuccessStepSectionState
 
     return Obx(
       () => controller.isRequestMoneyLoading.value
-          ? CommonLoading()
+          ? const CommonLoading()
           : SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.page,
+                ),
                 child: Column(
                   children: [
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSpacing.xl),
+                    // Success Hero Banner
                     Container(
                       width: double.infinity,
-                      height: 192,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.xl,
+                      ),
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(PngAssets.pendingAndSuccessFrame),
-                          fit: BoxFit.contain,
+                        color: isDark
+                            ? AppColors.darkSurfaceVariant
+                            : AppColors.success.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXl,
+                        ),
+                        border: Border.all(
+                          color: AppColors.success.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(PngAssets.commonSuccessIcon, width: 80),
-                          SizedBox(height: 16),
+                          Image.asset(
+                            PngAssets.commonSuccessIcon,
+                            width: 72,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
                           Text(
-                            textAlign: TextAlign.center,
                             localization.requestMoneySuccessStepSectionTitle,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               letterSpacing: 0,
                               fontWeight: FontWeight.w900,
-                              fontSize: 24,
-                              color: AppColors.lightTextPrimary,
+                              fontSize: 22,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: AppSpacing.xl),
+
+                    // Transaction Detail Card
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.lg,
+                      ),
                       decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg,
+                        ),
+                        border: Border.all(
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? AppColors.darkShadow
+                                : AppColors.lightShadow,
+                            blurRadius: AppSpacing.md,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
                       child: Column(
                         children: [
-                          _buildSuccessDynamicContent(
+                          _buildDynamicRow(
+                            isDark: isDark,
                             title: localization
                                 .requestMoneySuccessStepSectionAmount,
                             content:
                                 "${double.tryParse(controller.requestAmountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                            contentColor: AppColors.lightTextPrimary,
+                            contentColor: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildSuccessDynamicContent(
+                          _buildDivider(isDark),
+                          _buildDynamicRow(
+                            isDark: isDark,
                             title: localization
                                 .requestMoneySuccessStepSectionRecipientName,
-                            content: controller
-                                .successPaymentData
-                                .value!["request"]["recipient"]["name"],
-                            contentColor: AppColors.lightTextPrimary,
+                            content:
+                                "${controller.successPaymentData.value?["request"]?["recipient"]?["name"] ?? ''}",
+                            contentColor: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildSuccessDynamicContent(
+                          _buildDivider(isDark),
+                          _buildDynamicRow(
+                            isDark: isDark,
                             title: localization
                                 .requestMoneySuccessStepSectionRequestWalletName,
-                            content: controller
-                                .successPaymentData
-                                .value!["request"]["requester_wallet_currency_name"],
-                            contentColor: AppColors.lightTextPrimary,
+                            content:
+                                "${controller.successPaymentData.value?["request"]?["requester_wallet_currency_name"] ?? ''}",
+                            contentColor: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildSuccessDynamicContent(
+                          _buildDivider(isDark),
+                          _buildDynamicRow(
+                            isDark: isDark,
                             title: localization
                                 .requestMoneySuccessStepSectionCharge,
                             content:
                                 "${successChargeValue.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                            contentColor: AppColors.error,
+                            contentColor: AppColors.warning,
                           ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildSuccessDynamicContent(
+                          _buildDivider(isDark),
+                          _buildDynamicRow(
+                            isDark: isDark,
                             title: localization
                                 .requestMoneySuccessStepSectionFinalAmount,
                             content:
                                 "${successFinalAmountValue.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
                             contentColor: AppColors.success,
+                            isTotal: true,
                           ),
-                          const SizedBox(height: 20),
-                          Divider(
-                            height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
-                          ),
-                          const SizedBox(height: 20),
+                          _buildDivider(isDark),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.lg,
+                            ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   localization
                                       .requestMoneySuccessStepSectionStatus,
                                   style: TextStyle(
                                     letterSpacing: 0,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 15,
-                                    color: AppColors.lightTextPrimary
-                                        .withValues(alpha: 0.60),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary,
                                   ),
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 3,
+                                    horizontal: AppSpacing.sm,
+                                    vertical: AppSpacing.xs,
                                   ),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusFull,
+                                    ),
                                     border: Border.all(
                                       color: AppColors.warning.withValues(
-                                        alpha: 0.2,
+                                        alpha: 0.3,
                                       ),
                                     ),
                                     color: AppColors.warning.withValues(
-                                      alpha: 0.05,
+                                      alpha: 0.08,
                                     ),
                                   ),
                                   child: Text(
                                     () {
-                                      final status =
-                                          (controller
-                                                      .successPaymentData
-                                                      .value!["request"]["status"] ??
-                                                  "")
-                                              .toString()
-                                              .toLowerCase();
+                                      final status = (controller
+                                                  .successPaymentData
+                                                  .value?["request"]?["status"] ??
+                                              "")
+                                          .toString()
+                                          .toLowerCase();
                                       return status.isNotEmpty
                                           ? status[0].toUpperCase() +
-                                                status.substring(1)
+                                              status.substring(1)
                                           : "";
                                     }(),
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       letterSpacing: 0,
-                                      fontSize: 13,
+                                      fontSize: 12,
                                       color: AppColors.warning,
                                     ),
                                   ),
@@ -221,21 +245,23 @@ class _RequestMoneySuccessStepSectionState
                         ],
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: AppSpacing.xxxl),
+
                     CommonButton(
                       onPressed: () async {
+                        HapticFeedback.lightImpact();
                         controller.currentStep.value = 0;
                         controller.clearFields();
                         await controller.fetchWallets();
                       },
                       width: double.infinity,
-
                       text: localization
                           .requestMoneySuccessStepSectionRequestAgainButton,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.md),
                     CommonButton(
                       onPressed: () async {
+                        HapticFeedback.lightImpact();
                         Get.delete<RequestMoneyController>();
                         Get.toNamed(BaseRoute.navigation);
                         await Get.find<HomeController>().loadData();
@@ -243,16 +269,18 @@ class _RequestMoneySuccessStepSectionState
                       width: double.infinity,
                       text: localization
                           .requestMoneySuccessStepSectionBackHomeButton,
-                      backgroundColor: AppColors.lightPrimary.withValues(
-                        alpha: 0.06,
-                      ),
-                      borderColor: AppColors.lightPrimary.withValues(
-                        alpha: 0.60,
-                      ),
-                      borderWidth: 2,
-                      textColor: AppColors.lightTextPrimary,
+                      backgroundColor: isDark
+                          ? AppColors.darkSurfaceVariant
+                          : AppColors.lightPrimary.withValues(alpha: 0.06),
+                      borderColor: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightPrimary.withValues(alpha: 0.60),
+                      borderWidth: 1.5,
+                      textColor: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
-                    const SizedBox(height: 80),
+                    const SizedBox(height: AppSpacing.huge),
                   ],
                 ),
               ),
@@ -260,36 +288,50 @@ class _RequestMoneySuccessStepSectionState
     );
   }
 
-  static Widget _buildSuccessDynamicContent({
+  static Widget _buildDivider(bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      child: Divider(
+        height: 1,
+        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+      ),
+    );
+  }
+
+  static Widget _buildDynamicRow({
+    required bool isDark,
     required String title,
     required String content,
     required Color contentColor,
+    bool isTotal = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             title,
             style: TextStyle(
               letterSpacing: 0,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
+              fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
+              fontSize: isTotal ? 16 : 14,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Text(
               content,
               style: TextStyle(
                 letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 15,
+                fontWeight: isTotal ? FontWeight.w900 : FontWeight.w700,
+                fontSize: isTotal ? 17 : 14,
                 color: contentColor,
               ),
-              maxLines: 5,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.end,
             ),

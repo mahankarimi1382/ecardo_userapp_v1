@@ -109,9 +109,9 @@ class _TravelSuggestionSheetState extends State<_TravelSuggestionSheet> {
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.78,
       padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: TravelTheme.cardSurfaceFor(context),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: SafeArea(
         top: false,
@@ -126,6 +126,7 @@ class _TravelSuggestionSheetState extends State<_TravelSuggestionSheet> {
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w900,
+                      color: TravelTheme.textPrimaryFor(context),
                     ),
                   ),
                 ),
@@ -148,16 +149,17 @@ class _TravelSuggestionSheetState extends State<_TravelSuggestionSheet> {
             SizedBox(height: 14.h),
             Expanded(
               child: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(color: widget.color),
-                    )
+                  ? const TravelShimmerLoading(type: TravelShimmerType.tile, count: 5)
                   : suggestions.isEmpty
                   ? TravelEmptyState(
                       message: localization.travelOfferUnavailable,
                     )
                   : ListView.separated(
                       itemCount: suggestions.length,
-                      separatorBuilder: (_, _) => const Divider(height: 1),
+                      separatorBuilder: (_, _) => Divider(
+                        height: 1,
+                        color: TravelTheme.borderFor(context),
+                      ),
                       itemBuilder: (context, index) {
                         final suggestion = suggestions[index];
                         return ListTile(
@@ -178,14 +180,17 @@ class _TravelSuggestionSheetState extends State<_TravelSuggestionSheet> {
                           ),
                           title: TravelBidiText(
                             suggestion.title,
-                            style: const TextStyle(fontWeight: FontWeight.w800),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: TravelTheme.textPrimaryFor(context),
+                            ),
                           ),
                           subtitle: suggestion.subtitle.isEmpty
                               ? null
                               : TravelBidiText(
                                   suggestion.subtitle,
                                   style: TextStyle(
-                                    color: TravelTheme.muted,
+                                    color: TravelTheme.textSecondaryFor(context),
                                     fontSize: 11.sp,
                                   ),
                                 ),

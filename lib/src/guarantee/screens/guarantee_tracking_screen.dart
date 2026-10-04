@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/common/widgets/financial_service_unavailable_banner.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/guarantee_controller.dart';
 import '../models/guarantee_models.dart';
+import '../widgets/guarantee_status_stepper.dart';
 import 'guarantee_application_screen.dart';
 import 'guarantee_detail_screen.dart';
 
@@ -50,19 +53,21 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'RELEASED': return const Color(0xFF059669);
+      case 'RELEASED': return AppColors.success;
       case 'ISSUED': return const Color(0xFF0D9488);
-      case 'CLAIMED': case 'REJECTED': return const Color(0xFFDC2626);
-      case 'MARGIN_PENDING': case 'IN_ISSUANCE': return const Color(0xFFD97706);
-      case 'UNDER_REVIEW': case 'COMPLEMENT_REQUIRED': return const Color(0xFF2563EB);
+      case 'CLAIMED': case 'REJECTED': return AppColors.error;
+      case 'MARGIN_PENDING': case 'IN_ISSUANCE': return AppColors.warning;
+      case 'UNDER_REVIEW': case 'COMPLEMENT_REQUIRED': return AppColors.info;
       default: return Colors.blueGrey;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -84,7 +89,8 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
         return RefreshIndicator(
           onRefresh: controller.fetchMyCases,
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.md.h),
             children: [
               FinancialServiceUnavailableBanner(
                 serviceNameFa: 'ضمانت‌نامه و LC',
@@ -95,68 +101,44 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
                 onRetry: controller.fetchMyCases,
               ),
 
-              SizedBox(height: 10.h),
+              SizedBox(height: AppSpacing.sm.h),
 
               if (isLoading && cases.isEmpty) ...[
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(40.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+                const GuaranteeSkeletonLoader(itemCount: 3),
               ] else if (cases.isEmpty) ...[
-                Container(
-                  margin: EdgeInsets.only(top: 20.h),
-                  padding: EdgeInsets.all(24.r),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(18.r),
-                    border: Border.all(color: AppColors.lightBorder),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(Icons.shield_outlined, size: 54.sp, color: Colors.grey.shade400),
-                      SizedBox(height: 12.h),
-                      Text(
-                        l10nPick(
-                          context,
-                          fa: 'پرونده ضمانت‌نامه فعالی یافت نشد',
-                          en: 'No active guarantee application found',
-                          ar: 'لا توجد طلبات ضمان نشطة',
-                          zh: '暂无进行中的保函申请',
-                        ),
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
-                      ),
-                      SizedBox(height: 6.h),
-                      Text(
-                        l10nPick(
-                          context,
-                          fa: 'پرونده‌های صدور، تودیع وجه التزام و استعلام سپام شما در این کارتابل نمایش داده می‌شوند.',
-                          en: 'Your guarantee issuance, margin deposits, and SEPAM status will appear here.',
-                          ar: 'تظهر هنا ملفات الضمان وتأميناتها وسجلات سبام الخاصة بك.',
-                          zh: '您的保函申请、保证金质押及央行SEPAM状态将在此处集中展现。',
-                        ),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightTextSecondary),
-                      ),
-                      SizedBox(height: 18.h),
-                      CommonButton(
-                        height: 42,
-                        text: l10nPick(
-                          context,
-                          fa: 'ثبت درخواست ضمانت‌نامه جدید',
-                          en: 'New Guarantee Request',
-                          ar: 'تقديم طلب ضمان جديد',
-                          zh: '提交新保函申请',
-                        ),
-                        backgroundColor: const Color(0xFF0D9488),
-                        onPressed: () => Get.to(() => const GuaranteeApplicationScreen()),
-                      ),
-                    ],
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: AppSpacing.xxl.h),
+                  child: EcardoEmptyState(
+                    iconData: Icons.shield_outlined,
+                    title: l10nPick(
+                      context,
+                      fa: 'پرونده ضمانت‌نامه فعالی یافت نشد',
+                      en: 'No active guarantee application found',
+                      ar: 'لا توجد طلبات ضمان نشطة',
+                      zh: '暂无进行中的保函申请',
+                    ),
+                    description: l10nPick(
+                      context,
+                      fa: 'پرونده‌های صدور، تودیع وجه التزام و استعلام سپام شما در این کارتابل نمایش داده می‌شوند.',
+                      en: 'Your guarantee issuance, margin deposits, and SEPAM status will appear here.',
+                      ar: 'تظهر هنا ملفات الضمان وتأميناتها وسجلات سبام الخاصة بك.',
+                      zh: '您的保函申请、保证金质押及央行SEPAM状态将在此处集中展现。',
+                    ),
+                    primaryActionLabel: l10nPick(
+                      context,
+                      fa: 'ثبت درخواست ضمانت‌نامه جدید',
+                      en: 'New Guarantee Request',
+                      ar: 'تقديم طلب ضمان جديد',
+                      zh: '提交新保函申请',
+                    ),
+                    onPrimaryAction: () {
+                      HapticFeedback.lightImpact();
+                      Get.to(() => const GuaranteeApplicationScreen());
+                    },
                   ),
                 ),
               ] else ...[
-                ...cases.map((c) => _buildCaseCard(context, c)),
+                ...cases.map((c) => _buildCaseCard(context, c, isDark)),
               ],
             ],
           ),
@@ -165,105 +147,117 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
     );
   }
 
-  Widget _buildCaseCard(BuildContext context, GuaranteeCaseModel c) {
+  Widget _buildCaseCard(BuildContext context, GuaranteeCaseModel c, bool isDark) {
     final statusColor = _statusColor(c.status);
     final statusText = _statusLabel(context, c.status);
 
-    return Container(
-      margin: EdgeInsets.only(bottom: 14.h),
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.lightBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+    return InkWell(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Get.to(() => GuaranteeDetailScreen(caseId: c.id));
+      },
+      borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+      child: Container(
+        margin: EdgeInsetsDirectional.only(bottom: AppSpacing.md.h),
+        padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${c.instrument?.name ?? ''}',
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  c.instrument?.name ?? '',
+                  style: AppTextStyles.titleSmall.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
                 ),
-                child: Text(
-                  statusText,
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w800, color: statusColor),
+                Container(
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 3.h),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                    border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+                  ),
+                  child: Text(
+                    statusText,
+                    style: AppTextStyles.labelSmall.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: statusColor,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            '${l10nPick(context, fa: 'شماره پرونده', en: 'Case No.', ar: 'رقم الملف', zh: '案号')}: ${c.caseNo}',
-            style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
-          ),
-          const Divider(height: 18),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10nPick(context, fa: 'ذینفع / کارفرما:', en: 'Beneficiary:', ar: 'المستفيد:', zh: '受益人：'),
-                style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
-              ),
-              Text(
-                c.beneficiaryName,
-                style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-          SizedBox(height: 6.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10nPick(context, fa: 'مبلغ اسمی:', en: 'Face Amount:', ar: 'المبلغ:', zh: '保函面额：'),
-                style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
-              ),
-              Text(
-                '${c.amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${c.currency}',
-                style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFF0D9488)),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-              ),
-              onPressed: () => Get.to(() => GuaranteeDetailScreen(caseId: c.id)),
-              icon: Icon(Icons.arrow_forward_rounded, size: 16.sp, color: const Color(0xFF0D9488)),
-              label: Text(
-                l10nPick(
-                  context,
-                  fa: 'جزئیات، واریز وجه التزام و اسناد',
-                  en: 'Details, Margin & Documents',
-                  ar: 'التفاصيل وتوديع التأمين والوثائق',
-                  zh: '查看详情、补交质押与电子凭证',
-                ),
-                style: const TextStyle(color: Color(0xFF0D9488), fontWeight: FontWeight.w700),
+              ],
+            ),
+            SizedBox(height: AppSpacing.xs.h),
+            Text(
+              '${l10nPick(context, fa: 'شماره پرونده', en: 'Case No.', ar: 'رقم الملف', zh: '案号')}: ${c.caseNo}',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
-          ),
-        ],
+            Divider(
+              height: 18,
+              color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10nPick(context, fa: 'ذینفع', en: 'Beneficiary', ar: 'المستفيد', zh: '受益人'),
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      ),
+                    ),
+                    Text(
+                      c.beneficiaryName,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      l10nPick(context, fa: 'مبلغ ضمانت', en: 'Amount', ar: 'المبلغ', zh: '金额'),
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      ),
+                    ),
+                    Text(
+                      '${c.amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${c.currency}',
+                      style: AppTextStyles.titleSmall.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFF0D9488),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

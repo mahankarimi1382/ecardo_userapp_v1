@@ -182,18 +182,28 @@ class PrivacyPolicyScreen extends StatelessWidget {
       (sec7Title, sec7Body),
     ];
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text(title),
-        backgroundColor: AppColors.lightBackground,
-        foregroundColor: AppColors.black,
+        title: Text(
+          title,
+          style: AppTextStyles.titleMedium.copyWith(color: primaryTextColor),
+        ),
+        backgroundColor: bgColor,
+        foregroundColor: primaryTextColor,
         elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsetsDirectional.fromSTEB(
           AppSpacing.page,
-          AppSpacing.page,
+          AppSpacing.md,
           AppSpacing.page,
           AppSpacing.bottomSafe(context, AppSpacing.page),
         ),
@@ -202,12 +212,13 @@ class PrivacyPolicyScreen extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSpacing.lg),
               decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(16),
+                color: cardBg,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                 border: Border.all(
-                  color: AppColors.lightPrimary.withValues(alpha: 0.12),
+                  color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -215,52 +226,51 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 children: [
                   Text(
                     brandHeader,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: AppTextStyles.titleSmall.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.black,
+                      color: primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     lastUpdated,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: secondaryTextColor,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             ...sections.map(
               (sec) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
+                padding: EdgeInsets.only(bottom: AppSpacing.md),
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(AppSpacing.lg),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(14),
+                    color: cardBg,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                    border: Border.all(color: borderColor, width: 0.8),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         sec.$1,
-                        style: const TextStyle(
-                          fontSize: 15,
+                        style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: AppColors.black,
+                          color: primaryTextColor,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppSpacing.sm),
                       Text(
                         sec.$2,
-                        style: TextStyle(
-                          fontSize: 13.5,
+                        style: AppTextStyles.bodyMedium.copyWith(
                           height: 1.6,
-                          color: Colors.grey.shade800,
+                          color: isDark
+                              ? AppColors.warmWhite.withValues(alpha: 0.85)
+                              : AppColors.lightTextPrimary.withValues(alpha: 0.85),
                         ),
                       ),
                     ],

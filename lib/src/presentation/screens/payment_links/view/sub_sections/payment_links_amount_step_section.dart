@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
 import 'package:ecardo_user/src/presentation/screens/payment_links/controller/payment_links_controller.dart';
-
-import '../../../../../../l10n/app_localizations.dart';
-import '../../../../../app/constants/assets_path/png/png_assets.dart';
-import '../../../../../common/widgets/button/common_button.dart';
-import '../../../../../common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
 
 class PaymentLinksAmountStepSection extends StatefulWidget {
   const PaymentLinksAmountStepSection({super.key});
@@ -34,56 +36,144 @@ class _PaymentLinksAmountStepSectionState
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
-      padding: EdgeInsetsDirectional.only(
-        start: 20,
-        end: 20,
-        bottom: 24,
-        top: 2,
+      padding: const EdgeInsetsDirectional.only(
+        start: AppSpacing.page,
+        end: AppSpacing.page,
+        bottom: AppSpacing.xxl,
+        top: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadiusDirectional.only(
-          topStart: Radius.circular(30),
-          topEnd: Radius.circular(30),
+        color: isDark ? AppColors.darkCard : AppColors.lightCard,
+        borderRadius: const BorderRadiusDirectional.only(
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+            blurRadius: AppSpacing.lg,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Obx(() {
         if (controller.isLoading.value) {
-          return CommonLoading();
+          return const CommonLoading();
         }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16),
-            CommonRequiredLabelAndDynamicField(
-              labelText: localizations.paymentLinksAmountSectionTitle,
-              isLabelRequired: false,
-              dynamicField: Obx(
-                () => CommonTextInputField(
-                  focusNode: controller.amountFocusNode,
-                  isFocused: controller.isAmountFocused.value,
-                  backgroundColor: AppColors.transparent,
-                  hintText: "",
-                  controller: controller.amountController,
-                  keyboardType: TextInputType.number,
+            const SizedBox(height: AppSpacing.lg),
+
+            // Amount Hero Card with Currency Badge and Quick Amount Chips
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppSpacing.md),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.darkSurfaceVariant.withValues(alpha: 0.5)
+                    : AppColors.lightSecondaryContainer.withValues(alpha: 0.35),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CommonRequiredLabelAndDynamicField(
+                    labelText: localizations.paymentLinksAmountSectionTitle,
+                    isLabelRequired: false,
+                    dynamicField: Obx(
+                      () => CommonTextInputField(
+                        focusNode: controller.amountFocusNode,
+                        isFocused: controller.isAmountFocused.value,
+                        isSuffixIconCompact: false,
+                        suffixIcon: Obx(() {
+                          final code = controller.currency.value?.code ??
+                              Get.find<SettingsService>()
+                                  .getSetting("site_currency") ??
+                              "USD";
+                          return Container(
+                            margin: const EdgeInsetsDirectional.only(
+                              end: AppSpacing.sm,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: AppSpacing.xs,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.darkPrimary
+                                      .withValues(alpha: 0.15)
+                                  : AppColors.lightPrimary
+                                      .withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm,
+                              ),
+                            ),
+                            child: Text(
+                              code,
+                              style: TextStyle(
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary,
+                              ),
+                            ),
+                          );
+                        }),
+                        borderRadius: AppSpacing.radiusLg,
+                        backgroundColor: AppColors.transparent,
+                        hintText: "0.00",
+                        controller: controller.amountController,
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Obx(() {
+                    final curr = controller.currency.value;
+                    return QuickAmountSelector(
+                      textController: controller.amountController,
+                      availableBalance: 1000.0,
+                      isCrypto: curr?.type?.toLowerCase() == 'crypto',
+                      currencyCode: curr?.code,
+                      height: 32.0,
+                      chipSpacing: AppSpacing.sm,
+                    );
+                  }),
+                ],
+              ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
+
             CommonRequiredLabelAndDynamicField(
               labelText: localizations.paymentLinksCurrencyLabel,
               isLabelRequired: true,
               dynamicField: CommonTextInputField(
-                suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
-                suffixIconColor: AppColors.lightTextTertiary,
+                suffixIcon: Image.asset(
+                  PngAssets.arrowDownCommonIcon,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextTertiary,
+                ),
+                suffixIconColor: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextTertiary,
                 focusNode: controller.currencyFocusNode,
                 isFocused: controller.isCurrencyFocused.value,
+                borderRadius: AppSpacing.radiusLg,
                 backgroundColor: AppColors.transparent,
                 controller: controller.currencyController,
                 onTap: () {
+                  HapticFeedback.lightImpact();
                   List<String> dropdownList = [
                     Get.find<SettingsService>()
                         .getSetting("site_currency")
@@ -134,7 +224,7 @@ class _PaymentLinksAmountStepSectionState
                 hintText: localizations.paymentLinksCurrencyHint,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             CommonRequiredLabelAndDynamicField(
               labelText: localizations.paymentLinksNoteLabel,
               isLabelRequired: false,
@@ -142,6 +232,7 @@ class _PaymentLinksAmountStepSectionState
                 () => CommonTextInputField(
                   focusNode: controller.noteFocusNode,
                   isFocused: controller.isNoteFocused.value,
+                  borderRadius: AppSpacing.radiusLg,
                   backgroundColor: AppColors.transparent,
                   hintText: "",
                   controller: controller.noteController,
@@ -150,17 +241,20 @@ class _PaymentLinksAmountStepSectionState
                 ),
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: AppSpacing.xxxl),
             Obx(
               () => CommonButton(
-                borderRadius: 16,
+                borderRadius: AppSpacing.radiusLg,
                 width: double.infinity,
                 isLoading: controller.isCreatePaymentLinkLoading.value,
                 text: localizations.paymentLinksCreateLinkButton,
-                onPressed: () => controller.createLink(),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  controller.createLink();
+                },
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: AppSpacing.huge),
           ],
         );
       }),

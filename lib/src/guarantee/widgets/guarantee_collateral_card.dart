@@ -6,7 +6,6 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
-import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
 /// Supported types of collateral for Bank Guarantee (LG) requests.
 enum GuaranteeCollateralType {

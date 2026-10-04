@@ -340,7 +340,7 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                 final selected = _validityMonths == m;
                 return ChoiceChip(
                   label: Text(
-                    '$m ' + l10nPick(context, fa: 'ماهه', en: 'mo', ar: 'شهر', zh: '月'),
+                    '$m ${l10nPick(context, fa: 'ماهه', en: 'mo', ar: 'شهر', zh: '月')}',
                     style: TextStyle(
                       fontWeight: selected ? FontWeight.w800 : FontWeight.w500,
                       color: selected ? Colors.white : AppColors.lightTextPrimary,

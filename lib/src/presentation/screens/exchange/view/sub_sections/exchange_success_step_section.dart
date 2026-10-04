@@ -1,22 +1,27 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/route_return.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
-import 'package:ecardo_user/src/common/widgets/receipt/digital_receipt_ticket.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 
-/// Step 2 — Success. Renders an animated checkmark (draw-in via custom
-/// painter — no Lottie, no confetti), a digital receipt ticket (with
-/// ticket clipper notches, perforated dashed line, barcode, QR code,
-/// and high-resolution PNG & PDF export actions), and navigation buttons
-/// ("Exchange again" and "Back to wallet").
+/// Step 2 — Celebratory Success.
+///
+/// Features:
+///   - Custom animated celebration checkmark with expanding success aura
+///   - Digital receipt ticket summary (notched ticket with QR payload and share/download actions)
+///   - Primary and secondary navigation actions with haptics
+///   - Complete dark mode and RTL support
 class ExchangeSuccessStepSection extends StatefulWidget {
   const ExchangeSuccessStepSection({super.key});
 
@@ -31,89 +36,125 @@ class _ExchangeSuccessStepSectionState
   final ExchangeController controller = Get.find();
   final settingsService = Get.find<SettingsService>();
 
-  late final AnimationController _checkController;
+  late final AnimationController _celebrationController;
+  late final Animation<double> _checkAnimation;
+  late final Animation<double> _auraAnimation;
 
   @override
   void initState() {
     super.initState();
-    _checkController = AnimationController(
+    _celebrationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 900),
     );
-    // Slight delay so the check appears after the page transition.
-    Future.delayed(const Duration(milliseconds: 120), () {
-      if (mounted) _checkController.forward();
+
+    _checkAnimation = CurvedAnimation(
+      parent: _celebrationController,
+      curve: const Interval(0.0, 0.75, curve: Curves.easeOutCubic),
+    );
+
+    _auraAnimation = CurvedAnimation(
+      parent: _celebrationController,
+      curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
+    );
+
+    Future.delayed(const Duration(milliseconds: 150), () {
+      if (mounted) {
+        HapticFeedback.heavyImpact();
+        _celebrationController.forward();
+      }
     });
   }
 
   @override
   void dispose() {
-    _checkController.dispose();
+    _celebrationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final isDark = ExchangeDesignTokens.isDark(context);
 
     return Obx(
       () => controller.isExchangeWalletLoading.value
-          ? CommonLoading()
+          ? const CommonLoading()
           : SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(
                   children: [
-                    const SizedBox(height: 30),
-                    // Animated checkmark — minimal, formal. No confetti.
-                    SizedBox(
-                      width: 96,
-                      height: 96,
-                      child: CustomPaint(
-                        painter: _CheckPainter(_checkController),
+                    const SizedBox(height: AppSpacing.xxl),
+                    // Celebratory animated checkmark with aura
+                    Center(
+                      child: SizedBox(
+                        width: 104,
+                        height: 104,
+                        child: AnimatedBuilder(
+                          animation: _celebrationController,
+                          builder: (context, child) {
+                            return CustomPaint(
+                              painter: _CelebrationCheckPainter(
+                                checkProgress: _checkAnimation.value,
+                                auraProgress: _auraAnimation.value,
+                                isDark: isDark,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.lg),
                     Text(
                       loc.exchangeSuccessTitle,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 22,
-                        color: AppColors.lightTextPrimary,
+                        fontSize: 24,
+                        color: ExchangeDesignTokens.textPrimary(context),
                         letterSpacing: 0,
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: AppSpacing.xxl),
                     _buildSummaryCard(loc),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.xl),
                     // Exchange again
                     CommonButton(
                       onPressed: () {
+                        HapticFeedback.lightImpact();
                         controller.currentStep.value = 0;
                         controller.clearFields();
                       },
                       width: double.infinity,
+                      backgroundColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
+                      textColor:
+                          isDark ? AppColors.deepBlack : AppColors.white,
                       text: loc.exchangeSuccessExchangeAgain,
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     // Back to wallet
                     CommonButton(
                       onPressed: () async {
+                        HapticFeedback.lightImpact();
                         Get.delete<ExchangeController>();
                         RouteReturn.complete();
                       },
                       width: double.infinity,
                       text: loc.exchangeSuccessBackToWallet,
-                      backgroundColor:
-                          AppColors.lightPrimary.withValues(alpha: 0.06),
-                      borderColor:
-                          AppColors.lightPrimary.withValues(alpha: 0.60),
-                      borderWidth: 2,
-                      textColor: AppColors.lightTextPrimary,
+                      backgroundColor: isDark
+                          ? AppColors.darkCard
+                          : AppColors.lightPrimary.withValues(alpha: 0.05),
+                      borderColor: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightPrimary.withValues(alpha: 0.40),
+                      borderWidth: 1.5,
+                      textColor: ExchangeDesignTokens.textPrimary(context),
                     ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: AppSpacing.huge),
                   ],
                 ),
               ),
@@ -161,99 +202,131 @@ class _ExchangeSuccessStepSectionState
       formattedDate = createdStr;
     }
 
-    final payAmount = double.tryParse(t["pay_amount"]?.toString() ?? '') ?? 0.0;
-    final convertedAmount = double.tryParse(t["amount"]?.toString() ?? '') ?? 0.0;
+    final payAmount =
+        double.tryParse(t["pay_amount"]?.toString() ?? '') ?? 0.0;
+    final convertedAmount =
+        double.tryParse(t["amount"]?.toString() ?? '') ?? 0.0;
     final charge = double.tryParse(t["charge"]?.toString() ?? '') ?? 0.0;
-    final finalAmount = double.tryParse(t["final_amount"]?.toString() ?? '') ?? 0.0;
+    final finalAmount =
+        double.tryParse(t["final_amount"]?.toString() ?? '') ?? 0.0;
     final tnx = t["tnx"]?.toString() ?? '';
 
     // Calculate approximate exchange rate if available
     String? exchangeRateText;
     if (payAmount > 0 && convertedAmount > 0) {
       final rate = convertedAmount / payAmount;
-      exchangeRateText = '1 $payCurrencyCode ≈ ${rate.toStringAsFixed(4)} $receiveCurrencyCode';
+      exchangeRateText =
+          '1 $payCurrencyCode ≈ ${rate.toStringAsFixed(4)} $receiveCurrencyCode';
     }
 
-    final extraRows = <ReceiptRowData>[
-      ReceiptRowData(
+    final receiptItems = <EcardoReceiptItem>[
+      EcardoReceiptItem(
         label: loc.exchangeSuccessPayAmount,
         amount: payAmount,
+        currency: payCurrencyCode,
         decimals: payDecimals,
-        currencyCode: payCurrencyCode,
       ),
-      ReceiptRowData(
+      EcardoReceiptItem(
         label: loc.exchangeSuccessConvertedAmount,
         amount: convertedAmount,
+        currency: receiveCurrencyCode,
         decimals: receiveDecimals,
-        currencyCode: receiveCurrencyCode,
         isHighlighted: true,
+        valueColor: AppColors.success,
       ),
-      ReceiptRowData(
+      if (charge > 0)
+        EcardoReceiptItem(
+          label: loc.exchangeReviewCharge,
+          amount: charge,
+          currency: payCurrencyCode,
+          decimals: payDecimals,
+        ),
+      EcardoReceiptItem(
         label: loc.exchangeSuccessFinalAmount,
         amount: finalAmount,
+        currency: payCurrencyCode,
         decimals: payDecimals,
-        currencyCode: payCurrencyCode,
+      ),
+      if (exchangeRateText != null)
+        EcardoReceiptItem(
+          label: loc.exchangeReviewExchangeRate,
+          value: exchangeRateText,
+        ),
+      EcardoReceiptItem(
+        label: loc.exchangeReviewFromWallet,
+        value: payCurrencyCode.isNotEmpty ? '$payCurrencyCode Wallet' : '—',
+      ),
+      EcardoReceiptItem(
+        label: loc.exchangeReviewToWallet,
+        value: receiveCurrencyCode.isNotEmpty
+            ? '$receiveCurrencyCode Wallet'
+            : '—',
+      ),
+      EcardoReceiptItem(
+        label: 'Transaction ID',
+        value: tnx,
+        isCopyable: true,
+        copyText: tnx,
       ),
     ];
 
-    final qrPayload = {
-      'iss': 'eCardo',
-      'type': 'exchange',
-      'tnx': tnx,
-      'pay_amount': payAmount,
-      'pay_currency': payCurrencyCode,
-      'amount': convertedAmount,
-      'receive_currency': receiveCurrencyCode,
-      'charge': charge,
-      'final_amount': finalAmount,
-      'created_at': createdStr,
-      'status': 'success',
-    };
-
-    return DigitalReceiptTicket(
+    return EcardoDigitalReceipt(
       title: loc.exchangeSuccessTitle,
-      status: ReceiptStatus.success,
-      transactionId: tnx,
-      dateTime: dt,
-      formattedDateTime: formattedDate,
+      transactionReference: tnx,
+      timestamp: dt,
+      formattedTimestamp: formattedDate,
       primaryAmount: convertedAmount,
       primaryCurrency: receiveCurrencyCode,
       primaryDecimals: receiveDecimals,
-      fee: charge > 0 ? charge : null,
-      feeCurrency: payCurrencyCode,
-      feeDecimals: payDecimals,
-      fromAccount: payCurrencyCode.isNotEmpty ? '$payCurrencyCode Wallet' : null,
-      toAccount: receiveCurrencyCode.isNotEmpty ? '$receiveCurrencyCode Wallet' : null,
-      exchangeRate: exchangeRateText,
-      extraRows: extraRows,
-      qrPayload: qrPayload,
+      status: EcardoReceiptStatus.success,
+      items: receiptItems,
       showBarcode: true,
-      showQrCode: true,
-      showActions: true,
+      showWatermark: true,
     );
   }
 }
 
-/// Draws a circular success ring that fills clockwise, then a checkmark
-/// that draws in once the ring is complete. Minimal — no fill, no
-/// gradient, single accent colour.
-class _CheckPainter extends CustomPainter {
-  _CheckPainter(this.animation) : super(repaint: animation);
+/// Celebratory checkmark with smooth expanding ring and animated check mark.
+class _CelebrationCheckPainter extends CustomPainter {
+  const _CelebrationCheckPainter({
+    required this.checkProgress,
+    required this.auraProgress,
+    required this.isDark,
+  });
 
-  final Animation<double> animation;
+  final double checkProgress;
+  final double auraProgress;
+  final bool isDark;
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = (size.shortestSide / 2) - 6;
+    final radius = (size.shortestSide / 2) - 8;
 
-    // Ring progress: 0 → 1 over the first 60% of the animation.
-    final ringProgress = (animation.value / 0.6).clamp(0.0, 1.0);
+    // 1. Subtle expanding aura wave
+    if (auraProgress > 0) {
+      final auraRadius = radius + (14 * auraProgress);
+      final auraOpacity = (1.0 - auraProgress).clamp(0.0, 1.0) * 0.25;
+      final auraPaint = Paint()
+        ..color = AppColors.success.withValues(alpha: auraOpacity)
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(center, auraRadius, auraPaint);
+    }
 
+    // 2. Soft filled inner background disk
+    final bgPaint = Paint()
+      ..color = isDark
+          ? AppColors.success.withValues(alpha: 0.15)
+          : AppColors.successContainer
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(center, radius, bgPaint);
+
+    // 3. Ring progress: fills clockwise over checkProgress (0 -> 0.6)
+    final ringProgress = (checkProgress / 0.6).clamp(0.0, 1.0);
     final ringPaint = Paint()
       ..color = AppColors.success
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
+      ..strokeWidth = 3.5
       ..strokeCap = StrokeCap.round;
 
     canvas.drawArc(
@@ -264,11 +337,10 @@ class _CheckPainter extends CustomPainter {
       ringPaint,
     );
 
-    // Checkmark progress: 0 → 1 over the remaining 40% of the animation.
-    if (animation.value > 0.6) {
-      final checkProgress = ((animation.value - 0.6) / 0.4).clamp(0.0, 1.0);
+    // 4. Checkmark progress (0.6 -> 1.0)
+    if (checkProgress > 0.6) {
+      final segProgress = ((checkProgress - 0.6) / 0.4).clamp(0.0, 1.0);
 
-      // Checkmark geometry centered in the circle.
       final p1 = Offset(center.dx - radius * 0.35, center.dy);
       final p2 = Offset(center.dx - radius * 0.05, center.dy + radius * 0.30);
       final p3 = Offset(center.dx + radius * 0.40, center.dy - radius * 0.25);
@@ -276,23 +348,21 @@ class _CheckPainter extends CustomPainter {
       final checkPaint = Paint()
         ..color = AppColors.success
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3.5
+        ..strokeWidth = 4.0
         ..strokeCap = StrokeCap.round
         ..strokeJoin = StrokeJoin.round;
 
       final path = Path();
       path.moveTo(p1.dx, p1.dy);
 
-      // First segment: p1 → p2 (first 40% of check animation).
-      final seg1Progress = (checkProgress / 0.4).clamp(0.0, 1.0);
-      final currentP2 = Offset.lerp(p1, p2, seg1Progress)!;
-      path.lineTo(currentP2.dx, currentP2.dy);
+      final seg1 = (segProgress / 0.4).clamp(0.0, 1.0);
+      final curP2 = Offset.lerp(p1, p2, seg1)!;
+      path.lineTo(curP2.dx, curP2.dy);
 
-      // Second segment: p2 → p3 (remaining 60% of check animation).
-      if (checkProgress > 0.4) {
-        final seg2Progress = ((checkProgress - 0.4) / 0.6).clamp(0.0, 1.0);
-        final currentP3 = Offset.lerp(p2, p3, seg2Progress)!;
-        path.lineTo(currentP3.dx, currentP3.dy);
+      if (segProgress > 0.4) {
+        final seg2 = ((segProgress - 0.4) / 0.6).clamp(0.0, 1.0);
+        final curP3 = Offset.lerp(p2, p3, seg2)!;
+        path.lineTo(curP3.dx, curP3.dy);
       }
 
       canvas.drawPath(path, checkPaint);
@@ -300,5 +370,9 @@ class _CheckPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CheckPainter oldDelegate) => true;
+  bool shouldRepaint(_CelebrationCheckPainter oldDelegate) {
+    return oldDelegate.checkProgress != checkProgress ||
+        oldDelegate.auraProgress != auraProgress ||
+        oldDelegate.isDark != isDark;
+  }
 }

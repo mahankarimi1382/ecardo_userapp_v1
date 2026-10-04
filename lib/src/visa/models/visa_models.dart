@@ -167,6 +167,7 @@ class VisaRequestModel {
   });
 
   double get totalFee => serviceFee + govFee;
+  String get statusLabel => status;
 
   bool get isApproved => status == 'APPROVED' || status == 'DELIVERED';
   bool get isRejected => status == 'REJECTED';
@@ -266,6 +267,7 @@ class VisaSubmittedDoc {
   bool get isAccepted => status == 'ACCEPTED';
   bool get isRejected => status == 'REJECTED';
   bool get isPending => status == 'PENDING';
+  String get fileName => filePath?.split('/').last ?? title;
 
   factory VisaSubmittedDoc.fromJson(Map<String, dynamic> json) {
     return VisaSubmittedDoc(

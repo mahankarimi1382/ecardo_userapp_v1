@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/financial_service_unavailable_banner.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/loan_controller.dart';
 import '../models/loan_models.dart';
+import '../widgets/loan_status_stepper.dart';
 import 'loan_intro_screen.dart';
 import 'loan_application_screen.dart';
 import 'loan_tracking_screen.dart';
@@ -56,20 +59,23 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'COMPLETED': return const Color(0xFF059669);
+      case 'COMPLETED': return AppColors.success;
       case 'ACTIVE': return AppColors.lightPrimary;
-      case 'OVERDUE': case 'DEFAULTED': return const Color(0xFFDC2626);
-      case 'REJECTED': case 'CANCELLED': return Colors.grey;
+      case 'OVERDUE': case 'DEFAULTED': return AppColors.error;
+      case 'REJECTED': case 'CANCELLED': return AppColors.grey;
       case 'OFFERED': case 'AWAITING_COLLATERAL': case 'AWAITING_SIGNING':
-        return const Color(0xFFD97706);
+        return AppColors.warning;
       default: return Colors.blueGrey;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -82,11 +88,14 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
               zh: '贷款与信贷',
             ),
             rightSideWidget: Padding(
-              padding: EdgeInsetsDirectional.only(end: 16.w),
+              padding: EdgeInsetsDirectional.only(end: AppSpacing.page.w),
               child: IconButton(
                 icon: const Icon(Icons.history_rounded),
                 tooltip: l10nPick(context, fa: 'پیگیری پرونده‌ها', en: 'Tracking', ar: 'المتابعة', zh: '追踪'),
-                onPressed: () => Get.to(() => const LoanTrackingScreen()),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Get.to(() => const LoanTrackingScreen());
+                },
               ),
             ),
           ),
@@ -94,7 +103,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
       ),
       body: Obx(() {
         if (controller.isLoadingProducts.value && controller.products.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return const LoanSkeletonLoader(itemCount: 4);
         }
 
         return RefreshIndicator(
@@ -103,7 +112,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
             await controller.fetchMyCases();
           },
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.sm.h),
             children: [
               // Notice banner if backend endpoints are unavailable / returning empty
               if (controller.hasBackendError.value || controller.products.isEmpty)
@@ -118,7 +127,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                   },
                 ),
 
-              SizedBox(height: 6.h),
+              SizedBox(height: AppSpacing.sm.h),
 
               // Quick action cards
               Row(
@@ -126,6 +135,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                   Expanded(
                     child: _buildActionTile(
                       context,
+                      isDark: isDark,
                       icon: Icons.calculate_outlined,
                       titleFa: 'محاسبه‌گر و راهنما',
                       titleEn: 'Guide & Calculator',
@@ -133,21 +143,23 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                       onTap: () => Get.to(() => const LoanIntroScreen()),
                     ),
                   ),
-                  SizedBox(width: 10.w),
+                  SizedBox(width: AppSpacing.sm.w),
                   Expanded(
                     child: _buildActionTile(
                       context,
+                      isDark: isDark,
                       icon: Icons.post_add_rounded,
                       titleFa: 'ثبت درخواست وام',
                       titleEn: 'Apply for Loan',
-                      color: AppColors.lightPrimary,
+                      color: primaryAccent,
                       onTap: () => Get.to(() => const LoanApplicationScreen()),
                     ),
                   ),
-                  SizedBox(width: 10.w),
+                  SizedBox(width: AppSpacing.sm.w),
                   Expanded(
                     child: _buildActionTile(
                       context,
+                      isDark: isDark,
                       icon: Icons.timeline_rounded,
                       titleFa: 'پیگیری پرونده‌ها',
                       titleEn: 'Track Cases',
@@ -158,7 +170,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                 ],
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSpacing.xl.h),
 
               // Loan Products Section
               Row(
@@ -172,35 +184,37 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                       ar: 'خطط التسهيلات النشطة',
                       zh: '可用贷款方案',
                     ),
-                    style: TextStyle(
-                      fontSize: 14.sp,
+                    style: AppTextStyles.titleSmall.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.lightTextPrimary,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Get.to(() => const LoanIntroScreen()),
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      Get.to(() => const LoanIntroScreen());
+                    },
                     child: Text(
                       l10nPick(context, fa: 'مشاهده شرایط', en: 'View Terms', ar: 'الشروط', zh: '条件'),
-                      style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightPrimary),
+                      style: AppTextStyles.labelSmall.copyWith(color: primaryAccent),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: AppSpacing.xs.h),
 
               if (controller.products.isEmpty)
                 Container(
-                  padding: EdgeInsets.all(18.r),
+                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.lightBorder),
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                   ),
                   child: Column(
                     children: [
                       Icon(Icons.inventory_2_outlined, size: 40.sp, color: Colors.grey.shade400),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: AppSpacing.sm.h),
                       Text(
                         l10nPick(
                           context,
@@ -209,7 +223,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                           ar: 'بانتظار مزامنة كتالوج التسهيلات',
                           zh: '正在等待服务器同步贷款目录',
                         ),
-                        style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
+                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
                       ),
                       SizedBox(height: 4.h),
                       Text(
@@ -221,15 +235,17 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                           zh: '您可以通过测算器体验预估分期还款。',
                         ),
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
                       ),
                     ],
                   ),
                 )
               else
-                ...controller.products.map((p) => _buildProductCard(context, p)),
+                ...controller.products.map((p) => _buildProductCard(context, p, isDark, primaryAccent)),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSpacing.xl.h),
 
               // My Recent Cases Section
               Row(
@@ -243,36 +259,38 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                       ar: 'ملفاتي',
                       zh: '我的申请',
                     ),
-                    style: TextStyle(
-                      fontSize: 14.sp,
+                    style: AppTextStyles.titleSmall.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.lightTextPrimary,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                   if (controller.myCases.isNotEmpty)
                     TextButton(
-                      onPressed: () => Get.to(() => const LoanTrackingScreen()),
+                      onPressed: () {
+                        HapticFeedback.lightImpact();
+                        Get.to(() => const LoanTrackingScreen());
+                      },
                       child: Text(
                         l10nPick(context, fa: 'مشاهده همه', en: 'View All', ar: 'الكل', zh: '全部'),
-                        style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightPrimary),
+                        style: AppTextStyles.labelSmall.copyWith(color: primaryAccent),
                       ),
                     ),
                 ],
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: AppSpacing.xs.h),
 
               if (controller.myCases.isEmpty)
                 Container(
-                  padding: EdgeInsets.all(16.r),
+                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.lightBorder),
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                   ),
                   child: Row(
                     children: [
                       Icon(Icons.assignment_outlined, size: 28.sp, color: Colors.grey.shade400),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Text(
                           l10nPick(
@@ -282,14 +300,16 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                             ar: 'لا توجد طلبات قروض مسجلة حالياً.',
                             zh: '当前未查询到正在进行的贷款申请。',
                           ),
-                          style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 )
               else
-                ...controller.myCases.take(3).map((c) => _buildCaseItem(context, c)),
+                ...controller.myCases.take(3).map((c) => _buildCaseItem(context, c, isDark)),
             ],
           ),
         );
@@ -299,6 +319,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
 
   Widget _buildActionTile(
     BuildContext context, {
+    required bool isDark,
     required IconData icon,
     required String titleFa,
     required String titleEn,
@@ -306,34 +327,36 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
     required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16.r),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTap();
+      },
+      borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 8.w),
+        padding: EdgeInsetsDirectional.symmetric(vertical: 14.h, horizontal: 8.w),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.lightBorder),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(8.r),
+              padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 20.sp),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: AppSpacing.sm.h),
             Text(
               l10nPick(context, fa: titleFa, en: titleEn),
               textAlign: TextAlign.center,
               maxLines: 2,
-              style: TextStyle(
-                fontSize: 11.sp,
+              style: AppTextStyles.labelSmall.copyWith(
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextPrimary,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
           ],
@@ -342,33 +365,45 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, LoanProductModel p) {
+  Widget _buildProductCard(
+    BuildContext context,
+    LoanProductModel p,
+    bool isDark,
+    Color primaryAccent,
+  ) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.all(14.r),
+      margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
+      padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.lightBorder),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(10.r),
+            padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
             decoration: BoxDecoration(
               color: AppColors.mainSoftBlue.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
             ),
-            child: Icon(Icons.account_balance_wallet_rounded, color: AppColors.deepBlack, size: 22.sp),
+            child: Icon(
+              Icons.account_balance_wallet_rounded,
+              color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+              size: 22.sp,
+            ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: AppSpacing.md.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   p.name,
-                  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
                 ),
                 SizedBox(height: 3.h),
                 Text(
@@ -379,24 +414,30 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                     ar: 'فائدة: ${p.baseRateAnnual}٪ · الحد: ${p.maxAmount.toInt()}',
                     zh: '利率：${p.baseRateAnnual}% · 上限：${p.maxAmount.toInt()}',
                   ),
-                  style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary),
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
                 ),
               ],
             ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.lightPrimary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              backgroundColor: primaryAccent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 6.h),
             ),
             onPressed: () {
+              HapticFeedback.lightImpact();
               controller.selectProduct(p);
               Get.to(() => const LoanApplicationScreen());
             },
             child: Text(
               l10nPick(context, fa: 'درخواست', en: 'Apply', ar: 'طلب', zh: '申请'),
-              style: TextStyle(fontSize: 11.5.sp, color: Colors.white, fontWeight: FontWeight.w700),
+              style: AppTextStyles.labelSmall.copyWith(
+                color: isDark ? AppColors.deepBlack : AppColors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -404,18 +445,21 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
     );
   }
 
-  Widget _buildCaseItem(BuildContext context, LoanCaseModel c) {
+  Widget _buildCaseItem(BuildContext context, LoanCaseModel c, bool isDark) {
     final statusColor = _statusColor(c.status);
 
     return InkWell(
-      onTap: () => Get.to(() => LoanDetailScreen(caseId: c.id)),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Get.to(() => LoanDetailScreen(caseId: c.id));
+      },
       child: Container(
-        margin: EdgeInsets.only(bottom: 8.h),
-        padding: EdgeInsets.all(12.r),
+        margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
+        padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.lightBorder),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
         child: Row(
           children: [
@@ -425,29 +469,41 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                 children: [
                   Text(
                     '${l10nPick(context, fa: 'پرونده', en: 'Case', ar: 'ملف', zh: '案号')} ${c.caseNo}',
-                    style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     '${c.requestedAmount.toInt()} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
-                    style: TextStyle(fontSize: 11.5.sp, color: AppColors.lightTextSecondary),
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
                   ),
                 ],
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 2.h),
               decoration: BoxDecoration(
                 color: statusColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
               ),
               child: Text(
                 _statusFa(c.status),
-                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: statusColor),
+                style: AppTextStyles.labelSmall.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: statusColor,
+                ),
               ),
             ),
-            SizedBox(width: 8.w),
-            Icon(Icons.chevron_right, size: 20.sp, color: Colors.grey),
+            SizedBox(width: AppSpacing.sm.w),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14.sp,
+              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+            ),
           ],
         ),
       ),

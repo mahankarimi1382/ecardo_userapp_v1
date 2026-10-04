@@ -52,12 +52,14 @@ class TransferController extends GetxController {
     super.onInit();
     recipientUidFocusNode.addListener(_handleRecipientUidFocusChange);
     amountFocusNode.addListener(_handleAmountFocusChange);
+    amountController.addListener(_handleAmountTextChange);
   }
 
   @override
   void onClose() {
     recipientUidFocusNode.removeListener(_handleRecipientUidFocusChange);
     amountFocusNode.removeListener(_handleAmountFocusChange);
+    amountController.removeListener(_handleAmountTextChange);
     recipientUidFocusNode.dispose();
     amountFocusNode.dispose();
     super.onClose();
@@ -69,6 +71,12 @@ class TransferController extends GetxController {
 
   void _handleAmountFocusChange() {
     isAmountFocused.value = amountFocusNode.hasFocus;
+  }
+
+  void _handleAmountTextChange() {
+    if (transferConfigModel.value.data?.settings != null) {
+      _calculateCharge();
+    }
   }
 
   Future<void> nextStepWithValidation() async {
@@ -123,12 +131,54 @@ class TransferController extends GetxController {
     }
   }
 
+  Future<void> calculateLiveCharge() async => _calculateCharge();
+
+  void setPercentage(double fraction) {
+    final currentWallet = wallet.value;
+    if (currentWallet == null) return;
+    final balanceStr = currentWallet.balance ?? '0';
+    final balance = double.tryParse(balanceStr) ?? 0.0;
+    if (balance <= 0) return;
+
+    final siteCurrency =
+        Get.find<SettingsService>().getSetting("site_currency") ?? 'USD';
+    final siteDecimals =
+        Get.find<SettingsService>().getSetting("site_currency_decimals") ?? '2';
+    final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: currentWallet.code ?? 'USD',
+      siteCurrencyCode: siteCurrency,
+      siteCurrencyDecimals: siteDecimals,
+      isCrypto: currentWallet.isCrypto ?? false,
+    );
+
+    final targetAmount = balance * fraction;
+    amountController.text = targetAmount.toStringAsFixed(decimals);
+    calculateLiveCharge();
+  }
+
+  Beneficiaries? findBeneficiaryByAccount(String accountNumber) {
+    if (accountNumber.trim().isEmpty) return null;
+    final list = beneficiaryModel.value.data?.beneficiaries;
+    if (list == null || list.isEmpty) return null;
+    try {
+      return list.firstWhere(
+        (b) => (b.accountNumber?.trim() == accountNumber.trim()),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> _calculateCharge() async {
     final amount = double.tryParse(amountController.text) ?? 0.0;
-    final userChargeStr =
-        transferConfigModel.value.data!.settings!.charge ?? "0";
-    final userChargeType =
-        transferConfigModel.value.data!.settings!.chargeType ?? "fixed";
+    final settings = transferConfigModel.value.data?.settings;
+    if (settings == null) {
+      charge.value = 0.0;
+      totalAmount.value = amount;
+      return;
+    }
+    final userChargeStr = settings.charge ?? "0";
+    final userChargeType = settings.chargeType ?? "fixed";
 
     double calculatedCharge = 0.0;
 
@@ -146,12 +196,19 @@ class TransferController extends GetxController {
   }
 
   Future<void> getChargeConverter() async {
+    final chargeSetting = transferConfigModel.value.data?.settings?.charge;
+    final walletCode = wallet.value?.code;
+    if (chargeSetting == null || walletCode == null) {
+      charge.value = 0.0;
+      totalAmount.value = double.tryParse(amountController.text) ?? 0.0;
+      return;
+    }
     chargeLoadFailed.value = false;
     try {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getConverterEndpoint(
-          amount: transferConfigModel.value.data!.settings!.charge!,
-          currencyCode: wallet.value!.code!,
+          amount: chargeSetting,
+          currencyCode: walletCode,
         ),
       );
       if (response.status == Status.completed) {
