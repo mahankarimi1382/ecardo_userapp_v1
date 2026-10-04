@@ -122,11 +122,12 @@ class ExchangeValidationService {
     final currency = fromWallet.code ?? '';
     final double min =
         double.tryParse(fromWallet.exchangeLimit?.min ?? '') ?? 0.0;
-    final double max =
+    final double maxRaw =
         double.tryParse(fromWallet.exchangeLimit?.max ?? '') ??
             double.infinity;
+    final double max = maxRaw <= 0 ? double.infinity : maxRaw;
 
-    if (enteredAmount < min) {
+    if (min > 0 && enteredAmount < min) {
       final formattedMin = min.toStringAsFixed(decimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.amountBelowMinimum,
@@ -140,7 +141,7 @@ class ExchangeValidationService {
       );
     }
 
-    if (enteredAmount > max) {
+    if (max.isFinite && enteredAmount > max) {
       final formattedMax = max.toStringAsFixed(decimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.amountAboveMaximum,
@@ -180,12 +181,21 @@ class ExchangeValidationService {
     required String amountText,
   }) {
     if (fromWallet == null || toWallet == null) return false;
+    final fromCode = fromWallet.code?.toUpperCase();
+    final toCode = toWallet.code?.toUpperCase();
+    if (fromCode != null && toCode != null && fromCode == toCode) return false;
+
     final amount = double.tryParse(amountText.trim()) ?? 0.0;
     if (amount <= 0) return false;
-    final min = double.tryParse(fromWallet.exchangeLimit?.min ?? '0') ?? 0.0;
-    final max =
-        double.tryParse(fromWallet.exchangeLimit?.max ?? '0') ?? double.infinity;
-    return amount >= min && amount <= max;
+
+    final double balance = double.tryParse(fromWallet.balance ?? '') ?? 0.0;
+    if (balance > 0 && amount > balance) return false;
+
+    final min = double.tryParse(fromWallet.exchangeLimit?.min ?? '') ?? 0.0;
+    final maxRaw = double.tryParse(fromWallet.exchangeLimit?.max ?? '') ?? double.infinity;
+    final max = maxRaw <= 0 ? double.infinity : maxRaw;
+
+    return (min <= 0 || amount >= min) && amount <= max;
   }
 
   /// Calculates percentage fee and total using [MoneyMathHelper].

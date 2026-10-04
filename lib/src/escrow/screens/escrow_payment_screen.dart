@@ -18,8 +18,16 @@ class EscrowPaymentScreen extends StatefulWidget {
 }
 
 class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
-  final EscrowController controller = Get.find<EscrowController>();
+  late final EscrowController controller;
   String _selectedMethod = 'wallet';
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<EscrowController>()
+        ? Get.find<EscrowController>()
+        : Get.put(EscrowController());
+  }
 
   void _handlePay() async {
     HapticFeedback.lightImpact();

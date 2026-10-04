@@ -18,7 +18,9 @@ class EscrowListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EscrowController controller = Get.put(EscrowController());
+    final EscrowController controller = Get.isRegistered<EscrowController>()
+        ? Get.find<EscrowController>()
+        : Get.put(EscrowController());
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final filterTabs = [

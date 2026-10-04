@@ -43,18 +43,24 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
     final ExchangeController controller = Get.find();
     final settings = Get.find<SettingsService>();
 
+    final fromWallet = controller.fromWallet.value;
+    final toWallet = controller.toWallet.value;
+
+    final fromCode = fromWallet?.code ?? 'USD';
+    final toCode = toWallet?.code ?? 'IRT';
+
     final fromDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.fromWallet.value!.code!,
-      siteCurrencyCode: settings.getSetting("site_currency")!,
-      siteCurrencyDecimals: settings.getSetting("site_currency_decimals")!,
-      isCrypto: controller.fromWallet.value!.isCrypto!,
+      currencyCode: fromCode,
+      siteCurrencyCode: settings.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals: settings.getSetting("site_currency_decimals") ?? '2',
+      isCrypto: fromWallet?.isCrypto ?? false,
     );
 
     final toDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.toWallet.value!.code!,
-      siteCurrencyCode: settings.getSetting("site_currency")!,
-      siteCurrencyDecimals: settings.getSetting("site_currency_decimals")!,
-      isCrypto: controller.toWallet.value!.isCrypto!,
+      currencyCode: toCode,
+      siteCurrencyCode: settings.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals: settings.getSetting("site_currency_decimals") ?? '2',
+      isCrypto: toWallet?.isCrypto ?? false,
     );
 
     return Obx(() {
@@ -271,15 +277,14 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                           ) ??
                           0.0,
                       decimals: fromDecimals,
-                      currencyCode: controller.fromWallet.value!.code!,
+                      currencyCode: fromCode,
                     ),
                     _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewFromWallet,
-                      text: controller.fromWallet.value!.name!,
+                      text: fromWallet?.name ?? fromCode,
                       trailing: _WalletMiniBadge(
-                        isCrypto:
-                            controller.fromWallet.value!.isCrypto == true,
+                        isCrypto: fromWallet?.isCrypto == true,
                       ),
                     ),
                     _divider(context),
@@ -287,7 +292,7 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                       title: loc.exchangeReviewCharge,
                       amount: controller.charge.value,
                       decimals: fromDecimals,
-                      currencyCode: controller.fromWallet.value!.code!,
+                      currencyCode: fromCode,
                       amountColor: AppColors.warning,
                     ),
                     _divider(context),
@@ -295,30 +300,30 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                       title: loc.exchangeReviewTotalAmount,
                       amount: controller.totalAmount.value,
                       decimals: fromDecimals,
-                      currencyCode: controller.fromWallet.value!.code!,
+                      currencyCode: fromCode,
                       amountColor: ExchangeDesignTokens.textPrimary(context),
                       emphasize: true,
                     ),
                     _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewToWallet,
-                      text: controller.toWallet.value!.name!,
+                      text: toWallet?.name ?? toCode,
                       trailing: _WalletMiniBadge(
-                        isCrypto: controller.toWallet.value!.isCrypto == true,
+                        isCrypto: toWallet?.isCrypto == true,
                       ),
                     ),
                     _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewExchangeRate,
                       text:
-                          '1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
+                          '1 $fromCode = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} $toCode',
                     ),
                     _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewExchangeAmount,
                       amount: controller.exchangeAmount.value,
                       decimals: toDecimals,
-                      currencyCode: controller.toWallet.value!.code!,
+                      currencyCode: toCode,
                       amountColor: AppColors.success,
                       emphasize: true,
                     ),

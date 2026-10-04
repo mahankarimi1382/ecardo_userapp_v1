@@ -224,8 +224,49 @@ class ExchangeRateManager {
     final double toRate =
         double.tryParse(toCurrency.conversionRate ?? "1") ?? 1.0;
 
-    targetStaticRate.value = 1 / fromRate * toRate;
+    if (fromRate <= 0) {
+      targetStaticRate.value = 1.0;
+    } else {
+      targetStaticRate.value = 1 / fromRate * toRate;
+    }
+
+    // Benchmark fallback if rates are 1.0 or 0 and currency codes differ
+    if (((targetStaticRate.value - 1.0).abs() < 1e-6 || targetStaticRate.value <= 0) &&
+        fromCode.toUpperCase() != toCode.toUpperCase()) {
+      final fallback = _benchmarkCrossRate(fromCode, toCode);
+      if (fallback != null && fallback > 0) {
+        targetStaticRate.value = fallback;
+      }
+    }
+
     bumpLiveRate(targetStaticRate.value);
+  }
+
+  static double? _benchmarkCrossRate(String from, String to) {
+    final f = from.toUpperCase().trim();
+    final t = to.toUpperCase().trim();
+    if (f == t) return 1.0;
+
+    // Standard baseline rate map against USD
+    const ratesAgainstUsd = <String, double>{
+      'USD': 1.0,
+      'USDT': 1.0,
+      'EUR': 0.92,
+      'GBP': 0.77,
+      'AED': 3.67,
+      'TRY': 34.2,
+      'IRT': 65000.0,
+      'TOMAN': 65000.0,
+      'IRR': 650000.0,
+    };
+
+    final fRate = ratesAgainstUsd[f];
+    final tRate = ratesAgainstUsd[t];
+
+    if (fRate != null && tRate != null && fRate > 0) {
+      return (1.0 / fRate) * tRate;
+    }
+    return null;
   }
 
   // ------------------ Review Rate Locking & Staleness ------------------

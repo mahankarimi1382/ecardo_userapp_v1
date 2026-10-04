@@ -7,12 +7,14 @@ import 'package:ecardo_user/src/presentation/screens/wallets/widgets/multi_curre
 /// Smooth horizontal PageView carousel with 3D scaling and parallax depth for multi-currency cards.
 class WalletCardCarousel extends StatefulWidget {
   final List<Wallets> wallets;
+  final int initialPage;
   final ValueChanged<int>? onPageChanged;
   final Function(Wallets wallet)? onCardTap;
 
   const WalletCardCarousel({
     super.key,
     required this.wallets,
+    this.initialPage = 0,
     this.onPageChanged,
     this.onCardTap,
   });
@@ -32,14 +34,33 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: _kViewportFraction)
-      ..addListener(() {
+    final safeInitial = widget.initialPage.clamp(0, max(0, widget.wallets.length - 1)).toInt();
+    _currentPage = safeInitial.toDouble();
+    _pageController = PageController(
+      viewportFraction: _kViewportFraction,
+      initialPage: safeInitial,
+    )..addListener(() {
         if (mounted) {
           setState(() {
             _currentPage = _pageController.page ?? 0.0;
           });
         }
       });
+  }
+
+  @override
+  void didUpdateWidget(WalletCardCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialPage != oldWidget.initialPage &&
+        widget.initialPage != _currentPage.round() &&
+        _pageController.hasClients) {
+      final safeTarget = widget.initialPage.clamp(0, max(0, widget.wallets.length - 1)).toInt();
+      _pageController.animateToPage(
+        safeTarget,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+      );
+    }
   }
 
   @override

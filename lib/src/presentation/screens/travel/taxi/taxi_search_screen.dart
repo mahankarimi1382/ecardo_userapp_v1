@@ -18,7 +18,9 @@ class TaxiSearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(TaxiController());
+    final controller = Get.isRegistered<TaxiController>()
+        ? Get.find<TaxiController>()
+        : Get.put(TaxiController());
     final localization = AppLocalizations.of(context)!;
 
     return TravelPage(

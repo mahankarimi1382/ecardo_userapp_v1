@@ -53,16 +53,14 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                   ),
                   child: Column(
                     children: [
-                      AppBar(
-                        backgroundColor: bgColor,
-                        surfaceTintColor: bgColor,
-                        automaticallyImplyLeading: false,
-                        elevation: 0,
-                      ),
                       // Title row + history menu (only on step 0)
                       Obx(
                         () => CommonAppBar(
                           title: localizations.exchangeTitle,
+                          isBackLogicApply: controller.currentStep.value > 0,
+                          backLogicFunction: controller.currentStep.value > 0
+                              ? () => controller.backToAmountStep()
+                              : null,
                           rightSideWidget: controller.currentStep.value == 0
                               ? Padding(
                                   padding: const EdgeInsetsDirectional.only(

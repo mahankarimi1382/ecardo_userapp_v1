@@ -165,6 +165,7 @@ class ExchangeController extends GetxController {
       fetchCurrencies(),
       fetchUser(),
     ]);
+    calculateExchange();
     await fetchExchangeConfig();
     unawaited(_loadRecentPairs());
     isLoading.value = false;
@@ -477,12 +478,18 @@ class ExchangeController extends GetxController {
           toExchangeWalletsList.isNotEmpty) {
         final arguments =
             Get.arguments is Map ? Get.arguments as Map : {};
+        final requestedFromId = arguments['from_wallet'] ?? arguments['wallet_id'];
         final requestedFrom =
             arguments['from_currency']?.toString().toUpperCase();
         final requestedTo =
             arguments['to_currency']?.toString().toUpperCase();
+
         fromWallet.value = fromExchangeWalletsList.firstWhereOrNull(
-              (wallet) => wallet.code?.toUpperCase() == requestedFrom,
+              (wallet) =>
+                  (requestedFromId != null &&
+                      wallet.id.toString() == requestedFromId.toString()) ||
+                  (requestedFrom != null &&
+                      wallet.code?.toUpperCase() == requestedFrom),
             ) ??
             fromExchangeWalletsList.firstWhereOrNull(
               (wallet) =>
@@ -490,13 +497,18 @@ class ExchangeController extends GetxController {
                   (double.tryParse(wallet.balance ?? '0') ?? 0) > 0,
             ) ??
             fromExchangeWalletsList.first;
+
         toWallet.value = toExchangeWalletsList.firstWhereOrNull(
               (wallet) => wallet.code?.toUpperCase() == requestedTo,
             ) ??
             toExchangeWalletsList.firstWhereOrNull(
-              (wallet) => wallet.code != fromWallet.value?.code,
+              (wallet) =>
+                  wallet.code?.toUpperCase() !=
+                  fromWallet.value?.code?.toUpperCase(),
             ) ??
-            toExchangeWalletsList.first;
+            (toExchangeWalletsList.length > 1
+                ? toExchangeWalletsList[1]
+                : toExchangeWalletsList.first);
 
         calculateExchange();
       } else {
@@ -519,6 +531,7 @@ class ExchangeController extends GetxController {
       if (response.status == Status.completed && response.data != null) {
         final currenciesModel = CurrenciesModel.fromJson(response.data!);
         currenciesList.assignAll(currenciesModel.data ?? []);
+        calculateExchange();
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCurrencies() error: $e');
@@ -554,8 +567,9 @@ class ExchangeController extends GetxController {
   void onAmountChanged(String val) {
     amountInput.value = val;
     isContinueInvalid.value = false;
+    _scheduleLivePreview();
     _amountDebounce?.cancel();
-    _amountDebounce = Timer(const Duration(milliseconds: 300), () {
+    _amountDebounce = Timer(const Duration(milliseconds: 250), () {
       _scheduleLivePreview();
       _recalculateChargeForAmountStep();
     });
@@ -583,7 +597,13 @@ class ExchangeController extends GetxController {
 
   void _scheduleLivePreview() {
     final amount = double.tryParse(amountController.text) ?? 0.0;
-    final rate = currentRate.value;
+    double rate = currentRate.value;
+    if (rate <= 0) {
+      rate = exchangeRate.value;
+    }
+    if (rate <= 0) {
+      rate = exchangeReviewRate.value;
+    }
     if (amount <= 0 || rate <= 0) {
       liveToAmount.value = 0.0;
       return;

@@ -17,7 +17,7 @@ class EscrowShipmentScreen extends StatefulWidget {
 }
 
 class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
-  final EscrowController controller = Get.find<EscrowController>();
+  late final EscrowController controller;
 
   final TextEditingController _carrierController = TextEditingController();
   final TextEditingController _trackingController = TextEditingController();
@@ -25,6 +25,14 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
   final TextEditingController _notesController = TextEditingController();
 
   final List<String> _suggestedCarriers = ['تیپاکس (Tipax)', 'پست پیشتاز', 'چاپار (Chapar)', 'باربری اختصاصی'];
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<EscrowController>()
+        ? Get.find<EscrowController>()
+        : Get.put(EscrowController());
+  }
 
   @override
   void dispose() {

@@ -49,6 +49,13 @@ class CurrencyCardTheme {
           currencyName: 'Euro',
           flagEmoji: '🇪🇺',
         );
+      case 'GBP':
+        return const CurrencyCardTheme(
+          gradientColors: [Color(0xFF1E1B4B), Color(0xFF312E81), Color(0xFF0F172A)],
+          accentColor: Color(0xFF818CF8),
+          currencyName: 'British Pound',
+          flagEmoji: '🇬🇧',
+        );
       case 'TRY':
         return const CurrencyCardTheme(
           gradientColors: [Color(0xFF3F0B13), Color(0xFF6A1B29), Color(0xFF2B070D)],
@@ -63,21 +70,34 @@ class CurrencyCardTheme {
           currencyName: 'UAE Dirham',
           flagEmoji: '🇦🇪',
         );
-      case 'IRR':
+      case 'IRT':
       case 'TOMAN':
+        return const CurrencyCardTheme(
+          gradientColors: [Color(0xFF0F382C), Color(0xFF1B5E4A), Color(0xFF0B2920)],
+          accentColor: Color(0xFF38D39F),
+          currencyName: 'تومان (Toman)',
+          flagEmoji: '🇮🇷',
+        );
+      case 'IRR':
+        return const CurrencyCardTheme(
+          gradientColors: [Color(0xFF132A24), Color(0xFF1F463D), Color(0xFF0C1B17)],
+          accentColor: Color(0xFF48BB78),
+          currencyName: 'ریال (Rial)',
+          flagEmoji: '🇮🇷',
+        );
       default:
         if (isDefault) {
           return const CurrencyCardTheme(
-            gradientColors: [AppColors.deepBlack, AppColors.darkGray, Color(0xFF1A1A18)],
-            accentColor: Color(0xFFE0E0E0),
-            currencyName: 'Iranian Rial',
-            flagEmoji: '🇮🇷',
+            gradientColors: [Color(0xFF1A1A24), Color(0xFF2D2D3D), Color(0xFF14141E)],
+            accentColor: Color(0xFF90CAF9),
+            currencyName: 'کیف پول اصلی',
+            flagEmoji: '💳',
           );
         }
         return const CurrencyCardTheme(
           gradientColors: [Color(0xFF1A2A44), Color(0xFF2C3E50), Color(0xFF141E30)],
           accentColor: AppColors.mainSoftBlue,
-          currencyName: 'eCardo Wallet',
+          currencyName: 'کیف پول چندارزی',
           flagEmoji: '💳',
         );
     }
@@ -621,171 +641,173 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
   Widget _buildBack(CurrencyCardTheme theme) {
     final accountNo = widget.wallet.accountNo ?? '0000 0000 0000 0000';
 
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.16),
-          width: 1.0,
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: theme.gradientColors.reversed.toList(),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: theme.gradientColors.first.withValues(alpha: 0.45),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: _flipCard,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.16),
+            width: 1.0,
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 14),
-          // Magnetic Stripe
-          Container(
-            height: 32,
-            color: Colors.black87,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: theme.gradientColors.reversed.toList(),
           ),
-          const SizedBox(height: 12),
-          // Signature and Account Details
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 18, 0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 28,
-                    padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                    alignment: AlignmentDirectional.centerStart.resolve(
-                      Directionality.of(context),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.85),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      accountNo,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                      textDirection: TextDirection.ltr,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 10,
-                        fontFamily: 'monospace',
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.0,
+          boxShadow: [
+            BoxShadow(
+              color: theme.gradientColors.first.withValues(alpha: 0.45),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 14),
+            // Magnetic Stripe
+            Container(
+              height: 32,
+              color: Colors.black87,
+            ),
+            const SizedBox(height: 12),
+            // Signature and Account Details
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 18, 0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 28,
+                      padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                      alignment: AlignmentDirectional.centerStart.resolve(
+                        Directionality.of(context),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        accountNo,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        textDirection: TextDirection.ltr,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 10,
+                          fontFamily: 'monospace',
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                // Copy Account Number button
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                  tooltip: l10nPick(
-                    context,
-                    en: 'Copy account number',
-                    fa: 'کپی شماره حساب',
-                    ar: 'نسخ رقم الحساب',
-                    zh: '复制账号',
-                    tr: 'Hesap numarasını kopyala',
-                    ru: 'Скопировать номер счёта',
+                  const SizedBox(width: 8),
+                  // Copy Account Number button
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                    tooltip: l10nPick(
+                      context,
+                      en: 'Copy account number',
+                      fa: 'کپی شماره حساب',
+                      ar: 'نسخ رقم الحساب',
+                      zh: '复制账号',
+                      tr: 'Hesap numarasını kopyala',
+                      ru: 'Скопировать номер счёта',
+                    ),
+                    icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 16),
+                    onPressed: () => _copyAccountNo(accountNo),
                   ),
-                  // Mirrors automatically under RTL: the icon points away
-                  // from the account number it copies.
-                  icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 16),
-                  onPressed: () => _copyAccountNo(accountNo),
-                ),
-                const SizedBox(width: 4),
-                // Flip back icon button
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                  icon: const Icon(Icons.flip_to_front_rounded, color: Colors.white, size: 18),
-                  onPressed: _flipCard,
-                  tooltip: l10nPick(
-                    context,
-                    en: 'Show card front',
-                    fa: 'نمایش روی کارت',
-                    ar: 'إظهار وجه البطاقة',
-                    zh: '显示卡正面',
-                    tr: 'Kartın ön yüzünü göster',
-                    ru: 'Показать лицевую сторону',
+                  const SizedBox(width: 4),
+                  // Flip back icon button
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                    icon: const Icon(Icons.flip_to_front_rounded, color: Colors.white, size: 20),
+                    onPressed: _flipCard,
+                    tooltip: l10nPick(
+                      context,
+                      en: 'Show card front',
+                      fa: 'نمایش روی کارت',
+                      ar: 'إظهار وجه البطاقة',
+                      zh: '显示卡正面',
+                      tr: 'Kartın ön yüzünü göster',
+                      ru: 'Показать лицевую сторону',
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const Spacer(),
-          // Quick Action Shortcut Buttons
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 14, 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildActionBtn(
-                    label: l10nPick(
-                      context,
-                      en: 'Deposit',
-                      fa: 'واریز',
-                      ar: 'إيداع',
-                      zh: '充值',
-                      tr: 'Yatır',
-                      ru: 'Пополнить',
+            const Spacer(),
+            // Quick Action Shortcut Buttons
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 14, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildActionBtn(
+                      label: l10nPick(
+                        context,
+                        en: 'Deposit',
+                        fa: 'واریز',
+                        ar: 'إيداع',
+                        zh: '充值',
+                        tr: 'Yatır',
+                        ru: 'Пополнить',
+                      ),
+                      icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white, size: 13),
+                      onTap: () {
+                        Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id});
+                      },
                     ),
-                    icon: Icon(Icons.add_circle_outline_rounded, color: Colors.white, size: 13),
-                    onTap: () {
-                      Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id});
-                    },
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildActionBtn(
-                    label: l10nPick(
-                      context,
-                      en: 'Exchange',
-                      fa: 'تبدیل',
-                      ar: 'تبادل',
-                      zh: '兑换',
-                      tr: 'Takas',
-                      ru: 'Обмен',
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _buildActionBtn(
+                      label: l10nPick(
+                        context,
+                        en: 'Exchange',
+                        fa: 'تبدیل',
+                        ar: 'تبادل',
+                        zh: '兑换',
+                        tr: 'Takas',
+                        ru: 'Обмен',
+                      ),
+                      icon: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 13),
+                      onTap: () {
+                        Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id});
+                      },
                     ),
-                    icon: Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 13),
-                    onTap: () {
-                      Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id});
-                    },
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildActionBtn(
-                    label: l10nPick(
-                      context,
-                      en: 'Transfer',
-                      fa: 'انتقال',
-                      ar: 'تحويل',
-                      zh: '转账',
-                      tr: 'Transfer',
-                      ru: 'Перевод',
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _buildActionBtn(
+                      label: l10nPick(
+                        context,
+                        en: 'Transfer',
+                        fa: 'انتقال',
+                        ar: 'تحويل',
+                        zh: '转账',
+                        tr: 'Transfer',
+                        ru: 'Перевод',
+                      ),
+                      icon: _mirrorInRtl(Icons.send_rounded),
+                      onTap: () {
+                        Get.toNamed(BaseRoute.transfer, arguments: {'wallet_id': widget.wallet.id});
+                      },
                     ),
-                    icon: _mirrorInRtl(Icons.send_rounded),
-                    onTap: () {
-                      Get.toNamed(BaseRoute.transfer, arguments: {'wallet_id': widget.wallet.id});
-                    },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

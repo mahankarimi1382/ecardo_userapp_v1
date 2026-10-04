@@ -287,15 +287,24 @@ class ServiceTileView extends StatelessWidget {
                     ),
                   )
                 else
-                  Image.asset(
-                    tile.icon as String,
-                    width: 36,
-                    height: 36,
-                    color: disabled
-                        ? (isDark
-                            ? AppColors.white.withValues(alpha: 0.30)
-                            : AppColors.black.withValues(alpha: 0.30))
-                        : null,
+                  Container(
+                    width: 40,
+                    height: 40,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: primaryColor.withValues(alpha: isDark ? .16 : .08),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Image.asset(
+                      tile.icon as String,
+                      width: 24,
+                      height: 24,
+                      color: disabled
+                          ? (isDark
+                              ? AppColors.white.withValues(alpha: 0.30)
+                              : AppColors.black.withValues(alpha: 0.30))
+                          : (isDark ? AppColors.white : null),
+                    ),
                   ),
                 if (resolved.state == TileState.kycLocked ||
                     resolved.state == TileState.notBuilt)

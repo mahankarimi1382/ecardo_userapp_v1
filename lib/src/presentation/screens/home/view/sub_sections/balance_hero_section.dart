@@ -23,27 +23,26 @@ class BalanceHeroSection extends StatelessWidget {
 
     return Obx(() {
       final wallets = homeController.walletsList;
+      final selectedWallet = homeController.selectedWallet;
 
-      // Sum the balance of the primary (default) wallet, or the first wallet.
-      double totalBalance = 0.0;
+      double currentBalance = 0.0;
       String currencyCode = 'USD';
       String? currencySymbol;
 
-      final defaultWallet = wallets.firstWhereOrNull(
-        (w) => w.isDefault == true,
-      );
+      if (selectedWallet != null) {
+        currentBalance = double.tryParse(selectedWallet.balance ?? '0') ?? 0.0;
+        currencyCode = selectedWallet.code ?? 'USD';
+        currencySymbol = selectedWallet.symbol;
+      } else {
+        final defaultWallet = wallets.firstWhereOrNull(
+          (w) => w.isDefault == true,
+        ) ?? (wallets.isNotEmpty ? wallets.first : null);
 
-      if (defaultWallet != null) {
-        totalBalance = double.tryParse(defaultWallet.balance ?? '0') ?? 0.0;
-        currencyCode = defaultWallet.code ?? 'USD';
-        currencySymbol = defaultWallet.symbol;
-      } else if (wallets.isNotEmpty) {
-        // Sum all wallets when there is no primary
-        for (final wallet in wallets) {
-          totalBalance += double.tryParse(wallet.balance ?? '0') ?? 0.0;
+        if (defaultWallet != null) {
+          currentBalance = double.tryParse(defaultWallet.balance ?? '0') ?? 0.0;
+          currencyCode = defaultWallet.code ?? 'USD';
+          currencySymbol = defaultWallet.symbol;
         }
-        currencyCode = wallets.first.code ?? 'USD';
-        currencySymbol = wallets.first.symbol;
       }
 
       // Collect unique currency codes from wallets
@@ -60,22 +59,24 @@ class BalanceHeroSection extends StatelessWidget {
       return Padding(
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
         child: EcardoBalanceHero(
-          amount: totalBalance,
+          amount: currentBalance,
           currencyCode: currencyCode,
           currencySymbol: currencySymbol,
           availableCurrencies: availableCurrencies,
-          onCurrencyChanged: (_) {
-            // Currency switching handled in wallets screen
+          onCurrencyChanged: (code) {
+            homeController.selectWalletByCurrency(code);
           },
-          accountLabel: l10nPick(
-            context,
-            en: 'Total Balance',
-            fa: 'موجودی کل',
-            ar: 'الرصيد الإجمالي',
-            zh: '总余额',
-            tr: 'Toplam Bakiye',
-            ru: 'Общий баланс',
-          ),
+          accountLabel: selectedWallet != null
+              ? '${selectedWallet.name ?? currencyCode} (${l10nPick(context, fa: "کیف پول فعال", en: "Active Wallet", ar: "المحفظة النشطة")})'
+              : l10nPick(
+                  context,
+                  en: 'Total Balance',
+                  fa: 'موجودی کل',
+                  ar: 'الرصيد الإجمالي',
+                  zh: '总余额',
+                  tr: 'Toplam Bakiye',
+                  ru: 'Общий баланс',
+                ),
           showQuickActions: true,
           actions: [
             EcardoHeroAction(

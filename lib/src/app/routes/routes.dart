@@ -171,10 +171,17 @@ class BaseRoute {
   static const String tourDetail = "/tour_detail_route";
   static const String tourMatch = "/tour_match_route";
   static const String tourMyBookings = "/tour_my_bookings_route";
+  static const String tourBook = "/tour_book_route";
+  static const String tourPayment = "/tour_payment_route";
+  static const String tourVoucher = "/tour_voucher_route";
 
   // Escrow (معامله امانی)
   static const String escrowHome = "/escrow_home_route";
   static const String escrowDetail = "/escrow_detail_route";
+  static const String escrowCreate = "/escrow_create_route";
+  static const String escrowPayment = "/escrow_payment_route";
+  static const String escrowShipment = "/escrow_shipment_route";
+  static const String escrowDispute = "/escrow_dispute_route";
   // Visa Service Routes
   static const String visaHome = "/visa_home_route";
   static const String visaDetail = "/visa_detail_route";
@@ -185,6 +192,7 @@ class BaseRoute {
   static const String loanHome = "/loan_home_route";
   static const String loanDetail = "/loan_detail_route";
   static const String rentalHome = "/rental_home_route";
+  static const String rentalVoucher = "/rental_voucher_route";
   static const String guaranteeHome = "/guarantee_home_route";
   static const String rentalDetail = "/rental_detail_route";
   static const String guaranteeDetail = "/guarantee_detail_route";
@@ -212,4 +220,7 @@ class BaseRoute {
   static const String visaIntro = "/visa_intro_route";
   static const String licenseIntro = "/license_intro_route";
   static const String commercialProjects = "/commercial_projects_route";
+  static const String commercialProjectDetail = "/commercial_project_detail_route";
+  static const String commercialInvestCheckout = "/commercial_invest_checkout_route";
+  static const String commercialMyInvestments = "/commercial_my_investments_route";
 }

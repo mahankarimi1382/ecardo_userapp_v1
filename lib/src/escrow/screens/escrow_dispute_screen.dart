@@ -17,7 +17,7 @@ class EscrowDisputeScreen extends StatefulWidget {
 }
 
 class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
-  final EscrowController controller = Get.find<EscrowController>();
+  late final EscrowController controller;
 
   String _disputeType = 'QUALITY_ISSUE';
   final TextEditingController _descController = TextEditingController();
@@ -29,6 +29,14 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
     {'key': 'SHIPPING_DELAY', 'label': 'تأخیر غیرمجاز در ارسال کالا'},
     {'key': 'NON_DELIVERY', 'label': 'عدم تحویل کالا توسط فروشنده'},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<EscrowController>()
+        ? Get.find<EscrowController>()
+        : Get.put(EscrowController());
+  }
 
   @override
   void dispose() {

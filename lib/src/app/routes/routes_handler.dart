@@ -1,9 +1,28 @@
+import 'package:ecardo_user/src/commercial/bindings/commercial_binding.dart';
 import 'package:ecardo_user/src/commercial/screens/commercial_projects_screen.dart';
+import 'package:ecardo_user/src/commercial/screens/equity_project_detail_screen.dart';
+import 'package:ecardo_user/src/commercial/screens/equity_invest_checkout_screen.dart';
+import 'package:ecardo_user/src/commercial/screens/my_investments_screen.dart';
+import 'package:ecardo_user/src/commercial/widgets/equity_project_card.dart';
+import 'package:ecardo_user/src/escrow/bindings/escrow_binding.dart';
+import 'package:ecardo_user/src/escrow/models/escrow_models.dart';
+import 'package:ecardo_user/src/escrow/screens/escrow_create_screen.dart';
 import 'package:ecardo_user/src/escrow/screens/escrow_detail_screen.dart';
+import 'package:ecardo_user/src/escrow/screens/escrow_dispute_screen.dart';
+import 'package:ecardo_user/src/escrow/screens/escrow_payment_screen.dart';
+import 'package:ecardo_user/src/escrow/screens/escrow_shipment_screen.dart';
 import 'package:ecardo_user/src/loan/screens/loan_detail_screen.dart';
+import 'package:ecardo_user/src/rental/bindings/rental_binding.dart';
+import 'package:ecardo_user/src/rental/models/rental_models.dart';
 import 'package:ecardo_user/src/rental/screens/rental_detail_screen.dart';
+import 'package:ecardo_user/src/rental/screens/rental_voucher_screen.dart';
 import 'package:ecardo_user/src/guarantee/screens/guarantee_detail_screen.dart';
+import 'package:ecardo_user/src/tour/bindings/tour_binding.dart';
+import 'package:ecardo_user/src/tour/models/tour_model.dart';
+import 'package:ecardo_user/src/tour/screens/tour_book_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_detail_screen.dart';
+import 'package:ecardo_user/src/tour/screens/tour_payment_screen.dart';
+import 'package:ecardo_user/src/tour/screens/tour_voucher_screen.dart';
 import 'package:get/get.dart';
 
 import '../bindings/app_bindings.dart';
@@ -545,14 +564,17 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.tourHome,
     page: () => RoutesConfig.tourHome,
+    binding: TourBinding(),
   ),
   GetPage(
     name: BaseRoute.tourMatch,
     page: () => RoutesConfig.tourMatch,
+    binding: TourBinding(),
   ),
   GetPage(
     name: BaseRoute.tourMyBookings,
     page: () => RoutesConfig.tourMyBookings,
+    binding: TourBinding(),
   ),
   GetPage(
     name: BaseRoute.tourDetail,
@@ -563,12 +585,61 @@ List<GetPage> routesHandler = [
           : (args is int ? args : null);
       return TourDetailScreen(tourId: tourId ?? 1);
     },
+    binding: TourBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.tourBook,
+    page: () {
+      final tour = Get.arguments as TourModel;
+      return TourBookScreen(tour: tour);
+    },
+    binding: TourBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.tourPayment,
+    page: () {
+      final args = Get.arguments;
+      final bookingId = args is Map
+          ? int.tryParse('${args['bookingId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return TourPaymentScreen(bookingId: bookingId ?? 1);
+    },
+    binding: TourBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.tourVoucher,
+    page: () {
+      final args = Get.arguments;
+      if (args is TourBookingModel) {
+        return TourVoucherScreen(booking: args);
+      }
+      final bookingId = args is Map
+          ? int.tryParse('${args['bookingId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return TourVoucherScreen(
+        booking: TourBookingModel(
+          id: bookingId ?? 1,
+          bookingNo: 'TR-${bookingId ?? 1}',
+          tourTitle: 'تور گردشگری',
+          tourCity: 'تهران',
+          travelersCount: 1,
+          basePrice: 0.0,
+          totalPrice: 0.0,
+          currency: 'USD',
+          status: 'confirmed',
+          statusLabel: 'تأییدشده',
+          createdAt: DateTime.now().toIso8601String(),
+        ),
+      );
+    },
+    binding: TourBinding(),
   ),
 
   // Escrow Routes
   GetPage(
     name: BaseRoute.escrowHome,
     page: () => RoutesConfig.escrowHome,
+    binding: EscrowBinding(),
   ),
   GetPage(
     name: BaseRoute.escrowDetail,
@@ -579,6 +650,42 @@ List<GetPage> routesHandler = [
           : (args is int ? args : null);
       return EscrowDetailScreen(orderId: orderId ?? 1);
     },
+    binding: EscrowBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.escrowCreate,
+    page: () => const EscrowCreateScreen(),
+    binding: EscrowBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.escrowPayment,
+    page: () {
+      final order = Get.arguments as EscrowOrderModel;
+      return EscrowPaymentScreen(order: order);
+    },
+    binding: EscrowBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.escrowShipment,
+    page: () {
+      final args = Get.arguments;
+      final orderId = args is Map
+          ? int.tryParse('${args['orderId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return EscrowShipmentScreen(orderId: orderId ?? 1);
+    },
+    binding: EscrowBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.escrowDispute,
+    page: () {
+      final args = Get.arguments;
+      final orderId = args is Map
+          ? int.tryParse('${args['orderId'] ?? args['id'] ?? ''}')
+          : (args is int ? args : null);
+      return EscrowDisputeScreen(orderId: orderId ?? 1);
+    },
+    binding: EscrowBinding(),
   ),
   // Visa Routes
   GetPage(
@@ -677,6 +784,7 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.rentalHome,
     page: () => RoutesConfig.rentalHome,
+    binding: RentalBinding(),
   ),
 
   // Bank Guarantee Routes
@@ -726,6 +834,15 @@ List<GetPage> routesHandler = [
           : (args is int ? args : null);
       return RentalDetailScreen(bookingId: bookingId ?? 0);
     },
+    binding: RentalBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.rentalVoucher,
+    page: () {
+      final booking = Get.arguments as RentalBookingModel;
+      return RentalVoucherScreen(booking: booking);
+    },
+    binding: RentalBinding(),
   ),
 
   // Remittance Track Routes
@@ -750,8 +867,35 @@ List<GetPage> routesHandler = [
     page: () => RoutesConfig.licenseIntro,
     binding: LicenseBinding(),
   ),
+
+  // Commercial & Equity Projects Full Flow Routes
   GetPage(
     name: BaseRoute.commercialProjects,
     page: () => const CommercialProjectsScreen(),
+    binding: CommercialBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.commercialProjectDetail,
+    page: () {
+      final args = Get.arguments;
+      final projectId = args is Map
+          ? (args['projectId']?.toString() ?? 'eq-001')
+          : (args?.toString() ?? 'eq-001');
+      return EquityProjectDetailScreen(projectId: projectId);
+    },
+    binding: CommercialBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.commercialInvestCheckout,
+    page: () {
+      final project = Get.arguments as EquityProjectItem;
+      return EquityInvestCheckoutScreen(project: project);
+    },
+    binding: CommercialBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.commercialMyInvestments,
+    page: () => const MyInvestmentsScreen(),
+    binding: CommercialBinding(),
   ),
 ];

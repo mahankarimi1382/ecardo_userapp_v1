@@ -37,6 +37,31 @@ class HomeController extends GetxController {
   final Rx<DashboardModel> dashboardModel = DashboardModel().obs;
   final Rx<UserModel> userModel = UserModel().obs;
   final RxList<Wallets> walletsList = <Wallets>[].obs;
+  final RxInt selectedWalletIndex = 0.obs;
+
+  Wallets? get selectedWallet {
+    if (walletsList.isEmpty) return null;
+    if (selectedWalletIndex.value >= 0 && selectedWalletIndex.value < walletsList.length) {
+      return walletsList[selectedWalletIndex.value];
+    }
+    return walletsList.firstWhereOrNull((w) => w.isDefault == true) ?? walletsList.first;
+  }
+
+  void selectWalletByIndex(int index) {
+    if (index >= 0 && index < walletsList.length) {
+      selectedWalletIndex.value = index;
+    }
+  }
+
+  void selectWalletByCurrency(String code) {
+    final idx = walletsList.indexWhere(
+      (w) => (w.code ?? '').toUpperCase() == code.toUpperCase(),
+    );
+    if (idx != -1) {
+      selectedWalletIndex.value = idx;
+    }
+  }
+
   final Rx<TransactionsModel> transactionsModel = TransactionsModel().obs;
   final RxInt selectedIndex = 0.obs;
   final RxBool isSettingsInitialized = false.obs;

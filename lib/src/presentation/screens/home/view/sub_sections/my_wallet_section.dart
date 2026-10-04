@@ -36,7 +36,13 @@ class MyWalletSection extends StatelessWidget {
           if (wallets.isEmpty)
             EmptyView.wallets(onCta: () => Get.toNamed(BaseRoute.wallets))
           else
-            WalletCardCarousel(wallets: wallets),
+            WalletCardCarousel(
+              wallets: wallets,
+              initialPage: homeController.selectedWalletIndex.value,
+              onPageChanged: (index) {
+                homeController.selectWalletByIndex(index);
+              },
+            ),
         ],
       );
     });

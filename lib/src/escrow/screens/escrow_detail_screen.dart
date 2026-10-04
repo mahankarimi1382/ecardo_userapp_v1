@@ -23,11 +23,14 @@ class EscrowDetailScreen extends StatefulWidget {
 }
 
 class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
-  final EscrowController controller = Get.find<EscrowController>();
+  late final EscrowController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.isRegistered<EscrowController>()
+        ? Get.find<EscrowController>()
+        : Get.put(EscrowController());
     controller.loadOrderDetails(widget.orderId);
   }
 

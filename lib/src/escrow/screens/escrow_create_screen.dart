@@ -16,7 +16,7 @@ class EscrowCreateScreen extends StatefulWidget {
 }
 
 class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
-  final EscrowController controller = Get.find<EscrowController>();
+  late final EscrowController controller;
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
@@ -31,6 +31,14 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
   final String _shippingPayer = 'BUYER';
   int _inspectionHours = 72;
   final DateTime _shipDeadline = DateTime.now().add(const Duration(days: 5));
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<EscrowController>()
+        ? Get.find<EscrowController>()
+        : Get.put(EscrowController());
+  }
 
   @override
   void dispose() {
