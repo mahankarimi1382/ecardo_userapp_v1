@@ -84,12 +84,10 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
       final beneficiaries =
           controller.beneficiaryModel.value.data?.beneficiaries ?? <Beneficiaries>[];
 
-      return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. Recipient Selection
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. Recipient Selection
             if (hasSelectedRecipient)
               TransferRecipientCard(
                 beneficiary: matchedBeneficiary,
@@ -263,8 +261,7 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
             const SizedBox(height: AppSpacing.xxl),
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
           ],
-        ),
-      );
+        );
     });
   }
 

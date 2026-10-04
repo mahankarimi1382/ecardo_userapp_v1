@@ -24,10 +24,10 @@ class AppColors {
   static const Color lightSurfaceVariant = Color(0xFFF0EDEC);
   static const Color lightCard = Color(0xFFFFFFFF);
 
-  // Primary Colors (Monochrome & Black/White with Deep Black primary)
-  static const Color lightPrimary = deepBlack;
-  static const Color lightPrimaryContainer = mainSoftBlue;
-  static const Color lightPrimaryDark = darkGray;
+  // Primary Colors (Modern Royal Fintech Blue)
+  static const Color lightPrimary = Color(0xFF2563EB);
+  static const Color lightPrimaryContainer = Color(0xFFDBEAFE);
+  static const Color lightPrimaryDark = Color(0xFF1D4ED8);
 
   // Accent / Secondary
   static const Color lightSecondary = mutedBlue;

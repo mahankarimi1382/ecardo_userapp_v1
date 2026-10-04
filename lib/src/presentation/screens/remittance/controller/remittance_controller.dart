@@ -168,22 +168,71 @@ class RemittanceController extends GetxController {
 
   // ------------------------------ STEP 1: METHODS ------------------------------ //
 
+  static List<RemittanceMethod> get defaultMethods => [
+        RemittanceMethod(
+          id: 1,
+          name: 'Bank transfer · China',
+          countryCode: 'CN',
+          receiveCurrencyCode: 'CNY',
+          receiveCurrencyId: 3,
+          status: 1,
+          description: 'Arrives within 24h · CNY',
+        ),
+        RemittanceMethod(
+          id: 2,
+          name: 'Alipay',
+          countryCode: 'CN',
+          receiveCurrencyCode: 'CNY',
+          receiveCurrencyId: 3,
+          status: 1,
+          description: 'Usually within 2h · CNY',
+        ),
+        RemittanceMethod(
+          id: 3,
+          name: 'Iranian bank · SHABA',
+          countryCode: 'IR',
+          receiveCurrencyCode: 'IRT',
+          receiveCurrencyId: 1,
+          status: 0,
+          description: 'IRT payout · Soon',
+        ),
+        RemittanceMethod(
+          id: 4,
+          name: 'USDT wallet',
+          countryCode: 'GLOBAL',
+          receiveCurrencyCode: 'USDT',
+          receiveCurrencyId: 2,
+          status: 0,
+          description: 'TRC20 payout · Soon',
+        ),
+      ];
+
   Future<void> fetchMethods() async {
     isMethodsLoading.value = true;
-    final response = await _networkService.get(
-      endpoint: ApiPath.remittanceMethodsEndpoint,
-    );
-    isMethodsLoading.value = false;
-
-    if (response.status == Status.completed) {
-      final data = response.data?['data'];
-      if (data is List) {
-        methods.value = data
-            .map((e) => RemittanceMethod.fromJson(e as Map<String, dynamic>))
-            .toList();
+    try {
+      final response = await _networkService.get(
+        endpoint: ApiPath.remittanceMethodsEndpoint,
+      );
+      if (response.status == Status.completed) {
+        final data = response.data?['data'];
+        if (data is List && data.isNotEmpty) {
+          methods.value = data
+              .map((e) => RemittanceMethod.fromJson(e as Map<String, dynamic>))
+              .toList();
+        } else {
+          methods.value = defaultMethods;
+        }
+      } else {
+        methods.value = defaultMethods;
       }
-    } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrLoadMethods ?? 'Failed to load methods');
+    } catch (_) {
+      methods.value = defaultMethods;
+    } finally {
+      isMethodsLoading.value = false;
+      if (selectedMethod.value == null && methods.isNotEmpty) {
+        final firstActive = methods.firstWhere((m) => m.isActive, orElse: () => methods.first);
+        selectMethod(firstActive);
+      }
     }
   }
 

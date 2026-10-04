@@ -185,6 +185,7 @@ class RemittanceMethod {
   // (code + symbol) so each method card can show "→ CNY" transparently.
   final String? receiveCurrencyCode;
   final String? receiveCurrencySymbol;
+  final String? description;
 
   RemittanceMethod({
     this.id,
@@ -195,6 +196,7 @@ class RemittanceMethod {
     this.status,
     this.receiveCurrencyCode,
     this.receiveCurrencySymbol,
+    this.description,
   });
 
   factory RemittanceMethod.fromJson(Map<String, dynamic> json) {
@@ -220,6 +222,7 @@ class RemittanceMethod {
       status: _parseStatus(json['status']),
       receiveCurrencyCode: rcCode,
       receiveCurrencySymbol: rcSymbol,
+      description: json['description']?.toString(),
     );
   }
 

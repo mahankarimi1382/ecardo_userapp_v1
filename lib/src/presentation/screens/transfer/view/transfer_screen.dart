@@ -82,7 +82,7 @@ class _TransferScreenState extends State<TransferScreen> {
       },
       child: Scaffold(
         appBar: CommonDefaultAppBar(),
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: colorScheme.surface,
         body: Stack(
           children: [
@@ -161,17 +161,20 @@ class _TransferScreenState extends State<TransferScreen> {
                     }
 
                     if (controller.currentStep.value == 0) {
-                      return Padding(
+                      return SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.lg,
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
                             TransferWalletSection(),
                             SizedBox(height: AppSpacing.md),
-                            Expanded(
-                              child: TransferAmountStepSection(),
-                            ),
+                            TransferAmountStepSection(),
+                            SizedBox(height: AppSpacing.xxl),
                           ],
                         ),
                       );

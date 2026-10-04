@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
 /// Step 4: Review all details before submitting.
@@ -16,13 +17,58 @@ class RemittanceReviewSection extends StatelessWidget {
     return Obx(() {
       final q = c.currentQuote.value;
       final m = c.selectedMethod.value;
+      final secs = c.rateExpiresInSeconds.value;
+      final mins = (secs ~/ 60).toString().padLeft(2, '0');
+      final remSecs = (secs % 60).toString().padLeft(2, '0');
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(l.remittanceReviewConfirm, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
           SizedBox(height: 8.h),
           Text(l.remittanceReviewHint, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
-          SizedBox(height: 20.h),
+          SizedBox(height: 16.h),
+
+          // Rate hold countdown banner (matches review_transfer.html)
+          Container(
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: ECardoTokens.brand100(context),
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.timer_outlined, color: ECardoTokens.brand700(context), size: 20.sp),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Rate held for $mins:$remSecs',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.brand900(context),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        'After that you need a new quote.',
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.h),
+
           _Card(l.remittancePayoutDetails, [
             _Row(l.remittanceSelectPayoutMethod, m?.name ?? '-'),
             // M-7 — decimals now come from DynamicDecimalsHelper via the

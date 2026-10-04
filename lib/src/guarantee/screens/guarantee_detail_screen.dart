@@ -17,7 +17,8 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 /// جزئیات پرونده ضمانت‌نامه و اعتبار اسنادی — Bank-Guarantee-Service-Flow.md
 class GuaranteeDetailScreen extends StatefulWidget {
   final int caseId;
-  const GuaranteeDetailScreen({super.key, required this.caseId});
+  final GuaranteeCaseModel? initialCase;
+  const GuaranteeDetailScreen({super.key, required this.caseId, this.initialCase});
 
   @override
   State<GuaranteeDetailScreen> createState() => _GuaranteeDetailScreenState();
@@ -32,6 +33,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
     controller = Get.isRegistered<GuaranteeController>()
         ? Get.find<GuaranteeController>()
         : Get.put(GuaranteeController());
+    if (widget.initialCase != null) {
+      controller.selectedCase.value = widget.initialCase;
+    }
     final id = widget.caseId > 0 ? widget.caseId : (Get.arguments is int ? Get.arguments as int : 0);
     if (id > 0) {
       controller.fetchCase(id);

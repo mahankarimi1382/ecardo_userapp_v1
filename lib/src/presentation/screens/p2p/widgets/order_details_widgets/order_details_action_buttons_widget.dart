@@ -5,10 +5,11 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/bottom_sheet/common_alert_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
-import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/controller/p2p_order_details_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/model/order_details_response_model.dart'
     as order_details;
+
+import '../p2p_appeal_order_screen.dart';
 
 class OrderDetailsActionButtonsWidget extends StatelessWidget {
   final order_details.Data data;
@@ -136,101 +137,6 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
   }
 
   void _showDisputeReasonBottomSheet() {
-    final reasonController = TextEditingController();
-
-    Get.bottomSheet(
-      StatefulBuilder(
-        builder: (context, setState) => Container(
-          margin: EdgeInsets.symmetric(horizontal: 12.w),
-          padding: EdgeInsetsDirectional.fromSTEB(16.w, 12.h, 16.w, 20.h),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadiusDirectional.only(
-              topStart: Radius.circular(20.r),
-              topEnd: Radius.circular(20.r),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40.w,
-                  height: 6.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                ),
-              ),
-              SizedBox(height: 14.h),
-              Text(
-                AppLocalizations.of(context)!.p2pEnterDisputeReason,
-                style: TextStyle(
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16.sp,
-                  color: AppColors.lightTextPrimary,
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                decoration: BoxDecoration(
-                  color: AppColors.lightBackground,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.16),
-                  ),
-                ),
-                child: TextField(
-                  controller: reasonController,
-                  minLines: 3,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    isCollapsed: true,
-                    hintText: AppLocalizations.of(context)!.p2pWriteYourReason,
-                  ),
-                  style: TextStyle(
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.sp,
-                    color: AppColors.lightTextPrimary,
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Obx(
-                () => CommonButton(
-                  text: AppLocalizations.of(context)!.p2pEnterReason,
-                  width: double.infinity,
-                  isLoading: controller.isDisputingOrder.value,
-                  onPressed: () async {
-                    final reason = reasonController.text.trim();
-                    if (reason.isEmpty) {
-                      ToastHelper().showErrorToast(
-                        AppLocalizations.of(Get.context!)!.p2pReasonIsRequired,
-                      );
-                      return;
-                    }
-                    final isSuccess = await controller.disputeOrder(
-                      reason: reason,
-                    );
-                    if (isSuccess) {
-                      Get.back();
-                    }
-                  },
-                ),
-              ),
-              SizedBox(height: 16.h),
-            ],
-          ),
-        ),
-      ),
-      isScrollControlled: true,
-    );
+    Get.to(() => P2pAppealOrderScreen(data: data, controller: controller));
   }
 }

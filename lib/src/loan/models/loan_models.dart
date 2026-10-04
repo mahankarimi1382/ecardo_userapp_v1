@@ -13,6 +13,12 @@ class LoanProductModel {
   final double feePct;
   final double lateFeeDailyPct;
   final double lateFeeCapPct;
+  final String slaTag;
+  final String tagline;
+  final double collateralRatioPct;
+  final int requiredKycTier;
+  final double warningThresholdPct;
+  final double liquidationThresholdPct;
 
   const LoanProductModel({
     required this.id,
@@ -26,25 +32,48 @@ class LoanProductModel {
     required this.feePct,
     required this.lateFeeDailyPct,
     required this.lateFeeCapPct,
+    this.slaTag = '2 working days',
+    this.tagline = '',
+    this.collateralRatioPct = 0.0,
+    this.requiredKycTier = 1,
+    this.warningThresholdPct = 130.0,
+    this.liquidationThresholdPct = 120.0,
   });
 
   double get baseRateAnnual => interestRatePct;
 
   factory LoanProductModel.fromJson(Map<String, dynamic> json) {
+    final name = json['name']?.toString() ?? '';
+    final isCrypto = name.toLowerCase().contains('crypto') ||
+        json['required_collateral_type']?.toString().toUpperCase() == 'USDT' ||
+        json['required_collateral_type']?.toString().toUpperCase() == 'CRYPTO';
+    final isBusiness = name.toLowerCase().contains('business') ||
+        json['audience']?.toString().toUpperCase() == 'BUSINESS';
+
     return LoanProductModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
-      name: json['name']?.toString() ?? '',
-      audience: json['audience']?.toString() ?? 'PERSONAL',
-      minAmount: (json['min_amount'] as num?)?.toDouble() ?? 0,
-      maxAmount: (json['max_amount'] as num?)?.toDouble() ?? 0,
-      tenureOptions: ((json['tenure_options'] as List?) ?? [])
+      name: name,
+      audience: json['audience']?.toString() ?? (isBusiness ? 'BUSINESS' : 'PERSONAL'),
+      minAmount: (json['min_amount'] as num?)?.toDouble() ?? 500.0,
+      maxAmount: (json['max_amount'] as num?)?.toDouble() ?? (isCrypto ? 100000.0 : isBusiness ? 50000.0 : 5000.0),
+      tenureOptions: ((json['tenure_options'] as List?) ?? (isCrypto ? [3, 6, 12, 24] : [6, 12, 24]))
           .map((e) => (e as num).toInt())
           .toList(),
-      interestRatePct: (json['interest_rate_pct'] as num?)?.toDouble() ?? 0,
-      requiredCollateralType: json['required_collateral_type']?.toString(),
-      feePct: (json['fee_pct'] as num?)?.toDouble() ?? 0,
-      lateFeeDailyPct: (json['late_fee_daily_pct'] as num?)?.toDouble() ?? 0,
-      lateFeeCapPct: (json['late_fee_cap_pct'] as num?)?.toDouble() ?? 0,
+      interestRatePct: (json['interest_rate_pct'] as num?)?.toDouble() ?? (isCrypto ? 14.0 : isBusiness ? 20.0 : 24.0),
+      requiredCollateralType: json['required_collateral_type']?.toString() ?? (isCrypto ? 'USDT' : null),
+      feePct: (json['fee_pct'] as num?)?.toDouble() ?? 1.0,
+      lateFeeDailyPct: (json['late_fee_daily_pct'] as num?)?.toDouble() ?? 0.067,
+      lateFeeCapPct: (json['late_fee_cap_pct'] as num?)?.toDouble() ?? 2.0,
+      slaTag: json['sla_tag']?.toString() ?? (isCrypto ? 'Fastest' : isBusiness ? '5 working days' : '2 working days'),
+      tagline: json['tagline']?.toString() ?? (isCrypto
+          ? 'Lock USDT, borrow USD · no credit check'
+          : isBusiness
+              ? 'For registered companies · documents needed'
+              : 'For KYC tier 2 and above'),
+      collateralRatioPct: (json['collateral_ratio_pct'] as num?)?.toDouble() ?? (isCrypto ? 150.0 : 0.0),
+      requiredKycTier: (json['required_kyc_tier'] as num?)?.toInt() ?? (isBusiness ? 3 : isCrypto ? 1 : 2),
+      warningThresholdPct: (json['warning_threshold_pct'] as num?)?.toDouble() ?? 130.0,
+      liquidationThresholdPct: (json['liquidation_threshold_pct'] as num?)?.toDouble() ?? 120.0,
     );
   }
 }
@@ -213,7 +242,71 @@ class LoanCaseModel {
     required this.installments,
     required this.events,
     this.createdAt,
+    this.customCoveragePct,
+    this.customCollateralValueUsd,
   });
+
+  final double? customCoveragePct;
+  final double? customCollateralValueUsd;
+
+  /// Total outstanding balance owed across unpaid installments
+  double get outstandingAmount {
+    if (installments.isEmpty) return requestedAmount;
+    final unpaid = installments.where((i) => !i.isPaid);
+    if (unpaid.isEmpty) return 0.0;
+    return unpaid.fold(0.0, (sum, i) => sum + i.amount);
+  }
+
+  int get paidInstallmentsCount =>
+      installments.where((i) => i.isPaid).length;
+
+  int get totalInstallmentsCount =>
+      installments.isNotEmpty ? installments.length : tenureMonths;
+
+  LoanInstallmentModel? get nextInstallment {
+    final unpaid = installments.where((i) => !i.isPaid);
+    return unpaid.isNotEmpty ? unpaid.first : null;
+  }
+
+  double get lockedCollateralUsdt {
+    return collaterals.fold(0.0, (sum, c) => sum + c.amount);
+  }
+
+  /// Current collateral coverage ratio (e.g. 219% or 118%)
+  double get coverageNowPct {
+    if (customCoveragePct != null) return customCoveragePct!;
+    final locked = lockedCollateralUsdt;
+    final balance = outstandingAmount;
+    if (balance <= 0) return 300.0;
+    if (locked <= 0) return 0.0;
+    return (locked / balance) * 100.0;
+  }
+
+  double get collateralValueUsd {
+    if (customCollateralValueUsd != null) return customCollateralValueUsd!;
+    return lockedCollateralUsdt; // 1 USDT ~= 1 USD
+  }
+
+  bool get isCollateralWarning =>
+      lockedCollateralUsdt > 0 && coverageNowPct < 130.0;
+
+  bool get isCollateralDanger =>
+      lockedCollateralUsdt > 0 && coverageNowPct <= 120.0;
+
+  /// USDT needed to top up collateral to reach 150% coverage
+  double get collateralShortfallUsdt {
+    final target = outstandingAmount * 1.5;
+    final diff = target - lockedCollateralUsdt;
+    return diff > 0 ? diff : 0.0;
+  }
+
+  /// USD debt reduction needed to reach 150% coverage with current collateral
+  double get debtReductionRequiredUsd {
+    if (lockedCollateralUsdt <= 0) return 0.0;
+    final maxAllowedDebt = lockedCollateralUsdt / 1.5;
+    final diff = outstandingAmount - maxAllowedDebt;
+    return diff > 0 ? diff : 0.0;
+  }
 
   factory LoanCaseModel.fromJson(Map<String, dynamic> json) {
     return LoanCaseModel(
@@ -244,6 +337,8 @@ class LoanCaseModel {
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())
           : null,
+      customCoveragePct: (json['coverage_now_pct'] as num?)?.toDouble(),
+      customCollateralValueUsd: (json['collateral_value_usd'] as num?)?.toDouble(),
     );
   }
 }

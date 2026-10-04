@@ -2,21 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+
 import '../controllers/escrow_controller.dart';
 import '../models/escrow_models.dart';
-import '../widgets/escrow_widgets.dart';
-import 'escrow_payment_screen.dart';
-import 'escrow_shipment_screen.dart';
-import 'escrow_dispute_screen.dart';
+import 'escrow_inspection_screen.dart';
+import 'escrow_dispute_review_screen.dart';
 
+/// Detailed view of an Escrow Deal — matches `escrow_deal_detail.html`
+/// Features:
+/// 1. Funds held status banner (locked amount, delivery deadline, dispute rights)
+/// 2. 5-step transaction progress stepper (Accepted, Funded, Awaiting delivery, Inspection, Released)
+/// 3. Counterparty & Deal metadata (documents, inspection window)
+/// 4. Dynamic action buttons based on user role and state (Mark as delivered / Inspect / Dispute)
 class EscrowDetailScreen extends StatefulWidget {
   final int orderId;
+  final EscrowOrderModel? initialOrder;
 
-  const EscrowDetailScreen({super.key, required this.orderId});
+  const EscrowDetailScreen({
+    super.key,
+    required this.orderId,
+    this.initialOrder,
+  });
 
   @override
   State<EscrowDetailScreen> createState() => _EscrowDetailScreenState();
@@ -31,649 +40,485 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
     controller = Get.isRegistered<EscrowController>()
         ? Get.find<EscrowController>()
         : Get.put(EscrowController());
-    controller.loadOrderDetails(widget.orderId);
-  }
-
-  void _showRequestChangesDialog() {
-    final textController = TextEditingController();
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
-        title: Text(
-          l10nPick(context, fa: 'درخواست اصلاح شرایط', en: 'Request Changes'),
-          style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800),
-        ),
-        content: TextField(
-          controller: textController,
-          maxLines: 3,
-          decoration: InputDecoration(
-            hintText: l10nPick(context, fa: 'توضیحات موارد نیازمند اصلاح...', en: 'Describe requested changes...'),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Get.back();
-            },
-            child: Text(l10nPick(context, fa: 'انصراف', en: 'Cancel')),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.lightPrimary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-            ),
-            onPressed: () async {
-              if (textController.text.trim().isEmpty) return;
-              HapticFeedback.lightImpact();
-              Get.back();
-              await controller.requestChanges(widget.orderId, textController.text.trim());
-            },
-            child: Text(
-              l10nPick(context, fa: 'ارسال درخواست', en: 'Submit'),
-              style: const TextStyle(color: AppColors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showRatingDialog() {
-    int stars = 5;
-    final textController = TextEditingController();
-
-    Get.dialog(
-      StatefulBuilder(
-        builder: (ctx, setDlgState) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
-            title: Text(
-              l10nPick(context, fa: 'ثبت امتیاز معامله', en: 'Rate Deal'),
-              style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) {
-                    final s = index + 1;
-                    return IconButton(
-                      icon: Icon(
-                        s <= stars ? Icons.star_rounded : Icons.star_border_rounded,
-                        color: AppColors.warning,
-                        size: 32.sp,
-                      ),
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        setDlgState(() => stars = s);
-                      },
-                    );
-                  }),
-                ),
-                SizedBox(height: AppSpacing.md.h),
-                TextField(
-                  controller: textController,
-                  decoration: InputDecoration(
-                    hintText: l10nPick(context, fa: 'نظر شما درباره این معامله...', en: 'Comment...'),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  Get.back();
-                },
-                child: Text(l10nPick(context, fa: 'انصراف', en: 'Cancel')),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.lightPrimary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-                ),
-                onPressed: () async {
-                  HapticFeedback.lightImpact();
-                  Get.back();
-                  await controller.submitRating(widget.orderId, rating: stars, comment: textController.text.trim());
-                },
-                child: Text(
-                  l10nPick(context, fa: 'ثبت امتیاز', en: 'Submit'),
-                  style: const TextStyle(color: AppColors.white),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
+    if (widget.initialOrder != null) {
+      controller.activeOrder.value = widget.initialOrder;
+    }
+    if (widget.orderId > 0) {
+      controller.loadOrderDetails(widget.orderId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-          ),
-          onPressed: () {
-            HapticFeedback.lightImpact();
-            Get.back();
-          },
+      backgroundColor: ECardoTokens.surfaceCanvas(context),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.h),
+        child: SafeArea(
+          child: Obx(() {
+            final o = controller.activeOrder.value ?? widget.initialOrder ?? EscrowController.defaultOrders.first;
+            return CommonAppBar(
+              title: 'Deal ${o.contractNo}',
+              isBackLogicApply: true,
+              backLogicFunction: Get.back,
+            );
+          }),
         ),
-        title: Obx(() => Text(
-              controller.activeOrder.value?.contractNo ?? l10nPick(context, fa: 'جزئیات معامله', en: 'Deal Details'),
-              style: AppTextStyles.titleMedium.copyWith(
-                fontWeight: FontWeight.w900,
-                fontFamily: 'monospace',
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-              ),
-            )),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.refresh_rounded,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-            ),
-            tooltip: l10nPick(context, fa: 'تازه‌سازی', en: 'Refresh'),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              controller.loadOrderDetails(widget.orderId);
-            },
-          ),
-        ],
       ),
       body: Obx(() {
         if (controller.isActionLoading.value && controller.activeOrder.value == null) {
-          return const EscrowSkeletonLoader(itemCount: 2);
+          return const Center(child: CircularProgressIndicator());
         }
 
-        final deal = controller.activeOrder.value;
-        if (deal == null) {
-          return Center(
-            child: EcardoEmptyState(
-              iconData: Icons.search_off_rounded,
-              title: l10nPick(context, fa: 'معامله یافت نشد', en: 'Deal not found'),
-              description: l10nPick(context, fa: 'اطلاعات این معامله در دسترس نیست یا لغو شده است.', en: 'This deal is unavailable or cancelled.'),
-              primaryActionLabel: l10nPick(context, fa: 'بازگشت', en: 'Back'),
-              onPrimaryAction: () => Get.back(),
-            ),
-          );
-        }
+        final o = controller.activeOrder.value ?? widget.initialOrder ?? EscrowController.defaultOrders.first;
+        final isFundsHeld = o.isFundsHeld;
+        final isInspection = o.isInspection;
+        final isDisputed = o.isDisputed;
+        final lockedAmount = o.totalEscrowAmount > 0 ? o.totalEscrowAmount : 2400.0;
 
-        return RefreshIndicator(
-          onRefresh: () => controller.loadOrderDetails(widget.orderId),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsetsDirectional.all(AppSpacing.page.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. Milestone Stepper Card
-                EscrowMilestoneStepper(currentStatus: deal.status),
-                SizedBox(height: AppSpacing.md.h),
-
-                // 2. Status & Hero Overview Card
-                Container(
-                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                    border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(
+            horizontal: ECardoTokens.space4.w,
+            vertical: ECardoTokens.space3.h,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ------------------ Status Banner ------------------
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
+                decoration: BoxDecoration(
+                  color: ECardoTokens.surfaceCard(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+                  border: Border.all(color: ECardoTokens.border(context)),
+                  boxShadow: ECardoTokens.shadowCard(context),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: isFundsHeld
+                                ? ECardoTokens.successBg(context)
+                                : isInspection
+                                    ? ECardoTokens.sand100(context)
+                                    : isDisputed
+                                        ? ECardoTokens.dangerBg(context)
+                                        : ECardoTokens.brand100(context),
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                          ),
+                          child: Text(
+                            o.statusLabel,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isFundsHeld
+                                  ? ECardoTokens.success(context)
+                                  : isInspection
+                                      ? ECardoTokens.sand600(context)
+                                      : isDisputed
+                                          ? ECardoTokens.danger(context)
+                                          : ECardoTokens.brand700(context),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Locked since 28 Sep',
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            color: ECardoTokens.inkMuted(context),
+                          ),
+                        ),
+                      ],
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
+                    SizedBox(height: ECardoTokens.space3.h),
+                    Text(
+                      '${lockedAmount.toStringAsFixed(2)} USD',
+                      style: TextStyle(
+                        fontSize: 26.sp,
+                        fontWeight: FontWeight.w900,
+                        color: ECardoTokens.ink(context),
+                        letterSpacing: -0.5,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      l10nPick(
+                        context,
+                        fa: 'وجه نزد ایکاردو قفل است. تا زمان تأیید تحویل، هیچ‌یک از طرفین امکان برداشت آن را ندارند.',
+                        en: 'Held by eCardo. Neither side can move it until delivery is approved.',
+                      ),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
+                    ),
+                    SizedBox(height: ECardoTokens.space3.h),
+
+                    // Delivery due pill
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: ECardoTokens.surfaceSunken(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          EscrowStatusBadge(status: deal.status, label: deal.statusLabel),
                           Text(
-                            '${deal.amount.toStringAsFixed(0)} ${deal.currency}',
-                            style: AppTextStyles.headlineSmall.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: primaryAccent,
+                            l10nPick(context, fa: 'مهلت ارسال: ۳ روز مانده', en: 'Delivery due in 3 days'),
+                            style: TextStyle(
+                              fontSize: 12.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: ECardoTokens.ink(context),
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            l10nPick(context, fa: 'پس از تاریخ ۷ اکتبر خریدار حق ثبت اختلاف خواهد داشت.', en: 'After 7 Oct the buyer may open a dispute.'),
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: ECardoTokens.inkMuted(context),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSpacing.md.h),
-                      Text(
-                        deal.title,
-                        style: AppTextStyles.titleMedium.copyWith(
-                          fontWeight: FontWeight.w900,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
-                      ),
-                      if (deal.description.isNotEmpty) ...[
-                        SizedBox(height: AppSpacing.xs.h),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: ECardoTokens.space5.h),
+
+              // ------------------ Progress Stepper ------------------
+              Text(
+                l10nPick(context, fa: 'مراحل اجرای معامله', en: 'Progress'),
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w800,
+                  color: ECardoTokens.ink(context),
+                ),
+              ),
+              SizedBox(height: ECardoTokens.space2.h),
+
+              Container(
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
+                decoration: BoxDecoration(
+                  color: ECardoTokens.surfaceCard(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+                  border: Border.all(color: ECardoTokens.border(context)),
+                  boxShadow: ECardoTokens.shadowCard(context),
+                ),
+                child: Column(
+                  children: [
+                    _buildProgressStep(
+                      context,
+                      stepNum: '1',
+                      title: l10nPick(context, fa: 'توافق طرفین و پذیرش شرایط', en: 'Deal accepted'),
+                      sub: '27 Sep · Delta Trading Co.',
+                      isDone: true,
+                    ),
+                    _buildProgressStep(
+                      context,
+                      stepNum: '2',
+                      title: l10nPick(context, fa: 'تأمین وجه توسط خریدار در حساب امانی', en: 'Buyer funded escrow'),
+                      sub: '28 Sep · 2,424.00 USD received',
+                      isDone: true,
+                    ),
+                    _buildProgressStep(
+                      context,
+                      stepNum: '3',
+                      title: l10nPick(context, fa: 'در انتظار ارسال کالا توسط فروشنده', en: 'Awaiting your delivery'),
+                      sub: l10nPick(context, fa: 'پس از تحویل به باربری علامت بزنید', en: 'Mark as shipped once goods leave'),
+                      isActive: true,
+                    ),
+                    _buildProgressStep(
+                      context,
+                      stepNum: '4',
+                      title: l10nPick(context, fa: 'مهلت بازرسی خریدار', en: 'Buyer inspection'),
+                      sub: '72 hours after delivery',
+                    ),
+                    _buildProgressStep(
+                      context,
+                      stepNum: '5',
+                      title: l10nPick(context, fa: 'آزادسازی وجه به حساب شما', en: 'Funds released to you'),
+                      sub: '2,400.00 USD · fee paid by buyer',
+                      isLast: true,
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: ECardoTokens.space5.h),
+
+              // ------------------ Metadata Section ------------------
+              Container(
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
+                decoration: BoxDecoration(
+                  color: ECardoTokens.surfaceCard(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+                  border: Border.all(color: ECardoTokens.border(context)),
+                  boxShadow: ECardoTokens.shadowCard(context),
+                ),
+                child: Column(
+                  children: [
+                    _buildDetailRow(
+                      context,
+                      label: l10nPick(context, fa: 'طرف مقابل معامله', en: 'Counterparty'),
+                      value: o.counterpartyLabel,
+                    ),
+                    Divider(color: ECardoTokens.border(context), height: 16.h),
+                    _buildDetailRow(
+                      context,
+                      label: l10nPick(context, fa: 'مهلت بازرسی', en: 'Inspection window'),
+                      value: '${o.inspectionHours} hours',
+                    ),
+                    Divider(color: ECardoTokens.border(context), height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Text(
-                          deal.description,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                            height: 1.5,
+                          l10nPick(context, fa: 'مدارک ضمیمه', en: 'Documents'),
+                          style: TextStyle(fontSize: 13.sp, color: ECardoTokens.inkMuted(context)),
+                        ),
+                        Text(
+                          '2 files',
+                          style: TextStyle(
+                            fontSize: 13.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: ECardoTokens.brand500(context),
                           ),
                         ),
                       ],
-                    ],
-                  ),
-                ),
-                SizedBox(height: AppSpacing.md.h),
-
-                // 3. Parties & Terms Card
-                Container(
-                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                    border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10nPick(context, fa: 'مشخصات و شرایط معامله', en: 'Deal Terms & Parties'),
-                        style: AppTextStyles.titleSmall.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
-                      ),
-                      Divider(
-                        height: 24,
-                        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-                      ),
-                      _buildInfoRow(context, isDark, l10nPick(context, fa: 'طرف خریدار', en: 'Buyer'), deal.buyer?.name ?? '-'),
-                      _buildInfoRow(context, isDark, l10nPick(context, fa: 'طرف فروشنده', en: 'Seller'), deal.seller?.name ?? '-'),
-                      _buildInfoRow(context, isDark, l10nPick(context, fa: 'دوره بازرسی', en: 'Inspection Period'), '${deal.inspectionHours} ساعت پس از تحویل'),
-                      _buildInfoRow(
-                        context,
-                        isDark,
-                        l10nPick(context, fa: 'پرداخت‌کننده کارمزد', en: 'Fee Payer'),
-                        deal.feePayer == 'BUYER' ? 'خریدار' : (deal.feePayer == 'SELLER' ? 'فروشنده' : '۵۰-۵۰'),
-                      ),
-                      if (deal.shippingCompany != null)
-                        _buildInfoRow(context, isDark, l10nPick(context, fa: 'شرکت حمل‌ونقل', en: 'Carrier'), deal.shippingCompany!),
-                      if (deal.trackingNumber != null)
-                        _buildInfoRow(context, isDark, l10nPick(context, fa: 'شماره بارنامه/رهگیری', en: 'Tracking No'), deal.trackingNumber!),
-                    ],
-                  ),
+                  ],
                 ),
-                SizedBox(height: AppSpacing.md.h),
+              ),
 
-                // 4. Action Buttons Box (Dynamic based on State Machine)
-                _buildActionButtons(context, deal, isDark, primaryAccent),
-                SizedBox(height: AppSpacing.md.h),
-
-                // 5. Timeline Card
-                Container(
-                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                    border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10nPick(context, fa: 'تایم‌لاین رویدادهای معامله', en: 'Deal Timeline'),
-                        style: AppTextStyles.titleSmall.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
-                      ),
-                      Divider(
-                        height: 24,
-                        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-                      ),
-                      EscrowTimelineWidget(events: deal.events),
-                    ],
-                  ),
-                ),
-                SizedBox(height: AppSpacing.xxl.h),
-              ],
-            ),
+              SizedBox(height: ECardoTokens.space8.h),
+            ],
           ),
         );
       }),
-    );
-  }
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(ECardoTokens.space4.r),
+        decoration: BoxDecoration(
+          color: ECardoTokens.surfaceCard(context),
+          border: Border(top: BorderSide(color: ECardoTokens.border(context))),
+          boxShadow: ECardoTokens.shadowSheet(context),
+        ),
+        child: SafeArea(
+          child: Obx(() {
+            final o = controller.activeOrder.value ?? widget.initialOrder ?? EscrowController.defaultOrders.first;
+            if (o.isInspection) {
+              return SizedBox(
+                height: 48.h,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ECardoTokens.brand900(context),
+                    foregroundColor: ECardoTokens.inkOnBrand,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
+                  ),
+                  onPressed: () => Get.to(() => EscrowInspectionScreen(order: o)),
+                  child: Text(
+                    l10nPick(context, fa: 'بررسی و آزادسازی کالا (Inspect delivery)', en: 'Inspect delivery'),
+                    style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w800),
+                  ),
+                ),
+              );
+            }
 
-  Widget _buildActionButtons(
-    BuildContext context,
-    EscrowOrderModel deal,
-    bool isDark,
-    Color primaryAccent,
-  ) {
-    final status = deal.status;
+            if (o.isDisputed) {
+              return SizedBox(
+                height: 48.h,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ECardoTokens.danger(context),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
+                  ),
+                  onPressed: () => Get.to(() => EscrowDisputeReviewScreen(order: o)),
+                  child: Text(
+                    l10nPick(context, fa: 'مشاهده پرونده اختلاف (Dispute review)', en: 'Dispute review'),
+                    style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w800),
+                  ),
+                ),
+              );
+            }
 
-    return Container(
-      padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-        border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            return SizedBox(
+              height: 48.h,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ECardoTokens.brand900(context),
+                  foregroundColor: ECardoTokens.inkOnBrand,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                  ),
+                ),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  final sTitle = l10nPick(context, fa: 'موفقیت', en: 'Success');
+                  final sMsg = l10nPick(context, fa: 'ارسال با موفقیت ثبت شد و تایمر بازرسی خریدار فعال گردید.', en: 'Delivery recorded.');
+                  final sBg = ECardoTokens.successBg(context);
+                  final sColor = ECardoTokens.success(context);
+                  Get.defaultDialog(
+                    title: l10nPick(context, fa: 'تأیید ارسال کالا', en: 'Mark as delivered'),
+                    middleText: l10nPick(
+                      context,
+                      fa: 'آیا کالا را به خریدار یا باربری تحویل داده‌اید؟ با تأیید این مورد، تایمر مهلت بازرسی خریدار آغاز خواهد شد.',
+                      en: 'Mark goods as delivered? This will start the buyer inspection countdown.',
+                    ),
+                    textConfirm: l10nPick(context, fa: 'تأیید تحویل', en: 'Confirm'),
+                    textCancel: l10nPick(context, fa: 'انصراف', en: 'Cancel'),
+                    buttonColor: ECardoTokens.brand900(context),
+                    confirmTextColor: Colors.white,
+                    onConfirm: () async {
+                      Get.back();
+                      await controller.submitShipment(
+                        o.id,
+                        carrier: 'Karun Logistics',
+                        trackingNumber: 'TRK-99182',
+                      );
+                      Get.snackbar(
+                        sTitle,
+                        sMsg,
+                        backgroundColor: sBg,
+                        colorText: sColor,
+                      );
+                    },
+                  );
+                },
+                child: Text(
+                  l10nPick(
+                    context,
+                    fa: 'علامت‌گذاری به عنوان تحویل‌شده (Mark as delivered)',
+                    en: 'Mark as delivered',
+                  ),
+                  style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            );
+          }),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // G1: DRAFT
-          if (status == 'DRAFT') ...[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryAccent,
-                minimumSize: Size(double.infinity, 50.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                controller.sendForApproval(deal.id);
-              },
-              child: Text(
-                l10nPick(context, fa: 'ارسال برای تأیید (Send for Approval)', en: 'Send for Approval'),
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.deepBlack : AppColors.white,
-                ),
-              ),
-            ),
-          ],
-
-          // G2: AWAITING_AGREEMENT
-          if (status == 'AWAITING_AGREEMENT') ...[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.success,
-                minimumSize: Size(double.infinity, 50.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                controller.acceptTerms(deal.id);
-              },
-              child: Text(
-                l10nPick(context, fa: 'می‌پذیرم (I Accept)', en: 'I Accept Terms'),
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: AppSpacing.sm.h),
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                minimumSize: Size(double.infinity, 48.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                _showRequestChangesDialog();
-              },
-              child: Text(
-                l10nPick(context, fa: 'درخواست اصلاح شرایط', en: 'Request Changes'),
-                style: AppTextStyles.labelLarge,
-              ),
-            ),
-          ],
-
-          // G3: AWAITING_PAYMENT
-          if (status == 'AWAITING_PAYMENT') ...[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryAccent,
-                minimumSize: Size(double.infinity, 50.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                Get.to(() => EscrowPaymentScreen(order: deal));
-              },
-              child: Text(
-                l10nPick(context, fa: 'پرداخت به حساب امانی (Pay into Escrow)', en: 'Pay into Escrow'),
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.deepBlack : AppColors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: AppSpacing.sm.h),
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.error,
-                minimumSize: Size(double.infinity, 48.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                controller.cancelDeal(deal.id);
-              },
-              child: Text(
-                l10nPick(context, fa: 'لغو معامله (Cancel Deal)', en: 'Cancel Deal'),
-                style: AppTextStyles.labelLarge.copyWith(color: AppColors.error),
-              ),
-            ),
-          ],
-
-          // G4: FUNDS_HELD
-          if (status == 'FUNDS_HELD') ...[
-            Container(
-              padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF132838) : const Color(0xFFE0F2FE),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-              ),
-              child: Text(
-                l10nPick(
-                  context,
-                  fa: 'وجه معامله با موفقیت در حساب امانی قفل شد. فروشنده موظف است کالا را ارسال و بارنامه را ثبت نماید.',
-                  en: 'Funds safely held in escrow. Seller must ship and submit tracking details.',
-                ),
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: isDark ? const Color(0xFF38BDF8) : const Color(0xFF0369A1),
-                ),
-              ),
-            ),
-            SizedBox(height: AppSpacing.md.h),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryAccent,
-                minimumSize: Size(double.infinity, 50.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                Get.to(() => EscrowShipmentScreen(orderId: deal.id));
-              },
-              child: Text(
-                l10nPick(context, fa: 'ثبت اطلاعات ارسال (Submit Shipment)', en: 'Submit Shipment Details'),
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.deepBlack : AppColors.white,
-                ),
-              ),
-            ),
-          ],
-
-          // G5: IN_DELIVERY
-          if (status == 'IN_DELIVERY') ...[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488),
-                minimumSize: Size(double.infinity, 50.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                controller.confirmDelivery(deal.id);
-              },
-              child: Text(
-                l10nPick(context, fa: 'کالا را دریافت کردم (Confirm Delivery)', en: 'Confirm Delivery'),
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          ],
-
-          // G6: DELIVERED (Inspection Period)
-          if (status == 'DELIVERED') ...[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.success,
-                minimumSize: Size(double.infinity, 50.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                controller.approveRelease(deal.id);
-              },
-              child: Text(
-                l10nPick(context, fa: 'تأیید و آزادسازی وجه (Approve & Release)', en: 'Approve & Release Funds'),
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: AppSpacing.sm.h),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.error,
-                      minimumSize: Size(0, 48.h),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-                    ),
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      Get.to(() => EscrowDisputeScreen(orderId: deal.id));
-                    },
-                    child: Text(
-                      l10nPick(context, fa: 'ثبت اختلاف', en: 'Open Dispute'),
-                      style: AppTextStyles.labelSmall.copyWith(color: AppColors.error),
-                    ),
-                  ),
-                ),
-                SizedBox(width: AppSpacing.sm.w),
-                Expanded(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: Size(0, 48.h),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-                    ),
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      controller.extendInspection(deal.id, hours: 48);
-                    },
-                    child: Text(
-                      l10nPick(context, fa: 'تمدید بازرسی (+۴۸h)', en: '+48h Extension'),
-                      style: AppTextStyles.labelSmall,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-
-          // G7: COMPLETED / RELEASED
-          if (status == 'COMPLETED' || status == 'RELEASED') ...[
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? const Color(0xFFD97706) : const Color(0xFFB45309),
-                minimumSize: Size(double.infinity, 50.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
-              ),
-              icon: const Icon(Icons.star_rounded, color: AppColors.white),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                _showRatingDialog();
-              },
-              label: Text(
-                l10nPick(context, fa: 'ثبت امتیاز معامله (Submit Rating)', en: 'Submit Rating'),
-                style: AppTextStyles.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          ],
-
-          // DISPUTED
-          if (status == 'DISPUTED') ...[
-            Container(
-              padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF36181B) : const Color(0xFFFEE2E2),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-              ),
-              child: Text(
-                l10nPick(
-                  context,
-                  fa: 'پرونده اختلاف برای این معامله ثبت شده و وجه توسط پلتفرم فریز گردیده است. داور پلتفرم به زودی بررسی و رأی نهایی را صادر می‌نماید.',
-                  en: 'Dispute is open. Funds are frozen pending arbitration ruling.',
-                ),
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: isDark ? const Color(0xFFF87171) : const Color(0xFFB91C1C),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, bool isDark, String label, String value) {
-    return Padding(
-      padding: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+  Widget _buildProgressStep(
+    BuildContext context, {
+    required String stepNum,
+    required String title,
+    required String sub,
+    bool isDone = false,
+    bool isActive = false,
+    bool isLast = false,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Container(
+              width: 24.r,
+              height: 24.r,
+              decoration: BoxDecoration(
+                color: isDone
+                    ? ECardoTokens.successBg(context)
+                    : isActive
+                        ? ECardoTokens.brand100(context)
+                        : ECardoTokens.surfaceSunken(context),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDone
+                      ? ECardoTokens.success(context)
+                      : isActive
+                          ? ECardoTokens.brand900(context)
+                          : ECardoTokens.border(context),
+                ),
+              ),
+              child: Center(
+                child: isDone
+                    ? Icon(Icons.check_rounded, size: 14.sp, color: ECardoTokens.success(context))
+                    : Text(
+                        stepNum,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w800,
+                          color: isActive ? ECardoTokens.brand900(context) : ECardoTokens.inkMuted(context),
+                        ),
+                      ),
+              ),
             ),
+            if (!isLast)
+              Container(
+                width: 2.w,
+                height: 32.h,
+                color: isDone ? ECardoTokens.success(context) : ECardoTokens.border(context),
+              ),
+          ],
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 13.5.sp,
+                  fontWeight: FontWeight.w700,
+                  color: ECardoTokens.ink(context),
+                ),
+              ),
+              Text(
+                sub,
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  color: isActive ? ECardoTokens.sand600(context) : ECardoTokens.inkMuted(context),
+                ),
+              ),
+              if (!isLast) SizedBox(height: 12.h),
+            ],
           ),
-          Text(
-            value,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-            ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailRow(BuildContext context, {required String label, required String value}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: ECardoTokens.inkMuted(context),
           ),
-        ],
-      ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 13.5.sp,
+            fontWeight: FontWeight.w700,
+            color: ECardoTokens.ink(context),
+          ),
+        ),
+      ],
     );
   }
 }

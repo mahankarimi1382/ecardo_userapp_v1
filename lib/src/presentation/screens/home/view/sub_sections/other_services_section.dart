@@ -30,63 +30,23 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
     final localization = AppLocalizations.of(context)!;
 
     return [
+      // --- Page 1: Core Financial Movements ---
       ServiceTile(
         title: localization.otherServicesDynamicPassword,
         iconData: Icons.pin_rounded,
         route: BaseRoute.dynamicPassword,
       ),
       ServiceTile(
-        title: localization.otherServicesQrCode,
-        icon: PngAssets.qrCodeService,
-        route: BaseRoute.qrCode,
+        title: localization.otherServicesTransfer,
+        icon: PngAssets.transferService,
+        route: BaseRoute.transfer,
+        feature: 'transfer',
       ),
       ServiceTile(
         title: localization.otherServicesAddMoney,
         icon: PngAssets.addMoneyService,
         route: BaseRoute.addMoney,
         available: true,
-      ),
-      ServiceTile(
-        title: localization.otherServicesCashOut,
-        icon: PngAssets.cashOutService,
-        route: BaseRoute.cashOut,
-        feature: 'cashout',
-        available: true,
-      ),
-      ServiceTile(
-        title: localization.otherServicesMakePayment,
-        icon: PngAssets.makePaymentService,
-        route: BaseRoute.makePayment,
-        available: true,
-      ),
-      ServiceTile(
-        title: localization.otherServicesTransactions,
-        icon: PngAssets.transactionService,
-        route: BaseRoute.transactions,
-      ),
-      ServiceTile(
-        title: localization.otherServicesPaymentLinks,
-        icon: PngAssets.paymentLinksService,
-        route: BaseRoute.paymentLinks,
-        feature: 'payment-links',
-      ),
-      ServiceTile(
-        title: localization.otherServicesRequestMoney,
-        icon: PngAssets.requestMoneyService,
-        route: BaseRoute.requestMoney,
-        feature: 'request-money',
-      ),
-      ServiceTile(
-        title: localization.otherServicesGift,
-        icon: PngAssets.giftService,
-        route: BaseRoute.giftCode,
-        feature: 'gift_send',
-        available: true,
-      ),
-      ServiceTile(
-        title: localization.otherServicesWallets,
-        icon: PngAssets.walletsService,
-        route: BaseRoute.wallets,
       ),
       ServiceTile(
         title: localization.otherServicesWithdraw,
@@ -101,22 +61,22 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         feature: 'exchange',
       ),
       ServiceTile(
-        title: localization.otherServicesTransfer,
-        icon: PngAssets.transferService,
-        route: BaseRoute.transfer,
-        feature: 'transfer',
+        title: localization.otherServicesWallets,
+        icon: PngAssets.walletsService,
+        route: BaseRoute.wallets,
       ),
       ServiceTile(
-        title: localization.otherServicesInvite,
-        icon: PngAssets.inviteService,
-        route: BaseRoute.referral,
+        title: localization.otherServicesTransactions,
+        icon: PngAssets.transactionService,
+        route: BaseRoute.transactions,
       ),
       ServiceTile(
-        title: localization.otherServicesBillPayment,
-        icon: PngAssets.billPaymentService,
-        route: BaseRoute.billPayment,
-        feature: 'pay-bill',
+        title: localization.otherServicesQrCode,
+        icon: PngAssets.qrCodeService,
+        route: BaseRoute.qrCode,
       ),
+
+      // --- Page 2: Merchant, Cards, Utility & Sharing ---
       ServiceTile(
         title: localization.otherServicesVirtualCard,
         icon: PngAssets.virtualCardService,
@@ -125,11 +85,54 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
         available: true,
       ),
       ServiceTile(
+        title: localization.otherServicesBillPayment,
+        icon: PngAssets.billPaymentService,
+        route: BaseRoute.billPayment,
+        feature: 'pay-bill',
+      ),
+      ServiceTile(
+        title: localization.otherServicesRequestMoney,
+        icon: PngAssets.requestMoneyService,
+        route: BaseRoute.requestMoney,
+        feature: 'request-money',
+      ),
+      ServiceTile(
+        title: localization.otherServicesPaymentLinks,
+        icon: PngAssets.paymentLinksService,
+        route: BaseRoute.paymentLinks,
+        feature: 'payment-links',
+      ),
+      ServiceTile(
+        title: localization.otherServicesMakePayment,
+        icon: PngAssets.makePaymentService,
+        route: BaseRoute.makePayment,
+        available: true,
+      ),
+      ServiceTile(
+        title: localization.otherServicesCashOut,
+        icon: PngAssets.cashOutService,
+        route: BaseRoute.cashOut,
+        feature: 'cashout',
+        available: true,
+      ),
+      ServiceTile(
+        title: localization.otherServicesGift,
+        icon: PngAssets.giftService,
+        route: BaseRoute.giftCode,
+        feature: 'gift_send',
+        available: true,
+      ),
+      ServiceTile(
         title: localization.otherServicesGiftCards,
         icon: PngAssets.giftCardsService,
         route: BaseRoute.giftCard,
         feature: 'gift_redeem',
         available: true,
+      ),
+      ServiceTile(
+        title: localization.otherServicesInvite,
+        icon: PngAssets.inviteService,
+        route: BaseRoute.referral,
       ),
     ];
   }

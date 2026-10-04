@@ -2,6 +2,7 @@ import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart';
@@ -309,16 +310,67 @@ class SignInController extends GetxController {
           useBiometric: useBiometric,
         );
         await refreshBiometricButton();
+      } else {
+        _handleLoginFailure(response.message);
       }
     } catch (e, s) {
       debugPrint('❌ submitSignIn() error: $e');
       debugPrint('📍 StackTrace: $s');
-      ToastHelper().showErrorToast(_friendlyNetworkError(e));
+      _handleLoginFailure(_friendlyNetworkError(e));
     } finally {
       isLoading.value = false;
       if (useBiometric) {
         biometricPassword.value = '';
       }
+    }
+  }
+
+  void _handleLoginFailure(String? msg) {
+    final lower = (msg ?? '').toLowerCase();
+    final bool isUserNotFound = lower.contains('not found') ||
+        lower.contains('یافت نشد') ||
+        lower.contains('ثبت‌نام') ||
+        lower.contains('ثبت نام') ||
+        lower.contains('register') ||
+        lower.contains('no account') ||
+        lower.contains('credentials') ||
+        lower.contains('does not exist');
+
+    if (isUserNotFound) {
+      Get.defaultDialog(
+        title: _pick(
+          en: 'Account Not Found',
+          fa: 'حساب کاربری یافت نشد',
+          ar: 'لم يتم العثور على حساب',
+          zh: '未找到账户',
+        ),
+        middleText: _pick(
+          en: 'No account was found with these credentials. Would you like to create a new account?',
+          fa: 'حسابی با این مشخصات در اکاردو یافت نشد. آیا مایلید حساب کاربری جدیدی ایجاد کنید؟',
+          ar: 'لا يوجد حساب بهذه البيانات. هل ترغب في تسجيل حساب جديد؟',
+          zh: '未找到匹配的账户。是否现在注册新账户？',
+        ),
+        textConfirm: _pick(
+          en: 'Sign Up',
+          fa: 'ثبت‌نام در اکاردو',
+          ar: 'تسجيل جديد',
+          zh: '立即注册',
+        ),
+        textCancel: _pick(
+          en: 'Cancel',
+          fa: 'انصراف',
+          ar: 'إلغاء',
+          zh: '取消',
+        ),
+        buttonColor: AppColors.lightPrimary,
+        confirmTextColor: Colors.white,
+        onConfirm: () {
+          Get.back();
+          Get.toNamed(BaseRoute.email);
+        },
+      );
+    } else if (msg != null && msg.isNotEmpty) {
+      ToastHelper().showErrorToast(msg);
     }
   }
 

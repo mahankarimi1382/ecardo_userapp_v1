@@ -13,14 +13,47 @@ import 'loan_tracking_screen.dart';
 
 /// Review and confirmation screen for the loan request before final dispatch.
 class LoanConfirmScreen extends StatefulWidget {
-  const LoanConfirmScreen({super.key});
+  final double? amount;
+  final int? tenureMonths;
+  final int? graceMonths;
+  final String? collateralType;
+  final double? collateralRatioPct;
+  final String? purpose;
+
+  const LoanConfirmScreen({
+    super.key,
+    this.amount,
+    this.tenureMonths,
+    this.graceMonths,
+    this.collateralType,
+    this.collateralRatioPct,
+    this.purpose,
+  });
 
   @override
   State<LoanConfirmScreen> createState() => _LoanConfirmScreenState();
 }
 
 class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
-  final LoanController controller = Get.find<LoanController>();
+  late final LoanController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<LoanController>()
+        ? Get.find<LoanController>()
+        : Get.put(LoanController());
+
+    if (widget.amount != null) {
+      controller.amountInput.value = widget.amount!.toInt().toString();
+    }
+    if (widget.tenureMonths != null) {
+      controller.selectedTenure.value = widget.tenureMonths!;
+    }
+    if (widget.purpose != null && widget.purpose!.isNotEmpty) {
+      controller.purposeInput.value = widget.purpose!;
+    }
+  }
 
   void _handleSubmit() async {
     HapticFeedback.lightImpact();

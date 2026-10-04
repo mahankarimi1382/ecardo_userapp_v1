@@ -254,61 +254,110 @@ class _MethodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Task-12 — receive-currency badge: the card now shows what currency
-    // the receiver gets (e.g. "→ CNY"), so the user can tell payout
-    // methods apart BEFORE requesting a quote.
     final rcCode = (method.receiveCurrencyCode ?? '').toUpperCase();
+    final isActive = method.isActive;
+    final subtitle = method.description ?? method.countryCode?.toUpperCase();
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: isActive
+          ? onTap
+          : () {
+              HapticFeedback.lightImpact();
+              Get.snackbar(
+                'Coming Soon',
+                'This payout method will be available soon.',
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            },
       child: Container(
         margin: EdgeInsets.only(bottom: 8.h),
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.lightPrimaryContainer : AppColors.lightSurface,
+          color: isSelected
+              ? AppColors.lightPrimaryContainer
+              : (isActive ? AppColors.lightSurface : AppColors.lightBackground.withValues(alpha: 0.6)),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.lightPrimary : AppColors.lightBorder,
+            color: isSelected
+                ? AppColors.lightPrimary
+                : AppColors.lightBorder,
             width: isSelected ? 1.5 : 1,
           ),
         ),
         child: Row(
           children: [
             Container(
-              width: 40.w, height: 40.w,
+              width: 40.w,
+              height: 40.w,
               decoration: BoxDecoration(
-                color: AppColors.lightPrimaryContainer,
+                color: isActive
+                    ? AppColors.lightPrimaryContainer
+                    : AppColors.lightBorder.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(Icons.account_balance, color: AppColors.lightPrimary, size: 20.sp),
+              child: Icon(
+                Icons.account_balance,
+                color: isActive ? AppColors.lightPrimary : AppColors.softGray,
+                size: 20.sp,
+              ),
             ),
             SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(method.name ?? unknownLabel,
-                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
-                  if (method.countryCode != null) ...[
+                  Text(
+                    method.name ?? unknownLabel,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: isActive ? AppColors.lightTextPrimary : AppColors.softGray,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
                     SizedBox(height: 2.h),
-                    Text(method.countryCode!.toUpperCase(),
-                        style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: AppColors.lightTextSecondary,
+                      ),
+                    ),
                   ],
                 ],
               ),
             ),
-            if (rcCode.isNotEmpty) ...[
-              SizedBox(width: 8.w),
+            if (!isActive) ...[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: AppColors.warningContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Soon',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.warning,
+                  ),
+                ),
+              ),
+            ] else if (rcCode.isNotEmpty) ...[
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text('→ $rcCode',
-                    style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextSecondary)),
+                child: Text(
+                  '→ $rcCode',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                ),
               ),
             ],
             SizedBox(width: 8.w),

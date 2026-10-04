@@ -10,6 +10,9 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/transaction_pin/transaction_pin_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_path_card.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
@@ -253,6 +256,53 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     BuildContext context,
     TransferController controller,
   ) async {
+    // Check if user has set a transaction passcode
+    String? storedPasscode = controller.userModel.value.data?.passcode;
+    if (storedPasscode == null || storedPasscode.isEmpty) {
+      if (Get.isRegistered<HomeController>()) {
+        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
+      }
+    }
+
+    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode);
+
+    if (!hasPasscode) {
+      HapticFeedback.mediumImpact();
+      Get.defaultDialog(
+        title: l10nPick(
+          context,
+          fa: 'تعیین رمز انتقال وجه (رمز دوم)',
+          en: 'Set Transaction PIN',
+          ar: 'تعيين رمز التحويل (PIN)',
+        ),
+        middleText: l10nPick(
+          context,
+          fa: 'برای امنیت حساب و انجام تراکنش‌های انتقال، ابتدا باید رمز انتقال وجه (۴ تا ۶ رقم) خود را تعیین فرمایید.',
+          en: 'For security, you must set a 4 to 6 digit transaction PIN before transferring money.',
+          ar: 'للأمان، يجب تعيين رمز أمان التحويل أولاً قبل إتمام العملية.',
+        ),
+        textConfirm: l10nPick(
+          context,
+          fa: 'تعیین رمز اکنون',
+          en: 'Set PIN Now',
+          ar: 'تعيين الرمز الآن',
+        ),
+        textCancel: l10nPick(
+          context,
+          fa: 'انصراف',
+          en: 'Cancel',
+          ar: 'إلغاء',
+        ),
+        buttonColor: AppColors.lightPrimary,
+        confirmTextColor: Colors.white,
+        onConfirm: () {
+          Get.back();
+          Get.to(() => const TransactionPinScreen());
+        },
+      );
+      return;
+    }
+
     final String? verified = await Get.bottomSheet<String>(
       const VerifyPasscodeBottomSheet(),
     );

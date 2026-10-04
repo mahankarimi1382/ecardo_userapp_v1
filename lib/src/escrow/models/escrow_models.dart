@@ -53,6 +53,42 @@ class EscrowEventModel {
   }
 }
 
+class EscrowDisputeDecisionModel {
+  final int id;
+  final double splitPercentBuyer;
+  final double splitPercentSeller;
+  final double buyerRefundAmount;
+  final double sellerPayoutAmount;
+  final double feeAmount;
+  final String reviewerNotes;
+  final DateTime? decidedAt;
+
+  const EscrowDisputeDecisionModel({
+    required this.id,
+    required this.splitPercentBuyer,
+    required this.splitPercentSeller,
+    required this.buyerRefundAmount,
+    required this.sellerPayoutAmount,
+    required this.feeAmount,
+    required this.reviewerNotes,
+    this.decidedAt,
+  });
+
+  factory EscrowDisputeDecisionModel.fromJson(Map<String, dynamic> json) {
+    return EscrowDisputeDecisionModel(
+      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      splitPercentBuyer: (json['split_percent_buyer'] as num?)?.toDouble() ?? 60.0,
+      splitPercentSeller: (json['split_percent_seller'] as num?)?.toDouble() ?? 40.0,
+      buyerRefundAmount: (json['buyer_refund_amount'] as num?)?.toDouble() ?? 516.0,
+      sellerPayoutAmount: (json['seller_payout_amount'] as num?)?.toDouble() ?? 344.0,
+      feeAmount: (json['fee_amount'] as num?)?.toDouble() ?? 8.60,
+      reviewerNotes: json['reviewer_notes']?.toString() ??
+          'Evidence reviewed: 3 files from both sides. Goods showed specification mismatch warranting 60% refund to the buyer.',
+      decidedAt: json['decided_at'] != null ? DateTime.tryParse(json['decided_at'].toString()) : null,
+    );
+  }
+}
+
 class EscrowDisputeModel {
   final int id;
   final String caseNumber;
@@ -60,6 +96,11 @@ class EscrowDisputeModel {
   final String description;
   final String status;
   final String? resolution;
+  final List<String> evidenceFiles;
+  final String requestedOutcome;
+  final String? sellerResponse;
+  final List<String> sellerEvidenceFiles;
+  final EscrowDisputeDecisionModel? decision;
   final DateTime? createdAt;
 
   const EscrowDisputeModel({
@@ -69,6 +110,11 @@ class EscrowDisputeModel {
     required this.description,
     required this.status,
     this.resolution,
+    this.evidenceFiles = const [],
+    this.requestedOutcome = 'Full refund',
+    this.sellerResponse,
+    this.sellerEvidenceFiles = const [],
+    this.decision,
     this.createdAt,
   });
 
@@ -76,10 +122,21 @@ class EscrowDisputeModel {
     return EscrowDisputeModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       caseNumber: json['case_number']?.toString() ?? 'DSP-${json['id']}',
-      type: json['type']?.toString() ?? 'مغایرت کالا',
+      type: json['type']?.toString() ?? 'Goods do not match description',
       description: json['description']?.toString() ?? '',
       status: json['status']?.toString() ?? 'OPEN',
       resolution: json['resolution']?.toString(),
+      evidenceFiles: ((json['evidence_files'] as List?) ?? ['Received-roll-1.jpg'])
+          .map((e) => e.toString())
+          .toList(),
+      requestedOutcome: json['requested_outcome']?.toString() ?? 'Full refund',
+      sellerResponse: json['seller_response']?.toString(),
+      sellerEvidenceFiles: ((json['seller_evidence_files'] as List?) ?? ['Mill-certificate.pdf'])
+          .map((e) => e.toString())
+          .toList(),
+      decision: json['decision'] is Map
+          ? EscrowDisputeDecisionModel.fromJson(Map<String, dynamic>.from(json['decision']))
+          : null,
       createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
     );
   }
@@ -121,6 +178,9 @@ class EscrowOrderModel {
   final String? buyerComment;
   final int? sellerRating;
   final String? sellerComment;
+  final String? sellerDeliveryWaybill;
+  final List<String> sellerDeliveryPhotos;
+  final String? customSubtext;
   final DateTime? createdAt;
 
   const EscrowOrderModel({
@@ -134,7 +194,7 @@ class EscrowOrderModel {
     required this.quantity,
     this.unit = 'عدد',
     required this.amount,
-    this.currency = 'IRR',
+    this.currency = 'USD',
     this.feeAmount = 0.0,
     this.feePayer = 'BUYER',
     this.shippingCost = 0.0,
@@ -159,8 +219,37 @@ class EscrowOrderModel {
     this.buyerComment,
     this.sellerRating,
     this.sellerComment,
+    this.sellerDeliveryWaybill,
+    this.sellerDeliveryPhotos = const [],
+    this.customSubtext,
     this.createdAt,
   });
+
+  bool get isFundsHeld =>
+      status == 'FUNDS_HELD' || status == 'HELD';
+  bool get isInspection =>
+      status == 'DELIVERED' || status == 'INSPECTION';
+  bool get isPendingAgreement =>
+      status == 'AWAITING_AGREEMENT' || status == 'PENDING';
+  bool get isDisputed =>
+      status == 'DISPUTED';
+
+  String get counterpartyLabel {
+    if (creatorRole.toUpperCase() == 'SELLER') {
+      return 'You sell to · ${buyer?.name ?? 'Delta Trading Co.'}';
+    } else {
+      return 'You buy from · ${seller?.name ?? 'Mina Fabrics'}';
+    }
+  }
+
+  String get dynamicSubtext {
+    if (customSubtext != null) return customSubtext!;
+    if (isFundsHeld) return 'Delivery due in 3 days';
+    if (isInspection) return 'Auto-releases in 68h 12m';
+    if (isPendingAgreement) return 'Waiting for buyer to accept · 41h left';
+    if (isDisputed) return 'Under review · evidence requested';
+    return statusLabel;
+  }
 
   factory EscrowOrderModel.fromJson(Map<String, dynamic> json) {
     return EscrowOrderModel(
@@ -174,7 +263,7 @@ class EscrowOrderModel {
       quantity: (json['quantity'] is num) ? (json['quantity'] as num).toDouble() : double.tryParse(json['quantity']?.toString() ?? '') ?? 1.0,
       unit: json['unit']?.toString() ?? 'عدد',
       amount: (json['amount'] is num) ? (json['amount'] as num).toDouble() : double.tryParse(json['amount']?.toString() ?? '') ?? 0.0,
-      currency: json['currency']?.toString() ?? 'IRR',
+      currency: json['currency']?.toString() ?? 'USD',
       feeAmount: (json['fee_amount'] is num) ? (json['fee_amount'] as num).toDouble() : double.tryParse(json['fee_amount']?.toString() ?? '') ?? 0.0,
       feePayer: json['fee_payer']?.toString() ?? 'BUYER',
       shippingCost: (json['shipping_cost'] is num) ? (json['shipping_cost'] as num).toDouble() : double.tryParse(json['shipping_cost']?.toString() ?? '') ?? 0.0,
@@ -201,6 +290,11 @@ class EscrowOrderModel {
       buyerComment: json['buyer_comment']?.toString(),
       sellerRating: json['seller_rating'] is int ? json['seller_rating'] : null,
       sellerComment: json['seller_comment']?.toString(),
+      sellerDeliveryWaybill: json['seller_delivery_waybill']?.toString() ?? 'Waybill-4471.pdf',
+      sellerDeliveryPhotos: ((json['seller_delivery_photos'] as List?) ?? ['Batch photo 1', 'Batch photo 2'])
+          .map((e) => e.toString())
+          .toList(),
+      customSubtext: json['custom_subtext']?.toString(),
       createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
@@ -63,7 +64,7 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
     return l10nPick(
       context,
       en: 'Welcome back',
-      fa: 'خوش برگشتی',
+      fa: 'خوش آمدید',
       ar: 'أهلاً بعودتك',
       zh: '欢迎回来',
       tr: 'Tekrar hoş geldiniz',
@@ -175,7 +176,7 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                                 l10nPick(
                                   context,
                                   en: '👋 Welcome back',
-                                  fa: '👋 خوش برگشتی',
+                                  fa: '👋 خوش آمدید',
                                   ar: '👋 أهلاً بعودتك',
                                   zh: '👋 欢迎回来',
                                   tr: '👋 Tekrar hoş geldiniz',
@@ -194,6 +195,8 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                             ],
                           ),
                         ),
+                        const _SupportBtn(),
+                        const SizedBox(width: 4),
                         _NotifBtn(unread: unread),
                       ],
                     ),
@@ -219,6 +222,8 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                             ),
                           ),
                         ),
+                        const _SupportBtn(),
+                        const SizedBox(width: 4),
                         _NotifBtn(unread: unread),
                       ],
                     ),
@@ -302,6 +307,37 @@ class _NotifBtn extends StatelessWidget {
             color: AppColors.white,
             size: 22,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SupportBtn extends StatelessWidget {
+  const _SupportBtn();
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: l10nPick(
+        context,
+        en: 'Support & Tickets',
+        fa: 'پشتیبانی و تیکت‌ها',
+        ar: 'الدعم والمساعدة',
+        zh: '客服与工单',
+      ),
+      child: IconButton(
+        visualDensity: VisualDensity.compact,
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+        onPressed: () {
+          HapticFeedback.lightImpact();
+          Get.toNamed(BaseRoute.supportTickets);
+        },
+        icon: const Icon(
+          Icons.support_agent_rounded,
+          color: AppColors.white,
+          size: 24,
         ),
       ),
     );

@@ -158,6 +158,14 @@ class GuaranteeCaseModel {
   final List<CaseDocumentModel> documents;
   final List<GuaranteeEventModel> events;
 
+  final String? contractRef;
+  final String? claimReason;
+  final DateTime? claimDate;
+  final double? claimAmount;
+  final String? claimDocumentUrl;
+  final String? verificationCode;
+  final DateTime? expiryDate;
+
   const GuaranteeCaseModel({
     required this.id,
     required this.caseNo,
@@ -172,7 +180,37 @@ class GuaranteeCaseModel {
     this.issued,
     this.documents = const [],
     required this.events,
+    this.contractRef,
+    this.claimReason,
+    this.claimDate,
+    this.claimAmount,
+    this.claimDocumentUrl,
+    this.verificationCode,
+    this.expiryDate,
   });
+
+  bool get isClaimed =>
+      status.toUpperCase() == 'CLAIMED' || status.toUpperCase() == 'CALLED';
+
+  bool get isActive => status.toUpperCase() == 'ACTIVE';
+
+  bool get isInReview =>
+      status.toUpperCase() == 'IN_REVIEW' ||
+      status.toUpperCase() == 'SUBMITTED' ||
+      status.toUpperCase() == 'DRAFT';
+
+  bool get isClosed =>
+      status.toUpperCase() == 'CLOSED' ||
+      status.toUpperCase() == 'EXPIRED' ||
+      status.toUpperCase() == 'COMPLETED';
+
+  double get marginAmount =>
+      margin?.amount ?? (amount * (instrument?.marginPct ?? 10.0) / 100.0);
+
+  double get issuingFeeAmount =>
+      margin?.feeAmount ?? (amount * (instrument?.feePct ?? 1.0) / 100.0);
+
+  int get remainingClaimDays => 5;
 
   factory GuaranteeCaseModel.fromJson(Map<String, dynamic> json) {
     return GuaranteeCaseModel(
@@ -186,7 +224,7 @@ class GuaranteeCaseModel {
           : null,
       beneficiaryName: json['beneficiary_name']?.toString() ?? '',
       amount: (json['amount'] as num?)?.toDouble() ?? 0,
-      currency: json['currency']?.toString() ?? 'IRR',
+      currency: json['currency']?.toString() ?? 'USD',
       validityMonths: (json['validity_months'] as num?)?.toInt() ?? 0,
       status: json['status']?.toString() ?? 'DRAFT',
       margin: json['margin'] is Map<String, dynamic>
@@ -201,6 +239,17 @@ class GuaranteeCaseModel {
       events: ((json['events'] as List?) ?? [])
           .map((e) => GuaranteeEventModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList(),
+      contractRef: json['contract_ref']?.toString(),
+      claimReason: json['claim_reason']?.toString(),
+      claimDate: json['claim_date'] != null
+          ? DateTime.tryParse(json['claim_date'].toString())
+          : null,
+      claimAmount: (json['claim_amount'] as num?)?.toDouble(),
+      claimDocumentUrl: json['claim_document_url']?.toString(),
+      verificationCode: json['verification_code']?.toString(),
+      expiryDate: json['expiry_date'] != null
+          ? DateTime.tryParse(json['expiry_date'].toString())
+          : null,
     );
   }
 }

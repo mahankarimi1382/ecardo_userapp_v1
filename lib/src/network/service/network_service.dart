@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/common/services/session_manager.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/config/ssl_pinning_config.dart';
@@ -1212,18 +1213,25 @@ class NetworkService extends getx.GetxService {
         _log('$requestType Response: ${jsonResponse401.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse401);
 
+        // Do not invoke session expiration logout when user is on login/register endpoints
+        final isAuthEndpoint = response.requestOptions.path.contains(ApiPath.loginEndpoint) ||
+            response.requestOptions.path.contains('/login') ||
+            response.requestOptions.path.contains('/register');
+
         // Delegate all UI + logout to SessionManager (single-flight).
         // isForeground comes from request options.extra (default true).
         final isForeground =
             response.requestOptions.extra['isForeground'] as bool? ?? true;
 
-        if (getx.Get.isRegistered<SessionManager>()) {
+        if (!isAuthEndpoint && getx.Get.isRegistered<SessionManager>()) {
           unawaited(
             getx.Get.find<SessionManager>().handleUnauthorized(
               isForeground: isForeground,
               message: errorMessages,
             ),
           );
+        } else if (isAuthEndpoint) {
+          ToastHelper().showErrorToast(errorMessages);
         }
 
         return ApiResponse.error(errorMessages);
@@ -1332,6 +1340,26 @@ class NetworkService extends getx.GetxService {
         lower.contains('app/models/page')) {
       return localization?.allControllerLoadError ??
           'This service is temporarily unavailable. Please try again later.';
+    }
+    if (lower.contains('user not found') ||
+        lower.contains('account not found') ||
+        lower.contains('no user') ||
+        lower.contains('credentials do not match') ||
+        lower.contains('record not found') ||
+        lower.contains('account does not exist') ||
+        lower.contains('کاربر یافت نشد') ||
+        lower.contains('حساب کاربری یافت نشد')) {
+      final ctx = getx.Get.context;
+      if (ctx != null) {
+        return l10nPick(
+          ctx,
+          en: 'No account found with this information. Please register first.',
+          fa: 'حسابی با این مشخصات یافت نشد. لطفاً ابتدا ثبت‌نام کنید.',
+          ar: 'لم يتم العثور على حساب بهذه البيانات. يرجى التسجيل أولاً.',
+          zh: '未找到匹配的账户，请先注册。',
+        );
+      }
+      return 'No account found with this information. Please register first.';
     }
     if (lower.contains('unauthenticated') || lower.contains('token expired')) {
       return localization?.unauthorizedDialogTitle ??

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/svg/svg_assets.dart';
 import 'package:ecardo_user/src/common/controller/image_picker/image_picker_controller.dart';
@@ -17,6 +20,7 @@ import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_drop
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/profile_settings_controller.dart';
 
 class ProfileSettings extends StatefulWidget {
@@ -240,6 +244,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     return SingleChildScrollView(
                       child: Column(
                         children: [
+                          SizedBox(height: 12),
+                          _buildLanguageTile(context, isDark, primaryTextColor),
                           SizedBox(height: 16),
                           CommonRequiredLabelAndDynamicField(
                             labelText: localization.profileSettingsFirstName,
@@ -650,6 +656,173 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLanguageTile(BuildContext context, bool isDark, Color primaryTextColor) {
+    final currentCode = Localizations.localeOf(context).languageCode;
+    final Map<String, Map<String, String>> langs = {
+      'fa': {'name': 'فارسی', 'flag': '🇮🇷'},
+      'en': {'name': 'English', 'flag': '🇬🇧'},
+      'ar': {'name': 'العربية', 'flag': '🇸🇦'},
+      'tr': {'name': 'Türkçe', 'flag': '🇹🇷'},
+      'ru': {'name': 'Русский', 'flag': '🇷🇺'},
+      'zh': {'name': '中文', 'flag': '🇨🇳'},
+    };
+    final currentInfo = langs[currentCode] ?? langs['fa']!;
+
+    return InkWell(
+      onTap: () => _showLanguageBottomSheet(context, isDark),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary).withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.language_rounded,
+                size: 20.sp,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10nPick(
+                      context,
+                      fa: 'زبان برنامه',
+                      en: 'App Language',
+                      ar: 'لغة التطبيق',
+                      zh: '应用语言',
+                    ),
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      color: isDark ? AppColors.softGray : AppColors.lightTextTertiary,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    '${currentInfo['flag']} ${currentInfo['name']}',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w800,
+                      color: primaryTextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14.sp,
+              color: isDark ? AppColors.softGray : AppColors.lightTextTertiary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageBottomSheet(BuildContext context, bool isDark) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (ctx) {
+        final currentCode = Localizations.localeOf(context).languageCode;
+        final list = [
+          {'code': 'fa', 'name': 'فارسی (Persian)', 'flag': '🇮🇷'},
+          {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
+          {'code': 'ar', 'name': 'العربية (Arabic)', 'flag': '🇸🇦'},
+          {'code': 'tr', 'name': 'Türkçe (Turkish)', 'flag': '🇹🇷'},
+          {'code': 'ru', 'name': 'Русский (Russian)', 'flag': '🇷🇺'},
+          {'code': 'zh', 'name': '中文 (Chinese)', 'flag': '🇨🇳'},
+        ];
+
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.greyLight,
+                      borderRadius: BorderRadius.circular(2.r),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  l10nPick(
+                    context,
+                    fa: 'انتخاب زبان برنامه',
+                    en: 'Select Application Language',
+                    ar: 'اختر لغة التطبيق',
+                    zh: '选择应用语言',
+                  ),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                ...list.map((item) {
+                  final isSelected = item['code'] == currentCode;
+                  return ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
+                    leading: Text(item['flag']!, style: TextStyle(fontSize: 22.sp)),
+                    title: Text(
+                      item['name']!,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                        color: isSelected
+                            ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                            : (isDark ? AppColors.warmWhite : AppColors.deepBlack),
+                      ),
+                    ),
+                    trailing: isSelected
+                        ? Icon(Icons.check_circle_rounded, color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        : null,
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      HapticFeedback.selectionClick();
+                      if (Get.isRegistered<LocaleThemeService>()) {
+                        await Get.find<LocaleThemeService>().setLanguage(item['code']!);
+                      } else {
+                        Get.updateLocale(Locale(item['code']!));
+                      }
+                    },
+                  );
+                }),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

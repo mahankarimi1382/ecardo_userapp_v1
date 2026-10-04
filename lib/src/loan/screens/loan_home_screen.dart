@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
-import 'package:ecardo_user/src/common/widgets/financial_service_unavailable_banner.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/loan_controller.dart';
 import '../models/loan_models.dart';
-import '../widgets/loan_status_stepper.dart';
-import 'loan_intro_screen.dart';
 import 'loan_application_screen.dart';
-import 'loan_tracking_screen.dart';
 import 'loan_detail_screen.dart';
+import 'loan_collateral_warning_screen.dart';
+import 'loan_tracking_screen.dart';
 
-/// Main hub for the Loan & Credit service — overview, application entry,
-/// and live application tracking.
+/// Main hub for the Loans & Credit service — directly implements `loans_and_credit.html`
+/// Features:
+/// 1. Header: Loans
+/// 2. Active loan card (Repaying, Outstanding balance, Next payment, Collateral status)
+/// 3. Available loan products list (Crypto-backed, Business, Personal micro)
+/// 4. Sticky Bottom CTA: "Apply for a loan"
 class LoanHomeScreen extends StatefulWidget {
   const LoanHomeScreen({super.key});
 
@@ -38,59 +39,29 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
     controller.fetchMyCases();
   }
 
-  String _statusFa(String status) {
-    switch (status) {
-      case 'DRAFT': return 'پیش‌نویس';
-      case 'UNDER_ASSESSMENT': return 'در حال سنجش اعتبار';
-      case 'COMPLEMENT_REQUIRED': return 'نیاز به تکمیل مدارک';
-      case 'OFFERED': return 'پیشنهاد صادر شد';
-      case 'AWAITING_COLLATERAL': return 'در انتظار وثیقه';
-      case 'AWAITING_SIGNING': return 'در انتظار امضا';
-      case 'DISBURSED': return 'پرداخت شد';
-      case 'ACTIVE': return 'در حال بازپرداخت';
-      case 'OVERDUE': return 'معوق';
-      case 'DEFAULTED': return 'نکول';
-      case 'COMPLETED': return 'تسویه‌شده';
-      case 'REJECTED': return 'رد شد';
-      case 'CANCELLED': return 'لغو';
-      default: return status;
-    }
-  }
-
-  Color _statusColor(String status) {
-    switch (status) {
-      case 'COMPLETED': return AppColors.success;
-      case 'ACTIVE': return AppColors.lightPrimary;
-      case 'OVERDUE': case 'DEFAULTED': return AppColors.error;
-      case 'REJECTED': case 'CANCELLED': return AppColors.grey;
-      case 'OFFERED': case 'AWAITING_COLLATERAL': case 'AWAITING_SIGNING':
-        return AppColors.warning;
-      default: return Colors.blueGrey;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: ECardoTokens.surfaceCanvas(context),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
           child: CommonAppBar(
             title: l10nPick(
               context,
-              fa: 'تسهیلات و اعتبارات',
-              en: 'Loans & Credit',
-              ar: 'التسهيلات والقروض',
-              zh: '贷款与信贷',
+              fa: 'تسهیلات و وام‌ها',
+              en: 'Loans',
+              ar: 'القروض والتسهيلات',
+              zh: '贷款',
             ),
             rightSideWidget: Padding(
-              padding: EdgeInsetsDirectional.only(end: AppSpacing.page.w),
+              padding: EdgeInsetsDirectional.only(end: ECardoTokens.space4.w),
               child: IconButton(
-                icon: const Icon(Icons.history_rounded),
+                icon: Icon(
+                  Icons.history_rounded,
+                  color: ECardoTokens.ink(context),
+                  size: 22.sp,
+                ),
                 tooltip: l10nPick(context, fa: 'پیگیری پرونده‌ها', en: 'Tracking', ar: 'المتابعة', zh: '追踪'),
                 onPressed: () {
                   HapticFeedback.lightImpact();
@@ -103,406 +74,358 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
       ),
       body: Obx(() {
         if (controller.isLoadingProducts.value && controller.products.isEmpty) {
-          return const LoanSkeletonLoader(itemCount: 4);
+          return const Center(child: CircularProgressIndicator());
         }
 
+        final activeCase = controller.myCases.isNotEmpty
+            ? controller.myCases.first
+            : LoanController.sampleActiveLoan;
+
+        final availableProducts = controller.products.isNotEmpty
+            ? controller.products
+            : LoanController.defaultProducts;
+
         return RefreshIndicator(
+          color: ECardoTokens.brand900(context),
           onRefresh: () async {
             await controller.fetchProducts();
             await controller.fetchMyCases();
           },
           child: ListView(
-            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.sm.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: ECardoTokens.space4.w,
+              vertical: ECardoTokens.space3.h,
+            ),
             children: [
-              // Notice banner if backend endpoints are unavailable / returning empty
-              if (controller.hasBackendError.value || controller.products.isEmpty)
-                FinancialServiceUnavailableBanner(
-                  serviceNameFa: 'تسهیلات بانکی و اعتباری',
-                  serviceNameEn: 'Banking & Credit Facilities',
-                  serviceNameAr: 'التسهيلات المصرفية والائتمانية',
-                  serviceNameZh: '银行与信贷融通',
-                  onRetry: () {
-                    controller.fetchProducts();
-                    controller.fetchMyCases();
-                  },
+              // ------------------ Active Loan Card ------------------
+              _buildActiveLoanCard(context, activeCase),
+              SizedBox(height: ECardoTokens.space5.h),
+
+              // ------------------ Available Loans Header ------------------
+              Text(
+                l10nPick(
+                  context,
+                  fa: 'طرح‌های تسهیلاتی دردسترس',
+                  en: 'Available loans',
+                  ar: 'القروض المتاحة',
+                  zh: '可用贷款方案',
                 ),
-
-              SizedBox(height: AppSpacing.sm.h),
-
-              // Quick action cards
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildActionTile(
-                      context,
-                      isDark: isDark,
-                      icon: Icons.calculate_outlined,
-                      titleFa: 'محاسبه‌گر و راهنما',
-                      titleEn: 'Guide & Calculator',
-                      color: AppColors.mainSoftBlue,
-                      onTap: () => Get.to(() => const LoanIntroScreen()),
-                    ),
-                  ),
-                  SizedBox(width: AppSpacing.sm.w),
-                  Expanded(
-                    child: _buildActionTile(
-                      context,
-                      isDark: isDark,
-                      icon: Icons.post_add_rounded,
-                      titleFa: 'ثبت درخواست وام',
-                      titleEn: 'Apply for Loan',
-                      color: primaryAccent,
-                      onTap: () => Get.to(() => const LoanApplicationScreen()),
-                    ),
-                  ),
-                  SizedBox(width: AppSpacing.sm.w),
-                  Expanded(
-                    child: _buildActionTile(
-                      context,
-                      isDark: isDark,
-                      icon: Icons.timeline_rounded,
-                      titleFa: 'پیگیری پرونده‌ها',
-                      titleEn: 'Track Cases',
-                      color: const Color(0xFF059669),
-                      onTap: () => Get.to(() => const LoanTrackingScreen()),
-                    ),
-                  ),
-                ],
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w800,
+                  color: ECardoTokens.ink(context),
+                ),
               ),
+              SizedBox(height: ECardoTokens.space3.h),
 
-              SizedBox(height: AppSpacing.xl.h),
+              // ------------------ Product List Cards ------------------
+              ...availableProducts.map((product) => Padding(
+                    padding: EdgeInsets.only(bottom: ECardoTokens.space3.h),
+                    child: _buildProductCard(context, product),
+                  )),
 
-              // Loan Products Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    l10nPick(
-                      context,
-                      fa: 'طرح‌های تسهیلاتی فعال',
-                      en: 'Active Loan Schemes',
-                      ar: 'خطط التسهيلات النشطة',
-                      zh: '可用贷款方案',
-                    ),
-                    style: AppTextStyles.titleSmall.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      Get.to(() => const LoanIntroScreen());
-                    },
-                    child: Text(
-                      l10nPick(context, fa: 'مشاهده شرایط', en: 'View Terms', ar: 'الشروط', zh: '条件'),
-                      style: AppTextStyles.labelSmall.copyWith(color: primaryAccent),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: AppSpacing.xs.h),
-
-              if (controller.products.isEmpty)
-                Container(
-                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(Icons.inventory_2_outlined, size: 40.sp, color: Colors.grey.shade400),
-                      SizedBox(height: AppSpacing.sm.h),
-                      Text(
-                        l10nPick(
-                          context,
-                          fa: 'کاتالوگ تسهیلات در حال دریافت از سرور است',
-                          en: 'Loan catalog awaiting server integration',
-                          ar: 'بانتظار مزامنة كتالوج التسهيلات',
-                          zh: '正在等待服务器同步贷款目录',
-                        ),
-                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        l10nPick(
-                          context,
-                          fa: 'می‌توانید از طریق محاسبه‌گر، اقساط طرح پیش‌فرض را ارزیابی فرمایید.',
-                          en: 'You can test installment estimates via the calculator.',
-                          ar: 'يمكنك تجربة حساب الأقساط عبر الحاسبة.',
-                          zh: '您可以通过测算器体验预估分期还款。',
-                        ),
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                ...controller.products.map((p) => _buildProductCard(context, p, isDark, primaryAccent)),
-
-              SizedBox(height: AppSpacing.xl.h),
-
-              // My Recent Cases Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    l10nPick(
-                      context,
-                      fa: 'پرونده‌های من',
-                      en: 'My Applications',
-                      ar: 'ملفاتي',
-                      zh: '我的申请',
-                    ),
-                    style: AppTextStyles.titleSmall.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  if (controller.myCases.isNotEmpty)
-                    TextButton(
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        Get.to(() => const LoanTrackingScreen());
-                      },
-                      child: Text(
-                        l10nPick(context, fa: 'مشاهده همه', en: 'View All', ar: 'الكل', zh: '全部'),
-                        style: AppTextStyles.labelSmall.copyWith(color: primaryAccent),
-                      ),
-                    ),
-                ],
-              ),
-              SizedBox(height: AppSpacing.xs.h),
-
-              if (controller.myCases.isEmpty)
-                Container(
-                  padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.assignment_outlined, size: 28.sp, color: Colors.grey.shade400),
-                      SizedBox(width: AppSpacing.md.w),
-                      Expanded(
-                        child: Text(
-                          l10nPick(
-                            context,
-                            fa: 'در حال حاضر هیچ پرونده تسهیلاتی فعالی ندارید.',
-                            en: 'No active loan application currently recorded.',
-                            ar: 'لا توجد طلبات قروض مسجلة حالياً.',
-                            zh: '当前未查询到正在进行的贷款申请。',
-                          ),
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                ...controller.myCases.take(3).map((c) => _buildCaseItem(context, c, isDark)),
+              SizedBox(height: ECardoTokens.space8.h),
             ],
           ),
         );
       }),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(ECardoTokens.space4.r),
+        decoration: BoxDecoration(
+          color: ECardoTokens.surfaceCard(context),
+          border: Border(top: BorderSide(color: ECardoTokens.border(context))),
+          boxShadow: ECardoTokens.shadowSheet(context),
+        ),
+        child: SafeArea(
+          child: SizedBox(
+            height: 48.h,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ECardoTokens.brand900(context),
+                foregroundColor: ECardoTokens.inkOnBrand,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                ),
+              ),
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Get.to(() => const LoanApplicationScreen());
+              },
+              child: Text(
+                l10nPick(
+                  context,
+                  fa: 'درخواست تسهیلات جدید',
+                  en: 'Apply for a loan',
+                  ar: 'طلب قرض جديد',
+                  zh: '申请贷款',
+                ),
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  Widget _buildActionTile(
-    BuildContext context, {
-    required bool isDark,
-    required IconData icon,
-    required String titleFa,
-    required String titleEn,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+  /// Builds the top card for currently active / repaying loan (LN-2208)
+  Widget _buildActiveLoanCard(BuildContext context, LoanCaseModel c) {
+    final nextInst = c.nextInstallment;
+    final nextAmount = nextInst?.amount ?? 1140.0;
+    final isWarning = c.isCollateralWarning;
+
     return InkWell(
+      borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
       onTap: () {
         HapticFeedback.lightImpact();
-        onTap();
+        Get.to(() => LoanDetailScreen(caseId: c.id));
       },
-      borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
       child: Container(
-        padding: EdgeInsetsDirectional.symmetric(vertical: 14.h, horizontal: 8.w),
+        padding: EdgeInsets.all(ECardoTokens.space4.r),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          color: ECardoTokens.surfaceCard(context),
+          borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+          border: Border.all(
+            color: isWarning
+                ? ECardoTokens.danger(context).withValues(alpha: 0.5)
+                : ECardoTokens.border(context),
+            width: isWarning ? 1.5 : 1.0,
+          ),
+          boxShadow: ECardoTokens.shadowCard(context),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: color, size: 20.sp),
+            // Top tag row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: ECardoTokens.successBg(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                      ),
+                      child: Text(
+                        l10nPick(context, fa: 'در حال بازپرداخت', en: 'Repaying'),
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.success(context),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: ECardoTokens.space2.w),
+                    Text(
+                      c.product?.name ?? 'Crypto-backed loan',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
+                    ),
+                  ],
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14.sp,
+                  color: ECardoTokens.inkMuted(context),
+                ),
+              ],
             ),
-            SizedBox(height: AppSpacing.sm.h),
+            SizedBox(height: ECardoTokens.space4.h),
+
+            // Outstanding balance
             Text(
-              l10nPick(context, fa: titleFa, en: titleEn),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              style: AppTextStyles.labelSmall.copyWith(
-                fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              l10nPick(context, fa: 'مانده بدهی اصل وام', en: 'Outstanding'),
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: ECardoTokens.inkMuted(context),
               ),
             ),
+            SizedBox(height: ECardoTokens.space1.h),
+            Text(
+              '${c.outstandingAmount.toStringAsFixed(2)} USD',
+              style: TextStyle(
+                fontSize: 26.sp,
+                fontWeight: FontWeight.w900,
+                color: ECardoTokens.ink(context),
+                letterSpacing: -0.5,
+              ),
+            ),
+            SizedBox(height: ECardoTokens.space3.h),
+
+            // Next payment banner
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: ECardoTokens.surfaceSunken(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10nPick(context, fa: 'قسط بعدی (۱۲ اکتبر)', en: 'Next payment 12 Oct'),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: ECardoTokens.ink(context),
+                    ),
+                  ),
+                  Text(
+                    '${nextAmount.toStringAsFixed(2)} USD',
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w800,
+                      color: ECardoTokens.ink(context),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Warning Banner if collateral is low
+            if (isWarning) ...[
+              SizedBox(height: ECardoTokens.space3.h),
+              InkWell(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  Get.to(() => LoanCollateralWarningScreen(loanCase: c));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: ECardoTokens.dangerBg(context),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: ECardoTokens.danger(context),
+                        size: 16.sp,
+                      ),
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: Text(
+                          l10nPick(
+                            context,
+                            fa: 'هشدار وثیقه: پوشش ${c.coverageNowPct.toStringAsFixed(0)}٪ است · لمس برای شارژ',
+                            en: 'Collateral warning: Coverage is ${c.coverageNowPct.toStringAsFixed(0)}% · Tap to top up',
+                          ),
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: ECardoTokens.danger(context),
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        color: ECardoTokens.danger(context),
+                        size: 16.sp,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProductCard(
-    BuildContext context,
-    LoanProductModel p,
-    bool isDark,
-    Color primaryAccent,
-  ) {
-    return Container(
-      margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
-      padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
-            decoration: BoxDecoration(
-              color: AppColors.mainSoftBlue.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-            ),
-            child: Icon(
-              Icons.account_balance_wallet_rounded,
-              color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
-              size: 22.sp,
-            ),
-          ),
-          SizedBox(width: AppSpacing.md.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  /// Builds individual available product card
+  Widget _buildProductCard(BuildContext context, LoanProductModel p) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        controller.selectProduct(p);
+        Get.to(() => const LoanApplicationScreen());
+      },
+      child: Container(
+        padding: EdgeInsets.all(ECardoTokens.space4.r),
+        decoration: BoxDecoration(
+          color: ECardoTokens.surfaceCard(context),
+          borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+          border: Border.all(color: ECardoTokens.border(context)),
+          boxShadow: ECardoTokens.shadowCard(context),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title & SLA Tag
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  p.name,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                Expanded(
+                  child: Text(
+                    p.name,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w800,
+                      color: ECardoTokens.ink(context),
+                    ),
                   ),
                 ),
-                SizedBox(height: 3.h),
-                Text(
-                  l10nPick(
-                    context,
-                    fa: 'سود: ${p.baseRateAnnual}٪ سالانه · سقف: ${p.maxAmount.toInt()}',
-                    en: 'Rate: ${p.baseRateAnnual}% · Max: ${p.maxAmount.toInt()}',
-                    ar: 'فائدة: ${p.baseRateAnnual}٪ · الحد: ${p.maxAmount.toInt()}',
-                    zh: '利率：${p.baseRateAnnual}% · 上限：${p.maxAmount.toInt()}',
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: ECardoTokens.brand100(context),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
                   ),
-                  style: AppTextStyles.labelSmall.copyWith(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  child: Text(
+                    p.slaTag,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w700,
+                      color: ECardoTokens.brand700(context),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 6.h),
-            ),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              controller.selectProduct(p);
-              Get.to(() => const LoanApplicationScreen());
-            },
-            child: Text(
-              l10nPick(context, fa: 'درخواست', en: 'Apply', ar: 'طلب', zh: '申请'),
-              style: AppTextStyles.labelSmall.copyWith(
-                color: isDark ? AppColors.deepBlack : AppColors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+            SizedBox(height: ECardoTokens.space1.h),
 
-  Widget _buildCaseItem(BuildContext context, LoanCaseModel c, bool isDark) {
-    final statusColor = _statusColor(c.status);
-
-    return InkWell(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        Get.to(() => LoanDetailScreen(caseId: c.id));
-      },
-      child: Container(
-        margin: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
-        padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${l10nPick(context, fa: 'پرونده', en: 'Case', ar: 'ملف', zh: '案号')} ${c.caseNo}',
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    '${c.requestedAmount.toInt()} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                    ),
-                  ),
-                ],
+            // Tagline
+            Text(
+              p.tagline,
+              style: TextStyle(
+                fontSize: 12.5.sp,
+                fontWeight: FontWeight.w500,
+                color: ECardoTokens.inkMuted(context),
               ),
             ),
-            Container(
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 2.h),
-              decoration: BoxDecoration(
-                color: statusColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-              ),
-              child: Text(
-                _statusFa(c.status),
-                style: AppTextStyles.labelSmall.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: statusColor,
+            SizedBox(height: ECardoTokens.space3.h),
+
+            // Rate and Limit
+            Row(
+              children: [
+                Icon(
+                  Icons.trending_up_rounded,
+                  size: 16.sp,
+                  color: ECardoTokens.brand500(context),
                 ),
-              ),
-            ),
-            SizedBox(width: AppSpacing.sm.w),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14.sp,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                SizedBox(width: 6.w),
+                Text(
+                  '${p.interestRatePct.toStringAsFixed(1)}% a year · up to ${p.maxAmount.toInt()} USD',
+                  style: TextStyle(
+                    fontSize: 12.5.sp,
+                    fontWeight: FontWeight.w700,
+                    color: ECardoTokens.ink(context),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

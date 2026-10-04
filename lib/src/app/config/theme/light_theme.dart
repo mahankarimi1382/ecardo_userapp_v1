@@ -5,14 +5,14 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 class LightTheme {
   ThemeData lightTheme(BuildContext context) {
     const scheme = ColorScheme.light(
-      primary: AppColors.deepBlack,
-      onPrimary: AppColors.lightTextOnPrimary,
+      primary: AppColors.lightPrimary,
+      onPrimary: AppColors.white,
       primaryContainer: AppColors.lightPrimaryContainer,
-      onPrimaryContainer: AppColors.deepBlack,
+      onPrimaryContainer: AppColors.lightPrimaryDark,
       secondary: AppColors.lightSecondary,
-      onSecondary: AppColors.warmWhite,
+      onSecondary: AppColors.white,
       secondaryContainer: AppColors.lightSecondaryContainer,
-      onSecondaryContainer: AppColors.deepBlack,
+      onSecondaryContainer: AppColors.lightPrimaryDark,
       surface: AppColors.lightBackground,
       onSurface: AppColors.deepBlack,
       surfaceContainerLowest: AppColors.lightBackground,
