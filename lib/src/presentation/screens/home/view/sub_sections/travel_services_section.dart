@@ -8,6 +8,11 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/service_tiles.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/model/kyc_level_model.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/local/screens/local_catalog_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/services/cip_lounge_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/core/controller/travel_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/esim/esim_intro_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/flights/flight_search_screen.dart';
@@ -125,8 +130,21 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () =>
-            CatalogServiceScreen(config: extraServiceConfig('boat')),
+        pageBuilder: () => const BoatCatalogScreen(),
+      ),
+      ServiceTile(
+        title: l10nPick(
+          context,
+          en: 'CIP Lounge',
+          fa: 'تشریفات فرودگاهی CIP',
+          ar: 'صالة تشريفات المطار',
+          zh: '机场贵宾厅',
+        ),
+        iconData: Icons.airline_seat_recline_extra_rounded,
+        route: '',
+        available: travelOn,
+        beforeNavigate: _ensureTravelController,
+        pageBuilder: () => const CipLoungeReservationScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceLocal,
@@ -134,8 +152,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () =>
-            CatalogServiceScreen(config: extraServiceConfig('local')),
+        pageBuilder: () => const LocalCatalogScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceFood,
@@ -143,8 +160,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () =>
-            CatalogServiceScreen(config: extraServiceConfig('food')),
+        pageBuilder: () => const DiningCatalogScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceSupermarket,
@@ -161,8 +177,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
-        pageBuilder: () =>
-            CatalogServiceScreen(config: extraServiceConfig('restaurant')),
+        pageBuilder: () => const DiningCatalogScreen(),
       ),
       ServiceTile(
         title: localization.travelServiceStore,

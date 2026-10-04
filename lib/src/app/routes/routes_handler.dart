@@ -23,6 +23,18 @@ import 'package:ecardo_user/src/tour/screens/tour_book_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_detail_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_payment_screen.dart';
 import 'package:ecardo_user/src/tour/screens/tour_voucher_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/boat/bindings/boat_binding.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/boat/models/boat_models.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/boat/screens/boat_voucher_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/local/bindings/local_experience_binding.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/local/models/local_experience_models.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/local/screens/local_catalog_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/local/screens/local_voucher_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/dining/bindings/dining_binding.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/dining/models/dining_models.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/dining/screens/dining_order_pass_screen.dart';
 import 'package:get/get.dart';
 
 import '../bindings/app_bindings.dart';
@@ -897,5 +909,50 @@ List<GetPage> routesHandler = [
     name: BaseRoute.commercialMyInvestments,
     page: () => const MyInvestmentsScreen(),
     binding: CommercialBinding(),
+  ),
+
+  // Marine & Boat Experience Routes
+  GetPage(
+    name: BaseRoute.boatCatalog,
+    page: () => const BoatCatalogScreen(),
+    binding: BoatBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.boatVoucher,
+    page: () {
+      final booking = Get.arguments as BoatBookingModel;
+      return BoatVoucherScreen(booking: booking);
+    },
+    binding: BoatBinding(),
+  ),
+
+  // Local Experience & City Guide Routes
+  GetPage(
+    name: BaseRoute.localCatalog,
+    page: () => const LocalCatalogScreen(),
+    binding: LocalExperienceBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.localVoucher,
+    page: () {
+      final booking = Get.arguments as LocalBookingModel;
+      return LocalVoucherScreen(booking: booking);
+    },
+    binding: LocalExperienceBinding(),
+  ),
+
+  // Travel Dining & In-Transit Food Routes
+  GetPage(
+    name: BaseRoute.diningCatalog,
+    page: () => const DiningCatalogScreen(),
+    binding: DiningBinding(),
+  ),
+  GetPage(
+    name: BaseRoute.diningOrderPass,
+    page: () {
+      final order = Get.arguments as DiningOrderModel;
+      return DiningOrderPassScreen(order: order);
+    },
+    binding: DiningBinding(),
   ),
 ];

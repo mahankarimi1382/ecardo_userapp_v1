@@ -223,4 +223,16 @@ class BaseRoute {
   static const String commercialProjectDetail = "/commercial_project_detail_route";
   static const String commercialInvestCheckout = "/commercial_invest_checkout_route";
   static const String commercialMyInvestments = "/commercial_my_investments_route";
+
+  // Marine & Boat Experience Routes
+  static const String boatCatalog = "/boat_catalog_route";
+  static const String boatVoucher = "/boat_voucher_route";
+
+  // Local Experience & City Guide Routes
+  static const String localCatalog = "/local_catalog_route";
+  static const String localVoucher = "/local_voucher_route";
+
+  // Travel Dining & In-Transit Food Routes
+  static const String diningCatalog = "/dining_catalog_route";
+  static const String diningOrderPass = "/dining_order_pass_route";
 }
