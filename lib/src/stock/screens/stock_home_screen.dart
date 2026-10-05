@@ -352,10 +352,12 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Flexible(
-                    child: Container(
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
                       padding: EdgeInsets.all(ECardoTokens.space2.r),
                       decoration: BoxDecoration(
                         color: ECardoTokens.inkOnBrand.withValues(alpha: 0.15),
@@ -367,28 +369,27 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                         size: 18,
                       ),
                     ),
-                  ),
-                  SizedBox(width: ECardoTokens.space2.w),
-                  Flexible(
-                    flex: 3,
-                    child: Text(
-                      l10nPick(
-                        context,
-                        fa: 'ارزش پورتفوی سهام بین‌الملل',
-                        en: 'Stock Portfolio Valuation',
-                        ar: 'إجمالي تقييم محفظة الأسهم',
-                        zh: '全球股票投资组合总值',
+                    SizedBox(width: ECardoTokens.space2.w),
+                    Expanded(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          fa: 'ارزش پورتفوی سهام بین‌الملل',
+                          en: 'Stock Portfolio Valuation',
+                          ar: 'إجمالي تقييم محفظة الأسهم',
+                          zh: '全球股票投资组合总值',
+                        ),
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          fontWeight: FontWeight.w600,
+                          color: ECardoTokens.inkOnBrandMuted(context),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      style: TextStyle(
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.w600,
-                        color: ECardoTokens.inkOnBrandMuted(context),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               // T+2 Settlement Rule Pill
               Container(

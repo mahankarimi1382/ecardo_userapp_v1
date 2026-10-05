@@ -22,17 +22,20 @@ void main() {
     bool isDark = false,
     Locale locale = const Locale('en'),
   }) {
-    return GetMaterialApp(
-      locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: isDark
-          ? ThemeData.dark(useMaterial3: true)
-          : ThemeData.light(useMaterial3: true),
-      home: ScreenUtilInit(
-        designSize: const Size(375, 812),
-        minTextAdapt: true,
-        builder: (context, _) => Scaffold(body: child),
+    return MediaQuery(
+      data: const MediaQueryData(size: Size(375, 812)),
+      child: GetMaterialApp(
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: isDark
+            ? ThemeData.dark(useMaterial3: true)
+            : ThemeData.light(useMaterial3: true),
+        home: ScreenUtilInit(
+          designSize: const Size(375, 812),
+          minTextAdapt: true,
+          builder: (context, _) => Scaffold(body: child),
+        ),
       ),
     );
   }
