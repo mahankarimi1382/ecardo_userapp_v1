@@ -14,7 +14,7 @@ String l10nPick(
   String? ru,
   String? zh,
 }) {
-  final locale = Localizations.localeOf(context).languageCode;
+  final locale = Localizations.maybeLocaleOf(context)?.languageCode ?? 'en';
   switch (locale) {
     case 'fa':
       return fa;

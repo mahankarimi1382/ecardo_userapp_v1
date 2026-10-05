@@ -651,37 +651,39 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        l10nPick(context, fa: 'پروفایل ریسک:', en: 'Risk Profile:'),
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          fontWeight: FontWeight.w800,
-                          color: ECardoTokens.ink(context),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
-                      decoration: BoxDecoration(
-                        color: ECardoTokens.brand100(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                      ),
-                      child: Text(
-                        tierLabel,
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          fontWeight: FontWeight.w700,
-                          color: ECardoTokens.brand900(context),
+                Flexible(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          l10nPick(context, fa: 'پروفایل ریسک:', en: 'Risk Profile:'),
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w800,
+                            color: ECardoTokens.ink(context),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 4.w),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                        decoration: BoxDecoration(
+                          color: ECardoTokens.brand100(context),
+                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                        ),
+                        child: Text(
+                          tierLabel,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: ECardoTokens.brand900(context),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 2.h),
                 Text(
@@ -890,41 +892,52 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
         boxShadow: ECardoTokens.shadowCard(context),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Ticker & Exchange Pill
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: ECardoTokens.brand100(context),
-              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  s.ticker,
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    fontWeight: FontWeight.w900,
-                    fontFamily: 'monospace',
-                    color: ECardoTokens.brand700(context),
+          Flexible(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: ECardoTokens.brand100(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    s.ticker,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: 'monospace',
+                      color: ECardoTokens.brand700(context),
+                    ),
                   ),
-                ),
-                Text(
-                  s.exchangeCode ?? 'EQUITY',
-                  style: TextStyle(
-                    fontSize: 8.5.sp,
-                    fontWeight: FontWeight.w700,
-                    color: ECardoTokens.brand500(context),
+                  SizedBox(height: 1.h),
+                  Text(
+                    s.exchangeCode ?? 'EQUITY',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 8.5.sp,
+                      fontWeight: FontWeight.w700,
+                      color: ECardoTokens.brand500(context),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           SizedBox(width: ECardoTokens.space3.w),
 
           // Name and Industry
-          Expanded(
+          Flexible(
+            flex: 5,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

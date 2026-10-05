@@ -381,6 +381,7 @@ void main() {
 
   group('Stock Trading - Screen Rendering Tests (Light/Dark/RTL)', () {
     testWidgets('renders StockHomeScreen in Light mode without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockHomeScreen(),
@@ -395,6 +396,7 @@ void main() {
     });
 
     testWidgets('renders StockHomeScreen in Dark mode without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockHomeScreen(),
@@ -409,6 +411,7 @@ void main() {
     });
 
     testWidgets('renders StockHomeScreen in Persian (RTL) without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockHomeScreen(),
@@ -423,6 +426,7 @@ void main() {
     });
 
     testWidgets('renders StockHomeScreen in Arabic (RTL) without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockHomeScreen(),
@@ -436,6 +440,7 @@ void main() {
     });
 
     testWidgets('renders StockHomeScreen in Chinese (LTR) without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockHomeScreen(),
