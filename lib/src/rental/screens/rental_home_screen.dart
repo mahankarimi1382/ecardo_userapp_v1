@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
@@ -72,15 +71,15 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
     DateTime? pickup;
     DateTime? returnAt;
     String insuranceTier = 'BASIC';
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     Get.bottomSheet(
       StatefulBuilder(
         builder: (sheetContext, setSheetState) => Container(
-          padding: EdgeInsets.all(AppSpacing.xxl.r),
+          padding: EdgeInsets.all(ECardoTokens.space5.r),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl.r)),
+            color: ECardoTokens.surfaceCard(context),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(ECardoTokens.radius2xl.r)),
+            boxShadow: ECardoTokens.shadowSheet(context),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -95,28 +94,28 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: ECardoTokens.ink(context),
                       ),
                     ),
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      color: ECardoTokens.brand100(context),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
                     ),
                     child: Text(
                       '\$${car.dailyPrice}/day',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: ECardoTokens.brand500(context),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: AppSpacing.sm.h),
+              SizedBox(height: ECardoTokens.space2.h),
               Text(
                 l10nPick(context,
                   en: 'Security Deposit: \$${car.depositAmount} (Refundable)',
@@ -125,16 +124,16 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                   zh: '押金：\$${car.depositAmount}（行程结束无损返还）'),
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: ECardoTokens.inkMuted(context),
                 ),
               ),
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               Text(
                 l10nPick(context, en: 'Insurance tier (required)', fa: 'سطح پوشش بیمه (اجباری)', ar: 'مستوى التأمين', zh: '保险保障级别'),
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 12.sp,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: ECardoTokens.ink(context),
                 ),
               ),
               RadioGroup<String>(
@@ -145,27 +144,27 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     for (final t in car.insuranceTiers)
                       RadioListTile<String>(
                         dense: true,
-                        activeColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        activeColor: ECardoTokens.brand500(context),
                         value: t['tier'].toString(),
                         title: Text(
                           '${t['tier']} (+${t['extra_cost']})',
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: ECardoTokens.ink(context),
                           ),
                         ),
                       ),
                   ],
                 ),
               ),
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                        side: BorderSide(color: ECardoTokens.borderStrong(context)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                       ),
                       onPressed: () async {
@@ -183,17 +182,17 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                             : pickup!.toIso8601String().substring(0, 10),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: ECardoTokens.ink(context),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: AppSpacing.md.w),
+                  SizedBox(width: ECardoTokens.space3.w),
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                        side: BorderSide(color: ECardoTokens.borderStrong(context)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                       ),
                       onPressed: () async {
@@ -211,21 +210,21 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                             : returnAt!.toIso8601String().substring(0, 10),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: ECardoTokens.ink(context),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: AppSpacing.lg.h),
+              SizedBox(height: ECardoTokens.space4.h),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                    backgroundColor: ECardoTokens.brand500(context),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                   ),
                   onPressed: (pickup == null || returnAt == null) ? null : () async {
@@ -244,7 +243,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                       Get.snackbar(
                         l10nPick(context, en: 'Error', fa: 'خطا'),
                         err,
-                        backgroundColor: AppColors.error,
+                        backgroundColor: ECardoTokens.danger(context),
                         colorText: Colors.white,
                       );
                     } else {
@@ -254,7 +253,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                         l10nPick(context,
                           en: 'Price locked for 1 hour — upload driver docs.',
                           fa: 'قیمت ۱ ساعت قفل شد؛ مدارک راننده را بارگذاری کنید.'),
-                        backgroundColor: AppColors.success,
+                        backgroundColor: ECardoTokens.success(context),
                         colorText: Colors.white,
                       );
                     }
@@ -274,26 +273,24 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: ECardoTokens.surfaceCanvas(context),
       appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: ECardoTokens.surfaceCard(context),
         elevation: 0,
         title: Text(
           l10nPick(context, en: 'Car Rental', fa: 'رنت خودرو در سفر', ar: 'تأجير السيارات', zh: '境外车辆租赁'),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: ECardoTokens.ink(context),
           ),
         ),
         bottom: TabBar(
           controller: _tabController,
-          labelColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-          unselectedLabelColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-          indicatorColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+          labelColor: ECardoTokens.brand500(context),
+          unselectedLabelColor: ECardoTokens.inkMuted(context),
+          indicatorColor: ECardoTokens.brand500(context),
           indicatorWeight: 3.h,
           tabs: [
             Tab(text: l10nPick(context, en: 'Vehicle Fleet', fa: 'ناوگان خودروها', ar: 'الأسطول', zh: '精选车队')),
@@ -311,20 +308,20 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 height: 48.h,
                 child: Obx(() => ListView(
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.xs.h),
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: ECardoTokens.space4.w, vertical: ECardoTokens.space2.h),
                   children: categories.map((c) => Padding(
-                    padding: EdgeInsetsDirectional.only(end: AppSpacing.sm.w),
+                    padding: EdgeInsetsDirectional.only(end: ECardoTokens.space2.w),
                     child: ChoiceChip(
                       label: Text(_categoryLabel(context, c)),
                       selected: controller.selectedCategory.value == c,
-                      selectedColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                      backgroundColor: isDark ? AppColors.darkCard : AppColors.lightCard,
+                      selectedColor: ECardoTokens.brand500(context),
+                      backgroundColor: ECardoTokens.surfaceCard(context),
                       labelStyle: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: controller.selectedCategory.value == c ? FontWeight.bold : FontWeight.normal,
                         color: controller.selectedCategory.value == c
-                            ? (isDark ? AppColors.deepBlack : AppColors.white)
-                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                            ? Colors.white
+                            : ECardoTokens.ink(context),
                       ),
                       onSelected: (_) {
                         HapticFeedback.selectionClick();
@@ -338,30 +335,30 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               Expanded(
                 child: Obx(() {
                   if (controller.isLoadingCars.value) {
-                    return _buildCarsSkeleton(isDark);
+                    return _buildCarsSkeleton();
                   }
 
                   if (controller.isServiceUnavailable.value) {
                     return Center(
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsetsDirectional.all(AppSpacing.xxl.r),
+                        padding: EdgeInsetsDirectional.all(ECardoTokens.space6.r),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(AppSpacing.lg.r),
+                              padding: EdgeInsets.all(ECardoTokens.space4.r),
                               decoration: BoxDecoration(
-                                color: AppColors.warning.withValues(alpha: 0.12),
+                                color: ECardoTokens.warningBg(context),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.cloud_off_rounded,
-                                color: AppColors.warning,
-                                size: AppSpacing.iconXl.sp,
+                                color: ECardoTokens.warning(context),
+                                size: ECardoTokens.space8.sp,
                               ),
                             ),
-                            SizedBox(height: AppSpacing.md.h),
+                            SizedBox(height: ECardoTokens.space3.h),
                             Text(
                               l10nPick(
                                 context,
@@ -374,10 +371,10 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: ECardoTokens.ink(context),
                               ),
                             ),
-                            SizedBox(height: AppSpacing.sm.h),
+                            SizedBox(height: ECardoTokens.space2.h),
                             Text(
                               l10nPick(
                                 context,
@@ -388,22 +385,22 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                               ),
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: ECardoTokens.inkMuted(context),
                                 fontSize: 12.sp,
                                 height: 1.5,
                               ),
                             ),
-                            SizedBox(height: AppSpacing.lg.h),
+                            SizedBox(height: ECardoTokens.space4.h),
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                                foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                                backgroundColor: ECardoTokens.brand500(context),
+                                foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
                                 ),
                                 padding: EdgeInsetsDirectional.symmetric(
-                                  horizontal: AppSpacing.xl.w,
-                                  vertical: AppSpacing.md.h,
+                                  horizontal: ECardoTokens.space4.w,
+                                  vertical: ECardoTokens.space3.h,
                                 ),
                               ),
                               onPressed: () {
@@ -432,16 +429,16 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     return Center(
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.all(AppSpacing.xxl.r),
+                        padding: EdgeInsets.all(ECardoTokens.space6.r),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.directions_car_outlined,
                               size: 56.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: ECardoTokens.inkMuted(context),
                             ),
-                            SizedBox(height: AppSpacing.md.h),
+                            SizedBox(height: ECardoTokens.space3.h),
                             Text(
                               l10nPick(
                                 context,
@@ -453,7 +450,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: ECardoTokens.ink(context),
                               ),
                             ),
                           ],
@@ -466,12 +463,12 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     onRefresh: () => controller.fetchCars(),
                     child: ListView.separated(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
+                      padding: EdgeInsetsDirectional.all(ECardoTokens.space4.w),
                       itemCount: controller.cars.length,
-                      separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+                      separatorBuilder: (_, _) => SizedBox(height: ECardoTokens.space6.h),
                       itemBuilder: (context, i) {
                         final car = controller.cars[i];
-                        return _buildVehicleCard(context, car, isDark);
+                        return _buildVehicleCard(context, car);
                       },
                     ),
                   );
@@ -489,7 +486,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               return Center(
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(AppSpacing.xxl.r),
+                  padding: EdgeInsets.all(ECardoTokens.space6.r),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -497,25 +494,25 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                         width: 80.w,
                         height: 80.w,
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                          color: ECardoTokens.surfaceSunken(context),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.receipt_long_outlined,
                           size: 40.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
-                      SizedBox(height: AppSpacing.md.h),
+                      SizedBox(height: ECardoTokens.space3.h),
                       Text(
                         l10nPick(context, en: 'No Active Bookings', fa: 'هنوز رزروی ثبت نکرده‌اید', ar: 'لا توجد حجوزات', zh: '暂无预订订单'),
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: ECardoTokens.ink(context),
                         ),
                       ),
-                      SizedBox(height: AppSpacing.sm.h),
+                      SizedBox(height: ECardoTokens.space2.h),
                       Text(
                         l10nPick(context,
                           en: 'Select a premium car from our catalog to book with guaranteed pricing.',
@@ -523,7 +520,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                     ],
@@ -535,31 +532,31 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               onRefresh: () => controller.fetchMyBookings(),
               child: ListView.separated(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.all(AppSpacing.lg.w),
+                padding: EdgeInsets.all(ECardoTokens.space4.w),
                 itemCount: controller.myBookings.length,
-                separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+                separatorBuilder: (_, _) => SizedBox(height: ECardoTokens.space6.h),
                 itemBuilder: (context, i) {
                   final b = controller.myBookings[i];
                   return Container(
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                      borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+                      color: ECardoTokens.surfaceCard(context),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
                       border: Border.all(
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: ECardoTokens.border(context),
                       ),
                     ),
                     child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.xs.h),
+                      contentPadding: EdgeInsets.symmetric(horizontal: ECardoTokens.space4.w, vertical: ECardoTokens.space2.h),
                       leading: Container(
                         width: 44.w,
                         height: 44.w,
                         decoration: BoxDecoration(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                          color: ECardoTokens.brand100(context),
+                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
                         ),
                         child: Icon(
                           Icons.directions_car_rounded,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          color: ECardoTokens.brand500(context),
                         ),
                       ),
                       title: Text(
@@ -567,14 +564,14 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 13.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: ECardoTokens.ink(context),
                         ),
                       ),
                       subtitle: Text(
                         b.car?.title ?? l10nPick(context, en: 'Vehicle Rental', fa: 'رزرو خودرو'),
                         style: TextStyle(
                           fontSize: 11.5.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                       trailing: Row(
@@ -583,15 +580,15 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                             decoration: BoxDecoration(
-                              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                              color: ECardoTokens.brand100(context),
+                              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
                             ),
                             child: Text(
                               _statusFa(b.status),
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.bold,
-                                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                                color: ECardoTokens.brand500(context),
                               ),
                             ),
                           ),
@@ -599,7 +596,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           Icon(
                             Icons.chevron_right,
                             size: 18.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: ECardoTokens.inkMuted(context),
                           ),
                         ],
                       ),
@@ -618,83 +615,80 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildCarsSkeleton(bool isDark) {
-    final placeholder =
-        isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-    return ListView.separated(
-      padding: EdgeInsets.all(AppSpacing.lg.r),
-      itemCount: 4,
-      separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
-      itemBuilder: (_, _) => Container(
-        padding: EdgeInsets.all(AppSpacing.lg.r),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkCard : AppColors.lightCard,
-          borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+  Widget _buildCarsSkeleton() {
+    return Builder(
+      builder: (context) {
+        final placeholder = ECardoTokens.surfaceSunken(context);
+        return ListView.separated(
+          padding: EdgeInsets.all(ECardoTokens.space4.r),
+          itemCount: 4,
+          separatorBuilder: (_, _) => SizedBox(height: ECardoTokens.space3.h),
+          itemBuilder: (_, _) => Container(
+            padding: EdgeInsets.all(ECardoTokens.space4.r),
+            decoration: BoxDecoration(
+              color: ECardoTokens.surfaceCard(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+              border: Border.all(color: ECardoTokens.border(context)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 44.w,
-                  height: 44.w,
-                  decoration: BoxDecoration(
-                    color: placeholder,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                  ),
-                ),
-                SizedBox(width: AppSpacing.md.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(height: 14.h, color: placeholder),
-                      SizedBox(height: 6.h),
-                      Container(
-                        height: 12.h,
-                        width: 120.w,
+                Row(
+                  children: [
+                    Container(
+                      width: 44.w,
+                      height: 44.w,
+                      decoration: BoxDecoration(
                         color: placeholder,
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: ECardoTokens.space3.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(height: 14.h, color: placeholder),
+                          SizedBox(height: 6.h),
+                          Container(
+                            height: 12.h,
+                            width: 120.w,
+                            color: placeholder,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: ECardoTokens.space3.h),
+                Container(height: 12.h, color: placeholder),
+                SizedBox(height: ECardoTokens.space2.h),
+                Row(
+                  children: [
+                    Container(width: 90.w, height: 12.h, color: placeholder),
+                    SizedBox(width: ECardoTokens.space2.w),
+                    Container(width: 60.w, height: 12.h, color: placeholder),
+                  ],
                 ),
               ],
             ),
-            SizedBox(height: AppSpacing.md.h),
-            Container(height: 12.h, color: placeholder),
-            SizedBox(height: AppSpacing.sm.h),
-            Row(
-              children: [
-                Container(width: 90.w, height: 12.h, color: placeholder),
-                SizedBox(width: AppSpacing.sm.w),
-                Container(width: 60.w, height: 12.h, color: placeholder),
-              ],
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildVehicleCard(BuildContext context, CarModel car, bool isDark) {
+  Widget _buildVehicleCard(BuildContext context, CarModel car) {
     return Container(
-      padding: EdgeInsets.all(AppSpacing.lg.r),
+      padding: EdgeInsets.all(ECardoTokens.space4.r),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.lightCard,
-        borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+        color: ECardoTokens.surfaceCard(context),
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          color: ECardoTokens.border(context),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: ECardoTokens.shadowCard(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -707,16 +701,16 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 width: 44.w,
                 height: 44.w,
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  color: ECardoTokens.brand100(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
                 ),
                 child: Icon(
                   Icons.directions_car_filled_rounded,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                  size: AppSpacing.iconMd.sp,
+                  color: ECardoTokens.brand500(context),
+                  size: 22.sp,
                 ),
               ),
-              SizedBox(width: AppSpacing.md.w),
+              SizedBox(width: ECardoTokens.space3.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -726,7 +720,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 14.5.sp,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: ECardoTokens.ink(context),
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -734,7 +728,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                       _categoryLabel(context, car.category),
                       style: TextStyle(
                         fontSize: 11.5.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
                   ],
@@ -744,9 +738,9 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: car.isFleet
-                      ? AppColors.success.withValues(alpha: 0.12)
-                      : AppColors.warning.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      ? ECardoTokens.successBg(context)
+                      : ECardoTokens.warningBg(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -754,7 +748,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     Icon(
                       car.isFleet ? Icons.bolt_rounded : Icons.person_outline_rounded,
                       size: 12.sp,
-                      color: car.isFleet ? AppColors.success : AppColors.warning,
+                      color: car.isFleet ? ECardoTokens.success(context) : ECardoTokens.warning(context),
                     ),
                     SizedBox(width: 3.w),
                     Text(
@@ -764,7 +758,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                       style: TextStyle(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.bold,
-                        color: car.isFleet ? AppColors.success : AppColors.warning,
+                        color: car.isFleet ? ECardoTokens.success(context) : ECardoTokens.warning(context),
                       ),
                     ),
                   ],
@@ -773,38 +767,38 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
             ],
           ),
 
-          SizedBox(height: AppSpacing.md.h),
+          SizedBox(height: ECardoTokens.space3.h),
 
           // Spec Badges Row
           Wrap(
-            spacing: AppSpacing.xs.w,
-            runSpacing: AppSpacing.xs.h,
+            spacing: ECardoTokens.space1.w,
+            runSpacing: ECardoTokens.space1.h,
             children: [
               _buildSpecBadge(
+                context: context,
                 icon: Icons.speed_rounded,
                 label: '${car.dailyKmLimit} km/day',
-                isDark: isDark,
               ),
               if (car.transmission != null)
                 _buildSpecBadge(
+                  context: context,
                   icon: Icons.tune_rounded,
                   label: car.transmission!,
-                  isDark: isDark,
                 ),
               _buildSpecBadge(
+                context: context,
                 icon: Icons.shield_outlined,
                 label: l10nPick(context, en: 'Deposit: \$${car.depositAmount.toInt()}', fa: 'ودیعه: \$${car.depositAmount.toInt()}'),
-                isDark: isDark,
               ),
               _buildSpecBadge(
+                context: context,
                 icon: Icons.person_outline_rounded,
                 label: 'Age ${car.minAge}+',
-                isDark: isDark,
               ),
             ],
           ),
 
-          SizedBox(height: AppSpacing.md.h),
+          SizedBox(height: ECardoTokens.space3.h),
 
           // Bottom Bar: Price & Book Button
           Row(
@@ -817,7 +811,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     l10nPick(context, en: 'Daily rate', fa: 'نرخ روزانه', ar: 'السعر اليومي', zh: '日租金'),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      color: ECardoTokens.inkMuted(context),
                     ),
                   ),
                   Text(
@@ -825,17 +819,17 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w900,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      color: ECardoTokens.brand500(context),
                     ),
                   ),
                 ],
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                  foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                  backgroundColor: ECardoTokens.brand500(context),
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   elevation: 0,
@@ -856,24 +850,28 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildSpecBadge({required IconData icon, required String label, required bool isDark}) {
+  Widget _buildSpecBadge({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        color: ECardoTokens.surfaceSunken(context),
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+          Icon(icon, size: 12.sp, color: ECardoTokens.inkMuted(context)),
           SizedBox(width: 4.w),
           Text(
             label,
             style: TextStyle(
               fontSize: 10.5.sp,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: ECardoTokens.inkMuted(context),
             ),
           ),
         ],

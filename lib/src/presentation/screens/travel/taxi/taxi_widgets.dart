@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/travel/services/mock_travel_data.dart';
-import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_theme.dart';
 import 'taxi_models.dart';
 
 /// Accessible, theme-aware counter tile with >=48dp touch targets and dark mode safety.
-/// Fixes lines ~474 and ~488 in legacy taxi_search_screen.
 class TaxiCounterControl extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -34,18 +32,17 @@ class TaxiCounterControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = TravelTheme.isDark(context);
-    final cardBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8FAFC);
-    final buttonBg = isDark ? const Color(0xFF2C2C2E) : Colors.white;
-    final borderColor = TravelTheme.borderFor(context);
-    final textColor = TravelTheme.textPrimaryFor(context);
-    final mutedColor = TravelTheme.textSecondaryFor(context);
+    final cardBg = ECardoTokens.surfaceSunken(context);
+    final buttonBg = ECardoTokens.surfaceCard(context);
+    final borderColor = ECardoTokens.border(context);
+    final textColor = ECardoTokens.ink(context);
+    final mutedColor = ECardoTokens.inkMuted(context);
 
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
         border: Border.all(color: borderColor),
       ),
       child: Column(
@@ -53,7 +50,7 @@ class TaxiCounterControl extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 16.r, color: const Color(0xFF0D9488)),
+              Icon(icon, size: 16.r, color: ECardoTokens.brand500(context)),
               SizedBox(width: 6.w),
               Expanded(
                 child: Text(
@@ -85,7 +82,7 @@ class TaxiCounterControl extends StatelessWidget {
                       onChanged?.call(value.value);
                     }
                   },
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusFull),
                   child: Container(
                     width: 38.r,
                     height: 38.r,
@@ -93,7 +90,7 @@ class TaxiCounterControl extends StatelessWidget {
                       color: buttonBg,
                       shape: BoxShape.circle,
                       border: Border.all(color: borderColor),
-                      boxShadow: isDark ? null : TravelTheme.shadow,
+                      boxShadow: ECardoTokens.isDark(context) ? null : ECardoTokens.shadowCard(context),
                     ),
                     child: Center(
                       child: Icon(
@@ -126,7 +123,7 @@ class TaxiCounterControl extends StatelessWidget {
                       onChanged?.call(value.value);
                     }
                   },
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusFull),
                   child: Container(
                     width: 38.r,
                     height: 38.r,
@@ -134,13 +131,13 @@ class TaxiCounterControl extends StatelessWidget {
                       color: buttonBg,
                       shape: BoxShape.circle,
                       border: Border.all(color: borderColor),
-                      boxShadow: isDark ? null : TravelTheme.shadow,
+                      boxShadow: ECardoTokens.isDark(context) ? null : ECardoTokens.shadowCard(context),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.add_rounded,
                         size: 18.r,
-                        color: value.value < max ? const Color(0xFF0D9488) : mutedColor.withValues(alpha: 0.5),
+                        color: value.value < max ? ECardoTokens.brand500(context) : mutedColor.withValues(alpha: 0.5),
                       ),
                     ),
                   ),
@@ -161,15 +158,18 @@ class TaxiTrustSignalsBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsetsDirectional.all(16.r),
+      padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
       decoration: BoxDecoration(
-        borderRadius: TravelTheme.radius,
-        gradient: const LinearGradient(
-          colors: [Color(0xFF0F766E), Color(0xFF14B8A6)],
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+        gradient: LinearGradient(
+          colors: [
+            ECardoTokens.brand900(context),
+            ECardoTokens.brand700(context),
+          ],
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
         ),
-        boxShadow: TravelTheme.shadow,
+        boxShadow: ECardoTokens.shadowCard(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,15 +185,15 @@ class TaxiTrustSignalsBanner extends StatelessWidget {
                         Container(
                           padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(6.r),
+                            color: Colors.white.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                           ),
                           child: Text(
                             l10nPick(context, en: '100% FIXED RATE', fa: 'کرایه قطعی و تضمین‌شده', ar: 'سعر ثابت مؤكد'),
                             style: TextStyle(
                               fontSize: 9.5.sp,
                               fontWeight: FontWeight.w900,
-                              color: Colors.white,
+                              color: ECardoTokens.sand400(context),
                               letterSpacing: 0.5,
                             ),
                           ),
@@ -212,7 +212,7 @@ class TaxiTrustSignalsBanner extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white,
+                        color: ECardoTokens.inkOnBrand,
                       ),
                     ),
                   ],
@@ -220,8 +220,8 @@ class TaxiTrustSignalsBanner extends StatelessWidget {
               ),
               Icon(
                 Icons.local_taxi_rounded,
-                size: 52.r,
-                color: Colors.white.withValues(alpha: 0.85),
+                size: 50.r,
+                color: ECardoTokens.inkOnBrand.withValues(alpha: 0.85),
               ),
             ],
           ),
@@ -267,14 +267,18 @@ class _TrustItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 13.r, color: const Color(0xFF99F6E4)),
+        Icon(icon, size: 13.r, color: ECardoTokens.sand400(context)),
         SizedBox(width: 4.w),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 10.sp,
-            fontWeight: FontWeight.w700,
-            color: Colors.white.withValues(alpha: 0.95),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w700,
+              color: ECardoTokens.inkOnBrand.withValues(alpha: 0.95),
+            ),
           ),
         ),
       ],
@@ -304,34 +308,33 @@ class TaxiVehicleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final isDark = TravelTheme.isDark(context);
-    final cardBg = isDark ? AppColors.darkSurfaceVariant : Colors.white;
-    final titleColor = TravelTheme.textPrimaryFor(context);
-    final mutedColor = TravelTheme.textSecondaryFor(context);
+    final cardBg = ECardoTokens.surfaceCard(context);
+    final titleColor = ECardoTokens.ink(context);
+    final mutedColor = ECardoTokens.inkMuted(context);
 
     final bool capacityExceeded =
         passengerCount > vehicle.maxPassengers || luggageCount > vehicle.maxLuggage;
 
     return Padding(
-      padding: EdgeInsetsDirectional.only(bottom: 12.h),
+      padding: EdgeInsetsDirectional.only(bottom: ECardoTokens.space3.h),
       child: InkWell(
         onTap: () {
           AppHaptics.selection();
           onTap();
         },
-        borderRadius: TravelTheme.radius,
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
         child: Container(
-          padding: EdgeInsetsDirectional.all(16.r),
+          padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
           decoration: BoxDecoration(
             color: cardBg,
-            borderRadius: TravelTheme.radius,
+            borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
             border: Border.all(
               color: isSelected
-                  ? const Color(0xFF0D9488)
-                  : (capacityExceeded ? Colors.amber.shade700 : TravelTheme.borderFor(context)),
+                  ? ECardoTokens.brand500(context)
+                  : (capacityExceeded ? ECardoTokens.warning(context) : ECardoTokens.border(context)),
               width: isSelected ? 2 : 1,
             ),
-            boxShadow: isSelected ? TravelTheme.shadowFor(context) : null,
+            boxShadow: isSelected ? ECardoTokens.shadowCard(context) : null,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,13 +346,13 @@ class TaxiVehicleCard extends StatelessWidget {
                     height: 52.r,
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? const Color(0xFF0D9488).withValues(alpha: 0.18)
-                          : (isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF1F5F9)),
-                      borderRadius: BorderRadius.circular(14.r),
+                          ? ECardoTokens.brand100(context)
+                          : ECardoTokens.surfaceSunken(context),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
                     ),
                     child: Icon(
                       vehicle.icon,
-                      color: isSelected ? const Color(0xFF0D9488) : mutedColor,
+                      color: isSelected ? ECardoTokens.brand500(context) : mutedColor,
                       size: 28.r,
                     ),
                   ),
@@ -361,20 +364,29 @@ class TaxiVehicleCard extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              l10nPick(context, en: vehicle.titleEn, fa: vehicle.titleFa),
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w900,
-                                color: titleColor,
+                            Expanded(
+                              child: Text(
+                                l10nPick(context, en: vehicle.titleEn, fa: vehicle.titleFa),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: titleColor,
+                                ),
                               ),
                             ),
-                            Text(
-                              '${formatMockAmount(totalFare)} ${localization.travelMockCurrency}',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w900,
-                                color: const Color(0xFF0D9488),
+                            SizedBox(width: 8.w),
+                            Flexible(
+                              child: Text(
+                                '${formatMockAmount(totalFare)} ${localization.travelMockCurrency}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 13.5.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: ECardoTokens.brand500(context),
+                                ),
                               ),
                             ),
                           ],
@@ -382,6 +394,8 @@ class TaxiVehicleCard extends StatelessWidget {
                         SizedBox(height: 3.h),
                         Text(
                           vehicle.exampleModels,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 11.sp, color: mutedColor),
                         ),
                       ],
@@ -389,62 +403,77 @@ class TaxiVehicleCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const Divider(height: 20),
+              Divider(height: 20, color: ECardoTokens.border(context)),
               Row(
                 children: [
-                  Row(
-                    children: [
-                      Icon(Icons.people_alt_rounded, size: 16.r, color: mutedColor),
-                      SizedBox(width: 4.w),
-                      Text(
-                        '${vehicle.maxPassengers} ${l10nPick(context, en: 'pax', fa: 'نفر', ar: 'ركاب', zh: '人')}',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: passengerCount > vehicle.maxPassengers ? Colors.red : mutedColor,
-                          fontWeight: passengerCount > vehicle.maxPassengers ? FontWeight.w800 : FontWeight.w500,
+                  Flexible(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.people_alt_rounded, size: 15.r, color: mutedColor),
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            '${vehicle.maxPassengers} ${l10nPick(context, en: 'pax', fa: 'نفر', ar: 'ركاب', zh: '人')}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: passengerCount > vehicle.maxPassengers ? ECardoTokens.danger(context) : mutedColor,
+                              fontWeight: passengerCount > vehicle.maxPassengers ? FontWeight.w800 : FontWeight.w500,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 14.w),
-                  Row(
-                    children: [
-                      Icon(Icons.luggage_rounded, size: 16.r, color: mutedColor),
-                      SizedBox(width: 4.w),
-                      Text(
-                        '${vehicle.maxLuggage} ${l10nPick(context, en: 'bags', fa: 'چمدان', ar: 'حقائب', zh: '件行李')}',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: luggageCount > vehicle.maxLuggage ? Colors.red : mutedColor,
-                          fontWeight: luggageCount > vehicle.maxLuggage ? FontWeight.w800 : FontWeight.w500,
+                  SizedBox(width: 10.w),
+                  Flexible(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.luggage_rounded, size: 15.r, color: mutedColor),
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            '${vehicle.maxLuggage} ${l10nPick(context, en: 'bags', fa: 'چمدان', ar: 'حقائب', zh: '件行李')}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: luggageCount > vehicle.maxLuggage ? ECardoTokens.danger(context) : mutedColor,
+                              fontWeight: luggageCount > vehicle.maxLuggage ? FontWeight.w800 : FontWeight.w500,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const Spacer(),
-                  if (isSelected)
+                  if (isSelected) ...[
+                    const Spacer(),
                     Container(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0D9488),
-                        borderRadius: BorderRadius.circular(8.r),
+                        color: ECardoTokens.brand500(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.check, size: 14, color: Colors.white),
+                          Icon(Icons.check, size: 13, color: ECardoTokens.inkOnBrand),
                           SizedBox(width: 4.w),
                           Text(
                             l10nPick(context, en: 'Selected', fa: 'انتخاب شده', ar: 'محدد', zh: '已选'),
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10.5.sp,
+                              color: ECardoTokens.inkOnBrand,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
                         ],
                       ),
                     ),
+                  ],
                 ],
               ),
               if (capacityExceeded) ...[
@@ -452,12 +481,12 @@ class TaxiVehicleCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(6.r),
+                    color: ECardoTokens.warningBg(context),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.info_outline_rounded, size: 14, color: Colors.amber),
+                      Icon(Icons.info_outline_rounded, size: 14, color: ECardoTokens.warning(context)),
                       SizedBox(width: 6.w),
                       Expanded(
                         child: Text(
@@ -467,7 +496,7 @@ class TaxiVehicleCard extends StatelessWidget {
                             fa: 'تعداد مسافر یا بار بیش از ظرفیت استاندارد این خودرو است.',
                             ar: 'عدد الركاب أو الأمتعة يتجاوز سعة السيارة.',
                           ),
-                          style: TextStyle(fontSize: 10.sp, color: Colors.amber.shade800),
+                          style: TextStyle(fontSize: 10.sp, color: ECardoTokens.warning(context)),
                         ),
                       ),
                     ],
@@ -482,8 +511,8 @@ class TaxiVehicleCard extends StatelessWidget {
                   children: vehicle.features.map((f) => Container(
                     padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 2.h),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(6.r),
+                      color: ECardoTokens.surfaceSunken(context),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                     ),
                     child: Text(
                       f,
@@ -516,22 +545,23 @@ class TaxiLiveDriverCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final driver = booking.driver;
-    final isDark = TravelTheme.isDark(context);
-    final cardBg = isDark ? AppColors.darkSurfaceVariant : Colors.white;
-    final titleColor = TravelTheme.textPrimaryFor(context);
-    final mutedColor = TravelTheme.textSecondaryFor(context);
+    final cardBg = ECardoTokens.surfaceCard(context);
+    final titleColor = ECardoTokens.ink(context);
+    final mutedColor = ECardoTokens.inkMuted(context);
 
     if (driver == null) {
       return Container(
-        padding: EdgeInsetsDirectional.all(16.r),
+        padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
         decoration: BoxDecoration(
           color: cardBg,
-          borderRadius: TravelTheme.radius,
-          border: Border.all(color: TravelTheme.borderFor(context)),
+          borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+          border: Border.all(color: ECardoTokens.border(context)),
         ),
         child: Row(
           children: [
-            const CircularProgressIndicator.adaptive(),
+            CircularProgressIndicator.adaptive(
+              valueColor: AlwaysStoppedAnimation<Color>(ECardoTokens.brand500(context)),
+            ),
             SizedBox(width: 14.w),
             Expanded(
               child: Column(
@@ -555,12 +585,12 @@ class TaxiLiveDriverCard extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsetsDirectional.all(18.r),
+      padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r + 2.r),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: TravelTheme.radius,
-        border: Border.all(color: const Color(0xFF0D9488).withValues(alpha: 0.3)),
-        boxShadow: TravelTheme.shadowFor(context),
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+        border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.3)),
+        boxShadow: ECardoTokens.shadowCard(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -569,8 +599,8 @@ class TaxiLiveDriverCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 26.r,
-                backgroundColor: const Color(0xFF0D9488).withValues(alpha: 0.15),
-                child: const Icon(Icons.person_pin_rounded, color: Color(0xFF0D9488), size: 32),
+                backgroundColor: ECardoTokens.brand100(context),
+                child: Icon(Icons.person_pin_rounded, color: ECardoTokens.brand500(context), size: 32.r),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -587,17 +617,17 @@ class TaxiLiveDriverCard extends StatelessWidget {
                         Container(
                           padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 1.h),
                           decoration: BoxDecoration(
-                            color: Colors.amber.withValues(alpha: 0.18),
-                            borderRadius: BorderRadius.circular(4.r),
+                            color: ECardoTokens.sand100(context),
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.star_rounded, size: 13, color: Colors.amber),
+                              Icon(Icons.star_rounded, size: 13, color: ECardoTokens.sand600(context)),
                               SizedBox(width: 2.w),
                               Text(
                                 '${driver.rating}',
-                                style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900, color: Colors.amber.shade900),
+                                style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900, color: ECardoTokens.sand600(context)),
                               ),
                             ],
                           ),
@@ -615,7 +645,7 @@ class TaxiLiveDriverCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          const Divider(height: 1),
+          Divider(height: 1, color: ECardoTokens.border(context)),
           SizedBox(height: 10.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -624,13 +654,13 @@ class TaxiLiveDriverCard extends StatelessWidget {
               Container(
                 padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(6.r),
-                  border: Border.all(color: TravelTheme.borderFor(context)),
+                  color: ECardoTokens.surfaceSunken(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                  border: Border.all(color: ECardoTokens.border(context)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.directions_car_rounded, size: 16, color: Color(0xFF0D9488)),
+                    Icon(Icons.directions_car_rounded, size: 16, color: ECardoTokens.brand500(context)),
                     SizedBox(width: 6.w),
                     Text(
                       driver.licensePlate,
@@ -649,7 +679,8 @@ class TaxiLiveDriverCard extends StatelessWidget {
                 width: 120.w,
                 height: 36.h,
                 text: l10nPick(context, en: 'Call Chauffeur', fa: 'تماس با راننده', ar: 'اتصال بالسائق'),
-                backgroundColor: const Color(0xFF0D9488),
+                textColor: ECardoTokens.inkOnBrand,
+                backgroundColor: ECardoTokens.brand500(context),
                 onPressed: onCallDriver ?? () {},
               ),
             ],
@@ -700,12 +731,17 @@ class _TaxiRatingBottomSheetState extends State<TaxiRatingBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final titleColor = TravelTheme.textPrimaryFor(context);
-    final mutedColor = TravelTheme.textSecondaryFor(context);
+    final titleColor = ECardoTokens.ink(context);
+    final mutedColor = ECardoTokens.inkMuted(context);
 
     return SafeArea(
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(20.w, 16.h, 20.w, 20.h),
+        padding: EdgeInsetsDirectional.fromSTEB(
+          ECardoTokens.space5.w,
+          ECardoTokens.space4.h,
+          ECardoTokens.space5.w,
+          ECardoTokens.space5.h,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -715,7 +751,7 @@ class _TaxiRatingBottomSheetState extends State<TaxiRatingBottomSheet> {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
+                  color: ECardoTokens.borderStrong(context),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -741,7 +777,7 @@ class _TaxiRatingBottomSheetState extends State<TaxiRatingBottomSheet> {
                     iconSize: 36.r,
                     icon: Icon(
                       starIndex <= _rating ? Icons.star_rounded : Icons.star_border_rounded,
-                      color: Colors.amber,
+                      color: ECardoTokens.sand600(context),
                     ),
                     onPressed: () {
                       AppHaptics.selection();
@@ -763,10 +799,12 @@ class _TaxiRatingBottomSheetState extends State<TaxiRatingBottomSheet> {
               children: _complimentTags.map((tag) {
                 final isSelected = _selectedTags.contains(tag);
                 return FilterChip(
-                  label: Text(tag, style: TextStyle(fontSize: 11.sp)),
+                  label: Text(tag, style: TextStyle(fontSize: 11.sp, color: isSelected ? ECardoTokens.brand700(context) : titleColor)),
                   selected: isSelected,
-                  selectedColor: const Color(0xFF0D9488).withValues(alpha: 0.2),
-                  checkmarkColor: const Color(0xFF0D9488),
+                  selectedColor: ECardoTokens.brand100(context),
+                  checkmarkColor: ECardoTokens.brand500(context),
+                  backgroundColor: ECardoTokens.surfaceSunken(context),
+                  side: BorderSide(color: isSelected ? ECardoTokens.brand500(context) : ECardoTokens.border(context)),
                   onSelected: (val) {
                     setState(() {
                       if (val) {
@@ -792,7 +830,8 @@ class _TaxiRatingBottomSheetState extends State<TaxiRatingBottomSheet> {
             CommonButton(
               width: double.infinity,
               text: l10nPick(context, en: 'Submit Review', fa: 'ثبت و ارسال بازخورد', ar: 'إرسال التقييم'),
-              backgroundColor: const Color(0xFF0D9488),
+              textColor: ECardoTokens.inkOnBrand,
+              backgroundColor: ECardoTokens.brand500(context),
               isLoading: _isSubmitting,
               onPressed: () async {
                 setState(() => _isSubmitting = true);
@@ -834,12 +873,17 @@ class TaxiCancellationBottomSheet extends StatelessWidget {
       totalFare: booking.totalFare,
       currency: booking.currency,
     );
-    final titleColor = TravelTheme.textPrimaryFor(context);
-    final mutedColor = TravelTheme.textSecondaryFor(context);
+    final titleColor = ECardoTokens.ink(context);
+    final mutedColor = ECardoTokens.inkMuted(context);
 
     return SafeArea(
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(20.w, 16.h, 20.w, 24.h),
+        padding: EdgeInsetsDirectional.fromSTEB(
+          ECardoTokens.space5.w,
+          ECardoTokens.space4.h,
+          ECardoTokens.space5.w,
+          ECardoTokens.space6.h,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -849,7 +893,7 @@ class TaxiCancellationBottomSheet extends StatelessWidget {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
+                  color: ECardoTokens.borderStrong(context),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -866,11 +910,11 @@ class TaxiCancellationBottomSheet extends StatelessWidget {
             ),
             SizedBox(height: 14.h),
             Container(
-              padding: EdgeInsetsDirectional.all(14.r),
+              padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
               decoration: BoxDecoration(
-                color: Colors.amber.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+                color: ECardoTokens.warningBg(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+                border: Border.all(color: ECardoTokens.warning(context).withValues(alpha: 0.3)),
               ),
               child: Column(
                 children: [
@@ -888,9 +932,9 @@ class TaxiCancellationBottomSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(l10nPick(context, en: 'Refund to eCardo Wallet:', fa: 'مبلغ استرداد به کیف پول:', ar: 'المبلغ المسترد:'),
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: Colors.green.shade800)),
+                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: ECardoTokens.success(context))),
                       Text('${formatMockAmount(policy.refundableAmount)} ${booking.currency}',
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: Colors.green.shade800)),
+                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: ECardoTokens.success(context))),
                     ],
                   ),
                 ],
@@ -901,15 +945,22 @@ class TaxiCancellationBottomSheet extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: ECardoTokens.border(context)),
+                    ),
                     onPressed: () => Navigator.pop(context),
-                    child: Text(l10nPick(context, en: 'Keep Booking', fa: 'انصراف و حفظ رزرو', ar: 'تراجع')),
+                    child: Text(
+                      l10nPick(context, en: 'Keep Booking', fa: 'انصراف و حفظ رزرو', ar: 'تراجع'),
+                      style: TextStyle(color: titleColor),
+                    ),
                   ),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: CommonButton(
                     text: l10nPick(context, en: 'Confirm Cancel', fa: 'تأیید لغو ترانسفر', ar: 'تأكيد الإلغاء'),
-                    backgroundColor: Colors.red.shade700,
+                    textColor: ECardoTokens.inkOnBrand,
+                    backgroundColor: ECardoTokens.danger(context),
                     onPressed: () async {
                       Navigator.pop(context);
                       await onConfirmCancel('درخواست لغو توسط کاربر');

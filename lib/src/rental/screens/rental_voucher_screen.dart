@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
@@ -30,10 +28,9 @@ class RentalVoucherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final car = booking.car;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: ECardoTokens.surfaceCanvas(context),
       appBar: AppBar(
         title: Text(
           l10nPick(
@@ -46,23 +43,23 @@ class RentalVoucherScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: ECardoTokens.ink(context),
           ),
         ),
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: ECardoTokens.surfaceCard(context),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: ECardoTokens.ink(context),
           ),
           onPressed: () => Get.back(),
         ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsetsDirectional.all(AppSpacing.lg.r),
+          padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
           child: Row(
             children: [
               Expanded(
@@ -70,10 +67,10 @@ class RentalVoucherScreen extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsetsDirectional.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
                     ),
                     side: BorderSide(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: ECardoTokens.borderStrong(context),
                     ),
                   ),
                   onPressed: () {
@@ -100,24 +97,38 @@ class RentalVoucherScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: ECardoTokens.ink(context),
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: AppSpacing.md.w),
+              SizedBox(width: ECardoTokens.space3.w),
               Expanded(
-                child: CommonButton(
-                  text: l10nPick(
-                    context,
-                    en: 'Done',
-                    fa: 'تأیید و بازگشت',
-                    ar: 'تم',
-                    zh: '完成',
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ECardoTokens.brand500(context),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                    ),
+                    padding: EdgeInsetsDirectional.symmetric(vertical: 14.h),
+                    elevation: 0,
                   ),
-                  textColor: isDark ? AppColors.deepBlack : AppColors.white,
-                  backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                   onPressed: () => Get.back(),
+                  child: Text(
+                    l10nPick(
+                      context,
+                      en: 'Done',
+                      fa: 'تأیید و بازگشت',
+                      ar: 'تم',
+                      zh: '完成',
+                    ),
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -125,27 +136,27 @@ class RentalVoucherScreen extends StatelessWidget {
         ),
       ),
       body: ListView(
-        padding: EdgeInsetsDirectional.fromSTEB(AppSpacing.lg.w, AppSpacing.md.h, AppSpacing.lg.w, AppSpacing.xxxl.h),
+        padding: EdgeInsetsDirectional.fromSTEB(ECardoTokens.space4.w, ECardoTokens.space3.h, ECardoTokens.space4.w, ECardoTokens.space8.h),
         children: [
           // Status banner
           Container(
-            padding: EdgeInsetsDirectional.all(AppSpacing.lg.r),
+            padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
             decoration: BoxDecoration(
-              color: AppColors.success.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-              border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+              color: ECardoTokens.successBg(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+              border: Border.all(color: ECardoTokens.success(context).withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(AppSpacing.sm.r),
-                  decoration: const BoxDecoration(
-                    color: AppColors.success,
+                  padding: EdgeInsets.all(ECardoTokens.space2.r),
+                  decoration: BoxDecoration(
+                    color: ECardoTokens.success(context),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(Icons.check_circle_rounded, color: Colors.white, size: 22),
                 ),
-                SizedBox(width: AppSpacing.md.w),
+                SizedBox(width: ECardoTokens.space3.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +172,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w900,
-                          color: AppColors.success,
+                          color: ECardoTokens.success(context),
                         ),
                       ),
                       SizedBox(height: 3.h),
@@ -175,7 +186,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         ),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                     ],
@@ -184,24 +195,18 @@ class RentalVoucherScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: AppSpacing.lg.h),
+          SizedBox(height: ECardoTokens.space4.h),
 
           // Voucher Card
           Container(
-            padding: EdgeInsetsDirectional.all(AppSpacing.xl.r),
+            padding: EdgeInsetsDirectional.all(ECardoTokens.space5.r),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkCard : AppColors.lightCard,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+              color: ECardoTokens.surfaceCard(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
               border: Border.all(
-                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                color: ECardoTokens.border(context),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              boxShadow: ECardoTokens.shadowCard(context),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,10 +219,10 @@ class RentalVoucherScreen extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.directions_car_rounded,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                            size: AppSpacing.iconMd.sp,
+                            color: ECardoTokens.brand500(context),
+                            size: 20.sp,
                           ),
-                          SizedBox(width: AppSpacing.sm.w),
+                          SizedBox(width: ECardoTokens.space2.w),
                           Expanded(
                             child: Text(
                               car?.title ?? '—',
@@ -226,26 +231,26 @@ class RentalVoucherScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w900,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: ECardoTokens.ink(context),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(width: AppSpacing.sm.w),
+                    SizedBox(width: ECardoTokens.space2.w),
                     Container(
                       padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                        color: ECardoTokens.brand100(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
                       ),
                       child: Text(
                         booking.bookingNo,
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w900,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          color: ECardoTokens.brand500(context),
                         ),
                       ),
                     ),
@@ -253,7 +258,7 @@ class RentalVoucherScreen extends StatelessWidget {
                 ),
                 Divider(
                   height: 24.h,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: ECardoTokens.border(context),
                 ),
 
                 // Vehicle Specs
@@ -264,7 +269,6 @@ class RentalVoucherScreen extends StatelessWidget {
                         icon: Icons.category_rounded,
                         label: l10nPick(context, en: 'Category', fa: 'کلاس', ar: 'الفئة', zh: '类别'),
                         value: car?.category ?? '—',
-                        isDark: isDark,
                       ),
                     ),
                     Expanded(
@@ -272,7 +276,6 @@ class RentalVoucherScreen extends StatelessWidget {
                         icon: Icons.settings_rounded,
                         label: l10nPick(context, en: 'Transmission', fa: 'گیربکس', ar: 'ناقل الحركة', zh: '变速箱'),
                         value: car?.transmission ?? 'Auto',
-                        isDark: isDark,
                       ),
                     ),
                     Expanded(
@@ -280,14 +283,13 @@ class RentalVoucherScreen extends StatelessWidget {
                         icon: Icons.shield_rounded,
                         label: l10nPick(context, en: 'Insurance', fa: 'بیمه', ar: 'التأمين', zh: '保险'),
                         value: booking.insuranceTier,
-                        isDark: isDark,
                       ),
                     ),
                   ],
                 ),
                 Divider(
                   height: 24.h,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: ECardoTokens.border(context),
                 ),
 
                 // Dates & Locations
@@ -301,7 +303,7 @@ class RentalVoucherScreen extends StatelessWidget {
                             l10nPick(context, en: 'Pickup', fa: 'تحویل گرفتن', ar: 'الاستلام', zh: '取车时间'),
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: ECardoTokens.inkMuted(context),
                             ),
                           ),
                           SizedBox(height: 4.h),
@@ -310,7 +312,7 @@ class RentalVoucherScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: ECardoTokens.ink(context),
                             ),
                           ),
                         ],
@@ -318,7 +320,7 @@ class RentalVoucherScreen extends StatelessWidget {
                     ),
                     Icon(
                       Icons.arrow_forward_rounded,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      color: ECardoTokens.inkMuted(context),
                       size: 20.r,
                     ),
                     Expanded(
@@ -329,7 +331,7 @@ class RentalVoucherScreen extends StatelessWidget {
                             l10nPick(context, en: 'Return', fa: 'استرداد خودرو', ar: 'الإرجاع', zh: '还车时间'),
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: ECardoTokens.inkMuted(context),
                             ),
                           ),
                           SizedBox(height: 4.h),
@@ -338,7 +340,7 @@ class RentalVoucherScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: ECardoTokens.ink(context),
                             ),
                           ),
                         ],
@@ -348,7 +350,7 @@ class RentalVoucherScreen extends StatelessWidget {
                 ),
                 Divider(
                   height: 24.h,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: ECardoTokens.border(context),
                 ),
 
                 // Pricing Summary
@@ -362,7 +364,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                     ),
@@ -372,7 +374,7 @@ class RentalVoucherScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: ECardoTokens.brand500(context),
                       ),
                     ),
                   ],
@@ -388,7 +390,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                     ),
@@ -398,14 +400,14 @@ class RentalVoucherScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.warning,
+                        color: ECardoTokens.warning(context),
                       ),
                     ),
                   ],
                 ),
                 Divider(
                   height: 24.h,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: ECardoTokens.border(context),
                 ),
 
                 // QR Code
@@ -413,17 +415,17 @@ class RentalVoucherScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(AppSpacing.md.r),
+                        padding: EdgeInsets.all(ECardoTokens.space3.r),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: ECardoTokens.border(context),
                           ),
                         ),
                         child: SvgPicture.string(_generateQrSvg(), width: 120.r, height: 120.r),
                       ),
-                      SizedBox(height: AppSpacing.sm.h),
+                      SizedBox(height: ECardoTokens.space2.h),
                       Text(
                         l10nPick(
                           context,
@@ -435,7 +437,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 10.5.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                     ],
@@ -444,26 +446,26 @@ class RentalVoucherScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: AppSpacing.lg.h),
+          SizedBox(height: ECardoTokens.space4.h),
 
           // Roadside Assistance
           Container(
-            padding: EdgeInsetsDirectional.all(AppSpacing.lg.r),
+            padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkCard : AppColors.lightCard,
-              borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+              color: ECardoTokens.surfaceCard(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
               border: Border.all(
-                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                color: ECardoTokens.border(context),
               ),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.support_agent_rounded,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color: ECardoTokens.brand500(context),
                   size: 24.sp,
                 ),
-                SizedBox(width: AppSpacing.md.w),
+                SizedBox(width: ECardoTokens.space3.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,7 +475,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: ECardoTokens.ink(context),
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -481,7 +483,7 @@ class RentalVoucherScreen extends StatelessWidget {
                         l10nPick(context, en: 'Direct emergency line: +98 21 9100 ECAR', fa: 'تماس اضطراری ۲۴ ساعته: ۰۲۱-۹۱۰۰-اکاردو', ar: 'خط الدعم المباشر', zh: '紧急支持专线：+98 21 9100 ECAR'),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                     ],
@@ -500,13 +502,11 @@ class _RentalFact extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  final bool isDark;
 
   const _RentalFact({
     required this.icon,
     required this.label,
     required this.value,
-    required this.isDark,
   });
 
   @override
@@ -519,7 +519,7 @@ class _RentalFact extends StatelessWidget {
             Icon(
               icon,
               size: 14.r,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+              color: ECardoTokens.inkMuted(context),
             ),
             SizedBox(width: 4.w),
             Flexible(
@@ -529,7 +529,7 @@ class _RentalFact extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 10.5.sp,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: ECardoTokens.inkMuted(context),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -544,7 +544,7 @@ class _RentalFact extends StatelessWidget {
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: ECardoTokens.ink(context),
           ),
         ),
       ],

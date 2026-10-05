@@ -3,13 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../services/mock_travel_data.dart';
-import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'taxi_api_service.dart';
 import 'taxi_controller.dart';
@@ -46,9 +45,8 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final isDark = TravelTheme.isDark(context);
-    final textPrimary = TravelTheme.textPrimaryFor(context);
-    final textSecondary = TravelTheme.textSecondaryFor(context);
+    final textPrimary = ECardoTokens.ink(context);
+    final textSecondary = ECardoTokens.inkMuted(context);
 
     return TravelPage(
       title: l10nPick(
@@ -61,7 +59,7 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
       showTravelNavigation: false,
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsetsDirectional.all(16.r),
+          padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
           child: Obx(() {
             final vehicle = _controller.selectedVehicle.value;
             final fare = vehicle != null ? _controller.calculateTotalFare(vehicle) : 0;
@@ -88,7 +86,7 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w900,
-                                color: expired ? Colors.red : const Color(0xFF0D9488),
+                                color: expired ? ECardoTokens.danger(context) : ECardoTokens.brand500(context),
                               ),
                             ),
                           ),
@@ -97,15 +95,15 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                             Container(
                               padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF0D9488).withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(6.r),
+                                color: ECardoTokens.brand100(context),
+                                borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                               ),
                               child: Text(
                                 l10nPick(context, en: 'FIXED', fa: 'قطعی', ar: 'ثابت'),
                                 style: TextStyle(
                                   fontSize: 8.5.sp,
                                   fontWeight: FontWeight.w900,
-                                  color: const Color(0xFF0D9488),
+                                  color: ECardoTokens.brand500(context),
                                   letterSpacing: 0.4,
                                 ),
                               ),
@@ -123,8 +121,8 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                     text: expired
                         ? l10nPick(context, en: 'Refresh Price', fa: 'استعلام مجدد', ar: 'تحديث السعر')
                         : l10nPick(context, en: 'Confirm Vehicle', fa: 'تأیید خودرو و ادامه', ar: 'تأكيد ومتابعة', zh: '确认车型并继续'),
-                    textColor: Colors.white,
-                    backgroundColor: expired ? Colors.orange.shade700 : const Color(0xFF0D9488),
+                    textColor: ECardoTokens.inkOnBrand,
+                    backgroundColor: expired ? ECardoTokens.warning(context) : ECardoTokens.brand500(context),
                     onPressed: () {
                       AppHaptics.selection();
                       if (expired) {
@@ -141,11 +139,18 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
         ),
       ),
       child: ListView(
-        padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 30.h),
+        padding: EdgeInsetsDirectional.fromSTEB(
+          ECardoTokens.space5.w,
+          ECardoTokens.space3.h,
+          ECardoTokens.space5.w,
+          ECardoTokens.space8.h,
+        ),
         children: [
           // Route Summary Card (theme-aware)
           TravelCard(
-            color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0FDFA),
+            color: ECardoTokens.brand100(context),
+            borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+            padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -160,7 +165,7 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w900,
-                          color: isDark ? const Color(0xFF5EEAD4) : const Color(0xFF0F766E),
+                          color: ECardoTokens.brand700(context),
                         ),
                       ),
                     ),
@@ -175,10 +180,10 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: ECardoTokens.space2.h),
                 Row(
                   children: [
-                    const Icon(Icons.trip_origin_rounded, size: 16, color: Color(0xFF0D9488)),
+                    Icon(Icons.trip_origin_rounded, size: 16, color: ECardoTokens.brand500(context)),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: TravelBidiText(
@@ -193,7 +198,7 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                 SizedBox(height: 6.h),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_rounded, size: 16, color: Colors.red),
+                    Icon(Icons.location_on_rounded, size: 16, color: ECardoTokens.danger(context)),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: TravelBidiText(
@@ -209,7 +214,7 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                   final q = _controller.quote.value;
                   if (q == null) return const SizedBox.shrink();
                   return Padding(
-                    padding: EdgeInsetsDirectional.only(top: 8.h),
+                    padding: EdgeInsetsDirectional.only(top: ECardoTokens.space2.h),
                     child: Wrap(
                       spacing: 10.w,
                       runSpacing: 4.h,
@@ -244,7 +249,7 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
             l10nPick(context, en: 'Available Vehicle Options', fa: 'ناوگان در دسترس', ar: 'الخيارات المتاحة', zh: '可选车型列表'),
             style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: textPrimary),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: ECardoTokens.space3.h),
 
           // Vehicle list with full state coverage
           Obx(() {
@@ -312,7 +317,7 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                       if (unavailable) {
                         showTravelMessage(
                           context,
-                          title: l10nPick(context, en: 'Capacity exceeded', fa: 'ظرفت غیرکافی'),
+                          title: l10nPick(context, en: 'Capacity exceeded', fa: 'ظرفیت غیرکافی'),
                           message: l10nPick(
                             context,
                             en: '${vehicle.titleEn} seats ${vehicle.maxPassengers} pax and ${vehicle.maxLuggage} bags.',
@@ -330,20 +335,20 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
           }),
 
           // Fare rules explainer (builds trust in the fixed price)
-          SizedBox(height: 8.h),
+          SizedBox(height: ECardoTokens.space2.h),
           Obx(() {
             final source = _controller.quoteSource.value;
             if (source != RideDataSource.network) return const SizedBox.shrink();
             return Container(
-              padding: EdgeInsetsDirectional.all(12.r),
+              padding: EdgeInsetsDirectional.all(ECardoTokens.space3.r),
               decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: isDark ? 0.12 : 0.08),
-                borderRadius: TravelTheme.radius,
-                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                color: ECardoTokens.successBg(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+                border: Border.all(color: ECardoTokens.success(context).withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.receipt_long_rounded, color: Colors.green, size: 20),
+                  Icon(Icons.receipt_long_rounded, color: ECardoTokens.success(context), size: 20),
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
@@ -352,7 +357,11 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                         en: 'Prices confirmed by eCardo ride engine. Tolls, parking and waiting beyond 60 min are settled by the chauffeur on arrival.',
                         fa: 'مبلغ نهایی توسط موتور قیمت‌گذاری ترانسفر تأیید شده است. عوارض و پارکینگ و انتظار مازاد بر ۶۰ دقیقه در محل تسویه می‌شود.',
                       ),
-                      style: TextStyle(fontSize: 10.5.sp, color: isDark ? Colors.green.shade200 : Colors.green.shade900, height: 1.4),
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        color: ECardoTokens.success(context),
+                        height: 1.4,
+                      ),
                     ),
                   ),
                 ],
@@ -376,14 +385,14 @@ class _SummaryPill extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 13.r, color: const Color(0xFF0D9488)),
+        Icon(icon, size: 13.r, color: ECardoTokens.brand500(context)),
         SizedBox(width: 4.w),
         Text(
           text,
           style: TextStyle(
             fontSize: 10.5.sp,
             fontWeight: FontWeight.w700,
-            color: TravelTheme.textSecondaryFor(context),
+            color: ECardoTokens.inkMuted(context),
           ),
         ),
       ],
@@ -399,11 +408,11 @@ class _SourceNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = TravelTheme.isDark(context);
     if (state == TaxiUiState.partial) {
       return _NoticeTile(
         icon: Icons.cloud_off_rounded,
-        color: Colors.orange,
+        color: ECardoTokens.warning(context),
+        bgColor: ECardoTokens.warningBg(context),
         message: l10nPick(
           context,
           en: 'Live rate engine unreachable — indicative fixed prices shown. Final price is confirmed at booking.',
@@ -414,7 +423,8 @@ class _SourceNotice extends StatelessWidget {
     if (state == TaxiUiState.offline) {
       return _NoticeTile(
         icon: Icons.wifi_off_rounded,
-        color: Colors.amber,
+        color: ECardoTokens.warning(context),
+        bgColor: ECardoTokens.warningBg(context),
         message: l10nPick(
           context,
           en: 'You are offline. Cached regional fixed rates are displayed.',
@@ -425,19 +435,20 @@ class _SourceNotice extends StatelessWidget {
     if (state == TaxiUiState.expired) {
       return _NoticeTile(
         icon: Icons.timer_off_rounded,
-        color: Colors.red,
+        color: ECardoTokens.danger(context),
+        bgColor: ECardoTokens.dangerBg(context),
         message: l10nPick(
           context,
           en: 'This quote expired (15 min validity). Refresh to lock a new fixed price.',
           fa: 'اعتبار این استعلام ۱۵ دقیقه‌ای به پایان رسید. برای نرخ قطعی جدید استعلام را تازه کنید.',
         ),
-        isDark: isDark,
       );
     }
     if (state == TaxiUiState.validationError) {
       return _NoticeTile(
         icon: Icons.error_outline_rounded,
-        color: Colors.red,
+        color: ECardoTokens.danger(context),
+        bgColor: ECardoTokens.dangerBg(context),
         message: l10nPick(
           context,
           en: 'Origin and destination are both required to price a transfer.',
@@ -452,25 +463,25 @@ class _SourceNotice extends StatelessWidget {
 class _NoticeTile extends StatelessWidget {
   final IconData icon;
   final Color color;
+  final Color? bgColor;
   final String message;
-  final bool isDark;
 
   const _NoticeTile({
     required this.icon,
     required this.color,
+    this.bgColor,
     required this.message,
-    this.isDark = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.only(bottom: 12.h),
+      padding: EdgeInsetsDirectional.only(bottom: ECardoTokens.space3.h),
       child: Container(
-        padding: EdgeInsetsDirectional.all(12.r),
+        padding: EdgeInsetsDirectional.all(ECardoTokens.space3.r),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(12.r),
+          color: bgColor ?? color.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
           border: Border.all(color: color.withValues(alpha: 0.4)),
         ),
         child: Row(
@@ -483,7 +494,7 @@ class _NoticeTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11.sp,
                   height: 1.4,
-                  color: isDark ? Colors.white70 : TravelTheme.ink,
+                  color: ECardoTokens.ink(context),
                 ),
               ),
             ),

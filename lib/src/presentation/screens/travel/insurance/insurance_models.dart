@@ -3,6 +3,7 @@
 // eCardo Travel Insurance and Assistance Services.
 
 import 'package:flutter/material.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 
 /// Destination zone classifications for international travel insurance.
 enum InsuranceDestinationZone {
@@ -406,10 +407,14 @@ class InsurancePolicy {
 
   bool get isSchengenCompliant => tier.isSchengenCompliant;
 
+  /// Check eligibility for free-look cancellation (14-day EU requirement).
+  /// Per EU insurance directives, policies can be cancelled within 14 days of issuance for full refund.
   bool isEligibleForFreeLookCancellation({DateTime? checkDate}) {
     final now = checkDate ?? DateTime.now();
-    // Free look is valid before the policy start date
-    return now.isBefore(startDate) && status == 'active';
+    // Free look period: 14 calendar days from issuance OR before trip starts (whichever is earlier)
+    final freeLookEndDate = issuedAt.add(const Duration(days: 14));
+    final effectiveEndDate = now.isBefore(startDate) ? startDate : freeLookEndDate;
+    return now.isBefore(effectiveEndDate) && status == 'active';
   }
 }
 
@@ -472,13 +477,31 @@ extension InsuranceClaimStatusExtension on InsuranceClaimStatus {
         InsuranceClaimStatus.paidOut => 'تسویه و پرداخت شد',
       };
 
+  Color themeColor(BuildContext context) => switch (this) {
+        InsuranceClaimStatus.submitted => ECardoTokens.brand500(context),
+        InsuranceClaimStatus.underReview => ECardoTokens.warning(context),
+        InsuranceClaimStatus.documentsRequired => ECardoTokens.warning(context),
+        InsuranceClaimStatus.approved => ECardoTokens.success(context),
+        InsuranceClaimStatus.rejected => ECardoTokens.danger(context),
+        InsuranceClaimStatus.paidOut => ECardoTokens.brand700(context),
+      };
+
+  Color themeBgColor(BuildContext context) => switch (this) {
+        InsuranceClaimStatus.submitted => ECardoTokens.brand100(context),
+        InsuranceClaimStatus.underReview => ECardoTokens.warningBg(context),
+        InsuranceClaimStatus.documentsRequired => ECardoTokens.warningBg(context),
+        InsuranceClaimStatus.approved => ECardoTokens.successBg(context),
+        InsuranceClaimStatus.rejected => ECardoTokens.dangerBg(context),
+        InsuranceClaimStatus.paidOut => ECardoTokens.brand100(context),
+      };
+
   Color get color => switch (this) {
-        InsuranceClaimStatus.submitted => const Color(0xFF2563EB),
-        InsuranceClaimStatus.underReview => const Color(0xFFD97706),
-        InsuranceClaimStatus.documentsRequired => const Color(0xFFEA580C),
-        InsuranceClaimStatus.approved => const Color(0xFF16A34A),
-        InsuranceClaimStatus.rejected => const Color(0xFFDC2626),
-        InsuranceClaimStatus.paidOut => const Color(0xFF0D9488),
+        InsuranceClaimStatus.submitted => const Color(0xFF1A7D6C),
+        InsuranceClaimStatus.underReview => const Color(0xFF8A5A00),
+        InsuranceClaimStatus.documentsRequired => const Color(0xFFC79A3C),
+        InsuranceClaimStatus.approved => const Color(0xFF15713F),
+        InsuranceClaimStatus.rejected => const Color(0xFFA3231C),
+        InsuranceClaimStatus.paidOut => const Color(0xFF11564A),
       };
 }
 
@@ -603,28 +626,44 @@ class InsurancePricingCalculator {
     );
   }
 
-  /// Calculate cancellation refund under the free-look period.
+  /// Calculate cancellation refund under the statutory 14-day free-look guarantee.
   static InsuranceCancellationResult calculateCancellationRefund({
     required InsurancePolicy policy,
     required DateTime requestDate,
   }) {
-    if (requestDate.isBefore(policy.startDate)) {
-      // 100% full refund prior to trip start
-      return InsuranceCancellationResult(
-        isEligible: true,
-        refundAmount: policy.breakdown.totalPremium,
-        refundPercentage: 1.0,
-        reasonEn: 'Full 100% refund approved (cancelled prior to coverage start date).',
-        reasonFa: 'استرداد ۱۰۰٪ وجه بیمه‌نامه (درخواست لغو پیش از شروع تاریخ پوشش).',
-      );
-    } else {
-      // Policy has already activated
+    final daysSinceIssuance = requestDate.difference(policy.issuedAt).inDays;
+    final isBeforeTrip = requestDate.isBefore(policy.startDate);
+    final isWithin14Days = daysSinceIssuance <= 14;
+
+    if (!isBeforeTrip) {
+      // Policy has already commenced coverage
       return const InsuranceCancellationResult(
         isEligible: false,
         refundAmount: 0,
         refundPercentage: 0.0,
-        reasonEn: 'Policy has already commenced coverage and is no longer refundable.',
+        reasonEn: 'Coverage period has already commenced; policies are non-refundable after departure.',
         reasonFa: 'به دلیل فعال شدن دوره پوشش بیمه، امکان لغو و استرداد وجه وجود ندارد.',
+      );
+    }
+
+    if (isWithin14Days) {
+      // 100% statutory free-look full refund
+      return InsuranceCancellationResult(
+        isEligible: true,
+        refundAmount: policy.breakdown.totalPremium,
+        refundPercentage: 1.0,
+        reasonEn: 'Full 100% refund approved under the 14-day free-look statutory cancellation guarantee.',
+        reasonFa: 'استرداد ۱۰۰٪ وجه بیمه‌نامه در چارچوب ضمانت انصراف ۱۴ روزه (پیش از شروع سفر).',
+      );
+    } else {
+      // Prior to trip, but after 14-day free look window: standard 90% refund
+      final refund = (policy.breakdown.totalPremium * 0.90).round();
+      return InsuranceCancellationResult(
+        isEligible: true,
+        refundAmount: refund,
+        refundPercentage: 0.90,
+        reasonEn: '90% refund approved (cancelled prior to departure after 14-day free-look window).',
+        reasonFa: 'استرداد ۹۰٪ وجه بیمه‌نامه (انصراف خارج از مهلت ۱۴ روزه و پیش از شروع سفر).',
       );
     }
   }

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/rental_controller.dart';
@@ -51,36 +50,35 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
     }
   }
 
-  Color _statusColor(String status) {
+  Color _statusColor(String status, BuildContext context) {
     switch (status) {
-      case 'COMPLETED': return AppColors.success;
-      case 'ACTIVE': return AppColors.lightPrimary;
+      case 'COMPLETED': return ECardoTokens.success(context);
+      case 'ACTIVE': return ECardoTokens.brand500(context);
       case 'CONFIRMED': return const Color(0xFF0D9488);
-      case 'DISPUTED': return AppColors.error;
-      case 'CANCELLED': case 'REFUNDED': case 'EXPIRED': return AppColors.softGray;
+      case 'DISPUTED': return ECardoTokens.danger(context);
+      case 'CANCELLED': case 'REFUNDED': case 'EXPIRED': return ECardoTokens.inkMuted(context);
       case 'AWAITING_DOCS': case 'AWAITING_PAYMENT': case 'PENDING_CONFIRMATION':
-      case 'RETURNED': return AppColors.warning;
-      default: return AppColors.mutedBlue;
+      case 'RETURNED': return ECardoTokens.warning(context);
+      default: return ECardoTokens.info(context);
     }
   }
 
   void _confirm(String title, String message, Future<bool> Function() action) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     Get.dialog(AlertDialog(
-      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius.r)),
+      backgroundColor: ECardoTokens.surfaceCard(context),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
       title: Text(
         title,
         style: TextStyle(
           fontSize: 14.sp,
           fontWeight: FontWeight.w700,
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: ECardoTokens.ink(context),
         ),
       ),
       content: Text(
         message,
         style: TextStyle(
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          color: ECardoTokens.inkMuted(context),
         ),
       ),
       actions: [
@@ -88,14 +86,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
           onPressed: () => Get.back(),
           child: Text(
             l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
-            style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+            style: TextStyle(color: ECardoTokens.inkMuted(context)),
           ),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-            foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+            backgroundColor: ECardoTokens.brand500(context),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
           ),
           onPressed: () async {
             Get.back();
@@ -105,7 +103,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
               Get.snackbar(
                 l10nPick(context, en: 'Error', fa: 'خطا'),
                 l10nPick(context, en: 'Action failed.', fa: 'عملیات ناموفق بود.'),
-                backgroundColor: AppColors.error,
+                backgroundColor: ECardoTokens.danger(context),
                 colorText: Colors.white,
               );
             }
@@ -123,17 +121,16 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
     final licenseCtrl = TextEditingController(text: 'IR-DL-');
     final yearsCtrl = TextEditingController(text: '3');
     final expiryCtrl = TextEditingController(text: '2028-12-31');
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     Get.dialog(AlertDialog(
-      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius.r)),
+      backgroundColor: ECardoTokens.surfaceCard(context),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
       title: Text(
         l10nPick(context, en: 'Upload Driver License', fa: 'بارگذاری گواهینامه راننده', ar: 'رفع رخصة القيادة', zh: '提交驾驶执照'),
         style: TextStyle(
           fontSize: 14.sp,
           fontWeight: FontWeight.w800,
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: ECardoTokens.ink(context),
         ),
       ),
       content: Column(
@@ -141,29 +138,65 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
         children: [
           TextField(
             controller: licenseCtrl,
-            style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            style: TextStyle(color: ECardoTokens.ink(context)),
             decoration: InputDecoration(
               labelText: l10nPick(context, en: 'License Number', fa: 'شماره گواهینامه'),
-              border: const OutlineInputBorder(),
+              labelStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.border(context)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.border(context)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 2),
+              ),
             ),
           ),
-          SizedBox(height: AppSpacing.sm.h),
+          SizedBox(height: ECardoTokens.space2.h),
           TextField(
             controller: yearsCtrl,
             keyboardType: TextInputType.number,
-            style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            style: TextStyle(color: ECardoTokens.ink(context)),
             decoration: InputDecoration(
               labelText: l10nPick(context, en: 'Years with license', fa: 'سابقه گواهینامه (سال)'),
-              border: const OutlineInputBorder(),
+              labelStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.border(context)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.border(context)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 2),
+              ),
             ),
           ),
-          SizedBox(height: AppSpacing.sm.h),
+          SizedBox(height: ECardoTokens.space2.h),
           TextField(
             controller: expiryCtrl,
-            style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            style: TextStyle(color: ECardoTokens.ink(context)),
             decoration: InputDecoration(
               labelText: l10nPick(context, en: 'Expiry date (YYYY-MM-DD)', fa: 'تاریخ اعتبار (میلادی)'),
-              border: const OutlineInputBorder(),
+              labelStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.border(context)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.border(context)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 2),
+              ),
             ),
           ),
         ],
@@ -173,14 +206,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
           onPressed: () => Get.back(),
           child: Text(
             l10nPick(context, en: 'Cancel', fa: 'انصراف'),
-            style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+            style: TextStyle(color: ECardoTokens.inkMuted(context)),
           ),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-            foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+            backgroundColor: ECardoTokens.brand500(context),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
           ),
           onPressed: () async {
             Get.back();
@@ -198,7 +231,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                 l10nPick(context, en: 'Submitted', fa: 'ثبت شد'),
                 l10nPick(context, en: 'Driver docs submitted for verification.',
                   fa: 'مدارک راننده ثبت شد و در انتظار تأیید امتثال است.'),
-                backgroundColor: AppColors.success,
+                backgroundColor: ECardoTokens.success(context),
                 colorText: Colors.white,
               );
             }
@@ -216,11 +249,10 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
     final isPickup = phase == 'PICKUP';
     final odoCtrl = TextEditingController(text: '45000');
     final fuelCtrl = TextEditingController(text: '100');
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     Get.dialog(AlertDialog(
-      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius.r)),
+      backgroundColor: ECardoTokens.surfaceCard(context),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
       title: Text(
         isPickup
           ? l10nPick(context, en: 'Pickup Digital Handover', fa: 'تحویل دیجیتال خودرو (شروع اجاره)', ar: 'استلام السيارة الرقمي', zh: '电子取车交接')
@@ -228,7 +260,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
         style: TextStyle(
           fontSize: 13.sp,
           fontWeight: FontWeight.w800,
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: ECardoTokens.ink(context),
         ),
       ),
       content: SingleChildScrollView(
@@ -243,39 +275,63 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: ECardoTokens.ink(context),
               ),
             ),
-            SizedBox(height: 6.h),
+            SizedBox(height: ECardoTokens.space1.h),
             Wrap(
-              spacing: 6.w,
-              runSpacing: 4.h,
+              spacing: ECardoTokens.space1.w,
+              runSpacing: ECardoTokens.space1.h,
               children: [
                 'جلو', 'عقب', 'راست', 'چپ',
                 'کیلومتر', 'سوخت', 'کابین', 'خسارت قبلی'
               ].map((slot) => Chip(
-                avatar: const Icon(Icons.check_circle, size: 16, color: AppColors.success),
+                avatar: Icon(Icons.check_circle, size: 16, color: ECardoTokens.success(context)),
                 label: Text(slot, style: TextStyle(fontSize: 10.sp)),
               )).toList(),
             ),
-            SizedBox(height: AppSpacing.md.h),
+            SizedBox(height: ECardoTokens.space3.h),
             TextField(
               controller: odoCtrl,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+              style: TextStyle(color: ECardoTokens.ink(context)),
               decoration: InputDecoration(
                 labelText: l10nPick(context, en: 'Odometer (km)', fa: 'کیلومترشمار فعلی'),
-                border: const OutlineInputBorder(),
+                labelStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.border(context)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.border(context)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 2),
+                ),
               ),
             ),
-            SizedBox(height: AppSpacing.sm.h),
+            SizedBox(height: ECardoTokens.space2.h),
             TextField(
               controller: fuelCtrl,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+              style: TextStyle(color: ECardoTokens.ink(context)),
               decoration: InputDecoration(
                 labelText: l10nPick(context, en: 'Fuel level (%)', fa: 'درصد سوخت (۰ تا ۱۰۰)'),
-                border: const OutlineInputBorder(),
+                labelStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.border(context)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.border(context)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 2),
+                ),
               ),
             ),
           ],
@@ -286,14 +342,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
           onPressed: () => Get.back(),
           child: Text(
             l10nPick(context, en: 'Cancel', fa: 'انصراف'),
-            style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+            style: TextStyle(color: ECardoTokens.inkMuted(context)),
           ),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-            foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+            backgroundColor: ECardoTokens.brand500(context),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
           ),
           onPressed: () async {
             Get.back();
@@ -318,7 +374,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                 isPickup
                   ? l10nPick(context, en: 'Vehicle picked up — trip is active!', fa: 'خودرو تحویل گرفته شد — سفر فعال است!')
                   : l10nPick(context, en: 'Vehicle returned — settlement calculated.', fa: 'خودرو مسترد شد — تفاضل خودکار محاسبه گردید.'),
-                backgroundColor: AppColors.success,
+                backgroundColor: ECardoTokens.success(context),
                 colorText: Colors.white,
               );
             }
@@ -335,18 +391,17 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
   void _showDisputeDialog(RentalBookingModel booking) {
     final amountCtrl = TextEditingController(text: '50');
     String disputeType = 'damage';
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     Get.dialog(StatefulBuilder(
       builder: (dlgContext, setDlgState) => AlertDialog(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius.r)),
+        backgroundColor: ECardoTokens.surfaceCard(context),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
         title: Text(
           l10nPick(context, en: 'File Dispute', fa: 'ثبت اختلاف خسارت / تسویه', ar: 'تسجيل نزاع', zh: '发起售后争议'),
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: ECardoTokens.ink(context),
           ),
         ),
         content: Column(
@@ -355,12 +410,13 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
           children: [
             Text(
               l10nPick(context, en: 'Dispute reason:', fa: 'موضوع اختلاف:'),
-              style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+              style: TextStyle(color: ECardoTokens.inkMuted(context)),
             ),
             DropdownButton<String>(
               isExpanded: true,
               value: disputeType,
-              dropdownColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              dropdownColor: ECardoTokens.surfaceCard(context),
+              style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
               items: [
                 DropdownMenuItem(value: 'damage', child: Text(l10nPick(context, en: 'Damage claim', fa: 'اعتراض به ادعای خسارت'))),
                 DropdownMenuItem(value: 'fuel', child: Text(l10nPick(context, en: 'Fuel calculation', fa: 'مغایرت محاسبه سوخت'))),
@@ -369,14 +425,26 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
               ],
               onChanged: (v) => setDlgState(() => disputeType = v ?? 'damage'),
             ),
-            SizedBox(height: AppSpacing.sm.h),
+            SizedBox(height: ECardoTokens.space2.h),
             TextField(
               controller: amountCtrl,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+              style: TextStyle(color: ECardoTokens.ink(context)),
               decoration: InputDecoration(
                 labelText: l10nPick(context, en: 'Contested amount', fa: 'مبلغ مورد اختلاف'),
-                border: const OutlineInputBorder(),
+                labelStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.border(context)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.border(context)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                  borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 2),
+                ),
               ),
             ),
           ],
@@ -386,14 +454,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
             onPressed: () => Get.back(),
             child: Text(
               l10nPick(context, en: 'Cancel', fa: 'انصراف'),
-              style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+              style: TextStyle(color: ECardoTokens.inkMuted(context)),
             ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
+              backgroundColor: ECardoTokens.danger(context),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
             ),
             onPressed: () async {
               Get.back();
@@ -409,7 +477,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                   l10nPick(context,
                     en: 'Security deposit frozen — referee ruling in 5 days.',
                     fa: 'ودیعه فریز شد و پرونده به داور ارجاع گردید (مهلت رأی ۵ روز).'),
-                  backgroundColor: AppColors.warning,
+                  backgroundColor: ECardoTokens.warning(context),
                   colorText: Colors.white,
                 );
               }
@@ -426,19 +494,17 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: ECardoTokens.surfaceCanvas(context),
       appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: ECardoTokens.surfaceCard(context),
         elevation: 0,
         title: Text(
           l10nPick(context, en: 'Rental Booking', fa: 'جزئیات اجاره خودرو', ar: 'تفاصيل الحجز', zh: '订单详情'),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: ECardoTokens.ink(context),
           ),
         ),
         actions: [
@@ -455,7 +521,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
               ),
               icon: Icon(
                 Icons.confirmation_number_outlined,
-                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                color: ECardoTokens.brand500(context),
               ),
               onPressed: () {
                 HapticFeedback.lightImpact();
@@ -474,24 +540,18 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
         final car = b.car;
 
         return ListView(
-          padding: EdgeInsets.all(AppSpacing.lg.w),
+          padding: EdgeInsets.all(ECardoTokens.space4.w),
           children: [
             // Vehicle & Booking Card
             Container(
-              padding: EdgeInsets.all(AppSpacing.lg.r),
+              padding: EdgeInsets.all(ECardoTokens.space4.r),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+                color: ECardoTokens.surfaceCard(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
                 border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  color: ECardoTokens.border(context),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                boxShadow: ECardoTokens.shadowCard(context),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,19 +564,19 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 14.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: ECardoTokens.ink(context),
                         ),
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: _statusColor(b.status).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                          color: _statusColor(b.status, context).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
                         ),
                         child: Text(
                           _statusFa(b.status),
                           style: TextStyle(
-                            color: _statusColor(b.status),
+                            color: _statusColor(b.status, context),
                             fontSize: 10.5.sp,
                             fontWeight: FontWeight.w700,
                           ),
@@ -524,14 +584,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: AppSpacing.sm.h),
+                  SizedBox(height: ECardoTokens.space2.h),
                   if (car != null) ...[
                     Text(
                       car.title,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: ECardoTokens.ink(context),
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -540,7 +600,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         en: 'Category: ${car.category} · \$${car.dailyPrice}/day',
                         fa: 'دسته: ${car.category} · \$${car.dailyPrice} روزانه'),
                       style: TextStyle(
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                         fontSize: 11.5.sp,
                       ),
                     ),
@@ -549,17 +609,18 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
               ),
             ),
 
-            SizedBox(height: AppSpacing.md.h),
+            SizedBox(height: ECardoTokens.space3.h),
 
             // Schedule & Pricing Details Card
             Container(
-              padding: EdgeInsets.all(AppSpacing.lg.r),
+              padding: EdgeInsets.all(ECardoTokens.space4.r),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+                color: ECardoTokens.surfaceCard(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
                 border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  color: ECardoTokens.border(context),
                 ),
+                boxShadow: ECardoTokens.shadowCard(context),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -569,10 +630,10 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 13.sp,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: ECardoTokens.ink(context),
                     ),
                   ),
-                  SizedBox(height: AppSpacing.sm.h),
+                  SizedBox(height: ECardoTokens.space2.h),
                   if (b.pickupAt != null && b.returnAt != null) ...[
                     Text(
                       l10nPick(context,
@@ -580,7 +641,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         fa: 'تحویل: ${b.pickupAt!.toLocal()}'),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
                     Text(
@@ -589,7 +650,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         fa: 'استرداد: ${b.returnAt!.toLocal()}'),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
                   ],
@@ -600,12 +661,12 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         fa: 'محل تحویل: ${b.pickupLocation}'),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
                   Divider(
                     height: 20.h,
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    color: ECardoTokens.border(context),
                   ),
                   Text(
                     l10nPick(context,
@@ -614,7 +675,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 12.sp,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: ECardoTokens.ink(context),
                     ),
                   ),
                   if (car != null) ...[
@@ -624,7 +685,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         en: 'Refundable Security Deposit: \$${car.depositAmount} (locked, not charged)',
                         fa: 'ودیعه ضمانت قابل بازگشت: \$${car.depositAmount} (قفل، نه برداشت)'),
                       style: TextStyle(
-                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                        color: ECardoTokens.inkMuted(context),
                         fontSize: 10.5.sp,
                       ),
                     ),
@@ -635,14 +696,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
             // Step: Upload Driver License
             if (b.status == 'DRAFT' || b.status == 'AWAITING_DOCS') ...[
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               Container(
-                padding: EdgeInsets.all(AppSpacing.lg.r),
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimaryContainer : AppColors.lightSecondaryContainer),
-                  borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+                  color: ECardoTokens.brand100(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: ECardoTokens.brand500(context).withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -653,7 +714,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 12.5.sp,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: ECardoTokens.ink(context),
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -663,15 +724,15 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         fa: 'بررسی مدارک هویتی و گواهینامه توسط افسر امتثال الزامی است.'),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
-                    SizedBox(height: AppSpacing.md.h),
+                    SizedBox(height: ECardoTokens.space3.h),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                        foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+                        backgroundColor: ECardoTokens.brand500(context),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
                       ),
                       icon: const Icon(Icons.badge, size: 18),
                       label: Text(
@@ -687,12 +748,12 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
             // Step: Pay Rental + Lock Deposit
             if (b.status == 'AWAITING_PAYMENT') ...[
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                  foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                  backgroundColor: ECardoTokens.brand500(context),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
                   padding: EdgeInsets.symmetric(vertical: 14.h),
                 ),
                 icon: const Icon(Icons.payment, size: 20),
@@ -714,18 +775,18 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
             // Step: Waiting for Host Confirmation
             if (b.status == 'PENDING_CONFIRMATION') ...[
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               Container(
-                padding: EdgeInsets.all(AppSpacing.lg.r),
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
                 decoration: BoxDecoration(
-                  color: AppColors.warning.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-                  border: Border.all(color: AppColors.warning),
+                  color: ECardoTokens.warningBg(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+                  border: Border.all(color: ECardoTokens.warning(context).withValues(alpha: 0.4)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.hourglass_top, color: AppColors.warning),
-                    SizedBox(width: AppSpacing.md.w),
+                    Icon(Icons.hourglass_top, color: ECardoTokens.warning(context)),
+                    SizedBox(width: ECardoTokens.space3.w),
                     Expanded(
                       child: Text(
                         l10nPick(context,
@@ -733,7 +794,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                           fa: 'منتظر تأیید میزبان خودرو (حداکثر ۶ ساعت). در صورت عدم پاسخ، رزرو خودکار با عودت کامل لغو می‌گردد.'),
                         style: TextStyle(
                           fontSize: 11.5.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: ECardoTokens.ink(context),
                         ),
                       ),
                     ),
@@ -744,12 +805,12 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
             // Step: Digital Handover Protocol
             if (b.status == 'CONFIRMED') ...[
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               Container(
-                padding: EdgeInsets.all(AppSpacing.lg.r),
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
                 decoration: BoxDecoration(
                   color: const Color(0xFF0D9488).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
                   border: Border.all(color: const Color(0xFF0D9488)),
                 ),
                 child: Column(
@@ -760,7 +821,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 13.sp,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: ECardoTokens.ink(context),
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -770,15 +831,15 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         fa: 'تکمیل ۸ عکس با GPS و امضای دیجیتال دو طرف قبل از تحویل سوئیچ.'),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
-                    SizedBox(height: AppSpacing.md.h),
+                    SizedBox(height: ECardoTokens.space3.h),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0D9488),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
                       ),
                       icon: const Icon(Icons.camera_alt, size: 18),
                       label: Text(
@@ -794,36 +855,40 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
             // Step: Active Rental
             if (b.status == 'ACTIVE') ...[
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               Container(
-                padding: EdgeInsets.all(AppSpacing.lg.r),
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
                 decoration: BoxDecoration(
-                  color: AppColors.success.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-                  border: Border.all(color: AppColors.success),
+                  color: ECardoTokens.successBg(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
+                  border: Border.all(color: ECardoTokens.success(context).withValues(alpha: 0.4)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.directions_car, color: AppColors.success),
-                        SizedBox(width: AppSpacing.sm.w),
+                        Icon(Icons.directions_car, color: ECardoTokens.success(context)),
+                        SizedBox(width: ECardoTokens.space2.w),
                         Text(
                           l10nPick(context, en: 'Rental Active — Trip in Progress', fa: 'اجاره فعال — سفر در حال انجام'),
-                          style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.success),
+                          style: TextStyle(fontWeight: FontWeight.w800, color: ECardoTokens.success(context)),
                         ),
                       ],
                     ),
-                    SizedBox(height: AppSpacing.sm.h),
+                    SizedBox(height: ECardoTokens.space2.h),
                     Row(
                       children: [
                         Expanded(
                           child: OutlinedButton.icon(
-                            icon: const Icon(Icons.phone_in_talk, color: AppColors.error, size: 16),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: ECardoTokens.danger(context)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                            ),
+                            icon: Icon(Icons.phone_in_talk, color: ECardoTokens.danger(context), size: 16),
                             label: Text(
                               l10nPick(context, en: 'Emergency 24/7', fa: 'تماس اضطراری'),
-                              style: const TextStyle(color: AppColors.error, fontSize: 11),
+                              style: TextStyle(color: ECardoTokens.danger(context), fontSize: 11),
                             ),
                             onPressed: () {
                               Get.snackbar(
@@ -831,21 +896,25 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                 l10nPick(context,
                                   en: 'Connecting to 24/7 trip emergency hotline: +98-21-9100-ECAR',
                                   fa: 'تماس با خط اضطراری ۲۴ ساعته سفر: ۰۲۱-۹۱۰۰-اکاردو'),
-                                backgroundColor: AppColors.error,
+                                backgroundColor: ECardoTokens.danger(context),
                                 colorText: Colors.white,
                               );
                             },
                           ),
                         ),
-                        SizedBox(width: AppSpacing.sm.w),
+                        SizedBox(width: ECardoTokens.space2.w),
                         Expanded(
                           child: OutlinedButton.icon(
-                            icon: const Icon(Icons.report_problem, size: 16),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: ECardoTokens.borderStrong(context)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                            ),
+                            icon: Icon(Icons.report_problem, size: 16, color: ECardoTokens.ink(context)),
                             label: Text(
                               l10nPick(context, en: 'Report Incident', fa: 'گزارش حادثه'),
                               style: TextStyle(
                                 fontSize: 11,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: ECardoTokens.ink(context),
                               ),
                             ),
                             onPressed: () {
@@ -854,7 +923,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                                 l10nPick(context,
                                   en: 'Incident file opened — late fees paused.',
                                   fa: 'پرونده حادثه ثبت شد — محاسبه دیرکرد متوقف گردید.'),
-                                backgroundColor: AppColors.warning,
+                                backgroundColor: ECardoTokens.warning(context),
                                 colorText: Colors.white,
                               );
                             },
@@ -862,14 +931,14 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: AppSpacing.sm.h),
+                    SizedBox(height: ECardoTokens.space2.h),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                          foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+                          backgroundColor: ECardoTokens.brand500(context),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
                         ),
                         icon: const Icon(Icons.assignment_turned_in, size: 18),
                         label: Text(
@@ -886,15 +955,16 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
             // Step: Return Settlement
             if (b.status == 'RETURNED') ...[
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               Container(
-                padding: EdgeInsets.all(AppSpacing.lg.r),
+                padding: EdgeInsets.all(ECardoTokens.space4.r),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                  borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+                  color: ECardoTokens.surfaceCard(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: ECardoTokens.border(context),
                   ),
+                  boxShadow: ECardoTokens.shadowCard(context),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -904,7 +974,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 13.sp,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: ECardoTokens.ink(context),
                       ),
                     ),
                     SizedBox(height: 6.h),
@@ -914,18 +984,18 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                         fa: 'تفاضل خودکار کیلومتر اضافه، کسری سوخت و نظافت محاسبه گردید (پنجره خسارت ۷۲ ساعت).'),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
-                    SizedBox(height: AppSpacing.md.h),
+                    SizedBox(height: ECardoTokens.space3.h),
                     Row(
                       children: [
                         Expanded(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.success,
+                              backgroundColor: ECardoTokens.success(context),
                               foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
                             ),
                             onPressed: () => _confirm(
                               l10nPick(context, en: 'Accept Settlement', fa: 'پذیرش تسویه'),
@@ -940,13 +1010,13 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: AppSpacing.sm.w),
+                        SizedBox(width: ECardoTokens.space2.w),
                         Expanded(
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.error,
-                              side: const BorderSide(color: AppColors.error),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+                              foregroundColor: ECardoTokens.danger(context),
+                              side: BorderSide(color: ECardoTokens.danger(context)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
                             ),
                             onPressed: () => _showDisputeDialog(b),
                             child: Text(l10nPick(context, en: 'File Dispute', fa: 'ثبت اختلاف خسارت')),
@@ -961,7 +1031,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
 
             // Cancel Booking
             if (['DRAFT', 'AWAITING_DOCS', 'AWAITING_PAYMENT', 'PENDING_CONFIRMATION', 'CONFIRMED'].contains(b.status)) ...[
-              SizedBox(height: AppSpacing.md.h),
+              SizedBox(height: ECardoTokens.space3.h),
               TextButton(
                 onPressed: () => _confirm(
                   l10nPick(context, en: 'Cancel Booking', fa: 'لغو رزرو'),
@@ -972,22 +1042,22 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                 ),
                 child: Text(
                   l10nPick(context, en: 'Cancel Booking (Tiered Refund)', fa: 'لغو رزرو (طبق جدول پلکانی)'),
-                  style: const TextStyle(color: AppColors.error),
+                  style: TextStyle(color: ECardoTokens.danger(context)),
                 ),
               ),
             ],
 
             // Timeline Events
-            SizedBox(height: AppSpacing.lg.h),
+            SizedBox(height: ECardoTokens.space4.h),
             Text(
               l10nPick(context, en: 'Timeline', fa: 'تایم‌لاین رویدادها'),
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 13.sp,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: ECardoTokens.ink(context),
               ),
             ),
-            SizedBox(height: AppSpacing.xs.h),
+            SizedBox(height: ECardoTokens.space1.h),
             ...b.events.map((e) => Padding(
               padding: EdgeInsets.symmetric(vertical: 4.h),
               child: Row(
@@ -998,16 +1068,16 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                     child: Icon(
                       Icons.circle,
                       size: 8.sp,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      color: ECardoTokens.brand500(context),
                     ),
                   ),
-                  SizedBox(width: AppSpacing.sm.w),
+                  SizedBox(width: ECardoTokens.space2.w),
                   Expanded(
                     child: Text(
                       '${e.createdAt?.toLocal() ?? ''} · ${e.actorRole}${e.reason != null ? ' — ${e.reason}' : ''}',
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: ECardoTokens.inkMuted(context),
                       ),
                     ),
                   ),

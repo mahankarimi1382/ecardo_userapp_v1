@@ -6,14 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../services/mock_travel_data.dart';
-import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'taxi_controller.dart';
 import 'taxi_models.dart';
@@ -52,10 +51,9 @@ class TaxiVoucherScreen extends StatelessWidget {
     final controller = Get.isRegistered<TaxiController>()
         ? Get.find<TaxiController>()
         : Get.put(TaxiController());
-    final isDark = TravelTheme.isDark(context);
-    final textPrimary = TravelTheme.textPrimaryFor(context);
-    final textSecondary = TravelTheme.textSecondaryFor(context);
-    final border = TravelTheme.borderFor(context);
+    final textPrimary = ECardoTokens.ink(context);
+    final textSecondary = ECardoTokens.inkMuted(context);
+    final border = ECardoTokens.border(context);
     final formattedDate = DateFormat('yyyy-MM-dd').format(booking.pickupDate);
 
     return TravelPage(
@@ -69,15 +67,15 @@ class TaxiVoucherScreen extends StatelessWidget {
       showTravelNavigation: false,
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsetsDirectional.all(16.r),
+          padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
           child: Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    padding: EdgeInsetsDirectional.symmetric(vertical: 14.h),
+                    padding: EdgeInsetsDirectional.symmetric(vertical: ECardoTokens.space4.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.r),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
                     ),
                     side: BorderSide(color: border),
                   ),
@@ -112,7 +110,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: ECardoTokens.space3.w),
               Expanded(
                 child: CommonButton(
                   text: l10nPick(
@@ -122,8 +120,8 @@ class TaxiVoucherScreen extends StatelessWidget {
                     ar: 'العودة لخدمات السفر',
                     zh: '返回旅游首页',
                   ),
-                  textColor: Colors.white,
-                  backgroundColor: const Color(0xFF0D9488),
+                  textColor: ECardoTokens.inkOnBrand,
+                  backgroundColor: ECardoTokens.brand500(context),
                   onPressed: () {
                     AppHaptics.selection();
                     Get.offAllNamed(BaseRoute.travel);
@@ -135,7 +133,12 @@ class TaxiVoucherScreen extends StatelessWidget {
         ),
       ),
       child: ListView(
-        padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 30.h),
+        padding: EdgeInsetsDirectional.fromSTEB(
+          ECardoTokens.space5.w,
+          ECardoTokens.space3.h,
+          ECardoTokens.space5.w,
+          ECardoTokens.space8.h,
+        ),
         children: [
           // Booking Status Hero Card
           Obx(() {
@@ -143,16 +146,12 @@ class TaxiVoucherScreen extends StatelessWidget {
             final isCancelled = active.operationalStatus == RideBookingStatus.cancelled;
 
             return Container(
-              padding: EdgeInsetsDirectional.all(18.r),
+              padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r + 6.r),
               decoration: BoxDecoration(
-                color: isCancelled
-                    ? Colors.red.withValues(alpha: 0.1)
-                    : Colors.green.withValues(alpha: 0.1),
-                borderRadius: TravelTheme.radius,
+                color: isCancelled ? ECardoTokens.dangerBg(context) : ECardoTokens.successBg(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
                 border: Border.all(
-                  color: isCancelled
-                      ? Colors.red.withValues(alpha: 0.3)
-                      : Colors.green.withValues(alpha: 0.3),
+                  color: isCancelled ? ECardoTokens.danger(context).withValues(alpha: 0.3) : ECardoTokens.success(context).withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -160,12 +159,12 @@ class TaxiVoucherScreen extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(10.r),
                     decoration: BoxDecoration(
-                      color: isCancelled ? Colors.red : Colors.green,
+                      color: isCancelled ? ECardoTokens.danger(context) : ECardoTokens.success(context),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       isCancelled ? Icons.close_rounded : Icons.check_rounded,
-                      color: Colors.white,
+                      color: ECardoTokens.inkOnBrand,
                       size: 24,
                     ),
                   ),
@@ -187,7 +186,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w900,
-                            color: isCancelled ? Colors.red.shade900 : Colors.green.shade900,
+                            color: isCancelled ? ECardoTokens.danger(context) : ECardoTokens.success(context),
                           ),
                         ),
                         SizedBox(height: 3.h),
@@ -203,7 +202,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                                 ),
                           style: TextStyle(
                             fontSize: 11.5.sp,
-                            color: isCancelled ? Colors.red.shade800 : Colors.green.shade800,
+                            color: isCancelled ? ECardoTokens.danger(context) : ECardoTokens.success(context),
                           ),
                         ),
                       ],
@@ -213,14 +212,14 @@ class TaxiVoucherScreen extends StatelessWidget {
               ),
             );
           }),
-          SizedBox(height: 16.h),
+          SizedBox(height: ECardoTokens.space4.h),
 
           // Operational Status Tracker Steps
           Obx(() {
             final active = controller.activeBooking.value ?? booking;
             return _OperationalStatusTimeline(status: active.operationalStatus);
           }),
-          SizedBox(height: 16.h),
+          SizedBox(height: ECardoTokens.space4.h),
 
           // Assigned Driver Card with Call & WhatsApp
           Obx(() {
@@ -240,11 +239,13 @@ class TaxiVoucherScreen extends StatelessWidget {
               },
             );
           }),
-          SizedBox(height: 16.h),
+          SizedBox(height: ECardoTokens.space4.h),
 
           // Digital Voucher Card (Theme-Aware)
           TravelCard(
-            padding: EdgeInsetsDirectional.all(20.r),
+            color: ECardoTokens.surfaceCard(context),
+            borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+            padding: EdgeInsetsDirectional.all(ECardoTokens.space5.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -253,7 +254,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.local_taxi_rounded, color: Color(0xFF0D9488), size: 24),
+                        Icon(Icons.local_taxi_rounded, color: ECardoTokens.brand500(context), size: 24.r),
                         SizedBox(width: 8.w),
                         Text(
                           l10nPick(context, en: booking.vehicle.titleEn, fa: booking.vehicle.titleFa),
@@ -264,21 +265,21 @@ class TaxiVoucherScreen extends StatelessWidget {
                     Container(
                       padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0D9488).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8.r),
+                        color: ECardoTokens.brand100(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                       ),
                       child: Text(
                         booking.reference,
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w900,
-                          color: const Color(0xFF0D9488),
+                          color: ECardoTokens.brand500(context),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const Divider(height: 24),
+                Divider(height: 24, color: ECardoTokens.border(context)),
 
                 // Pickup & Dropoff Route
                 Row(
@@ -286,9 +287,9 @@ class TaxiVoucherScreen extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        const Icon(Icons.trip_origin_rounded, color: Color(0xFF0D9488), size: 18),
-                        Container(width: 2, height: 32.h, color: border),
-                        const Icon(Icons.location_on_rounded, color: Colors.red, size: 18),
+                        Icon(Icons.trip_origin_rounded, color: ECardoTokens.brand500(context), size: 18.r),
+                        Container(width: 2, height: 32.h, color: ECardoTokens.borderStrong(context)),
+                        Icon(Icons.location_on_rounded, color: ECardoTokens.danger(context), size: 18.r),
                       ],
                     ),
                     SizedBox(width: 12.w),
@@ -318,7 +319,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Divider(height: 24),
+                Divider(height: 24, color: ECardoTokens.border(context)),
 
                 // Key Facts: Date, Time, Pax, Bags
                 Row(
@@ -357,10 +358,10 @@ class TaxiVoucherScreen extends StatelessWidget {
 
                 // Passenger & Flight Info
                 Container(
-                  padding: EdgeInsetsDirectional.all(12.r),
+                  padding: EdgeInsetsDirectional.all(ECardoTokens.space3.r),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA),
-                    borderRadius: BorderRadius.circular(10.r),
+                    color: ECardoTokens.surfaceSunken(context),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                     border: Border.all(color: border),
                   ),
                   child: Column(
@@ -405,7 +406,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                             ),
                             Text(
                               booking.flightNumber,
-                              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, fontFamily: 'monospace', color: const Color(0xFF0D9488)),
+                              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, fontFamily: 'monospace', color: ECardoTokens.brand500(context)),
                             ),
                           ],
                         ),
@@ -421,7 +422,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                             ),
                             Text(
                               l10nPick(context, en: 'Included (Name Sign)', fa: 'دارد (با تابلوی نام مسافر)', ar: 'مشمول', zh: '已包含'),
-                              style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700, color: const Color(0xFF0D9488)),
+                              style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.brand500(context)),
                             ),
                           ],
                         ),
@@ -445,7 +446,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Divider(height: 24),
+                Divider(height: 24, color: ECardoTokens.border(context)),
 
                 // Barcode & QR Code Section (Inside scan-friendly white box for contrast with scanner)
                 Center(
@@ -455,7 +456,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.r),
+                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                         ),
                         child: SvgPicture.string(_generateBarcodeSvg(), height: 50.h),
                       ),
@@ -472,10 +473,10 @@ class TaxiVoucherScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 12.h),
                       Container(
-                        padding: EdgeInsets.all(12.r),
+                        padding: EdgeInsets.all(ECardoTokens.space3.r),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
                           border: Border.all(color: border),
                         ),
                         child: SvgPicture.string(_generateQrSvg(), width: 120.r, height: 120.r),
@@ -494,7 +495,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Divider(height: 24),
+                Divider(height: 24, color: ECardoTokens.border(context)),
 
                 // Total Fare & Guarantee Badge
                 Row(
@@ -509,7 +510,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                         ),
                         Text(
                           l10nPick(context, en: '100% Fixed Rate Guarantee', fa: 'کرایه قطعی و تضمین‌شده'),
-                          style: TextStyle(fontSize: 9.5.sp, color: const Color(0xFF0D9488), fontWeight: FontWeight.w700),
+                          style: TextStyle(fontSize: 9.5.sp, color: ECardoTokens.brand500(context), fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),
@@ -518,7 +519,7 @@ class TaxiVoucherScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w900,
-                        color: const Color(0xFF0D9488),
+                        color: ECardoTokens.brand500(context),
                       ),
                     ),
                   ],
@@ -526,21 +527,21 @@ class TaxiVoucherScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: ECardoTokens.space4.h),
 
           // Action Buttons: Cancel Ride & Rate Driver
           Row(
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  icon: const Icon(Icons.cancel_outlined, size: 16, color: Colors.red),
+                  icon: Icon(Icons.cancel_outlined, size: 16, color: ECardoTokens.danger(context)),
                   label: Text(
                     l10nPick(context, en: 'Cancel Ride', fa: 'لغو ترانسفر', ar: 'إلغاء الرحلة'),
-                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
+                    style: TextStyle(color: ECardoTokens.danger(context), fontWeight: FontWeight.w700),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.red),
-                    padding: EdgeInsetsDirectional.symmetric(vertical: 12.h),
+                    side: BorderSide(color: ECardoTokens.danger(context)),
+                    padding: EdgeInsetsDirectional.symmetric(vertical: ECardoTokens.space3.h),
                   ),
                   onPressed: () {
                     AppHaptics.selection();
@@ -557,17 +558,17 @@ class TaxiVoucherScreen extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: ECardoTokens.space3.w),
               Expanded(
                 child: OutlinedButton.icon(
-                  icon: const Icon(Icons.star_outline_rounded, size: 16, color: Color(0xFF0D9488)),
+                  icon: Icon(Icons.star_outline_rounded, size: 16, color: ECardoTokens.brand500(context)),
                   label: Text(
                     l10nPick(context, en: 'Rate Chauffeur', fa: 'امتیاز به راننده', ar: 'تقييم السائق'),
-                    style: const TextStyle(color: Color(0xFF0D9488), fontWeight: FontWeight.w700),
+                    style: TextStyle(color: ECardoTokens.brand500(context), fontWeight: FontWeight.w700),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFF0D9488)),
-                    padding: EdgeInsetsDirectional.symmetric(vertical: 12.h),
+                    side: BorderSide(color: ECardoTokens.brand500(context)),
+                    padding: EdgeInsetsDirectional.symmetric(vertical: ECardoTokens.space3.h),
                   ),
                   onPressed: () {
                     AppHaptics.selection();
@@ -594,21 +595,21 @@ class TaxiVoucherScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: ECardoTokens.space4.h),
 
           // 24/7 Dispatch Hotline Banner (Theme-Aware)
           Container(
-            padding: EdgeInsetsDirectional.all(14.r),
+            padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF0D9488).withValues(alpha: 0.12) : const Color(0xFFF0FDFA),
-              borderRadius: TravelTheme.radius,
+              color: ECardoTokens.brand100(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
               border: Border.all(
-                color: isDark ? const Color(0xFF0D9488).withValues(alpha: 0.3) : const Color(0xFFCCFBF1),
+                color: ECardoTokens.brand500(context).withValues(alpha: 0.3),
               ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.phone_in_talk_rounded, color: Color(0xFF0D9488)),
+                Icon(Icons.phone_in_talk_rounded, color: ECardoTokens.brand500(context)),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
@@ -653,13 +654,13 @@ class _FactItem extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, size: 14.r, color: TravelTheme.textSecondaryFor(context)),
+            Icon(icon, size: 14.r, color: ECardoTokens.inkMuted(context)),
             SizedBox(width: 4.w),
-            Text(label, style: TextStyle(fontSize: 10.5.sp, color: TravelTheme.textSecondaryFor(context), fontWeight: FontWeight.w600)),
+            Text(label, style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context), fontWeight: FontWeight.w600)),
           ],
         ),
         SizedBox(height: 4.h),
-        Text(value, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: TravelTheme.textPrimaryFor(context))),
+        Text(value, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context))),
       ],
     );
   }
@@ -672,8 +673,7 @@ class _OperationalStatusTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = TravelTheme.isDark(context);
-    final border = TravelTheme.borderFor(context);
+    final border = ECardoTokens.border(context);
 
     int getStepIndex() {
       switch (status) {
@@ -708,8 +708,8 @@ class _OperationalStatusTimeline extends StatelessWidget {
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(12.r),
+        color: ECardoTokens.surfaceSunken(context),
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
         border: Border.all(color: border),
       ),
       child: Row(
@@ -729,13 +729,13 @@ class _OperationalStatusTimeline extends StatelessWidget {
                       height: 20.r,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isDone ? const Color(0xFF0D9488) : (isDark ? const Color(0xFF333333) : Colors.grey.shade300),
-                        border: isCurrent ? Border.all(color: const Color(0xFF0D9488), width: 2) : null,
+                        color: isDone ? ECardoTokens.brand500(context) : ECardoTokens.borderStrong(context),
+                        border: isCurrent ? Border.all(color: ECardoTokens.brand500(context), width: 2) : null,
                       ),
                       child: Center(
                         child: isDone
-                            ? const Icon(Icons.check, size: 12, color: Colors.white)
-                            : Text('${index + 1}', style: TextStyle(fontSize: 9.sp, color: Colors.white)),
+                            ? Icon(Icons.check, size: 12, color: ECardoTokens.inkOnBrand)
+                            : Text('${index + 1}', style: TextStyle(fontSize: 9.sp, color: ECardoTokens.inkOnBrand)),
                       ),
                     ),
                     SizedBox(height: 3.h),
@@ -744,7 +744,7 @@ class _OperationalStatusTimeline extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 9.5.sp,
                         fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600,
-                        color: isCurrent ? const Color(0xFF0D9488) : TravelTheme.textSecondaryFor(context),
+                        color: isCurrent ? ECardoTokens.brand500(context) : ECardoTokens.inkMuted(context),
                       ),
                     ),
                   ],
@@ -753,7 +753,7 @@ class _OperationalStatusTimeline extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: 2,
-                      color: activeStep > index ? const Color(0xFF0D9488) : border,
+                      color: activeStep > index ? ECardoTokens.brand500(context) : border,
                     ),
                   ),
               ],

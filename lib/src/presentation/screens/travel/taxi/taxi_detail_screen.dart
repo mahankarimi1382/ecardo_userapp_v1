@@ -3,13 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../services/mock_travel_data.dart';
-import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'taxi_api_service.dart';
 import 'taxi_controller.dart';
@@ -54,9 +53,8 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final isDark = TravelTheme.isDark(context);
-    final textPrimary = TravelTheme.textPrimaryFor(context);
-    final textSecondary = TravelTheme.textSecondaryFor(context);
+    final textPrimary = ECardoTokens.ink(context);
+    final textSecondary = ECardoTokens.inkMuted(context);
 
     final vehicle = _selectedVehicle;
     if (vehicle == null) {
@@ -89,63 +87,77 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
       showTravelNavigation: false,
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsetsDirectional.all(16.r),
-          child: Obx(() => CommonButton(
-            width: double.infinity,
-            text: _controller.isSubmitting.value
-                ? l10nPick(context, en: 'Booking...', fa: 'در حال ثبت...', ar: 'جاري الحجز')
-                : _controller.quoteSource.value == RideDataSource.fallback
-                    ? l10nPick(context, en: 'Confirm & Book Transfer', fa: 'تأیید و رزرو قطعی', ar: 'تأكيد وحجز التوصيل')
-                    : l10nPick(context, en: 'Pay & Confirm Transfer', fa: 'پرداخت و اتمام رزرو', ar: 'الدفع وتأكيد الحجز'),
-            backgroundColor: capacityViolation != null || !TaxiApiService.isValidIranianMobile(_controller.passengerPhoneController.text.trim()) || _controller.isQuoteExpired.value
-                ? Colors.grey.shade700
-                : const Color(0xFF0D9488),
-            isLoading: _controller.isSubmitting.value,
-            onPressed: (capacityViolation != null || _controller.isQuoteExpired.value)
-                ? null
-                : () async {
-                    AppHaptics.selection();
-                    if (_formKey.currentState?.validate() != true) return;
-                    if (capacityViolation != null) {
-                      showTravelMessage(
-                        context,
-                        title: l10nPick(context, en: 'Capacity exceeded', fa: 'ظرفیت غیرکافی'),
-                        message: l10nPick(
+          padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
+          child: Obx(() {
+            final isInvalidPhone = !TaxiApiService.isValidIranianMobile(_controller.passengerPhoneController.text.trim());
+            final isBlocked = capacityViolation != null || _controller.isQuoteExpired.value;
+            final isInactive = isBlocked || isInvalidPhone;
+
+            return CommonButton(
+              width: double.infinity,
+              text: _controller.isSubmitting.value
+                  ? l10nPick(context, en: 'Booking...', fa: 'در حال ثبت...', ar: 'جاري الحجز')
+                  : _controller.quoteSource.value == RideDataSource.fallback
+                      ? l10nPick(context, en: 'Confirm & Book Transfer', fa: 'تأیید و رزرو قطعی', ar: 'تأكيد وحجز التوصيل')
+                      : l10nPick(context, en: 'Pay & Confirm Transfer', fa: 'پرداخت و اتمام رزرو', ar: 'الدفع وتأكيد الحجز'),
+              backgroundColor: isInactive
+                  ? ECardoTokens.borderStrong(context)
+                  : ECardoTokens.brand500(context),
+              textColor: ECardoTokens.inkOnBrand,
+              isLoading: _controller.isSubmitting.value,
+              onPressed: isBlocked
+                  ? null
+                  : () async {
+                      AppHaptics.selection();
+                      if (_formKey.currentState?.validate() != true) return;
+                      if (capacityViolation != null) {
+                        showTravelMessage(
                           context,
-                          en: 'This vehicle cannot fit all passengers and bags.',
-                          fa: 'این خودرو نمی‌تواند تمام مسافران و چمدان‌ها را جای دهد.',
-                        ),
-                      );
-                      return;
-                    }
-                    final booking = await _controller.createBooking();
-                    if (booking != null && mounted) {
-                      // Start polling for live driver status once booked
-                      _controller.startStatusPolling();
-                      Get.off(() => TaxiVoucherScreen(booking: booking));
-                    }
-                  },
-          )),
+                          title: l10nPick(context, en: 'Capacity exceeded', fa: 'ظرفیت غیرکافی'),
+                          message: l10nPick(
+                            context,
+                            en: 'This vehicle cannot fit all passengers and bags.',
+                            fa: 'این خودرو نمی‌تواند تمام مسافران و چمدان‌ها را جای دهد.',
+                          ),
+                        );
+                        return;
+                      }
+                      final booking = await _controller.createBooking();
+                      if (booking != null && mounted) {
+                        // Start polling for live driver status once booked
+                        _controller.startStatusPolling();
+                        Get.off(() => TaxiVoucherScreen(booking: booking));
+                      }
+                    },
+            );
+          }),
         ),
       ),
       child: Form(
         key: _formKey,
         child: ListView(
-          padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 30.h),
+          padding: EdgeInsetsDirectional.fromSTEB(
+            ECardoTokens.space5.w,
+            ECardoTokens.space3.h,
+            ECardoTokens.space5.w,
+            ECardoTokens.space8.h,
+          ),
           children: [
             // Selected Vehicle Banner
             TravelCard(
-              color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0FDFA),
+              color: ECardoTokens.surfaceCard(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+              padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
               child: Row(
                 children: [
                   Container(
                     width: 52.r,
                     height: 52.r,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0D9488).withValues(alpha: 0.18),
-                      borderRadius: BorderRadius.circular(14.r),
+                      color: ECardoTokens.brand100(context),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
                     ),
-                    child: Icon(vehicle.icon, color: const Color(0xFF0D9488), size: 28),
+                    child: Icon(vehicle.icon, color: ECardoTokens.brand500(context), size: 28.r),
                   ),
                   SizedBox(width: 14.w),
                   Expanded(
@@ -174,20 +186,22 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                                 child: Container(
                                   padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
                                   decoration: BoxDecoration(
-                                    color: Colors.amber.withValues(alpha: 0.18),
-                                    borderRadius: BorderRadius.circular(6.r),
+                                    color: ECardoTokens.warningBg(context),
+                                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.info_outline_rounded, size: 13, color: Colors.amber),
+                                      Icon(Icons.info_outline_rounded, size: 13, color: ECardoTokens.warning(context)),
                                       SizedBox(width: 4.w),
-                                      Text(
-                                        l10nPick(
-                                          context,
-                                          en: 'Passenger or luggage count exceeds this vehicle\'s standard capacity.',
-                                          fa: 'تعداد مسافر یا بار این خودرو با ظرفیت استاندارد همخوانی ندارد.',
+                                      Expanded(
+                                        child: Text(
+                                          l10nPick(
+                                            context,
+                                            en: 'Passenger or luggage count exceeds standard capacity.',
+                                            fa: 'تعداد مسافر یا بار این خودرو با ظرفیت استاندارد همخوانی ندارد.',
+                                          ),
+                                          style: TextStyle(fontSize: 10.sp, color: ECardoTokens.warning(context)),
                                         ),
-                                        style: TextStyle(fontSize: 10.sp, color: Colors.amber.shade800),
                                       ),
                                     ],
                                   ),
@@ -200,21 +214,25 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(width: 8.w),
                   Text(
                     '${formatMockAmount(totalFare)} ${localization.travelMockCurrency}',
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w900,
-                      color: const Color(0xFF0D9488),
+                      color: ECardoTokens.brand500(context),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: ECardoTokens.space4.h),
 
             // Passenger Contact Details Card
             TravelCard(
+              color: ECardoTokens.surfaceCard(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+              padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -222,14 +240,14 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                     l10nPick(context, en: 'Passenger Information', fa: 'مشخصات سرپرست و مسافر', ar: 'معلومات الراكب', zh: '乘车联系信息'),
                     style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w900, color: textPrimary),
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: ECardoTokens.space3.h),
 
                   // Passenger Name
                   TextFormField(
                     controller: _controller.passengerNameController,
                     decoration: InputDecoration(
                       labelText: l10nPick(context, en: 'Full Name', fa: 'نام و نام خانوادگی', ar: 'الاسم الكامل', zh: '姓名'),
-                      prefixIcon: const Icon(Icons.person_outline_rounded),
+                      prefixIcon: Icon(Icons.person_outline_rounded, color: ECardoTokens.brand500(context)),
                       border: const OutlineInputBorder(),
                     ),
                     validator: (val) {
@@ -239,7 +257,7 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: ECardoTokens.space3.h),
 
                   // Passenger Phone
                   TextFormField(
@@ -256,7 +274,7 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                         ar: 'رقم الهاتف للتواصل',
                         zh: '联系电话（用于WhatsApp或电话）',
                       ),
-                      prefixIcon: const Icon(Icons.phone_rounded),
+                      prefixIcon: Icon(Icons.phone_rounded, color: ECardoTokens.brand500(context)),
                       border: const OutlineInputBorder(),
                     ),
                     validator: (val) {
@@ -266,7 +284,7 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: ECardoTokens.space3.h),
 
                   // Flight Number (optional but encouraged for airport pickups)
                   TextFormField(
@@ -279,11 +297,11 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                         ar: 'رقم الرحلة الجوية (اختياري - للمتابعة)',
                         zh: '航班号（选填，有助于跟踪延误）',
                       ),
-                      prefixIcon: const Icon(Icons.flight_rounded),
+                      prefixIcon: Icon(Icons.flight_rounded, color: ECardoTokens.brand500(context)),
                       border: const OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: ECardoTokens.space3.h),
 
                   // Notes for driver / special requests
                   TextFormField(
@@ -297,14 +315,14 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                         ar: 'طلبات خاصة للسائق',
                         zh: '给司机的特殊要求',
                       ),
-                      prefixIcon: const Icon(Icons.note_alt_outlined),
+                      prefixIcon: Icon(Icons.note_alt_outlined, color: ECardoTokens.brand500(context)),
                       border: const OutlineInputBorder(),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: ECardoTokens.space4.h),
 
             // Live Tracking Status Bar for Completed/Confirmed rides
             Obx(() {
@@ -324,10 +342,13 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
               );
             }),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: ECardoTokens.space4.h),
 
             // Fare Breakdown with trust signals about fixed-price guarantee
             TravelCard(
+              color: ECardoTokens.surfaceCard(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+              padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -390,16 +411,16 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                     Container(
                       padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 2.h),
                       decoration: BoxDecoration(
-                        color: Colors.amber.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(4.r),
+                        color: ECardoTokens.sand100(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                       ),
                       child: Text(
-                        l10nPick(context, en: '+ Intercity factor applied (60% increase)', fa: '+ عامل بین شهری (افزایش ۶۰٪)', ar: '+ تطبيق عامل城际 +'),
-                        style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800, color: Colors.amber.shade900),
+                        l10nPick(context, en: '+ Intercity factor applied (60% increase)', fa: '+ عامل بین شهری (افزایش ۶۰٪)', ar: '+ تطبيق عامل بین شهری'),
+                        style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800, color: ECardoTokens.sand600(context)),
                       ),
                     ),
                   ],
-                  const Divider(height: 20),
+                  Divider(height: 20, color: ECardoTokens.border(context)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -409,7 +430,7 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                       ),
                       Text(
                         '${formatMockAmount(totalFare)} ${localization.travelMockCurrency}',
-                        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w900, color: const Color(0xFF0D9488)),
+                        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w900, color: ECardoTokens.brand500(context)),
                       ),
                     ],
                   ),
@@ -419,7 +440,7 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                         padding: EdgeInsetsDirectional.only(top: 6.h),
                         child: Row(
                           children: [
-                            const Icon(Icons.receipt_long_rounded, size: 13, color: Color(0xFF0D9488)),
+                            Icon(Icons.receipt_long_rounded, size: 13, color: ECardoTokens.brand500(context)),
                             SizedBox(width: 4.w),
                             Text(
                               l10nPick(

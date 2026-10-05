@@ -5,17 +5,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
+
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/presentation/screens/travel/shared/travel_widgets.dart';
 
-import '../services/mock_travel_data.dart';
-import '../shared/travel_theme.dart';
-import '../shared/travel_widgets.dart';
+import 'train_models.dart';
 
-/// Digital Train Ticket / Boarding Pass Voucher
-class TrainConfirmationScreen extends StatelessWidget {
+/// Digital Train Ticket / Mobile Rail Pass Voucher (UIC 918-3 & European Pattern)
+/// Upgraded to ECardoTokens with Aztec / QR barcode generation,
+/// sleeper berth indicators, connection safety alerts, and responsive dark/light support.
+class TrainConfirmationScreen extends StatefulWidget {
   final String reference;
   final String origin;
   final String destination;
@@ -28,6 +31,16 @@ class TrainConfirmationScreen extends StatelessWidget {
   final String trainClass;
   final int totalPrice;
   final List<Map<String, String>> passengers;
+  final String? originStation;
+  final String? destinationStation;
+  final String? departurePlatform;
+  final String? arrivalPlatform;
+  final TrainCategory? category;
+  final SleeperBerthType? sleeperType;
+  final CompartmentGenderRule? genderRule;
+  final RailPassVoucherType voucherType;
+  final ConnectionTransferInfo? transferInfo;
+  final List<IntermediateStop>? intermediateStops;
 
   const TrainConfirmationScreen({
     super.key,
@@ -43,81 +56,144 @@ class TrainConfirmationScreen extends StatelessWidget {
     required this.trainClass,
     required this.totalPrice,
     required this.passengers,
+    this.originStation,
+    this.destinationStation,
+    this.departurePlatform,
+    this.arrivalPlatform,
+    this.category,
+    this.sleeperType,
+    this.genderRule,
+    this.voucherType = RailPassVoucherType.aztec,
+    this.transferInfo,
+    this.intermediateStops,
   });
+
+  @override
+  State<TrainConfirmationScreen> createState() => _TrainConfirmationScreenState();
+}
+
+class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
+  late RailPassVoucherType _activeVoucherType;
+  bool _showAllStops = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _activeVoucherType = widget.voucherType;
+  }
 
   String _generateBarcodeSvg() {
     final barcode = Barcode.code128();
     return barcode.toSvg(
-      reference,
+      widget.reference,
       width: 260,
-      height: 60,
+      height: 52,
       drawText: false,
     );
   }
 
-  String _generateQrSvg() {
-    final barcode = Barcode.qrCode();
-    return barcode.toSvg(
-      'TRAIN-$reference-$trainNumber-$origin-$destination',
-      width: 140,
-      height: 140,
-    );
+  String _generatePassBarcodeSvg() {
+    final content = 'UIC918-3:${widget.reference}:${widget.trainNumber}:${widget.origin}:${widget.destination}';
+    if (_activeVoucherType == RailPassVoucherType.aztec) {
+      final barcode = Barcode.aztec();
+      return barcode.toSvg(
+        content,
+        width: 140,
+        height: 140,
+      );
+    } else {
+      final barcode = Barcode.qrCode();
+      return barcode.toSvg(
+        content,
+        width: 140,
+        height: 140,
+      );
+    }
+  }
+
+  String _formatAmount(int amount) {
+    final formatter = NumberFormat('#,###', 'en_US');
+    return '${formatter.format(amount)} Toman';
   }
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
-    final formattedDate = DateFormat('yyyy-MM-dd').format(departureDate);
+    final localization = AppLocalizations.of(context);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final formattedDate = DateFormat('yyyy-MM-dd').format(widget.departureDate);
 
-    return TravelPage(
-      title: l10nPick(
-        context,
-        en: 'Train Boarding Ticket',
-        fa: 'بلیط و رسید قطار',
-        ar: 'تذكرة ركوب القطار',
-        zh: '火车乘车票据',
+    return Scaffold(
+      backgroundColor: ECardoTokens.surfaceCanvas(context),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.close_rounded,
+            color: ECardoTokens.ink(context),
+          ),
+          onPressed: () => Get.offAllNamed(BaseRoute.travel),
+        ),
+        title: Text(
+          l10nPick(
+            context,
+            en: 'Train Boarding Voucher',
+            fa: 'بلیط دیجیتال و رسید قطار',
+            ar: 'تذكرة ركوب القطار الإلكترونية',
+            zh: '火车乘车电子客票',
+          ),
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w800,
+            color: ECardoTokens.ink(context),
+          ),
+        ),
+        centerTitle: true,
       ),
-      showTravelNavigation: false,
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsetsDirectional.all(16.r),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           child: Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    padding: EdgeInsetsDirectional.symmetric(vertical: 14.h),
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.r),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                     ),
-                    side: const BorderSide(color: TravelTheme.border),
+                    side: BorderSide(color: ECardoTokens.border(context)),
                   ),
                   onPressed: () {
-                    Clipboard.setData(ClipboardData(text: reference));
-                    showTravelMessage(
-                      context,
-                      title: l10nPick(
-                        context,
-                        en: 'Reference Copied',
-                        fa: 'کد رهگیری کپی شد',
-                        ar: 'تم نسخ الرقم المرجعي',
-                        zh: '参考编号已复制',
+                    Clipboard.setData(ClipboardData(text: widget.reference));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          l10nPick(
+                            context,
+                            en: 'Booking reference copied: ${widget.reference}',
+                            fa: 'کد رهگیری کپی شد: ${widget.reference}',
+                            ar: 'تم نسخ الرقم المرجعي: ${widget.reference}',
+                            zh: '预订参考号已复制：${widget.reference}',
+                          ),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: ECardoTokens.brand900(context),
                       ),
-                      message: reference,
                     );
                   },
                   child: Text(
                     l10nPick(
                       context,
-                      en: 'Copy Ticket Code',
+                      en: 'Copy Code',
                       fa: 'کپی کد بلیط',
-                      ar: 'نسخ رقم التذكرة',
-                      zh: '复制车票编号',
+                      ar: 'نسخ الرمز',
+                      zh: '复制车票码',
                     ),
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w700,
-                      color: TravelTheme.ink,
+                      color: ECardoTokens.ink(context),
                     ),
                   ),
                 ),
@@ -132,8 +208,9 @@ class TrainConfirmationScreen extends StatelessWidget {
                     ar: 'العودة لخدمات السفر',
                     zh: '返回旅游首页',
                   ),
-                  textColor: Colors.white,
-                  backgroundColor: TravelTheme.blue,
+                  textColor: ECardoTokens.inkOnBrand,
+                  backgroundColor: ECardoTokens.brand500(context),
+                  borderRadius: ECardoTokens.radiusMd,
                   onPressed: () => Get.offAllNamed(BaseRoute.travel),
                 ),
               ),
@@ -141,26 +218,32 @@ class TrainConfirmationScreen extends StatelessWidget {
           ),
         ),
       ),
-      child: ListView(
-        padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 30.h),
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         children: [
-          // Success Status Card
+          // Success Status Card (ECardoTokens)
           Container(
-            padding: EdgeInsetsDirectional.all(18.r),
+            padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
-              color: Colors.green.withValues(alpha: 0.1),
-              borderRadius: TravelTheme.radius,
-              border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+              color: ECardoTokens.successBg(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+              border: Border.all(
+                color: ECardoTokens.success(context).withValues(alpha: 0.3),
+              ),
             ),
             child: Row(
               children: [
                 Container(
                   padding: EdgeInsets.all(10.r),
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
+                  decoration: BoxDecoration(
+                    color: ECardoTokens.success(context),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check_rounded, color: Colors.white, size: 24),
+                  child: const Icon(
+                    Icons.check_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
                 SizedBox(width: 14.w),
                 Expanded(
@@ -170,29 +253,29 @@ class TrainConfirmationScreen extends StatelessWidget {
                       Text(
                         l10nPick(
                           context,
-                          en: 'Train Ticket Issued Successfully',
+                          en: 'Train Ticket Confirmed & Issued',
                           fa: 'بلیط قطار با موفقیت صادر شد',
-                          ar: 'تم إصدار تذكرة القطار بنجاح',
-                          zh: '火车票已成功出票',
+                          ar: 'تم تأكيد وإصدار تذكرة القطار بنجاح',
+                          zh: '车票已成功确认并出票',
                         ),
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 13.5.sp,
                           fontWeight: FontWeight.w900,
-                          color: Colors.green.shade900,
+                          color: ECardoTokens.success(context),
                         ),
                       ),
                       SizedBox(height: 3.h),
                       Text(
                         l10nPick(
                           context,
-                          en: 'Present this digital voucher at the station gate.',
-                          fa: 'این رسید دیجیتال را هنگام ورود به ایستگاه نشان دهید.',
-                          ar: 'يرجى إبراز هذا الإيصال عند بوابة المحطة.',
-                          zh: '请在进站验票口出示此电子凭证。',
+                          en: 'Present the Aztec/QR barcode at station ticket barriers.',
+                          fa: 'بارکد آزتک / کیوآر را در گیت ورودی ایستگاه اسکن نمایید.',
+                          ar: 'يرجى إبراز باركود آزتك / QR عند بوابات المحطة.',
+                          zh: '进站时请在闸机处扫描 Aztec / QR 二维码。',
                         ),
                         style: TextStyle(
-                          fontSize: 11.5.sp,
-                          color: Colors.green.shade800,
+                          fontSize: 11.sp,
+                          color: ECardoTokens.inkMuted(context),
                         ),
                       ),
                     ],
@@ -201,167 +284,360 @@ class TrainConfirmationScreen extends StatelessWidget {
               ],
             ),
           ),
+
           SizedBox(height: 16.h),
 
-          // Digital Ticket Card
-          TravelCard(
-            padding: EdgeInsetsDirectional.all(20.r),
+          // Main Digital Pass Boarding Card
+          Container(
+            padding: EdgeInsets.all(20.r),
+            decoration: BoxDecoration(
+              color: ECardoTokens.surfaceCard(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+              border: Border.all(color: ECardoTokens.border(context)),
+              boxShadow: ECardoTokens.shadowCard(context),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Ticket Header: Operator & Reference
+                // Top Header: Operator & Train Badges & PNR
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.train_rounded, color: TravelTheme.blue, size: 24),
-                        SizedBox(width: 8.w),
-                        Text(
-                          operatorName,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w900,
-                            color: TravelTheme.ink,
+                        Container(
+                          padding: EdgeInsets.all(8.r),
+                          decoration: BoxDecoration(
+                            color: ECardoTokens.brand100(context),
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                           ),
+                          child: Icon(
+                            widget.category?.icon ?? Icons.train_rounded,
+                            color: ECardoTokens.brand500(context),
+                            size: 20.r,
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.operatorName,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w900,
+                                color: ECardoTokens.ink(context),
+                              ),
+                            ),
+                            Text(
+                              widget.trainName,
+                              style: TextStyle(
+                                fontSize: 10.5.sp,
+                                color: ECardoTokens.inkMuted(context),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                     Container(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                       decoration: BoxDecoration(
-                        color: TravelTheme.blue.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8.r),
+                        color: ECardoTokens.brand100(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                        border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.2)),
                       ),
                       child: Text(
-                        reference,
+                        widget.reference,
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w900,
-                          color: TravelTheme.blue,
+                          fontFamily: 'monospace',
+                          color: ECardoTokens.brand700(context),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const Divider(height: 24),
 
-                // Stations & Times
+                SizedBox(height: 18.h),
+                Divider(color: ECardoTokens.border(context), height: 1),
+                SizedBox(height: 18.h),
+
+                // Stations, Platforms & Schedule
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          departureTime,
-                          style: TextStyle(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w900,
-                            color: TravelTheme.ink,
+                    // Origin
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.departureTime,
+                            style: TextStyle(
+                              fontSize: 22.sp,
+                              fontWeight: FontWeight.w900,
+                              color: ECardoTokens.ink(context),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                        TravelBidiText(
-                          origin,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w800,
-                            color: TravelTheme.ink,
+                          SizedBox(height: 3.h),
+                          TravelBidiText(
+                            widget.origin,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w800,
+                              color: ECardoTokens.ink(context),
+                            ),
                           ),
-                        ),
-                        Text(
-                          localization.travelOrigin,
-                          style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
-                        ),
-                      ],
+                          if (widget.originStation != null)
+                            Text(
+                              widget.originStation!,
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: ECardoTokens.inkMuted(context),
+                              ),
+                            ),
+                          SizedBox(height: 4.h),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: ECardoTokens.surfaceSunken(context),
+                              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            ),
+                            child: Text(
+                              widget.departurePlatform ?? 'Platform 1',
+                              style: TextStyle(
+                                fontSize: 9.5.sp,
+                                fontWeight: FontWeight.w700,
+                                color: ECardoTokens.ink(context),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Icon(Icons.arrow_forward_rounded, color: TravelTheme.blue, size: 24.r),
-                        SizedBox(height: 2.h),
-                        Text(
-                          trainName,
-                          style: TextStyle(fontSize: 10.sp, color: TravelTheme.muted, fontWeight: FontWeight.w700),
-                        ),
-                      ],
+
+                    // Train Arrow & Category
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            color: ECardoTokens.brand500(context),
+                            size: 22.r,
+                          ),
+                          SizedBox(height: 4.h),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: ECardoTokens.brand100(context),
+                              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            ),
+                            child: Text(
+                              widget.category != null
+                                  ? widget.category!.localizedLabel(context, isRtl: isRtl)
+                                  : 'Rail Express',
+                              style: TextStyle(
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.w700,
+                                color: ECardoTokens.brand700(context),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          arrivalTime,
-                          style: TextStyle(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w900,
-                            color: TravelTheme.ink,
+
+                    // Destination
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            widget.arrivalTime,
+                            style: TextStyle(
+                              fontSize: 22.sp,
+                              fontWeight: FontWeight.w900,
+                              color: ECardoTokens.ink(context),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2.h),
-                        TravelBidiText(
-                          destination,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w800,
-                            color: TravelTheme.ink,
+                          SizedBox(height: 3.h),
+                          TravelBidiText(
+                            widget.destination,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w800,
+                              color: ECardoTokens.ink(context),
+                            ),
                           ),
-                        ),
-                        Text(
-                          localization.travelDestination,
-                          style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
-                        ),
-                      ],
+                          if (widget.destinationStation != null)
+                            Text(
+                              widget.destinationStation!,
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: ECardoTokens.inkMuted(context),
+                              ),
+                            ),
+                          SizedBox(height: 4.h),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: ECardoTokens.surfaceSunken(context),
+                              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            ),
+                            child: Text(
+                              widget.arrivalPlatform ?? 'Platform 2',
+                              style: TextStyle(
+                                fontSize: 9.5.sp,
+                                fontWeight: FontWeight.w700,
+                                color: ECardoTokens.ink(context),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                const Divider(height: 24),
 
-                // Carriage & Class Info
+                SizedBox(height: 18.h),
+                Divider(color: ECardoTokens.border(context), height: 1),
+                SizedBox(height: 16.h),
+
+                // Key Facts Row (Date, Train No, Class & Sleeper)
                 Row(
                   children: [
                     Expanded(
-                      child: _TicketFact(
-                        label: l10nPick(context, en: 'Date', fa: 'تاریخ حرکت', ar: 'التاريخ', zh: '出行日期'),
+                      child: _VoucherFact(
+                        label: l10nPick(context, en: 'Travel Date', fa: 'تاریخ سفر', ar: 'تاريخ السفر', zh: '出行日期'),
                         value: formattedDate,
                         icon: Icons.calendar_today_rounded,
                       ),
                     ),
                     Expanded(
-                      child: _TicketFact(
+                      child: _VoucherFact(
                         label: l10nPick(context, en: 'Train No.', fa: 'شماره قطار', ar: 'رقم القطار', zh: '车次'),
-                        value: trainNumber,
+                        value: widget.trainNumber,
                         icon: Icons.numbers_rounded,
                       ),
                     ),
                     Expanded(
-                      child: _TicketFact(
-                        label: l10nPick(context, en: 'Class', fa: 'کلاس سالن', ar: 'الدرجة', zh: '座席等级'),
-                        value: trainClass,
-                        icon: Icons.airline_seat_recline_extra_rounded,
+                      child: _VoucherFact(
+                        label: l10nPick(context, en: 'Class', fa: 'کلاس سالن', ar: 'الدرجة', zh: '席别'),
+                        value: widget.sleeperType != null
+                            ? widget.sleeperType!.localizedTitle(isRtl: isRtl)
+                            : widget.trainClass,
+                        icon: widget.sleeperType?.icon ?? Icons.airline_seat_recline_extra_rounded,
                       ),
                     ),
                   ],
                 ),
+
+                // Gender Rule & Coupe Badge if applicable
+                if (widget.genderRule != null) ...[
+                  SizedBox(height: 12.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: ECardoTokens.sand100(context),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      border: Border.all(color: ECardoTokens.sand400(context).withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(widget.genderRule!.icon, color: ECardoTokens.sand600(context), size: 18.r),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Text(
+                            widget.genderRule!.localizedTitle(isRtl: isRtl),
+                            style: TextStyle(
+                              fontSize: 11.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: ECardoTokens.sand600(context),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                // Connection Safety Information Banner if Transfer
+                if (widget.transferInfo != null) ...[
+                  SizedBox(height: 12.h),
+                  Container(
+                    padding: EdgeInsets.all(12.r),
+                    decoration: BoxDecoration(
+                      color: widget.transferInfo!.safetyLevel.color.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      border: Border.all(
+                        color: widget.transferInfo!.safetyLevel.color.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          widget.transferInfo!.safetyLevel.icon,
+                          color: widget.transferInfo!.safetyLevel.color,
+                          size: 20.r,
+                        ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.transferInfo!.localizedTitle(isRtl: isRtl),
+                                style: TextStyle(
+                                  fontSize: 11.5.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: widget.transferInfo!.safetyLevel.color,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                '${widget.transferInfo!.stationName} · ${widget.transferInfo!.arrivalPlatform} → ${widget.transferInfo!.departurePlatform}',
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  color: widget.transferInfo!.safetyLevel.color.withValues(alpha: 0.9),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                SizedBox(height: 18.h),
+                Divider(color: ECardoTokens.border(context), height: 1),
                 SizedBox(height: 16.h),
 
                 // Passengers List
                 Text(
-                  l10nPick(context, en: 'Passenger(s)', fa: 'مسافران', ar: 'المسافرون', zh: '乘车人'),
+                  l10nPick(context, en: 'Passenger(s) & Berth Allocation', fa: 'مسافران و تخت‌های تخصیص‌یافته', ar: 'المسافرون وتخصيص المقاعد', zh: '乘车人及座位/铺位分配'),
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 12.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: TravelTheme.ink,
+                    color: ECardoTokens.ink(context),
                   ),
                 ),
                 SizedBox(height: 8.h),
-                ...passengers.asMap().entries.map((entry) {
+
+                ...widget.passengers.asMap().entries.map((entry) {
                   final p = entry.value;
+                  final seatNumber = p['seat'] ?? 'Carriage 3 / Berth ${entry.key + 12}';
                   return Container(
-                    margin: EdgeInsetsDirectional.only(bottom: 6.h),
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
+                    margin: EdgeInsets.only(bottom: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8F9FA),
-                      borderRadius: BorderRadius.circular(10.r),
+                      color: ECardoTokens.surfaceSunken(context),
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      border: Border.all(color: ECardoTokens.border(context)),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -370,86 +646,220 @@ class TrainConfirmationScreen extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 12.r,
-                              backgroundColor: TravelTheme.blue.withValues(alpha: 0.1),
+                              backgroundColor: ECardoTokens.brand100(context),
                               child: Text(
                                 '${entry.key + 1}',
-                                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w900, color: TravelTheme.blue),
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: ECardoTokens.brand500(context),
+                                ),
                               ),
                             ),
-                            SizedBox(width: 8.w),
-                            Text(
-                              p['name'] ?? '',
-                              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
+                            SizedBox(width: 10.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p['name']?.isNotEmpty == true ? p['name']! : 'Passenger ${entry.key + 1}',
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: ECardoTokens.ink(context),
+                                  ),
+                                ),
+                                if (p['national_code'] != null && p['national_code']!.isNotEmpty)
+                                  Text(
+                                    'ID: ${p['national_code']!}',
+                                    style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontFamily: 'monospace',
+                                      color: ECardoTokens.inkMuted(context),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ],
                         ),
-                        if (p['national_code'] != null && p['national_code']!.isNotEmpty)
-                          Text(
-                            p['national_code']!,
-                            style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted, fontFamily: 'monospace'),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: ECardoTokens.brand100(context),
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                           ),
+                          child: Text(
+                            seatNumber,
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w800,
+                              color: ECardoTokens.brand700(context),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   );
                 }),
-                const Divider(height: 24),
 
-                // Barcode & QR Code Section
+                // Intermediate stops toggle if available
+                if (widget.intermediateStops != null && widget.intermediateStops!.isNotEmpty) ...[
+                  SizedBox(height: 8.h),
+                  InkWell(
+                    onTap: () => setState(() => _showAllStops = !_showAllStops),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'Route & Intermediate Stops (${widget.intermediateStops!.length})',
+                              fa: 'ایستگاه‌های بین‌راهی (${widget.intermediateStops!.length} ایستگاه)',
+                              ar: 'محطات المسار (${widget.intermediateStops!.length})',
+                              zh: '途径站点信息 (${widget.intermediateStops!.length} 站)',
+                            ),
+                            style: TextStyle(
+                              fontSize: 11.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: ECardoTokens.brand500(context),
+                            ),
+                          ),
+                          Icon(
+                            _showAllStops ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                            color: ECardoTokens.brand500(context),
+                            size: 18.r,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (_showAllStops) ...[
+                    SizedBox(height: 8.h),
+                    _ConfirmationStopTimeline(stops: widget.intermediateStops!),
+                  ],
+                ],
+
+                SizedBox(height: 18.h),
+                Divider(color: ECardoTokens.border(context), height: 1),
+                SizedBox(height: 18.h),
+
+                // European Mobile Rail Pass Voucher (UIC 918-3 Aztec / QR)
                 Center(
                   child: Column(
                     children: [
-                      SvgPicture.string(_generateBarcodeSvg(), height: 50.h),
+                      // Linear barcode 128
+                      SvgPicture.string(
+                        _generateBarcodeSvg(),
+                        height: 48.h,
+                      ),
                       SizedBox(height: 6.h),
                       Text(
-                        reference,
+                        widget.reference,
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontFamily: 'monospace',
                           letterSpacing: 2,
-                          fontWeight: FontWeight.w700,
-                          color: TravelTheme.ink,
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.ink(context),
                         ),
+                      ),
+                      SizedBox(height: 16.h),
+
+                      // Barcode format switcher
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ChoiceChip(
+                            label: Text(
+                              'UIC 918-3 Aztec',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w700,
+                                color: _activeVoucherType == RailPassVoucherType.aztec
+                                    ? ECardoTokens.inkOnBrand
+                                    : ECardoTokens.ink(context),
+                              ),
+                            ),
+                            selected: _activeVoucherType == RailPassVoucherType.aztec,
+                            selectedColor: ECardoTokens.brand900(context),
+                            backgroundColor: ECardoTokens.surfaceSunken(context),
+                            onSelected: (_) => setState(() => _activeVoucherType = RailPassVoucherType.aztec),
+                          ),
+                          SizedBox(width: 8.w),
+                          ChoiceChip(
+                            label: Text(
+                              'Standard QR Code',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w700,
+                                color: _activeVoucherType == RailPassVoucherType.qrCode
+                                    ? ECardoTokens.inkOnBrand
+                                    : ECardoTokens.ink(context),
+                              ),
+                            ),
+                            selected: _activeVoucherType == RailPassVoucherType.qrCode,
+                            selectedColor: ECardoTokens.brand900(context),
+                            backgroundColor: ECardoTokens.surfaceSunken(context),
+                            onSelected: (_) => setState(() => _activeVoucherType = RailPassVoucherType.qrCode),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 12.h),
+
+                      // 2D Barcode container (Aztec or QR)
                       Container(
-                        padding: EdgeInsets.all(12.r),
+                        padding: EdgeInsets.all(14.r),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: TravelTheme.border),
+                          borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                          border: Border.all(color: ECardoTokens.border(context)),
+                          boxShadow: ECardoTokens.shadowCard(context),
                         ),
-                        child: SvgPicture.string(_generateQrSvg(), width: 120.r, height: 120.r),
+                        child: SvgPicture.string(
+                          _generatePassBarcodeSvg(),
+                          width: 140.r,
+                          height: 140.r,
+                        ),
                       ),
-                      SizedBox(height: 6.h),
+                      SizedBox(height: 8.h),
                       Text(
-                        l10nPick(
-                          context,
-                          en: 'Scan at the station gate barcode reader',
-                          fa: 'بارکد را در گیت ورودی ایستگاه اسکن نمایید',
-                          ar: 'امسح الباركود عند بوابة المحطة',
-                          zh: '进站时请在闸机处扫描二维码',
+                        _activeVoucherType == RailPassVoucherType.aztec
+                            ? 'UIC 918-3 European Rail Pass Secure Aztec Code'
+                            : 'Standard ISO QR Code for Station Turnstiles',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: ECardoTokens.inkMuted(context),
+                          fontWeight: FontWeight.w600,
                         ),
-                        style: TextStyle(fontSize: 10.5.sp, color: TravelTheme.muted),
                       ),
                     ],
                   ),
                 ),
-                const Divider(height: 24),
 
-                // Total Fare
+                SizedBox(height: 20.h),
+                Divider(color: ECardoTokens.border(context), height: 1),
+                SizedBox(height: 16.h),
+
+                // Total Fare Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      localization.travelTotal,
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: TravelTheme.muted),
+                      localization?.travelTotal ?? 'Total Fare',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w800,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                     Text(
-                      '${formatMockAmount(totalPrice)} ${localization.travelMockCurrency}',
+                      _formatAmount(widget.totalPrice),
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 17.sp,
                         fontWeight: FontWeight.w900,
-                        color: TravelTheme.green,
+                        color: ECardoTokens.brand900(context),
                       ),
                     ),
                   ],
@@ -457,20 +867,26 @@ class TrainConfirmationScreen extends StatelessWidget {
               ],
             ),
           ),
+
           SizedBox(height: 16.h),
 
-          // Station Arrival Tips
+          // Station Arrival Tips Banner
           Container(
-            padding: EdgeInsetsDirectional.all(14.r),
+            padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
-              borderRadius: TravelTheme.radius,
+              color: ECardoTokens.surfaceSunken(context),
+              borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+              border: Border.all(color: ECardoTokens.border(context)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.info_outline_rounded, color: TravelTheme.blue, size: 20),
-                SizedBox(width: 10.w),
+                Icon(
+                  Icons.info_outline_rounded,
+                  color: ECardoTokens.brand500(context),
+                  size: 20.r,
+                ),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -478,23 +894,31 @@ class TrainConfirmationScreen extends StatelessWidget {
                       Text(
                         l10nPick(
                           context,
-                          en: 'Travel Guidelines',
+                          en: 'Railway Travel Guidelines',
                           fa: 'نکات مهم سفر با قطار',
                           ar: 'إرشادات السفر بالقطار',
                           zh: '乘车乘意事项',
                         ),
-                        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12.sp),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 12.sp,
+                          color: ECardoTokens.ink(context),
+                        ),
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 6.h),
                       Text(
                         l10nPick(
                           context,
-                          en: '• Please be at the station at least 45 minutes before departure.\n• Original national ID or passport is required.\n• Each passenger is allowed up to 30kg of personal luggage.',
-                          fa: '• لطفاً حداقل ۴۵ دقیقه قبل از حرکت در ایستگاه حضور داشته باشید.\n• همراه داشتن کارت ملی یا گذرنامه برای همه مسافران الزامی است.\n• بار مجاز همراه هر مسافر تا ۳۰ کیلوگرم می‌باشد.',
-                          ar: '• يرجى التواجد في المحطة قبل ٤٥ دقيقة من موعد المغادرة.\n• يلزم إحضار بطاقة الهوية الأصلية أو جواز السفر.\n• الحد المسموح به للأمتعة هو ٣٠ كجم لكل راكب.',
-                          zh: '• 请在发车前至少45分钟抵达车站。\n• 乘车必须携带有效身份证件原件或护照。\n• 每位乘客免费携带行李额度为30公斤。',
+                          en: '• Please arrive at the station at least 30-45 minutes before departure.\n• Original national ID or passport required for all passengers.\n• Luggage allowance: 30kg personal luggage per passenger.\n• Sleeper carriages provide fresh linens, blanket, and amenity kit.',
+                          fa: '• لطفاً حداقل ۳۰ تا ۴۵ دقیقه قبل از زمان حرکت در ایستگاه حضور داشته باشید.\n• همراه داشتن کارت شناسایی ملی معتبر یا گذرنامه برای همه مسافران الزامی است.\n• بار مجاز همراه هر مسافر ۳۰ کیلوگرم می‌باشد.\n• در کوپه‌های خواب ملحفه، بالش، پتو و بسته پذیرایی در اختیار مسافر قرار می‌گیرد.',
+                          ar: '• يرجى التواجد في المحطة قبل 30-45 دقيقة من موعد المغادرة.\n• يلزم إبراز بطاقة الهوية الوطنية أو جواز السفر لجميع المسافرين.\n• الحد المسموح به للأمتعة هو 30 كجم لكل راكب.\n• توفر عربات النوم بياضات نظيفة وبطانية ومستلزمات الراحة.',
+                          zh: '• 请在发车前至少30-45分钟抵达车站候车。\n• 所有乘客乘车时必须携带有效身份证件或护照原件。\n• 每位乘客免费行李额度为30公斤。\n• 卧铺车厢提供干净卧具、毛毯和旅行洗漱包。',
                         ),
-                        style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted, height: 1.5),
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: ECardoTokens.inkMuted(context),
+                          height: 1.5,
+                        ),
                       ),
                     ],
                   ),
@@ -502,18 +926,19 @@ class TrainConfirmationScreen extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: 24.h),
         ],
       ),
     );
   }
 }
 
-class _TicketFact extends StatelessWidget {
+class _VoucherFact extends StatelessWidget {
   final String label;
   final String value;
   final IconData icon;
 
-  const _TicketFact({
+  const _VoucherFact({
     required this.label,
     required this.value,
     required this.icon,
@@ -526,24 +951,117 @@ class _TicketFact extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, size: 14.r, color: TravelTheme.muted),
+            Icon(icon, size: 14.r, color: ECardoTokens.inkMuted(context)),
             SizedBox(width: 4.w),
-            Text(
-              label,
-              style: TextStyle(fontSize: 10.5.sp, color: TravelTheme.muted, fontWeight: FontWeight.w600),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: ECardoTokens.inkMuted(context),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),
         SizedBox(height: 4.h),
         Text(
           value,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontSize: 12.sp,
+            fontSize: 11.5.sp,
             fontWeight: FontWeight.w800,
-            color: TravelTheme.ink,
+            color: ECardoTokens.ink(context),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ConfirmationStopTimeline extends StatelessWidget {
+  final List<IntermediateStop> stops;
+
+  const _ConfirmationStopTimeline({required this.stops});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(stops.length, (index) {
+        final stop = stops[index];
+        final isLast = index == stops.length - 1;
+        final isFirst = index == 0;
+
+        return Column(
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 6.r,
+                  backgroundColor: stop.isMajorHub
+                      ? ECardoTokens.brand500(context)
+                      : ECardoTokens.inkMuted(context),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        stop.stationName,
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          fontWeight: isFirst || isLast ? FontWeight.w800 : FontWeight.w600,
+                          color: ECardoTokens.ink(context),
+                        ),
+                      ),
+                      Text(
+                        'Platform ${stop.platform}',
+                        style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      stop.departureTime,
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w800,
+                        color: ECardoTokens.ink(context),
+                      ),
+                    ),
+                    if (!isFirst)
+                      Text(
+                        stop.arrivalTime,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+            if (!isLast)
+              Container(
+                width: 2.w,
+                height: 14.h,
+                margin: EdgeInsets.only(left: isFirst ? 5.w : 5.w),
+                color: ECardoTokens.border(context),
+              ),
+          ],
+        );
+      }),
     );
   }
 }

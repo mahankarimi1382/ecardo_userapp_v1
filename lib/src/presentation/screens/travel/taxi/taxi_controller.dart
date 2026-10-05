@@ -46,8 +46,13 @@ class TaxiController extends GetxController {
   static const Duration geoDebounceDuration = Duration(milliseconds: 350);
 
   // ---------------------------------------------------------------- catalog
-  final RxList<TaxiVehicleClass> availableVehicles = <TaxiVehicleClass>[].obs;
-  final Rxn<TaxiVehicleClass> selectedVehicle = Rxn<TaxiVehicleClass>();
+  final RxList<TaxiVehicleClass> availableVehicles =
+      <TaxiVehicleClass>[...TaxiApiService.fallbackVehicles].obs;
+  final Rxn<TaxiVehicleClass> selectedVehicle = Rxn<TaxiVehicleClass>(
+    TaxiApiService.fallbackVehicles.length > 1
+        ? TaxiApiService.fallbackVehicles[1]
+        : TaxiApiService.fallbackVehicles.firstOrNull,
+  );
   final Rxn<TaxiBookingInfo> activeBooking = Rxn<TaxiBookingInfo>();
 
   // ------------------------------------------------------------------ quote
