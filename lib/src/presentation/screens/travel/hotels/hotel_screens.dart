@@ -278,7 +278,12 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                 SizedBox(height: 12.h),
                 TravelFieldTile(
                   label: localization.travelGuests,
-                  value: '$roomCount / $adultCount / $childCount',
+                  value: formatHotelOccupancy(
+                    context,
+                    rooms: roomCount,
+                    adults: adultCount,
+                    children: childCount,
+                  ),
                   icon: Icons.group_outlined,
                   onTap: _showGuestPicker,
                 ),
@@ -498,9 +503,11 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
         return StatefulBuilder(
           builder: (context, setSheetState) => Container(
             padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 28.h),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            decoration: BoxDecoration(
+              color: TravelTheme.cardSurfaceFor(context),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              border: Border.all(color: TravelTheme.borderFor(context)),
+              boxShadow: TravelTheme.shadowFor(context),
             ),
             child: SafeArea(
               top: false,
@@ -512,18 +519,29 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                       Expanded(
                         child: Text(
                           localization.travelRooms,
-                          style: const TextStyle(fontWeight: FontWeight.w900),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: TravelTheme.textPrimaryFor(context),
+                          ),
                         ),
                       ),
                       IconButton(
                         onPressed: selectedRooms.length > 1
                             ? () => setSheetState(selectedRooms.removeLast)
                             : null,
-                        icon: const Icon(Icons.remove_circle_outline_rounded),
+                        icon: Icon(
+                          Icons.remove_circle_outline_rounded,
+                          color: selectedRooms.length > 1
+                              ? TravelTheme.textPrimaryFor(context)
+                              : TravelTheme.textSecondaryFor(context),
+                        ),
                       ),
                       Text(
                         '${selectedRooms.length}',
-                        style: const TextStyle(fontWeight: FontWeight.w900),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          color: TravelTheme.textPrimaryFor(context),
+                        ),
                       ),
                       IconButton(
                         onPressed: selectedRooms.length < 8
@@ -533,7 +551,12 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                                 ),
                               )
                             : null,
-                        icon: const Icon(Icons.add_circle_outline_rounded),
+                        icon: Icon(
+                          Icons.add_circle_outline_rounded,
+                          color: selectedRooms.length < 8
+                              ? TravelTheme.textPrimaryFor(context)
+                              : TravelTheme.textSecondaryFor(context),
+                        ),
                       ),
                     ],
                   ),
@@ -664,6 +687,38 @@ List<TravelRoomOccupancy> _normalizedRoomOccupancies(
   return rooms;
 }
 
+/// Human-readable, localized guest occupancy string for hotels.
+String formatHotelOccupancy(
+  BuildContext context, {
+  required int rooms,
+  required int adults,
+  required int children,
+}) {
+  final lang = Localizations.localeOf(context).languageCode;
+  if (lang == 'fa') {
+    final roomStr = '$rooms اتاق';
+    final adultStr = '$adults بزرگسال';
+    final childStr = children > 0 ? '، $children کودک' : '';
+    return '$roomStr، $adultStr$childStr';
+  } else if (lang == 'ar') {
+    final roomStr = '$rooms غرفة';
+    final adultStr = '$adults بالغ';
+    final childStr = children > 0 ? '، $children طفل' : '';
+    return '$roomStr، $adultStr$childStr';
+  } else if (lang == 'zh') {
+    final roomStr = '$rooms 间房';
+    final adultStr = '$adults 成人';
+    final childStr = children > 0 ? '，$children 儿童' : '';
+    return '$roomStr，$adultStr$childStr';
+  } else {
+    final roomStr = '$rooms ${rooms > 1 ? 'Rooms' : 'Room'}';
+    final adultStr = '$adults ${adults > 1 ? 'Adults' : 'Adult'}';
+    final childStr =
+        children > 0 ? ', $children ${children > 1 ? 'Children' : 'Child'}' : '';
+    return '$roomStr, $adultStr$childStr';
+  }
+}
+
 class _CountRow extends StatelessWidget {
   final String label;
   final int value;
@@ -681,6 +736,8 @@ class _CountRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
@@ -688,24 +745,36 @@ class _CountRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(fontWeight: FontWeight.w800),
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: textPrimary,
+              ),
             ),
           ),
           IconButton(
             onPressed: value > minimum ? () => onChanged(value - 1) : null,
-            icon: const Icon(Icons.remove_circle_outline_rounded),
+            icon: Icon(
+              Icons.remove_circle_outline_rounded,
+              color: value > minimum ? textPrimary : textSecondary,
+            ),
           ),
           SizedBox(
             width: 34.w,
             child: Text(
               '$value',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.w900),
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color: textPrimary,
+              ),
             ),
           ),
           IconButton(
             onPressed: value < maximum ? () => onChanged(value + 1) : null,
-            icon: const Icon(Icons.add_circle_outline_rounded),
+            icon: Icon(
+              Icons.add_circle_outline_rounded,
+              color: value < maximum ? textPrimary : textSecondary,
+            ),
           ),
         ],
       ),
@@ -776,6 +845,7 @@ class _HotelResultsScreenState extends State<HotelResultsScreen> {
     final next = await showModalBottomSheet<_HotelSort>(
       context: context,
       showDragHandle: true,
+      backgroundColor: TravelTheme.cardSurfaceFor(context),
       builder: (context) {
         final localization = AppLocalizations.of(context)!;
         return SafeArea(
@@ -809,6 +879,7 @@ class _HotelResultsScreenState extends State<HotelResultsScreen> {
     final next = await showModalBottomSheet<double?>(
       context: context,
       showDragHandle: true,
+      backgroundColor: TravelTheme.cardSurfaceFor(context),
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1222,7 +1293,35 @@ class _HotelOfferCard extends StatelessWidget {
                     if (offer.rating > 0)
                       Directionality(
                         textDirection: TextDirection.ltr,
-                        child: Text('★ ${offer.rating}'),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.w,
+                            vertical: 3.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.star_rounded,
+                                size: 14,
+                                color: Color(0xFFD97706),
+                              ),
+                              SizedBox(width: 2.w),
+                              Text(
+                                offer.rating.toStringAsFixed(1),
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: const Color(0xFF92400E),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     IconButton(
                       tooltip: localization.travelCompare,
@@ -1232,8 +1331,8 @@ class _HotelOfferCard extends StatelessWidget {
                             ? Icons.library_add_check_rounded
                             : Icons.library_add_outlined,
                         color: isCompared
-                            ? TravelTheme.purple
-                            : TravelTheme.muted,
+                            ? TravelTheme.primaryFor(context)
+                            : TravelTheme.textSecondaryFor(context),
                       ),
                     ),
                   ],
@@ -1241,7 +1340,99 @@ class _HotelOfferCard extends StatelessWidget {
                 SizedBox(height: 5.h),
                 Text(
                   travelLocalizedKey(localization, offer.subtitleKey),
-                  style: TextStyle(color: TravelTheme.muted, fontSize: 11.sp),
+                  style: TextStyle(
+                    color: TravelTheme.textSecondaryFor(context),
+                    fontSize: 11.sp,
+                  ),
+                ),
+                Builder(
+                  builder: (context) {
+                    final hasFreeCancellation =
+                        offer.attributes['free_cancellation'] == true ||
+                        offer.attributes['cancellation_free'] == true ||
+                        offer.attributes['cancellation_policy']
+                                ?.toString()
+                                .toLowerCase()
+                                .contains('free') ==
+                            true ||
+                        offer.product['cancellation_policy']
+                                ?.toString()
+                                .toLowerCase()
+                                .contains('free') ==
+                            true;
+                    final starCount = int.tryParse(
+                      offer.attributes['stars']?.toString() ?? '',
+                    );
+                    if (!hasFreeCancellation &&
+                        (starCount == null || starCount <= 0)) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Wrap(
+                        spacing: 6.w,
+                        runSpacing: 4.h,
+                        children: [
+                          if (starCount != null && starCount > 0)
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFEF3C7),
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  for (int i = 0; i < starCount && i < 5; i++)
+                                    Icon(
+                                      Icons.star_rounded,
+                                      size: 11.r,
+                                      color: const Color(0xFFD97706),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          if (hasFreeCancellation)
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 7.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: TravelTheme.green.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.check_circle_outline_rounded,
+                                    size: 12,
+                                    color: TravelTheme.green,
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Text(
+                                    hotelFlowText(
+                                      context,
+                                      'کنسلی رایگان',
+                                      'Free Cancellation',
+                                    ),
+                                    style: TextStyle(
+                                      color: TravelTheme.green,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: 12.h),
                 Wrap(
@@ -1268,7 +1459,7 @@ class _HotelOfferCard extends StatelessWidget {
                           Text(
                             localization.travelStartingPrice,
                             style: TextStyle(
-                              color: TravelTheme.muted,
+                              color: TravelTheme.textSecondaryFor(context),
                               fontSize: 10.sp,
                             ),
                           ),
@@ -1277,10 +1468,22 @@ class _HotelOfferCard extends StatelessWidget {
                             child: Text(
                               travelMoney(context, offer.total),
                               style: TextStyle(
-                                color: TravelTheme.purple,
+                                color: TravelTheme.primaryFor(context),
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w900,
                               ),
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            hotelFlowText(
+                              context,
+                              'شامل مالیات و عوارض',
+                              'Taxes & fees included',
+                            ),
+                            style: TextStyle(
+                              color: TravelTheme.textSecondaryFor(context),
+                              fontSize: 9.sp,
                             ),
                           ),
                         ],
@@ -1291,7 +1494,7 @@ class _HotelOfferCard extends StatelessWidget {
                       child: CommonButton(
                         height: 42,
                         fontSize: 11,
-                        backgroundColor: TravelTheme.purple,
+                        backgroundColor: TravelTheme.primaryFor(context),
                         text: localization.travelViewDetails,
                         isLoading: isLoading,
                         onPressed: isLoading ? null : onTap,
@@ -1405,7 +1608,7 @@ Future<void> _showHotelComparison(
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.white,
+    backgroundColor: TravelTheme.cardSurfaceFor(context),
     builder: (context) => SafeArea(
       child: FractionallySizedBox(
         heightFactor: .86,
@@ -1511,12 +1714,12 @@ class _HotelSearchSummary extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-          Text(dates, style: TextStyle(color: TravelTheme.muted)),
+          Text(dates, style: TextStyle(color: TravelTheme.textSecondaryFor(context))),
           SizedBox(height: 6.h),
           Text(
             '${localization.travelGuests}: '
-            '${search.roomCount} / ${search.adultCount} / ${search.childCount}',
-            style: TextStyle(color: TravelTheme.muted),
+            '${formatHotelOccupancy(context, rooms: search.roomCount, adults: search.adultCount, children: search.childCount)}',
+            style: TextStyle(color: TravelTheme.textSecondaryFor(context)),
           ),
           const Divider(height: 24),
           Text(
@@ -1766,12 +1969,16 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
           ? null
           : SafeArea(
               child: Container(
-                padding: EdgeInsets.all(14.r),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(color: Color(0x18000000), blurRadius: 18),
-                  ],
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: TravelTheme.cardSurfaceFor(context),
+                  border: Border(
+                    top: BorderSide(
+                      color: TravelTheme.borderFor(context),
+                      width: 1,
+                    ),
+                  ),
+                  boxShadow: TravelTheme.shadowFor(context),
                 ),
                 child: Row(
                   children: [
@@ -1783,10 +1990,12 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                           Text(
                             AppLocalizations.of(context)!.hotelRoomsForNights(selectedRoomCount, nights),
                             style: TextStyle(
-                              color: TravelTheme.muted,
-                              fontSize: 10.sp,
+                              color: TravelTheme.textSecondaryFor(context),
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
+                          SizedBox(height: 2.h),
                           Text(
                             travelMoney(
                               context,
@@ -1796,20 +2005,22 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
                                     selectedCurrency ?? offer.total.currency,
                               ),
                             ),
-                            style: const TextStyle(
-                              color: TravelTheme.purple,
+                            style: TextStyle(
+                              color: TravelTheme.primaryFor(context),
                               fontWeight: FontWeight.w900,
+                              fontSize: 16.sp,
                             ),
                           ),
                         ],
                       ),
                     ),
+                    SizedBox(width: 12.w),
                     SizedBox(
-                      width: 150.w,
+                      width: 155.w,
                       child: CommonButton(
                         width: double.infinity,
                         text: AppLocalizations.of(context)!.hotel_continue_booking,
-                        backgroundColor: TravelTheme.purple,
+                        backgroundColor: TravelTheme.primaryFor(context),
                         onPressed: canCheckout
                             ? () {
                                 final first = selectedRooms.first;
@@ -2155,17 +2366,24 @@ class _SectionChip extends StatelessWidget {
   }
 }
 
-class _HotelGallery extends StatelessWidget {
+class _HotelGallery extends StatefulWidget {
   final List<String> images;
   final String fallbackImageUrl;
 
   const _HotelGallery({required this.images, required this.fallbackImageUrl});
 
   @override
+  State<_HotelGallery> createState() => _HotelGalleryState();
+}
+
+class _HotelGalleryState extends State<_HotelGallery> {
+  int _currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     final gallery = [
-      if (fallbackImageUrl.isNotEmpty) fallbackImageUrl,
-      ...images.where((image) => image != fallbackImageUrl),
+      if (widget.fallbackImageUrl.isNotEmpty) widget.fallbackImageUrl,
+      ...widget.images.where((image) => image != widget.fallbackImageUrl),
     ];
     if (gallery.isEmpty) {
       return ClipRRect(
@@ -2175,17 +2393,42 @@ class _HotelGallery extends StatelessWidget {
     }
     return SizedBox(
       height: 230.h,
-      child: PageView.builder(
-        itemCount: gallery.length,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsetsDirectional.only(
-            end: index == gallery.length - 1 ? 0.0 : 8.w,
+      child: Stack(
+        children: [
+          PageView.builder(
+            itemCount: gallery.length,
+            onPageChanged: (index) => setState(() => _currentIndex = index),
+            itemBuilder: (context, index) => Padding(
+              padding: EdgeInsetsDirectional.only(
+                end: index == gallery.length - 1 ? 0.0 : 8.w,
+              ),
+              child: ClipRRect(
+                borderRadius: TravelTheme.radius,
+                child: _HotelNetworkImage(url: gallery[index]),
+              ),
+            ),
           ),
-          child: ClipRRect(
-            borderRadius: TravelTheme.radius,
-            child: _HotelNetworkImage(url: gallery[index]),
-          ),
-        ),
+          if (gallery.length > 1)
+            PositionedDirectional(
+              bottom: 12.h,
+              end: 14.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.65),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Text(
+                  '${_currentIndex + 1} / ${gallery.length}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
