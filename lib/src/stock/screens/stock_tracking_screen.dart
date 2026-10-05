@@ -190,34 +190,47 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      l10nPick(context, fa: 'ارزش کل دارایی سهام (USD)', en: 'Total Stock Valuation (USD)'),
-                                      style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkOnBrandMuted(context)),
+                                    Expanded(
+                                      child: Text(
+                                        l10nPick(context, fa: 'ارزش کل دارایی سهام (USD)', en: 'Total Stock Valuation (USD)'),
+                                        style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkOnBrandMuted(context)),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
+                                    SizedBox(width: ECardoTokens.space2.w),
                                     Icon(Icons.pie_chart_rounded, color: ECardoTokens.sand400(context), size: 18.sp),
                                   ],
                                 ),
                                 SizedBox(height: ECardoTokens.space2.h),
                                 Row(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
                                   children: [
-                                    Text(
-                                      '\$${summary?.totalValueUsd.toStringAsFixed(2) ?? '0.00'}',
-                                      style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w900, color: ECardoTokens.inkOnBrand),
-                                    ),
-                                    SizedBox(width: ECardoTokens.space2.w),
-                                    Text(
-                                      summary != null && summary.totalUnrealizedPnlUsd >= 0
-                                          ? '+\$${summary.totalUnrealizedPnlUsd.toStringAsFixed(1)}'
-                                          : '-',
-                                      style: TextStyle(
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w800,
-                                        color: ECardoTokens.inkOnBrandMuted(context),
+                                    Expanded(
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                                        textBaseline: TextBaseline.alphabetic,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              '\$${summary?.totalValueUsd.toStringAsFixed(2) ?? '0.00'}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w900, color: ECardoTokens.inkOnBrand),
+                                            ),
+                                          ),
+                                          SizedBox(width: ECardoTokens.space2.w),
+                                          Text(
+                                            summary != null && summary.totalUnrealizedPnlUsd >= 0
+                                                ? '+\$${summary.totalUnrealizedPnlUsd.toStringAsFixed(1)}'
+                                                : '-',
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w800,
+                                              color: ECardoTokens.inkOnBrandMuted(context),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    const Spacer(),
+                                    SizedBox(width: ECardoTokens.space2.w),
                                     Container(
                                       padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space2.w, vertical: 3.h),
                                       decoration: BoxDecoration(
@@ -495,48 +508,50 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 32.w,
-                    height: 32.w,
-                    decoration: BoxDecoration(
-                      color: ECardoTokens.brand100(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                    ),
-                    child: Center(
-                      child: Text(
-                        h.ticker.substring(0, min(3, h.ticker.length)).toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w900,
-                          color: ECardoTokens.brand700(context),
-                          fontFamily: 'monospace',
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32.w,
+                      height: 32.w,
+                      decoration: BoxDecoration(
+                        color: ECardoTokens.brand100(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                      ),
+                      child: Center(
+                        child: Text(
+                          h.ticker.substring(0, min(3, h.ticker.length)).toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w900,
+                            color: ECardoTokens.brand700(context),
+                            fontFamily: 'monospace',
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: ECardoTokens.space2.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          h.name,
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            fontWeight: FontWeight.w800,
-                            color: ECardoTokens.ink(context),
+                    SizedBox(width: ECardoTokens.space2.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            h.name,
+                            style: TextStyle(
+                              fontSize: 12.5.sp,
+                              fontWeight: FontWeight.w800,
+                              color: ECardoTokens.ink(context),
+                            ),
                           ),
-                        ),
-                        Text(
-                          '${h.shares.toInt()} shares · $h.currency @ ${h.exchangeCode}',
-                          style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context)),
-                        ),
-                      ],
+                          Text(
+                            '${h.shares.toInt()} shares · ${h.currency} @ ${h.exchangeCode}',
+                            style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context)),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -566,10 +581,14 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Avg Cost: \$${h.averageCost.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+              Expanded(
+                child: Text(
+                  'Avg Cost: \$${h.averageCost.toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
+              SizedBox(width: ECardoTokens.space2.w),
               Text(
                 'Current: \$${h.currentPrice.toStringAsFixed(2)}',
                 style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
@@ -579,14 +598,14 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
           SizedBox(height: 2.h),
           Row(
             children: [
-              Flexible(
+              Expanded(
                 child: Text(
                   'Realized P&L: \$${h.realizedPnl.toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context)),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Spacer(),
+              SizedBox(width: ECardoTokens.space2.w),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
                 decoration: BoxDecoration(
@@ -619,52 +638,55 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
     required String descFa,
     required String descEn,
   }) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: ECardoTokens.space5.h),
-      padding: EdgeInsets.all(ECardoTokens.space6.r),
-      decoration: BoxDecoration(
-        color: ECardoTokens.surfaceCard(context),
-        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-        border: Border.all(color: ECardoTokens.border(context)),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            size: 48.sp,
-            color: ECardoTokens.inkMuted(context),
-          ),
-          SizedBox(height: ECardoTokens.space3.h),
-          Text(
-            l10nPick(context, fa: titleFa, en: titleEn),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13.5.sp,
-              fontWeight: FontWeight.w800,
-              color: ECardoTokens.ink(context),
-            ),
-          ),
-          SizedBox(height: ECardoTokens.space2.h),
-          Text(
-            l10nPick(context, fa: descFa, en: descEn),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 11.5.sp,
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: ECardoTokens.space5.h),
+        padding: EdgeInsets.all(ECardoTokens.space6.r),
+        decoration: BoxDecoration(
+          color: ECardoTokens.surfaceCard(context),
+          borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+          border: Border.all(color: ECardoTokens.border(context)),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              size: 48.sp,
               color: ECardoTokens.inkMuted(context),
             ),
-          ),
-          SizedBox(height: ECardoTokens.space4.h),
-          CommonButton(
-            height: 42.h,
-            text: l10nPick(context, fa: 'ثبت سفارش سهام جدید', en: 'Place New Stock Order'),
-            backgroundColor: ECardoTokens.brand700(context),
-            textColor: ECardoTokens.inkOnBrand,
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Get.to(() => const StockOrderScreen());
-            },
-          ),
-        ],
+            SizedBox(height: ECardoTokens.space3.h),
+            Text(
+              l10nPick(context, fa: titleFa, en: titleEn),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13.5.sp,
+                fontWeight: FontWeight.w800,
+                color: ECardoTokens.ink(context),
+              ),
+            ),
+            SizedBox(height: ECardoTokens.space2.h),
+            Text(
+              l10nPick(context, fa: descFa, en: descEn),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                color: ECardoTokens.inkMuted(context),
+              ),
+            ),
+            SizedBox(height: ECardoTokens.space4.h),
+            CommonButton(
+              height: 42.h,
+              text: l10nPick(context, fa: 'ثبت سفارش سهام جدید', en: 'Place New Stock Order'),
+              backgroundColor: ECardoTokens.brand700(context),
+              textColor: ECardoTokens.inkOnBrand,
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Get.to(() => const StockOrderScreen());
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -54,6 +54,17 @@ class StockSymbolModel {
       exchangeCode: json['exchange_code']?.toString(),
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StockSymbolModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          ticker == other.ticker;
+
+  @override
+  int get hashCode => id.hashCode ^ ticker.hashCode;
 }
 
 class StockMarketModel {
@@ -100,6 +111,17 @@ class StockMarketModel {
           : const [],
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StockMarketModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          code == other.code;
+
+  @override
+  int get hashCode => id.hashCode ^ code.hashCode;
 }
 
 class StockTradingAccountModel {

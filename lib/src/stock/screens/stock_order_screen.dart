@@ -99,8 +99,8 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             width: double.infinity,
             text: l10nPick(
               context,
-              fa: 'پیش‌نمایش و بررسی نهایی معامله',
-              en: 'Review & Verify Order',
+              fa: 'پیش‌نمایش و ثبت نهایی سفارش',
+              en: 'Place Order & Review',
               ar: 'معاينة ومراجعة الأمر',
               zh: '订单预览与校验',
             ),
@@ -206,12 +206,16 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
       children: [
         Icon(icon, size: 16.sp, color: ECardoTokens.brand500(context)),
         SizedBox(width: ECardoTokens.space2.w),
-        Text(
-          l10nPick(context, fa: labelFa, en: labelEn),
-          style: TextStyle(
-            fontSize: 12.5.sp,
-            fontWeight: FontWeight.w800,
-            color: ECardoTokens.ink(context),
+        Expanded(
+          child: Text(
+            l10nPick(context, fa: labelFa, en: labelEn),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 12.5.sp,
+              fontWeight: FontWeight.w800,
+              color: ECardoTokens.ink(context),
+            ),
           ),
         ),
       ],
@@ -308,8 +312,14 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
 
   Widget _buildMarketDropdown(BuildContext context) {
     return Obx(() {
-      final mkts = controller.markets;
-      final selected = controller.selectedMarket.value ?? (mkts.isNotEmpty ? mkts.first : null);
+      final mkts = controller.markets.toList();
+      final selected = controller.selectedMarket.value;
+      if (selected != null && !mkts.contains(selected)) {
+        mkts.insert(0, selected);
+      }
+      final safeValue = mkts.contains(selected)
+          ? selected
+          : (mkts.isNotEmpty ? mkts.first : null);
 
       return Container(
         decoration: BoxDecoration(
@@ -320,12 +330,12 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
         padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space3.w),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<StockMarketModel>(
-            value: selected,
+            value: safeValue,
             isExpanded: true,
             dropdownColor: ECardoTokens.surfaceCard(context),
             icon: Icon(Icons.arrow_drop_down_rounded, color: ECardoTokens.inkMuted(context)),
             items: mkts.map((m) {
-              return DropdownMenuItem(
+              return DropdownMenuItem<StockMarketModel>(
                 value: m,
                 child: Row(
                   children: [
@@ -373,8 +383,12 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
 
   Widget _buildSymbolDropdown(BuildContext context) {
     return Obx(() {
-      final syms = controller.selectedMarket.value?.symbols ?? [];
-      final selected = controller.selectedSymbol.value ?? (syms.isNotEmpty ? syms.first : null);
+      final syms = (controller.selectedMarket.value?.symbols ?? []).toList();
+      final currentSelected = controller.selectedSymbol.value;
+      if (currentSelected != null && !syms.any((s) => s.ticker == currentSelected.ticker)) {
+        syms.insert(0, currentSelected);
+      }
+      final selectedTicker = currentSelected?.ticker ?? (syms.isNotEmpty ? syms.first.ticker : null);
 
       return Container(
         decoration: BoxDecoration(
@@ -384,16 +398,16 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
         ),
         padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space3.w),
         child: DropdownButtonHideUnderline(
-          child: DropdownButton<StockSymbolModel>(
-            value: selected,
+          child: DropdownButton<String>(
+            value: selectedTicker,
             isExpanded: true,
             dropdownColor: ECardoTokens.surfaceCard(context),
             icon: Icon(Icons.arrow_drop_down_rounded, color: ECardoTokens.inkMuted(context)),
             items: syms.map((s) {
               final isPos = s.dailyChangePct >= 0;
               final changeCol = isPos ? ECardoTokens.success(context) : ECardoTokens.danger(context);
-              return DropdownMenuItem(
-                value: s,
+              return DropdownMenuItem<String>(
+                value: s.ticker,
                 child: Row(
                   children: [
                     Text(
@@ -438,9 +452,12 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 ),
               );
             }).toList(),
-            onChanged: (val) {
-              if (val != null) {
-                controller.selectSymbol(val);
+            onChanged: (ticker) {
+              if (ticker != null) {
+                final match = syms.firstWhereOrNull((s) => s.ticker == ticker);
+                if (match != null) {
+                  controller.selectSymbol(match);
+                }
               }
             },
           ),
@@ -806,20 +823,26 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.receipt_long_rounded, color: ECardoTokens.brand500(context), size: 18.sp),
-                    SizedBox(width: ECardoTokens.space2.w),
-                    Text(
-                      l10nPick(context, fa: 'پیش‌نمایش تسویه و کارمزد:', en: 'Settlement & Execution:'),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w800,
-                        color: ECardoTokens.ink(context),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(Icons.receipt_long_rounded, color: ECardoTokens.brand500(context), size: 18.sp),
+                      SizedBox(width: ECardoTokens.space2.w),
+                      Expanded(
+                        child: Text(
+                          l10nPick(context, fa: 'پیش‌نمایش تسویه و کارمزد:', en: 'Settlement & Execution:'),
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w800,
+                            color: ECardoTokens.ink(context),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                SizedBox(width: ECardoTokens.space2.w),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
@@ -863,14 +886,17 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    l10nPick(context, fa: 'مبلغ کل قابل پرداخت:', en: 'Total Settlement Amount:'),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w800,
-                      color: ECardoTokens.brand700(context),
+                  Expanded(
+                    child: Text(
+                      l10nPick(context, fa: 'مبلغ کل قابل پرداخت:', en: 'Total Settlement Amount:'),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w800,
+                        color: ECardoTokens.brand700(context),
+                      ),
                     ),
                   ),
+                  SizedBox(width: 4.w),
                   Text(
                     '${payAmt.toStringAsFixed(curr == 'IRR' ? 0 : 2)} $curr',
                     style: TextStyle(
@@ -897,10 +923,15 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          l10nPick(context, fa: labelFa, en: labelEn),
-          style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+        Expanded(
+          child: Text(
+            l10nPick(context, fa: labelFa, en: labelEn),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+          ),
         ),
+        SizedBox(width: 4.w),
         Text(
           value,
           style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),

@@ -252,16 +252,23 @@ class TaxiVoucherScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Icon(Icons.local_taxi_rounded, color: ECardoTokens.brand500(context), size: 24.r),
-                        SizedBox(width: 8.w),
-                        Text(
-                          l10nPick(context, en: booking.vehicle.titleEn, fa: booking.vehicle.titleFa),
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: textPrimary),
-                        ),
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Icon(Icons.local_taxi_rounded, color: ECardoTokens.brand500(context), size: 24.r),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              l10nPick(context, en: booking.vehicle.titleEn, fa: booking.vehicle.titleFa),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: textPrimary),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    SizedBox(width: 8.w),
                     Container(
                       padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
                       decoration: BoxDecoration(
@@ -369,10 +376,15 @@ class TaxiVoucherScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            l10nPick(context, en: 'Lead Passenger:', fa: 'نام مسافر:', ar: 'اسم الراكب:', zh: '乘车人姓名:'),
-                            style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                          Expanded(
+                            child: Text(
+                              l10nPick(context, en: 'Lead Passenger:', fa: 'نام مسافر:', ar: 'اسم الراكب:', zh: '乘车人姓名:'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                            ),
                           ),
+                          SizedBox(width: 4.w),
                           Text(
                             booking.passengerName,
                             style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: textPrimary),
@@ -384,10 +396,15 @@ class TaxiVoucherScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              l10nPick(context, en: 'Mobile / WhatsApp:', fa: 'شماره تماس:', ar: 'رقم الهاتف:', zh: '联系电话:'),
-                              style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                            Expanded(
+                              child: Text(
+                                l10nPick(context, en: 'Mobile / WhatsApp:', fa: 'شماره تماس:', ar: 'رقم الهاتف:', zh: '联系电话:'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                              ),
                             ),
+                            SizedBox(width: 4.w),
                             Text(
                               booking.passengerPhone,
                               style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: textPrimary),
@@ -400,13 +417,22 @@ class TaxiVoucherScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              l10nPick(context, en: 'Flight Tracking:', fa: 'شماره پرواز:', ar: 'رقم الرحلة:', zh: '航班号:'),
-                              style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                            Expanded(
+                              child: Text(
+                                l10nPick(context, en: 'Flight Tracking:', fa: 'شماره پرواز:', ar: 'رقم الرحلة:', zh: '航班号:'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                              ),
                             ),
-                            Text(
-                              booking.flightNumber,
-                              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, fontFamily: 'monospace', color: ECardoTokens.brand500(context)),
+                            SizedBox(width: 4.w),
+                            Flexible(
+                              child: Text(
+                                booking.flightNumber,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, fontFamily: 'monospace', color: ECardoTokens.brand500(context)),
+                              ),
                             ),
                           ],
                         ),
@@ -416,13 +442,22 @@ class TaxiVoucherScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              l10nPick(context, en: 'Meet & Greet:', fa: 'استقبال تشریفات:', ar: 'الاستقبال باللوحة:', zh: '举牌接机:'),
-                              style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                            Expanded(
+                              child: Text(
+                                l10nPick(context, en: 'Meet & Greet:', fa: 'استقبال تشریفات:', ar: 'الاستقبال باللوحة:', zh: '举牌接机:'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                              ),
                             ),
-                            Text(
-                              l10nPick(context, en: 'Included (Name Sign)', fa: 'دارد (با تابلوی نام مسافر)', ar: 'مشمول', zh: '已包含'),
-                              style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.brand500(context)),
+                            SizedBox(width: 4.w),
+                            Flexible(
+                              child: Text(
+                                l10nPick(context, en: 'Included (Name Sign)', fa: 'دارد (با تابلوی نام مسافر)', ar: 'مشمول', zh: '已包含'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.brand500(context)),
+                              ),
                             ),
                           ],
                         ),
@@ -432,10 +467,15 @@ class TaxiVoucherScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              l10nPick(context, en: 'Child Safety Seats:', fa: 'صندلی کودک:', ar: 'مقاعد أمان:'),
-                              style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                            Expanded(
+                              child: Text(
+                                l10nPick(context, en: 'Child Safety Seats:', fa: 'صندلی کودک:', ar: 'مقاعد أمان:'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                              ),
                             ),
+                            SizedBox(width: 4.w),
                             Text(
                               '${booking.childSeatCount} عدد',
                               style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textPrimary),
@@ -501,25 +541,32 @@ class TaxiVoucherScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          localization.travelTotal,
-                          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: textSecondary),
-                        ),
-                        Text(
-                          l10nPick(context, en: '100% Fixed Rate Guarantee', fa: 'کرایه قطعی و تضمین‌شده'),
-                          style: TextStyle(fontSize: 9.5.sp, color: ECardoTokens.brand500(context), fontWeight: FontWeight.w700),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localization.travelTotal,
+                            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: textSecondary),
+                          ),
+                          Text(
+                            l10nPick(context, en: '100% Fixed Rate Guarantee', fa: 'کرایه قطعی و تضمین‌شده'),
+                            style: TextStyle(fontSize: 9.5.sp, color: ECardoTokens.brand500(context), fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      '${formatMockAmount(booking.totalFare)} ${localization.travelMockCurrency}',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w900,
-                        color: ECardoTokens.brand500(context),
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      child: Text(
+                        '${formatMockAmount(booking.totalFare)} ${localization.travelMockCurrency}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w900,
+                          color: ECardoTokens.brand500(context),
+                        ),
                       ),
                     ),
                   ],
@@ -656,11 +703,23 @@ class _FactItem extends StatelessWidget {
           children: [
             Icon(icon, size: 14.r, color: ECardoTokens.inkMuted(context)),
             SizedBox(width: 4.w),
-            Text(label, style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context), fontWeight: FontWeight.w600)),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context), fontWeight: FontWeight.w600),
+              ),
+            ),
           ],
         ),
         SizedBox(height: 4.h),
-        Text(value, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context))),
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context)),
+        ),
       ],
     );
   }
@@ -721,36 +780,43 @@ class _OperationalStatusTimeline extends StatelessWidget {
           return Expanded(
             child: Row(
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 20.r,
-                      height: 20.r,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isDone ? ECardoTokens.brand500(context) : ECardoTokens.borderStrong(context),
-                        border: isCurrent ? Border.all(color: ECardoTokens.brand500(context), width: 2) : null,
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 20.r,
+                        height: 20.r,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isDone ? ECardoTokens.brand500(context) : ECardoTokens.borderStrong(context),
+                          border: isCurrent ? Border.all(color: ECardoTokens.brand500(context), width: 2) : null,
+                        ),
+                        child: Center(
+                          child: isDone
+                              ? Icon(Icons.check, size: 12, color: ECardoTokens.inkOnBrand)
+                              : Text('${index + 1}', style: TextStyle(fontSize: 9.sp, color: ECardoTokens.inkOnBrand)),
+                        ),
                       ),
-                      child: Center(
-                        child: isDone
-                            ? Icon(Icons.check, size: 12, color: ECardoTokens.inkOnBrand)
-                            : Text('${index + 1}', style: TextStyle(fontSize: 9.sp, color: ECardoTokens.inkOnBrand)),
+                      SizedBox(height: 3.h),
+                      Text(
+                        steps[index],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 9.sp,
+                          fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600,
+                          color: isCurrent ? ECardoTokens.brand500(context) : ECardoTokens.inkMuted(context),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 3.h),
-                    Text(
-                      steps[index],
-                      style: TextStyle(
-                        fontSize: 9.5.sp,
-                        fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600,
-                        color: isCurrent ? ECardoTokens.brand500(context) : ECardoTokens.inkMuted(context),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 if (index < steps.length - 1)
                   Expanded(
+                    flex: 2,
                     child: Container(
                       height: 2,
                       color: activeStep > index ? ECardoTokens.brand500(context) : border,

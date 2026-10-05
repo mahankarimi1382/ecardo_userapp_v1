@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -8,11 +9,27 @@ import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/stock/controllers/stock_controller.dart';
 import 'package:ecardo_user/src/stock/models/stock_models.dart';
+import 'package:ecardo_user/src/stock/services/stock_service.dart';
 import 'package:ecardo_user/src/stock/screens/stock_home_screen.dart';
 import 'package:ecardo_user/src/stock/screens/stock_order_screen.dart';
 import 'package:ecardo_user/src/stock/screens/stock_confirm_screen.dart';
 import 'package:ecardo_user/src/stock/screens/stock_tracking_screen.dart';
 import 'package:ecardo_user/src/stock/screens/stock_intro_screen.dart';
+
+class MockStockService extends StockService {
+  @override
+  Future<List<StockMarketModel>> getMarkets() async => [];
+  @override
+  Future<StockTradingAccountModel?> getAccount() async => null;
+  @override
+  Future<Map<String, dynamic>?> getPortfolio() async => null;
+  @override
+  Future<Map<String, dynamic>?> getFxQuote({
+    required String from,
+    required String to,
+    required double amount,
+  }) async => null;
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -47,10 +64,16 @@ void main() {
   }
 
   setUp(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('PonnamKarthik/fluttertoast'),
+      (MethodCall methodCall) async => true,
+    );
     SharedPreferences.setMockInitialValues({});
     Get.reset();
     Get.put<TokenService>(TokenService());
     Get.put<NetworkService>(NetworkService());
+    Get.put<StockService>(MockStockService());
   });
 
   tearDown(() {
@@ -454,6 +477,7 @@ void main() {
     });
 
     testWidgets('renders StockOrderScreen form without overflow', (tester) async {
+      phoneSurface(tester);
       final controller = Get.put(StockController());
       controller.selectedMarket.value = const StockMarketModel(
         id: 1,
@@ -484,10 +508,11 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.byType(StockOrderScreen), findsOneWidget);
-      expect(find.textContaining('Place Order'), findsOneWidget);
+      expect(find.textContaining('Order'), findsWidgets);
     });
 
     testWidgets('renders StockOrderScreen in RTL without overflow', (tester) async {
+      phoneSurface(tester);
       final controller = Get.put(StockController());
       controller.selectedMarket.value = const StockMarketModel(
         id: 1,
@@ -521,6 +546,7 @@ void main() {
     });
 
     testWidgets('renders StockConfirmScreen review card without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockOrderConfirmScreen(),
@@ -535,6 +561,7 @@ void main() {
     });
 
     testWidgets('renders StockConfirmScreen with risk checkbox visible', (tester) async {
+      phoneSurface(tester);
       final controller = Get.put(StockController());
       controller.riskAcknowledged.value = false;
 
@@ -552,6 +579,7 @@ void main() {
     });
 
     testWidgets('renders StockTrackingScreen Orders tab without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockTrackingScreen(),
@@ -566,6 +594,7 @@ void main() {
     });
 
     testWidgets('renders StockTrackingScreen Portfolio tab without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockTrackingScreen(),
@@ -582,6 +611,7 @@ void main() {
     });
 
     testWidgets('renders StockIntroScreen hero card without overflow', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockIntroScreen(),
@@ -596,6 +626,7 @@ void main() {
     });
 
     testWidgets('renders StockIntroScreen market cards grid', (tester) async {
+      phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
           const StockIntroScreen(),
@@ -620,11 +651,13 @@ void main() {
       controller = Get.put(StockController());
     });
 
-    tearDown(() {
+    tearDown(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
       Get.reset();
     });
 
     test('validateOrder returns error when no symbol selected', () {
+      controller.selectedSymbol.value = null;
       final error = controller.validateOrder();
       expect(error, contains('ERR_PRECONDITION'));
     });

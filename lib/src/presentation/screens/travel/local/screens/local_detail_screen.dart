@@ -263,22 +263,27 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: tealColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Text(
-                        widget.experience.typeLabel,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w700,
-                          color: tealColor,
+                    Flexible(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: tealColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text(
+                          widget.experience.typeLabel,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w700,
+                            color: tealColor,
+                          ),
                         ),
                       ),
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
                         SizedBox(width: 4.w),
@@ -381,19 +386,21 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('بزرگسالان',
-                      style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-                  Text('${widget.experience.price.toStringAsFixed(0)} ${widget.experience.currency} / نفر',
-                      style: TextStyle(
-                          fontSize: 10.5.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('بزرگسالان',
+                        style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+                    Text('${widget.experience.price.toStringAsFixed(0)} ${widget.experience.currency} / نفر',
+                        style: TextStyle(
+                            fontSize: 10.5.sp,
+                            color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                  ],
+                ),
               ),
               Obx(() {
                 final gCount = controller.guestsCount.value;
@@ -439,22 +446,24 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('کودکان (۲ تا ۱۲ سال)',
-                      style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-                  Text(
-                      widget.experience.childPrice > 0
-                          ? '${widget.experience.childPrice.toStringAsFixed(0)} ${widget.experience.currency} / نفر'
-                          : 'تعرفه نیم‌بها',
-                      style: TextStyle(
-                          fontSize: 10.5.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('کودکان (۲ تا ۱۲ سال)',
+                        style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+                    Text(
+                        widget.experience.childPrice > 0
+                            ? '${widget.experience.childPrice.toStringAsFixed(0)} ${widget.experience.currency} / نفر'
+                            : 'تعرفه نیم‌بها',
+                        style: TextStyle(
+                            fontSize: 10.5.sp,
+                            color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                  ],
+                ),
               ),
               Obx(() {
                 final cCount = controller.childrenCount.value;
@@ -513,14 +522,18 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                       children: [
                         Icon(Icons.calendar_today_rounded, size: 16.sp, color: tealColor),
                         SizedBox(width: 6.w),
-                        Obx(() => Text(
-                              DateFormat('yyyy/MM/dd').format(controller.selectedDate.value),
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                              ),
-                            )),
+                        Expanded(
+                          child: Obx(() => Text(
+                                DateFormat('yyyy/MM/dd').format(controller.selectedDate.value),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                ),
+                              )),
+                        ),
                       ],
                     ),
                   ),
@@ -545,14 +558,20 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                           color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                         ),
                       ),
-                      Obx(() => Text(
-                            '${controller.guestsCount.value} بزرگسال + ${controller.childrenCount.value} کودک',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                            ),
-                          )),
+                      SizedBox(width: 4.w),
+                      Expanded(
+                        child: Obx(() => Text(
+                              '${controller.guestsCount.value}ب + ${controller.childrenCount.value}ک',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w800,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              ),
+                            )),
+                      ),
                     ],
                   ),
                 ),

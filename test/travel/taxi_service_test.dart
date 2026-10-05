@@ -374,7 +374,7 @@ void main() {
       expect(find.text('Pickup Location'), findsOneWidget);
       expect(find.text('Destination / Drop-off'), findsOneWidget);
 
-      await tester.drag(find.byType(ListView), const Offset(0, -300));
+      await tester.drag(find.byType(ListView), const Offset(0, -600));
       await tester.pumpAndSettle();
 
       expect(find.text('Passengers'), findsOneWidget);
@@ -404,6 +404,8 @@ void main() {
       expect(find.text('خلاصه مسیر ترانسفر'), findsOneWidget);
       expect(find.text('ناوگان در دسترس'), findsOneWidget);
       expect(find.text('تأیید خودرو و ادامه'), findsOneWidget);
+
+      controller.onClose();
     });
 
     testWidgets('TaxiDetailScreen renders passenger form and fare summary without overflow', (tester) async {

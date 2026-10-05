@@ -31,6 +31,12 @@ import 'package:ecardo_user/src/presentation/screens/travel/local/screens/local_
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  void phoneSurface(WidgetTester tester) {
+    tester.view.physicalSize = const Size(750, 1624);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+  }
+
   Widget wrapWithTheme(
     Widget child, {
     bool isDark = false,
@@ -347,6 +353,7 @@ void main() {
   group('Screens Rendering (Light, Dark, RTL, 375x812)', () {
     testWidgets('BoatCatalogScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       final controller = Get.put(BoatController());
       controller.loadCatalog();
 
@@ -354,19 +361,20 @@ void main() {
       await tester.pumpWidget(
         wrapWithTheme(const BoatCatalogScreen(), isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(BoatCatalogScreen), findsOneWidget);
 
       // RTL Dark
       await tester.pumpWidget(
         wrapWithTheme(const BoatCatalogScreen(), isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(BoatCatalogScreen), findsOneWidget);
     });
 
     testWidgets('BoatDetailScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       Get.put(BoatController());
       const sampleBoat = BoatExperienceModel(
         schemaVersion: '1.0',
@@ -394,7 +402,7 @@ void main() {
         wrapWithTheme(const BoatDetailScreen(boat: sampleBoat),
             isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(BoatDetailScreen), findsOneWidget);
 
       // RTL Dark
@@ -402,12 +410,13 @@ void main() {
         wrapWithTheme(const BoatDetailScreen(boat: sampleBoat),
             isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(BoatDetailScreen), findsOneWidget);
     });
 
     testWidgets('BoatVoucherScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       Get.put(BoatController());
       final sampleBooking = BoatBookingModel(
         schemaVersion: '1.0',
@@ -432,37 +441,39 @@ void main() {
         wrapWithTheme(BoatVoucherScreen(booking: sampleBooking),
             isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(BoatVoucherScreen), findsOneWidget);
 
       await tester.pumpWidget(
         wrapWithTheme(BoatVoucherScreen(booking: sampleBooking),
             isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(BoatVoucherScreen), findsOneWidget);
     });
 
     testWidgets('DiningCatalogScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       final controller = Get.put(DiningController());
       controller.loadCatalog();
 
       await tester.pumpWidget(
         wrapWithTheme(const DiningCatalogScreen(), isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(DiningCatalogScreen), findsOneWidget);
 
       await tester.pumpWidget(
         wrapWithTheme(const DiningCatalogScreen(), isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(DiningCatalogScreen), findsOneWidget);
     });
 
     testWidgets('RestaurantDetailScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       Get.put(DiningController());
       const sampleRestaurant = RestaurantModel(
         schemaVersion: '1.0',
@@ -482,19 +493,20 @@ void main() {
         wrapWithTheme(const RestaurantDetailScreen(restaurant: sampleRestaurant),
             isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(RestaurantDetailScreen), findsOneWidget);
 
       await tester.pumpWidget(
         wrapWithTheme(const RestaurantDetailScreen(restaurant: sampleRestaurant),
             isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(RestaurantDetailScreen), findsOneWidget);
     });
 
     testWidgets('DiningOrderPassScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       Get.put(DiningController());
       final sampleOrder = DiningOrderModel(
         schemaVersion: '1.0',
@@ -515,37 +527,39 @@ void main() {
         wrapWithTheme(DiningOrderPassScreen(order: sampleOrder),
             isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(DiningOrderPassScreen), findsOneWidget);
 
       await tester.pumpWidget(
         wrapWithTheme(DiningOrderPassScreen(order: sampleOrder),
             isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(DiningOrderPassScreen), findsOneWidget);
     });
 
     testWidgets('LocalCatalogScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       final controller = Get.put(LocalExperienceController());
       controller.loadCatalog();
 
       await tester.pumpWidget(
         wrapWithTheme(const LocalCatalogScreen(), isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(LocalCatalogScreen), findsOneWidget);
 
       await tester.pumpWidget(
         wrapWithTheme(const LocalCatalogScreen(), isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(LocalCatalogScreen), findsOneWidget);
     });
 
     testWidgets('LocalDetailScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       Get.put(LocalExperienceController());
       const sampleExp = LocalExperienceItemModel(
         schemaVersion: '1.0',
@@ -570,19 +584,20 @@ void main() {
         wrapWithTheme(const LocalDetailScreen(experience: sampleExp),
             isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(LocalDetailScreen), findsOneWidget);
 
       await tester.pumpWidget(
         wrapWithTheme(const LocalDetailScreen(experience: sampleExp),
             isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(LocalDetailScreen), findsOneWidget);
     });
 
     testWidgets('LocalVoucherScreen renders without overflow in RTL light & dark',
         (tester) async {
+      phoneSurface(tester);
       Get.put(LocalExperienceController());
       final sampleBooking = LocalBookingModel(
         schemaVersion: '1.0',
@@ -606,14 +621,14 @@ void main() {
         wrapWithTheme(LocalVoucherScreen(booking: sampleBooking),
             isDark: false, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(LocalVoucherScreen), findsOneWidget);
 
       await tester.pumpWidget(
         wrapWithTheme(LocalVoucherScreen(booking: sampleBooking),
             isDark: true, locale: const Locale('fa')),
       );
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(LocalVoucherScreen), findsOneWidget);
     });
   });

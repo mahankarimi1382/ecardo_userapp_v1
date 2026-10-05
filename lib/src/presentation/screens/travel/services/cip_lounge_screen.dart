@@ -1410,12 +1410,16 @@ class _CipLoungeReservationScreenState
                         color: _tier == CipLoungeTier.executive ? primary : Colors.grey,
                       ),
                       SizedBox(width: 6.w),
-                      Text(
-                        'Executive CIP',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w800,
-                          color: TravelTheme.textPrimaryFor(context),
+                      Expanded(
+                        child: Text(
+                          'Executive CIP',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w800,
+                            color: TravelTheme.textPrimaryFor(context),
+                          ),
                         ),
                       ),
                     ],
@@ -1467,12 +1471,16 @@ class _CipLoungeReservationScreenState
                         color: Color(0xFFD4AF37),
                       ),
                       SizedBox(width: 6.w),
-                      Text(
-                        'Royal VIP Suite',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w800,
-                          color: TravelTheme.textPrimaryFor(context),
+                      Expanded(
+                        child: Text(
+                          'Royal VIP Suite',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w800,
+                            color: TravelTheme.textPrimaryFor(context),
+                          ),
                         ),
                       ),
                     ],
@@ -1705,12 +1713,16 @@ class _CipLoungeReservationScreenState
                 color: TravelTheme.primaryFor(context),
               ),
               SizedBox(width: 8.w),
-              Text(
-                'Cancellation & Refund Policy',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  color: TravelTheme.textPrimaryFor(context),
+              Expanded(
+                child: Text(
+                  'Cancellation & Refund Policy',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w800,
+                    color: TravelTheme.textPrimaryFor(context),
+                  ),
                 ),
               ),
             ],

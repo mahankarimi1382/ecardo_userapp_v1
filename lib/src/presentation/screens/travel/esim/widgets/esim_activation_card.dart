@@ -161,18 +161,22 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      l10nPick(
-                        context,
-                        en: 'eSIM Activation QR',
-                        fa: 'کد QR فعال‌سازی eSIM',
-                        ar: 'رمز QR لتفعيل eSIM',
-                        zh: 'eSIM 激活二维码',
-                      ),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w900,
-                        color: TravelTheme.textPrimaryFor(ctx),
+                    Expanded(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'eSIM Activation QR',
+                          fa: 'کد QR فعال‌سازی eSIM',
+                          ar: 'رمز QR لتفعيل eSIM',
+                          zh: 'eSIM 激活二维码',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w900,
+                          color: TravelTheme.textPrimaryFor(ctx),
+                        ),
                       ),
                     ),
                     IconButton(

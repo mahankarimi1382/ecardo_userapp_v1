@@ -286,15 +286,20 @@ class StockIntroScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w900, fontFamily: 'monospace', color: ECardoTokens.brand700(context)),
                 ),
               ),
-              Text(
-                l10nPick(
-                  context,
-                  fa: m['label']!,
-                  en: m['label']!,
-                  ar: m['label']!,
-                  zh: m['label']!,
+              SizedBox(width: 4.w),
+              Expanded(
+                child: Text(
+                  l10nPick(
+                    context,
+                    fa: m['label']!,
+                    en: m['label']!,
+                    ar: m['label']!,
+                    zh: m['label']!,
+                  ),
+                  textAlign: TextAlign.end,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
                 ),
-                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
               ),
             ],
           ),

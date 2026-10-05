@@ -84,8 +84,8 @@ class TaxiCounterControl extends StatelessWidget {
                   },
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusFull),
                   child: Container(
-                    width: 38.r,
-                    height: 38.r,
+                    width: 32.r,
+                    height: 32.r,
                     decoration: BoxDecoration(
                       color: buttonBg,
                       shape: BoxShape.circle,
@@ -95,7 +95,7 @@ class TaxiCounterControl extends StatelessWidget {
                     child: Center(
                       child: Icon(
                         Icons.remove_rounded,
-                        size: 18.r,
+                        size: 16.r,
                         color: value.value > min ? textColor : mutedColor.withValues(alpha: 0.5),
                       ),
                     ),
@@ -103,14 +103,19 @@ class TaxiCounterControl extends StatelessWidget {
                 ),
               ),
               // Value Display
-              Obx(() => Text(
-                '${value.value}${unit.isNotEmpty ? ' $unit' : ''}',
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w900,
-                  color: textColor,
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Obx(() => Text(
+                    '${value.value}${unit.isNotEmpty ? ' $unit' : ''}',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w900,
+                      color: textColor,
+                    ),
+                  )),
                 ),
-              )),
+              ),
               // Increment Button
               Semantics(
                 button: true,
@@ -125,8 +130,8 @@ class TaxiCounterControl extends StatelessWidget {
                   },
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusFull),
                   child: Container(
-                    width: 38.r,
-                    height: 38.r,
+                    width: 32.r,
+                    height: 32.r,
                     decoration: BoxDecoration(
                       color: buttonBg,
                       shape: BoxShape.circle,
@@ -136,7 +141,7 @@ class TaxiCounterControl extends StatelessWidget {
                     child: Center(
                       child: Icon(
                         Icons.add_rounded,
-                        size: 18.r,
+                        size: 16.r,
                         color: value.value < max ? ECardoTokens.brand500(context) : mutedColor.withValues(alpha: 0.5),
                       ),
                     ),
@@ -651,32 +656,40 @@ class TaxiLiveDriverCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // License Plate Display
-              Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: ECardoTokens.surfaceSunken(context),
-                  borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                  border: Border.all(color: ECardoTokens.border(context)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.directions_car_rounded, size: 16, color: ECardoTokens.brand500(context)),
-                    SizedBox(width: 6.w),
-                    Text(
-                      driver.licensePlate,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1,
-                        color: titleColor,
+              Flexible(
+                child: Container(
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: ECardoTokens.surfaceSunken(context),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                    border: Border.all(color: ECardoTokens.border(context)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.directions_car_rounded, size: 16, color: ECardoTokens.brand500(context)),
+                      SizedBox(width: 4.w),
+                      Flexible(
+                        child: Text(
+                          driver.licensePlate,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
+                            color: titleColor,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+              SizedBox(width: 6.w),
               // Call Chauffeur Button
               CommonButton(
-                width: 120.w,
+                width: 110.w,
                 height: 36.h,
                 text: l10nPick(context, en: 'Call Chauffeur', fa: 'تماس با راننده', ar: 'اتصال بالسائق'),
                 textColor: ECardoTokens.inkOnBrand,

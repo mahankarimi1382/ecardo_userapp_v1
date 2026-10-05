@@ -21,8 +21,16 @@ class StockOrderConfirmScreen extends StatefulWidget {
 }
 
 class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
-  final StockController controller = Get.find<StockController>();
+  late final StockController controller;
   final TextEditingController _twoFactorController = TextEditingController(text: '7492');
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<StockController>()
+        ? Get.find<StockController>()
+        : Get.put(StockController());
+  }
 
   @override
   void dispose() {
@@ -484,6 +492,7 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
+          flex: 4,
           child: Text(
             l10nPick(context, fa: labelFa, en: labelEn),
             style: TextStyle(
@@ -492,13 +501,18 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
             ),
           ),
         ),
-        Text(
-          value,
-          textAlign: TextAlign.end,
-          style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
-            color: valueColor ?? ECardoTokens.ink(context),
+        SizedBox(width: ECardoTokens.space2.w),
+        Expanded(
+          flex: 5,
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
+              color: valueColor ?? ECardoTokens.ink(context),
+            ),
           ),
         ),
       ],

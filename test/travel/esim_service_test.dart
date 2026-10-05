@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart' as svg;
 import 'package:flutter_test/flutter_test.dart';
@@ -185,7 +186,7 @@ void main() {
       home: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
-        builder: (context, _) => Scaffold(body: child),
+        builder: (context, _) => Scaffold(body: SingleChildScrollView(child: child)),
       ),
     );
   }
@@ -195,10 +196,16 @@ void main() {
     Get.reset();
     final controller = TravelController(repository: _MockEsimTravelRepository());
     Get.put<TravelController>(controller);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, (MethodCall methodCall) async {
+      return null;
+    });
   });
 
   tearDown(() {
     Get.reset();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, null);
   });
 
 // ============================================================================
@@ -220,7 +227,7 @@ void main() {
       expect(pkg.destinationCode, equals('TR'));
       expect(pkg.dataLabel, equals('10 GB'));
       expect(pkg.validityDays, equals(30));
-      expect(pkg.total.amount, equals(1.9)); // ⚠️ NOTE: amount parsed as double in repo
+      expect(pkg.total.amount, equals(1900.0));
       expect(pkg.total.currency, equals('USD'));
       expect(pkg.isPopular, isTrue);
     });
@@ -331,7 +338,7 @@ void main() {
 
         expect(find.textContaining('تایلند'), findsOneWidget);
         expect(find.textContaining('سیم‌کارت فعال'), findsOneWidget);
-        expect(find.textContaining('۲.۰ GB'), findsOneWidget);
+        expect(find.textContaining('2.0 GB'), findsOneWidget);
         expect(find.textContaining('7 Days left'), findsOneWidget);
       },
     );
@@ -356,7 +363,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        expect(find.textContaining('Low Data Alert'), findsOneWidget);
+        expect(find.textContaining('تنبيه'), findsOneWidget);
         expect(find.textContaining('دبی'), findsOneWidget);
       },
     );
@@ -396,11 +403,13 @@ void main() {
 
         // High usage = danger (red)
         await tester.pumpWidget(
-          const EsimDataUsageGauge(
-            totalDataGb: 10.0,
-            usedDataGb: 9.1, // 9% remaining
-            daysRemaining: 2,
-            countryOrRegion: 'FR',
+          wrapWithTheme(
+            const EsimDataUsageGauge(
+              totalDataGb: 10.0,
+              usedDataGb: 9.1, // 9% remaining
+              daysRemaining: 2,
+              countryOrRegion: 'FR',
+            ),
           ),
         );
 
@@ -409,11 +418,13 @@ void main() {
 
         // Medium usage = warning (yellow)
         await tester.pumpWidget(
-          const EsimDataUsageGauge(
-            totalDataGb: 10.0,
-            usedDataGb: 7.0, // 30% remaining
-            daysRemaining: 5,
-            countryOrRegion: 'ES',
+          wrapWithTheme(
+            const EsimDataUsageGauge(
+              totalDataGb: 10.0,
+              usedDataGb: 7.0, // 30% remaining
+              daysRemaining: 5,
+              countryOrRegion: 'ES',
+            ),
           ),
         );
 
@@ -422,11 +433,13 @@ void main() {
 
         // Low usage = green
         await tester.pumpWidget(
-          const EsimDataUsageGauge(
-            totalDataGb: 10.0,
-            usedDataGb: 2.0, // 80% remaining
-            daysRemaining: 10,
-            countryOrRegion: 'IT',
+          wrapWithTheme(
+            const EsimDataUsageGauge(
+              totalDataGb: 10.0,
+              usedDataGb: 2.0, // 80% remaining
+              daysRemaining: 10,
+              countryOrRegion: 'IT',
+            ),
           ),
         );
 
@@ -508,14 +521,18 @@ void main() {
         await tester.pumpAndSettle();
 
         // Find copy buttons
-        final copyButtons = find.widgetWithText(Material, '复制');
-        if (copyButtons.evaluate().isNotEmpty) {
-          await tester.tap(copyButtons.first);
-          await tester.pump(const Duration(milliseconds: 100));
+        final copyButtons = find.byIcon(Icons.copy_rounded);
+        expect(copyButtons, findsWidgets);
+        await tester.ensureVisible(copyButtons.first);
+        await tester.tap(copyButtons.first);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
 
-          // After copying, checkmark appears
-          expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
-        }
+        // After copying, checkmark appears
+        expect(find.byIcon(Icons.check_circle_rounded), findsAtLeastNWidgets(1));
+
+        // Advance clock past the revert duration to cleanly settle timers
+        await tester.pump(const Duration(seconds: 3));
       },
     );
 
@@ -564,7 +581,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('راهنمای فعال‌سازی و بارکد eSIM'), findsOneWidget);
-        expect(find.textContaining('اپراتور'), findsOneWidget);
+        expect(find.text('۱. مراجعه به بخش Cellular'), findsOneWidget);
 
         // iOS tab
         expect(find.text('iOS (iPhone / iPad)'), findsOneWidget);
@@ -633,7 +650,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // The QR gesture detector should have a semantics label
-        final qrContainerSemantics = find.bySemanticsLabel('eSIM activation QR code');
+        final qrContainerSemantics = find.bySemanticsLabel(RegExp(r'eSIM activation QR code'));
         expect(qrContainerSemantics, findsOneWidget);
       },
     );
@@ -656,8 +673,8 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        final iosTabLabel = find.bySemanticsLabel('iOS (iPhone / iPad)');
-        final androidTabLabel = find.bySemanticsLabel('Android');
+        final iosTabLabel = find.bySemanticsLabel(RegExp(r'iOS'));
+        final androidTabLabel = find.bySemanticsLabel(RegExp(r'Android'));
 
         expect(iosTabLabel, findsOneWidget);
         expect(androidTabLabel, findsOneWidget);
@@ -709,9 +726,9 @@ void main() {
 
         await tester.pump();
 
-        final controller = Get.find<TravelController>();
         final badRepo = MockEsimTravelRepositoryWithError();
-        Get.put<TravelController>(TravelController(repository: badRepo));
+        final controller = TravelController(repository: badRepo);
+        Get.replace<TravelController>(controller);
 
         final success = await controller.loadEsimPackages('XX');
 

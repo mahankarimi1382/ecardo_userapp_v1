@@ -184,18 +184,22 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: oceanColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Text(
-                        widget.boat.categoryLabel,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w700,
-                          color: oceanColor,
+                    Flexible(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: oceanColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text(
+                          widget.boat.categoryLabel,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w700,
+                            color: oceanColor,
+                          ),
                         ),
                       ),
                     ),
@@ -372,27 +376,32 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10nPick(context, fa: 'تاریخ گشت دریایی', en: 'Cruise Date'),
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10nPick(context, fa: 'تاریخ گشت دریایی', en: 'Cruise Date'),
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
                 ),
-              ),
-              SizedBox(height: 2.h),
-              Obx(() => Text(
-                    DateFormat('yyyy/MM/dd (EEEE)').format(controller.selectedDate.value),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                    ),
-                  )),
-            ],
+                SizedBox(height: 2.h),
+                Obx(() => Text(
+                      DateFormat('yyyy/MM/dd (EEEE)').format(controller.selectedDate.value),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      ),
+                    )),
+              ],
+            ),
           ),
+          SizedBox(width: 8.w),
           OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
               minimumSize: Size(90.w, 44.h),

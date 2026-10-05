@@ -447,18 +447,22 @@ class EsimDataUsageGauge extends StatelessWidget {
                               color: TravelTheme.muted,
                             ),
                             SizedBox(width: 6.w),
-                            Text(
-                              l10nPick(
-                                context,
-                                en: 'Used Data',
-                                fa: 'مصرف شده',
-                                ar: 'المستهلك',
-                                zh: '已用数据',
-                              ),
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w700,
-                                color: TravelTheme.textSecondaryFor(context),
+                            Expanded(
+                              child: Text(
+                                l10nPick(
+                                  context,
+                                  en: 'Used Data',
+                                  fa: 'مصرف شده',
+                                  ar: 'المستهلك',
+                                  zh: '已用数据',
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: TravelTheme.textSecondaryFor(context),
+                                ),
                               ),
                             ),
                           ],
@@ -499,18 +503,22 @@ class EsimDataUsageGauge extends StatelessWidget {
                               color: TravelTheme.blue,
                             ),
                             SizedBox(width: 6.w),
-                            Text(
-                              l10nPick(
-                                context,
-                                en: 'Validity Left',
-                                fa: 'اعتبار زمانی',
-                                ar: 'المدة المتبقية',
-                                zh: '剩余有效期',
-                              ),
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w700,
-                                color: TravelTheme.textSecondaryFor(context),
+                            Expanded(
+                              child: Text(
+                                l10nPick(
+                                  context,
+                                  en: 'Validity Left',
+                                  fa: 'اعتبار زمانی',
+                                  ar: 'المدة المتبقية',
+                                  zh: '剩余有效期',
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: TravelTheme.textSecondaryFor(context),
+                                ),
                               ),
                             ),
                           ],
@@ -552,6 +560,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(
                           Icons.add_circle_outline_rounded,
@@ -559,18 +568,22 @@ class EsimDataUsageGauge extends StatelessWidget {
                           size: 20,
                         ),
                         SizedBox(width: 8.w),
-                        Text(
-                          l10nPick(
-                            context,
-                            en: '+ Top-Up Data',
-                            fa: '+ شارژ و افزایش حجم دیتا',
-                            ar: '+ إعادة شحن البيانات',
-                            zh: '+ 充值流量',
-                          ),
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w900,
-                            color: TravelTheme.ink,
+                        Flexible(
+                          child: Text(
+                            l10nPick(
+                              context,
+                              en: '+ Top-Up Data',
+                              fa: '+ شارژ و افزایش حجم دیتا',
+                              ar: '+ إعادة شحن البيانات',
+                              zh: '+ 充值流量',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w900,
+                              color: TravelTheme.ink,
+                            ),
                           ),
                         ),
                       ],

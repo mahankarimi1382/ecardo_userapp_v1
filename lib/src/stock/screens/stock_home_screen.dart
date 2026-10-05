@@ -651,39 +651,35 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          l10nPick(context, fa: 'پروفایل ریسک:', en: 'Risk Profile:'),
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w800,
-                            color: ECardoTokens.ink(context),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4.w,
+                  runSpacing: 2.h,
+                  children: [
+                    Text(
+                      l10nPick(context, fa: 'پروفایل ریسک:', en: 'Risk Profile:'),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w800,
+                        color: ECardoTokens.ink(context),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                      decoration: BoxDecoration(
+                        color: ECardoTokens.brand100(context),
+                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                      ),
+                      child: Text(
+                        tierLabel,
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: ECardoTokens.brand900(context),
                         ),
                       ),
-                      SizedBox(width: 4.w),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
-                        decoration: BoxDecoration(
-                          color: ECardoTokens.brand100(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                        ),
-                        child: Text(
-                          tierLabel,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w700,
-                            color: ECardoTokens.brand900(context),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 2.h),
                 Text(
