@@ -360,7 +360,12 @@ class TransferController extends GetxController {
         transferWalletsList.assignAll(transferWalletsModel.data?.wallets ?? []);
 
         if (transferWalletsList.isNotEmpty) {
-          wallet.value = transferWalletsList.first;
+          // Prioritize national default currency wallet (e.g. IRT for Iran, CNY for China),
+          // fallback to first available. The user can switch to any wallet at any time.
+          final nationalWallet = transferWalletsList.firstWhereOrNull(
+            (w) => w.isNationalDefault == true,
+          );
+          wallet.value = nationalWallet ?? transferWalletsList.first;
         } else {
           wallet.value = null;
         }

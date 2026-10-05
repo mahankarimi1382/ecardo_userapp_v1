@@ -38,6 +38,7 @@ class Wallets {
   String? symbol;
   String? icon;
   bool? isDefault;
+  bool? isNationalDefault;
   bool? isCrypto;
   int? currencyId;
   TransferLimit? transferLimit;
@@ -53,6 +54,7 @@ class Wallets {
     this.symbol,
     this.icon,
     this.isDefault,
+    this.isNationalDefault,
     this.isCrypto,
     this.currencyId,
     this.transferLimit,
@@ -69,6 +71,7 @@ class Wallets {
     symbol = json['symbol'];
     icon = json['icon'];
     isDefault = json['is_default'];
+    isNationalDefault = json['is_national_default'] ?? false;
     isCrypto = json['is_crypto'];
     currencyId = json['currency_id'];
     transferLimit =
