@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 
 import '../core/models/travel_models.dart';
-import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 
@@ -166,198 +166,358 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
     final range =
         value.priceRange ??
         RangeValues(options.minimumPrice, options.maximumPrice);
+
     return TravelPage(
       title: AppLocalizations.of(context)!.hotel_hotel_filters,
       bottomNavigationBar: SafeArea(
-        child: Padding(
+        child: Container(
           padding: EdgeInsets.all(AppSpacing.lg.r),
-          child: FilledButton(
-            onPressed: () => Navigator.of(
-              context,
-            ).pop(value.copyWith(name: nameController.text.trim())),
-            style: FilledButton.styleFrom(
-              backgroundColor: TravelTheme.primaryFor(context),
-              minimumSize: const Size.fromHeight(52),
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.hotel_apply_filters,
+          decoration: BoxDecoration(
+            color: ECardoTokens.surfaceCard(context),
+            border: Border(top: BorderSide(color: ECardoTokens.border(context))),
+            boxShadow: ECardoTokens.shadowSheet(context),
+          ),
+          child: SizedBox(
+            height: 52.h,
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(
+                value.copyWith(name: nameController.text.trim()),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ECardoTokens.brand900(context),
+                foregroundColor: ECardoTokens.inkOnBrand,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.hotel_apply_filters,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ),
           ),
         ),
       ),
-      child: ListView(
-        padding: EdgeInsets.all(20.r),
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  AppLocalizations.of(context)!.hotel_refine_your_results,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w900,
+      child: Container(
+        color: ECardoTokens.surfaceCanvas(context),
+        child: ListView(
+          padding: EdgeInsets.all(20.r),
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    AppLocalizations.of(context)!.hotel_refine_your_results,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w900,
+                      color: ECardoTokens.ink(context),
+                    ),
                   ),
                 ),
-              ),
-              TextButton(
-                onPressed: () => setState(() {
-                  value = const HotelFilterState();
-                  nameController.clear();
-                }),
-                child: Text(AppLocalizations.of(context)!.hotel_clear_all),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          TextField(
-            controller: nameController,
-            decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.hotel_search_hotel_name,
-              prefixIcon: const Icon(Icons.search_rounded),
-            ),
-          ),
-          SizedBox(height: 12.h),
-          _SwitchFilter(
-            title: AppLocalizations.of(context)!.hotel_discounted_hotels_only,
-            value: value.discountedOnly,
-            onChanged: (next) =>
-                setState(() => value = value.copyWith(discountedOnly: next)),
-          ),
-          _FilterSection(
-            title: AppLocalizations.of(context)!.hotel_price_range,
-            child: Column(
-              children: [
-                RangeSlider(
-                  values: range,
-                  min: options.minimumPrice,
-                  max: options.maximumPrice <= options.minimumPrice
-                      ? options.minimumPrice + 1
-                      : options.maximumPrice,
-                  onChanged: (next) =>
-                      setState(() => value = value.copyWith(priceRange: next)),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(range.start.toStringAsFixed(0)),
-                    Text(range.end.toStringAsFixed(0)),
-                  ],
+                TextButton(
+                  onPressed: () => setState(() {
+                    value = const HotelFilterState();
+                    nameController.clear();
+                  }),
+                  style: TextButton.styleFrom(
+                    foregroundColor: ECardoTokens.brand500(context),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.hotel_clear_all,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13.sp,
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-          if (options.stars.isNotEmpty)
+            SizedBox(height: 12.h),
+            Container(
+              decoration: BoxDecoration(
+                color: ECardoTokens.surfaceCard(context),
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                border: Border.all(color: ECardoTokens.border(context)),
+                boxShadow: ECardoTokens.shadowCard(context),
+              ),
+              child: TextField(
+                controller: nameController,
+                style: TextStyle(
+                  color: ECardoTokens.ink(context),
+                  fontSize: 14.sp,
+                ),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 14.h,
+                  ),
+                  border: InputBorder.none,
+                  labelText: AppLocalizations.of(context)!.hotel_search_hotel_name,
+                  labelStyle: TextStyle(
+                    color: ECardoTokens.inkMuted(context),
+                    fontSize: 13.sp,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: ECardoTokens.brand500(context),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            _SwitchFilter(
+              title: AppLocalizations.of(context)!.hotel_discounted_hotels_only,
+              value: value.discountedOnly,
+              onChanged: (next) =>
+                  setState(() => value = value.copyWith(discountedOnly: next)),
+            ),
             _FilterSection(
-              title: AppLocalizations.of(context)!.hotel_hotel_stars,
-              child: Wrap(
-                spacing: 8.w,
-                children: (options.stars.toList()..sort())
-                    .map(
-                      (star) => FilterChip(
-                        label: Text('$star ★'),
-                        selected: value.stars.contains(star),
-                        onSelected: (_) => _toggle(
-                          value.stars,
-                          star,
-                          (next) => setState(
-                            () => value = value.copyWith(stars: next),
-                          ),
+              title: AppLocalizations.of(context)!.hotel_price_range,
+              child: Container(
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  color: ECardoTokens.surfaceCard(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                  border: Border.all(color: ECardoTokens.border(context)),
+                ),
+                child: Column(
+                  children: [
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: ECardoTokens.brand700(context),
+                        inactiveTrackColor: ECardoTokens.surfaceSunken(context),
+                        thumbColor: ECardoTokens.brand700(context),
+                        overlayColor:
+                            ECardoTokens.brand500(context).withValues(alpha: 0.15),
+                      ),
+                      child: RangeSlider(
+                        values: range,
+                        min: options.minimumPrice,
+                        max: options.maximumPrice <= options.minimumPrice
+                            ? options.minimumPrice + 1
+                            : options.maximumPrice,
+                        onChanged: (next) => setState(
+                          () => value = value.copyWith(priceRange: next),
                         ),
                       ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          range.start.toStringAsFixed(0),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            color: ECardoTokens.ink(context),
+                          ),
+                        ),
+                        Text(
+                          range.end.toStringAsFixed(0),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            color: ECardoTokens.ink(context),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (options.stars.isNotEmpty)
+              _FilterSection(
+                title: AppLocalizations.of(context)!.hotel_hotel_stars,
+                child: Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children: (options.stars.toList()..sort())
+                      .map(
+                        (star) {
+                          final selected = value.stars.contains(star);
+                          return FilterChip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '$star',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    color: selected
+                                        ? ECardoTokens.sand600(context)
+                                        : ECardoTokens.ink(context),
+                                  ),
+                                ),
+                                SizedBox(width: 3.w),
+                                Icon(
+                                  Icons.star_rounded,
+                                  size: 14.sp,
+                                  color: ECardoTokens.sand600(context),
+                                ),
+                              ],
+                            ),
+                            selected: selected,
+                            backgroundColor: ECardoTokens.surfaceCard(context),
+                            selectedColor: ECardoTokens.sand100(context),
+                            checkmarkColor: ECardoTokens.sand600(context),
+                            side: BorderSide(
+                              color: selected
+                                  ? ECardoTokens.sand400(context)
+                                  : ECardoTokens.border(context),
+                            ),
+                            onSelected: (_) => _toggle(
+                              value.stars,
+                              star,
+                              (next) => setState(
+                                () => value = value.copyWith(stars: next),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                      .toList(),
+                ),
+              ),
+            _FilterSection(
+              title: AppLocalizations.of(context)!.hotel_special_offers,
+              child: options.specialOffers.isEmpty
+                  ? Text(
+                      AppLocalizations.of(context)!
+                          .hotel_admin_configured_special_offers_will_appear,
+                      style: TextStyle(color: ECardoTokens.inkMuted(context)),
+                    )
+                  : Wrap(
+                      spacing: 8.w,
+                      runSpacing: 8.h,
+                      children: options.specialOffers
+                          .map(
+                            (item) {
+                              final selected =
+                                  value.specialOffers.contains(item);
+                              return FilterChip(
+                                label: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: selected
+                                        ? ECardoTokens.brand700(context)
+                                        : ECardoTokens.ink(context),
+                                  ),
+                                ),
+                                selected: selected,
+                                backgroundColor:
+                                    ECardoTokens.surfaceCard(context),
+                                selectedColor:
+                                    ECardoTokens.brand100(context),
+                                checkmarkColor:
+                                    ECardoTokens.brand700(context),
+                                side: BorderSide(
+                                  color: selected
+                                      ? ECardoTokens.brand500(context)
+                                      : ECardoTokens.border(context),
+                                ),
+                                onSelected: (_) => _toggle(
+                                  value.specialOffers,
+                                  item,
+                                  (next) => setState(
+                                    () => value =
+                                        value.copyWith(specialOffers: next),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                          .toList(),
+                    ),
+            ),
+            if (features.isNotEmpty)
+              _FilterSection(
+                title: AppLocalizations.of(context)!.hotel_hotel_features,
+                child: _ExpandableFilterChips(
+                  values: features,
+                  selected: value.features,
+                  expanded: showAllFeatures,
+                  onToggleExpanded: () =>
+                      setState(() => showAllFeatures = !showAllFeatures),
+                  onSelected: (item) => _toggle(
+                    value.features,
+                    item,
+                    (next) =>
+                        setState(() => value = value.copyWith(features: next)),
+                  ),
+                ),
+              ),
+            if (types.isNotEmpty)
+              _FilterSection(
+                title: AppLocalizations.of(context)!.hotel_property_type,
+                child: _ExpandableFilterChips(
+                  values: types,
+                  selected: value.propertyTypes,
+                  expanded: showAllTypes,
+                  onToggleExpanded: () =>
+                      setState(() => showAllTypes = !showAllTypes),
+                  onSelected: (item) => _toggle(
+                    value.propertyTypes,
+                    item,
+                    (next) => setState(
+                      () => value = value.copyWith(propertyTypes: next),
+                    ),
+                  ),
+                ),
+              ),
+            _FilterSection(
+              title: AppLocalizations.of(context)!.hotel_guest_rating,
+              child: Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: [3.0, 3.5, 4.0, 4.5]
+                    .map(
+                      (rating) {
+                        final selected = value.minimumRating == rating;
+                        return ChoiceChip(
+                          label: Text(
+                            '$rating+',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: selected
+                                  ? ECardoTokens.inkOnBrand
+                                  : ECardoTokens.ink(context),
+                            ),
+                          ),
+                          selected: selected,
+                          selectedColor: ECardoTokens.brand900(context),
+                          backgroundColor: ECardoTokens.surfaceCard(context),
+                          side: BorderSide(
+                            color: selected
+                                ? ECardoTokens.brand900(context)
+                                : ECardoTokens.border(context),
+                          ),
+                          onSelected: (sel) => setState(
+                            () => value = value.copyWith(
+                              minimumRating: rating,
+                              clearMinimumRating: !sel,
+                            ),
+                          ),
+                        );
+                      },
                     )
                     .toList(),
               ),
             ),
-          _FilterSection(
-            title: AppLocalizations.of(context)!.hotel_special_offers,
-            child: options.specialOffers.isEmpty
-                ? Text(
-                    AppLocalizations.of(context)!.hotel_admin_configured_special_offers_will_appear,
-                    style: TextStyle(color: TravelTheme.muted),
-                  )
-                : Wrap(
-                    spacing: 8.w,
-                    children: options.specialOffers
-                        .map(
-                          (item) => FilterChip(
-                            label: Text(item),
-                            selected: value.specialOffers.contains(item),
-                            onSelected: (_) => _toggle(
-                              value.specialOffers,
-                              item,
-                              (next) => setState(
-                                () =>
-                                    value = value.copyWith(specialOffers: next),
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-          ),
-          if (features.isNotEmpty)
-            _FilterSection(
-              title: AppLocalizations.of(context)!.hotel_hotel_features,
-              child: _ExpandableFilterChips(
-                values: features,
-                selected: value.features,
-                expanded: showAllFeatures,
-                onToggleExpanded: () =>
-                    setState(() => showAllFeatures = !showAllFeatures),
-                onSelected: (item) => _toggle(
-                  value.features,
-                  item,
-                  (next) =>
-                      setState(() => value = value.copyWith(features: next)),
-                ),
+            _SwitchFilter(
+              title: AppLocalizations.of(context)!
+                  .hotel_hotels_with_available_rooms_only,
+              value: value.availableRoomsOnly,
+              onChanged: (next) => setState(
+                () => value = value.copyWith(availableRoomsOnly: next),
               ),
             ),
-          if (types.isNotEmpty)
-            _FilterSection(
-              title: AppLocalizations.of(context)!.hotel_property_type,
-              child: _ExpandableFilterChips(
-                values: types,
-                selected: value.propertyTypes,
-                expanded: showAllTypes,
-                onToggleExpanded: () =>
-                    setState(() => showAllTypes = !showAllTypes),
-                onSelected: (item) => _toggle(
-                  value.propertyTypes,
-                  item,
-                  (next) => setState(
-                    () => value = value.copyWith(propertyTypes: next),
-                  ),
-                ),
-              ),
-            ),
-          _FilterSection(
-            title: AppLocalizations.of(context)!.hotel_guest_rating,
-            child: Wrap(
-              spacing: 8.w,
-              children: [3.0, 3.5, 4.0, 4.5]
-                  .map(
-                    (rating) => ChoiceChip(
-                      label: Text('$rating+'),
-                      selected: value.minimumRating == rating,
-                      onSelected: (selected) => setState(
-                        () => value = value.copyWith(
-                          minimumRating: rating,
-                          clearMinimumRating: !selected,
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-          _SwitchFilter(
-            title: AppLocalizations.of(context)!.hotel_hotels_with_available_rooms_only,
-            value: value.availableRoomsOnly,
-            onChanged: (next) => setState(
-              () => value = value.copyWith(availableRoomsOnly: next),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -376,7 +536,14 @@ class _FilterSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 14.sp,
+              color: ECardoTokens.ink(context),
+            ),
+          ),
           SizedBox(height: 10.h),
           child,
         ],
@@ -398,11 +565,31 @@ class _SwitchFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
-      value: value,
-      onChanged: onChanged,
+    return Container(
+      margin: EdgeInsets.only(top: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: ECardoTokens.surfaceCard(context),
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+        border: Border.all(color: ECardoTokens.border(context)),
+      ),
+      child: SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 13.sp,
+            color: ECardoTokens.ink(context),
+          ),
+        ),
+        activeTrackColor: ECardoTokens.brand700(context),
+        activeThumbColor: ECardoTokens.surfaceCard(context),
+        inactiveTrackColor: ECardoTokens.surfaceSunken(context),
+        inactiveThumbColor: ECardoTokens.inkMuted(context),
+        value: value,
+        onChanged: onChanged,
+      ),
     );
   }
 }
@@ -430,29 +617,58 @@ class _ExpandableFilterChips extends StatelessWidget {
       children: [
         Wrap(
           spacing: 8.w,
-          runSpacing: 6.h,
+          runSpacing: 8.h,
           children: visible
               .map(
-                (item) => FilterChip(
-                  label: Text(item),
-                  selected: selected.contains(item),
-                  onSelected: (_) => onSelected(item),
-                ),
+                (item) {
+                  final isSelected = selected.contains(item);
+                  return FilterChip(
+                    label: Text(
+                      item,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight:
+                            isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: isSelected
+                            ? ECardoTokens.brand700(context)
+                            : ECardoTokens.ink(context),
+                      ),
+                    ),
+                    selected: isSelected,
+                    backgroundColor: ECardoTokens.surfaceCard(context),
+                    selectedColor: ECardoTokens.brand100(context),
+                    checkmarkColor: ECardoTokens.brand700(context),
+                    side: BorderSide(
+                      color: isSelected
+                          ? ECardoTokens.brand500(context)
+                          : ECardoTokens.border(context),
+                    ),
+                    onSelected: (_) => onSelected(item),
+                  );
+                },
               )
               .toList(),
         ),
         if (values.length > 6)
           TextButton.icon(
             onPressed: onToggleExpanded,
+            style: TextButton.styleFrom(
+              foregroundColor: ECardoTokens.brand500(context),
+            ),
             icon: Icon(
               expanded
                   ? Icons.keyboard_arrow_up_rounded
                   : Icons.keyboard_arrow_down_rounded,
+              size: 18.sp,
             ),
             label: Text(
               expanded
                   ? AppLocalizations.of(context)!.hotel_show_less
                   : AppLocalizations.of(context)!.hotel_show_more,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
       ],

@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -215,6 +216,27 @@ class HeroWalletCardTheme {
           rateTicker: rate,
           trendChange: '▼ 0.4%',
           isTrendPositive: false,
+        );
+      case 'CNY':
+      case 'RMB':
+        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+            ? '1 CNY ≈ \$${wallet.conversionRate}'
+            : '1 CNY ≈ \$0.138 USD';
+        return HeroWalletCardTheme(
+          gradientColors: const [
+            Color(0xFF2B1015),
+            Color(0xFF4A1822),
+            Color(0xFF1F0B10),
+          ],
+          accentColor: const Color(0xFFFF4D4F),
+          secondaryColor: const Color(0xFFFFCCC7),
+          currencyName: wallet.name ?? 'Chinese Yuan',
+          flagOrSymbol: '🇨🇳',
+          cardEdition: 'IMPERIAL CRIMSON',
+          isCrypto: false,
+          rateTicker: rate,
+          trendChange: '▲ 0.2%',
+          isTrendPositive: true,
         );
       default:
         return HeroWalletCardTheme(
@@ -1467,11 +1489,11 @@ class WalletsCardSection extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1F1F1D) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: ECardoTokens.surfaceCard(context),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         border: Border.all(
-          color: isDark ? const Color(0x33D5CBC8) : const Color(0x1F000000),
-          width: 0.8,
+          color: ECardoTokens.border(context),
+          width: 1.0,
         ),
       ),
       child: Column(
@@ -1482,7 +1504,7 @@ class WalletsCardSection extends StatelessWidget {
                 ? Icons.currency_bitcoin_rounded
                 : Icons.account_balance_outlined,
             size: 42,
-            color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+            color: ECardoTokens.brand500(context),
           ),
           const SizedBox(height: 12),
           Text(
@@ -1499,9 +1521,7 @@ class WalletsCardSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: isDark
-                  ? AppColors.darkTextPrimary
-                  : AppColors.lightTextPrimary,
+              color: ECardoTokens.ink(context),
             ),
           ),
           const SizedBox(height: 6),
@@ -1518,9 +1538,7 @@ class WalletsCardSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
+              color: ECardoTokens.inkMuted(context),
             ),
           ),
           const SizedBox(height: 16),
@@ -1539,11 +1557,11 @@ class WalletsCardSection extends StatelessWidget {
               ),
             ),
             style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: isDark ? AppColors.deepBlack : Colors.white,
+              backgroundColor: ECardoTokens.brand500(context),
+              foregroundColor: ECardoTokens.inkOnBrand,
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
               ),
             ),
           ),

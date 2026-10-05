@@ -14,6 +14,7 @@ import 'package:ecardo_user/src/presentation/screens/wallets/view/wallets_screen
 
 class _TestWalletsController extends WalletsController {
   @override
+  // ignore: must_call_super
   void onInit() {
     // Override to skip network calls during widget testing
   }

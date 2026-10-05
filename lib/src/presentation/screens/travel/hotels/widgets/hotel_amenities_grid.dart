@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import '../../shared/travel_theme.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 
 /// Data model representing a hotel amenity item with icon, label, and category.
 class HotelAmenityItem {
@@ -272,11 +271,15 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
       icon = Icons.pool_rounded;
       category = 'Wellness & Spa';
       categoryFa = 'سلامت و اسپا';
-    } else if (lower.contains('gym') || lower.contains('fitness') || lower.contains('ورزش')) {
+    } else if (lower.contains('gym') ||
+        lower.contains('fitness') ||
+        lower.contains('ورزش')) {
       icon = Icons.fitness_center_rounded;
       category = 'Wellness & Spa';
       categoryFa = 'سلامت و اسپا';
-    } else if (lower.contains('food') || lower.contains('restaurant') || lower.contains('رستوران')) {
+    } else if (lower.contains('food') ||
+        lower.contains('restaurant') ||
+        lower.contains('رستوران')) {
       icon = Icons.restaurant_rounded;
       category = 'Dining & Drinks';
       categoryFa = 'غذا و نوشیدنی';
@@ -317,7 +320,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             crossAxisCount: 2,
             crossAxisSpacing: 10.w,
             mainAxisSpacing: 10.h,
-            mainAxisExtent: 92.h,
+            mainAxisExtent: 64.h,
           ),
           itemBuilder: (context, index) {
             final amenity = displayedAmenities[index];
@@ -332,31 +335,43 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
           children: [
             if (widget.enableBottomSheet)
               Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _showAllAmenitiesBottomSheet(context, allAmenities, isRtl),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: TravelTheme.primaryFor(context),
-                    side: BorderSide(
-                      color: TravelTheme.primaryFor(context).withValues(alpha: 0.35),
-                      width: 1.2.w,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: 44.h),
+                  child: OutlinedButton.icon(
+                    onPressed: () => _showAllAmenitiesBottomSheet(
+                      context,
+                      allAmenities,
+                      isRtl,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: ECardoTokens.brand700(context),
+                      side: BorderSide(
+                        color: ECardoTokens.brand500(context)
+                            .withValues(alpha: 0.4),
+                        width: 1.2.w,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(ECardoTokens.radiusMd),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.h,
+                        horizontal: 12.w,
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
-                  ),
-                  icon: Icon(
-                    Icons.apps_rounded,
-                    size: 16.sp,
-                    color: TravelTheme.primaryFor(context),
-                  ),
-                  label: Text(
-                    isRtl
-                        ? 'مشاهده تمام امکانات (${allAmenities.length})'
-                        : 'View all amenities (${allAmenities.length})',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
+                    icon: Icon(
+                      Icons.apps_rounded,
+                      size: 16.sp,
+                      color: ECardoTokens.brand700(context),
+                    ),
+                    label: Text(
+                      isRtl
+                          ? 'مشاهده تمام امکانات (${allAmenities.length})'
+                          : 'View all amenities (${allAmenities.length})',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -372,7 +387,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                   _isAccordionExpanded
                       ? Icons.keyboard_arrow_up_rounded
                       : Icons.keyboard_arrow_down_rounded,
-                  color: TravelTheme.primaryFor(context),
+                  color: ECardoTokens.brand700(context),
                 ),
                 label: Text(
                   _isAccordionExpanded
@@ -381,7 +396,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                           ? 'نمایش بیشتر (${allAmenities.length})'
                           : 'Show all (${allAmenities.length})'),
                   style: TextStyle(
-                    color: TravelTheme.primaryFor(context),
+                    color: ECardoTokens.brand700(context),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -392,22 +407,26 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
     );
   }
 
-  Widget _buildAmenityTile(BuildContext context, HotelAmenityItem amenity, bool isRtl) {
-    final cardBg = TravelTheme.cardSurfaceFor(context);
-    final borderColor = TravelTheme.borderFor(context);
-    final brandColor = TravelTheme.primaryFor(context);
-    final textPrimary = TravelTheme.textPrimaryFor(context);
+  Widget _buildAmenityTile(
+    BuildContext context,
+    HotelAmenityItem amenity,
+    bool isRtl,
+  ) {
+    final cardBg = ECardoTokens.surfaceCard(context);
+    final borderColor = ECardoTokens.border(context);
+    final brandColor = ECardoTokens.brand700(context);
+    final textPrimary = ECardoTokens.ink(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
         border: Border.all(
-          color: borderColor.withValues(alpha: 0.7),
+          color: borderColor,
           width: 1.w,
         ),
-        boxShadow: TravelTheme.shadowFor(context),
+        boxShadow: ECardoTokens.shadowCard(context),
       ),
       child: Row(
         children: [
@@ -416,7 +435,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
             width: 36.r,
             height: 36.r,
             decoration: BoxDecoration(
-              color: brandColor.withValues(alpha: 0.08),
+              color: ECardoTokens.brand100(context),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -452,7 +471,6 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
     List<HotelAmenityItem> items,
     bool isRtl,
   ) {
-    // Group amenities by category
     final grouped = <String, List<HotelAmenityItem>>{};
     for (final item in items) {
       final category = item.localizedCategory(isRtl);
@@ -464,19 +482,21 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) {
-        final isDark = TravelTheme.isDark(bottomSheetContext);
-        final cardBg = TravelTheme.cardSurfaceFor(bottomSheetContext);
-        final borderColor = TravelTheme.borderFor(bottomSheetContext);
-        final brandColor = TravelTheme.primaryFor(bottomSheetContext);
-        final textPrimary = TravelTheme.textPrimaryFor(bottomSheetContext);
+        final cardBg = ECardoTokens.surfaceCard(bottomSheetContext);
+        final borderColor = ECardoTokens.border(bottomSheetContext);
+        final brandColor = ECardoTokens.brand700(bottomSheetContext);
+        final textPrimary = ECardoTokens.ink(bottomSheetContext);
 
         return Container(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(bottomSheetContext).size.height * 0.82,
+            maxHeight:
+                MediaQuery.of(bottomSheetContext).size.height * 0.82,
           ),
           decoration: BoxDecoration(
             color: cardBg,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(ECardoTokens.radius2xl),
+            ),
           ),
           child: Column(
             children: [
@@ -500,8 +520,9 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                     Container(
                       padding: EdgeInsets.all(8.r),
                       decoration: BoxDecoration(
-                        color: brandColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10.r),
+                        color: ECardoTokens.brand100(bottomSheetContext),
+                        borderRadius:
+                            BorderRadius.circular(ECardoTokens.radiusMd),
                       ),
                       child: Icon(
                         Icons.hotel_rounded,
@@ -524,7 +545,8 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.close_rounded),
-                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
+                      onPressed: () =>
+                          Navigator.of(bottomSheetContext).pop(),
                     ),
                   ],
                 ),
@@ -535,7 +557,10 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
               // Grouped Amenity Sections List
               Expanded(
                 child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 8.h,
+                  ),
                   itemCount: grouped.keys.length,
                   itemBuilder: (context, index) {
                     final category = grouped.keys.elementAt(index);
@@ -573,10 +598,11 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                           // Amenities in this category
                           Container(
                             decoration: BoxDecoration(
-                              color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA),
-                              borderRadius: BorderRadius.circular(16.r),
+                              color: ECardoTokens.surfaceSunken(context),
+                              borderRadius:
+                                  BorderRadius.circular(ECardoTokens.radiusLg),
                               border: Border.all(
-                                color: borderColor.withValues(alpha: 0.8),
+                                color: borderColor,
                               ),
                             ),
                             child: ListView.separated(
@@ -584,7 +610,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: categoryAmenities.length,
                               separatorBuilder: (_, _) => Divider(
-                                color: borderColor.withValues(alpha: 0.6),
+                                color: borderColor,
                                 height: 1.h,
                               ),
                               itemBuilder: (context, itemIdx) {
@@ -599,9 +625,11 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                                       Container(
                                         padding: EdgeInsets.all(7.r),
                                         decoration: BoxDecoration(
-                                          color: isDark ? AppColors.darkSurface : AppColors.white,
+                                          color:
+                                              ECardoTokens.surfaceCard(context),
                                           shape: BoxShape.circle,
-                                          boxShadow: TravelTheme.shadowFor(context),
+                                          boxShadow:
+                                              ECardoTokens.shadowCard(context),
                                         ),
                                         child: Icon(
                                           item.icon,

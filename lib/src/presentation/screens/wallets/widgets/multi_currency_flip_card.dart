@@ -70,6 +70,14 @@ class CurrencyCardTheme {
           currencyName: 'UAE Dirham',
           flagEmoji: '🇦🇪',
         );
+      case 'CNY':
+      case 'RMB':
+        return const CurrencyCardTheme(
+          gradientColors: [Color(0xFF2B1015), Color(0xFF4A1822), Color(0xFF1F0B10)],
+          accentColor: Color(0xFFFF4D4F),
+          currencyName: 'Chinese Yuan',
+          flagEmoji: '🇨🇳',
+        );
       case 'IRT':
       case 'TOMAN':
         return const CurrencyCardTheme(
