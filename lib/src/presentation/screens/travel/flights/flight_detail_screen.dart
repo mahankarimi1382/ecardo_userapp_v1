@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart' hide TextDirection;
-import 'package:pdf/pdf_colors.dart';
-import 'package:printing/printing.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
+import '../bookings/travel_checkout_screen.dart';
 import '../core/models/travel_models.dart';
 import '../shared/seat_selection_map.dart';
 import '../shared/travel_widgets.dart';
 import 'flight_models.dart';
-import 'flight_list_screen.dart';
 
 /// International-Grade Flight Detail Screen (Service T-02)
 ///
@@ -40,20 +38,10 @@ class FlightDetailScreen extends StatefulWidget {
 
 class _FlightDetailScreenState extends State<FlightDetailScreen> {
   List<CabinSeatModel> _selectedSeats = [];
-  late String _selectedPassengers;
 
   @override
   void initState() {
     super.initState();
-    final controller = ensureTravelController();
-    final bookingDetails = controller.flightBookingDetails.value;
-    _selectedPassengers =
-        l10nPick(
-          Get.context!,
-          en: '${bookingDetails.adultCount} adults',
-          fa: '${bookingDetails.adultCount} بزرگسال',
-          ar: '${bookingDetails.adultCount} بالغين',
-        );
   }
 
   @override
@@ -62,7 +50,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     final controller = ensureTravelController();
     final bookingDetails = controller.flightBookingDetails.value;
     final lang = Localizations.localeOf(context).languageCode;
-    final isDark = ECardoTokens.isDark(context);
 
     return Scaffold(
       backgroundColor: ECardoTokens.surfaceCanvas(context),
@@ -350,7 +337,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 ),
                 alignment: Alignment.center,
                 child: Icon(
-                  Icons.airplane_rounded,
+                  Icons.flight_rounded,
                   color: ECardoTokens.brand500(context),
                   size: 28.r,
                 ),
@@ -411,7 +398,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 value: aircraftType,
               ),
               _buildInfoRow(context,
-                icon: Icons.speech_chat_bubbles_rounded,
+                icon: Icons.wifi_rounded,
                 label: l10nPick(context, en: 'In-flight Wifi', fa: 'اینترنت پرواز', ar: 'إنترنت الطائرة'),
                 value: 'Available',
               ),
@@ -609,7 +596,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.suitcase_rounded, size: 22.r, color: ECardoTokens.brand500(context)),
+                      Icon(Icons.luggage_rounded, size: 22.r, color: ECardoTokens.brand500(context)),
                       SizedBox(height: 6.h),
                       Text(
                         l10nPick(context, en: 'Checked Bag', fa: 'چمدان', ar: 'الحقيبة المسجلة'),
@@ -845,9 +832,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   Widget _buildFareBreakdown(BuildContext context, TravelBookingDetails bookingDetails) {
     final components = <(String, double)>[];
     final adultCount = bookingDetails.adultCount > 0 ? bookingDetails.adultCount : 1;
+    final totalPrice = (widget.offer.attributes['basePrice'] as num?)?.toDouble() ?? 0;
 
-    components.add(('Base Fare × $adultCount', widget.totalAmount));
-    components.add(('Taxes & Fees', widget.totalAmount * 0.12));
+    components.add(('Base Fare × $adultCount', totalPrice));
+    components.add(('Taxes & Fees', totalPrice * 0.12));
 
     final total = components.fold(0.0, (sum, item) => sum + item.$2);
 
@@ -993,7 +981,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                       borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
                     ),
                     child: CustomPaint(
-                      painter: _AirplaneLayoutPainter(),
+                      painter: _AirplaneLayoutPainter(backgroundColor: ECardoTokens.inkMuted(context)),
                     ),
                   ),
                 ),
@@ -1027,7 +1015,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
       initiallySelectedSeatIds: [],
       title: widget.offer.attributes['airline_name']?.toString() ?? 'Airline',
       subtitle: '${widget.offer.attributes['origin'] ?? 'DXB'} → ${widget.offer.attributes['destination'] ?? 'LHR'}',
-      currency: widget.totalCurrency,
+      currency: totalCurrency,
     );
 
     if (result != null && mounted) {
@@ -1069,7 +1057,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
               Directionality(
                 textDirection: TextDirection.ltr,
                 child: Text(
-                  '\$${(widget.totalAmount * passengerCount).toStringAsFixed(0)}',
+                  '\$${(totalAmount * passengerCount).toStringAsFixed(0)}',
                   style: TextStyle(
                     color: ECardoTokens.inkOnBrand,
                     fontSize: 20.sp,
@@ -1091,12 +1079,20 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   }
 
   double get totalAmount => widget.offer.total.amount;
-  String get totalCurrency => widget.offer.total.currency.isEmpty ? 'USD' : widget.offer.total.currency;
+  String get totalCurrency => widget.offer.total.currency.isNotEmpty
+      ? widget.offer.total.currency
+      : 'USD';
 
   void _goToCheckout(BuildContext context, dynamic controller, TravelBookingDetails bookingDetails) {
     AppHaptics.medium();
-    Get.to(() => FlightCheckoutScreen(
-      offer: widget.offer,
+    Get.to(() => TravelCheckoutScreen(
+      type: TravelProductType.flight,
+      productId: widget.offer.id,
+      title: travelLocalizedKey(AppLocalizations.of(context)!, widget.offer.titleKey),
+      total: TravelMoney(
+        amount: totalAmount * (bookingDetails.adultCount > 0 ? bookingDetails.adultCount : 1),
+        currency: totalCurrency,
+      ),
       bookingDetails: bookingDetails.copyWith(
         specialRequests: _selectedSeats.isNotEmpty
             ? 'Selected seats: ${_selectedSeats.map((s) => s.id).join(', ')}'
@@ -1173,10 +1169,14 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
 }
 
 class _AirplaneLayoutPainter extends CustomPainter {
+  final Color backgroundColor;
+
+  _AirplaneLayoutPainter({required this.backgroundColor});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = ECardoTokens.inkMuted(WidgetsBinding.instance!.context).withValues(alpha: 0.2)
+      ..color = backgroundColor
       ..style = PaintingStyle.fill;
 
     final path = Path();
@@ -1213,6 +1213,7 @@ extension on SeatItem {
       col: column,
       position: position,
       feature: feature,
+      cabinClass: FlightCabinClass.economy,
       state: status == SeatStatus.selected ? CabinSeatState.selected : CabinSeatState.available,
       extraPrice: extraPrice,
     );

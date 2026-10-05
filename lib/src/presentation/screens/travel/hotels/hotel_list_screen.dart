@@ -6,11 +6,13 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 
-import '../core/controller/travel_controller.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+
 import '../core/models/travel_models.dart';
 import '../shared/travel_widgets.dart';
 import 'hotel_detail_screen.dart';
 import 'hotel_filter_screen.dart';
+import 'hotel_screens.dart' show formatHotelOccupancy;
 import 'hotel_search_components.dart';
 
 enum HotelSortOption { recommended, priceLowToHigh, priceHighToLow, rating }
@@ -113,7 +115,7 @@ class _HotelListScreenState extends State<HotelListScreen> {
                     ),
                     SizedBox(width: 10.w),
                     Text(
-                      localization.travelSort,
+                      l10nPick(context, en: 'Sort', fa: 'مرتب‌سازی', ar: 'فرز', zh: '排序'),
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w900,

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
-import '../core/controller/travel_controller.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_widgets.dart';
 import 'hotel_checkout_screen.dart';
@@ -46,7 +44,8 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
     return bookingDetails.checkOutDate!
         .difference(bookingDetails.checkInDate!)
         .inDays
-        .clamp(1, 365);
+        .clamp(1, 365)
+        .toDouble();
   }
 
   List<TravelSelectedRoom> _getSelectedRooms() {
@@ -89,7 +88,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
       final details = controller.hotelBookingDetails.value;
       if (widget.initialSelectedRoomId != null && details.roomId != widget.initialSelectedRoomId) {
         setState(() {
-          _selectedRoomQuantities[details.roomId ?? widget.initialSelectedRoomId!] = details.roomCount ?? 1;
+          _selectedRoomQuantities[details.roomId.isNotEmpty ? details.roomId : widget.initialSelectedRoomId!] = details.roomCount > 0 ? details.roomCount : 1;
         });
       } else if (widget.initialSelectedRoomId != null) {
         setState(() {
@@ -101,11 +100,10 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
-    final isRtl = Directionality.of.context == TextDirection.rtl;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return TravelPage(
-      title: localization.travelSelectRooms,
+      title: l10nPick(context, en: 'Select Rooms', fa: 'انتخاب اتاق‌ها', ar: 'اختيار الغرف', zh: '选择房间'),
       child: Container(
         color: ECardoTokens.surfaceCanvas(context),
         child: CustomScrollView(
@@ -203,9 +201,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                     Semantics(
                       label: 'Cancellation policy summary',
                       child: CancellationPolicyTimelineCard(
-                        checkInDate: Get.context!.findAncestorWidgetOfExactType<GetMaterialApp>()?.navigatorKey.currentContext != null
-                            ? ensureTravelController().hotelBookingDetails.value.checkInDate
-                            : null,
+                        checkInDate: ensureTravelController().hotelBookingDetails.value.checkInDate,
                         customPolicySummary: _providerCancellationSummary(
                           context,
                           widget.hotelOffer.product,
@@ -232,8 +228,8 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                     else if (_rooms.isEmpty)
                       TravelEmptyState(
                         icon: Icons.bed_rounded,
-                        title: AppLocalizations.of(context)!.hotelNoRoomsAvailable,
-                        message: AppLocalizations.of(context)!.hotelTryDifferentDates,
+                        title: l10nPick(context, en: 'No Rooms Available', fa: 'اتاقی موجود نیست', ar: 'لا توجد غرف متاحة', zh: '无可用房间'),
+                        message: l10nPick(context, en: 'Try different dates', fa: 'تاریخ‌های متفاوت را امتحان کنید', ar: 'جرب تواريخ مختلفة', zh: '尝试不同日期'),
                       )
                     else
                       ..._rooms.map((room) {
@@ -281,8 +277,8 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                             ),
                             SizedBox(height: 12.h),
                             ..._getSelectedRooms().map((room) {
-                              final roomQtyStr = '${room.quantity} x ${localization.hotel_one_night_price}';
-                              final totalPriceStr = '${travelMoney(context, TravelMoney(amount: room.unitPrice * room.quantity * _nights.toInt(), currency: room.currency))}';
+                              final roomQtyStr = '${room.quantity} x ${l10nPick(context, en: 'night', fa: 'شب', ar: 'ليلة', zh: '晚')}';
+                              final totalPriceStr = travelMoney(context, TravelMoney(amount: room.unitPrice * room.quantity * _nights.toInt(), currency: room.currency));
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -291,7 +287,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        isRtl ? '$roomQtyStr - ${travelBackendText(context, room.name)}' : '$roomQtyStr - ${travelBackendText(context, room.name)}',
+                                        '$roomQtyStr - ${travelBackendText(context, room.name)}',
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -358,7 +354,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                       CommonButton(
                         width: double.infinity,
                         height: 52,
-                        text: localization.travelContinueBooking,
+                        text: l10nPick(context, en: 'Continue Booking', fa: 'ادامه رزرو', ar: 'متابعة الحجز', zh: '继续预订'),
                         backgroundColor: ECardoTokens.brand900(context),
                         isLoading: _isLoading,
                         onPressed: () {
@@ -366,8 +362,8 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                           if (selectedRooms.isEmpty) {
                             showTravelMessage(
                               context,
-                              title: localization.travelSelectRooms,
-                              message: AppLocalizations.of(context)!.hotelPleaseSelectAtLeastOneRoom,
+                              title: l10nPick(context, en: 'Select Rooms', fa: 'انتخاب اتاق‌ها', ar: 'اختيار الغرف', zh: '选择房间'),
+                              message: l10nPick(context, en: 'Please select at least one room', fa: 'لطفاً حداقل یک اتاق را انتخاب کنید', ar: 'يرجى اختيار غرفة واحدة على الأقل', zh: '请至少选择一间房间'),
                             );
                             return;
                           }
@@ -387,7 +383,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                                 bookingDetails: bookingDetails.copyWith(
                                   roomId: selectedRooms.first.id,
                                   roomName: selectedRooms.first.name,
-                                  roomCount: selectedRooms.fold(0, (sum, r) => sum + r.quantity),
+                                  roomCount: selectedRooms.fold<int>(0, (sum, r) => sum + r.quantity),
                                   selectedRooms: selectedRooms,
                                 ),
                                 nights: _nights.toInt(),
