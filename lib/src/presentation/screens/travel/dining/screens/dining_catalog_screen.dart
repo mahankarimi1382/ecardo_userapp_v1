@@ -374,27 +374,34 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                   const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'حداقل سفارش',
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color:
-                                  isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'حداقل سفارش',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color:
+                                    isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          Text(
-                            '${rest.minOrderAmount.toStringAsFixed(0)} ${rest.currency}',
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w900,
-                              color: amberColor,
+                            Text(
+                              '${rest.minOrderAmount.toStringAsFixed(0)} ${rest.currency}',
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w900,
+                                color: amberColor,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(

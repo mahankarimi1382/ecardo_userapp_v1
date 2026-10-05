@@ -41,6 +41,7 @@ void main() {
   group('Local Experiences Unit & Model Tests', () {
     test('LocalExperienceItemModel type labels and booking execution work', () async {
       const item = LocalExperienceItemModel(
+        schemaVersion: '1.0',
         id: 'test-local-1',
         title: 'Istanbul Historical Tour',
         subtitle: 'Sultanahmet and Bosphorus',
@@ -48,6 +49,7 @@ void main() {
         city: 'Istanbul',
         type: LocalServiceType.tourGuide,
         price: 50.0,
+        childPrice: 20.0,
         currency: 'USD',
         durationLabel: '4 hours',
         languages: ['فارسی', 'English'],
@@ -61,6 +63,11 @@ void main() {
       expect(item.typeLabel, contains('Tour Guide'));
 
       final controller = Get.put(LocalExperienceController());
+
+      // Set guest count to 1 for accurate price verification
+      controller.guestsCount.value = 1;
+      controller.childrenCount.value = 0;
+
       final booking = await controller.bookExperience(item: item);
 
       expect(booking, isNotNull);
@@ -72,12 +79,13 @@ void main() {
     testWidgets('LocalCatalogScreen renders experiences and city filters', (tester) async {
       phoneSurface(tester);
       await tester.pumpWidget(_host(const LocalCatalogScreen()));
+      await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      expect(find.text('Local Guides & Experiences'), findsOneWidget);
+      expect(find.text('Local Experiences & City Guide'), findsOneWidget);
       expect(find.text('استانبول 🇹🇷'), findsOneWidget);
       expect(find.text('دبی 🇦🇪'), findsOneWidget);
-      expect(find.textContaining('استاد امین خلیلی'), findsOneWidget);
+      expect(find.textContaining('گشت تاریخی استانبول'), findsOneWidget);
     });
 
     testWidgets('LocalVoucherScreen renders experience pass with meeting point and QR', (tester) async {

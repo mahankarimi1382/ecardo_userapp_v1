@@ -110,6 +110,8 @@ void main() {
       );
 
       await tester.pumpWidget(_host(BoatVoucherScreen(booking: sampleBooking)));
+      // Wait for QR code generation and UI settling
+      await tester.pump(const Duration(milliseconds: 1500));
       await tester.pumpAndSettle();
 
       expect(find.text('Marine Boarding Pass'), findsOneWidget);

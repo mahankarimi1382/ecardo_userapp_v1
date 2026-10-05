@@ -391,6 +391,7 @@ void main() {
       // Tap 50/50 fee payer radio
       final radio5050 = find.text('50/50');
       expect(radio5050, findsOneWidget);
+      await tester.ensureVisible(radio5050);
       await tester.tap(radio5050);
       await tester.pumpAndSettle();
 
