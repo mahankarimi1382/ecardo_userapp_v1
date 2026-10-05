@@ -117,7 +117,7 @@ class TourService extends getx.GetxService {
   }) async {
     final payload = <String, dynamic>{
       'payment_mode': paymentMode,
-      'wallet_id': ?walletId,
+      if (walletId != null) 'wallet_id': walletId,
     };
     final response = await _network.post(
       endpoint: '/user/tours/bookings/$bookingId/pay',
@@ -135,7 +135,7 @@ class TourService extends getx.GetxService {
   /// Step 5-B: Pay remaining balance
   Future<TourBookingModel?> payRemainder(int bookingId, {int? walletId}) async {
     final payload = <String, dynamic>{
-      'wallet_id': ?walletId,
+      if (walletId != null) 'wallet_id': walletId,
     };
     final response = await _network.post(
       endpoint: '/user/tours/bookings/$bookingId/pay-remainder',

@@ -466,9 +466,17 @@ class _TourYarBanner extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: AppSpacing.xs.w),
-                          Text(
-                            l10nPick(context, en: 'Tour-Yar Advisor', fa: 'تور-یار هوشمند eCardo'),
-                            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: AppColors.white),
+                          Flexible(
+                            child: Text(
+                              l10nPick(context, en: 'Tour-Yar Advisor', fa: 'تور-یار هوشمند eCardo'),
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.white,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
