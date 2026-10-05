@@ -478,9 +478,11 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
       builder: (context) => StatefulBuilder(
         builder: (context, setSheetState) => Container(
           padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 28.h),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          decoration: BoxDecoration(
+            color: TravelTheme.cardSurfaceFor(context),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: Border.all(color: TravelTheme.borderFor(context)),
+            boxShadow: TravelTheme.shadowFor(context),
           ),
           child: SafeArea(
             top: false,
@@ -492,6 +494,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w900,
+                    color: TravelTheme.textPrimaryFor(context),
                   ),
                 ),
                 SizedBox(height: 18.h),
@@ -995,7 +998,7 @@ Future<void> _showFlightComparison(
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.white,
+    backgroundColor: TravelTheme.cardSurfaceFor(context),
     builder: (context) => SafeArea(
       child: FractionallySizedBox(
         heightFactor: .86,
