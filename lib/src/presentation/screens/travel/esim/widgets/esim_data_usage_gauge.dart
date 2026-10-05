@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
@@ -98,17 +99,23 @@ class EsimDataUsageGauge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final statBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA);
+    final linearTrackBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFECEFF1);
+    final arcTrackBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0F2F5);
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: TravelTheme.radius,
         border: Border.all(
           color: isLowData
               ? TravelTheme.red.withValues(alpha: 0.3)
-              : TravelTheme.border,
+              : TravelTheme.borderFor(context),
           width: isLowData ? 1.5 : 1.0,
         ),
-        boxShadow: TravelTheme.shadow,
+        boxShadow: TravelTheme.shadowFor(context),
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.all(18.r),
@@ -140,7 +147,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
-                          color: TravelTheme.ink,
+                          color: TravelTheme.textPrimaryFor(context),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -152,7 +159,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w600,
-                            color: TravelTheme.muted,
+                            color: TravelTheme.textSecondaryFor(context),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -271,6 +278,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                             ratio: animatedRatio,
                             primaryColor: statusColor,
                             gradientColors: statusGradient,
+                            trackColor: arcTrackBg,
                             strokeWidth: 15.r,
                           ),
                         ),
@@ -296,7 +304,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 27.sp,
                                       fontWeight: FontWeight.w900,
-                                      color: TravelTheme.ink,
+                                      color: TravelTheme.textPrimaryFor(context),
                                       letterSpacing: -0.5,
                                     ),
                                   ),
@@ -310,7 +318,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w700,
-                                      color: TravelTheme.muted,
+                                      color: TravelTheme.textSecondaryFor(context),
                                     ),
                                   ),
                                 ),
@@ -369,7 +377,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w800,
-                          color: TravelTheme.ink,
+                          color: TravelTheme.textPrimaryFor(context),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -382,7 +390,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w700,
-                          color: TravelTheme.muted,
+                          color: TravelTheme.textSecondaryFor(context),
                         ),
                       ),
                     ),
@@ -393,7 +401,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                   height: 10.h,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFECEFF1),
+                    color: linearTrackBg,
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: FractionallySizedBox(
@@ -424,9 +432,9 @@ class EsimDataUsageGauge extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsetsDirectional.all(12.r),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8F9FA),
+                      color: statBg,
                       borderRadius: BorderRadius.circular(14.r),
-                      border: Border.all(color: TravelTheme.border),
+                      border: Border.all(color: TravelTheme.borderFor(context)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,7 +458,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.w700,
-                                color: TravelTheme.muted,
+                                color: TravelTheme.textSecondaryFor(context),
                               ),
                             ),
                           ],
@@ -463,7 +471,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w900,
-                              color: TravelTheme.ink,
+                              color: TravelTheme.textPrimaryFor(context),
                             ),
                           ),
                         ),
@@ -476,9 +484,9 @@ class EsimDataUsageGauge extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsetsDirectional.all(12.r),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8F9FA),
+                      color: statBg,
                       borderRadius: BorderRadius.circular(14.r),
-                      border: Border.all(color: TravelTheme.border),
+                      border: Border.all(color: TravelTheme.borderFor(context)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -502,7 +510,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.w700,
-                                color: TravelTheme.muted,
+                                color: TravelTheme.textSecondaryFor(context),
                               ),
                             ),
                           ],
@@ -515,7 +523,7 @@ class EsimDataUsageGauge extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w900,
-                              color: TravelTheme.ink,
+                              color: TravelTheme.textPrimaryFor(context),
                             ),
                           ),
                         ),
@@ -584,12 +592,14 @@ class _RadialArcGaugePainter extends CustomPainter {
   final double ratio;
   final Color primaryColor;
   final List<Color> gradientColors;
+  final Color trackColor;
   final double strokeWidth;
 
   _RadialArcGaugePainter({
     required this.ratio,
     required this.primaryColor,
     required this.gradientColors,
+    required this.trackColor,
     required this.strokeWidth,
   });
 
@@ -604,7 +614,7 @@ class _RadialArcGaugePainter extends CustomPainter {
     final activeSweepAngle = totalSweepAngle * ratio.clamp(0.0, 1.0);
 
     final trackPaint = Paint()
-      ..color = const Color(0xFFF0F2F5)
+      ..color = trackColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -644,6 +654,7 @@ class _RadialArcGaugePainter extends CustomPainter {
   bool shouldRepaint(covariant _RadialArcGaugePainter oldDelegate) {
     return oldDelegate.ratio != ratio ||
         oldDelegate.primaryColor != primaryColor ||
+        oldDelegate.trackColor != trackColor ||
         oldDelegate.strokeWidth != strokeWidth;
   }
 }

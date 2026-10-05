@@ -1,3 +1,4 @@
+// DATA: MOCK (Ready for REAL backend domain registration under schema_version: 1.0)
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,8 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/local_experience_controller.dart';
 import '../models/local_experience_models.dart';
+import '../../local/models/experience_contracts.dart';
+import '../../local/widgets/experience_ui_components.dart';
 import 'local_voucher_screen.dart';
 
 class LocalDetailScreen extends StatefulWidget {
@@ -26,14 +29,6 @@ class LocalDetailScreen extends StatefulWidget {
 class _LocalDetailScreenState extends State<LocalDetailScreen> {
   late final LocalExperienceController controller;
 
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.isRegistered<LocalExperienceController>()
-        ? Get.find<LocalExperienceController>()
-        : Get.put(LocalExperienceController());
-  }
-
   Future<void> _pickDate() async {
     final now = DateTime.now();
     final picked = await showDatePicker(
@@ -46,6 +41,14 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
       HapticFeedback.selectionClick();
       controller.selectedDate.value = picked;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<LocalExperienceController>()
+        ? Get.find<LocalExperienceController>()
+        : Get.put(LocalExperienceController());
   }
 
   @override
@@ -101,7 +104,11 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                 _buildMeetingPointCard(context, isDark, tealColor),
                 SizedBox(height: AppSpacing.lg.h),
 
-                // Full Description
+                // Cancellation Policy Card
+                _buildCancellationPolicyCard(context, isDark, tealColor),
+                SizedBox(height: AppSpacing.lg.h),
+
+                // Description
                 _buildDescriptionCard(context, isDark),
                 SizedBox(height: AppSpacing.xxl.h),
               ],
@@ -109,15 +116,121 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
           ),
 
           // Bottom Bar
-          _buildBottomCheckoutBar(context, isDark, tealColor),
+          Obx(() {
+            final total = controller.calculateTotal(widget.experience);
+            final vErr = controller.validationError.value.isNotEmpty;
+            final isSubmitting = controller.uiState.value == ExperienceServiceState.processing;
+
+            return Container(
+              padding: EdgeInsets.all(AppSpacing.lg.r),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkSurface : AppColors.white,
+                border: Border(top: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder)),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    blurRadius: 10,
+                    offset: const Offset(0, -3),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Validation Error Banner
+                  if (vErr)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10.h),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                        ),
+                        child: Text(
+                          controller.validationError.value,
+                          style: TextStyle(fontSize: 11.5.sp, color: AppColors.error, height: 1.4),
+                        ),
+                      ),
+                    ),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'مبلغ نهایی (${widget.experience.durationLabel})',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            '${total.toStringAsFixed(0)} ${widget.experience.currency}',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w900,
+                              color: tealColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: tealColor,
+                            minimumSize: Size(double.infinity, 44.h),
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                            ),
+                            elevation: 0,
+                          ),
+                          onPressed: isSubmitting || vErr
+                              ? null
+                              : () async {
+                                  HapticFeedback.heavyImpact();
+                                  final booking = await controller.bookExperience(item: widget.experience);
+                                  if (booking != null) {
+                                    Get.off(() => LocalVoucherScreen(booking: booking));
+                                  }
+                                },
+                          child: isSubmitting
+                              ? SizedBox(
+                                  width: 20.w,
+                                  height: 20.h,
+                                  child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                )
+                              : Text(
+                                  'پرداخت و صدور واچر',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 
   Widget _buildHeroCard(BuildContext context, bool isDark, Color tealColor) {
+    final hasImage = widget.experience.images.isNotEmpty;
+
     return Container(
-      padding: EdgeInsets.all(AppSpacing.lg.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radius.r),
@@ -133,86 +246,111 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: tealColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Text(
-                  widget.experience.typeLabel,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w700,
-                    color: tealColor,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '${widget.experience.rating} (${widget.experience.reviewsCount} نظر)',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            widget.experience.title,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-              height: 1.3,
+          if (hasImage)
+            ExperienceNetworkImage(
+              imageUrl: widget.experience.images.first,
+              width: double.infinity,
+              height: 180.h,
+              borderRadius: AppSpacing.radius,
+              fallbackIcon: Icons.place_rounded,
+              semanticLabel: widget.experience.title,
             ),
-          ),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              Icon(Icons.person_pin_rounded, size: 16.sp, color: AppColors.success),
-              SizedBox(width: 6.w),
-              Expanded(
-                child: Text(
-                  widget.experience.providerName,
+          Padding(
+            padding: EdgeInsets.all(AppSpacing.lg.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: tealColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Text(
+                        widget.experience.typeLabel,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w700,
+                          color: tealColor,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
+                        SizedBox(width: 4.w),
+                        Text(
+                          '${widget.experience.rating} (${widget.experience.reviewsCount} نظر)',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  widget.experience.title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    height: 1.3,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  widget.experience.subtitle,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
                     color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 6.h),
-          Wrap(
-            spacing: 6.w,
-            children: widget.experience.languages.map((l) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                  borderRadius: BorderRadius.circular(4.r),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    Icon(Icons.person_pin_rounded, size: 16.sp, color: tealColor),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
+                        widget.experience.providerName,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  l,
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
-                  ),
+                SizedBox(height: 6.h),
+                Wrap(
+                  spacing: 6.w,
+                  children: widget.experience.languages.map((l) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        l,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
-              );
-            }).toList(),
+              ],
+            ),
           ),
         ],
       ),
@@ -239,6 +377,125 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
             ),
           ),
           SizedBox(height: 12.h),
+          // Adults selector
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('بزرگسالان',
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+                  Text('${widget.experience.price.toStringAsFixed(0)} ${widget.experience.currency} / نفر',
+                      style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                ],
+              ),
+              Obx(() {
+                final gCount = controller.guestsCount.value;
+                final cCount = controller.childrenCount.value;
+                final totalGuests = gCount + cCount;
+                return Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle_outline_rounded),
+                      color: tealColor,
+                      onPressed: gCount > 1
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.guestsCount.value--;
+                            }
+                          : null,
+                    ),
+                    Text(
+                      '$gCount',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle_outline_rounded),
+                      color: tealColor,
+                      onPressed: totalGuests < widget.experience.maxGuests
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.guestsCount.value++;
+                            }
+                          : null,
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
+          const Divider(),
+          // Children selector
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('کودکان (۲ تا ۱۲ سال)',
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+                  Text(
+                      widget.experience.childPrice > 0
+                          ? '${widget.experience.childPrice.toStringAsFixed(0)} ${widget.experience.currency} / نفر'
+                          : 'تعرفه نیم‌بها',
+                      style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                ],
+              ),
+              Obx(() {
+                final cCount = controller.childrenCount.value;
+                final totalGuests = controller.guestsCount.value + cCount;
+                return Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle_outline_rounded),
+                      color: tealColor,
+                      onPressed: cCount > 0
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.childrenCount.value--;
+                            }
+                          : null,
+                    ),
+                    Text(
+                      '$cCount',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle_outline_rounded),
+                      color: tealColor,
+                      onPressed: totalGuests < widget.experience.maxGuests
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.childrenCount.value++;
+                            }
+                          : null,
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          // Date picker
           Row(
             children: [
               Expanded(
@@ -289,7 +546,7 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                         ),
                       ),
                       Obx(() => Text(
-                            '${controller.guestsCount.value} نفر',
+                            '${controller.guestsCount.value} بزرگسال + ${controller.childrenCount.value} کودک',
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w800,
@@ -396,6 +653,56 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
     );
   }
 
+  Widget _buildCancellationPolicyCard(BuildContext context, bool isDark, Color tealColor) {
+    final policy = widget.experience.cancellationPolicy;
+
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.md.r),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.shield_outlined, color: AppColors.success, size: 18.sp),
+              SizedBox(width: 6.w),
+              Text(
+                'شرایط لغو و استرداد وجه',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            '• لغو رایگان تا ${policy.freeCancellationHours} ساعت قبل از سرویس با استرداد ۱۰۰٪ به کیف پول',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              height: 1.4,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            '• لغو کمتر از ${policy.freeCancellationHours} ساعت: ${policy.lateCancelPenaltyPercent.toStringAsFixed(0)}٪ جریمه کنسلی',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDescriptionCard(BuildContext context, bool isDark) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
@@ -426,89 +733,6 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomCheckoutBar(BuildContext context, bool isDark, Color tealColor) {
-    return Container(
-      padding: EdgeInsets.all(AppSpacing.lg.r),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.white,
-        border: Border(top: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder)),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-            blurRadius: 10,
-            offset: const Offset(0, -3),
-          ),
-        ],
-      ),
-      child: Obx(() {
-        final isSubmitting = controller.isSubmittingBooking.value;
-
-        return Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'مبلغ نهایی خدمت (${widget.experience.durationLabel})',
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  '${widget.experience.price.toStringAsFixed(0)} ${widget.experience.currency}',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w900,
-                    color: tealColor,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: tealColor,
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                  ),
-                  elevation: 0,
-                ),
-                onPressed: isSubmitting
-                    ? null
-                    : () async {
-                        HapticFeedback.heavyImpact();
-                        final booking = await controller.bookExperience(item: widget.experience);
-                        if (booking != null) {
-                          Get.off(() => LocalVoucherScreen(booking: booking));
-                        }
-                      },
-                child: isSubmitting
-                    ? SizedBox(
-                        width: 20.w,
-                        height: 20.h,
-                        child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                      )
-                    : Text(
-                        'پرداخت و صدور واچر',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-              ),
-            ),
-          ],
-        );
-      }),
     );
   }
 }

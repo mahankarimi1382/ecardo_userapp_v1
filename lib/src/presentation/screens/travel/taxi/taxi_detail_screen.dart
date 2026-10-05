@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../services/mock_travel_data.dart';
 import '../shared/travel_theme.dart';
 import '../shared/travel_widgets.dart';
+import 'taxi_api_service.dart';
 import 'taxi_controller.dart';
+import 'taxi_models.dart';
 import 'taxi_voucher_screen.dart';
+import 'taxi_widgets.dart';
 
+/// Passenger & Confirmation Screen for Airport Transfer
+/// Collects contact info, validates form, displays fare breakdown, and confirms
+/// fixed-rate transfers. Shows live driver assignment tracking.
 class TaxiDetailScreen extends StatefulWidget {
   const TaxiDetailScreen({super.key});
 
@@ -21,18 +30,59 @@ class TaxiDetailScreen extends StatefulWidget {
 class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  late final TaxiController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = Get.isRegistered<TaxiController>()
+        ? Get.find<TaxiController>()
+        : Get.put(TaxiController());
+  }
+
+  int get totalFare => _controller.calculateTotalFare(_selectedVehicle!);
+
+  TaxiVehicleClass? get _selectedVehicle {
+    final v = _controller.selectedVehicle.value ??
+        (availableVehicles.isNotEmpty ? availableVehicles.first : null);
+    if (v != null) return v;
+    return null;
+  }
+
+  List<TaxiVehicleClass> get availableVehicles => _controller.availableVehicles;
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<TaxiController>();
     final localization = AppLocalizations.of(context)!;
-    final vehicle = controller.selectedVehicle.value ?? TaxiController.defaultVehicles.first;
-    final totalFare = controller.calculateTotalFare(vehicle);
+    final isDark = TravelTheme.isDark(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+
+    final vehicle = _selectedVehicle;
+    if (vehicle == null) {
+      return TravelErrorState(
+        title: l10nPick(context, en: 'No vehicle selected', fa: 'خودرو انتخاب نشده'),
+        message: l10nPick(
+          context,
+          en: 'Please select a vehicle class from the previous step.',
+          fa: 'لطفاً کلاس خودرو را از مرحله قبلی انتخاب کنید.',
+        ),
+        onRetry: () => Get.back(),
+        retryText: l10nPick(context, en: 'Back to Vehicles', fa: 'بازگشت به انتخاب خودرو'),
+      );
+    }
+
+    final capacityViolation = TaxiApiService.capacityViolationFor(
+      vehicle: vehicle,
+      passengerCount: _controller.passengerCount.value,
+      luggageCount: _controller.luggageCount.value,
+    );
 
     return TravelPage(
       title: l10nPick(
         context,
         en: 'Passenger & Confirmation',
-        fa: 'اطلاعات مسافر و تأیید نهایی',
+        fa: 'مشخصات مسافر و تأیید نهایی',
         ar: 'بيانات الراكب والتأكيد',
         zh: '乘车人信息与确认',
       ),
@@ -42,22 +92,39 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
           padding: EdgeInsetsDirectional.all(16.r),
           child: Obx(() => CommonButton(
             width: double.infinity,
-            text: l10nPick(
-              context,
-              en: 'Confirm & Book Transfer',
-              fa: 'تأیید نهایی و رزرو ترانسفر',
-              ar: 'تأكيد وحجز التوصيل',
-              zh: '确认并预订接送服务',
-            ),
-            backgroundColor: const Color(0xFF0D9488),
-            isLoading: controller.isSubmitting.value,
-            onPressed: () async {
-              if (_formKey.currentState?.validate() != true) return;
-              final booking = await controller.createBooking();
-              if (booking != null) {
-                Get.off(() => TaxiVoucherScreen(booking: booking));
-              }
-            },
+            text: _controller.isSubmitting.value
+                ? l10nPick(context, en: 'Booking...', fa: 'در حال ثبت...', ar: 'جاري الحجز')
+                : _controller.quoteSource.value == RideDataSource.fallback
+                    ? l10nPick(context, en: 'Confirm & Book Transfer', fa: 'تأیید و رزرو قطعی', ar: 'تأكيد وحجز التوصيل')
+                    : l10nPick(context, en: 'Pay & Confirm Transfer', fa: 'پرداخت و اتمام رزرو', ar: 'الدفع وتأكيد الحجز'),
+            backgroundColor: capacityViolation != null || !TaxiApiService.isValidIranianMobile(_controller.passengerPhoneController.text.trim()) || _controller.isQuoteExpired.value
+                ? Colors.grey.shade700
+                : const Color(0xFF0D9488),
+            isLoading: _controller.isSubmitting.value,
+            onPressed: (capacityViolation != null || _controller.isQuoteExpired.value)
+                ? null
+                : () async {
+                    AppHaptics.selection();
+                    if (_formKey.currentState?.validate() != true) return;
+                    if (capacityViolation != null) {
+                      showTravelMessage(
+                        context,
+                        title: l10nPick(context, en: 'Capacity exceeded', fa: 'ظرفیت غیرکافی'),
+                        message: l10nPick(
+                          context,
+                          en: 'This vehicle cannot fit all passengers and bags.',
+                          fa: 'این خودرو نمی‌تواند تمام مسافران و چمدان‌ها را جای دهد.',
+                        ),
+                      );
+                      return;
+                    }
+                    final booking = await _controller.createBooking();
+                    if (booking != null && mounted) {
+                      // Start polling for live driver status once booked
+                      _controller.startStatusPolling();
+                      Get.off(() => TaxiVoucherScreen(booking: booking));
+                    }
+                  },
           )),
         ),
       ),
@@ -68,14 +135,14 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
           children: [
             // Selected Vehicle Banner
             TravelCard(
-              color: const Color(0xFFF0FDFA),
+              color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0FDFA),
               child: Row(
                 children: [
                   Container(
                     width: 52.r,
                     height: 52.r,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0D9488).withValues(alpha: 0.15),
+                      color: const Color(0xFF0D9488).withValues(alpha: 0.18),
                       borderRadius: BorderRadius.circular(14.r),
                     ),
                     child: Icon(vehicle.icon, color: const Color(0xFF0D9488), size: 28),
@@ -87,13 +154,49 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                       children: [
                         Text(
                           l10nPick(context, en: vehicle.titleEn, fa: vehicle.titleFa),
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: TravelTheme.ink),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w900,
+                            color: textPrimary,
+                          ),
                         ),
                         SizedBox(height: 2.h),
                         Text(
                           vehicle.exampleModels,
-                          style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
+                          style: TextStyle(fontSize: 11.sp, color: textSecondary),
                         ),
+                        Obx(() {
+                          if (capacityViolation != null) {
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.only(top: 6.h),
+                                child: Container(
+                                  padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.withValues(alpha: 0.18),
+                                    borderRadius: BorderRadius.circular(6.r),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.info_outline_rounded, size: 13, color: Colors.amber),
+                                      SizedBox(width: 4.w),
+                                      Text(
+                                        l10nPick(
+                                          context,
+                                          en: 'Passenger or luggage count exceeds this vehicle\'s standard capacity.',
+                                          fa: 'تعداد مسافر یا بار این خودرو با ظرفیت استاندارد همخوانی ندارد.',
+                                        ),
+                                        style: TextStyle(fontSize: 10.sp, color: Colors.amber.shade800),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        }),
                       ],
                     ),
                   ),
@@ -116,21 +219,21 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10nPick(context, en: 'Passenger Information', fa: 'مشخصات سرپرست و مسافر', ar: 'معلومات الراكب', zh: '乘车人联系信息'),
-                    style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w900, color: TravelTheme.ink),
+                    l10nPick(context, en: 'Passenger Information', fa: 'مشخصات سرپرست و مسافر', ar: 'معلومات الراكب', zh: '乘车联系信息'),
+                    style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w900, color: textPrimary),
                   ),
                   SizedBox(height: 12.h),
 
                   // Passenger Name
                   TextFormField(
-                    controller: controller.passengerNameController,
+                    controller: _controller.passengerNameController,
                     decoration: InputDecoration(
                       labelText: l10nPick(context, en: 'Full Name', fa: 'نام و نام خانوادگی', ar: 'الاسم الكامل', zh: '姓名'),
                       prefixIcon: const Icon(Icons.person_outline_rounded),
                       border: const OutlineInputBorder(),
                     ),
                     validator: (val) {
-                      if (val == null || val.trim().isEmpty) {
+                      if (val == null || val.trim().length < 3) {
                         return localization.travelFormRequired;
                       }
                       return null;
@@ -140,39 +243,60 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
 
                   // Passenger Phone
                   TextFormField(
-                    controller: controller.passengerPhoneController,
+                    controller: _controller.passengerPhoneController,
                     keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
+                    ],
                     decoration: InputDecoration(
-                      labelText: l10nPick(context, en: 'Mobile Phone (for driver WhatsApp/call)', fa: 'شماره تماس مسافر (جهت هماهنگی راننده)', ar: 'رقم الهاتف للتواصل', zh: '联系电话'),
+                      labelText: l10nPick(
+                        context,
+                        en: 'Mobile Phone (for driver WhatsApp/call)',
+                        fa: 'شماره تماس مسافر (جهت هماهنگی راننده)',
+                        ar: 'رقم الهاتف للتواصل',
+                        zh: '联系电话（用于WhatsApp或电话）',
+                      ),
                       prefixIcon: const Icon(Icons.phone_rounded),
                       border: const OutlineInputBorder(),
                     ),
                     validator: (val) {
-                      if (val == null || val.trim().isEmpty) {
-                        return localization.travelFormRequired;
+                      if (!TaxiApiService.isValidIranianMobile(val ?? '')) {
+                        return l10nPick(context, en: 'Invalid mobile format', fa: 'فرمت شماره اشتباه است', ar: 'تنسيق رقم الهاتف غير صحيح');
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 12.h),
 
-                  // Flight Number
+                  // Flight Number (optional but encouraged for airport pickups)
                   TextFormField(
-                    controller: controller.flightNumberController,
+                    controller: _controller.flightNumberController,
                     decoration: InputDecoration(
-                      labelText: l10nPick(context, en: 'Flight Number', fa: 'شماره پرواز (اختیاری)', ar: 'رقم الرحلة الجوية', zh: '航班号（选填）'),
+                      labelText: l10nPick(
+                        context,
+                        en: 'Flight Number (Optional — helps track delays)',
+                        fa: 'شماره پرواز (اختیاری — برای رصد تأخیرها مفید است)',
+                        ar: 'رقم الرحلة الجوية (اختياري - للمتابعة)',
+                        zh: '航班号（选填，有助于跟踪延误）',
+                      ),
                       prefixIcon: const Icon(Icons.flight_rounded),
                       border: const OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 12.h),
 
-                  // Notes for driver
+                  // Notes for driver / special requests
                   TextFormField(
-                    controller: controller.notesController,
+                    controller: _controller.notesController,
                     maxLines: 2,
                     decoration: InputDecoration(
-                      labelText: l10nPick(context, en: 'Special Requests / Notes for Driver', fa: 'توضیحات و نیازمندی‌های خاص برای راننده', ar: 'ملاحظات خاصة للسائق', zh: '给司机的留言或特殊要求'),
+                      labelText: l10nPick(
+                        context,
+                        en: 'Special Requests / Notes for Driver',
+                        fa: 'درخواست‌های ویژه / توضیحات برای راننده',
+                        ar: 'طلبات خاصة للسائق',
+                        zh: '给司机的特殊要求',
+                      ),
                       prefixIcon: const Icon(Icons.note_alt_outlined),
                       border: const OutlineInputBorder(),
                     ),
@@ -182,92 +306,137 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
             ),
             SizedBox(height: 16.h),
 
-            // Free Waiting Time Guarantee Card
-            Container(
-              padding: EdgeInsetsDirectional.all(14.r),
-              decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.08),
-                borderRadius: TravelTheme.radius,
-                border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.hourglass_bottom_rounded, color: Colors.green),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10nPick(
-                            context,
-                            en: 'Free 60-Minute Flight Delay Waiting',
-                            fa: '۶۰ دقیقه انتظار رایگان در صورت تأخیر پرواز',
-                            ar: 'انتظار مجاني ٦٠ دقيقة في حال تأخر الطائرة',
-                            zh: '航班延误享60分钟免费等待保障',
-                          ),
-                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12.sp, color: Colors.green.shade900),
-                        ),
-                        SizedBox(height: 2.h),
-                        Text(
-                          l10nPick(
-                            context,
-                            en: 'Our operations team tracks your flight in real time.',
-                            fa: 'تیم پشتیبانی ترانسفر پرواز شما را به صورت زنده رصد می‌کند.',
-                            ar: 'فريق العمليات يتابع حركة طائرتك مباشرة.',
-                            zh: '运营调度团队实时跟踪航班动态，无需担心延误。',
-                          ),
-                          style: TextStyle(fontSize: 11.sp, color: Colors.green.shade800),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Live Tracking Status Bar for Completed/Confirmed rides
+            Obx(() {
+              final b = _controller.activeBooking.value;
+              final operational = b?.operationalStatus;
+              if (b == null || operational == null) return const SizedBox.shrink();
+              return TaxiLiveDriverCard(
+                booking: b,
+                onCallDriver: () {
+                  AppHaptics.light();
+                  // In real app: launch dialer with driver.phone
+                },
+                onOpenSupport: () {
+                  AppHaptics.light();
+                  // In real app: open support sheet/ticket flow
+                },
+              );
+            }),
+
             SizedBox(height: 16.h),
 
-            // Fare Breakdown
+            // Fare Breakdown with trust signals about fixed-price guarantee
             TravelCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     l10nPick(context, en: 'Fare Breakdown', fa: 'ریز محاسبات کرایه', ar: 'تفاصيل الأجرة', zh: '费用明细'),
-                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: TravelTheme.ink),
+                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: textPrimary),
                   ),
                   SizedBox(height: 10.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10nPick(context, en: 'Base Vehicle Fare', fa: 'کرایه پایه خودرو', ar: 'الأجرة الأساسية', zh: '车辆基础费'),
-                        style: TextStyle(fontSize: 11.5.sp, color: TravelTheme.muted)),
-                      Text('${formatMockAmount(vehicle.basePrice)} ${localization.travelMockCurrency}',
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700)),
+                      Text(
+                        l10nPick(context, en: 'Base Vehicle Fare', fa: 'کرایه پایه خودرو', ar: 'الأجرة الأساسية', zh: '车辆基础费'),
+                        style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                      ),
+                      Text(
+                        '${formatMockAmount(vehicle.basePrice)} ${localization.travelMockCurrency}',
+                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textPrimary),
+                      ),
                     ],
                   ),
-                  if (controller.meetAndGreet.value) ...[
+                  if (_controller.meetAndGreet.value) ...[
                     SizedBox(height: 6.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10nPick(context, en: 'Meet & Greet Service', fa: 'خدمات استقبال با تابلو', ar: 'خدمة الاستقبال باللوحة', zh: '举牌接机服务费'),
-                          style: TextStyle(fontSize: 11.5.sp, color: TravelTheme.muted)),
-                        Text('150,000 ${localization.travelMockCurrency}',
-                          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700)),
+                        Text(
+                          l10nPick(context, en: 'Meet & Greet Service', fa: 'خدمات استقبال با تابلو', ar: 'خدمة الاستقبال باللوحة'),
+                          style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                        ),
+                        Text(
+                          '150,000 ${localization.travelMockCurrency}',
+                          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textPrimary),
+                        ),
                       ],
+                    ),
+                  ],
+                  if (_controller.childSeatCount.value > 0) ...[
+                    SizedBox(height: 6.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Child Safety Seats (${_controller.childSeatCount.value} × 75,000 IRR)',
+                            fa: 'صندلی ایمنی کودک (${_controller.childSeatCount.value} × ۷۵,۰۰۰ تومان)',
+                          ),
+                          style: TextStyle(fontSize: 11.5.sp, color: textSecondary),
+                        ),
+                        Text(
+                          '${formatMockAmount(_controller.childSeatCount.value * TaxiApiService.childSeatFeeIrr)} ${localization.travelMockCurrency}',
+                          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textPrimary),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (_controller.selectedRideType.value == TaxiRideType.intercity) ...[
+                    SizedBox(height: 6.h),
+                    Container(
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        l10nPick(context, en: '+ Intercity factor applied (60% increase)', fa: '+ عامل بین شهری (افزایش ۶۰٪)', ar: '+ تطبيق عامل城际 +'),
+                        style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800, color: Colors.amber.shade900),
+                      ),
                     ),
                   ],
                   const Divider(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(localization.travelTotal,
-                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: TravelTheme.ink)),
-                      Text('${formatMockAmount(totalFare)} ${localization.travelMockCurrency}',
-                        style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: const Color(0xFF0D9488))),
+                      Text(
+                        localization.travelTotal,
+                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: textPrimary),
+                      ),
+                      Text(
+                        '${formatMockAmount(totalFare)} ${localization.travelMockCurrency}',
+                        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w900, color: const Color(0xFF0D9488)),
+                      ),
                     ],
                   ),
+                  Obx(() {
+                    if (_controller.quoteSource.value == RideDataSource.network) {
+                      return Padding(
+                        padding: EdgeInsetsDirectional.only(top: 6.h),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.receipt_long_rounded, size: 13, color: Color(0xFF0D9488)),
+                            SizedBox(width: 4.w),
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Fixed price confirmed by eCardo engine. No surge pricing.',
+                                fa: 'نرخ قطعی توسط موتور قیمت‌گذاری تأیید شده است.',
+                                ar: 'سعر مؤكد بدون زيادة.',
+                                zh: '固定价格已确认。无动态加价。',
+                              ),
+                              style: TextStyle(fontSize: 9.5.sp, color: textSecondary),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
                 ],
               ),
             ),

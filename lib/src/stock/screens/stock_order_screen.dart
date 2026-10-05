@@ -126,12 +126,16 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                     children: [
                       Icon(Icons.language_rounded, color: AppColors.mainSoftBlue, size: 22.sp),
                       SizedBox(width: AppSpacing.sm.w),
-                      Text(
-                        l10nPick(context, fa: 'بورس نزدک و نیویورک (NASDAQ / NYSE)', en: 'US Equities (NASDAQ / NYSE)'),
-                        style: TextStyle(
-                          fontSize: 12.5.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      Expanded(
+                        child: Text(
+                          l10nPick(context, fa: 'بورس نزدک و نیویورک (NASDAQ / NYSE)', en: 'US Equities (NASDAQ / NYSE)'),
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                     ],

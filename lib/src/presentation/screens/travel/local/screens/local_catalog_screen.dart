@@ -1,13 +1,16 @@
+// DATA: MOCK (Ready for REAL backend domain registration under schema_version: 1.0)
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
-
 import '../controllers/local_experience_controller.dart';
 import '../models/local_experience_models.dart';
+import '../../local/models/experience_contracts.dart';
+import '../../local/widgets/experience_ui_components.dart';
 import 'local_detail_screen.dart';
 import 'local_voucher_screen.dart';
 
@@ -30,10 +33,10 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
 
   final List<Map<String, dynamic>> _types = const [
     {'type': null, 'label': 'همه خدمات'},
-    {'type': LocalServiceType.tourGuide, 'label': 'راهنمای محلی 🏛️'},
-    {'type': LocalServiceType.photographer, 'label': 'عکاس سفر 📸'},
-    {'type': LocalServiceType.chauffeur, 'label': 'راننده اختصاصی 🚗'},
-    {'type': LocalServiceType.meetAndGreet, 'label': 'همراهی فرودگاه ✈️'},
+    {'type': LocalServiceType.tourGuide, 'label': 'راهنمای تور 🏛️'},
+    {'type': LocalServiceType.chauffeur, 'label': 'راننده لوکس 🚗'},
+    {'type': LocalServiceType.photographer, 'label': 'عکاس حرفه‌ای 📸'},
+    {'type': LocalServiceType.meetAndGreet, 'label': 'فرودگاه VIP ✈️'},
   ];
 
   @override
@@ -68,9 +71,9 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
         title: Text(
           l10nPick(
             context,
-            fa: 'راهنمای محلی و تجارب سفر',
-            en: 'Local Guides & Experiences',
-            ar: 'المرشدين والخدمات المحلية',
+            fa: 'خدمات محلی و تجربیات شهری',
+            en: 'Local Experiences & City Guide',
+            ar: 'الخدمات المحلية ودليل المدينة',
           ),
           style: TextStyle(
             fontSize: 16.sp,
@@ -82,7 +85,7 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.receipt_long_outlined,
+              Icons.confirmation_number_outlined,
               color: tealColor,
               size: 22.sp,
             ),
@@ -93,6 +96,50 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
       ),
       body: Column(
         children: [
+          // Offline Banner
+          Obx(() => controller.isOffline.value
+              ? ExperienceOfflineBanner(onRetry: () => controller.loadCatalog())
+              : const SizedBox.shrink()),
+
+          // Search Field
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: 4.h),
+            child: TextField(
+              onChanged: controller.onSearchChanged,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
+              decoration: InputDecoration(
+                hintText: l10nPick(
+                  context,
+                  fa: 'جستجوی خدمت، راهنما یا جاذبه...',
+                  en: 'Search service, provider or attraction...',
+                ),
+                hintStyle: TextStyle(
+                  fontSize: 11.5.sp,
+                  color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+                ),
+                prefixIcon: Icon(Icons.search_rounded,
+                    size: 18.sp,
+                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+                filled: true,
+                fillColor: isDark ? AppColors.darkCard : AppColors.lightSurface,
+                contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                  borderSide:
+                      BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                  borderSide:
+                      BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                ),
+              ),
+            ),
+          ),
+
           // City Selector Row
           Container(
             height: 44.h,
@@ -125,7 +172,9 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.r),
                       side: BorderSide(
-                        color: isSelected ? tealColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        color: isSelected
+                            ? tealColor
+                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
                       ),
                     ),
                     onSelected: (_) {
@@ -138,7 +187,7 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
             }),
           ),
 
-          // Service Type Filter Row
+          // Category Filter Row
           Container(
             height: 42.h,
             padding: EdgeInsets.symmetric(vertical: 4.h),
@@ -150,12 +199,12 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
                 itemCount: _types.length,
                 separatorBuilder: (_, _) => SizedBox(width: 8.w),
                 itemBuilder: (context, idx) {
-                  final t = _types[idx];
-                  final isSelected = activeType == t['type'];
+                  final cat = _types[idx];
+                  final isSelected = activeType == cat['cat'];
 
                   return FilterChip(
                     label: Text(
-                      t['label']!,
+                      cat['label']!,
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
@@ -171,12 +220,14 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
                       side: BorderSide(
-                        color: isSelected ? tealColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        color: isSelected
+                            ? tealColor
+                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
                       ),
                     ),
                     onSelected: (_) {
                       HapticFeedback.selectionClick();
-                      controller.setType(t['type'] as LocalServiceType?);
+                      controller.setType(cat['cat'] as LocalServiceType?);
                     },
                   );
                 },
@@ -186,38 +237,57 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
 
           SizedBox(height: 6.h),
 
-          // Experience Cards List
+          // Services List with 12-state UI machine
           Expanded(
             child: Obx(() {
               final list = controller.filteredExperiences;
+              final state = controller.uiState.value;
 
-              if (list.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.place_outlined, size: 54.sp, color: AppColors.greyLight),
-                      SizedBox(height: 12.h),
-                      Text(
-                        'خدمتی در این دسته‌بندی یافت نشد.',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+              switch (state) {
+                case ExperienceServiceState.loading:
+                case ExperienceServiceState.skeleton:
+                  return ExperienceCatalogSkeleton(itemCount: 4);
+
+                case ExperienceServiceState.error:
+                  return ExperienceErrorView(
+                    errorMessage: controller.errorMessage.value.isNotEmpty
+                        ? controller.errorMessage.value
+                        : 'خطا در بارگذاری تجربه‌های محلی',
+                    onRetry: () => controller.loadCatalog(),
+                  );
+
+                case ExperienceServiceState.offline:
+                  return ExperienceErrorView(
+                    errorMessage: 'اتصال اینترنت قطع است.',
+                    onRetry: () => controller.loadCatalog(),
+                  );
+
+                case ExperienceServiceState.empty:
+                case ExperienceServiceState.partial:
+                  return ExperienceEmptyView(
+                    icon: Icons.place_rounded,
+                    title: 'خدمتی با این مشخصات یافت نشد.',
+                    subtitle: 'فیلتر شهر یا نوع خدمت را تغییر دهید.',
+                    onReset: () => controller.resetFilters(),
+                  );
+
+                case ExperienceServiceState.success:
+                case ExperienceServiceState.completed:
+                case ExperienceServiceState.cancelled:
+                  return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, 4.h, AppSpacing.lg.w, AppSpacing.xl.h),
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final exp = list[index];
+                      return _buildExperienceCard(context, exp, isDark, tealColor);
+                    },
+                  );
+
+                case ExperienceServiceState.validationError:
+                case ExperienceServiceState.processing:
+                case ExperienceServiceState.defaultState:
+                  return const SizedBox.shrink();
               }
-
-              return ListView.builder(
-                padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, 4.h, AppSpacing.lg.w, AppSpacing.xl.h),
-                itemCount: list.length,
-                itemBuilder: (context, index) {
-                  final exp = list[index];
-                  return _buildExperienceCard(context, exp, isDark, tealColor);
-                },
-              );
             }),
           ),
         ],
@@ -231,157 +301,153 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
     bool isDark,
     Color tealColor,
   ) {
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.white,
-        borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            Get.to(() => LocalDetailScreen(experience: exp));
-          },
+    return Semantics(
+      label: '${exp.title} - ${exp.price.toStringAsFixed(0)} ${exp.currency}',
+      button: true,
+      child: Container(
+        margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-          child: Padding(
-            padding: EdgeInsets.all(AppSpacing.lg.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                        decoration: BoxDecoration(
-                          color: tealColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        child: Text(
-                          exp.typeLabel,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 10.5.sp,
-                            fontWeight: FontWeight.w700,
-                            color: tealColor,
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              Get.to(() => LocalDetailScreen(experience: exp));
+            },
+            borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+            child: Padding(
+              padding: EdgeInsets.all(AppSpacing.lg.r),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          decoration: BoxDecoration(
+                            color: tealColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            exp.typeLabel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: tealColor,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Row(
-                      children: [
-                        const Icon(Icons.star_rounded, color: AppColors.warning, size: 15),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '${exp.rating}',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      SizedBox(width: 8.w),
+                      Row(
+                        children: [
+                          const Icon(Icons.star_rounded, color: AppColors.warning, size: 15),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${exp.rating} (${exp.reviewsCount})',
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  exp.title,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    height: 1.3,
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 6.h),
-                Row(
-                  children: [
-                    Icon(Icons.person_pin_rounded, size: 14.sp, color: AppColors.success),
-                    SizedBox(width: 4.w),
-                    Expanded(
-                      child: Text(
-                        exp.providerName,
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    exp.title,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      height: 1.3,
                     ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                // Languages & Duration
-                Wrap(
-                  spacing: 6.w,
-                  runSpacing: 4.h,
-                  children: [
-                    _buildPill(Icons.timer_outlined, exp.durationLabel, isDark),
-                    _buildPill(Icons.place_outlined, exp.city, isDark),
-                    ...exp.languages.map((l) => _buildPill(Icons.language_rounded, l, isDark)),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Column(
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    exp.subtitle,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 10.h),
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 6.h,
+                    children: [
+                      _buildPill(Icons.location_on_rounded, exp.city, isDark),
+                      _buildPill(Icons.timer_outlined, exp.durationLabel, isDark),
+                      if (exp.freeCancellation)
+                        _buildPill(Icons.shield_outlined, 'لغو رایگان', isDark),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'هزینه خدمت',
+                            'تعرفه پایه',
                             style: TextStyle(
                               fontSize: 10.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color:
+                                  isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                             ),
                           ),
                           Text(
                             '${exp.price.toStringAsFixed(0)} ${exp.currency}',
                             style: TextStyle(
-                              fontSize: 16.sp,
+                              fontSize: 15.sp,
                               fontWeight: FontWeight.w900,
                               color: tealColor,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(width: 8.w),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: tealColor,
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.r),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: tealColor,
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                          minimumSize: Size(110.w, 44.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          elevation: 0,
                         ),
-                        elevation: 0,
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          Get.to(() => LocalDetailScreen(experience: exp));
+                        },
+                        child: const Text('رزرو',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        Get.to(() => LocalDetailScreen(experience: exp));
-                      },
-                      child: const Text('مشاهده و رزرو', style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -399,7 +465,9 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12.sp, color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+          Icon(icon,
+              size: 12.sp,
+              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
           SizedBox(width: 4.w),
           Text(
             label,
@@ -455,9 +523,10 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
                   if (bookings.isEmpty) {
                     return Center(
                       child: Text(
-                        'شما واچر خدمات محلی فعالی ندارید.',
+                        'شما هیچ واچر فعالی ندارید.',
                         style: TextStyle(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color:
+                              isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                     );
@@ -477,7 +546,9 @@ class _LocalCatalogScreenState extends State<LocalCatalogScreen> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          subtitle: Text('${b.providerName} • ${b.serviceTime}'),
+                          subtitle: Text(
+                            '${b.providerName} • ${DateFormat('dd MMM').format(b.serviceDate)}',
+                          ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
                           onTap: () {
                             Navigator.pop(ctx);

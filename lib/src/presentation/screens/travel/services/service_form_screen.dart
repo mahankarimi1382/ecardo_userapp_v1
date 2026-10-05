@@ -119,7 +119,9 @@ class _TravelServiceFormScreenState extends State<TravelServiceFormScreen> {
           padding: EdgeInsets.all(20.r),
           children: [
             TravelCard(
-              color: const Color(0xFFEAF3FF),
+              color: TravelTheme.isDark(context)
+                  ? TravelTheme.blue.withValues(alpha: .15)
+                  : const Color(0xFFEAF3FF),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

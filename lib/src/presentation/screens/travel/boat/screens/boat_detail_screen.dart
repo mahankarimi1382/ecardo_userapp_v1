@@ -1,13 +1,17 @@
+// DATA: MOCK (Ready for REAL backend domain registration under schema_version: 1.0)
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/boat_controller.dart';
 import '../models/boat_models.dart';
+import '../../local/models/experience_contracts.dart';
+import '../../local/widgets/experience_ui_components.dart';
 import 'boat_voucher_screen.dart';
 
 class BoatDetailScreen extends StatefulWidget {
@@ -34,6 +38,20 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
 
     if (widget.boat.availableSlots.isNotEmpty) {
       controller.selectedTimeSlot.value = widget.boat.availableSlots.first;
+    }
+  }
+
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: controller.selectedDate.value,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 90)),
+    );
+    if (picked != null) {
+      HapticFeedback.selectionClick();
+      controller.selectedDate.value = picked;
     }
   }
 
@@ -74,12 +92,16 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             child: ListView(
               padding: EdgeInsets.all(AppSpacing.lg.r),
               children: [
-                // Hero Header Card
+                // Hero Header Card with Image
                 _buildHeroCard(context, isDark, oceanColor),
                 SizedBox(height: AppSpacing.lg.h),
 
                 // Technical Specs Grid
                 _buildSpecGrid(context, isDark, oceanColor),
+                SizedBox(height: AppSpacing.lg.h),
+
+                // Date Picker Card
+                _buildDatePickerCard(context, isDark, oceanColor),
                 SizedBox(height: AppSpacing.lg.h),
 
                 // Time Slot Selector
@@ -90,7 +112,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                 _buildDurationSelector(context, isDark, oceanColor),
                 SizedBox(height: AppSpacing.lg.h),
 
-                // Passenger Count Selector
+                // Passenger Count Selector (Adults + Children)
                 _buildPassengerSelector(context, isDark, oceanColor),
                 SizedBox(height: AppSpacing.lg.h),
 
@@ -100,8 +122,16 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   SizedBox(height: AppSpacing.lg.h),
                 ],
 
+                // Cancellation Policy Card
+                _buildCancellationPolicyCard(context, isDark, oceanColor),
+                SizedBox(height: AppSpacing.lg.h),
+
                 // Amenities & Included Features
                 _buildFeaturesCard(context, isDark, oceanColor),
+                SizedBox(height: AppSpacing.lg.h),
+
+                // Sea Advisory & Dock
+                _buildAdvisoryCard(context, isDark, oceanColor),
                 SizedBox(height: AppSpacing.lg.h),
 
                 // Description
@@ -119,8 +149,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
   }
 
   Widget _buildHeroCard(BuildContext context, bool isDark, Color oceanColor) {
+    final hasImage = widget.boat.images.isNotEmpty;
+
     return Container(
-      padding: EdgeInsets.all(AppSpacing.lg.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radius.r),
@@ -136,79 +167,156 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: oceanColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Text(
-                  widget.boat.categoryLabel,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w700,
-                    color: oceanColor,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '${widget.boat.rating} (${widget.boat.reviewsCount} نظر)',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          if (hasImage)
+            ExperienceNetworkImage(
+              imageUrl: widget.boat.images.first,
+              width: double.infinity,
+              height: 180.h,
+              borderRadius: AppSpacing.radius,
+              fallbackIcon: Icons.directions_boat_rounded,
+              semanticLabel: widget.boat.title,
+            ),
+          Padding(
+            padding: EdgeInsets.all(AppSpacing.lg.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: oceanColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Text(
+                        widget.boat.categoryLabel,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w700,
+                          color: oceanColor,
+                        ),
+                      ),
                     ),
+                    Row(
+                      children: [
+                        const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
+                        SizedBox(width: 4.w),
+                        Text(
+                          '${widget.boat.rating} (${widget.boat.reviewsCount} نظر)',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  widget.boat.title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    height: 1.3,
                   ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            widget.boat.title,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-              height: 1.3,
+                ),
+                SizedBox(height: 8.h),
+                Row(
+                  children: [
+                    Icon(Icons.place_rounded, size: 15.sp, color: oceanColor),
+                    SizedBox(width: 4.w),
+                    Expanded(
+                      child: Text(
+                        widget.boat.marinaName,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 6.h),
+                Row(
+                  children: [
+                    Icon(Icons.person_pin_rounded, size: 15.sp, color: AppColors.success),
+                    SizedBox(width: 4.w),
+                    Text(
+                      widget.boat.captainName,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 8.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpecGrid(BuildContext context, bool isDark, Color oceanColor) {
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.md.r),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10nPick(context, fa: 'مشخصات فنی و استانداردهای دریانوردی', en: 'Vessel Specifications'),
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w800,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+          ),
+          SizedBox(height: 10.h),
           Row(
             children: [
-              Icon(Icons.place_rounded, size: 15.sp, color: oceanColor),
-              SizedBox(width: 4.w),
               Expanded(
-                child: Text(
-                  widget.boat.marinaName,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                child: _buildSpecTile(
+                  'حداکثر ظرفیت',
+                  '${widget.boat.maxPassengers} نفر',
+                  Icons.people_alt_outlined,
+                  isDark,
+                  oceanColor,
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 6.h),
-          Row(
-            children: [
-              Icon(Icons.person_pin_rounded, size: 15.sp, color: AppColors.success),
-              SizedBox(width: 4.w),
-              Text(
-                widget.boat.captainName,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              SizedBox(width: 8.w),
+              Expanded(
+                child: _buildSpecTile(
+                  'طول شناور',
+                  '${widget.boat.lengthMeters} متر',
+                  Icons.straighten_rounded,
+                  isDark,
+                  oceanColor,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: _buildSpecTile(
+                  'تعرفه کودک',
+                  widget.boat.childRate > 0
+                      ? '${widget.boat.childRate.toStringAsFixed(0)} ${widget.boat.currency}'
+                      : 'نیم‌بها',
+                  Icons.child_care_rounded,
+                  isDark,
+                  oceanColor,
                 ),
               ),
             ],
@@ -218,68 +326,18 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildSpecGrid(BuildContext context, bool isDark, Color oceanColor) {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildSpecTile(
-            'ظرفیت مجاز',
-            '${widget.boat.maxPassengers} نفر',
-            Icons.people_alt_outlined,
-            isDark,
-            oceanColor,
-          ),
-        ),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: _buildSpecTile(
-            'طول شناور',
-            '${widget.boat.lengthMeters} متر',
-            Icons.straighten_rounded,
-            isDark,
-            oceanColor,
-          ),
-        ),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: _buildSpecTile(
-            'کرایه هر ساعت',
-            '${widget.boat.hourlyRate.toStringAsFixed(0)} ${widget.boat.currency}',
-            Icons.schedule_rounded,
-            isDark,
-            oceanColor,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSpecTile(
-    String label,
-    String value,
-    IconData icon,
-    bool isDark,
-    Color oceanColor,
-  ) {
+  Widget _buildSpecTile(String label, String value, IconData icon, bool isDark, Color oceanColor) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 6.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.white,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       child: Column(
         children: [
-          Icon(icon, size: 20.sp, color: oceanColor),
-          SizedBox(height: 6.h),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10.sp,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
-            ),
-          ),
-          SizedBox(height: 2.h),
+          Icon(icon, size: 18.sp, color: oceanColor),
+          SizedBox(height: 4.h),
           Text(
             value,
             style: TextStyle(
@@ -287,8 +345,64 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
               fontWeight: FontWeight.w800,
               color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDatePickerCard(BuildContext context, bool isDark, Color oceanColor) {
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.md.r),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10nPick(context, fa: 'تاریخ گشت دریایی', en: 'Cruise Date'),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              Obx(() => Text(
+                    DateFormat('yyyy/MM/dd (EEEE)').format(controller.selectedDate.value),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
+                  )),
+            ],
+          ),
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              minimumSize: Size(90.w, 44.h),
+              side: BorderSide(color: oceanColor),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+            ),
+            icon: Icon(Icons.edit_calendar_rounded, size: 16.sp, color: oceanColor),
+            label: Text(l10nPick(context, fa: 'تغییر تاریخ', en: 'Change'),
+                style: TextStyle(color: oceanColor, fontSize: 11.5.sp)),
+            onPressed: _pickDate,
           ),
         ],
       ),
@@ -336,7 +450,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                             : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
-                          color: isSelected ? oceanColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          color: isSelected
+                              ? oceanColor
+                              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
                           width: isSelected ? 1.5 : 1.0,
                         ),
                       ),
@@ -411,10 +527,14 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 8.h),
                         decoration: BoxDecoration(
-                          color: isSelected ? oceanColor : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                          color: isSelected
+                              ? oceanColor
+                              : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
-                            color: isSelected ? oceanColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            color: isSelected
+                                ? oceanColor
+                                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
                           ),
                         ),
                         child: Center(
@@ -449,11 +569,11 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
         border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 l10nPick(context, fa: 'تعداد مسافران همراه', en: 'Passengers Count'),
@@ -463,51 +583,132 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
-              SizedBox(height: 2.h),
               Text(
-                'حداکثر ظرفیت این شناور: ${widget.boat.maxPassengers} نفر',
+                'حداکثر: ${widget.boat.maxPassengers} نفر',
                 style: TextStyle(
-                  fontSize: 10.sp,
+                  fontSize: 11.sp,
                   color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
                 ),
               ),
             ],
           ),
-          Obx(() {
-            final count = controller.passengerCount.value;
-            return Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.remove_circle_outline_rounded),
-                  color: oceanColor,
-                  onPressed: count > 1
-                      ? () {
-                          HapticFeedback.selectionClick();
-                          controller.passengerCount.value--;
-                        }
-                      : null,
-                ),
-                Text(
-                  '$count',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w900,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add_circle_outline_rounded),
-                  color: oceanColor,
-                  onPressed: count < widget.boat.maxPassengers
-                      ? () {
-                          HapticFeedback.selectionClick();
-                          controller.passengerCount.value++;
-                        }
-                      : null,
-                ),
-              ],
-            );
-          }),
+          SizedBox(height: 10.h),
+          // Adults
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('بزرگسالان',
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+                  Text('${widget.boat.hourlyRate.toStringAsFixed(0)} ${widget.boat.currency} / ساعت',
+                      style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                ],
+              ),
+              Obx(() {
+                final count = controller.passengerCount.value;
+                final totalGuests = count + controller.childrenCount.value;
+                return Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle_outline_rounded),
+                      color: oceanColor,
+                      onPressed: count > 1
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.passengerCount.value--;
+                            }
+                          : null,
+                    ),
+                    Text(
+                      '$count',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle_outline_rounded),
+                      color: oceanColor,
+                      onPressed: totalGuests < widget.boat.maxPassengers
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.passengerCount.value++;
+                            }
+                          : null,
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
+          const Divider(),
+          // Children
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('کودکان (۲ تا ۱۲ سال)',
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+                  Text(
+                      widget.boat.childRate > 0
+                          ? '${widget.boat.childRate.toStringAsFixed(0)} ${widget.boat.currency} / ساعت'
+                          : 'تعرفه نیم‌بها',
+                      style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                ],
+              ),
+              Obx(() {
+                final cCount = controller.childrenCount.value;
+                final totalGuests = controller.passengerCount.value + cCount;
+                return Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle_outline_rounded),
+                      color: oceanColor,
+                      onPressed: cCount > 0
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.childrenCount.value--;
+                            }
+                          : null,
+                    ),
+                    Text(
+                      '$cCount',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle_outline_rounded),
+                      color: oceanColor,
+                      onPressed: totalGuests < widget.boat.maxPassengers
+                          ? () {
+                              HapticFeedback.selectionClick();
+                              controller.childrenCount.value++;
+                            }
+                          : null,
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
         ],
       ),
     );
@@ -569,6 +770,56 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
+  Widget _buildCancellationPolicyCard(BuildContext context, bool isDark, Color oceanColor) {
+    final policy = widget.boat.cancellationPolicy;
+
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.md.r),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.shield_outlined, color: AppColors.success, size: 18.sp),
+              SizedBox(width: 6.w),
+              Text(
+                'شرایط لغو و ضمانت استرداد وجه',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            '• لغو رایگان تا ${policy.freeCancellationHours} ساعت پیش از حرکت با عودت ۱۰۰٪ به کیف پول دلاری',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              height: 1.4,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            '• لغو کمتر از ${policy.freeCancellationHours} ساعت: ${policy.lateCancelPenaltyPercent.toStringAsFixed(0)}٪ جریمه کنسلی اعمال می‌گردد.',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFeaturesCard(BuildContext context, bool isDark, Color oceanColor) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
@@ -607,6 +858,61 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdvisoryCard(BuildContext context, bool isDark, Color oceanColor) {
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.md.r),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.anchor_rounded, color: oceanColor, size: 18.sp),
+              SizedBox(width: 6.w),
+              Text(
+                'اطلاعات لنگرگاه و وضعیت دریا',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'اسکله اختصاصی: ${widget.boat.pierDockNumber}',
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w700,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            'وضعیت امواج: ${widget.boat.seaConditionsAdvisory}',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            'سیاست سوخت: ${widget.boat.fuelPolicy}',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
           ),
         ],
@@ -663,7 +969,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       ),
       child: Obx(() {
         final total = controller.calculateTotalPrice(widget.boat);
-        final isSubmitting = controller.isSubmittingBooking.value;
+        final isSubmitting = controller.uiState.value == ExperienceServiceState.processing;
+        final totalGuests = controller.passengerCount.value + controller.childrenCount.value;
 
         return Row(
           children: [
@@ -672,7 +979,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'مبلغ نهایی رزرو',
+                  'مبلغ نهایی ($totalGuests نفر)',
                   style: TextStyle(
                     fontSize: 10.sp,
                     color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
@@ -695,6 +1002,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: oceanColor,
                   padding: EdgeInsets.symmetric(vertical: 14.h),
+                  minimumSize: Size(double.infinity, 44.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                   ),

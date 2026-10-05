@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
-import 'package:ecardo_user/src/tour/controllers/tour_controller.dart';
 import 'package:ecardo_user/src/tour/models/tour_model.dart';
 import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
 

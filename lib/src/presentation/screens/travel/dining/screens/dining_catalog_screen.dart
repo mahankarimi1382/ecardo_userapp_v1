@@ -1,3 +1,4 @@
+// DATA: MOCK (Ready for REAL backend domain registration under schema_version: 1.0)
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,8 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/dining_controller.dart';
 import '../models/dining_models.dart';
+import '../../local/models/experience_contracts.dart';
+import '../../local/widgets/experience_ui_components.dart';
 import 'restaurant_detail_screen.dart';
 import 'dining_order_pass_screen.dart';
 
@@ -85,6 +88,11 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
       ),
       body: Column(
         children: [
+          // Offline Banner
+          Obx(() => controller.isOffline.value
+              ? ExperienceOfflineBanner(onRetry: () => controller.loadCatalog())
+              : const SizedBox.shrink()),
+
           // Transit Hub Selector Row
           Container(
             height: 44.h,
@@ -117,7 +125,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.r),
                       side: BorderSide(
-                        color: isSelected ? amberColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        color: isSelected
+                            ? amberColor
+                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
                       ),
                     ),
                     onSelected: (_) {
@@ -130,40 +140,103 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
             }),
           ),
 
-          SizedBox(height: 6.h),
+          // Search Field
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: 4.h),
+            child: TextField(
+              onChanged: controller.onSearchChanged,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
+              decoration: InputDecoration(
+                hintText: l10nPick(
+                  context,
+                  fa: 'جستجوی رستوران، نوع غذا یا غذاهای ترانزیت...',
+                  en: 'Search restaurant, cuisine, or in-transit meals...',
+                ),
+                hintStyle: TextStyle(
+                  fontSize: 11.5.sp,
+                  color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+                ),
+                prefixIcon: Icon(Icons.search_rounded,
+                    size: 18.sp,
+                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+                filled: true,
+                fillColor: isDark ? AppColors.darkCard : AppColors.lightSurface,
+                contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                  borderSide:
+                      BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                  borderSide:
+                      BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                ),
+              ),
+            ),
+          ),
 
-          // Restaurant Cards List
+          SizedBox(height: 4.h),
+
+          // Restaurant Cards List with 12-state UI machine
           Expanded(
             child: Obx(() {
               final list = controller.filteredRestaurants;
+              final state = controller.uiState.value;
 
-              if (list.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.restaurant_outlined, size: 54.sp, color: AppColors.greyLight),
-                      SizedBox(height: 12.h),
-                      Text(
-                        'رستورانی در این پایانه یافت نشد.',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+              switch (state) {
+                case ExperienceServiceState.loading:
+                case ExperienceServiceState.skeleton:
+                  return ExperienceCatalogSkeleton(itemCount: 4);
+
+                case ExperienceServiceState.error:
+                  return ExperienceErrorView(
+                    errorMessage: controller.errorMessage.value.isNotEmpty
+                        ? controller.errorMessage.value
+                        : 'خطا در بارگذاری فهرست رستوران‌ها',
+                    onRetry: () => controller.loadCatalog(),
+                  );
+
+                case ExperienceServiceState.offline:
+                  return ExperienceErrorView(
+                    errorMessage: 'اتصال شبکه قطع است. برای دریافت داده‌های تازه دوباره تلاش کنید.',
+                    onRetry: () => controller.loadCatalog(),
+                  );
+
+                case ExperienceServiceState.empty:
+                case ExperienceServiceState.partial:
+                  return ExperienceEmptyView(
+                    icon: Icons.restaurant_outlined,
+                    title: 'رستورانی با این مشخصات یافت نشد.',
+                    subtitle: 'فیلتر پایانه یا عبارت جستجو را تغییر دهید.',
+                    onReset: () => controller.resetFilters(),
+                  );
+
+                case ExperienceServiceState.success:
+                case ExperienceServiceState.completed:
+                case ExperienceServiceState.cancelled:
+                  return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(
+                      AppSpacing.lg.w,
+                      4.h,
+                      AppSpacing.lg.w,
+                      AppSpacing.xl.h,
+                    ),
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final rest = list[index];
+                      return _buildRestaurantCard(context, rest, isDark, amberColor);
+                    },
+                  );
+
+                case ExperienceServiceState.validationError:
+                case ExperienceServiceState.processing:
+                case ExperienceServiceState.defaultState:
+                  return const SizedBox.shrink();
               }
-
-              return ListView.builder(
-                padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, 4.h, AppSpacing.lg.w, AppSpacing.xl.h),
-                itemCount: list.length,
-                itemBuilder: (context, index) {
-                  final rest = list[index];
-                  return _buildRestaurantCard(context, rest, isDark, amberColor);
-                },
-              );
             }),
           ),
         ],
@@ -177,143 +250,173 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
     bool isDark,
     Color amberColor,
   ) {
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.white,
-        borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            Get.to(() => RestaurantDetailScreen(restaurant: rest));
-          },
+    return Semantics(
+      label: '${rest.name} - ${rest.cuisineType} - امتیاز ${rest.rating}',
+      button: true,
+      child: Container(
+        margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-          child: Padding(
-            padding: EdgeInsets.all(AppSpacing.lg.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                        decoration: BoxDecoration(
-                          color: amberColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(6.r),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              Get.to(() => RestaurantDetailScreen(restaurant: rest));
+            },
+            borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+            child: Padding(
+              padding: EdgeInsets.all(AppSpacing.lg.r),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          decoration: BoxDecoration(
+                            color: amberColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            rest.cuisineType,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: amberColor,
+                            ),
+                          ),
                         ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Row(
+                        children: [
+                          const Icon(Icons.star_rounded, color: AppColors.warning, size: 15),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${rest.rating}',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                          Text(
+                            ' (${rest.reviewsCount})',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color:
+                                  isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    rest.name,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      height: 1.3,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    children: [
+                      Icon(Icons.flight_takeoff_rounded,
+                          size: 14.sp,
+                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+                      SizedBox(width: 4.w),
+                      Expanded(
                         child: Text(
-                          rest.cuisineType,
+                          rest.terminalLocation,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color:
+                                isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 10.5.sp,
-                            fontWeight: FontWeight.w700,
-                            color: amberColor,
-                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Row(
-                      children: [
-                        const Icon(Icons.star_rounded, color: AppColors.warning, size: 15),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '${rest.rating}',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  rest.name,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    height: 1.3,
+                    ],
                   ),
-                ),
-                SizedBox(height: 6.h),
-                Row(
-                  children: [
-                    Icon(Icons.place_rounded, size: 14.sp, color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
-                    SizedBox(width: 4.w),
-                    Expanded(
-                      child: Text(
-                        rest.terminalLocation,
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                  SizedBox(height: 10.h),
+                  // Pills
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 6.h,
+                    children: [
+                      _buildPill(Icons.access_time_rounded, rest.openingHours, isDark),
+                      _buildPill(
+                          Icons.timer_outlined, 'آماده‌سازی ~${rest.avgPrepMinutes} دقیقه', isDark),
+                      _buildPill(Icons.menu_book_rounded, '${rest.menu.length} آیتم منو', isDark),
+                    ],
+                  ),
+                  SizedBox(height: 12.h),
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'حداقل سفارش',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color:
+                                  isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                            ),
+                          ),
+                          Text(
+                            '${rest.minOrderAmount.toStringAsFixed(0)} ${rest.currency}',
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w900,
+                              color: amberColor,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Wrap(
-                  spacing: 6.w,
-                  children: [
-                    _buildPill(Icons.access_time_rounded, rest.openingHours, isDark),
-                    _buildPill(Icons.delivery_dining_rounded, 'تحویل گیت', isDark),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '${rest.menu.length} نوع غذا و نوشیدنی آماده',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: amberColor,
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                          minimumSize: Size(110.w, 44.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          elevation: 0,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          Get.to(() => RestaurantDetailScreen(restaurant: rest));
+                        },
+                        child: const Text('مشاهده منو و سفارش',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                    ),
-                    SizedBox(width: 8.w),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: amberColor,
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        elevation: 0,
-                      ),
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        Get.to(() => RestaurantDetailScreen(restaurant: rest));
-                      },
-                      child: const Text('مشاهده منو و سفارش', style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -331,7 +434,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12.sp, color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+          Icon(icon,
+              size: 12.sp,
+              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
           SizedBox(width: 4.w),
           Text(
             label,
@@ -373,7 +478,7 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
               ),
               SizedBox(height: 16.h),
               Text(
-                'رسید و سفارش‌های غذای من',
+                'سفارش‌های غذای فرودگاهی من',
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w900,
@@ -398,22 +503,24 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                   return ListView.builder(
                     itemCount: orders.length,
                     itemBuilder: (context, idx) {
-                      final o = orders[idx];
+                      final order = orders[idx];
                       return Card(
                         margin: EdgeInsets.only(bottom: 10.h),
                         color: isDark ? AppColors.darkCard : AppColors.lightSurface,
                         child: ListTile(
                           title: Text(
-                            o.restaurantName,
+                            order.restaurantName,
                             style: const TextStyle(fontWeight: FontWeight.w700),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          subtitle: Text('${o.pickupTime} • ${o.totalAmount.toStringAsFixed(0)} ${o.currency}'),
+                          subtitle: Text(
+                            '${order.items.length} آیتم • ${order.totalAmount.toStringAsFixed(0)} ${order.currency}',
+                          ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
                           onTap: () {
                             Navigator.pop(ctx);
-                            Get.to(() => DiningOrderPassScreen(order: o));
+                            Get.to(() => DiningOrderPassScreen(order: order));
                           },
                         ),
                       );

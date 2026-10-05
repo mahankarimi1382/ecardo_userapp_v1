@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
@@ -142,12 +143,13 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
 
   void _showEnlargedQrDialog(BuildContext context) {
     AppHaptics.light();
+    final isDark = TravelTheme.isDark(context);
     showDialog<void>(
       context: context,
       builder: (ctx) {
         final svgString = _generateQrSvg(size: 260);
         return Dialog(
-          backgroundColor: Colors.white,
+          backgroundColor: TravelTheme.cardSurfaceFor(ctx),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24.r),
           ),
@@ -170,13 +172,13 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w900,
-                        color: TravelTheme.ink,
+                        color: TravelTheme.textPrimaryFor(ctx),
                       ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close_rounded),
                       onPressed: () => Navigator.pop(ctx),
-                      color: TravelTheme.muted,
+                      color: TravelTheme.textSecondaryFor(ctx),
                     ),
                   ],
                 ),
@@ -186,10 +188,10 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(18.r),
-                    border: Border.all(color: TravelTheme.border),
+                    border: Border.all(color: TravelTheme.borderFor(ctx)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
+                        color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
@@ -213,7 +215,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: TravelTheme.muted,
+                    color: TravelTheme.textSecondaryFor(ctx),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -231,13 +233,17 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
     final hasConfCode = widget.confirmationCode != null &&
         widget.confirmationCode!.trim().isNotEmpty &&
         widget.confirmationCode!.trim().toLowerCase() != 'none';
+    final isDark = TravelTheme.isDark(context);
+    final cardBg = TravelTheme.cardSurfaceFor(context);
+    final chipBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA);
+    final trackBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0F2F5);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: TravelTheme.radius,
-        border: Border.all(color: TravelTheme.border),
-        boxShadow: TravelTheme.shadow,
+        border: Border.all(color: TravelTheme.borderFor(context)),
+        boxShadow: TravelTheme.shadowFor(context),
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.all(18.r),
@@ -275,7 +281,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
-                          color: TravelTheme.ink,
+                          color: TravelTheme.textPrimaryFor(context),
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -289,7 +295,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                         ),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: TravelTheme.muted,
+                          color: TravelTheme.textSecondaryFor(context),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -301,59 +307,75 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
 
             SizedBox(height: 18.h),
 
-            // High-Resolution QR Code Container
+            // High-Resolution QR Code Container — the quiet zone stays white in
+            // BOTH themes on purpose: a QR only decodes against a light field.
             Center(
-              child: GestureDetector(
-                onTap: () => _showEnlargedQrDialog(context),
-                child: Container(
-                  padding: EdgeInsets.all(14.r),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(color: TravelTheme.border, width: 1.5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 18,
-                        offset: const Offset(0, 6),
+              child: Semantics(
+                label: l10nPick(
+                  context,
+                  en: 'eSIM activation QR code',
+                  fa: 'بارکد QR فعال‌سازی eSIM',
+                  ar: 'رمز QR لتفعيل eSIM',
+                  zh: 'eSIM 激活二维码',
+                ),
+                button: true,
+                child: GestureDetector(
+                  onTap: () => _showEnlargedQrDialog(context),
+                  child: Container(
+                    padding: EdgeInsets.all(14.r),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        color: TravelTheme.borderFor(context),
+                        width: 1.5,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.string(
-                        qrSvg,
-                        width: 180.r,
-                        height: 180.r,
-                      ),
-                      SizedBox(height: 8.h),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.fullscreen_rounded,
-                            size: 14.sp,
-                            color: TravelTheme.blue,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(
+                            alpha: isDark ? 0.28 : 0.04,
                           ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            l10nPick(
-                              context,
-                              en: 'Tap to enlarge QR',
-                              fa: 'برای بزرگ‌نمایی ضربه بزنید',
-                              ar: 'اضغط لتكبير الرمز',
-                              zh: '点击放大二维码',
-                            ),
-                            style: TextStyle(
-                              fontSize: 10.5.sp,
-                              fontWeight: FontWeight.w700,
+                          blurRadius: 18,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.string(
+                          qrSvg,
+                          width: 180.r,
+                          height: 180.r,
+                        ),
+                        SizedBox(height: 8.h),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.fullscreen_rounded,
+                              size: 14.sp,
                               color: TravelTheme.blue,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            SizedBox(width: 4.w),
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Tap to enlarge QR',
+                                fa: 'برای بزرگ‌نمایی ضربه بزنید',
+                                ar: 'اضغط لتكبير الرمز',
+                                zh: '点击放大二维码',
+                              ),
+                              style: TextStyle(
+                                fontSize: 10.5.sp,
+                                fontWeight: FontWeight.w700,
+                                color: TravelTheme.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -373,7 +395,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w900,
-                color: TravelTheme.ink,
+                color: TravelTheme.textPrimaryFor(context),
               ),
             ),
             SizedBox(height: 10.h),
@@ -419,7 +441,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
             Container(
               padding: EdgeInsets.all(4.r),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0F2F5),
+                color: trackBg,
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: Row(
@@ -458,18 +480,22 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
             Container(
               padding: EdgeInsetsDirectional.all(12.r),
               decoration: BoxDecoration(
-                color: TravelTheme.yellow.withValues(alpha: 0.12),
+                color: isDark
+                    ? TravelTheme.yellow.withValues(alpha: 0.15)
+                    : TravelTheme.yellow.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(14.r),
                 border: Border.all(
-                  color: TravelTheme.yellow.withValues(alpha: 0.35),
+                  color: TravelTheme.yellow.withValues(
+                    alpha: isDark ? 0.45 : 0.35,
+                  ),
                 ),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.info_outline_rounded,
-                    color: TravelTheme.ink,
+                    color: isDark ? TravelTheme.yellow : TravelTheme.ink,
                     size: 18,
                   ),
                   SizedBox(width: 8.w),
@@ -484,7 +510,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                       ),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: TravelTheme.ink,
+                        color: TravelTheme.textPrimaryFor(context),
                         fontWeight: FontWeight.w600,
                         height: 1.45,
                       ),
@@ -505,51 +531,64 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
     required IconData icon,
   }) {
     final isSelected = _selectedPlatformIndex == index;
-    return GestureDetector(
-      onTap: () {
-        AppHaptics.light();
-        setState(() => _selectedPlatformIndex = index);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsetsDirectional.symmetric(vertical: 8.h),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(10.r),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
+    final isDark = TravelTheme.isDark(context);
+    final selectedBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : Colors.white;
+    return Semantics(
+      selected: isSelected,
+      button: true,
+      label: label,
+      child: GestureDetector(
+        onTap: () {
+          AppHaptics.light();
+          setState(() => _selectedPlatformIndex = index);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsetsDirectional.symmetric(vertical: 8.h),
+          decoration: BoxDecoration(
+            color: isSelected ? selectedBg : Colors.transparent,
+            borderRadius: BorderRadius.circular(10.r),
+            boxShadow: isSelected && !isDark
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 16.sp,
+                color: isSelected
+                    ? TravelTheme.textPrimaryFor(context)
+                    : TravelTheme.textSecondaryFor(context),
+              ),
+              SizedBox(width: 6.w),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                    color: isSelected
+                        ? TravelTheme.textPrimaryFor(context)
+                        : TravelTheme.textSecondaryFor(context),
                   ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 16.sp,
-              color: isSelected ? TravelTheme.ink : TravelTheme.muted,
-            ),
-            SizedBox(width: 6.w),
-            Flexible(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 11.5.sp,
-                  fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                  color: isSelected ? TravelTheme.ink : TravelTheme.muted,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -563,6 +602,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
     required IconData icon,
   }) {
     final isCopied = _recentlyCopiedKey == fieldKey;
+    final isDark = TravelTheme.isDark(context);
 
     return Container(
       padding: EdgeInsetsDirectional.symmetric(
@@ -570,9 +610,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
         vertical: 10.h,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: TravelTheme.border),
+        border: Border.all(color: TravelTheme.borderFor(context)),
       ),
       child: Row(
         children: [
@@ -587,7 +627,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   style: TextStyle(
                     fontSize: 10.5.sp,
                     fontWeight: FontWeight.w700,
-                    color: TravelTheme.muted,
+                    color: TravelTheme.textSecondaryFor(context),
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -598,7 +638,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                     style: TextStyle(
                       fontSize: 12.5.sp,
                       fontWeight: FontWeight.w800,
-                      color: TravelTheme.ink,
+                      color: TravelTheme.textPrimaryFor(context),
                       fontFamily: 'monospace',
                     ),
                     maxLines: 1,
@@ -612,7 +652,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
           Material(
             color: isCopied
                 ? TravelTheme.green.withValues(alpha: 0.15)
-                : Colors.white,
+                : (isDark ? AppColors.darkSurfaceVariant : Colors.white),
             borderRadius: BorderRadius.circular(10.r),
             child: InkWell(
               onTap: () => _copyToClipboard(
@@ -631,7 +671,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   border: Border.all(
                     color: isCopied
                         ? TravelTheme.green.withValues(alpha: 0.4)
-                        : TravelTheme.border,
+                        : TravelTheme.borderFor(context),
                   ),
                 ),
                 child: Row(
@@ -642,7 +682,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                           ? Icons.check_circle_rounded
                           : Icons.copy_rounded,
                       size: 14.sp,
-                      color: isCopied ? TravelTheme.green : TravelTheme.ink,
+                      color: isCopied
+                          ? TravelTheme.green
+                          : TravelTheme.textPrimaryFor(context),
                     ),
                     SizedBox(width: 4.w),
                     Text(
@@ -664,7 +706,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w800,
-                        color: isCopied ? TravelTheme.green : TravelTheme.ink,
+                        color: isCopied
+                            ? TravelTheme.green
+                            : TravelTheme.textPrimaryFor(context),
                       ),
                     ),
                   ],
@@ -683,6 +727,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
   }) {
     final confValue = hasConfCode ? widget.confirmationCode!.trim() : 'None';
     final isCopied = _recentlyCopiedKey == 'conf';
+    final isDark = TravelTheme.isDark(context);
 
     return Container(
       padding: EdgeInsetsDirectional.symmetric(
@@ -690,9 +735,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
         vertical: 10.h,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: TravelTheme.border),
+        border: Border.all(color: TravelTheme.borderFor(context)),
       ),
       child: Row(
         children: [
@@ -711,7 +756,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   style: TextStyle(
                     fontSize: 10.5.sp,
                     fontWeight: FontWeight.w700,
-                    color: TravelTheme.muted,
+                    color: TravelTheme.textSecondaryFor(context),
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -728,7 +773,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   style: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: hasConfCode ? TravelTheme.ink : TravelTheme.muted,
+                    color: hasConfCode
+                        ? TravelTheme.textPrimaryFor(context)
+                        : TravelTheme.textSecondaryFor(context),
                     fontFamily: hasConfCode ? 'monospace' : null,
                   ),
                 ),
@@ -740,7 +787,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
             Material(
               color: isCopied
                   ? TravelTheme.green.withValues(alpha: 0.15)
-                  : Colors.white,
+                  : (isDark ? AppColors.darkSurfaceVariant : Colors.white),
               borderRadius: BorderRadius.circular(10.r),
               child: InkWell(
                 onTap: () => _copyToClipboard(
@@ -759,7 +806,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                     border: Border.all(
                       color: isCopied
                           ? TravelTheme.green.withValues(alpha: 0.4)
-                          : TravelTheme.border,
+                          : TravelTheme.borderFor(context),
                     ),
                   ),
                   child: Row(
@@ -770,7 +817,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                             ? Icons.check_circle_rounded
                             : Icons.copy_rounded,
                         size: 14.sp,
-                        color: isCopied ? TravelTheme.green : TravelTheme.ink,
+                        color: isCopied
+                            ? TravelTheme.green
+                            : TravelTheme.textPrimaryFor(context),
                       ),
                       SizedBox(width: 4.w),
                       Text(
@@ -792,7 +841,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w800,
-                          color: isCopied ? TravelTheme.green : TravelTheme.ink,
+                          color: isCopied
+                              ? TravelTheme.green
+                              : TravelTheme.textPrimaryFor(context),
                         ),
                       ),
                     ],
@@ -940,12 +991,13 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
     required String description,
     required IconData icon,
   }) {
+    final isDark = TravelTheme.isDark(context);
     return Container(
       padding: EdgeInsetsDirectional.all(12.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: TravelTheme.border),
+        border: Border.all(color: TravelTheme.borderFor(context)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -954,7 +1006,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
             width: 28.r,
             height: 28.r,
             decoration: BoxDecoration(
-              color: TravelTheme.ink,
+              color: TravelTheme.primaryFor(context),
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -977,7 +1029,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   style: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: TravelTheme.ink,
+                    color: TravelTheme.textPrimaryFor(context),
                   ),
                 ),
                 SizedBox(height: 3.h),
@@ -985,7 +1037,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   description,
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: TravelTheme.muted,
+                    color: TravelTheme.textSecondaryFor(context),
                     fontWeight: FontWeight.w500,
                     height: 1.4,
                   ),
