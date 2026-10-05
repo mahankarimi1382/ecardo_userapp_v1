@@ -44,6 +44,22 @@ class CarModel {
   bool get isFleet => ownerType == 'FLEET';
 
   factory CarModel.fromJson(Map<String, dynamic> json) {
+    List<dynamic> parsedFeatures = const [];
+    if (json['features'] is List) {
+      parsedFeatures = json['features'] as List;
+    } else if (json['features'] is Map) {
+      parsedFeatures = (json['features'] as Map)
+          .entries
+          .where((e) => e.value == true || '${e.value}' == '1')
+          .map((e) => e.key.toString())
+          .toList();
+    }
+
+    List<dynamic> parsedPhotos = const [];
+    if (json['photos'] is List) {
+      parsedPhotos = json['photos'] as List;
+    }
+
     return CarModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       ownerType: json['owner_type']?.toString() ?? 'FLEET',
@@ -62,8 +78,8 @@ class CarModel {
           .map((e) => Map<String, dynamic>.from(e as Map))
           .toList(),
       pickupLocation: json['pickup_location']?.toString(),
-      photos: (json['photos'] as List?) ?? [],
-      features: (json['features'] as List?) ?? [],
+      photos: parsedPhotos,
+      features: parsedFeatures,
       isActive: json['is_active'] == true || json['is_active'] == 1,
     );
   }

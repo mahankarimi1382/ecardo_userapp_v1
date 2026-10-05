@@ -619,12 +619,13 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
   }
 
   Widget _buildCarsSkeleton(bool isDark) {
+    final placeholder =
+        isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
     return ListView.separated(
       padding: EdgeInsets.all(AppSpacing.lg.r),
       itemCount: 4,
       separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
       itemBuilder: (_, _) => Container(
-        height: 140.h,
         padding: EdgeInsets.all(AppSpacing.lg.r),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkCard : AppColors.lightCard,
@@ -632,6 +633,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
           border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -640,17 +642,35 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                   width: 44.w,
                   height: 44.w,
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                    color: placeholder,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   ),
                 ),
                 SizedBox(width: AppSpacing.md.w),
                 Expanded(
-                  child: Container(
-                    height: 18.h,
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 14.h, color: placeholder),
+                      SizedBox(height: 6.h),
+                      Container(
+                        height: 12.h,
+                        width: 120.w,
+                        color: placeholder,
+                      ),
+                    ],
                   ),
                 ),
+              ],
+            ),
+            SizedBox(height: AppSpacing.md.h),
+            Container(height: 12.h, color: placeholder),
+            SizedBox(height: AppSpacing.sm.h),
+            Row(
+              children: [
+                Container(width: 90.w, height: 12.h, color: placeholder),
+                SizedBox(width: AppSpacing.sm.w),
+                Container(width: 60.w, height: 12.h, color: placeholder),
               ],
             ),
           ],
