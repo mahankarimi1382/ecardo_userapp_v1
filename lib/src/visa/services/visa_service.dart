@@ -62,11 +62,11 @@ class VisaService extends GetxService {
     String? travelDate,
     String? returnDate,
   }) async {
-    final payload = {
+    final payload = <String, dynamic>{
       'catalog_id': catalogId,
       'applicant_info': applicantInfo,
-      'travel_date': ?travelDate,
-      'return_date': ?returnDate,
+      if (travelDate != null) 'travel_date': travelDate,
+      if (returnDate != null) 'return_date': returnDate,
     };
 
     final response = await _network.post(
