@@ -17,6 +17,12 @@ import 'package:ecardo_user/src/stock/screens/stock_intro_screen.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  void phoneSurface(WidgetTester tester) {
+    tester.view.physicalSize = const Size(750, 1624);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+  }
+
   Widget wrapWithTheme(
     Widget child, {
     bool isDark = false,
