@@ -138,9 +138,16 @@ class CommonButton extends StatelessWidget {
 
     switch (variant) {
       case ButtonVariant.primary:
-        effectiveBgColor = backgroundColor ?? colorScheme.primary;
+        effectiveBgColor = backgroundColor ??
+            (colorScheme.primary == AppColors.deepBlack
+                ? (theme.brightness == Brightness.dark
+                    ? AppColors.darkPrimary
+                    : AppColors.lightPrimary)
+                : colorScheme.primary);
         effectiveTextColor = textColor ??
-            (backgroundColor != null ? AppColors.white : colorScheme.onPrimary);
+            (effectiveBgColor == AppColors.darkPrimary
+                ? AppColors.deepBlack
+                : AppColors.white);
         effectiveBorderColor = borderColor;
         effectiveBorderWidth = borderWidth;
         break;

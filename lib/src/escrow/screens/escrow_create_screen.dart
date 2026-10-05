@@ -42,7 +42,7 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
   String? _attachedFileName;
 
   final List<int> _inspectionOptions = [24, 48, 72, 120, 168];
-  final List<String> _feePayerOptions = ['Buyer', 'Seller', '50 / 50'];
+  final List<String> _feePayerOptions = ['Buyer', 'Seller', '50/50'];
 
   @override
   void initState() {
@@ -131,7 +131,7 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
             title: l10nPick(
               context,
               fa: 'معامله جدید امانی',
-              en: 'New escrow deal',
+              en: 'New Escrow Deal',
               ar: 'معاملة ضمان جديدة',
               zh: '新建担保交易',
             ),
@@ -538,7 +538,7 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
               TextButton(
                 onPressed: () => _handleSubmit(isDraft: true),
                 child: Text(
-                  l10nPick(context, fa: 'ذخیره به عنوان پیش‌نویس (Save draft)', en: 'Save draft'),
+                  l10nPick(context, fa: 'ذخیره به عنوان پیش‌نویس (Save Draft)', en: 'Save Draft'),
                   style: TextStyle(
                     fontSize: 13.5.sp,
                     fontWeight: FontWeight.w700,
@@ -563,14 +563,19 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13.sp,
-            color: isBold ? ECardoTokens.ink(context) : ECardoTokens.inkMuted(context),
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isBold ? ECardoTokens.ink(context) : ECardoTokens.inkMuted(context),
+              fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
+        SizedBox(width: 8.w),
         Text(
           value,
           style: TextStyle(
