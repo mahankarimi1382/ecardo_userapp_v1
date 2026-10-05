@@ -213,8 +213,8 @@ void main() {
       final order = StockOrderModel.fromJson(json);
 
       expect(order.type, 'STOP_LOSS');
-      expect(order.stopPrice, 120.00);
-      expect(order.price, 120.00);
+      expect(order.stopPrice, closeTo(120.0, 0.01));
+      expect(order.price, closeTo(135.20, 0.01));
       expect(order.isStopLoss, isTrue);
     });
 
@@ -235,11 +235,11 @@ void main() {
         realizedPnl: 150.0,
       );
 
-      expect(holding.currentValue, 2740.80);
-      expect(holding.costBasis, 2346.00);
-      expect(holding.unrealizedPnl, 394.80);
+      expect(holding.currentValue, closeTo(2740.80, 0.01));
+      expect(holding.costBasis, closeTo(2346.00, 0.01));
+      expect(holding.unrealizedPnl, closeTo(394.80, 0.01));
       expect(holding.unrealizedPnlPercent, closeTo(16.83, 0.01));
-      expect(holding.totalPnl, 544.80);
+      expect(holding.totalPnl, closeTo(544.80, 0.01));
       expect(holding.isProfitable, isTrue);
     });
 

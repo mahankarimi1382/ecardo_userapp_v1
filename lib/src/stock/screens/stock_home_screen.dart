@@ -352,10 +352,8 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
+              Expanded(
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
                       padding: EdgeInsets.all(ECardoTokens.space2.r),
@@ -391,6 +389,7 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                   ],
                 ),
               ),
+              SizedBox(width: ECardoTokens.space2.w),
               // T+2 Settlement Rule Pill
               Container(
                 padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space2.w, vertical: 3.h),
