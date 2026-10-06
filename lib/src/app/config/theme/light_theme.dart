@@ -5,21 +5,21 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 class LightTheme {
   ThemeData lightTheme(BuildContext context) {
     const scheme = ColorScheme.light(
-      primary: AppColors.deepBlack,
+      primary: AppColors.lightPrimary,
       onPrimary: AppColors.lightTextOnPrimary,
       primaryContainer: AppColors.lightPrimaryContainer,
-      onPrimaryContainer: AppColors.deepBlack,
+      onPrimaryContainer: AppColors.lightPrimaryDark,
       secondary: AppColors.lightSecondary,
-      onSecondary: AppColors.warmWhite,
+      onSecondary: AppColors.white,
       secondaryContainer: AppColors.lightSecondaryContainer,
       onSecondaryContainer: AppColors.deepBlack,
       surface: AppColors.lightBackground,
       onSurface: AppColors.deepBlack,
       surfaceContainerLowest: AppColors.lightBackground,
-      surfaceContainerLow: Color(0xFFF4F4F6),
+      surfaceContainerLow: Color(0xFFF1F3F8),
       surfaceContainer: AppColors.lightSurface,
       surfaceContainerHigh: AppColors.lightSurfaceVariant,
-      surfaceContainerHighest: Color(0xFFE8E5E4),
+      surfaceContainerHighest: Color(0xFFE7EAEE),
       error: AppColors.error,
       onError: AppColors.warmWhite,
       errorContainer: AppColors.errorContainer,
@@ -85,7 +85,7 @@ class LightTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-          borderSide: const BorderSide(color: AppColors.deepBlack, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.lightPrimary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -98,8 +98,8 @@ class LightTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.deepBlack,
-          foregroundColor: AppColors.warmWhite,
+          backgroundColor: AppColors.lightPrimary,
+          foregroundColor: AppColors.lightTextOnPrimary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
           ),
@@ -107,7 +107,7 @@ class LightTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.deepBlack,
+          foregroundColor: AppColors.lightPrimary,
           textStyle: const TextStyle(
             fontFamily: 'Plus Jakarta Sans',
             fontWeight: FontWeight.w600,
@@ -136,13 +136,13 @@ class LightTheme {
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return AppColors.deepBlack;
+            return AppColors.white;
           }
           return AppColors.softGray;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return AppColors.mainSoftBlue;
+            return AppColors.lightPrimary;
           }
           return AppColors.lightWarmGray.withValues(alpha: 0.5);
         }),
@@ -159,9 +159,9 @@ class LightTheme {
         space: 1,
       ),
       tabBarTheme: const TabBarThemeData(
-        labelColor: AppColors.deepBlack,
+        labelColor: AppColors.lightPrimary,
         unselectedLabelColor: AppColors.softGray,
-        indicatorColor: AppColors.deepBlack,
+        indicatorColor: AppColors.lightPrimary,
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: AppColors.lightBorder,
         labelStyle: TextStyle(
@@ -178,14 +178,14 @@ class LightTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.lightSurface,
         elevation: 0,
-        indicatorColor: AppColors.deepBlack.withValues(alpha: 0.1),
+        indicatorColor: AppColors.lightPrimary.withValues(alpha: 0.12),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const TextStyle(
               fontFamily: 'Plus Jakarta Sans',
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppColors.deepBlack,
+              color: AppColors.lightPrimary,
             );
           }
           return const TextStyle(
@@ -197,23 +197,23 @@ class LightTheme {
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: AppColors.deepBlack, size: AppSpacing.iconMd);
+            return const IconThemeData(color: AppColors.lightPrimary, size: AppSpacing.iconMd);
           }
           return const IconThemeData(color: AppColors.softGray, size: AppSpacing.iconMd);
         }),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: AppColors.deepBlack,
-        foregroundColor: AppColors.warmWhite,
+        backgroundColor: AppColors.lightPrimary,
+        foregroundColor: AppColors.lightTextOnPrimary,
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.lightSurface,
-        selectedItemColor: AppColors.deepBlack,
+        selectedItemColor: AppColors.lightPrimary,
         unselectedItemColor: AppColors.softGray,
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.mainSoftBlue.withValues(alpha: 0.15),
-        selectedColor: AppColors.deepBlack,
+        backgroundColor: AppColors.lightPrimaryContainer.withValues(alpha: 0.55),
+        selectedColor: AppColors.lightPrimary,
         labelStyle: const TextStyle(color: AppColors.deepBlack),
         side: const BorderSide(color: AppColors.lightWarmGray),
       ),

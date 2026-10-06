@@ -406,6 +406,21 @@ class KycHistoryBinding implements Bindings {
   }
 }
 
+/// SERVICES HUB binding — the services page reuses the app-scope
+/// HomeController for addons/KYC reads; ensure it (and the KYC badge
+/// controller) exist even if the page is opened before the dashboard.
+class ServicesBinding implements Bindings {
+  @override
+  void dependencies() {
+    if (!Get.isRegistered<HomeController>()) {
+      Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
+    }
+    if (!Get.isRegistered<KycLevelController>()) {
+      Get.lazyPut<KycLevelController>(() => KycLevelController(), fenix: true);
+    }
+  }
+}
+
 class ReferralBinding implements Bindings {
   @override
   void dependencies() {

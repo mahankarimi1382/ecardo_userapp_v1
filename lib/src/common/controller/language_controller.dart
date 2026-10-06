@@ -48,8 +48,13 @@ class LanguageController extends GetxController {
     if (Get.isRegistered<LocaleThemeService>()) {
       await Get.find<LocaleThemeService>().setLanguage(selectedLocale);
     } else {
-      Get.updateLocale(Locale(selectedLocale));
-      await Get.find<SettingsService>().saveLanguageLocaleCurrentState(selectedLocale);
+      // Cold path (LocaleThemeService not registered yet): still normalize —
+      // the server's /get-languages carries mixed-case codes ("Fa").
+      final normalized = selectedLocale.trim().toLowerCase();
+      if (LocaleThemeService.supported.contains(normalized)) {
+        Get.updateLocale(Locale(normalized));
+        await Get.find<SettingsService>().saveLanguageLocaleCurrentState(normalized);
+      }
     }
   }
 }

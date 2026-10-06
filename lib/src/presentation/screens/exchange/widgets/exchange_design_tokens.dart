@@ -33,11 +33,11 @@ class ExchangeDesignTokens {
     colors: [AppColors.lightPrimary, AppColors.lightPrimaryDark],
   );
 
-  /// Nuanced deep slate & metallic accent gradient for dark theme.
+  /// Nuanced deep violet-slate gradient for dark theme.
   static const LinearGradient darkBrandGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF1E2430), Color(0xFF14171E)],
+    colors: [Color(0xFF232036), Color(0xFF171522)],
   );
 
   /// Dynamic gradient matching the current brightness.

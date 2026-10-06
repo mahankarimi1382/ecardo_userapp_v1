@@ -51,9 +51,13 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Widget build(BuildContext context) {
     return Obx(() {
       final localization = AppLocalizations.of(context);
+      // DARK-FIX: this early scaffold used to hardcode the light background
+      // and flashed white during dark-mode boots.
+      final theme = Theme.of(context);
+      final isDark = theme.brightness == Brightness.dark;
       if (localization == null) {
-        return const Scaffold(
-          backgroundColor: AppColors.lightBackground,
+        return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
           body: Center(
             child: CircularProgressIndicator(),
           ),
@@ -105,7 +109,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
             ? FloatingActionButton(
                 heroTag: null,
-                backgroundColor: AppColors.lightPrimary,
+                backgroundColor:
+                    isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
@@ -170,7 +175,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
         bottomNavigationBar: AnimatedBottomNavigationBar.builder(
           height: 80,
-          backgroundColor: AppColors.white,
+          // DARK-FIX: the bar used to be hardcode-white in dark mode.
+          backgroundColor:
+              isDark ? AppColors.darkSurface : AppColors.white,
           itemCount: iconList.length,
           activeIndex: homeController.selectedIndex.value,
           notchSmoothness: NotchSmoothness.softEdge,
@@ -178,8 +185,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
           tabBuilder: (int index, bool isActive) {
             final color = isActive
-                ? AppColors.lightPrimary
-                : AppColors.lightTextPrimary.withValues(alpha: 0.30);
+                ? (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                : (isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary)
+                    .withValues(alpha: 0.30);
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,

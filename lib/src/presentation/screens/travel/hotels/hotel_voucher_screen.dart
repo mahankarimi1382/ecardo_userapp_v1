@@ -306,7 +306,6 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final qrSvg = Barcode.qrCode().toSvg(

@@ -3,6 +3,11 @@ class BaseRoute {
 
   static const String splash = "/splash_route";
 
+  /// Lightweight waypoint used by LocaleThemeService.setLanguage() to clear
+  /// the navigation stack BEFORE applying a locale (prevents the release
+  /// full-tree-rebuild crash) without replaying the SplashScreen.
+  static const String localeTransition = "/locale_transition_route";
+
   static const noInternetConnection = '/no_internet_connection';
 
   static const String welcome = "/welcome_route";
@@ -64,6 +69,10 @@ class BaseRoute {
   static const String exchange = "/exchange_route";
 
   static const String transactions = "/transactions_route";
+
+  // SERVICES HUB — dedicated page hosting the financial / travel / business
+  // service grids + the recent-transactions card moved off the dashboard.
+  static const String services = "/services_route";
 
   static const String referral = "/referral_route";
 

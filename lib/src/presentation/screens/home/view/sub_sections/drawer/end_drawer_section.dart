@@ -28,6 +28,14 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
     final localization = AppLocalizations.of(context);
     if (localization == null) return const SizedBox.shrink();
 
+    // DARK-FIX: the end drawer used to hardcode a light background, light
+    // text colors and dark status-bar icons — unreadable in dark mode.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final drawerTextPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final drawerTextMuted =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+
     return SafeArea(
       bottom: false,
       child: Obx(
@@ -36,14 +44,16 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
           children: [
             AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle(
-                statusBarIconBrightness: Brightness.dark,
+                statusBarIconBrightness:
+                    isDark ? Brightness.light : Brightness.dark,
               ),
               child: Drawer(
                 width: 310,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.zero,
                 ),
-                backgroundColor: AppColors.lightBackground,
+                backgroundColor:
+                    isDark ? AppColors.darkBackground : AppColors.lightBackground,
                 child: Column(
                   children: [
                     Expanded(
@@ -96,7 +106,7 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                               letterSpacing: 0,
                                               fontWeight: FontWeight.w900,
                                               fontSize: 22,
-                                              color: AppColors.lightTextPrimary,
+                                              color: drawerTextPrimary,
                                             ),
                                           ),
                                           Text(
@@ -234,7 +244,7 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                             fontWeight: FontWeight.w600,
                                             letterSpacing: 0,
                                             fontSize: 13,
-                                            color: AppColors.lightTextTertiary,
+                                            color: drawerTextMuted,
                                           ),
                                         ),
                                       ),
@@ -243,7 +253,7 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                         PngAssets.arrowRightCommonIcon,
                                         width: 14,
                                         height: 14,
-                                        color: AppColors.black,
+                                        color: drawerTextPrimary,
                                       ),
                                     ],
                                   ),
@@ -260,8 +270,8 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                 padding: EdgeInsets.zero,
                                 value: homeController.isBiometricEnable.value,
                                 activeThumbColor: AppColors.lightPrimary,
-                                inactiveThumbColor: AppColors.lightTextTertiary,
-                                inactiveTrackColor: AppColors.lightTextPrimary
+                                inactiveThumbColor: drawerTextMuted,
+                                inactiveTrackColor: drawerTextPrimary
                                     .withValues(alpha: 0.05),
                                 onChanged: (_) async {
                                   await homeController.toggleBiometric();
@@ -298,7 +308,9 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                           offset: Offset(-1, 1),
                         ),
                       ],
-                      color: AppColors.white,
+                      color: isDark
+                          ? AppColors.darkSurfaceVariant
+                          : AppColors.white,
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: Image.asset(
@@ -348,6 +360,15 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
     required GestureTapCallback onPressed,
     bool? isSwitch = false,
   }) {
+    // DARK-FIX: this helper builds outside the main build() scope, so it
+    // resolves the theme from the State's own context.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final navIconColor = (isDark
+            ? AppColors.darkTextPrimary
+            : AppColors.lightTextPrimary)
+        .withValues(alpha: 0.44);
+    final navTextColor =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
     return InkWell(
       borderRadius: BorderRadius.circular(4),
       onTap: onPressed,
@@ -364,7 +385,7 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                 SvgPicture.asset(
                   icon,
                   colorFilter: ColorFilter.mode(
-                    AppColors.lightTextPrimary.withValues(alpha: 0.44),
+                    navIconColor,
                     BlendMode.srcIn,
                   ),
                   width: 22,
@@ -377,7 +398,7 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                     letterSpacing: 0,
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
-                    color: AppColors.lightTextTertiary,
+                    color: navTextColor,
                   ),
                 ),
               ],

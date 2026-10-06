@@ -20,7 +20,7 @@ class DarkTheme {
       surfaceContainerLow: AppColors.darkBackground,
       surfaceContainer: AppColors.darkSurface,
       surfaceContainerHigh: AppColors.darkSurfaceVariant,
-      surfaceContainerHighest: Color(0xFF3C3B3A),
+      surfaceContainerHighest: Color(0xFF3A3742),
       error: AppColors.error,
       onError: AppColors.deepBlack,
       errorContainer: Color(0xFF491811),

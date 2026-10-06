@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, SocketException;
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -28,9 +28,7 @@ class NetworkService extends getx.GetxService {
   final Dio _dio = Dio();
   final Dio _globalDio = Dio();
   final String baseUrl = ApiPath.baseUrl;
-  late TokenService _tokenService;
-
-  // Real app version (from pubspec via package_info_plus). Until resolved we
+  late TokenService _tokenService;  // Real app version (from pubspec via package_info_plus). Until resolved we
   // send an empty value — the server treats a missing/unparseable header as
   // pass-through. Never hardcode a stale version again (S-003/S-022 fix).
   String _appVersion = '';
@@ -118,12 +116,25 @@ class NetworkService extends getx.GetxService {
       _dio.httpClientAdapter = IOHttpClientAdapter(
         validateCertificate: (cert, host, port) {
           if (cert == null) return true;
-          return SslPinningConfig.validateCertificate(cert.der, host);
+          return SslPinningConfig.validateCertificate(
+            cert.der,
+            host,
+            allowDebugWithoutPin: kDebugMode,
+          );
         },
       );
     }
 
     _dio.interceptors.clear();
+    // NET-FIX (RC-flake): one silent retry for idempotent (GET) requests on
+    // pure transport failures — mobile handovers and CF edge blips used to
+    // surface as user-facing errors on first attempt. Money-mutating
+    // methods are NEVER retried here (server-side idempotency covers
+    // double-tap, but blind POST retries would still risk double side
+    // effects on endpoints without the middleware).
+    _dio.interceptors.add(
+      _TransportRetryInterceptor((options) => _dio.fetch(options)),
+    );
     _setupInterceptors();
   }
 
@@ -142,12 +153,19 @@ class NetworkService extends getx.GetxService {
       _globalDio.httpClientAdapter = IOHttpClientAdapter(
         validateCertificate: (cert, host, port) {
           if (cert == null) return true;
-          return SslPinningConfig.validateCertificate(cert.der, host);
+          return SslPinningConfig.validateCertificate(
+            cert.der,
+            host,
+            allowDebugWithoutPin: kDebugMode,
+          );
         },
       );
     }
 
     _globalDio.interceptors.clear();
+    _globalDio.interceptors.add(
+      _TransportRetryInterceptor((options) => _globalDio.fetch(options)),
+    );
   }
 
   // v1.0.5: Token refresh state — جلوگیری از refresh همزمان
@@ -340,31 +358,48 @@ class NetworkService extends getx.GetxService {
   /// v1.0.5: تلاش برای refresh token
   /// از endpoint /api/auth/user/refresh استفاده می‌کند
   Future<bool> _attemptTokenRefresh() async {
-    try {
-      _log('Attempting token refresh...');
-      final response = await _globalDio.post(
-        '$baseUrl${ApiPath.tokenRefreshEndpoint}',
-        options: Options(headers: {
-          'Authorization': 'Bearer ${_tokenService.accessToken.value}',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final newToken = response.data['data']?['token'];
-        if (newToken != null && newToken is String) {
-          await _tokenService.saveAccessToken(newToken);
-          _log('✓ Token refreshed successfully');
-          return true;
+    // NET-FIX: the refresh POST used to carry exactly one attempt, so a
+    // single flaky second during the refresh call logged the user out of a
+    // perfectly valid session. Retry the transport failure once before
+    // declaring the session dead (an HTTP 401 from the server is NOT a
+    // transport failure — it fails immediately as before).
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        if (attempt > 0) {
+          await Future<void>.delayed(const Duration(milliseconds: 800));
+          _log('Retrying token refresh (attempt ${attempt + 1})...');
+        } else {
+          _log('Attempting token refresh...');
         }
+        final response = await _globalDio.post(
+          '$baseUrl${ApiPath.tokenRefreshEndpoint}',
+          options: Options(headers: {
+            'Authorization': 'Bearer ${_tokenService.accessToken.value}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          final newToken = response.data['data']?['token'];
+          if (newToken != null && newToken is String) {
+            await _tokenService.saveAccessToken(newToken);
+            _log('✓ Token refreshed successfully');
+            return true;
+          }
+        }
+        _log('Token refresh failed: ${response.statusCode}');
+        return false;
+      } on DioException catch (e) {
+        final isTransportFailure = e.response == null;
+        _log('Token refresh error: $e');
+        if (!isTransportFailure || attempt == 1) return false;
+      } catch (e) {
+        _log('Token refresh error: $e');
+        return false;
       }
-      _log('Token refresh failed: ${response.statusCode}');
-      return false;
-    } catch (e) {
-      _log('Token refresh error: $e');
-      return false;
     }
+    return false;
   }
 
   /// v1.0.24 (S-023): release the in-flight idempotency key once the request
@@ -1128,16 +1163,18 @@ class NetworkService extends getx.GetxService {
     DioException e,
     String requestType,
   ) {
-    // Detect No Internet Connection
+    // Detect No Internet Connection.
+    // NET-FIX (RC2): this branch used to answer ANY transient connection
+    // blip by tearing the whole navigation stack down with
+    // `Get.offAllNamed(noInternetConnection)` — background dashboard
+    // refreshes and FCM-poked settings calls could yank the user off their
+    // screen mid-action. Offline navigation is owned exclusively by
+    // ConnectivityWatchService (debounced 2s, route-guarded); this layer
+    // only reports the error to the caller.
     if (e.type == DioExceptionType.connectionError ||
         (e.type == DioExceptionType.unknown &&
             e.error.toString().contains('SocketException'))) {
       _log('$requestType No Internet Connection', icon: '🚫');
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (getx.Get.currentRoute != BaseRoute.noInternetConnection) {
-          getx.Get.offAllNamed(BaseRoute.noInternetConnection);
-        }
-      });
       return ApiResponse.error('No internet connection');
     }
 
@@ -1375,6 +1412,53 @@ class NetworkService extends getx.GetxService {
   void _log(String message, {String icon = '📄'}) {
     if (kDebugMode) {
       debugPrint('$icon $message');
+    }
+  }
+}
+
+/// NET-FIX: single silent retry for idempotent (GET) requests that failed on
+/// pure transport errors (connection timeout/error, receive timeout, socket
+/// drop). Transient mobile-data handovers and CDN edge blips used to surface
+/// toasts or error states on the FIRST attempt even though a second attempt
+/// half a second later would succeed. Mutating methods (POST/PUT/DELETE/PATCH)
+/// are never retried here.
+class _TransportRetryInterceptor extends Interceptor {
+  _TransportRetryInterceptor(this._refetch);
+
+  final Future<Response<dynamic>> Function(RequestOptions options) _refetch;
+
+  static const Duration _backoff = Duration(milliseconds: 600);
+
+  bool _isTransportFailure(DioException err) {
+    final hasResponse = err.response != null;
+    return !hasResponse &&
+        (err.type == DioExceptionType.connectionTimeout ||
+            err.type == DioExceptionType.receiveTimeout ||
+            err.type == DioExceptionType.connectionError ||
+            (err.type == DioExceptionType.unknown &&
+                (err.error is SocketException ||
+                    err.error.toString().contains('SocketException'))));
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    final options = err.requestOptions;
+    final isIdempotent = options.method.toUpperCase() == 'GET';
+    final alreadyRetried = options.extra['__transport_retried__'] == true;
+
+    if (!isIdempotent || alreadyRetried || !_isTransportFailure(err)) {
+      return handler.next(err);
+    }
+
+    try {
+      await Future<void>.delayed(_backoff);
+      options.extra['__transport_retried__'] = true;
+      final response = await _refetch(options);
+      return handler.resolve(response);
+    } catch (_) {
+      // The retry failed too — hand the ORIGINAL error to the pipeline so
+      // the caller sees the transport failure, not the retry's.
+      return handler.next(err);
     }
   }
 }

@@ -43,6 +43,7 @@ import '../../presentation/screens/remittance/view/remittance_screen.dart';
 import '../../presentation/screens/remittance/view/remittance_history/remittance_history.dart';
 import '../../presentation/screens/remittance/view/remittance_details/remittance_details.dart';
 import '../../presentation/screens/kyc_level/view/kyc_submit_wizard.dart';
+import '../views/locale_transition_screen.dart';
 import '../../presentation/screens/kyc_level/view/upgrade_required_screen.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/view/p2p_view.dart';
 import 'package:ecardo_user/src/presentation/screens/payment_links/view/payment_links_screen.dart';
@@ -100,6 +101,7 @@ import '../../presentation/screens/settings/view/privacy_policy_screen.dart';
 import '../../presentation/screens/settings/view/support_tickets/add_new_ticket/add_new_ticket.dart';
 import '../../presentation/screens/settings/view/support_tickets/support_tickets.dart';
 import '../../presentation/screens/settings/view/two_factor_authentication/two_factor_authentication.dart';
+import '../../presentation/screens/services/view/services_screen.dart';
 import '../../presentation/screens/transactions/view/transactions_screen.dart';
 import '../../presentation/screens/transfer/view/transfer_history/transfer_history.dart';
 import '../../presentation/screens/transfer/view/transfer_received_history/transfer_received_history.dart';
@@ -167,6 +169,10 @@ class RoutesConfig {
   static const exchange = ExchangeScreen();
 
   static const transactions = TransactionsScreen();
+
+  // SERVICES HUB: the financial / travel / business grids + recent
+  // transactions moved off the dashboard into this dedicated page.
+  static const services = ServicesScreen();
 
   static const referral = ReferralScreen();
 
@@ -265,6 +271,9 @@ class RoutesConfig {
   static const remittanceDetails = RemittanceDetailsScreen();
   static const kycSubmitWizard = KycSubmitWizard();
   static const upgradeRequired = UpgradeRequiredScreen();
+
+  // Locale switch waypoint (see LocaleThemeService.setLanguage)
+  static const localeTransition = LocaleTransitionScreen();
 
   // App self-update (v1.0.8+8)
   static const appUpdate = AppUpdateScreen();

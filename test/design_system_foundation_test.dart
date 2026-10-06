@@ -12,10 +12,10 @@ void main() {
   group('AppColors Design Tokens', () {
     test('contains all required dark theme tokens with proper values', () {
       expect(AppColors.darkTextTertiary, equals(const Color(0x8CE7E0DE)));
-      expect(AppColors.darkPrimaryContainer, equals(const Color(0xFF1E2E42)));
+      expect(AppColors.darkPrimaryContainer, equals(const Color(0xFF2B2159)));
       expect(AppColors.darkTextOnPrimary, equals(AppColors.deepBlack));
       expect(AppColors.darkBorder, equals(const Color(0x33D5CBC8)));
-      expect(AppColors.darkSurfaceVariant, equals(const Color(0xFF323230)));
+      expect(AppColors.darkSurfaceVariant, equals(const Color(0xFF322F3A)));
       expect(AppColors.darkOutline, equals(const Color(0x4DD5CBC8)));
     });
 
@@ -24,8 +24,8 @@ void main() {
       expect(AppColors.darkGray, equals(const Color(0xFF262625)));
       expect(AppColors.softGray, equals(const Color(0xFF656262)));
       expect(AppColors.warmWhite, equals(const Color(0xFFE7E0DE)));
-      expect(AppColors.mainSoftBlue, equals(const Color(0xFFABC3EA)));
-      expect(AppColors.mutedBlue, equals(const Color(0xFF849ACD)));
+      expect(AppColors.mainSoftBlue, equals(const Color(0xFFB79CFF)));
+      expect(AppColors.mutedBlue, equals(const Color(0xFF00BFA6)));
     });
 
     test('lightTextTertiary is a const Color with proper alpha', () {
@@ -127,12 +127,12 @@ void main() {
               final scheme = theme.colorScheme;
 
               // ColorScheme roles
-              expect(scheme.primary, equals(AppColors.deepBlack));
+              expect(scheme.primary, equals(AppColors.lightPrimary));
               expect(scheme.onPrimary, equals(AppColors.lightTextOnPrimary));
               expect(scheme.primaryContainer, equals(AppColors.lightPrimaryContainer));
-              expect(scheme.onPrimaryContainer, equals(AppColors.deepBlack));
+              expect(scheme.onPrimaryContainer, equals(AppColors.lightPrimaryDark));
               expect(scheme.secondary, equals(AppColors.lightSecondary));
-              expect(scheme.onSecondary, equals(AppColors.warmWhite));
+              expect(scheme.onSecondary, equals(AppColors.white));
               expect(scheme.surface, equals(AppColors.lightBackground));
               expect(scheme.onSurface, equals(AppColors.deepBlack));
               expect(scheme.error, equals(AppColors.error));

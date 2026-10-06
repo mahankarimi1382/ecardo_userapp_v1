@@ -59,10 +59,19 @@ class SslPinningConfig {
   /// Fails CLOSED: a pinned host with no configured pin is rejected. That is
   /// deliberate — an unconfigured pin means the build supplied none, and
   /// accepting the connection there is the hole this class existed to close.
+  ///
+  /// NET-FIX (RC1 relief): the fail-closed rule stays for RELEASE builds,
+  /// but debug builds are allowed through with a loud warning. A local
+  /// `flutter run` without --dart-define=ECARDO_CERT_PIN used to reject
+  /// EVERY request to ecardo.ir, surfacing as endless "network errors"
+  /// during development while release builds (CI supplies the pin) were
+  /// unaffected. Platform trust still applies in debug — this only skips
+  /// the extra pin check, it does not accept untrusted certificates.
   static bool validateCertificate(
     List<int>? certDer,
-    String host,
-  ) {
+    String host, {
+    bool allowDebugWithoutPin = false,
+  }) {
     if (!isPinningEnabled || certDer == null || certDer.isEmpty) {
       return true;
     }
@@ -75,6 +84,15 @@ class SslPinningConfig {
 
     final pins = expectedCertificateHashes[host] ?? const <String>[];
     if (pins.isEmpty) {
+      if (allowDebugWithoutPin && kDebugMode) {
+        debugPrint(
+          '⚠️ [SECURITY-DEBUG] No certificate pin configured for $host — '
+          'ALLOWED in debug (system trust only).\n'
+          '   Release builds fail closed. Build with '
+          '--dart-define=ECARDO_CERT_PIN=<base64 sha256 of cert DER>.',
+        );
+        return true;
+      }
       debugPrint(
         '🚨 [SECURITY] No certificate pin configured for $host — REJECTED.\n'
         '   Build with --dart-define=ECARDO_CERT_PIN=<base64 sha256 of cert DER>.',

@@ -101,8 +101,13 @@ void _installGlobalErrorHandlers() {
       details.exception,
       details.stack,
     );
+    // DARK-FIX: the error card used to render light-only; follow the
+    // platform brightness so it doesn't flash white in dark mode.
+    final isDark = WidgetsBinding
+            .instance.platformDispatcher.platformBrightness ==
+        Brightness.dark;
     return Material(
-      color: const Color(0xFFF8F8F8),
+      color: isDark ? const Color(0xFF1A1824) : const Color(0xFFF8F8F8),
       child: SafeArea(
         child: Center(
           child: Padding(
@@ -110,27 +115,29 @@ void _installGlobalErrorHandlers() {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
+                Icon(
                   Icons.error_outline_rounded,
-                  color: AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                   size: 44,
                 ),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   AppStrings.appName,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF2D2D2D),
+                    color: isDark ? AppColors.warmWhite : const Color(0xFF2D2D2D),
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   'Something went wrong rendering this section.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF757575),
+                    color: isDark ? const Color(0xFFB0ADB8) : const Color(0xFF757575),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -138,7 +145,10 @@ void _installGlobalErrorHandlers() {
                   kDebugMode ? '${details.exception}' : ' ',
                   maxLines: kDebugMode ? 6 : 0,
                   overflow: TextOverflow.fade,
-                  style: const TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: isDark ? const Color(0xFF8B8894) : const Color(0xFF9E9E9E),
+                  ),
                 ),
               ],
             ),

@@ -49,8 +49,7 @@ class AppBadgeService extends GetxService {
   /// Debug-only: force a badge count for physical testing.
   Future<void> debugForceBadge(int value) async {
     assert(() {
-      // ignore: avoid_print
-      print('debugForceBadge($value)');
+      debugPrint('debugForceBadge($value)');
       return true;
     }());
     if (!kDebugMode) return;

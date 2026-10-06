@@ -496,12 +496,12 @@ extension InsuranceClaimStatusExtension on InsuranceClaimStatus {
       };
 
   Color get color => switch (this) {
-        InsuranceClaimStatus.submitted => const Color(0xFF1A7D6C),
+        InsuranceClaimStatus.submitted => const Color(0xFF7445FF),
         InsuranceClaimStatus.underReview => const Color(0xFF8A5A00),
         InsuranceClaimStatus.documentsRequired => const Color(0xFFC79A3C),
         InsuranceClaimStatus.approved => const Color(0xFF15713F),
         InsuranceClaimStatus.rejected => const Color(0xFFA3231C),
-        InsuranceClaimStatus.paidOut => const Color(0xFF11564A),
+        InsuranceClaimStatus.paidOut => const Color(0xFF35276B),
       };
 }
 
