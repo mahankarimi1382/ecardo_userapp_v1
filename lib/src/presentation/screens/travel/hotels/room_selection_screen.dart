@@ -30,7 +30,7 @@ class RoomSelectionScreen extends StatefulWidget {
 
 class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
   final Map<String, int> _selectedRoomQuantities = {};
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   List<Map<String, dynamic>> get _rooms => _providerMaps(widget.hotelOffer.product['rooms']);
   double get _nights => _calculateNights();

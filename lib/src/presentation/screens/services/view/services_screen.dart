@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -78,6 +79,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   ServiceCategory _selectedCategory = ServiceCategory.all;
   String _searchQuery = '';
+  Timer? _searchDebounce;
 
   @override
   void initState() {
@@ -85,8 +87,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
     _searchController.addListener(() {
       final text = _searchController.text.trim();
       if (_searchQuery != text) {
-        setState(() {
-          _searchQuery = text;
+        _searchDebounce?.cancel();
+        _searchDebounce = Timer(const Duration(milliseconds: 150), () {
+          if (mounted && _searchQuery != text) {
+            setState(() {
+              _searchQuery = text;
+            });
+          }
         });
       }
     });
@@ -94,6 +101,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
@@ -1493,12 +1501,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? AppColors.brandViolet
+                    ? (isDark ? AppColors.darkPrimaryContainer : AppColors.brandViolet)
                     : (isDark ? AppColors.darkSurface : AppColors.white),
                 borderRadius: BorderRadius.circular(22),
                 border: Border.all(
                   color: isSelected
-                      ? AppColors.brandViolet
+                      ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                       : (isDark
                           ? AppColors.darkBorder
                           : AppColors.lightOutlineVariant),
@@ -1507,7 +1515,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: AppColors.brandViolet.withValues(alpha: 0.35),
+                          color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(alpha: isDark ? 0.2 : 0.35),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),
@@ -1521,7 +1529,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     chip.icon,
                     size: 16,
                     color: isSelected
-                        ? Colors.white
+                        ? (isDark ? AppColors.mainSoftBlue : Colors.white)
                         : (isDark
                             ? AppColors.darkTextSecondary
                             : AppColors.lightTextSecondary),
@@ -1534,7 +1542,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       fontWeight:
                           isSelected ? FontWeight.w800 : FontWeight.w600,
                       color: isSelected
-                          ? Colors.white
+                          ? (isDark ? AppColors.mainSoftBlue : Colors.white)
                           : (isDark
                               ? AppColors.darkTextPrimary
                               : AppColors.lightTextPrimary),
@@ -1549,7 +1557,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? Colors.white.withValues(alpha: 0.25)
+                            ? (isDark ? AppColors.mainSoftBlue.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.25))
                             : (isDark
                                 ? AppColors.darkSurfaceVariant
                                 : AppColors.brandVioletContainer),
@@ -1561,7 +1569,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
                           color: isSelected
-                              ? Colors.white
+                              ? (isDark ? AppColors.mainSoftBlue : Colors.white)
                               : (isDark
                                   ? AppColors.darkAccent
                                   : AppColors.brandViolet),
@@ -1645,19 +1653,44 @@ class _ServicesScreenState extends State<ServicesScreen> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: items.map((item) {
-          final resolved = resolveTile(item.tile, badge);
-          return Expanded(
-            child: _buildTileView(
-              context: context,
-              resolved: resolved,
-              accentColor: item.accentColor ?? AppColors.brandViolet,
-              isDark: isDark,
-            ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isNarrow = constraints.maxWidth < 360;
+          if (isNarrow) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: items.map((item) {
+                  final resolved = resolveTile(item.tile, badge);
+                  return SizedBox(
+                    width: 68,
+                    child: _buildTileView(
+                      context: context,
+                      resolved: resolved,
+                      accentColor: item.accentColor ?? AppColors.brandViolet,
+                      isDark: isDark,
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: items.map((item) {
+              final resolved = resolveTile(item.tile, badge);
+              return Expanded(
+                child: _buildTileView(
+                  context: context,
+                  resolved: resolved,
+                  accentColor: item.accentColor ?? AppColors.brandViolet,
+                  isDark: isDark,
+                ),
+              );
+            }).toList(),
           );
-        }).toList(),
+        },
       ),
     );
   }

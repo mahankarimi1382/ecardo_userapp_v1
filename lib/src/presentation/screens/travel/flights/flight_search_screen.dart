@@ -1232,7 +1232,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: searches.length,
-              separatorBuilder: (_, __) => SizedBox(width: 8.w),
+              separatorBuilder: (_, _) => SizedBox(width: 8.w),
               itemBuilder: (context, idx) {
                 final search = searches[idx];
                 return InkWell(
@@ -1675,7 +1675,7 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
                   : ListView.separated(
                       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                       itemCount: _filtered.length,
-                      separatorBuilder: (_, __) =>
+                      separatorBuilder: (_, _) =>
                           Divider(color: ECardoTokens.border(context), height: 1),
                       itemBuilder: (context, idx) {
                         final airport = _filtered[idx];

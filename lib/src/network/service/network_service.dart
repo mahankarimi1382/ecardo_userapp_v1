@@ -115,9 +115,8 @@ class NetworkService extends getx.GetxService {
     if (!kIsWeb) {
       _dio.httpClientAdapter = IOHttpClientAdapter(
         validateCertificate: (cert, host, port) {
-          if (cert == null) return true;
           return SslPinningConfig.validateCertificate(
-            cert.der,
+            cert?.der,
             host,
             allowDebugWithoutPin: kDebugMode,
           );
@@ -152,9 +151,8 @@ class NetworkService extends getx.GetxService {
     if (!kIsWeb) {
       _globalDio.httpClientAdapter = IOHttpClientAdapter(
         validateCertificate: (cert, host, port) {
-          if (cert == null) return true;
           return SslPinningConfig.validateCertificate(
-            cert.der,
+            cert?.der,
             host,
             allowDebugWithoutPin: kDebugMode,
           );
@@ -1187,6 +1185,15 @@ class NetworkService extends getx.GetxService {
         localization?.networkErrorTimeout ?? 'Request timed out. Please try again.',
       );
       return ApiResponse.error('Request timed out');
+    }
+
+    // Detect SSL / Bad Certificate validation failure
+    if (e.type == DioExceptionType.badCertificate) {
+      _log('$requestType Security Error: SSL certificate verification failed', icon: '🚨');
+      ToastHelper().showErrorToast(
+        localization?.networkErrorGeneric ?? 'Secure connection could not be established.',
+      );
+      return ApiResponse.error('SSL certificate verification failed');
     }
 
     // Server returned a response

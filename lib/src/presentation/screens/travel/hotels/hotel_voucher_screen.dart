@@ -67,7 +67,7 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
     try {
       final doc = pw.Document();
       final qrSvg = Barcode.qrCode().toSvg(
-        'ECARDO:HOTEL:${_refCode}:${widget.orderId}',
+        'ECARDO:HOTEL:$_refCode:${widget.orderId}',
         width: 100,
         height: 100,
       );
@@ -292,7 +292,7 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
       final bytes = await doc.save();
       await Printing.sharePdf(
         bytes: Uint8List.fromList(bytes),
-        filename: 'hotel-voucher-${_refCode}.pdf',
+        filename: 'hotel-voucher-$_refCode.pdf',
       );
     } catch (_) {
       Get.snackbar(
@@ -309,7 +309,7 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final qrSvg = Barcode.qrCode().toSvg(
-      'ECARDO:HOTEL:${_refCode}:${widget.orderId}',
+      'ECARDO:HOTEL:$_refCode:${widget.orderId}',
       width: 140,
       height: 140,
     );

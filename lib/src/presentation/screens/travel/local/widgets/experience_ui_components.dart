@@ -86,8 +86,8 @@ class ExperienceNetworkImage extends StatelessWidget {
           width: width,
           height: height,
           fit: BoxFit.cover,
-          placeholder: (_, __) => placeholder,
-          errorWidget: (_, __, ___) => fallbackWidget,
+          placeholder: (_, _) => placeholder,
+          errorWidget: (_, _, _) => fallbackWidget,
         ),
       ),
     );
@@ -107,7 +107,7 @@ class ExperienceCatalogSkeleton extends StatelessWidget {
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.h),
       itemCount: itemCount,
-      itemBuilder: (_, __) {
+      itemBuilder: (_, _) {
         return Shimmer.fromColors(
           baseColor: isDark ? AppColors.darkCard : const Color(0xFFE2E8F0),
           highlightColor: isDark ? AppColors.darkSurface : const Color(0xFFF8FAFC),

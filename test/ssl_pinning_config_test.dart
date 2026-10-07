@@ -20,9 +20,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SslPinningConfig.validateCertificate', () {
-    test('ignores a null or empty certificate', () {
-      expect(SslPinningConfig.validateCertificate(null, 'ecardo.ir'), isTrue);
+    test('rejects a null or empty certificate for pinned hosts', () {
+      expect(SslPinningConfig.validateCertificate(null, 'ecardo.ir'), isFalse);
       expect(SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
+          isFalse);
+    });
+
+    test('ignores a null or empty certificate for unpinned hosts', () {
+      expect(SslPinningConfig.validateCertificate(null, 'example.com'), isTrue);
+      expect(SslPinningConfig.validateCertificate(<int>[], 'example.com'),
           isTrue);
     });
 
@@ -73,8 +79,8 @@ void main() {
 
     test('rejects a certificate for a pinned host even when one is empty', () {
       expect(SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
-          isTrue,
-          reason: 'no certificate bytes means there is nothing to compare');
+          isFalse,
+          reason: 'a pinned host with empty certificate bytes must be rejected');
     });
   });
 

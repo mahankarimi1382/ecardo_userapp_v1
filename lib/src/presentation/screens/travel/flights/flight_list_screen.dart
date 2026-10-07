@@ -1155,7 +1155,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
                 child: ListView.separated(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   itemCount: comparedOffers.length,
-                  separatorBuilder: (_, __) =>
+                  separatorBuilder: (_, _) =>
                       Divider(color: ECardoTokens.border(context), height: 24),
                   itemBuilder: (context, idx) {
                     final item = comparedOffers[idx];
