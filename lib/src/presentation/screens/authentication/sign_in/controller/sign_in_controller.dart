@@ -48,6 +48,10 @@ class SignInController extends GetxController {
   final Rx<UserModel> userModel = UserModel().obs;
   final SettingsService settingsService = Get.find<SettingsService>();
 
+  /// Tracks when login() has succeeded and auth token is preserved in TokenService,
+  /// but fetchUser() failed due to a transient network issue or timeout.
+  final RxBool hasPendingProfileFetch = false.obs;
+
   final RxBool isEmailFocused = false.obs;
   final FocusNode emailFocusNode = FocusNode();
   final TextEditingController emailController = TextEditingController();
@@ -115,10 +119,12 @@ class SignInController extends GetxController {
   /// UX-FIX (login): stale validation errors vanished only on next submit.
   /// Clearing them the moment the user edits the field feels alive.
   void onEmailChanged(String _) {
+    hasPendingProfileFetch.value = false;
     if (emailError.value.isNotEmpty) emailError.value = '';
   }
 
   void onPasswordChanged(String _) {
+    hasPendingProfileFetch.value = false;
     if (passwordError.value.isNotEmpty) passwordError.value = '';
   }
 
@@ -269,7 +275,111 @@ class SignInController extends GetxController {
     }
   }
 
+  void _triggerPostLoginBackgroundTasks() {
+    unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
+    unawaited(refreshBiometricButton());
+    if (Get.isRegistered<PermissionFlowService>()) {
+      unawaited(Get.find<PermissionFlowService>().requestNotification(
+        context: Get.context,
+        explain: true,
+      ));
+    }
+  }
+
+  /// Retries fetching user profile without requiring credentials re-entry.
+  Future<void> retryFetchUserProfile({bool useBiometric = false}) async {
+    isLoading.value = true;
+    try {
+      final success = await fetchUser(
+        useBiometric: useBiometric,
+        throwOnError: true,
+      );
+      if (success) {
+        hasPendingProfileFetch.value = false;
+        _triggerPostLoginBackgroundTasks();
+      }
+    } catch (e) {
+      debugPrint('❌ retryFetchUserProfile error: $e');
+      _handleFetchUserFailure(
+        useBiometric: useBiometric,
+        error: e,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _handleFetchUserFailure({
+    bool useBiometric = false,
+    required Object error,
+  }) {
+    // Provide a clear toast message allowing retry without re-entering credentials
+    ToastHelper().showErrorToast(
+      _pick(
+        en: 'Network error loading profile. Tap Retry to continue.',
+        fa: 'خطای شبکه در دریافت اطلاعات کاربری. برای ادامه، تلاش دوباره را بزنید.',
+        ar: 'خطأ في الشبكة أثناء تحميل الملف الشخصي. اضغط إعادة المحاولة للمتابعة.',
+        zh: '加载个人资料时发生网络错误。请点击重试以继续。',
+      ),
+    );
+
+    // Show retry dialog so user can retry immediately without re-entering credentials
+    if (Get.context != null) {
+      Get.defaultDialog(
+        title: _pick(
+          en: 'Connection Error',
+          fa: 'خطای ارتباط با سرور',
+          ar: 'خطأ في الاتصال',
+          zh: '网络连接错误',
+        ),
+        titleStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+        middleText: _pick(
+          en: 'Signed in successfully, but loading your profile failed due to a network glitch. Tap Retry to continue without re-entering credentials.',
+          fa: 'ورود با موفقیت انجام شد، اما دریافت اطلاعات به دلیل خطای شبکه ناموفق بود. برای ادامه بدون ورود مجدد مشخصات، تلاش مجدد را بزنید.',
+          ar: 'تم تسجيل الدخول بنجاح، لكن تعذر تحميل الملف الشخصي بسبب خطأ في الشبكة. اضغط على إعادة المحاولة للمتابعة دون إعادة إدخال البيانات.',
+          zh: '已成功登录，但由于网络问题加载资料失败。点击重试即可继续，无需重新输入凭据。',
+        ),
+        middleTextStyle: const TextStyle(fontSize: 13),
+        textConfirm: _pick(
+          en: 'Retry',
+          fa: 'تلاش مجدد',
+          ar: 'إعادة المحاولة',
+          zh: '重试',
+        ),
+        textCancel: _pick(
+          en: 'Cancel',
+          fa: 'انصراف',
+          ar: 'إلغاء',
+          zh: '取消',
+        ),
+        buttonColor: AppColors.lightPrimary,
+        confirmTextColor: Colors.white,
+        barrierDismissible: true,
+        onConfirm: () async {
+          Get.back();
+          await retryFetchUserProfile(useBiometric: useBiometric);
+        },
+      );
+    }
+  }
+
   Future<void> submitSignIn({bool useBiometric = false}) async {
+    // If login already succeeded earlier (token received and saved into TokenService)
+    // but fetchUser failed due to transient network glitch or timeout, retry fetching
+    // the profile directly without re-entering credentials:
+    if (hasPendingProfileFetch.value) {
+      final token = Get.isRegistered<TokenService>()
+          ? Get.find<TokenService>().accessToken.value
+          : null;
+      if (token != null && token.isNotEmpty) {
+        await retryFetchUserProfile(useBiometric: useBiometric);
+        return;
+      }
+    }
+
     if (!useBiometric && !validateForm()) return;
 
     isLoading.value = true;
@@ -296,17 +406,39 @@ class SignInController extends GetxController {
           }
         } catch (_) {}
 
-        // Immediate user profile retrieval and routing to dashboard:
-        await fetchUser(useBiometric: useBiometric);
+        hasPendingProfileFetch.value = true;
 
-        // Non-blocking background operations after auth completes:
-        unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
-        unawaited(refreshBiometricButton());
-        if (Get.isRegistered<PermissionFlowService>()) {
-          unawaited(Get.find<PermissionFlowService>().requestNotification(
-            context: Get.context,
-            explain: true,
-          ));
+        // Immediate user profile retrieval with automatic retry on transient error:
+        bool fetchSuccess = false;
+        try {
+          fetchSuccess = await fetchUser(
+            useBiometric: useBiometric,
+            throwOnError: true,
+          );
+        } catch (initialError) {
+          debugPrint(
+            '⚠️ fetchUser() failed on first attempt: $initialError. Retrying once...',
+          );
+          // Transient network glitch or timeout: retry once automatically
+          try {
+            await Future.delayed(const Duration(milliseconds: 800));
+            fetchSuccess = await fetchUser(
+              useBiometric: useBiometric,
+              throwOnError: true,
+            );
+          } catch (retryError) {
+            debugPrint('❌ fetchUser() retry attempt failed: $retryError');
+            fetchSuccess = false;
+            _handleFetchUserFailure(
+              useBiometric: useBiometric,
+              error: retryError,
+            );
+          }
+        }
+
+        if (fetchSuccess) {
+          hasPendingProfileFetch.value = false;
+          _triggerPostLoginBackgroundTasks();
         }
       } else {
         _handleLoginFailure(response.message);
@@ -372,14 +504,17 @@ class SignInController extends GetxController {
     }
   }
 
-  Future<void> fetchUser({bool useBiometric = false}) async {
+  Future<bool> fetchUser({
+    bool useBiometric = false,
+    bool throwOnError = false,
+  }) async {
     isLoading.value = true;
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.userEndpoint,
       );
 
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         userModel.value = UserModel.fromJson(response.data!);
 
         if (userModel.value.data?.twoFa == true) {
@@ -396,10 +531,25 @@ class SignInController extends GetxController {
           await setLogInState();
           _routeAfterAuth();
         }
+        hasPendingProfileFetch.value = false;
+        return true;
+      } else {
+        final errorMsg = response.message ??
+            localizationOrNull?.allControllerLoadError ??
+            _pick(
+              en: 'Failed to load user profile.',
+              fa: 'دریافت اطلاعات کاربری با خطا مواجه شد.',
+              ar: 'فشل تحميل ملف المستخدم.',
+              zh: '加载用户资料失败。',
+            );
+        throw Exception(errorMsg);
       }
     } catch (e, s) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $s');
+      if (throwOnError) {
+        rethrow;
+      }
       // P-4: null-safe localization (was `AppLocalizations.of(Get.context!)!`).
       ToastHelper().showErrorToast(
         localizationOrNull?.allControllerLoadError ??
@@ -408,6 +558,7 @@ class SignInController extends GetxController {
               fa: 'خطایی رخ داد. دوباره تلاش کنید.',
             ),
       );
+      return false;
     } finally {
       isLoading.value = false;
     }
@@ -431,6 +582,7 @@ class SignInController extends GetxController {
     passwordController.clear();
     isEmailFocused.value = false;
     isPasswordFocused.value = false;
+    hasPendingProfileFetch.value = false;
   }
 
   Future<void> offerSecuritySetup() async {

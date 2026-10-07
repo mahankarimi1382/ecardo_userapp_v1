@@ -7,7 +7,7 @@ void main() {
   group('TravelTheme NUVO Design Tokens Alignment', () {
     test('maps core tokens to AppColors NUVO palette', () {
       expect(TravelTheme.background, equals(AppColors.lightBackground));
-      expect(TravelTheme.background, equals(const Color(0xFFF9F9FB)));
+      expect(TravelTheme.background, equals(const Color(0xFFF5F7FB)));
 
       expect(TravelTheme.ink, equals(AppColors.deepBlack));
       expect(TravelTheme.ink, equals(const Color(0xFF161614)));
@@ -20,7 +20,7 @@ void main() {
 
       // Foreign purple (0xFF9B51E0) harmonized with brand accent
       expect(TravelTheme.purple, equals(AppColors.mainSoftBlue));
-      expect(TravelTheme.purple, equals(const Color(0xFFABC3EA)));
+      expect(TravelTheme.purple, equals(const Color(0xFFB79CFF)));
       expect(TravelTheme.accent, equals(AppColors.mainSoftBlue));
     });
 

@@ -23,56 +23,105 @@ class SslPinningConfig {
   /// Whether SSL pinning enforcement is active.
   static const bool isPinningEnabled = true;
 
+  /// Pinned apex host for core API and authentication services.
+  static const String ecardoApexHost = 'ecardo.ir';
+
+  /// Pinned host for travel and ticketing services.
+  static const String tripApexHost = 'trip.ecardo.ir';
+
   /// Allowed hostnames for certificate pinning.
   static const List<String> pinnedHosts = [
-    'ecardo.ir',
-    'trip.ecardo.ir',
+    tripApexHost,
+    ecardoApexHost,
   ];
 
-  /// SHA-256 certificate pins, base64, supplied at build time.
+  /// Verified live fallback certificate pin for ecardo.ir leaf certificate.
+  static const String defaultEcardoCertPin =
+      'YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM=';
+
+  /// Verified live fallback certificate pin for trip.ecardo.ir leaf certificate.
+  static const String defaultTripCertPin =
+      '5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ=';
+
+  /// SHA-256 certificate pins, base64, separated per host.
   ///
-  /// CI publishes the current pin into the build with:
-  ///   `flutter build apk --dart-define=ECARDO_CERT_PIN=<pin>`
+  /// For ecardo.ir:
+  ///   Build-time defines: ECARDO_CERT_PIN and ECARDO_CERT_PIN_BACKUP.
+  ///   If ECARDO_CERT_PIN is provided via --dart-define, it is used (along with
+  ///   any backup pin). If omitted, falls back to [defaultEcardoCertPin].
   ///
-  /// Compute a pin with (must match the runtime digest exactly):
-  ///   `openssl s_client -connect ecardo.ir:443 -servername ecardo.ir </dev/null 2>/dev/null` \
-  ///     | `openssl x509 -outform der` \
-  ///     | `openssl dgst -sha256 -binary | openssl enc -base64`
-  ///
-  /// Keep one BACKUP pin alongside the current one: rotating the certificate
-  /// before the release is live bricks every installed app.
+  /// For trip.ecardo.ir:
+  ///   Build-time defines: TRIP_CERT_PIN and TRIP_CERT_PIN_BACKUP.
+  ///   If TRIP_CERT_PIN is provided via --dart-define, it is used (along with
+  ///   any backup pin). If omitted, falls back to [defaultTripCertPin].
   static Map<String, List<String>> get expectedCertificateHashes {
-    const current = String.fromEnvironment('ECARDO_CERT_PIN');
-    const backup = String.fromEnvironment('ECARDO_CERT_PIN_BACKUP');
-    if (current.isEmpty && backup.isEmpty) {
-      return const {};
-    }
-    final pins = [
-      if (current.isNotEmpty) current.trim(),
-      if (backup.isNotEmpty) backup.trim(),
+    const ecardoCurrent = String.fromEnvironment('ECARDO_CERT_PIN');
+    const ecardoBackup = String.fromEnvironment('ECARDO_CERT_PIN_BACKUP');
+    final ecardoPins = <String>[
+      if (ecardoCurrent.trim().isNotEmpty)
+        ecardoCurrent.trim()
+      else
+        defaultEcardoCertPin,
+      if (ecardoBackup.trim().isNotEmpty)
+        ecardoBackup.trim(),
     ];
-    return {for (final host in pinnedHosts) host: pins};
+
+    const tripCurrent = String.fromEnvironment('TRIP_CERT_PIN');
+    const tripBackup = String.fromEnvironment('TRIP_CERT_PIN_BACKUP');
+    final tripPins = <String>[
+      if (tripCurrent.trim().isNotEmpty)
+        tripCurrent.trim()
+      else
+        defaultTripCertPin,
+      if (tripBackup.trim().isNotEmpty)
+        tripBackup.trim(),
+    ];
+
+    return {
+      ecardoApexHost: List<String>.unmodifiable(ecardoPins),
+      tripApexHost: List<String>.unmodifiable(tripPins),
+    };
+  }
+
+  /// Matches [host] to the most specific pinned host apex, or null if unpinned.
+  ///
+  /// For example:
+  ///   - 'ecardo.ir' -> 'ecardo.ir'
+  ///   - 'api.ecardo.ir' -> 'ecardo.ir'
+  ///   - 'trip.ecardo.ir' -> 'trip.ecardo.ir'
+  ///   - 'api.trip.ecardo.ir' -> 'trip.ecardo.ir' (longest suffix matches trip, not ecardo)
+  ///   - 'example.com' -> null
+  static String? matchPinnedHost(String host) {
+    final lower = host.trim().toLowerCase();
+    // 1. Exact match first
+    for (final h in pinnedHosts) {
+      if (lower == h) return h;
+    }
+    // 2. Subdomain match: longest matching apex wins so that subdomains of
+    // trip.ecardo.ir match trip.ecardo.ir rather than ecardo.ir.
+    String? bestMatch;
+    for (final h in pinnedHosts) {
+      if (lower.endsWith('.$h')) {
+        if (bestMatch == null || h.length > bestMatch.length) {
+          bestMatch = h;
+        }
+      }
+    }
+    return bestMatch;
   }
 
   /// Checks whether [host] is one of the pinned hostnames or subdomains.
   static bool isPinnedHost(String host) {
-    return pinnedHosts.any((h) => host == h || host.endsWith('.$h'));
+    return matchPinnedHost(host) != null;
   }
 
   /// Validates the certificate against the pins for [host].
   ///
-  /// Fails CLOSED: a pinned host with no configured pin or missing certificate
-  /// data is rejected. That is deliberate — an unconfigured pin or missing cert
-  /// means the connection cannot be verified, and accepting the connection there
-  /// is the hole this class existed to close.
+  /// Fails CLOSED: a pinned host with no configured pin, missing certificate
+  /// data, or mismatched pin is rejected.
   ///
   /// NET-FIX (RC1 relief): the fail-closed rule stays for RELEASE builds,
-  /// but debug builds are allowed through with a loud warning. A local
-  /// `flutter run` without --dart-define=ECARDO_CERT_PIN used to reject
-  /// EVERY request to ecardo.ir, surfacing as endless "network errors"
-  /// during development while release builds (CI supplies the pin) were
-  /// unaffected. Platform trust still applies in debug — this only skips
-  /// the extra pin check, it does not accept untrusted certificates.
+  /// but debug builds are allowed through with a loud warning when allowDebugWithoutPin is true.
   static bool validateCertificate(
     List<int>? certDer,
     String host, {
@@ -82,7 +131,8 @@ class SslPinningConfig {
       return true;
     }
 
-    if (!isPinnedHost(host)) {
+    final matchedApex = matchPinnedHost(host);
+    if (matchedApex == null) {
       return true; // Not a pinned host — system trust store decides.
     }
 
@@ -101,26 +151,20 @@ class SslPinningConfig {
       return false;
     }
 
-    final matchedApex = pinnedHosts.firstWhere(
-      (h) => host == h || host.endsWith('.$h'),
-      orElse: () => host,
-    );
-    final pins = expectedCertificateHashes[host] ??
-        expectedCertificateHashes[matchedApex] ??
+    final pins = expectedCertificateHashes[matchedApex] ??
+        expectedCertificateHashes[host.trim().toLowerCase()] ??
         const <String>[];
     if (pins.isEmpty) {
       if (allowDebugWithoutPin && kDebugMode) {
         debugPrint(
           '⚠️ [SECURITY-DEBUG] No certificate pin configured for $host — '
           'ALLOWED in debug (system trust only).\n'
-          '   Release builds fail closed. Build with '
-          '--dart-define=ECARDO_CERT_PIN=<base64 sha256 of cert DER>.',
+          '   Release builds fail closed.',
         );
         return true;
       }
       debugPrint(
-        '🚨 [SECURITY] No certificate pin configured for $host — REJECTED.\n'
-        '   Build with --dart-define=ECARDO_CERT_PIN=<base64 sha256 of cert DER>.',
+        '🚨 [SECURITY] No certificate pin configured for $host — REJECTED.',
       );
       return false;
     }

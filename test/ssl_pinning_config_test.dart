@@ -56,15 +56,13 @@ void main() {
       );
     });
 
-    test('FAILS CLOSED for a pinned host with no configured pin', () {
-      // The core assertion. `flutter test` compiles without
-      // --dart-define=ECARDO_CERT_PIN, so the pin list is empty here — and
-      // a pinned host must be rejected, not waved through. This is the exact
-      // hole the placeholder branch used to open.
+    test('FAILS CLOSED for mismatched certificates on pinned hosts', () {
+      // With default fallback pins active, random bytes must be rejected
+      // because they do not match the expected SHA-256 certificate pin.
       expect(
         SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'ecardo.ir'),
         isFalse,
-        reason: 'a pinned host with no pin must reject the connection',
+        reason: 'a pinned host with mismatched certificate must reject the connection',
       );
       expect(
         SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'trip.ecardo.ir'),
@@ -81,6 +79,42 @@ void main() {
       expect(SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
           isFalse,
           reason: 'a pinned host with empty certificate bytes must be rejected');
+    });
+  });
+
+  group('SslPinningConfig per-host pin isolation and fallback pins', () {
+    test('expectedCertificateHashes provides separate pin lists per host', () {
+      final hashes = SslPinningConfig.expectedCertificateHashes;
+      expect(hashes.containsKey('ecardo.ir'), isTrue);
+      expect(hashes.containsKey('trip.ecardo.ir'), isTrue);
+
+      final ecardoPins = hashes['ecardo.ir']!;
+      final tripPins = hashes['trip.ecardo.ir']!;
+
+      expect(ecardoPins, contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM='));
+      expect(tripPins, contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ='));
+
+      // Ensure pin lists are isolated and NOT shared across hosts
+      expect(ecardoPins, isNot(contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ=')));
+      expect(tripPins, isNot(contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM=')));
+    });
+
+    test('matchPinnedHost correctly resolves apex and subdomains', () {
+      expect(SslPinningConfig.matchPinnedHost('ecardo.ir'), 'ecardo.ir');
+      expect(SslPinningConfig.matchPinnedHost('ECARDO.IR'), 'ecardo.ir');
+      expect(SslPinningConfig.matchPinnedHost('api.ecardo.ir'), 'ecardo.ir');
+      expect(SslPinningConfig.matchPinnedHost('trip.ecardo.ir'), 'trip.ecardo.ir');
+      expect(SslPinningConfig.matchPinnedHost('flight.trip.ecardo.ir'), 'trip.ecardo.ir');
+      expect(SslPinningConfig.matchPinnedHost('example.com'), isNull);
+      expect(SslPinningConfig.matchPinnedHost('notecardo.ir'), isNull);
+    });
+
+    test('isPinnedHost correctly identifies hosts', () {
+      expect(SslPinningConfig.isPinnedHost('ecardo.ir'), isTrue);
+      expect(SslPinningConfig.isPinnedHost('trip.ecardo.ir'), isTrue);
+      expect(SslPinningConfig.isPinnedHost('api.ecardo.ir'), isTrue);
+      expect(SslPinningConfig.isPinnedHost('hotel.trip.ecardo.ir'), isTrue);
+      expect(SslPinningConfig.isPinnedHost('other.org'), isFalse);
     });
   });
 
