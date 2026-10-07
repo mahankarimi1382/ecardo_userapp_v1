@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 /// AppColors — central color palette for the eCardo app.
-/// Based on NUVO Palette (Dark / Neutral / Soft Blue / Warm Metallic).
+///
+/// REBRAND (texture spec `ecardo_app_ui/css/style.css`): the brand primary is
+/// the eCardo violet `#7445FF` with its `#5A35CC` deep variant, secondary is
+/// the teal `#00BFA6`, info splits out to `#2196F3`, and the light canvases
+/// use the cool gray family `#F5F7FB / #F0F2F6 / #E7EAEE`. Every themed
+/// component reads from here, so changing a constant re-themes the platform.
 class AppColors {
   const AppColors._();
 
@@ -11,27 +16,47 @@ class AppColors {
   static const Color softGray = Color(0xFF656262); /* Secondary Text / Icons */
   static const Color warmWhite = Color(0xFFE7E0DE); /* Primary Text / Light Surface */
   static const Color lightWarmGray = Color(0xFFD5CBC8); /* Borders / Dividers */
-  static const Color mainSoftBlue = Color(0xFFABC3EA); /* Primary Accent / Main Surface */
-  static const Color mutedBlue = Color(0xFF849ACD); /* Secondary Accent / Cards */
+  static const Color mainSoftBlue = Color(0xFFB79CFF); /* Primary Accent / Main Surface (soft violet) */
+  static const Color mutedBlue = Color(0xFF00BFA6); /* Secondary Accent / Cards (brand teal) */
   static const Color warmBrown = Color(0xFF87624C); /* Financial / Card Elements */
   static const Color taupeBronze = Color(0xFFB3A9A5); /* Warm Neutral / Metallic */
+
+  // ------------------ BRAND (texture spec) ------------------
+  /// Core brand violet — buttons, links, active states, icon tints.
+  static const Color brandViolet = Color(0xFF7445FF);
+  /// Pressed / gradient-end violet.
+  static const Color brandVioletDeep = Color(0xFF5A35CC);
+  /// Tinted container behind violet icons and chips.
+  static const Color brandVioletContainer = Color(0xFFF0ECFF);
+  /// 135° brand gradient for hero cards and primary CTAs.
+  static const LinearGradient brandGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [brandViolet, brandVioletDeep],
+  );
+  /// Signature hero-card night gradient (balance / flagship surfaces).
+  static const List<Color> heroNightGradient = [
+    Color(0xFF1A1F36),
+    Color(0xFF2A3B5C),
+    Color(0xFF442E7A),
+  ];
 
   // ------------------ LIGHT THEME ------------------
 
   // Background Colors
-  static const Color lightBackground = Color(0xFFF9F9FB);
+  static const Color lightBackground = Color(0xFFF5F7FB);
   static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightSurfaceVariant = Color(0xFFF0EDEC);
+  static const Color lightSurfaceVariant = Color(0xFFF0F2F6);
   static const Color lightCard = Color(0xFFFFFFFF);
 
-  // Primary Colors (Modern Royal Fintech Blue)
-  static const Color lightPrimary = Color(0xFF2563EB);
-  static const Color lightPrimaryContainer = Color(0xFFDBEAFE);
-  static const Color lightPrimaryDark = Color(0xFF1D4ED8);
+  // Primary Colors (eCardo violet — texture spec)
+  static const Color lightPrimary = brandViolet;
+  static const Color lightPrimaryContainer = brandVioletContainer;
+  static const Color lightPrimaryDark = brandVioletDeep;
 
-  // Accent / Secondary
+  // Accent / Secondary (brand teal)
   static const Color lightSecondary = mutedBlue;
-  static const Color lightSecondaryContainer = Color(0xFFEBF1FA);
+  static const Color lightSecondaryContainer = Color(0xFFE0F8F5);
   static const Color lightAccent = mainSoftBlue;
 
   // Text Colors
@@ -44,7 +69,7 @@ class AppColors {
   // Border / Divider
   static const Color lightBorder = lightWarmGray;
   static const Color lightOutline = lightWarmGray;
-  static const Color lightOutlineVariant = Color(0xFFE8E2E0);
+  static const Color lightOutlineVariant = Color(0xFFE7EAEE);
   static const Color lightDivider = lightWarmGray;
   static const Color lightShadow = Color(0x1A000000);
 
@@ -57,8 +82,8 @@ class AppColors {
   static const Color warningContainer = Color(0xFFFFF8E1);
   static const Color success = Color(0xFF14AE6F);
   static const Color successContainer = Color(0xFFE8F8F0);
-  static const Color info = mutedBlue;
-  static const Color infoContainer = Color(0xFFEBF1FA);
+  static const Color info = Color(0xFF2196F3);
+  static const Color infoContainer = Color(0xFFE3F2FD);
 
   // Neutral
   static const Color white = Colors.white;
@@ -71,13 +96,13 @@ class AppColors {
   // ------------------ DARK THEME ------------------
   static const Color darkBackground = deepBlack;
   static const Color darkSurface = darkGray;
-  static const Color darkSurfaceVariant = Color(0xFF323230);
+  static const Color darkSurfaceVariant = Color(0xFF322F3A);
   static const Color darkCard = darkGray;
   static const Color darkPrimary = mainSoftBlue;
-  static const Color darkPrimaryContainer = Color(0xFF1E2E42);
+  static const Color darkPrimaryContainer = Color(0xFF2B2159);
   static const Color darkPrimaryDark = deepBlack;
   static const Color darkSecondary = mutedBlue;
-  static const Color darkSecondaryContainer = Color(0xFF263345);
+  static const Color darkSecondaryContainer = Color(0xFF0E3A34);
   static const Color darkAccent = mainSoftBlue;
   static const Color darkTextPrimary = warmWhite;
   static const Color darkTextSecondary = softGray;

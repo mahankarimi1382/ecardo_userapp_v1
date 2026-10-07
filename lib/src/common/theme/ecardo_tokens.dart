@@ -13,32 +13,32 @@ class ECardoTokens {
   // ------------------ Surfaces ------------------
   /// پس‌زمینهٔ کل صفحه. کارت‌ها روی این می‌نشینند.
   static Color surfaceCanvas(BuildContext context) =>
-      isDark(context) ? const Color(0xFF0D1412) : const Color(0xFFF0F3F0);
+      isDark(context) ? const Color(0xFF121019) : const Color(0xFFF5F7FB);
 
   /// پس‌زمینهٔ کارت‌ها، باتم‌شیت‌ها و نوار پایین.
   static Color surfaceCard(BuildContext context) =>
-      isDark(context) ? const Color(0xFF141D1A) : const Color(0xFFFFFFFF);
+      isDark(context) ? const Color(0xFF1A1824) : const Color(0xFFFFFFFF);
 
   /// فیلد ورودی، اسکلتون لودینگ، ردیف‌های غیرفعال.
   static Color surfaceSunken(BuildContext context) =>
-      isDark(context) ? const Color(0xFF0A110F) : const Color(0xFFE7ECE8);
+      isDark(context) ? const Color(0xFF0E0D15) : const Color(0xFFEBEDF4);
 
   // ------------------ Brand Colors ------------------
   /// رنگ اصلی برند. هدر، کارت موجودی، تب فعال. متن سفید روی آن.
   static Color brand900(BuildContext context) =>
-      isDark(context) ? const Color(0xFF09302A) : const Color(0xFF0B3B33);
+      isDark(context) ? const Color(0xFF2A1D52) : const Color(0xFF35276B);
 
   /// حالت فشرده‌شدن دکمهٔ اصلی و آیکون‌های تأکیدی روی زمینهٔ روشن.
   static Color brand700(BuildContext context) =>
-      isDark(context) ? const Color(0xFF16705F) : const Color(0xFF11564A);
+      isDark(context) ? const Color(0xFF6C46E0) : const Color(0xFF4C2FB8);
 
   /// لینک‌ها، آیکون‌های فعال و نمودارها. حداقل اندازهٔ متن ۱۶px.
   static Color brand500(BuildContext context) =>
-      isDark(context) ? const Color(0xFF37A890) : const Color(0xFF1A7D6C);
+      isDark(context) ? const Color(0xFF9A73FF) : const Color(0xFF7445FF);
 
   /// پس‌زمینهٔ کاشی آیکون سرویس‌ها و چیپ‌های خنثی.
   static Color brand100(BuildContext context) =>
-      isDark(context) ? const Color(0xFF15302A) : const Color(0xFFE9F1EE);
+      isDark(context) ? const Color(0xFF241F3D) : const Color(0xFFF0ECFF);
 
   // ------------------ Sand (Secondary / Accent) ------------------
   /// رنگ مکمل برای متن و آیکون تأکیدی: «همه را ببین»، دکمهٔ شناور اسکن.
@@ -56,27 +56,27 @@ class ECardoTokens {
   // ------------------ Ink (Text) ------------------
   /// متن اصلی روی surface-canvas و surface-card.
   static Color ink(BuildContext context) =>
-      isDark(context) ? const Color(0xFFE8EEEA) : const Color(0xFF0F1A17);
+      isDark(context) ? const Color(0xFFECEAF4) : const Color(0xFF16141F);
 
   /// متن ثانویه: تاریخ، زیرعنوان، لیبل آیکون‌ها.
   static Color inkMuted(BuildContext context) =>
-      isDark(context) ? const Color(0xFF9AA8A0) : const Color(0xFF566159);
+      isDark(context) ? const Color(0xFF9C98AC) : const Color(0xFF5B5866);
 
   /// متن و آیکون روی brand-900 و brand-700.
   static const Color inkOnBrand = Color(0xFFFFFFFF);
 
   /// لیبل ثانویه روی زمینهٔ برند، مثل «Total balance».
   static Color inkOnBrandMuted(BuildContext context) =>
-      isDark(context) ? const Color(0xFFA9C6BE) : const Color(0xFFBBD3CC);
+      isDark(context) ? const Color(0xFFB9ABE8) : const Color(0xFFCFC3F5);
 
   // ------------------ Borders ------------------
   /// خط جداکنندهٔ کارت‌ها و ردیف‌های لیست.
   static Color border(BuildContext context) =>
-      isDark(context) ? const Color(0xFF26322D) : const Color(0xFFE1E8E4);
+      isDark(context) ? const Color(0xFF262335) : const Color(0xFFE7EAEE);
 
   /// حاشیهٔ فیلد ورودی و دکمهٔ ثانویه.
   static Color borderStrong(BuildContext context) =>
-      isDark(context) ? const Color(0xFF3A4A43) : const Color(0xFFC8D3CD);
+      isDark(context) ? const Color(0xFF3A3550) : const Color(0xFFD2D5E0);
 
   // ------------------ Status Colors ------------------
   /// مبلغ واریزی، وضعیت Success. همیشه همراه آیکون فلش رو به پایین.
@@ -113,11 +113,11 @@ class ECardoTokens {
 
   /// حلقهٔ فوکوس ۲px با فاصلهٔ ۲px از المان. هرگز حذف نشود.
   static Color focusRing(BuildContext context) =>
-      isDark(context) ? const Color(0xFF37A890) : const Color(0xFF1A7D6C);
+      isDark(context) ? const Color(0xFF9A73FF) : const Color(0xFF7445FF);
 
   /// پردهٔ پشت باتم‌شیت و دیالوگ.
   static Color overlay(BuildContext context) =>
-      isDark(context) ? const Color(0xCC000000) : const Color(0xB30F1A17);
+      isDark(context) ? const Color(0xCC000000) : const Color(0xB316141F);
 
   // ------------------ Radii ------------------
   /// چیپ‌ها و برچسب‌های کوچک: 8px
@@ -152,7 +152,7 @@ class ECardoTokens {
         BoxShadow(
           color: isDark(context)
               ? Colors.black.withValues(alpha: 0.3)
-              : const Color(0xFF0B3B33).withValues(alpha: 0.06),
+              : const Color(0xFF35276B).withValues(alpha: 0.06),
           blurRadius: 4,
           offset: const Offset(0, 1),
         ),
@@ -162,7 +162,7 @@ class ECardoTokens {
         BoxShadow(
           color: isDark(context)
               ? Colors.black.withValues(alpha: 0.5)
-              : const Color(0xFF0B3B33).withValues(alpha: 0.12),
+              : const Color(0xFF35276B).withValues(alpha: 0.12),
           blurRadius: 24,
           offset: const Offset(0, -8),
         ),

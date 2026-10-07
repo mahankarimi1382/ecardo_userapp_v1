@@ -11,23 +11,26 @@ import 'package:ecardo_user/src/common/widgets/bottom_sheet/common_alert_bottom_
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
-import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/business_services_section.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/services_entry_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/home_skeleton_loader.dart';
-import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/travel_services_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart';
-import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/other_services_section.dart';
-import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/recent_transactions_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/referral_stats_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/sign_up_bonus_pop_up.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/top_header_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/dashboard_sliver_header.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/balance_hero_section.dart';
 
-/// Dashboard structure (v1.0.60):
+/// Dashboard structure (v1.0.146 UX pass):
 /// CustomScrollView
 ///   1. SliverAppBar (floating+snap) — greeting header expands/collapses
 ///   2. SliverToBoxAdapter — TopHeader (UID + action buttons)
-///   3. wallet / referral / services / transactions (unchanged sections)
+///   3. Balance Hero, Wallets, Referral stats
+///   4. Compact "All Services" entry card
+///
+/// SERVICES HUB MOVE: the three service grids (financial / travel /
+/// business) and the recent-transactions card no longer live here — they
+/// moved to the dedicated ServicesScreen (BaseRoute.services) so the home
+/// screen stays clean and fast.
 class HomeScreen extends StatefulWidget {
   final String? signUpBonus;
 
@@ -181,22 +184,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),
-                      const SliverToBoxAdapter(child: OtherServicesSection()),
+                      // SERVICES HUB MOVE: entry card to the dedicated
+                      // All-Services page (financial / travel / business
+                      // grids + recent transactions live there now).
                       const SliverToBoxAdapter(
-                        child: SizedBox(height: AppSpacing.sectionGap),
-                      ),
-                      const SliverToBoxAdapter(child: TravelServicesSection()),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(height: AppSpacing.sectionGap),
-                      ),
-                      const SliverToBoxAdapter(
-                        child: BusinessServicesSection(),
-                      ),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(height: AppSpacing.sectionGap),
-                      ),
-                      const SliverToBoxAdapter(
-                        child: RecentTransactionsSection(),
+                        child: ServicesEntrySection(),
                       ),
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),

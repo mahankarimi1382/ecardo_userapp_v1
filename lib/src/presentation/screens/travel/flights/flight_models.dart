@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../core/models/travel_models.dart';
 
 /// Flight trip types supported by International-grade booking.

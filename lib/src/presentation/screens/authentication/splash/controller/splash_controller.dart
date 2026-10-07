@@ -191,7 +191,7 @@ class SplashController extends GetxController {
       if (hasToken) {
         // Token path: refresh profile and enter the app (no password re-login).
         try {
-          await FirebaseMessagingService.instance().registerTokenWithBackend();
+          unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
         } catch (_) {}
         try {
           final response = await Get.find<NetworkService>().get(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -264,17 +266,68 @@ class SettingsService extends GetxService {
           }
         });
         isSettingsDataLoad.value = true;
+        // NET-FIX (RC3): persist the last-good settings so the next boot
+        // with a flaky connection still starts with language_switcher,
+        // update links and force-update flags instead of an empty map.
+        await _persistSettingsBackup();
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchSettings() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      final restored = await _restoreSettingsBackup();
+      // v1.0.125: `localization!` here threw when the error fired while no
+      // localization context existed (mid locale-switch rebuild, teardown) —
+      // an error path must never itself crash. Fall back to plain text.
+      // NET-FIX: when a cached copy was restored the app still works —
+      // don't alarm the user with an error toast on every retry.
+      if (!restored) {
+        ToastHelper().showErrorToast(
+          localization?.allControllerLoadError ??
+              'Could not load settings. Please try again.',
+        );
+      }
     } finally {
       isSettingsLoading.value = false;
       // v1.0.24: mark the load attempt as finished even on error/timeout so
       // the splash screen never hangs waiting for this flag (it used to be
       // set only on success, leaving splash stuck on a 500/timeout).
       isSettingsDataLoad.value = true;
+    }
+  }
+
+  static const String _settingsBackupKey = 'settings_last_good_v1';
+
+  Future<void> _persistSettingsBackup() async {
+    try {
+      if (appSettings.isEmpty) return;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_settingsBackupKey, jsonEncode(appSettings));
+    } catch (e) {
+      debugPrint('⚠️ settings backup save failed: $e');
+    }
+  }
+
+  /// Restores the last-good settings snapshot. Returns true when the map
+  /// was populated from the cache (or already non-empty).
+  Future<bool> _restoreSettingsBackup() async {
+    try {
+      if (appSettings.isNotEmpty) return true;
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_settingsBackupKey);
+      if (raw == null || raw.isEmpty) return false;
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return false;
+      appSettings.clear();
+      decoded.forEach((key, value) {
+        if (key is String && value != null) {
+          appSettings[key] = value.toString();
+        }
+      });
+      debugPrint('♻️ settings restored from cache (${appSettings.length} keys)');
+      return appSettings.isNotEmpty;
+    } catch (e) {
+      debugPrint('⚠️ settings backup restore failed: $e');
+      return false;
     }
   }
 
@@ -313,7 +366,11 @@ class SettingsService extends GetxService {
 
   Future<String> getThemeModePref() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(themeModeKey) ?? 'light';
+    // DARK-FIX: the old default was 'light', which forced a light UI on
+    // first launch even when the OS was in dark mode (LocaleThemeService
+    // reads this pref at init). 'system' honours the OS until the user
+    // picks a mode explicitly.
+    return prefs.getString(themeModeKey) ?? 'system';
   }
 
   Future<void> setThemeModePref(String mode) async {

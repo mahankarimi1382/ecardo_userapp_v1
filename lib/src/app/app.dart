@@ -154,10 +154,12 @@ class _VpnBannerWrapper extends StatelessWidget {
       final vpn = Get.find<ConnectivityWatchService>().isVpn.value;
       if (!vpn) return child;
       final loc = AppLocalizations.of(context);
+      // DARK-FIX: the banner used to hardcode the light warning colors.
+      final isDark = Theme.of(context).brightness == Brightness.dark;
       return Column(
         children: [
           Material(
-            color: const Color(0xFFFFF3CD),
+            color: isDark ? const Color(0xFF3A3010) : const Color(0xFFFFF3CD),
             child: SafeArea(
               bottom: false,
               child: Padding(
@@ -167,15 +169,24 @@ class _VpnBannerWrapper extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.vpn_lock_rounded, size: 18),
+                    Icon(
+                      Icons.vpn_lock_rounded,
+                      size: 18,
+                      color: isDark
+                          ? const Color(0xFFE0C060)
+                          : const Color(0xFF8A6D00),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         loc?.vpnHintBanner ??
                             'VPN detected — turn it off for a more stable experience',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? const Color(0xFFE8D8A0)
+                              : const Color(0xFF5B4A00),
                         ),
                       ),
                     ),

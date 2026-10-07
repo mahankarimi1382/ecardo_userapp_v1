@@ -164,6 +164,13 @@ class DrawerSection extends StatelessWidget {
 
     final navigationItemList = buildNavigationList(settingsService);
 
+    // DARK-FIX: the drawer used to hardcode a white surface, light text
+    // colors and dark status-bar icons — unreadable in dark mode.
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final drawerTextPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+
     return SafeArea(
       bottom: false,
       child: Stack(
@@ -171,14 +178,16 @@ class DrawerSection extends StatelessWidget {
         children: [
           AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
-              statusBarIconBrightness: Brightness.dark,
+              statusBarIconBrightness:
+                  isDark ? Brightness.light : Brightness.dark,
             ),
             child: Drawer(
               width: 310,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
               ),
-              backgroundColor: AppColors.white,
+              backgroundColor:
+                  isDark ? AppColors.darkSurface : AppColors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -190,7 +199,7 @@ class DrawerSection extends StatelessWidget {
                   SizedBox(height: 20),
                   Divider(
                     endIndent: 28,
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.10),
+                    color: drawerTextPrimary.withValues(alpha: 0.10),
                     height: 0,
                     indent: 28,
                   ),
@@ -329,7 +338,7 @@ class DrawerSection extends StatelessWidget {
                         offset: Offset(-1, 1),
                       ),
                     ],
-                    color: AppColors.white,
+                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Image.asset(
@@ -365,6 +374,15 @@ class _DrawerItem extends StatelessWidget {
     if (localization == null) return const SizedBox.shrink();
     final settingsService = Get.find<SettingsService>();
 
+    // DARK-FIX: item colors follow the ambient theme.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final drawerTextPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final drawerTextMuted =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final drawerTextHint =
+        isDark ? AppColors.darkTextHint : AppColors.lightTextHint;
+
     return Column(
       children: [
         InkWell(
@@ -390,7 +408,7 @@ class _DrawerItem extends StatelessWidget {
                   ]),
                   content: Text(
                     'The "$nav" feature is not available on your current plan.\n\nPlease contact support to activate this module.',
-                    style: TextStyle(fontSize: 14, color: AppColors.lightTextPrimary),
+                    style: TextStyle(fontSize: 14, color: drawerTextPrimary),
                   ),
                   actions: [
                     TextButton(onPressed: () => Get.back(), child: Text(localization.commonClose)),
@@ -492,36 +510,37 @@ class _DrawerItem extends StatelessWidget {
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 28, vertical: 10),
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  item["icon"],
-                  colorFilter: ColorFilter.mode(
-                    (item["isEnabled"] as bool? ?? true)
-                        ? AppColors.lightTextPrimary.withValues(alpha: 0.44)
-                        : AppColors.lightTextHint.withValues(alpha: 0.3),
-                    BlendMode.srcIn,
-                  ),
-                  width: 20,
-                ),
-                SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    item["navigation"],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: (item["isEnabled"] as bool? ?? true)
-                          ? AppColors.lightTextTertiary
-                          : AppColors.lightTextHint,
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      item["icon"],
+                      colorFilter: ColorFilter.mode(
+                        (item["isEnabled"] as bool? ?? true)
+                            ? drawerTextPrimary.withValues(alpha: 0.44)
+                            : drawerTextHint.withValues(alpha: 0.3),
+                        BlendMode.srcIn,
+                      ),
+                      width: 20,
                     ),
-                  ),
+                    SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        item["navigation"],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: (item["isEnabled"] as bool? ?? true)
+                              ? drawerTextMuted
+                              : drawerTextHint,
+                        ),
+                      ),
+                    ),
+                    // Show lock icon for disabled modules
+                    if (!(item["isEnabled"] as bool? ?? true))
+                      Icon(Icons.lock_outline,
+                          size: 14, color: drawerTextHint),
+                  ],
                 ),
-                // Show lock icon for disabled modules
-                if (!(item["isEnabled"] as bool? ?? true))
-                  Icon(Icons.lock_outline, size: 14, color: AppColors.lightTextHint),
-              ],
-            ),
           ),
         ),
         if (isLastItem) SizedBox(height: 20),
@@ -546,6 +565,12 @@ class _KycLevelRequiredDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     if (loc == null) return const SizedBox.shrink();
+    // DARK-FIX: dialog surfaces adapt to the ambient theme.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final dialogTextPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final dialogTextSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
@@ -559,13 +584,13 @@ class _KycLevelRequiredDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(loc.kycUpgradeDialogBody(featureName, '$requiredLevel'), style: TextStyle(fontSize: 14, color: AppColors.lightTextPrimary)),
+          Text(loc.kycUpgradeDialogBody(featureName, '$requiredLevel'), style: TextStyle(fontSize: 14, color: dialogTextPrimary)),
           SizedBox(height: 8),
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: AppColors.lightBackground, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground, borderRadius: BorderRadius.circular(8)),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(loc.kycUpgradeCurrentLevel, style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+              Text(loc.kycUpgradeCurrentLevel, style: TextStyle(fontSize: 12, color: dialogTextSecondary)),
               Text(loc.kycUpgradeLevelValue('$currentLevel'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.warning)),
             ]),
           ),
@@ -574,7 +599,7 @@ class _KycLevelRequiredDialog extends StatelessWidget {
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(color: AppColors.lightPrimaryContainer, borderRadius: BorderRadius.circular(8)),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(loc.kycUpgradeRequiredLevel, style: TextStyle(fontSize: 12, color: AppColors.lightTextSecondary)),
+              Text(loc.kycUpgradeRequiredLevel, style: TextStyle(fontSize: 12, color: dialogTextSecondary)),
               Text(loc.kycUpgradeLevelValue('$requiredLevel'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.lightPrimary)),
             ]),
           ),

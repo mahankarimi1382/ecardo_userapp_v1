@@ -152,7 +152,7 @@ class FirebaseMessagingService {
         status = await Permission.notification.request();
       }
       if (kDebugMode) {
-        print('Notification permission (permission_handler): $status');
+        debugPrint('Notification permission (permission_handler): $status');
       }
       if (status.isGranted || status.isLimited) {
         // Sync FCM AuthorizationStatus so topic messages are delivered.
@@ -168,12 +168,12 @@ class FirebaseMessagingService {
       final settings =
           await FirebaseMessaging.instance.getNotificationSettings();
       if (kDebugMode) {
-        print('Notification permission: ${settings.authorizationStatus}');
+        debugPrint('Notification permission: ${settings.authorizationStatus}');
       }
       return;
     } catch (e) {
       if (kDebugMode) {
-        print(
+        debugPrint(
           'permission_handler notification gate failed ($e) — falling back '
           'to FCM requestPermission',
         );
@@ -188,7 +188,7 @@ class FirebaseMessagingService {
     );
 
     if (kDebugMode) {
-      print('Notification permission: ${settings.authorizationStatus}');
+      debugPrint('Notification permission: ${settings.authorizationStatus}');
     }
   }
 
@@ -197,12 +197,12 @@ class FirebaseMessagingService {
 
     if (token != null) {
       await Get.find<SettingsService>().saveFcmToken(token);
-      if (kDebugMode) print('FCM Token: $token');
+      if (kDebugMode) debugPrint('FCM Token: $token');
     }
 
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
       await Get.find<SettingsService>().saveFcmToken(newToken);
-      if (kDebugMode) print('FCM Token refreshed: $newToken');
+      if (kDebugMode) debugPrint('FCM Token refreshed: $newToken');
 
       // AUTH-BIO (A-3): push the fresh token to the backend immediately when
       // a session exists, reusing the SAME getSetupFcm call the login flow
@@ -213,13 +213,13 @@ class FirebaseMessagingService {
         if (loginState != null && loginState.isNotEmpty) {
           await registerTokenWithBackend();
         } else if (kDebugMode) {
-          print(
+          debugPrint(
             'FCM token refresh: not logged in — skipping backend registration',
           );
         }
       } catch (e) {
         if (kDebugMode) {
-          print('FCM token refresh: backend registration skipped: $e');
+          debugPrint('FCM token refresh: backend registration skipped: $e');
         }
       }
     });
@@ -275,11 +275,11 @@ class FirebaseMessagingService {
     try {
       await FirebaseMessaging.instance.subscribeToTopic(_updateTopic);
       if (kDebugMode) {
-        print('Subscribed to FCM topic: $_updateTopic');
+        debugPrint('Subscribed to FCM topic: $_updateTopic');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to subscribe to topic $_updateTopic: $e');
+        debugPrint('Failed to subscribe to topic $_updateTopic: $e');
       }
     }
   }
@@ -311,7 +311,7 @@ class FirebaseMessagingService {
 
   void _onMessageOpenedApp(RemoteMessage message) {
     if (kDebugMode) {
-      print('Notification opened: ${message.data}');
+      debugPrint('Notification opened: ${message.data}');
     }
 
     // app_update keeps its dedicated handling (unchanged behaviour).
@@ -334,7 +334,7 @@ class FirebaseMessagingService {
         unawaited(Get.find<KycLevelController>().fetchStatus());
       }
     } catch (e) {
-      if (kDebugMode) print('kyc_action refresh failed: $e');
+      if (kDebugMode) debugPrint('kyc_action refresh failed: $e');
     }
   }
 
@@ -391,7 +391,7 @@ class FirebaseMessagingService {
       final loginState = await SettingsService.getLoginCurrentState();
       if (loginState == null || loginState.isEmpty) {
         if (kDebugMode) {
-          print('Notification tap ignored (no session): type=$type');
+          debugPrint('Notification tap ignored (no session): type=$type');
         }
         return;
       }
@@ -403,7 +403,7 @@ class FirebaseMessagingService {
         // payload — attachContext() routes it on the first frame.
         _pendingNotificationData = data;
         if (kDebugMode) {
-          print('Notification routing deferred until navigator is ready: type=$type');
+          debugPrint('Notification routing deferred until navigator is ready: type=$type');
         }
         return;
       }
@@ -536,7 +536,7 @@ class FirebaseMessagingService {
     try {
       await Get.find<SettingsService>().fetchSettings();
     } catch (e) {
-      if (kDebugMode) print('Failed to refresh settings: $e');
+      if (kDebugMode) debugPrint('Failed to refresh settings: $e');
     }
 
     // Trigger the controller — this will transition to updateAvailable and
@@ -558,7 +558,7 @@ class FirebaseMessagingService {
       // Cold start: park it; attachContext() opens it on the first frame.
       _pendingUpdateOpen = true;
       if (kDebugMode) {
-        print('Update screen deferred until navigator is ready');
+        debugPrint('Update screen deferred until navigator is ready');
       }
       return;
     }

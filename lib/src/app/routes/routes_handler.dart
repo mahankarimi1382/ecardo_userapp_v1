@@ -208,6 +208,12 @@ List<GetPage> routesHandler = [
   ),
 
   GetPage(
+    name: BaseRoute.services,
+    page: () => RoutesConfig.services,
+    binding: ServicesBinding(),
+  ),
+
+  GetPage(
     name: BaseRoute.referral,
     page: () => RoutesConfig.referral,
     binding: ReferralBinding(),
@@ -570,6 +576,13 @@ List<GetPage> routesHandler = [
   GetPage(
     name: BaseRoute.appUpdate,
     page: () => RoutesConfig.appUpdate,
+  ),
+
+  // Locale switch waypoint — no binding, no controller: must build while
+  // every GetX controller has just been disposed (LocaleThemeService).
+  GetPage(
+    name: BaseRoute.localeTransition,
+    page: () => RoutesConfig.localeTransition,
   ),
 
   // Tours Routes

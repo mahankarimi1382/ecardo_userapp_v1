@@ -32,12 +32,12 @@ class SslPinningConfig {
   /// SHA-256 certificate pins, base64, supplied at build time.
   ///
   /// CI publishes the current pin into the build with:
-  ///   flutter build apk --dart-define=ECARDO_CERT_PIN=<pin>
+  ///   `flutter build apk --dart-define=ECARDO_CERT_PIN=<pin>`
   ///
   /// Compute a pin with (must match the runtime digest exactly):
-  ///   openssl s_client -connect ecardo.ir:443 -servername ecardo.ir </dev/null 2>/dev/null \
-  ///     | openssl x509 -outform der \
-  ///     | openssl dgst -sha256 -binary | openssl enc -base64
+  ///   `openssl s_client -connect ecardo.ir:443 -servername ecardo.ir </dev/null 2>/dev/null` \
+  ///     | `openssl x509 -outform der` \
+  ///     | `openssl dgst -sha256 -binary | openssl enc -base64`
   ///
   /// Keep one BACKUP pin alongside the current one: rotating the certificate
   /// before the release is live bricks every installed app.
@@ -54,27 +54,70 @@ class SslPinningConfig {
     return {for (final host in pinnedHosts) host: pins};
   }
 
+  /// Checks whether [host] is one of the pinned hostnames or subdomains.
+  static bool isPinnedHost(String host) {
+    return pinnedHosts.any((h) => host == h || host.endsWith('.$h'));
+  }
+
   /// Validates the certificate against the pins for [host].
   ///
-  /// Fails CLOSED: a pinned host with no configured pin is rejected. That is
-  /// deliberate — an unconfigured pin means the build supplied none, and
-  /// accepting the connection there is the hole this class existed to close.
+  /// Fails CLOSED: a pinned host with no configured pin or missing certificate
+  /// data is rejected. That is deliberate — an unconfigured pin or missing cert
+  /// means the connection cannot be verified, and accepting the connection there
+  /// is the hole this class existed to close.
+  ///
+  /// NET-FIX (RC1 relief): the fail-closed rule stays for RELEASE builds,
+  /// but debug builds are allowed through with a loud warning. A local
+  /// `flutter run` without --dart-define=ECARDO_CERT_PIN used to reject
+  /// EVERY request to ecardo.ir, surfacing as endless "network errors"
+  /// during development while release builds (CI supplies the pin) were
+  /// unaffected. Platform trust still applies in debug — this only skips
+  /// the extra pin check, it does not accept untrusted certificates.
   static bool validateCertificate(
     List<int>? certDer,
-    String host,
-  ) {
-    if (!isPinningEnabled || certDer == null || certDer.isEmpty) {
+    String host, {
+    bool allowDebugWithoutPin = false,
+  }) {
+    if (!isPinningEnabled) {
       return true;
     }
 
-    final isPinnedHost =
-        pinnedHosts.any((h) => host == h || host.endsWith('.$h'));
-    if (!isPinnedHost) {
+    if (!isPinnedHost(host)) {
       return true; // Not a pinned host — system trust store decides.
     }
 
-    final pins = expectedCertificateHashes[host] ?? const <String>[];
+    // Pinned host: Missing or empty certificate data MUST fail closed.
+    if (certDer == null || certDer.isEmpty) {
+      if (allowDebugWithoutPin && kDebugMode) {
+        debugPrint(
+          '⚠️ [SECURITY-DEBUG] Certificate data missing for pinned host $host — '
+          'ALLOWED in debug (system trust only).',
+        );
+        return true;
+      }
+      debugPrint(
+        '🚨 [SECURITY] Certificate data missing for pinned host: $host — REJECTED.',
+      );
+      return false;
+    }
+
+    final matchedApex = pinnedHosts.firstWhere(
+      (h) => host == h || host.endsWith('.$h'),
+      orElse: () => host,
+    );
+    final pins = expectedCertificateHashes[host] ??
+        expectedCertificateHashes[matchedApex] ??
+        const <String>[];
     if (pins.isEmpty) {
+      if (allowDebugWithoutPin && kDebugMode) {
+        debugPrint(
+          '⚠️ [SECURITY-DEBUG] No certificate pin configured for $host — '
+          'ALLOWED in debug (system trust only).\n'
+          '   Release builds fail closed. Build with '
+          '--dart-define=ECARDO_CERT_PIN=<base64 sha256 of cert DER>.',
+        );
+        return true;
+      }
       debugPrint(
         '🚨 [SECURITY] No certificate pin configured for $host — REJECTED.\n'
         '   Build with --dart-define=ECARDO_CERT_PIN=<base64 sha256 of cert DER>.',

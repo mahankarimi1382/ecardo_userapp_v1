@@ -8,13 +8,25 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 
-/// Language switch regression (v1.0.124).
+/// Language switch regression (v1.0.125).
 ///
-/// Earlier versions ran `Get.offAllNamed(BaseRoute.root)` plus
-/// `Get.updateLocale` when the language changed. `/` is the SplashScreen and
-/// `Get.updateLocale` force-restarts the app/Navigator, so the logo and
-/// loading indicator replayed on every switch. The switch must now be applied
-/// IN PLACE: the locale and text direction change, the active route does not.
+/// History of this crash, all release-only:
+/// * v1.0.121/122 applied the locale IN PLACE. The full-tree rebuild while
+///   every live route/controller was mounted hit a Get.find for a controller
+///   whose route was mid-teardown — "controller not found" (error_log #62/#63).
+/// * v1.0.123 cleared the stack FIRST (crash fixed) but went to the splash
+///   route, so the splash logo replayed on every switch.
+/// * v1.0.124 went back to in-place to stop the splash replay — the crash
+///   came back with it.
+///
+/// The v1.0.125 contract (LocaleThemeService.setLanguage):
+///   1. clear the stack to the dependency-free `/locale_transition_route`
+///      waypoint (splash must NEVER be built),
+///   2. apply the locale while only that lightweight screen is mounted,
+///   3. restore the user's original route (with its arguments) under the
+///      new locale.
+/// So a switch DOES navigate — through the waypoint — but the user always
+/// ends on the route they started from, and the splash never replays.
 ///
 /// The route table is a minimal stand-in: the real SplashBinding (network,
 /// plugins, FCM, biometrics) must never run inside a unit test. A `/` route is
@@ -100,6 +112,10 @@ void main() {
               page: () => const _Probe(name: 'splash'),
             ),
             GetPage(
+              name: BaseRoute.localeTransition,
+              page: () => const _Probe(name: 'localeTransition'),
+            ),
+            GetPage(
               name: startRoute,
               page: () => _Probe(key: startKey, name: 'start'),
             ),
@@ -120,31 +136,38 @@ void main() {
   Locale currentWidgetLocale() =>
       Localizations.localeOf(startKey.currentContext!);
 
+  /// Drives the fake clock through the waypoint sequence: offAllNamed +
+  /// first endOfFrame → 400 ms waypoint delay → apply → restore route.
   Future<void> switchLanguage(
     WidgetTester tester,
     LocaleThemeService service,
     String code,
   ) async {
-    await service.setLanguage(code);
+    final switching = service.setLanguage(code);
+    await tester.pump(); // offAllNamed → waypoint, first endOfFrame settles
+    await tester
+        .pump(const Duration(milliseconds: 450)); // fire the 400 ms delay
+    await tester.pumpAndSettle(); // apply + restore navigation settles
+    await switching;
     await tester.pumpAndSettle();
   }
 
-  void expectStayedOnActiveRoute() {
+  void expectRestoredActiveRoute() {
     expect(
       Get.currentRoute,
       startRoute,
-      reason: 'a language switch must not navigate (no re-root to splash)',
+      reason: 'the language switch must return the user to the route they '
+          'started from (via the locale-transition waypoint)',
     );
     expect(
-      _Probe.built,
-      ['start'],
-      reason: 'splash must not be built and the active screen must not be '
-          'recreated by a language switch',
+      _Probe.built.contains('splash'),
+      isFalse,
+      reason: 'the SplashScreen must never be built by a language switch',
     );
   }
 
   testWidgets(
-    'setLanguage applies locale + RTL in place, persists, and keeps the route',
+    'setLanguage applies locale + RTL via the waypoint, restores the route, persists',
     (tester) async {
       final service = await pumpLanguageApp(tester);
       expect(currentWidgetLocale(), const Locale('en'));
@@ -157,7 +180,13 @@ void main() {
       expect(Get.locale, const Locale('fa'));
       expect(currentWidgetLocale(), const Locale('fa'));
       expect(currentDirection(), TextDirection.rtl);
-      expectStayedOnActiveRoute();
+      expectRestoredActiveRoute();
+      expect(
+        _Probe.built,
+        containsAllInOrder(['start', 'localeTransition', 'start']),
+        reason: 'the switch must clear the stack to the waypoint and then '
+            'recreate the active screen under the new locale',
+      );
       expect(
         await SettingsService.getLanguageLocaleCurrentState(),
         'fa',
@@ -174,26 +203,41 @@ void main() {
 
     expect(service.locale.value, const Locale('en'));
     expect(currentDirection(), TextDirection.ltr);
-    expectStayedOnActiveRoute();
+    expectRestoredActiveRoute();
+    expect(_Probe.built, ['start'],
+        reason: 'an unsupported code must not navigate at all');
     expect(await SettingsService.getLanguageLocaleCurrentState(), isNull);
   });
 
   testWidgets(
-    'en→fa→en round-trip flips direction each time without navigating',
+    'setLanguage is a no-op when the requested locale is already active',
+    (tester) async {
+      final service = await pumpLanguageApp(tester);
+
+      await switchLanguage(tester, service, 'en');
+
+      expect(_Probe.built, ['start'],
+          reason: 're-selecting the active language must not rebuild anything');
+      expectRestoredActiveRoute();
+    },
+  );
+
+  testWidgets(
+    'en→fa→en round-trip flips direction each time and always comes back',
     (tester) async {
       final service = await pumpLanguageApp(tester);
 
       await switchLanguage(tester, service, 'fa');
       expect(service.locale.value, const Locale('fa'));
       expect(currentDirection(), TextDirection.rtl);
-      expectStayedOnActiveRoute();
+      expectRestoredActiveRoute();
       expect(await SettingsService.getLanguageLocaleCurrentState(), 'fa');
 
       await switchLanguage(tester, service, 'en');
       expect(service.locale.value, const Locale('en'));
       expect(Get.locale, const Locale('en'));
       expect(currentDirection(), TextDirection.ltr);
-      expectStayedOnActiveRoute();
+      expectRestoredActiveRoute();
       expect(await SettingsService.getLanguageLocaleCurrentState(), 'en');
     },
   );
@@ -213,7 +257,7 @@ void main() {
       expect(Get.locale, const Locale('fa'));
       expect(currentWidgetLocale(), const Locale('fa'));
       expect(currentDirection(), TextDirection.rtl);
-      expectStayedOnActiveRoute();
+      expectRestoredActiveRoute();
       expect(await SettingsService.getLanguageLocaleCurrentState(), 'fa');
     },
   );

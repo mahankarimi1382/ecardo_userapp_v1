@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 
@@ -972,7 +971,7 @@ class _HotelLightboxScreenState extends State<_HotelLightboxScreen> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: isCurrent
-                                ? const Color(0xFF37A890)
+                                ? ECardoTokens.brand500(context)
                                 : Colors.transparent,
                             width: 2.w,
                           ),

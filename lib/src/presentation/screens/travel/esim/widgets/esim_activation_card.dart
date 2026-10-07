@@ -239,7 +239,6 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
         widget.confirmationCode!.trim().toLowerCase() != 'none';
     final isDark = TravelTheme.isDark(context);
     final cardBg = TravelTheme.cardSurfaceFor(context);
-    final chipBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA);
     final trackBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0F2F5);
 
     return Container(

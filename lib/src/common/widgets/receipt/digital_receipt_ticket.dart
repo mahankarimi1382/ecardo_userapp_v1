@@ -570,18 +570,7 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
         return;
       }
 
-      final image = await boundary.toImage(pixelRatio: 3.0);
-      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      image.dispose();
-      if (byteData == null) return;
-
-      final tempDir = await getTemporaryDirectory();
       final tnx = widget.transactionId ?? 'tx';
-      final file = File(
-        '${tempDir.path}/ecardo_receipt_${tnx}_${DateTime.now().millisecondsSinceEpoch}.png',
-      );
-      await file.writeAsBytes(byteData.buffer.asUint8List());
-
       final shareText = l10nPick(
         context,
         en: 'eCardo Digital Receipt - ${widget.title} ($tnx)',
@@ -589,6 +578,17 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
         ar: 'إيصال eCardo الرقمي - ${widget.title} ($tnx)',
         zh: 'eCardo 电子凭证 - ${widget.title} ($tnx)',
       );
+
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
+      if (byteData == null) return;
+
+      final tempDir = await getTemporaryDirectory();
+      final file = File(
+        '${tempDir.path}/ecardo_receipt_${tnx}_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
+      await file.writeAsBytes(byteData.buffer.asUint8List());
 
       await SharePlus.instance.share(
         ShareParams(
@@ -629,6 +629,14 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
       final locale = Localizations.localeOf(context);
       final isRtl = const {'fa', 'ar'}.contains(locale.languageCode);
 
+      final String statusText = switch (widget.status) {
+        ReceiptStatus.success => l10nPick(context, en: 'SUCCESS', fa: 'موفق', ar: 'ناجح', zh: '成功'),
+        ReceiptStatus.pending => l10nPick(context, en: 'PENDING', fa: 'در انتظار', ar: 'قيد الانتظار', zh: '处理中'),
+        ReceiptStatus.failed => l10nPick(context, en: 'FAILED', fa: 'ناموفق', ar: 'فشل', zh: '失败'),
+      };
+      final allRows = _collectAllRows(context);
+      final formattedDate = _resolveDateTimeString(context);
+
       final fontAsset = switch (locale.languageCode) {
         'fa' || 'ar' => 'assets/fonts/Vazirmatn-Regular.ttf',
         'ru' || 'zh' => 'assets/fonts/NotoSans-Regular.ttf',
@@ -656,16 +664,9 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
         ReceiptStatus.pending => PdfColor.fromInt(0xFFFFF8E1),
         ReceiptStatus.failed => PdfColor.fromInt(0xFFFDECEA),
       };
-      final String statusText = switch (widget.status) {
-        ReceiptStatus.success => l10nPick(context, en: 'SUCCESS', fa: 'موفق', ar: 'ناجح', zh: '成功'),
-        ReceiptStatus.pending => l10nPick(context, en: 'PENDING', fa: 'در انتظار', ar: 'قيد الانتظار', zh: '处理中'),
-        ReceiptStatus.failed => l10nPick(context, en: 'FAILED', fa: 'ناموفق', ar: 'فشل', zh: '失败'),
-      };
 
-      final allRows = _collectAllRows(context);
       final qrData = jsonEncode(widget.qrPayload ?? _buildDefaultQrPayload());
       final tnx = widget.transactionId ?? '';
-      final formattedDate = _resolveDateTimeString(context);
 
       doc.addPage(
         pw.Page(

@@ -33,7 +33,7 @@ class MultipleImagePickerController extends GetxController {
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: localization!.multipleImagePickerGalleryError,
+        msg: localization?.multipleImagePickerGalleryError ?? 'Gallery access error',
         backgroundColor: AppColors.error,
       );
     }
@@ -51,7 +51,7 @@ class MultipleImagePickerController extends GetxController {
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: localization!.multipleImagePickerCameraError,
+        msg: localization?.multipleImagePickerCameraError ?? 'Camera access error',
         backgroundColor: AppColors.error,
       );
     }
