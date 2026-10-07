@@ -36,6 +36,19 @@ class SessionManager extends GetxService {
     required bool isForeground,
     String? message,
   }) async {
+    // If the user is on the sign-in, splash, or welcome screen, background 401s
+    // (e.g. from setup-fcm or background pollers) are expected and must NEVER
+    // wipe newly minted login credentials or show expired session dialogs!
+    final route = Get.currentRoute;
+    if (route == BaseRoute.signIn ||
+        route == BaseRoute.welcome ||
+        route == BaseRoute.splash) {
+      if (kDebugMode) {
+        debugPrint('🛡️ SessionManager: ignoring 401 on auth route $route');
+      }
+      return;
+    }
+
     // Fast path: already handling → wait for the in-flight operation
     if (_isHandling) {
       await _inFlight?.future;

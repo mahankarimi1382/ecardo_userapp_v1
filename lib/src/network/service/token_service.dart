@@ -68,24 +68,28 @@ class TokenService extends GetxService {
 
   /// Save the access token to secure storage.
   Future<bool> saveAccessToken(String token) async {
+    // 1. Immediately update reactive memory cache so subsequent requests
+    // have the token right away without waiting on native platform channel
+    accessToken.value = token;
     try {
       await _secureStorage.write(key: accessTokenKey, value: token);
-      accessToken.value = token;
       if (kDebugMode) {
         debugPrint('🔑 TokenService: token saved securely');
       }
       return true;
     } catch (e) {
       debugPrint('🔑 TokenService: failed to save token: $e');
+      // Token is still preserved in memory for the active session
+      accessToken.value = token;
       return false;
     }
   }
 
   /// Clear the access token (logout).
   Future<bool> clearToken() async {
+    accessToken.value = null;
     try {
       await _secureStorage.delete(key: accessTokenKey);
-      accessToken.value = null;
       if (kDebugMode) {
         debugPrint('🔑 TokenService: token cleared');
       }

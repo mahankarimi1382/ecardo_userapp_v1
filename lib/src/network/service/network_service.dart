@@ -240,6 +240,19 @@ class NetworkService extends getx.GetxService {
         onError: (DioException error, handler) async {
           _releaseIdempotencyKey(error.requestOptions);
           if (error.response?.statusCode == 401) {
+            // Do NOT attempt token refresh for login/auth/fcm or unauthenticated endpoints
+            final path = error.requestOptions.uri.path;
+            final isUnauthenticatedFlow = path.contains('/auth/user/login') ||
+                path.contains('/auth/user/login-otp') ||
+                path.contains('/auth/user/register') ||
+                path.contains('/auth/user/refresh') ||
+                path.contains('/setup-fcm');
+
+            final currentToken = _tokenService.accessToken.value;
+            if (isUnauthenticatedFlow || currentToken == null || currentToken.isEmpty) {
+              return handler.next(error);
+            }
+
             _log("401 Unauthorized — attempting token refresh...");
 
             // v1.0.5: اگر در حال refresh هستیم، request را صف کنیم

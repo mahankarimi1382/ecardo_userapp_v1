@@ -16,8 +16,8 @@ class AppColors {
   static const Color softGray = Color(0xFF656262); /* Secondary Text / Icons */
   static const Color warmWhite = Color(0xFFE7E0DE); /* Primary Text / Light Surface */
   static const Color lightWarmGray = Color(0xFFD5CBC8); /* Borders / Dividers */
-  static const Color mainSoftBlue = Color(0xFFB79CFF); /* Primary Accent / Main Surface (soft violet) */
-  static const Color mutedBlue = Color(0xFF00BFA6); /* Secondary Accent / Cards (brand teal) */
+  static const Color mainSoftBlue = Color(0xFFABC3EA); /* Primary Accent / Main Surface (NUVO soft blue) */
+  static const Color mutedBlue = Color(0xFF849ACD); /* Secondary Accent / Cards (NUVO muted blue) */
   static const Color warmBrown = Color(0xFF87624C); /* Financial / Card Elements */
   static const Color taupeBronze = Color(0xFFB3A9A5); /* Warm Neutral / Metallic */
 
@@ -32,7 +32,7 @@ class AppColors {
   static const LinearGradient brandGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [brandViolet, brandVioletDeep],
+    colors: [lightPrimary, lightPrimaryDark],
   );
   /// Signature hero-card night gradient (balance / flagship surfaces).
   static const List<Color> heroNightGradient = [
@@ -49,14 +49,14 @@ class AppColors {
   static const Color lightSurfaceVariant = Color(0xFFF0F2F6);
   static const Color lightCard = Color(0xFFFFFFFF);
 
-  // Primary Colors (eCardo violet — texture spec)
-  static const Color lightPrimary = brandViolet;
-  static const Color lightPrimaryContainer = brandVioletContainer;
-  static const Color lightPrimaryDark = brandVioletDeep;
+  // Primary Colors (Modern Royal Fintech Blue — beloved classic palette)
+  static const Color lightPrimary = Color(0xFF2563EB);
+  static const Color lightPrimaryContainer = Color(0xFFDBEAFE);
+  static const Color lightPrimaryDark = Color(0xFF1D4ED8);
 
-  // Accent / Secondary (brand teal)
+  // Accent / Secondary
   static const Color lightSecondary = mutedBlue;
-  static const Color lightSecondaryContainer = Color(0xFFE0F8F5);
+  static const Color lightSecondaryContainer = Color(0xFFEBF1FA);
   static const Color lightAccent = mainSoftBlue;
 
   // Text Colors
@@ -96,13 +96,13 @@ class AppColors {
   // ------------------ DARK THEME ------------------
   static const Color darkBackground = deepBlack;
   static const Color darkSurface = darkGray;
-  static const Color darkSurfaceVariant = Color(0xFF322F3A);
+  static const Color darkSurfaceVariant = Color(0xFF323230);
   static const Color darkCard = darkGray;
   static const Color darkPrimary = mainSoftBlue;
-  static const Color darkPrimaryContainer = Color(0xFF2B2159);
+  static const Color darkPrimaryContainer = Color(0xFF1E2E42);
   static const Color darkPrimaryDark = deepBlack;
   static const Color darkSecondary = mutedBlue;
-  static const Color darkSecondaryContainer = Color(0xFF0E3A34);
+  static const Color darkSecondaryContainer = Color(0xFF263345);
   static const Color darkAccent = mainSoftBlue;
   static const Color darkTextPrimary = warmWhite;
   static const Color darkTextSecondary = softGray;
