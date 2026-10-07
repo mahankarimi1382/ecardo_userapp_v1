@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -244,7 +245,7 @@ class SignInController extends GetxController {
         return;
       }
       try {
-        await FirebaseMessagingService.instance().registerTokenWithBackend();
+        unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
       } catch (_) {}
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.userEndpoint,
@@ -294,22 +295,19 @@ class SignInController extends GetxController {
             await settingsService.saveBiometricEnableOrDisable(true);
           }
         } catch (_) {}
+
+        // Immediate user profile retrieval and routing to dashboard:
+        await fetchUser(useBiometric: useBiometric);
+
+        // Non-blocking background operations after auth completes:
+        unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
+        unawaited(refreshBiometricButton());
         if (Get.isRegistered<PermissionFlowService>()) {
-          await Get.find<PermissionFlowService>().requestNotification(
+          unawaited(Get.find<PermissionFlowService>().requestNotification(
             context: Get.context,
             explain: true,
-          );
+          ));
         }
-
-        try {
-          await _offerSecuritySetup();
-        } catch (_) {}
-        await postFcmNotification(
-          email: email,
-          password: password,
-          useBiometric: useBiometric,
-        );
-        await refreshBiometricButton();
       } else {
         _handleLoginFailure(response.message);
       }
@@ -425,8 +423,6 @@ class SignInController extends GetxController {
     } catch (e, s) {
       debugPrint('❌ postFcmNotification() error: $e');
       debugPrint('📍 StackTrace: $s');
-    } finally {
-      await fetchUser(useBiometric: useBiometric);
     }
   }
 
@@ -437,7 +433,7 @@ class SignInController extends GetxController {
     isPasswordFocused.value = false;
   }
 
-  Future<void> _offerSecuritySetup() async {
+  Future<void> offerSecuritySetup() async {
     try {
       if (!Get.isRegistered<AppLockService>()) return;
       final lock = Get.find<AppLockService>();
