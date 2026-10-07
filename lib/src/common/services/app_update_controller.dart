@@ -244,6 +244,9 @@ class AppUpdateController extends GetxController {
     if (apiData != null) {
       server = (apiData['version'] ?? '').toString().trim();
       link = (apiData['update_url'] ?? '').toString().trim();
+      forceUpdate.value = apiData['force_update'] == true ||
+          apiData['force_update'] == 1 ||
+          apiData['force_update'] == '1';
       if (apiData['sha256'] != null) {
         serverSha256.value = apiData['sha256'].toString().trim();
       }
@@ -253,6 +256,8 @@ class AppUpdateController extends GetxController {
       final settings = Get.find<SettingsService>();
       server = settings.getSetting(config.settingKeyVersion) ?? '';
       link = settings.getSetting(config.settingKeyUpdateLink) ?? '';
+      forceUpdate.value =
+          settings.getSetting(config.settingKeyForceUpdate) == '1';
     }
 
     if (server.isEmpty || link.isEmpty) return false;
