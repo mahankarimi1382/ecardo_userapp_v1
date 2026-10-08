@@ -17,6 +17,7 @@ class KycLevelController extends GetxController {
   final NetworkService _networkService = Get.find<NetworkService>();
   final RxBool isLoading = false.obs;
   final RxBool isSubmitting = false.obs;
+  final RxDouble uploadProgress = 0.0.obs;
   final RxList<KycLevel> levels = <KycLevel>[].obs;
   final Rxn<KycStatus> status = Rxn<KycStatus>();
   final Rxn<KycBadge> badge = Rxn<KycBadge>();
@@ -138,11 +139,18 @@ class KycLevelController extends GetxController {
         return false;
       }
 
+      uploadProgress.value = 0.0;
       final response = await _networkService.postMultipart(
         endpoint: ApiPath.kycLevelSubmitEndpoint,
         data: formData,
+        onSendProgress: (sent, total) {
+          if (total > 0) {
+            uploadProgress.value = (sent / total).clamp(0.0, 1.0);
+          }
+        },
       );
       isSubmitting.value = false;
+      uploadProgress.value = 0.0;
       if (response.status == Status.completed) {
         ToastHelper().showSuccessToast(response.data?['data']?['message'] ?? 'Documents submitted.');
         await fetchStatus();

@@ -152,7 +152,11 @@ class FrontCameraTypeSection extends StatelessWidget {
                                 if (file != null) {
                                   controller.fieldFiles[field.name ?? ""] =
                                       file;
-                                  Get.to(() => const KycSubmissionSection());
+                                  if (context.mounted && Navigator.canPop(context)) {
+                                    Navigator.pop(context, file);
+                                  } else {
+                                    Get.to(() => const KycSubmissionSection());
+                                  }
                                 }
                               },
                             ),

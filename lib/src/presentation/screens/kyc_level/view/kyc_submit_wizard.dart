@@ -457,13 +457,29 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             ),
             child: Obx(
               () => controller.isSubmitting.value
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: isDark ? AppColors.deepBlack : AppColors.white,
-                        strokeWidth: 2,
-                      ),
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            color: isDark ? AppColors.deepBlack : AppColors.white,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                        if (controller.uploadProgress.value > 0) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            '${(controller.uploadProgress.value * 100).toInt()}%',
+                            style: AppTextStyles.labelMedium.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.deepBlack : AppColors.white,
+                            ),
+                          ),
+                        ],
+                      ],
                     )
                   : Text(
                       isLastStep

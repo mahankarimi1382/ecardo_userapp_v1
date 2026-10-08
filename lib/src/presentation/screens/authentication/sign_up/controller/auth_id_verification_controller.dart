@@ -24,6 +24,7 @@ class AuthIdVerificationController extends GetxController {
 
   // Global Variable
   final RxBool isLoading = false.obs;
+  final RxDouble uploadProgress = 0.0.obs;
   final RxInt currentFieldIndex = 0.obs;
   final RxString kycId = "".obs;
   final RxList<Fields> fields = <Fields>[].obs;
@@ -95,10 +96,16 @@ class AuthIdVerificationController extends GetxController {
         }
       }
 
+      uploadProgress.value = 0.0;
       // Route through NetworkService.postMultipart (timeouts + interceptors + error toasts).
       final response = await Get.find<NetworkService>().postMultipart(
         endpoint: ApiPath.userKycEndpoint,
         data: formData,
+        onSendProgress: (sent, total) {
+          if (total > 0) {
+            uploadProgress.value = (sent / total).clamp(0.0, 1.0);
+          }
+        },
       );
 
       if (response.status == Status.completed) {
@@ -125,12 +132,14 @@ class AuthIdVerificationController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+      uploadProgress.value = 0.0;
     }
   }
 
   // Reset Fields
   void resetFields() {
     currentFieldIndex.value = 0;
+    uploadProgress.value = 0.0;
     fields.clear();
     fieldFiles.clear();
     skippedFields.clear();

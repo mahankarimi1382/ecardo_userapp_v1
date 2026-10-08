@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 
 class FrontCameraCapture extends StatefulWidget {
   final String fieldName;
@@ -48,9 +48,12 @@ class _FrontCameraCaptureState extends State<FrontCameraCapture> {
     }
   }
 
-  void onCapture(String filePath) {
-    File file = File(filePath);
-    Navigator.pop(Get.context!, file);
+  Future<void> onCapture(String filePath) async {
+    if (!mounted) return;
+    final file = File(filePath);
+    final compressed = await UploadHelper.compressImageIfNeeded(file);
+    if (!mounted) return;
+    Navigator.of(context).pop(compressed);
   }
 
   Future<void> _pickWithSystemCamera() async {
@@ -60,9 +63,11 @@ class _FrontCameraCaptureState extends State<FrontCameraCapture> {
         source: ImageSource.camera,
         preferredCameraDevice: CameraDevice.front,
         imageQuality: 85,
+        maxWidth: 1920,
+        maxHeight: 1080,
       );
       if (picked != null) {
-        onCapture(picked.path);
+        await onCapture(picked.path);
       }
     } catch (e) {
       debugPrint('System front camera pick error: $e');
@@ -75,9 +80,11 @@ class _FrontCameraCaptureState extends State<FrontCameraCapture> {
       final picked = await picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 85,
+        maxWidth: 1920,
+        maxHeight: 1080,
       );
       if (picked != null) {
-        onCapture(picked.path);
+        await onCapture(picked.path);
       }
     } catch (e) {
       debugPrint('Gallery pick error: $e');

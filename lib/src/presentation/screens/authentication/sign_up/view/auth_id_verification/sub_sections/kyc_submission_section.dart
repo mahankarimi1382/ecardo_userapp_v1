@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.da
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/back_camera_capture.dart';
@@ -115,12 +116,66 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                 ],
               );
             }),
-            Obx(
-              () => Visibility(
-                visible: controller.isLoading.value,
-                child: CommonLoading(),
-              ),
-            ),
+            Obx(() {
+              if (!controller.isLoading.value) return const SizedBox.shrink();
+              final progress = controller.uploadProgress.value;
+              return Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: AppColors.black.withValues(alpha: 0.35),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
+                    margin: const EdgeInsets.symmetric(horizontal: 36),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.black.withValues(alpha: 0.15),
+                          blurRadius: 20,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CommonLoading(size: 40),
+                        const SizedBox(height: 16),
+                        Text(
+                          progress > 0
+                              ? '${(progress * 100).toInt()}% ${l10nPickAuto(en: 'Uploaded', fa: 'بارگذاری شد')}'
+                              : l10nPickAuto(
+                                  en: 'Optimizing & uploading documents...',
+                                  fa: 'در حال فشرده‌سازی و بارگذاری مدارک...',
+                                ),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                          ),
+                        ),
+                        if (progress > 0) ...[
+                          const SizedBox(height: 12),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: LinearProgressIndicator(
+                              value: progress,
+                              minHeight: 6,
+                              backgroundColor: AppColors.lightBorder,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -282,6 +337,7 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                       file,
                       width: double.infinity,
                       fit: BoxFit.fitWidth,
+                      cacheWidth: 800,
                     ),
                   ),
                 ),

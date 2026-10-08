@@ -147,7 +147,11 @@ class FileTypeSection extends StatelessWidget {
                                 final file =
                                     controller.fieldFiles[field.name ?? ""];
                                 if (file != null) {
-                                  Get.to(() => const KycSubmissionSection());
+                                  if (context.mounted && Navigator.canPop(context)) {
+                                    Navigator.pop(context, file);
+                                  } else {
+                                    Get.to(() => const KycSubmissionSection());
+                                  }
                                 }
                               },
                             ),

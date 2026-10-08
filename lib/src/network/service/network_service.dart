@@ -796,6 +796,7 @@ class NetworkService extends getx.GetxService {
     required String endpoint,
     required FormData data,
     bool isForeground = true,
+    ProgressCallback? onSendProgress,
   }) async {
     // Demo Mode Upload Bypass
     if (_demoInterceptionAllowed) {
@@ -812,18 +813,18 @@ class NetworkService extends getx.GetxService {
     _log('📦 POST (multipart) Fields: ${data.fields.length}, Files: ${data.files.length}');
 
     try {
-      // Pass the FormData with explicit multipart boundary and extended timeouts
-      // so large uploads don't abort with premature timeout or inherit application/json.
+      // Allow Dio to handle Content-Type and multipart boundary generation natively.
+      // Manually setting boundary or contentType causes header stripping in Dio interceptors
+      // and conflicts with Nginx/Cloudflare body parsing. Extended timeout for mobile stability.
       final response = await _dio.post(
         endpoint,
         data: data,
+        onSendProgress: onSendProgress,
         options: Options(
-          contentType: 'multipart/form-data',
-          sendTimeout: const Duration(seconds: 120),
-          receiveTimeout: const Duration(seconds: 120),
+          sendTimeout: const Duration(seconds: 180),
+          receiveTimeout: const Duration(seconds: 180),
           extra: {'isForeground': isForeground},
           headers: {
-            'Content-Type': 'multipart/form-data; boundary=${data.boundary}',
             'Accept': 'application/json',
           },
         ),
