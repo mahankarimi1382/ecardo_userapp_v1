@@ -72,12 +72,12 @@ class PermissionFlowService extends GetxService {
         ),
         body: l10nPick(
           context,
-          en: 'Al Barakat needs notification access to inform you of deposits, transfers, and security updates.',
-          fa: 'Al Barakat برای اطلاع از واریز، انتقال و به‌روزرسانی امن اپ به اعلان نیاز دارد. بدون اعلان ممکن است تراکنش‌های مهم را از دست بدهید.',
-          ar: 'يحتاج Al Barakat إلى إذن الإشعارات لإبلاغك بالإيداعات والتحويلات والتحديثات الأمنية.',
-          tr: 'Al Barakat, para yatırma, transfer ve güvenlik güncellemelerinden haberdar etmek için bildirim erişimine ihtiyaç duyar.',
-          ru: 'Al Barakat необходим доступ к уведомлениям для оповещения о переводах и обновлениях безопасности.',
-          zh: 'Al Barakat 需要通知权限以通知您存款、转账和安全更新。',
+          en: 'eCardo needs notification access to inform you of deposits, transfers, and security updates.',
+          fa: 'eCardo برای اطلاع از واریز، انتقال و به‌روزرسانی امن اپ به اعلان نیاز دارد. بدون اعلان ممکن است تراکنش‌های مهم را از دست بدهید.',
+          ar: 'يحتاج eCardo إلى إذن الإشعارات لإبلاغك بالإيداعات والتحويلات والتحديثات الأمنية.',
+          tr: 'eCardo, para yatırma, transfer ve güvenlik güncellemelerinden haberdar etmek için bildirim erişimine ihtiyaç duyar.',
+          ru: 'eCardo необходим доступ к уведомлениям для оповещения о переводах и обновлениях безопасности.',
+          zh: 'eCardo 需要通知权限以通知您存款、转账和安全更新。',
         ),
         confirm: l10nPick(
           context,
@@ -112,12 +112,12 @@ class PermissionFlowService extends GetxService {
         ),
         body: l10nPick(
           context,
-          en: 'Enable Al Barakat notifications in phone settings.',
-          fa: 'از تنظیمات گوشی، اعلان‌های Al Barakat را فعال کنید.',
-          ar: 'من إعدادات الهاتف، فعّل إشعارات Al Barakat.',
-          tr: 'Telefon ayarlarından Al Barakat bildirimlerini etkinleştirin.',
-          ru: 'В настройках устройства включите уведомления Al Barakat.',
-          zh: '请在手机设置中开启 Al Barakat 的通知。',
+          en: 'Enable eCardo notifications in phone settings.',
+          fa: 'از تنظیمات گوشی، اعلان‌های eCardo را فعال کنید.',
+          ar: 'من إعدادات الهاتف، فعّل إشعارات eCardo.',
+          tr: 'Telefon ayarlarından eCardo bildirimlerini etkinleştirin.',
+          ru: 'В настройках устройства включите уведомления eCardo.',
+          zh: '请在手机设置中开启 eCardo 的通知。',
         ),
       );
     }
@@ -173,12 +173,12 @@ class PermissionFlowService extends GetxService {
         ),
         body: l10nPick(
           context,
-          en: 'Enable Al Barakat camera access in system settings.',
-          fa: 'از تنظیمات سیستم، دسترسی دوربین Al Barakat را باز کنید.',
-          ar: 'من إعدادات النظام، اسمح لـ Al Barakat بالوصول إلى الكاميرا.',
-          tr: 'Sistem ayarlarından Al Barakat kamera erişimini açın.',
-          ru: 'В настройках системы разрешите доступ к камере для Al Barakat.',
-          zh: '请在系统设置中允许 Al Barakat 使用相机。',
+          en: 'Enable eCardo camera access in system settings.',
+          fa: 'از تنظیمات سیستم، دسترسی دوربین eCardo را باز کنید.',
+          ar: 'من إعدادات النظام، اسمح لـ eCardo بالوصول إلى الكاميرا.',
+          tr: 'Sistem ayarlarından eCardo kamera erişimini açın.',
+          ru: 'В настройках системы разрешите доступ к камере для eCardo.',
+          zh: '请在系统设置中允许 eCardo 使用相机。',
         ),
       );
     }

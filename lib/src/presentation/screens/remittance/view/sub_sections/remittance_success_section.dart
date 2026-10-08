@@ -66,7 +66,7 @@ class _Info extends StatelessWidget {
   Widget build(BuildContext context) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text(label, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
         SizedBox(width: 12.w),
-        Expanded(child: Text(value, textAlign: TextAlign.right, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary, fontWeight: FontWeight.w600))),
+        Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary, fontWeight: FontWeight.w600))),
       ]);
 }
 

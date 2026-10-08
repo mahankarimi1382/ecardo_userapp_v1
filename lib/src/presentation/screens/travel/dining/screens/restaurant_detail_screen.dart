@@ -426,7 +426,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       if (item.isHalal)
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                          margin: EdgeInsets.only(left: 6.w),
+                          margin: EdgeInsetsDirectional.only(start: 6.w),
                           decoration: BoxDecoration(
                             color: AppColors.success.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(4.r),

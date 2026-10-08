@@ -1,4 +1,5 @@
 ﻿import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'package:ecardo_user/src/common/services/offline_cache_service.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -65,6 +66,8 @@ class HomeController extends GetxController {
   final Rx<TransactionsModel> transactionsModel = TransactionsModel().obs;
   final RxInt selectedIndex = 0.obs;
   final RxBool isSettingsInitialized = false.obs;
+  /// When non-null, the dashboard is showing cached/stale data from this timestamp
+  final Rxn<DateTime> staleCachedAt = Rxn<DateTime>();
   /// v1.0.43 (P-4 pattern — CRITICAL crash fix): the constructor-time
   /// `AppLocalizations.of(Get.context!)!` threw when the controller was
   /// built without a localization context (cold-start timing) — taking the
@@ -154,6 +157,7 @@ class HomeController extends GetxController {
   Future<void> loadData() async {
     isLoading.value = true;
     loadError.value = '';
+    staleCachedAt.value = null; // Clear stale banner when refreshing
     if (Get.find<SettingsService>().getSetting("language_switcher") == "1") {
       _setInitialLanguage();
     }
@@ -291,10 +295,29 @@ Future<void> changeLanguage(String languageCode) async {
       );
       if (response.status == Status.completed) {
         userModel.value = UserModel.fromJson(response.data!);
+        // Cache successful response
+        if (Get.isRegistered<OfflineCacheService>()) {
+          await Get.find<OfflineCacheService>().put(
+            OfflineCacheService.kProfile,
+            response.data!,
+          );
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      // Try loading from cache on error
+      if (Get.isRegistered<OfflineCacheService>()) {
+        final cacheResult = await Get.find<OfflineCacheService>().getWithMeta(
+          OfflineCacheService.kProfile,
+        );
+        if (cacheResult.data != null) {
+          debugPrint('📦 [OfflineCache] Loading user profile from cache');
+          userModel.value = UserModel.fromJson(cacheResult.data!);
+          staleCachedAt.value = cacheResult.cachedAt;
+          return;
+        }
+      }
       ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
     } finally {}
   }
@@ -310,6 +333,13 @@ Future<void> changeLanguage(String languageCode) async {
         final walletsModel = WalletsModel.fromJson(response.data!);
         walletsList.clear();
         walletsList.value = walletsModel.data!.wallets ?? [];
+        // Cache successful response
+        if (Get.isRegistered<OfflineCacheService>()) {
+          await Get.find<OfflineCacheService>().put(
+            OfflineCacheService.kWallets,
+            response.data!,
+          );
+        }
         // Refresh live FX for wallet ≈ chips (non-blocking).
         if (Get.isRegistered<WalletLiveRateService>()) {
           // ignore: unawaited_futures
@@ -319,6 +349,20 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      // Try loading from cache on error
+      if (Get.isRegistered<OfflineCacheService>()) {
+        final cacheResult = await Get.find<OfflineCacheService>().getWithMeta(
+          OfflineCacheService.kWallets,
+        );
+        if (cacheResult.data != null) {
+          debugPrint('📦 [OfflineCache] Loading wallets from cache');
+          final walletsModel = WalletsModel.fromJson(cacheResult.data!);
+          walletsList.clear();
+          walletsList.value = walletsModel.data!.wallets ?? [];
+          staleCachedAt.value = cacheResult.cachedAt;
+          return; // Don't show error toast if we have cached data
+        }
+      }
       ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
     } finally {}
   }
@@ -332,10 +376,29 @@ Future<void> changeLanguage(String languageCode) async {
 
       if (response.status == Status.completed) {
         transactionsModel.value = TransactionsModel.fromJson(response.data!);
+        // Cache successful response
+        if (Get.isRegistered<OfflineCacheService>()) {
+          await Get.find<OfflineCacheService>().put(
+            OfflineCacheService.kTransactions,
+            response.data!,
+          );
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      // Try loading from cache on error
+      if (Get.isRegistered<OfflineCacheService>()) {
+        final cacheResult = await Get.find<OfflineCacheService>().getWithMeta(
+          OfflineCacheService.kTransactions,
+        );
+        if (cacheResult.data != null) {
+          debugPrint('📦 [OfflineCache] Loading transactions from cache');
+          transactionsModel.value = TransactionsModel.fromJson(cacheResult.data!);
+          staleCachedAt.value = cacheResult.cachedAt;
+          return; // Don't show error toast if we have cached data
+        }
+      }
       ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
     } finally {}
   }
@@ -360,6 +423,10 @@ Future<void> changeLanguage(String languageCode) async {
     } finally {
       try {
         await Get.find<SettingsService>().wipeSession();
+        // Clear offline cache on logout
+        if (Get.isRegistered<OfflineCacheService>()) {
+          await Get.find<OfflineCacheService>().clearAll();
+        }
       } catch (e) {
         debugPrint('⚠️ wipeSession error: $e');
       }

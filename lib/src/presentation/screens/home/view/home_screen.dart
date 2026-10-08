@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/bottom_sheet/common_alert_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/stale_data_banner.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/services_entry_section.dart';
@@ -165,6 +166,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         delegate: DashboardSliverHeaderDelegate(
                           topInset: MediaQuery.paddingOf(context).top,
                         ),
+                      ),
+                      // --- Stale data banner (offline cache) ---
+                      SliverToBoxAdapter(
+                        child: Obx(() {
+                          final cachedAt = homeController.staleCachedAt.value;
+                          if (cachedAt == null) return const SizedBox.shrink();
+                          return StaleDataBanner(
+                            cachedAt: cachedAt,
+                            onRetry: () => homeController.loadData(),
+                          );
+                        }),
                       ),
                       // --- TopHeader (UID only) ---
                       const SliverToBoxAdapter(child: TopHeaderSection()),

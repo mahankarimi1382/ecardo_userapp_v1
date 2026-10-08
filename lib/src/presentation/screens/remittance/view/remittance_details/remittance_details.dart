@@ -151,7 +151,7 @@ class _Row extends StatelessWidget {
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(label, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
       SizedBox(width: 12.w),
-      Expanded(child: Text(value, textAlign: TextAlign.right, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
+      Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
     ]),
   );
 }

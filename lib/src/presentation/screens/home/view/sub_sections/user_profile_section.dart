@@ -280,7 +280,7 @@ class _UidPill extends StatelessWidget {
                                 maxLines: 1,
                                 softWrap: false,
                                 textDirection: TextDirection.ltr,
-                                textAlign: TextAlign.left,
+                                textAlign: TextAlign.start,
                                 style: style,
                               ),
                             ),

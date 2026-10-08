@@ -99,7 +99,7 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
             ),
           ),
           child: Stack(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             children: [
               // Filled track progress
               Container(

@@ -249,16 +249,16 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
               Color(0xFF263345),
               AppColors.mainSoftBlue,
             ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+            begin: AlignmentDirectional.centerStart,
+            end: AlignmentDirectional.centerEnd,
           )
         : const LinearGradient(
             colors: [
               AppColors.darkGray,
               AppColors.deepBlack,
             ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+            begin: AlignmentDirectional.centerStart,
+            end: AlignmentDirectional.centerEnd,
           );
 
     final resolvedGradient = widget.activeGradient ?? defaultGradient;
@@ -266,7 +266,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     final fillWidth = (thumbSize + 8.0 + _dragPosition).clamp(0.0, totalWidth);
 
     return Stack(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       children: [
         // 1. Outer Track Container
         Container(

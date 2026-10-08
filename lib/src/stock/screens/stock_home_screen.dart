@@ -455,7 +455,7 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                             : ECardoTokens.danger(context).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                       ),
-                      alignment: Alignment.centerRight,
+                      alignment: AlignmentDirectional.centerEnd,
                       child: Text(
                         '${isPos ? '+' : ''}\$${pnlUsd.toStringAsFixed(1)} (${pnlPct.toStringAsFixed(2)}%)',
                         maxLines: 1,

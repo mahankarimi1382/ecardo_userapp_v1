@@ -16,6 +16,7 @@ import 'package:ecardo_user/src/common/services/notification_history_service.dar
 import 'package:ecardo_user/src/common/services/app_badge_service.dart';
 import 'package:ecardo_user/src/common/services/client_error_reporter.dart';
 import 'package:ecardo_user/src/common/services/offline_request_queue.dart';
+import 'package:ecardo_user/src/common/services/offline_cache_service.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
@@ -182,6 +183,7 @@ Future<void> _initializeServices() async {
   Get.put<NotificationHistoryService>(NotificationHistoryService(), permanent: true);
   Get.put<AppBadgeService>(AppBadgeService(), permanent: true);
   Get.put<OfflineRequestQueue>(OfflineRequestQueue(), permanent: true);
+  Get.put<OfflineCacheService>(OfflineCacheService(), permanent: true);
   await Get.putAsync<AppLockService>(() async => AppLockService().init(), permanent: true);
   await Get.putAsync<LocaleThemeService>(() async => LocaleThemeService().init(), permanent: true);
   Future.microtask(() => Get.find<OfflineRequestQueue>().init());

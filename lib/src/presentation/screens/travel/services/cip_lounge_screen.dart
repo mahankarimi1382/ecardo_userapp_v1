@@ -840,7 +840,7 @@ class _CipLoungeReservationScreenState
           SizedBox(height: 4.h),
           ..._validationErrors.map(
             (error) => Padding(
-              padding: EdgeInsets.only(left: 26.w, top: 2.h),
+              padding: EdgeInsetsDirectional.only(start: 26.w, top: 2.h),
               child: Text(
                 '• $error',
                 style: TextStyle(

@@ -1056,7 +1056,7 @@ class _ConfirmationStopTimeline extends StatelessWidget {
               Container(
                 width: 2.w,
                 height: 14.h,
-                margin: EdgeInsets.only(left: isFirst ? 5.w : 5.w),
+                margin: EdgeInsetsDirectional.only(start: 5.w),
                 color: ECardoTokens.border(context),
               ),
           ],

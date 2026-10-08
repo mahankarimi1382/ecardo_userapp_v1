@@ -437,7 +437,7 @@ class _RateLockCountdownTimerState extends State<RateLockCountdownTimer>
               color: color.withValues(alpha: 0.16),
               borderRadius: BorderRadius.circular(widget.strokeWidth / 2),
             ),
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: FractionallySizedBox(
               widthFactor: progress,
               child: Container(

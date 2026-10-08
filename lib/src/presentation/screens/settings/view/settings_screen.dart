@@ -1338,7 +1338,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
 
   String _versionLabel() {
-    if (_version.isEmpty) return 'Al Barakat';
+    if (_version.isEmpty) return 'eCardo';
     return l10nPick(
       context,
       en: 'Version $_version',

@@ -21,12 +21,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
     final brandHeader = l10nPick(
       context,
-      en: 'Privacy Policy & Terms of Service — Al Barakat',
-      fa: 'حریم خصوصی و شرایط استفاده — Al Barakat',
-      ar: 'سياسة الخصوصية وشروط الاستخدام — Al Barakat',
-      tr: 'Gizlilik Politikası ve Kullanım Koşulları — Al Barakat',
-      ru: 'Политика конфиденциальности и условия — Al Barakat',
-      zh: '隐私政策与服务条款 — Al Barakat',
+      en: 'Privacy Policy & Terms of Service — eCardo',
+      fa: 'حریم خصوصی و شرایط استفاده — eCardo',
+      ar: 'سياسة الخصوصية وشروط الاستخدام — eCardo',
+      tr: 'Gizlilik Politikası ve Kullanım Koşulları — eCardo',
+      ru: 'Политика конфиденциальности и условия — eCardo',
+      zh: '隐私政策与服务条款 — eCardo',
     );
 
     final lastUpdated = l10nPick(
@@ -145,12 +145,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
     final sec6Body = l10nPick(
       context,
-      en: 'Using the app for unlawful activities is strictly prohibited. Users are responsible for safeguarding their password, PIN, and device. Al Barakat is not liable for unauthorized access resulting from user negligence.',
-      fa: 'استفاده از اپ برای فعالیت غیرقانونی ممنوع است. مسئولیت حفظ رمز، PIN و دستگاه با کاربر است. Al Barakat در قبال دسترسی غیرمجاز ناشی از سهل‌انگاری کاربر مسئول نیست.',
-      ar: 'يُحظر تماماً استخدام التطبيق لأي أنشطة غير قانونية. يتحمل المستخدم المسؤولية الكاملة عن حماية كلمة المرور ورمز PIN وجهازه. لا تتحمل Al Barakat أي مسؤولية عن الوصول غير المصرح به الناتج عن إهمال المستخدم.',
-      tr: 'Uygulamanın yasa dışı faaliyetler için kullanılması kesinlikle yasaktır. Şifrenin, PIN kodunun ve cihazın güvenliğini sağlamak kullanıcının sorumluluğundadır. Al Barakat, kullanıcının ihmalinden kaynaklanan yetkisiz erişimlerden sorumlu değildir.',
-      ru: 'Использование приложения для незаконной деятельности строго запрещено. Пользователь несет личную ответственность за сохранность пароля, PIN-кода и своего устройства. Al Barakat не несет ответственности за несанкционированный доступ, возникший по вине или неосторожности пользователя.',
-      zh: '严禁使用本应用从事任何非法活动。用户须对自身密码、PIN码和设备的妥善保管负全责。因用户自身疏忽导致的任何未授权访问，Al Barakat 概不承担相关责任。',
+      en: 'Using the app for unlawful activities is strictly prohibited. Users are responsible for safeguarding their password, PIN, and device. eCardo is not liable for unauthorized access resulting from user negligence.',
+      fa: 'استفاده از اپ برای فعالیت غیرقانونی ممنوع است. مسئولیت حفظ رمز، PIN و دستگاه با کاربر است. eCardo در قبال دسترسی غیرمجاز ناشی از سهل‌انگاری کاربر مسئول نیست.',
+      ar: 'يُحظر تماماً استخدام التطبيق لأي أنشطة غير قانونية. يتحمل المستخدم المسؤولية الكاملة عن حماية كلمة المرور ورمز PIN وجهازه. لا تتحمل eCardo أي مسؤولية عن الوصول غير المصرح به الناتج عن إهمال المستخدم.',
+      tr: 'Uygulamanın yasa dışı faaliyetler için kullanılması kesinlikle yasaktır. Şifrenin, PIN kodunun ve cihazın güvenliğini sağlamak kullanıcının sorumluluğundadır. eCardo, kullanıcının ihmalinden kaynaklanan yetkisiz erişimlerden sorumlu değildir.',
+      ru: 'Использование приложения для незаконной деятельности строго запрещено. Пользователь несет личную ответственность за сохранность пароля, PIN-кода и своего устройства. eCardo не несет ответственности за несанкционированный доступ, возникший по вине или неосторожности пользователя.',
+      zh: '严禁使用本应用从事任何非法活动。用户须对自身密码、PIN码和设备的妥善保管负全责。因用户自身疏忽导致的任何未授权访问，eCardo 概不承担相关责任。',
     );
 
     final sec7Title = l10nPick(
@@ -164,12 +164,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
     final sec7Body = l10nPick(
       context,
-      en: 'These terms may be updated periodically; the latest version will always be accessible within the app.\n\nFor questions: Contact in-app support or official Al Barakat channels.',
-      fa: 'ممکن است این متن به‌روز شود؛ نسخهٔ جدید از داخل اپ در دسترس خواهد بود.\n\nبرای هرگونه پرسش: پشتیبانی داخل اپ یا کانال‌های رسمی Al Barakat.',
-      ar: 'قد يتم تحديث هذه الشروط دورياً؛ وستكون النسخة الأحدث متاحة دائماً داخل التطبيق.\n\nلأي استفسارات: يُرجى التواصل عبر الدعم داخل التطبيق أو القنوات الرسمية لـ Al Barakat.',
-      tr: 'Bu şartlar periyodik olarak güncellenebilir; en güncel sürüme her zaman uygulama içinden erişilebilir.\n\nSorularınız için: Uygulama içi destek veya resmi Al Barakat kanalları ile iletişime geçebilirsiniz.',
-      ru: 'Настоящие условия могут периодически обновляться; актуальная версия всегда доступна в приложении.\n\nПо любым вопросам: обратитесь в поддержку в приложении или официальные каналы Al Barakat.',
-      zh: '本条款可能会定期修订；最新版本将随时在应用程序内公布。\n\n如有任何疑问：请联系应用内在线客服或通过 Al Barakat 官方渠道咨询。',
+      en: 'These terms may be updated periodically; the latest version will always be accessible within the app.\n\nFor questions: Contact in-app support or official eCardo channels.',
+      fa: 'ممکن است این متن به‌روز شود؛ نسخهٔ جدید از داخل اپ در دسترس خواهد بود.\n\nبرای هرگونه پرسش: پشتیبانی داخل اپ یا کانال‌های رسمی eCardo.',
+      ar: 'قد يتم تحديث هذه الشروط دورياً؛ وستكون النسخة الأحدث متاحة دائماً داخل التطبيق.\n\nلأي استفسارات: يُرجى التواصل عبر الدعم داخل التطبيق أو القنوات الرسمية لـ eCardo.',
+      tr: 'Bu şartlar periyodik olarak güncellenebilir; en güncel sürüme her zaman uygulama içinden erişilebilir.\n\nSorularınız için: Uygulama içi destek veya resmi eCardo kanalları ile iletişime geçebilirsiniz.',
+      ru: 'Настоящие условия могут периодически обновляться; актуальная версия всегда доступна в приложении.\n\nПо любым вопросам: обратитесь в поддержку в приложении или официальные каналы eCardo.',
+      zh: '本条款可能会定期修订；最新版本将随时在应用程序内公布。\n\n如有任何疑问：请联系应用内在线客服或通过 eCardo 官方渠道咨询。',
     );
 
     final sections = [

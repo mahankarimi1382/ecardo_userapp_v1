@@ -1500,7 +1500,7 @@ class StopTimeline extends StatelessWidget {
               SizedBox(height: 8.h),
               Container(
                 width: 8.w,
-                margin: EdgeInsets.only(left: 12.w + 8.r),
+                margin: EdgeInsetsDirectional.only(start: 12.w + 8.r),
                 child: Divider(
                   thickness: 2,
                   color: ECardoTokens.borderStrong(context),

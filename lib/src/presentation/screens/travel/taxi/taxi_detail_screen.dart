@@ -188,7 +188,7 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                         ),
                         if (capacityViolation != null)
                           Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: AlignmentDirectional.centerStart,
                             child: Padding(
                               padding: EdgeInsetsDirectional.only(top: 6.h),
                               child: Container(
