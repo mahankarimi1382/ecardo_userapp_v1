@@ -43,6 +43,7 @@ import 'package:flutter/foundation.dart';
 import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 
 import 'exchange_rate_source.dart';
+import 'public_live_rate_source.dart';
 
 /// One rate entry as returned by fee.ecardo.ir.
 class FeeEcardoRateEntry {
@@ -191,6 +192,16 @@ class FeeEcardoRateSource implements ExchangeRateSource {
         debugPrint('📍 $st');
       }
     }
+
+    // If fee.ecardo.ir primary and fallback both failed, query free PublicLiveRateSource (Binance & ECB)
+    try {
+      final publicSource = PublicLiveRateSource();
+      final publicRates = await publicSource.fetchRates(currencyCodes: currencyCodes);
+      if (publicRates.isNotEmpty) {
+        _lastEntries = publicSource.lastEntries;
+        return publicRates;
+      }
+    } catch (_) {}
 
     return const {};
   }

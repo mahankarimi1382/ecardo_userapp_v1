@@ -171,10 +171,6 @@ Future<void> _initializeServices() async {
     permanent: true,
   );
   Get.put<TokenService>(TokenService());
-  // RELEASE SAFETY: DemoAccountService fabricates balances and intercepts the network
-  // layer. It is a debug-only tool, so it is registered in debug builds ONLY — profile
-  // and release builds must never construct it, and DemoAccountService.isDemoAvailableInThisBuild
-  // independently denies interception in those builds as a second layer of defence.
   if (kDebugMode) {
     Get.put<DemoAccountService>(DemoAccountService(), permanent: true);
   }

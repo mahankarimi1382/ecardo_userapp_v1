@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:ecardo_user/src/common/services/demo_account_service.dart';
+import 'package:ecardo_user/src/common/services/realistic_catalogs/travel_catalog.dart';
 import 'package:ecardo_user/src/network/service/token_service.dart';
 
 import '../models/travel_models.dart';
@@ -148,20 +149,27 @@ class TravelApiRepository implements TravelRepository {
   @override
   Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async {
     if (DemoAccountService.isDemoInterceptionAllowedNow) {
-      return const [
-        TravelOffer(
-          id: 'demo-hotel-offer-1',
+      return TravelCatalog.getHotels().map((h) {
+        return TravelOffer(
+          id: h['id'].toString(),
           type: TravelProductType.hotel,
-          titleKey: 'هتل اسپیناس پالاس تهران (Espinas Palace)',
-          subtitleKey: 'سعادت‌آباد، تهران',
-          badgeKey: '5 ستاره',
-          imageUrl: 'https://ecardo.ir/demo/hotel1.jpg',
-          total: TravelMoney(amount: 150, currency: 'USD'),
-          rating: 4.9,
-          featureKeys: ['صبحانه رایگان', 'استخر و سونا', 'اینترنت رایگان'],
-          metadata: {'stars': '5', 'location': 'سعادت‌آباد، تهران'},
-        ),
-      ];
+          titleKey: h['name'].toString(),
+          subtitleKey: h['address'].toString(),
+          badgeKey: '${h['stars']} ستاره',
+          imageUrl: h['image'].toString(),
+          total: TravelMoney(
+            amount: (h['price_per_night'] as num).toDouble(),
+            currency: h['currency'].toString(),
+          ),
+          rating: (h['rating'] as num).toDouble(),
+          featureKeys: List<String>.from(h['amenities'] as List),
+          metadata: {
+            'stars': h['stars'].toString(),
+            'location': h['address'].toString(),
+            'city': h['city'].toString(),
+          },
+        );
+      }).toList();
     }
     final offers = await _searchService('hotel', {
       'city': search.city,
@@ -283,6 +291,17 @@ class TravelApiRepository implements TravelRepository {
     required String idempotencyKey,
     required TravelBookingDetails bookingDetails,
   }) async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      final now = DateTime.now();
+      return TravelReservation(
+        id: 'res-demo-${now.millisecondsSinceEpoch % 100000}',
+        type: type,
+        title: 'رزرو تایید شده ${type.name}',
+        orderNumber: 'BK-RES-2026-${now.millisecondsSinceEpoch % 10000}',
+        total: expectedTotal,
+        expiresAt: now.add(const Duration(minutes: 15)),
+      );
+    }
     final checkInDate = bookingDetails.checkInDate;
     final checkOutDate = bookingDetails.checkOutDate;
     if (type == TravelProductType.hotel &&
@@ -387,6 +406,27 @@ class TravelApiRepository implements TravelRepository {
     required TravelReservation reservation,
     required String idempotencyKey,
   }) async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      final now = DateTime.now();
+      return TravelOrder(
+        id: reservation.id,
+        type: reservation.type,
+        titleKey: reservation.title,
+        reference: reservation.orderNumber.isNotEmpty
+            ? reservation.orderNumber
+            : 'BK-TRV-2026-${now.millisecondsSinceEpoch % 100000}',
+        total: reservation.total,
+        status: TravelOrderStatus.issued,
+        rawStatus: 'issued',
+        createdAt: now,
+        details: {
+          'booking_number': reservation.orderNumber,
+          'voucher_number': 'VCH-${now.millisecondsSinceEpoch % 1000000}',
+          'issued_at': now.toIso8601String(),
+          'status': 'issued',
+        },
+      );
+    }
     final token = await _ensureTravelAccessToken();
     final payResponse = await _client.post<Map<String, dynamic>>(
       '/orders/${Uri.encodeComponent(reservation.id)}/pay',
@@ -718,6 +758,37 @@ class TravelApiRepository implements TravelRepository {
 
   @override
   Future<List<TravelOffer>> searchFlights(TravelFlightSearch search) async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      return TravelCatalog.getFlights().map((f) {
+        return TravelOffer(
+          id: f['id'].toString(),
+          type: TravelProductType.flight,
+          titleKey: '${f['airline']} (${f['flight_number']})',
+          subtitleKey: '${f['origin_city']} ➔ ${f['destination_city']}',
+          badgeKey: f['cabin_class'].toString(),
+          imageUrl: 'https://ecardo.ir/icons/flight.png',
+          total: TravelMoney(
+            amount: (f['price'] as num).toDouble(),
+            currency: f['currency'].toString(),
+          ),
+          rating: 4.85,
+          featureKeys: [
+            f['departure_time'].toString(),
+            f['duration'].toString(),
+            f['baggage_allowance'].toString(),
+          ],
+          metadata: {
+            'airline': f['airline'].toString(),
+            'flight_number': f['flight_number'].toString(),
+            'origin': f['origin'].toString(),
+            'destination': f['destination'].toString(),
+            'departure_time': f['departure_time'].toString(),
+            'arrival_time': f['arrival_time'].toString(),
+            'duration': f['duration'].toString(),
+          },
+        );
+      }).toList();
+    }
     final offers = await _searchService('flight', {
       if (search.origin?.isNotEmpty == true) 'origin': search.origin,
       if (search.destination?.isNotEmpty == true)
@@ -744,6 +815,63 @@ class TravelApiRepository implements TravelRepository {
     TravelProductType type,
     String offerId,
   ) async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      if (type == TravelProductType.hotel) {
+        final hotels = TravelCatalog.getHotels();
+        final h = hotels.firstWhereOrNull((item) => item['id'] == offerId) ?? hotels.first;
+        return TravelOffer(
+          id: h['id'].toString(),
+          type: TravelProductType.hotel,
+          titleKey: h['name'].toString(),
+          subtitleKey: h['address'].toString(),
+          badgeKey: '${h['stars']} ستاره',
+          imageUrl: h['image'].toString(),
+          total: TravelMoney(
+            amount: (h['price_per_night'] as num).toDouble(),
+            currency: h['currency'].toString(),
+          ),
+          rating: (h['rating'] as num).toDouble(),
+          featureKeys: List<String>.from(h['amenities'] as List),
+          metadata: {
+            'stars': h['stars'].toString(),
+            'location': h['address'].toString(),
+            'city': h['city'].toString(),
+            'description': 'اقامت مجلل با استانداردهای ۵ ستاره بین‌المللی',
+          },
+        );
+      } else if (type == TravelProductType.flight) {
+        final flights = TravelCatalog.getFlights();
+        final f = flights.firstWhereOrNull((item) => item['id'] == offerId) ?? flights.first;
+        return TravelOffer(
+          id: f['id'].toString(),
+          type: TravelProductType.flight,
+          titleKey: '${f['airline']} (${f['flight_number']})',
+          subtitleKey: '${f['origin_city']} ➔ ${f['destination_city']}',
+          badgeKey: f['cabin_class'].toString(),
+          imageUrl: 'https://ecardo.ir/icons/flight.png',
+          total: TravelMoney(
+            amount: (f['price'] as num).toDouble(),
+            currency: f['currency'].toString(),
+          ),
+          rating: 4.85,
+          featureKeys: [
+            f['departure_time'].toString(),
+            f['duration'].toString(),
+            f['baggage_allowance'].toString(),
+          ],
+          metadata: {
+            'airline': f['airline'].toString(),
+            'flight_number': f['flight_number'].toString(),
+            'origin': f['origin'].toString(),
+            'destination': f['destination'].toString(),
+            'departure_time': f['departure_time'].toString(),
+            'arrival_time': f['arrival_time'].toString(),
+            'duration': f['duration'].toString(),
+            'aircraft': f['aircraft']?.toString() ?? '',
+          },
+        );
+      }
+    }
     final response = await _client.get<Map<String, dynamic>>(
       '/travel/services/${type.name}/offers/${Uri.encodeComponent(offerId)}',
       queryParameters: {'locale': _locale},
@@ -757,6 +885,21 @@ class TravelApiRepository implements TravelRepository {
   Future<List<TravelEsimPackage>> getEsimPackages(
     String destinationCode,
   ) async {
+    if (DemoAccountService.isDemoInterceptionAllowedNow) {
+      return TravelCatalog.getEsimPackages().map((p) {
+        return TravelEsimPackage(
+          id: p['id'].toString(),
+          destinationCode: p['country_code'].toString(),
+          dataLabel: p['data_amount'].toString(),
+          validityDays: p['validity_days'] as int,
+          total: TravelMoney(
+            amount: (p['price'] as num).toDouble(),
+            currency: p['currency'].toString(),
+          ),
+          isPopular: true,
+        );
+      }).toList();
+    }
     final offers = await _searchService('esim', {
       'country_code': destinationCode,
     });

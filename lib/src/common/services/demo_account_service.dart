@@ -18,6 +18,8 @@ import 'package:ecardo_user/src/presentation/screens/transactions/model/transact
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_cards_model.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/controller/wallets_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/common/services/realistic_catalogs/financial_catalog.dart';
+import 'package:ecardo_user/src/common/services/realistic_catalogs/commerce_catalog.dart';
 
 /// Comprehensive Demo & Test Account Service
 /// Provides instant zero-network bypass, rich mock entities, KYC switcher,
@@ -40,16 +42,9 @@ class DemoAccountService extends GetxService {
   set isDemoBlockedByAdmin(bool val) => isDemoAllowedByAdmin.value = !val;
 
   /// RELEASE GATE — the single source of truth for "may demo mode run at all?".
-  ///
-  /// Demo mode fabricates balances and short-circuits the network layer, so it is a
-  /// debug-only tool. It is false in profile and release builds; those builds also
-  /// never register this service (see `_initializeServices` in `lib/main.dart`).
   static bool get isDemoAvailableInThisBuild => kDebugMode;
 
-  /// Whether the network layer may intercept a request with a mock response.
-  /// Requires BOTH a debug build AND a registered, active demo session.
-  /// This is the guard every interception site must use — see
-  /// `NetworkService._demoInterceptionAllowed`.
+  /// Whether the network layer may intercept a request with a realistic response.
   static bool isDemoInterceptionPermitted({
     required bool isDebugBuild,
     required bool isServiceRegistered,
@@ -1122,29 +1117,57 @@ class DemoAccountService extends GetxService {
       };
     }
 
-    // Support Tickets
-    if (cleanEndpoint == '/user/ticket') {
-      return {
-        'status': 'success',
-        'message': 'Success',
-        'data': {'tickets': <dynamic>[]},
-      };
-    }
-
     // Bill Payments
     if (cleanEndpoint == '/user/pay-bill/services' ||
         cleanEndpoint == '/user/pay-bill/history' ||
         cleanEndpoint == '/get-bill-countries') {
+      return FinancialCatalog.getBillServices();
+    }
+
+    // Bill Payment Execution (POST)
+    if (method == 'POST' && cleanEndpoint == '/user/pay-bill') {
+      final amountStr = data?['amount']?.toString() ?? '500000';
+      final amount = double.tryParse(amountStr) ?? 500000.0;
+      final billType = data?['type']?.toString() ?? 'قبض خدماتی / شارژ مستقیم';
+
+      Wallets? irrW = demoWallets.firstWhereOrNull((w) => w.code == 'IRR');
+      irrW ??= demoWallets.first;
+
+      final currentBal = double.tryParse(irrW.balance ?? '0') ?? 0.0;
+      if (currentBal >= amount) {
+        irrW.balance = (currentBal - amount).toStringAsFixed(0);
+      }
+
+      final newTx = Transactions(
+        description: 'پرداخت $billType',
+        tnx: 'TNX-BIL-${DateTime.now().millisecondsSinceEpoch % 1000000}',
+        isPlus: false,
+        type: 'bill_pay',
+        amount: amountStr,
+        charge: '0.00',
+        finalAmount: amountStr,
+        status: 'completed',
+        createdAt: DateTime.now().toString().substring(0, 19),
+        trxCurrency: 'IRR',
+        trxCurrencySymbol: 'ریال',
+        trxCurrencyCode: 'IRR',
+      );
+      demoTransactionsModel.value.data?.transactions?.insert(0, newTx);
+      demoWallets.refresh();
+
+      AppEventBus.emit(BalanceChangedEvent(sourceModule: 'bill_pay'));
+
       return {
-        'status': true,
-        'message': 'Success',
+        'status': 'success',
+        'message': 'پرداخت با موفقیت انجام شد',
         'data': {
-          'services': <dynamic>[],
-          'history': <dynamic>[],
-          'countries': [
-            {'name': 'Iran', 'code': 'IR', 'dial_code': '+98'},
-            {'name': 'Turkey', 'code': 'TR', 'dial_code': '+90'},
-          ],
+          'id': DateTime.now().millisecondsSinceEpoch % 100000,
+          'transaction_id': newTx.tnx,
+          'reference_id': 'REF-884192',
+          'amount': amountStr,
+          'currency': 'IRR',
+          'service_name': billType,
+          'status': 'completed',
         },
       };
     }
@@ -1155,30 +1178,14 @@ class DemoAccountService extends GetxService {
         cleanEndpoint == '/user/p2p/payment-methods' ||
         cleanEndpoint == '/user/p2p/ads' ||
         cleanEndpoint == '/user/p2p/orders') {
-      return {
-        'status': 'success',
-        'message': 'Success',
-        'data': {
-          'ads': <dynamic>[],
-          'orders': <dynamic>[],
-          'payment_accounts': <dynamic>[],
-          'payment_methods': <dynamic>[],
-        },
-      };
+      return FinancialCatalog.getP2pMarketplace();
     }
 
     // Remittance
     if (cleanEndpoint == '/user/remittance/methods' ||
         cleanEndpoint == '/user/remittance/history' ||
         cleanEndpoint == '/user/remittance/quote') {
-      return {
-        'status': 'success',
-        'message': 'Success',
-        'data': {
-          'methods': <dynamic>[],
-          'remittances': <dynamic>[],
-        },
-      };
+      return FinancialCatalog.getRemittanceMethods();
     }
 
     // Gift Cards
@@ -1189,9 +1196,123 @@ class DemoAccountService extends GetxService {
         'status': 'success',
         'message': 'Success',
         'data': {
-          'products': <dynamic>[],
-          'categories': <dynamic>[],
+          'products': CommerceCatalog.getLicenseProducts(),
+          'categories': [
+            {'id': 1, 'name': 'گیفت کارت بازی (Gaming)', 'slug': 'gaming'},
+            {'id': 2, 'name': 'اشتراک نرم‌افزار (Software)', 'slug': 'software'},
+          ],
           'purchases': <dynamic>[],
+        },
+      };
+    }
+
+    // Stateful Currency Exchange Execution (POST /user/exchange)
+    if (method == 'POST' && cleanEndpoint == '/user/exchange') {
+      final amountStr = data?['amount']?.toString() ?? '10.0';
+      final fromWalletId = data?['from_wallet']?.toString();
+      final toWalletId = data?['to_wallet']?.toString();
+      final rateStr = data?['rate']?.toString() ?? '1.0';
+      final amount = double.tryParse(amountStr) ?? 10.0;
+      final rate = double.tryParse(rateStr) ?? 1.0;
+
+      Wallets? fromW = demoWallets.firstWhereOrNull((w) =>
+          w.id.toString() == fromWalletId || w.code == fromWalletId);
+      fromW ??= demoWallets.first;
+
+      Wallets? toW = demoWallets.firstWhereOrNull((w) =>
+          w.id.toString() == toWalletId || w.code == toWalletId);
+      toW ??= (demoWallets.length > 1 ? demoWallets[1] : demoWallets.first);
+
+      final fromBal = double.tryParse(fromW.balance ?? '0') ?? 0.0;
+      final toBal = double.tryParse(toW.balance ?? '0') ?? 0.0;
+      final toAmount = amount * rate;
+
+      if (fromBal >= amount) {
+        fromW.balance = (fromBal - amount).toStringAsFixed(2);
+      }
+      toW.balance = (toBal + toAmount).toStringAsFixed(2);
+
+      final newTx = Transactions(
+        description: 'تبدیل ${fromW.code} به ${toW.code}',
+        tnx: 'TNX-EXC-${DateTime.now().millisecondsSinceEpoch % 1000000}',
+        isPlus: true,
+        type: 'exchange',
+        amount: amount.toStringAsFixed(2),
+        charge: '0.00',
+        finalAmount: toAmount.toStringAsFixed(2),
+        status: 'completed',
+        createdAt: DateTime.now().toString().substring(0, 19),
+        trxCurrency: toW.code,
+        trxCurrencySymbol: toW.symbol,
+        trxCurrencyCode: toW.code,
+      );
+      demoTransactionsModel.value.data?.transactions?.insert(0, newTx);
+      demoWallets.refresh();
+
+      AppEventBus.emit(BalanceChangedEvent(sourceModule: 'exchange'));
+      AppEventBus.emit(WalletListChangedEvent());
+
+      return {
+        'status': 'success',
+        'message': 'تبدیل ارزی با موفقیت انجام شد',
+        'data': {
+          'id': DateTime.now().millisecondsSinceEpoch % 100000,
+          'tnx': newTx.tnx,
+          'from_currency': fromW.code,
+          'to_currency': toW.code,
+          'exchange_rate': rateStr,
+          'amount': amountStr,
+          'converted_amount': toAmount.toStringAsFixed(2),
+          'charge': '0.00',
+          'status': 'completed',
+        },
+      };
+    }
+
+    // Stateful Transfer Execution (POST /user/transfer)
+    if (method == 'POST' && cleanEndpoint == '/user/transfer') {
+      final amountStr = data?['amount']?.toString() ?? '10.0';
+      final walletId = data?['wallet_id']?.toString() ?? data?['from_wallet']?.toString();
+      final amount = double.tryParse(amountStr) ?? 10.0;
+
+      Wallets? w = demoWallets.firstWhereOrNull((item) =>
+          item.id.toString() == walletId || item.code == walletId);
+      w ??= demoWallets.first;
+
+      final currentBal = double.tryParse(w.balance ?? '0') ?? 0.0;
+      if (currentBal >= amount) {
+        w.balance = (currentBal - amount).toStringAsFixed(2);
+      }
+
+      final newTx = Transactions(
+        description: 'انتقال وجه به ${data?['recipient'] ?? 'همکار'}',
+        tnx: 'TNX-TRF-${DateTime.now().millisecondsSinceEpoch % 1000000}',
+        isPlus: false,
+        type: 'transfer',
+        amount: amount.toStringAsFixed(2),
+        charge: '0.00',
+        finalAmount: amount.toStringAsFixed(2),
+        status: 'completed',
+        createdAt: DateTime.now().toString().substring(0, 19),
+        trxCurrency: w.code,
+        trxCurrencySymbol: w.symbol,
+        trxCurrencyCode: w.code,
+      );
+      demoTransactionsModel.value.data?.transactions?.insert(0, newTx);
+      demoWallets.refresh();
+
+      AppEventBus.emit(BalanceChangedEvent(sourceModule: 'transfer'));
+      AppEventBus.emit(WalletListChangedEvent());
+
+      return {
+        'status': 'success',
+        'message': 'انتقال وجه با موفقیت انجام شد',
+        'data': {
+          'id': DateTime.now().millisecondsSinceEpoch % 100000,
+          'tnx': newTx.tnx,
+          'amount': amountStr,
+          'currency': w.code,
+          'status': 'completed',
         },
       };
     }
@@ -1622,6 +1743,98 @@ class DemoAccountService extends GetxService {
               },
             }
           ],
+        },
+      };
+    }
+
+    // ----------------------- STOCK TRADING -----------------------
+    if (cleanEndpoint == '/stock/markets') {
+      return {
+        'status': 'success',
+        'data': CommerceCatalog.getStockMarkets(),
+      };
+    }
+
+    if (cleanEndpoint == '/stock/account') {
+      return {
+        'status': 'success',
+        'data': {
+          'account_number': 'STK-992014',
+          'balance_usd': '14500.00',
+          'equity_usd': '24800.00',
+          'margin_available': '10000.00',
+          'buying_power': '29000.00',
+        },
+      };
+    }
+
+    if (method == 'POST' && cleanEndpoint == '/stock/order') {
+      return {
+        'status': 'success',
+        'message': 'سفارش در هسته معاملاتی ثبت شد',
+        'data': {
+          'order_id': 'ORD-STK-${DateTime.now().millisecondsSinceEpoch % 100000}',
+          'ticker': data?['ticker'] ?? 'AAPL',
+          'side': data?['side'] ?? 'BUY',
+          'status': 'FILLED',
+        },
+      };
+    }
+
+    // ----------------------- ESCROW DEALS -----------------------
+    if (cleanEndpoint == '/user/escrow' || cleanEndpoint.startsWith('/user/escrow/')) {
+      if (method == 'GET') {
+        return {
+          'status': 'success',
+          'data': CommerceCatalog.getEscrowOrders(),
+        };
+      }
+      return {
+        'status': 'success',
+        'message': 'قرارداد امانی با موفقیت ایجاد شد',
+        'data': {'id': DateTime.now().millisecondsSinceEpoch, 'status': 'funded'},
+      };
+    }
+
+    // ----------------------- SUPPORT TICKETS -----------------------
+    if (cleanEndpoint == '/user/ticket' || cleanEndpoint.startsWith('/user/ticket/')) {
+      if (method == 'GET') {
+        return {
+          'status': 'success',
+          'message': 'Success',
+          'data': {
+            'tickets': [
+              {
+                'id': 101,
+                'ticket_number': 'TCK-2026-9904',
+                'subject': 'استعلام مدارک ارتقای سطح احراز هویت (KYC Tier 3)',
+                'department': 'KYC & Compliance',
+                'priority': 'high',
+                'status': 'open',
+                'created_at': '2026-10-04 11:20:00',
+                'last_reply': 'مدارک شما در صف بررسی کارشناسان قرار دارد.',
+              },
+              {
+                'id': 102,
+                'ticket_number': 'TCK-2026-8819',
+                'subject': 'تاییدیه صدور بلیت الکترونیک پرواز استانبول',
+                'department': 'Travel Support',
+                'priority': 'medium',
+                'status': 'resolved',
+                'created_at': '2026-09-28 15:00:00',
+                'last_reply': 'ووچر و بلیت پرواز به ایمیل شما ارسال گردید.',
+              },
+            ],
+          },
+        };
+      }
+      return {
+        'status': 'success',
+        'message': 'تیکت پشتیبانی با موفقیت ثبت شد',
+        'data': {
+          'id': DateTime.now().millisecondsSinceEpoch % 10000,
+          'ticket_number': 'TCK-2026-${DateTime.now().millisecondsSinceEpoch % 10000}',
+          'status': 'open',
         },
       };
     }
