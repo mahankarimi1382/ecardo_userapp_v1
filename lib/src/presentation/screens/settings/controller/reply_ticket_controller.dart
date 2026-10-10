@@ -26,7 +26,10 @@ class ReplyTicketController extends GetxController {
   final messageController = TextEditingController();
 
   // Fetch Ticket Message
-  Future<void> fetchTicketMessage({required String ticketUid}) async {
+  Future<void> fetchTicketMessage({
+    required String ticketUid,
+    bool isSilent = false,
+  }) async {
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: "${ApiPath.supportTicketsEndpoint}/$ticketUid",
@@ -47,9 +50,11 @@ class ReplyTicketController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchTicketMessage() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
-      );
+      if (!isSilent && Get.context != null) {
+        ToastHelper().showErrorToast(
+          AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        );
+      }
     } finally {}
   }
 

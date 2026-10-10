@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,15 +34,40 @@ class ReplayTicket extends StatefulWidget {
 class _ReplayTicketState extends State<ReplayTicket> {
   final ReplyTicketController controller = Get.put(ReplyTicketController());
   final ScrollController _scrollController = ScrollController();
+  Timer? _livePollingTimer;
 
   @override
   void initState() {
     super.initState();
     loadData();
+    _startLivePolling();
+  }
+
+  void _startLivePolling() {
+    _livePollingTimer?.cancel();
+    _livePollingTimer = Timer.periodic(const Duration(seconds: 6), (_) async {
+      if (!mounted) return;
+      final ticket = controller.ticketMessageModel.value.data?.ticket;
+      if (ticket != null && (ticket.isClosed == true || ticket.status == 'closed')) {
+        _livePollingTimer?.cancel();
+        return;
+      }
+      final prevCount = controller.ticketMessageModel.value.data?.messages?.length ?? 0;
+      await controller.fetchTicketMessage(ticketUid: widget.ticketUid, isSilent: true);
+      if (!mounted) return;
+      final newCount = controller.ticketMessageModel.value.data?.messages?.length ?? 0;
+      if (newCount > prevCount) {
+        HapticFeedback.lightImpact();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToBottom();
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    _livePollingTimer?.cancel();
     _scrollController.dispose();
     super.dispose();
   }
