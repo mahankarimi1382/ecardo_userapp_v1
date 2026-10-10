@@ -36,7 +36,12 @@ class SslPinningConfig {
   ];
 
   /// Verified live fallback certificate pin for ecardo.ir leaf certificate.
+  /// Rotated 2026-10-09 by Google Trust Services / Cloudflare.
   static const String defaultEcardoCertPin =
+      'nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc=';
+
+  /// Previous certificate pin for ecardo.ir (for graceful rotation window).
+  static const String previousEcardoCertPin =
       'YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM=';
 
   /// Verified live fallback certificate pin for trip.ecardo.ir leaf certificate.
@@ -48,7 +53,7 @@ class SslPinningConfig {
   /// For ecardo.ir:
   ///   Build-time defines: ECARDO_CERT_PIN and ECARDO_CERT_PIN_BACKUP.
   ///   If ECARDO_CERT_PIN is provided via --dart-define, it is used (along with
-  ///   any backup pin). If omitted, falls back to [defaultEcardoCertPin].
+  ///   any backup pin). If omitted, falls back to [defaultEcardoCertPin] and [previousEcardoCertPin].
   ///
   /// For trip.ecardo.ir:
   ///   Build-time defines: TRIP_CERT_PIN and TRIP_CERT_PIN_BACKUP.
@@ -60,8 +65,10 @@ class SslPinningConfig {
     final ecardoPins = <String>[
       if (ecardoCurrent.trim().isNotEmpty)
         ecardoCurrent.trim()
-      else
+      else ...[
         defaultEcardoCertPin,
+        previousEcardoCertPin,
+      ],
       if (ecardoBackup.trim().isNotEmpty)
         ecardoBackup.trim(),
     ];

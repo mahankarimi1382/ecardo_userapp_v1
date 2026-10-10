@@ -91,11 +91,13 @@ void main() {
       final ecardoPins = hashes['ecardo.ir']!;
       final tripPins = hashes['trip.ecardo.ir']!;
 
+      expect(ecardoPins, contains('nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc='));
       expect(ecardoPins, contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM='));
       expect(tripPins, contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ='));
 
       // Ensure pin lists are isolated and NOT shared across hosts
       expect(ecardoPins, isNot(contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ=')));
+      expect(tripPins, isNot(contains('nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc=')));
       expect(tripPins, isNot(contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM=')));
     });
 
