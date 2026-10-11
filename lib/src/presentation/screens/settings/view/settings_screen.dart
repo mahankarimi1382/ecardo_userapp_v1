@@ -7,7 +7,6 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
-import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -1396,11 +1395,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ar: 'الحصول على أحدث الميزات',
                       ),
                       onTap: () {
-                        if (Get.isRegistered<AppUpdateController>()) {
-                          Get.find<AppUpdateController>().checkForUpdate();
-                        } else {
-                          Get.toNamed(BaseRoute.appUpdate);
-                        }
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.appUpdate);
                       },
                     ),
                   ],

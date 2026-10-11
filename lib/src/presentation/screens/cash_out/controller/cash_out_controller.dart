@@ -201,8 +201,17 @@ class CashOutController extends GetxController {
       return false;
     }
 
+    final currentWallet = wallet.value;
+    if (currentWallet == null) {
+      ToastHelper().showErrorToast(localization.cashOutValidationSelectWallet);
+      return false;
+    }
+
+    final walletCode = currentWallet.code ?? '';
+    final isCrypto = currentWallet.isCrypto ?? false;
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: wallet.value!.code!,
+      currencyCode: walletCode,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
             "site_currency",
           ) ??
@@ -211,20 +220,20 @@ class CashOutController extends GetxController {
             "site_currency_decimals",
           ) ??
           '2',
-      isCrypto: wallet.value!.isCrypto!,
+      isCrypto: isCrypto,
     );
 
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
-    final double min = double.tryParse(wallet.value!.cashoutLimit!.min!) ?? 0.0;
+    final double min = double.tryParse(currentWallet.cashoutLimit?.min ?? '') ?? 0.0;
     final double max =
-        double.tryParse(wallet.value!.cashoutLimit!.max!) ?? double.infinity;
+        double.tryParse(currentWallet.cashoutLimit?.max ?? '') ?? double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
         localization.cashOutValidationAmountMinimum(
           min.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;
@@ -234,19 +243,20 @@ class CashOutController extends GetxController {
       ToastHelper().showErrorToast(
         localization.cashOutValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;
     }
 
     final double availableBalance =
-        double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
-    if (enteredAmount > availableBalance) {
+        double.tryParse(currentWallet.balance ?? '') ?? 0.0;
+    final double totalRequired = enteredAmount + charge.value;
+    if (totalRequired > availableBalance) {
       ToastHelper().showErrorToast(
         localization.exchangeValidationInsufficientBalance(
           availableBalance.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;

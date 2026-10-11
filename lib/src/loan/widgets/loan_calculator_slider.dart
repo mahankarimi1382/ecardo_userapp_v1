@@ -84,12 +84,18 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     return widget.maxMonths;
   }
 
+  double get safeMinAmount => math.min(widget.minAmount, widget.maxAmount);
+  double get safeMaxAmount => math.max(widget.minAmount, widget.maxAmount);
+  double get safeStepAmount => widget.stepAmount > 0 ? widget.stepAmount : 1.0;
+  int get safeMinMonths => math.min(minM, maxM);
+  int get safeMaxMonths => math.max(minM, maxM);
+
   @override
   void initState() {
     super.initState();
-    _amount = (widget.initialAmount ?? (widget.currency.toUpperCase() == 'USD' ? 10000.0 : 50000000.0))
-        .clamp(widget.minAmount, widget.maxAmount);
-    _months = (widget.initialMonths ?? 12).clamp(minM, maxM);
+    final initial = widget.initialAmount ?? (widget.currency.toUpperCase() == 'USD' ? 10000.0 : 50000000.0);
+    _amount = initial.clamp(safeMinAmount, safeMaxAmount);
+    _months = (widget.initialMonths ?? 12).clamp(safeMinMonths, safeMaxMonths);
     if (!effectiveTerms.contains(_months) && effectiveTerms.isNotEmpty) {
       _months = effectiveTerms.first;
     }
@@ -109,10 +115,10 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     bool changed = false;
 
     if (widget.initialAmount != null && widget.initialAmount != oldWidget.initialAmount) {
-      _amount = widget.initialAmount!.clamp(widget.minAmount, widget.maxAmount);
+      _amount = widget.initialAmount!.clamp(safeMinAmount, safeMaxAmount);
       changed = true;
     } else {
-      final clamped = _amount.clamp(widget.minAmount, widget.maxAmount);
+      final clamped = _amount.clamp(safeMinAmount, safeMaxAmount);
       if (clamped != _amount) {
         _amount = clamped;
         changed = true;
@@ -120,10 +126,10 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     }
 
     if (widget.initialMonths != null && widget.initialMonths != oldWidget.initialMonths) {
-      _months = widget.initialMonths!.clamp(minM, maxM);
+      _months = widget.initialMonths!.clamp(safeMinMonths, safeMaxMonths);
       changed = true;
     } else {
-      final clampedM = _months.clamp(minM, maxM);
+      final clampedM = _months.clamp(safeMinMonths, safeMaxMonths);
       if (clampedM != _months) {
         _months = clampedM;
         changed = true;
@@ -249,10 +255,11 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final sunkenColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
 
-    final amountDivisions = ((widget.maxAmount - widget.minAmount) / widget.stepAmount).round();
-    final effectiveAmountDivisions = amountDivisions > 0 && amountDivisions <= 500 ? amountDivisions : null;
+    final amountRange = math.max(0.0, safeMaxAmount - safeMinAmount);
+    final amountDivisions = safeStepAmount > 0 ? (amountRange / safeStepAmount).round() : null;
+    final effectiveAmountDivisions = amountDivisions != null && amountDivisions > 0 && amountDivisions <= 500 ? amountDivisions : null;
 
-    final durationRange = maxM - minM;
+    final durationRange = math.max(0, safeMaxMonths - safeMinMonths);
     final durationDivisions = durationRange > 0 ? durationRange : null;
 
     return Container(
@@ -371,13 +378,15 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               overlayShape: RoundSliderOverlayShape(overlayRadius: 18.r),
             ),
             child: Slider(
-              value: _amount,
-              min: widget.minAmount,
-              max: widget.maxAmount,
+              value: _amount.clamp(safeMinAmount, safeMaxAmount),
+              min: safeMinAmount,
+              max: safeMaxAmount,
               divisions: effectiveAmountDivisions,
               onChanged: (val) {
-                final stepped = (val / widget.stepAmount).round() * widget.stepAmount;
-                final clamped = stepped.clamp(widget.minAmount, widget.maxAmount);
+                final stepped = safeStepAmount > 0
+                    ? (val / safeStepAmount).round() * safeStepAmount
+                    : val;
+                final clamped = stepped.clamp(safeMinAmount, safeMaxAmount);
                 if (clamped != _amount) {
                   HapticFeedback.selectionClick();
                   setState(() {
@@ -547,12 +556,12 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               overlayShape: RoundSliderOverlayShape(overlayRadius: 18.r),
             ),
             child: Slider(
-              value: _months.toDouble().clamp(minM.toDouble(), maxM.toDouble()),
-              min: minM.toDouble(),
-              max: maxM.toDouble(),
+              value: _months.toDouble().clamp(safeMinMonths.toDouble(), safeMaxMonths.toDouble()),
+              min: safeMinMonths.toDouble(),
+              max: safeMaxMonths.toDouble(),
               divisions: durationDivisions,
               onChanged: (val) {
-                final stepped = val.round().clamp(minM, maxM);
+                final stepped = val.round().clamp(safeMinMonths, safeMaxMonths);
                 if (stepped != _months) {
                   HapticFeedback.selectionClick();
                   setState(() {

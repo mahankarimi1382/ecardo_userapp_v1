@@ -224,10 +224,10 @@ class ExchangeRateManager {
     final double toRate =
         double.tryParse(toCurrency.conversionRate ?? "1") ?? 1.0;
 
-    if (fromRate <= 0) {
+    if (fromRate <= 0 || toRate <= 0) {
       targetStaticRate.value = 1.0;
     } else {
-      targetStaticRate.value = 1 / fromRate * toRate;
+      targetStaticRate.value = fromRate / toRate;
     }
 
     // Benchmark fallback if rates are 1.0 or 0 and currency codes differ

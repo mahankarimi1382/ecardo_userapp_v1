@@ -72,6 +72,7 @@ class ExchangeValidationService {
     required Wallets? toWallet,
     required String amountText,
     required int decimals,
+    double charge = 0.0,
     AppLocalizations? localizations,
   }) {
     if (fromWallet == null || fromWallet.name?.isEmpty == true) {
@@ -157,7 +158,7 @@ class ExchangeValidationService {
 
     final double availableBalance =
         double.tryParse(fromWallet.balance ?? '') ?? 0.0;
-    if (enteredAmount > availableBalance) {
+    if ((enteredAmount + charge) > availableBalance) {
       final formattedBalance = availableBalance.toStringAsFixed(decimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.insufficientBalance,

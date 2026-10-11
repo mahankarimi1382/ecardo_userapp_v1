@@ -99,7 +99,13 @@ class SslPinningConfig {
   ///   - 'api.trip.ecardo.ir' -> 'trip.ecardo.ir' (longest suffix matches trip, not ecardo)
   ///   - 'example.com' -> null
   static String? matchPinnedHost(String host) {
-    final lower = host.trim().toLowerCase();
+    var lower = host.trim().toLowerCase();
+    if (lower.contains(':')) {
+      lower = lower.split(':').first;
+    }
+    if (lower.endsWith('.')) {
+      lower = lower.substring(0, lower.length - 1);
+    }
     // 1. Exact match first
     for (final h in pinnedHosts) {
       if (lower == h) return h;

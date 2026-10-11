@@ -64,6 +64,14 @@ class InstallmentItem {
     return result;
   }
 
+  static DateTime _addMonthsClamped(DateTime base, int monthsToAdd) {
+    final targetYear = base.year + (base.month + monthsToAdd - 1) ~/ 12;
+    final targetMonth = (base.month + monthsToAdd - 1) % 12 + 1;
+    final daysInMonth = DateTime(targetYear, targetMonth + 1, 0).day;
+    final targetDay = base.day > daysInMonth ? daysInMonth : base.day;
+    return DateTime(targetYear, targetMonth, targetDay);
+  }
+
   /// Generate a mathematically projected amortization schedule from loan terms.
   static List<InstallmentItem> generateSchedule({
     required double principal,
@@ -92,7 +100,7 @@ class InstallmentItem {
     double balance = principal;
 
     for (int i = 0; i < tenureMonths; i++) {
-      final itemDate = DateTime(baseDate.year, baseDate.month + i, baseDate.day);
+      final itemDate = _addMonthsClamped(baseDate, i);
       final isGrace = i < graceMonths;
 
       if (isGrace) {

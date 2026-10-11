@@ -127,12 +127,12 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
 
   Future<bool> isLocked() async => locked.value;
 
-  Future<void> lock() async {
+  Future<void> lock({bool force = false}) async {
     try {
       final loginState = await SettingsService.getLoginCurrentState();
       if (loginState == null || loginState.isEmpty) return;
       if (!await hasPinSet()) return;
-      if (isPreAuthRoute(Get.currentRoute)) return;
+      if (!force && isPreAuthRoute(Get.currentRoute)) return;
       locked.value = true;
     } catch (e) {
       if (kDebugMode) {

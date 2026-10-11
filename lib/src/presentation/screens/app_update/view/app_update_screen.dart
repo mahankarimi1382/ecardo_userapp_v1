@@ -888,6 +888,35 @@ class _ErrorView extends StatelessWidget {
             SizedBox(height: AppSpacing.sm),
             SizedBox(
               width: double.infinity,
+              height: 48.h,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  side: BorderSide(
+                    color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  ),
+                ),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  controller.openDirectDownload();
+                },
+                icon: const Icon(Icons.open_in_browser_rounded),
+                label: Text(
+                  Directionality.of(context) == TextDirection.rtl
+                      ? 'دانلود مستقیم از وب‌سایت'
+                      : 'Download from website',
+                  style: AppTextStyles.labelMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: AppSpacing.sm),
+            SizedBox(
+              width: double.infinity,
               child: TextButton(
                 onPressed: () => Get.back(),
                 child: Text(

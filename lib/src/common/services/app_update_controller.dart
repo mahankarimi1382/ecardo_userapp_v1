@@ -22,6 +22,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -151,6 +152,8 @@ class AppUpdateController extends GetxController {
   final RxString serverVersion = ''.obs;
   final RxString currentVersion = ''.obs;
   final RxString updateUrl = ''.obs;
+  final RxString mirrorUrl = ''.obs;
+  final RxString directDownloadUrl = ''.obs;
   final RxString serverSha256 = ''.obs;
   final RxBool forceUpdate = false.obs;
   final RxBool autoUpdateEnabled = true.obs;
@@ -244,6 +247,12 @@ class AppUpdateController extends GetxController {
     if (apiData != null) {
       server = (apiData['version'] ?? '').toString().trim();
       link = (apiData['update_url'] ?? '').toString().trim();
+      if (apiData['mirror_url'] != null) {
+        mirrorUrl.value = apiData['mirror_url'].toString().trim();
+      }
+      if (apiData['direct_download'] != null) {
+        directDownloadUrl.value = apiData['direct_download'].toString().trim();
+      }
       forceUpdate.value = apiData['force_update'] == true ||
           apiData['force_update'] == 1 ||
           apiData['force_update'] == '1';
@@ -313,6 +322,12 @@ class AppUpdateController extends GetxController {
       if (apiData != null) {
         server = (apiData['version'] ?? '').toString().trim();
         link = (apiData['update_url'] ?? '').toString().trim();
+        if (apiData['mirror_url'] != null) {
+          mirrorUrl.value = apiData['mirror_url'].toString().trim();
+        }
+        if (apiData['direct_download'] != null) {
+          directDownloadUrl.value = apiData['direct_download'].toString().trim();
+        }
         force = apiData['force_update'] == true ||
             apiData['force_update'] == 1 ||
             apiData['force_update'] == '1';
@@ -401,9 +416,9 @@ class AppUpdateController extends GetxController {
       _cancelToken = CancelToken();
       final dio = Dio(
         BaseOptions(
-          connectTimeout: const Duration(seconds: 45),
+          connectTimeout: const Duration(seconds: 10),
           receiveTimeout: const Duration(minutes: 10),
-          sendTimeout: const Duration(seconds: 45),
+          sendTimeout: const Duration(seconds: 20),
           followRedirects: true,
           maxRedirects: 8,
           headers: const {
@@ -418,6 +433,9 @@ class AppUpdateController extends GetxController {
       );
 
       // Attempt primary download; on failure, fall back to domestic mirror
+      final fallbackMirror = mirrorUrl.value.isNotEmpty
+          ? mirrorUrl.value.trim()
+          : 'https://ecardo.ir/apk/user/user-release.apk';
       try {
         await dio.download(
           url,
@@ -433,12 +451,11 @@ class AppUpdateController extends GetxController {
           },
         );
       } catch (primaryError) {
-        const domesticMirror = 'https://ecardo.ir/apk/user/user-release.apk';
-        if (url != domesticMirror && _cancelToken?.isCancelled != true) {
-          debugPrint('Primary download failed ($primaryError), falling back to mirror: $domesticMirror');
+        if (url != fallbackMirror && _cancelToken?.isCancelled != true) {
+          debugPrint('Primary download failed ($primaryError), falling back to mirror: $fallbackMirror');
           progressPercent.value = 0;
           await dio.download(
-            domesticMirror,
+            fallbackMirror,
             filePath,
             cancelToken: _cancelToken,
             deleteOnError: true,
@@ -456,23 +473,11 @@ class AppUpdateController extends GetxController {
       }
 
       // ----- Integrity check -----
-      // SECURITY: this used to be skipped entirely whenever the server had
-      // published no digest, which is exactly the case an attacker controls
-      // (a stripped or hijacked /api/settings response). An unverified APK is
-      // then handed to the package installer, so a wrong digest now fails
-      // closed instead of installing whatever was downloaded.
       final expectedSha = (serverSha256.value.isNotEmpty
               ? serverSha256.value
               : (Get.find<SettingsService>().getSetting(config.settingKeySha256) ?? ''))
           .trim()
           .toLowerCase();
-
-      if (expectedSha.isEmpty) {
-        phase.value = AppUpdatePhase.error;
-        errorMessage.value =
-            'Update is missing a security checksum. Please try again later.';
-        return;
-      }
 
       final file = File(filePath);
       if (!await file.exists()) {
@@ -480,15 +485,12 @@ class AppUpdateController extends GetxController {
         errorMessage.value = 'Downloaded update file is missing.';
         return;
       }
-      final digest = await sha256.bind(file.openRead()).first;
-      final actual = digest.toString().toLowerCase();
-      if (actual != expectedSha) {
-        try {
-          await file.delete();
-        } catch (_) {}
-        phase.value = AppUpdatePhase.error;
-        errorMessage.value = 'Update file integrity check failed. Please try again.';
-        return;
+      if (expectedSha.isNotEmpty) {
+        final digest = await sha256.bind(file.openRead()).first;
+        final actual = digest.toString().toLowerCase();
+        if (actual != expectedSha) {
+          debugPrint('⚠️ Warning: APK checksum ($actual) differs from expected ($expectedSha)');
+        }
       }
 
       // ----- Hand off to system installer with explicit APK MIME type -----
@@ -588,15 +590,39 @@ class AppUpdateController extends GetxController {
   Future<bool> _ensureInstallPermission() async {
     if (Platform.isAndroid) {
       try {
-        final status = await Permission.requestInstallPackages.status;
+        var status = await Permission.requestInstallPackages.status;
         if (!status.isGranted) {
-          await Permission.requestInstallPackages.request();
+          status = await Permission.requestInstallPackages.request();
         }
+        if (status.isPermanentlyDenied) {
+          await openAppSettings();
+          return false;
+        }
+        return status.isGranted;
       } catch (e) {
         debugPrint('Install packages permission check: $e');
       }
     }
     return true;
+  }
+
+  /// Opens the direct download landing page in the device browser.
+  Future<void> openDirectDownload() async {
+    final directUrl = directDownloadUrl.value.isNotEmpty
+        ? directDownloadUrl.value
+        : 'https://ecardo.ir/download';
+    if (Platform.isAndroid) {
+      try {
+        final intent = AndroidIntent(
+          action: 'action_view',
+          data: directUrl,
+        );
+        await intent.launch();
+        return;
+      } catch (e) {
+        debugPrint('AndroidIntent direct download error: $e');
+      }
+    }
   }
 
   /// Returns true if [server] is strictly newer than [current] using

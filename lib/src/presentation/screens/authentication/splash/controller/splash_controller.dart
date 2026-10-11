@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -68,6 +69,12 @@ class SplashController extends GetxController {
         final token = tokenService.accessToken.value;
         final hasToken = token != null && token.isNotEmpty;
         if (isLoggedIn && hasToken) {
+          if (Get.isRegistered<AppLockService>()) {
+            final appLock = Get.find<AppLockService>();
+            if (await appLock.hasPinSet()) {
+              await appLock.lock(force: true);
+            }
+          }
           // Fast probe (3s). On timeout/network: enter dashboard if session
           // flag exists; final validity is re-checked in-app.
           try {

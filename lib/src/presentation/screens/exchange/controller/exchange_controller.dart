@@ -419,6 +419,7 @@ class ExchangeController extends GetxController {
       toWallet: to,
       amountText: amountController.text,
       decimals: calculateDecimals,
+      charge: charge.value,
       localizations: localizationOrNull,
     );
 

@@ -189,30 +189,43 @@ class WithdrawController extends GetxController {
       return false;
     }
 
+    final acc = withdrawAccount.value;
+    if (acc == null) {
+      ToastHelper().showErrorToast(
+        localization.withdrawValidationSelectWithdrawAccount,
+      );
+      return false;
+    }
+
+    final currency = acc.currency ?? '';
+    final isCrypto = acc.method?.isCrypto ?? false;
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: withdrawAccount.value!.currency!,
+      currencyCode: currency,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
-        "site_currency",
-      )!,
+            "site_currency",
+          ) ??
+          'USD',
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-        "site_currency_decimals",
-      )!,
-      isCrypto: withdrawAccount.value!.method!.isCrypto!,
+            "site_currency_decimals",
+          ) ??
+          '2',
+      isCrypto: isCrypto,
     );
 
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
     final double min =
-        double.tryParse(withdrawAccount.value!.method!.minWithdraw!) ?? 0.0;
+        double.tryParse(acc.method?.minWithdraw ?? '') ?? 0.0;
     final double max =
-        double.tryParse(withdrawAccount.value!.method!.maxWithdraw!) ??
+        double.tryParse(acc.method?.maxWithdraw ?? '') ??
         double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
         localization.withdrawValidationAmountMinimum(
           min.toStringAsFixed(calculateDecimals),
-          withdrawAccount.value!.currency!,
+          currency,
         ),
       );
       return false;
@@ -222,7 +235,19 @@ class WithdrawController extends GetxController {
       ToastHelper().showErrorToast(
         localization.withdrawValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
-          withdrawAccount.value!.currency!,
+          currency,
+        ),
+      );
+      return false;
+    }
+
+    final double balance = availableBalance;
+    final double totalRequired = enteredAmount + calculatedCharge.value;
+    if (totalRequired > balance) {
+      ToastHelper().showErrorToast(
+        localization.exchangeValidationInsufficientBalance(
+          balance.toStringAsFixed(calculateDecimals),
+          currency,
         ),
       );
       return false;

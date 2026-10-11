@@ -254,7 +254,7 @@ class LoanCaseModel {
     if (installments.isEmpty) return requestedAmount;
     final unpaid = installments.where((i) => !i.isPaid);
     if (unpaid.isEmpty) return 0.0;
-    return unpaid.fold(0.0, (sum, i) => sum + i.amount);
+    return unpaid.fold(0.0, (sum, i) => sum + (i.totalDue > 0 ? i.totalDue : 0.0));
   }
 
   int get paidInstallmentsCount =>
@@ -293,17 +293,25 @@ class LoanCaseModel {
   bool get isCollateralDanger =>
       lockedCollateralUsdt > 0 && coverageNowPct <= 120.0;
 
-  /// USDT needed to top up collateral to reach 150% coverage
+  double get effectiveCollateralRatio {
+    final ratio = product?.collateralRatioPct ?? 150.0;
+    return ratio > 0 ? ratio / 100.0 : 1.5;
+  }
+
+  /// USDT needed to top up collateral to reach required coverage
   double get collateralShortfallUsdt {
-    final target = outstandingAmount * 1.5;
+    if (lockedCollateralUsdt <= 0 && (product?.collateralRatioPct ?? 0) <= 0) return 0.0;
+    final target = outstandingAmount * effectiveCollateralRatio;
     final diff = target - lockedCollateralUsdt;
     return diff > 0 ? diff : 0.0;
   }
 
-  /// USD debt reduction needed to reach 150% coverage with current collateral
+  /// USD debt reduction needed to reach required coverage with current collateral
   double get debtReductionRequiredUsd {
     if (lockedCollateralUsdt <= 0) return 0.0;
-    final maxAllowedDebt = lockedCollateralUsdt / 1.5;
+    final ratio = effectiveCollateralRatio;
+    if (ratio <= 0) return 0.0;
+    final maxAllowedDebt = lockedCollateralUsdt / ratio;
     final diff = outstandingAmount - maxAllowedDebt;
     return diff > 0 ? diff : 0.0;
   }

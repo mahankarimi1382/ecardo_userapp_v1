@@ -402,25 +402,24 @@ class AddMoneyController extends GetxController {
       return false;
     }
 
-    if ((double.tryParse((gatewayMethod.value?.minimumDeposit ?? '0')) ?? 0.0) > 0 &&
-        amount < (double.tryParse((gatewayMethod.value?.minimumDeposit ?? '0')) ?? 0.0)) {
+    final isCrypto = wallet.value?.isCrypto ?? false;
+    final int decimals = isCrypto ? 8 : 2;
+
+    final minDeposit = double.tryParse(gatewayMethod.value?.minimumDeposit ?? '0') ?? 0.0;
+    if (minDeposit > 0 && amount < minDeposit) {
       ToastHelper().showErrorToast(
         localization!.addMoneyValidationAmountMinimum(
-          (double.tryParse(
-            (gatewayMethod.value?.minimumDeposit ?? '0'),
-          ) ?? 0.0).toStringAsFixed(2),
+          minDeposit.toStringAsFixed(decimals),
         ),
       );
       return false;
     }
 
-    if ((double.tryParse((gatewayMethod.value?.maximumDeposit ?? '0')) ?? 0.0) > 0 &&
-        amount > (double.tryParse((gatewayMethod.value?.maximumDeposit ?? '0')) ?? 0.0)) {
+    final maxDeposit = double.tryParse(gatewayMethod.value?.maximumDeposit ?? '0') ?? 0.0;
+    if (maxDeposit > 0 && amount > maxDeposit) {
       ToastHelper().showErrorToast(
         localization!.addMoneyValidationAmountMaximum(
-          (double.tryParse(
-            (gatewayMethod.value?.maximumDeposit ?? '0'),
-          ) ?? 0.0).toStringAsFixed(2),
+          maxDeposit.toStringAsFixed(decimals),
         ),
       );
       return false;

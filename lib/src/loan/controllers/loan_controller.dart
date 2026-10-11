@@ -357,6 +357,10 @@ class LoanController extends GetxController {
 
   /// Apply for loan — returns error message on failure or null on success
   Future<String?> applyForLoan() async {
+    if (isSubmitting.isTrue) {
+      return 'ERR_CONCURRENT: درخواست در حال پردازش است.';
+    }
+
     final product = selectedProduct.value;
     if (product == null) {
       return 'ERR_PRECONDITION: لطفاً یک محصول تسهیلاتی انتخاب کنید.';
@@ -371,6 +375,10 @@ class LoanController extends GetxController {
     }
     if (selectedTenure.value <= 0) {
       return 'ERR_PRECONDITION: مدت بازپرداخت را مشخص کنید.';
+    }
+    if (product.tenureOptions.isNotEmpty &&
+        !product.tenureOptions.contains(selectedTenure.value)) {
+      return 'ERR_VALIDATION: مدت زمان انتخابی برای این طرح معتبر نیست.';
     }
     if (!termsAccepted.value) {
       return 'ERR_CONSENT: تأیید شرایط و قوانین دریافت تسهیلات الزامی است.';

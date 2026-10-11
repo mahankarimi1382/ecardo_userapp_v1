@@ -237,20 +237,27 @@ class MakePaymentController extends GetxController {
             "site_currency_decimals",
           ) ??
           '2',
-      isCrypto: wallet.value!.isCrypto!,
+      isCrypto: wallet.value?.isCrypto ?? false,
     );
 
+    final currentWallet = wallet.value;
+    if (currentWallet == null) {
+      ToastHelper().showErrorToast(localization.transferValidationSelectWallet);
+      return false;
+    }
+
+    final walletCode = currentWallet.code ?? '';
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
-    final double min = double.tryParse(wallet.value!.paymentLimit!.min!) ?? 0.0;
+    final double min = double.tryParse(currentWallet.paymentLimit?.min ?? '') ?? 0.0;
     final double max =
-        double.tryParse(wallet.value!.paymentLimit!.max!) ?? double.infinity;
+        double.tryParse(currentWallet.paymentLimit?.max ?? '') ?? double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
         localization.makePaymentValidationAmountMinimum(
           min.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;
@@ -260,19 +267,20 @@ class MakePaymentController extends GetxController {
       ToastHelper().showErrorToast(
         localization.makePaymentValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;
     }
 
     final double availableBalance =
-        double.tryParse(wallet.value!.balance ?? '') ?? 0.0;
-    if (enteredAmount > availableBalance) {
+        double.tryParse(currentWallet.balance ?? '') ?? 0.0;
+    final double totalRequired = enteredAmount + charge.value;
+    if (totalRequired > availableBalance) {
       ToastHelper().showErrorToast(
         localization.exchangeValidationInsufficientBalance(
           availableBalance.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;
