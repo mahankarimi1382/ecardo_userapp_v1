@@ -84,7 +84,7 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
             child: MultiCurrencyFlipCard(
               wallet: widget.wallets.first,
               width: double.infinity,
-              height: 196,
+              height: 212,
               onTap: widget.onCardTap != null
                   ? () => widget.onCardTap!(widget.wallets.first)
                   : null,
@@ -98,7 +98,7 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 204,
+          height: 220,
           child: PageView.builder(
             controller: _pageController,
             physics: const BouncingScrollPhysics(),
@@ -119,7 +119,7 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
                     child: MultiCurrencyFlipCard(
                       wallet: wallet,
                       width: min(MediaQuery.of(context).size.width * _kViewportFraction, 420.0),
-                      height: 196,
+                      height: 212,
                       onTap: widget.onCardTap != null
                           ? () => widget.onCardTap!(wallet)
                           : null,

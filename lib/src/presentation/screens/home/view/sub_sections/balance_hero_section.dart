@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/controller/wallets_controller.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -65,6 +66,13 @@ class BalanceHeroSection extends StatelessWidget {
           availableCurrencies: availableCurrencies,
           onCurrencyChanged: (code) {
             homeController.selectWalletByCurrency(code);
+          },
+          isObscured: settings.isPrivacyMode.value,
+          onTogglePrivacy: (val) {
+            settings.setPrivacyMode(val);
+            if (Get.isRegistered<WalletsController>()) {
+              Get.find<WalletsController>().isPrivacyMode.value = val;
+            }
           },
           accountLabel: selectedWallet != null
               ? '${selectedWallet.name ?? currencyCode} (${l10nPick(context, fa: "کیف پول فعال", en: "Active Wallet", ar: "المحفظة النشطة")})'

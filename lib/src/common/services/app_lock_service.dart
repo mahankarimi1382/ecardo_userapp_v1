@@ -57,9 +57,22 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
       _pausedAt = DateTime.now();
+      _handleBackgroundPrivacy();
     } else if (state == AppLifecycleState.resumed) {
       _onResumed();
     }
+  }
+
+  /// Automatically obscure balances when app is backgrounded or inactive
+  void _handleBackgroundPrivacy() {
+    try {
+      if (Get.isRegistered<SettingsService>()) {
+        final settings = Get.find<SettingsService>();
+        if (settings.hideBalanceOnBackground.value || settings.isPrivacyMode.value) {
+          settings.isPrivacyMode.value = true;
+        }
+      }
+    } catch (_) {}
   }
 
   Future<void> _onResumed() async {

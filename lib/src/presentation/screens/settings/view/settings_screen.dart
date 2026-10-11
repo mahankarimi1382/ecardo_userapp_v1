@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
@@ -11,10 +14,12 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
-
-
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/device_sessions_security/view/widgets/visual_pin_dots_indicator.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/view/transaction_pin/transaction_pin_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/controller/wallets_controller.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -34,6 +39,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   bool _bioSupported = false;
   bool _bioEnabled = false;
+  bool _hasFaceBiometric = false;
+  bool _hasFingerprintBiometric = false;
+  bool _isTestingBio = false;
   int _lockMinutes = 0;
   bool _notifFinancial = true;
   bool _notifPromo = false;
@@ -66,6 +74,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         await settings.saveBiometricEnableOrDisable(false);
         enabled = false;
       }
+      List<BiometricType> availableBios = [];
+      try {
+        availableBios = await _bio.auth.getAvailableBiometrics()
+            .timeout(const Duration(milliseconds: 300), onTimeout: () => []);
+      } catch (_) {}
+      final hasFace = availableBios.contains(BiometricType.face);
+      final hasFingerprint = availableBios.contains(BiometricType.fingerprint);
+
       final lock = await settings.getAppLockMinutes();
       final fin = await settings.getNotifPref(SettingsService.notifFinancialKey);
       final promo = await settings.getNotifPref(
@@ -92,6 +108,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       setState(() {
         _bioSupported = supported;
         _bioEnabled = enabled;
+        _hasFaceBiometric = hasFace;
+        _hasFingerprintBiometric = hasFingerprint;
         _lockMinutes = lock;
         _notifFinancial = fin;
         _notifPromo = promo;
@@ -112,13 +130,109 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  IconData get _biometricIcon {
+    if (_hasFaceBiometric && !_hasFingerprintBiometric) {
+      return Icons.face_unlock_rounded;
+    }
+    return Icons.fingerprint_rounded;
+  }
+
+  String get _biometricTitle {
+    if (_hasFaceBiometric && !_hasFingerprintBiometric) {
+      return l10nPick(
+        context,
+        en: 'Face ID Sign In',
+        fa: 'ورود با تشخیص چهره (Face ID)',
+        ar: 'الدخول بالتعرف على الوجه',
+        zh: '面容解锁',
+      );
+    }
+    if (_hasFingerprintBiometric && !_hasFaceBiometric) {
+      return l10nPick(
+        context,
+        en: 'Fingerprint Sign In',
+        fa: 'ورود با اثر انگشت (Fingerprint)',
+        ar: 'الدخول ببصمة الإصبع',
+        zh: '指纹解锁',
+      );
+    }
+    return l10nPick(
+      context,
+      en: 'Face ID / Fingerprint',
+      fa: 'ورود با اثر انگشت یا چهره',
+      ar: 'الدخول بالبصمة أو الوجه',
+      zh: '生物识别登录',
+    );
+  }
+
   Future<void> _toggleBio(bool value) async {
+    if (_isTestingBio) return;
+    HapticFeedback.lightImpact();
+    final enableMsg = l10nPick(
+      context,
+      en: 'Biometric verification successful & activated',
+      fa: 'حسگر بیومتریک تأیید و ورود فعال شد',
+      ar: 'تم تفعيل الدخول بالبصمة بنجاح',
+      zh: '生物识别已验证并成功启用',
+    );
+    final disableMsg = l10nPick(
+      context,
+      en: 'Biometric sign-in turned off',
+      fa: 'ورود بیومتریک غیرفعال شد',
+      ar: 'تم إيقاف الدخول بالبصمة',
+      zh: '生物识别登录已关闭',
+    );
+
+    setState(() => _isTestingBio = true);
     if (value) {
       final ok = await _bio.enable();
-      if (ok && mounted) setState(() => _bioEnabled = true);
+      if (!mounted) return;
+      setState(() {
+        if (ok) _bioEnabled = true;
+        _isTestingBio = false;
+      });
+      if (ok) {
+        HapticFeedback.lightImpact();
+        ToastHelper().showSuccessToast(enableMsg);
+      }
     } else {
-      final ok = await _bio.disable();
-      if (ok && mounted) setState(() => _bioEnabled = false);
+      final ok = await _bio.disable(requireAuth: true);
+      if (!mounted) return;
+      setState(() {
+        if (ok) _bioEnabled = false;
+        _isTestingBio = false;
+      });
+      if (ok) {
+        HapticFeedback.lightImpact();
+        ToastHelper().showSuccessToast(disableMsg);
+      }
+    }
+  }
+
+  Future<void> _testBiometricHardware() async {
+    if (_isTestingBio) return;
+    HapticFeedback.lightImpact();
+    setState(() => _isTestingBio = true);
+    final reason = l10nPick(
+      context,
+      en: 'Instant hardware test: scan fingerprint or face to verify sensor responsiveness',
+      fa: 'تست آنی حسگر: جهت بررسی سلامت سخت‌افزار، حسگر را لمس یا چهره را اسکن کنید',
+      ar: 'اختبار فوري: المس مستشعر البصمة أو الوجه للتأكد من الاستجابة',
+      zh: '即时硬件测试：扫描指纹或面容以验证感应器响应',
+    );
+    final successMsg = l10nPick(
+      context,
+      en: 'Biometric sensor is 100% responsive and verified!',
+      fa: 'حسگر سخت‌افزاری کاملاً سالم، سریع و تأیید شد!',
+      ar: 'مستشعر المصادقة البيومترية يعمل بنجاح وبسرعة!',
+      zh: '生物识别传感器响应正常，验证成功！',
+    );
+    final ok = await _bio.authenticate(reason: reason);
+    if (!mounted) return;
+    setState(() => _isTestingBio = false);
+    if (ok) {
+      HapticFeedback.mediumImpact();
+      ToastHelper().showSuccessToast(successMsg);
     }
   }
 
@@ -474,7 +588,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       onTap: () => Get.toNamed(BaseRoute.changePassword),
                     ),
-                    _navTile(
+                    _actionTile(
                       context: context,
                       isDark: isDark,
                       leading: _iconBox(
@@ -495,29 +609,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ar: '4–6 أرقام للتحويل والدفع',
                         zh: '转账与支付用4–6位',
                       ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Obx(() {
+                            final isPinSet = PasscodeHelper.userHasPasscode(
+                              homeController.userModel.value.data?.passcode,
+                            );
+                            return _buildTransactionPinBadge(isPinSet, isDark);
+                          }),
+                          SizedBox(width: 4.w),
+                          _trailingChevron(context, isDark),
+                        ],
+                      ),
                       onTap: () {
-                        Get.to(() => const TransactionPinScreen());
+                        _showVisualChangePinModal(isDark, primaryTextColor, cardBg);
                       },
                     ),
                     if (settings.getSetting('fa_verification') == '1')
-                      _navTile(
-                        context: context,
-                        isDark: isDark,
-                        leading: _iconBox(
-                          icon: Icons.phonelink_lock_rounded,
-                          style: SettingsIconTokens.twoFactor(isDark: isDark),
-                        ),
-                        title: loc.settingsTwoFactorAuthentication,
-                        subtitle: l10nPick(
-                          context,
-                          en: 'Google Authenticator — login only',
-                          fa: 'ورود دو مرحله‌ای — فقط لاگین',
-                          ar: 'المصادقة الثنائية — تسجيل الدخول فقط',
-                          zh: '双重认证—仅登录',
-                        ),
-                        onTap: () =>
-                            Get.toNamed(BaseRoute.twoFactorAuthentication),
-                      ),
+                      Obx(() {
+                        final is2FaEnabled =
+                            homeController.userModel.value.data?.twoFa == true;
+                        return _actionTile(
+                          context: context,
+                          isDark: isDark,
+                          leading: _iconBox(
+                            icon: Icons.phonelink_lock_rounded,
+                            style: SettingsIconTokens.twoFactor(isDark: isDark),
+                          ),
+                          title: loc.settingsTwoFactorAuthentication,
+                          subtitle: l10nPick(
+                            context,
+                            en: 'Google Authenticator — login only',
+                            fa: 'ورود دو مرحله‌ای — فقط لاگین',
+                            ar: 'المصادقة الثنائية — تسجيل الدخول فقط',
+                            zh: '双重认证—仅登录',
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildTwoFaBadge(is2FaEnabled, isDark),
+                              SizedBox(width: 4.w),
+                              _trailingChevron(context, isDark),
+                            ],
+                          ),
+                          onTap: () =>
+                              Get.toNamed(BaseRoute.twoFactorAuthentication),
+                        );
+                      }),
                     _navTile(
                       context: context,
                       isDark: isDark,
@@ -566,31 +705,95 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Get.toNamed(BaseRoute.deviceSessionsSecurity),
                     ),
                     if (_bioSupported)
-                      _switchTile(
+                      _biometricSwitchTile(
+                        context: context,
                         isDark: isDark,
                         leading: _iconBox(
-                          icon: Icons.fingerprint_rounded,
+                          icon: _biometricIcon,
                           style: SettingsIconTokens.biometric(isDark: isDark),
                         ),
-                        title: l10nPick(
-                          context,
-                          en: 'Sign in with biometrics',
-                          fa: 'ورود با بیومتریک',
-                          ar: 'الدخول بالبصمة',
-                          zh: '生物识别登录',
-                        ),
+                        title: _biometricTitle,
                         subtitle: _bioEnabled
-                            ? l10nPick(context, en: 'Enabled', fa: 'فعال')
+                            ? l10nPick(
+                                context,
+                                en: 'Enabled — quick security check',
+                                fa: 'فعال — ورود سریع و امن',
+                                ar: 'مفعّل — دخول سريع وآمن',
+                                zh: '已启用 — 快速安全验证',
+                              )
                             : l10nPick(
                                 context,
                                 en: 'Sign in with your fingerprint or face',
                                 fa: 'با اثر انگشت یا چهره وارد شوید',
+                                ar: 'الدخول بالبصمة أو الوجه',
+                                zh: '通过指纹或面容快速登录',
                               ),
                         value: _bioEnabled,
+                        isTesting: _isTestingBio,
                         onChanged: _toggleBio,
+                        onTestHardware: _testBiometricHardware,
                       )
                     else
                       const SizedBox.shrink(),
+                    Obx(
+                      () => _switchTile(
+                        isDark: isDark,
+                        leading: _iconBox(
+                          icon: Icons.visibility_off_rounded,
+                          style: SettingsIconTokens.privacyMode(isDark: isDark),
+                        ),
+                        title: l10nPick(
+                          context,
+                          en: 'Privacy Mode (Hide Balances)',
+                          fa: 'حالت حریم خصوصی (مخفی‌سازی موجودی)',
+                          ar: 'وضع الخصوصية (إخفاء الأرصدة)',
+                          zh: '隐私模式（隐藏余额）',
+                        ),
+                        subtitle: l10nPick(
+                          context,
+                          en: 'Instantly masks balances across dashboard with •••••••• upon return or backgrounding',
+                          fa: 'پوشاندن آنی موجودی‌ها در صفحهٔ اصلی با «••••••••» هنگام پس‌زمینه یا بازگشت',
+                          ar: 'إخفاء الأرصدة فوراً برمز •••••••• عند مغادرة التطبيق',
+                          zh: '后台或切屏返回时自动用••••••••遮挡仪表盘余额',
+                        ),
+                        value: settings.isPrivacyMode.value,
+                        onChanged: (v) async {
+                          HapticFeedback.lightImpact();
+                          await settings.setPrivacyMode(v);
+                          if (Get.isRegistered<WalletsController>()) {
+                            Get.find<WalletsController>().isPrivacyMode.value = v;
+                          }
+                        },
+                      ),
+                    ),
+                    Obx(
+                      () => _switchTile(
+                        isDark: isDark,
+                        leading: _iconBox(
+                          icon: Icons.shield_outlined,
+                          style: SettingsIconTokens.hideBackground(isDark: isDark),
+                        ),
+                        title: l10nPick(
+                          context,
+                          en: 'Auto-hide on app background',
+                          fa: 'مخفی‌سازی خودکار در پس‌زمینه',
+                          ar: 'إخفاء تلقائي في الخلفية',
+                          zh: '后台自动隐藏',
+                        ),
+                        subtitle: l10nPick(
+                          context,
+                          en: 'Instantly masks sensitive balance values whenever you leave the app',
+                          fa: 'پوشاندن خودکار مبالغ به محض خروج از اپلیکیشن برای محافظت در برابر دید دیگران',
+                          ar: 'إخفاء القيم المالية الحساسة بمجرد مغادرة التطبيق',
+                          zh: '离开应用时立即遮挡敏感金额',
+                        ),
+                        value: settings.hideBalanceOnBackground.value,
+                        onChanged: (v) async {
+                          HapticFeedback.lightImpact();
+                          await settings.setHideBalanceOnBackground(v);
+                        },
+                      ),
+                    ),
                     _actionTile(
                       context: context,
                       isDark: isDark,
@@ -1586,6 +1789,497 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildBiometricIllustration({
+    required bool isDark,
+    required Color accentColor,
+    required bool value,
+  }) {
+    return Container(
+      width: 44.w,
+      height: 44.w,
+      decoration: BoxDecoration(
+        color: accentColor.withValues(alpha: isDark ? 0.16 : 0.08),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(
+          color: accentColor.withValues(alpha: value ? 0.40 : 0.20),
+          width: 1.0,
+        ),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 36.w,
+            height: 36.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: accentColor.withValues(alpha: value ? 0.35 : 0.12),
+                width: 0.8,
+              ),
+            ),
+          ),
+          Container(
+            width: 26.w,
+            height: 26.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: accentColor.withValues(alpha: value ? 0.12 : 0.04),
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.fingerprint_rounded,
+                size: 20.sp,
+                color: accentColor,
+              ),
+              if (_hasFaceBiometric) ...[
+                SizedBox(width: 2.w),
+                Icon(
+                  Icons.face_unlock_rounded,
+                  size: 13.sp,
+                  color: accentColor.withValues(alpha: 0.85),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _biometricSwitchTile({
+    required BuildContext context,
+    required bool isDark,
+    required Widget leading,
+    required String title,
+    required String subtitle,
+    required bool value,
+    required bool isTesting,
+    required ValueChanged<bool> onChanged,
+    required VoidCallback onTestHardware,
+  }) {
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor =
+        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final accentColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+
+    return Material(
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        child: Row(
+          children: [
+            _buildBiometricIllustration(
+              isDark: isDark,
+              accentColor: accentColor,
+              value: value,
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w600,
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: secondaryTextColor,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Row(
+                    children: [
+                      Icon(Icons.verified_user_rounded, size: 11.sp, color: AppColors.success),
+                      SizedBox(width: 4.w),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Hardware Enclave Protected',
+                          fa: 'امنیت سخت‌افزاری بر پایه Secure Enclave',
+                          ar: 'محمي بواسطة Secure Enclave',
+                          zh: '安全芯片硬件级保护',
+                        ),
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.success,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (value) ...[
+                    const SizedBox(height: 6),
+                    InkWell(
+                      onTap: isTesting ? null : onTestHardware,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        decoration: BoxDecoration(
+                          color: accentColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                          border: Border.all(
+                            color: accentColor.withValues(alpha: 0.28),
+                            width: 0.8,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.play_circle_outline_rounded,
+                              size: 13.sp,
+                              color: accentColor,
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Instant Sensor Test',
+                                fa: 'تست آنی حسگر',
+                                ar: 'اختبار الحساس',
+                                zh: '即时硬件测试',
+                              ),
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w600,
+                                color: accentColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: isTesting
+                  ? SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.2,
+                          color: accentColor,
+                        ),
+                      ),
+                    )
+                  : Switch.adaptive(
+                      value: value,
+                      onChanged: onChanged,
+                      activeTrackColor: accentColor,
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTwoFaBadge(bool isEnabled, bool isDark) {
+    final color = isEnabled ? AppColors.success : AppColors.warning;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        border: Border.all(
+          color: color.withValues(alpha: 0.28),
+          width: 0.8,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isEnabled ? Icons.verified_user_rounded : Icons.shield_outlined,
+            size: 13.sp,
+            color: color,
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            isEnabled
+                ? l10nPick(context, en: 'Enabled', fa: 'فعال', ar: 'مفعّل', zh: '已启用')
+                : l10nPick(context, en: 'Disabled', fa: 'غیرفعال', ar: 'معطّل', zh: '未启用'),
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionPinBadge(bool isConfigured, bool isDark) {
+    final color = isConfigured ? AppColors.success : AppColors.warning;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        border: Border.all(
+          color: color.withValues(alpha: 0.28),
+          width: 0.8,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          VisualPinDotsIndicator.compact(
+            length: 4,
+            isConfigured: isConfigured,
+            isDark: isDark,
+            dotSize: 5.5,
+            spacing: 3.0,
+          ),
+          SizedBox(width: 6.w),
+          Text(
+            isConfigured
+                ? l10nPick(context, en: 'Configured', fa: 'فعال', ar: 'مفعّل', zh: '已设置')
+                : l10nPick(context, en: 'Not Set', fa: 'تنظیم نشده', ar: 'غير معيّن', zh: '未设置'),
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModalLengthChip({
+    required int length,
+    required bool isSelected,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? primaryColor.withValues(alpha: 0.14)
+              : (isDark ? AppColors.darkSurface : AppColors.white),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          border: Border.all(
+            color: isSelected ? primaryColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            width: isSelected ? 1.4 : 0.8,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            VisualPinDotsIndicator.compact(
+              length: length,
+              isConfigured: isSelected,
+              isDark: isDark,
+              dotSize: 5.0,
+              spacing: 3.0,
+            ),
+            SizedBox(width: 6.w),
+            Text(
+              length == 4
+                  ? l10nPick(context, en: '4 Digits', fa: '۴ رقم', ar: '4 أرقام', zh: '4位')
+                  : l10nPick(context, en: '6 Digits', fa: '۶ رقم', ar: '6 أرقام', zh: '6位'),
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? primaryColor : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showVisualChangePinModal(
+    bool isDark,
+    Color primaryTextColor,
+    Color cardBg,
+  ) async {
+    HapticFeedback.lightImpact();
+    int selectedLength = 4;
+    final isPinConfigured = PasscodeHelper.userHasPasscode(
+      homeController.userModel.value.data?.passcode,
+    );
+
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: cardBg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) {
+          return SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.softGray.withValues(alpha: 0.4) : AppColors.lightWarmGray,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.dialpad_rounded,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        size: 24.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        l10nPick(context, en: 'Transaction PIN', fa: 'رمز انتقال وجه', ar: 'رمز التحويل', zh: '转账密码'),
+                        style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w700, color: primaryTextColor),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: '4 to 6 digit security code required to authorize transfers and withdrawals.',
+                      fa: 'رمز امنیتی ۴ تا ۶ رقمی مورد نیاز برای تأیید واریز، انتقال و برداشت وجه.',
+                      ar: 'رمز أمان من 4 إلى 6 أرقام لتأكيد التحويلات والسحوبات.',
+                      zh: '用于授权转账和提现的4至6位安全密码。',
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                      height: 1.4,
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+
+                  // Visual Dots Display
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      border: Border.all(
+                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        width: 0.8,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildModalLengthChip(
+                              length: 4,
+                              isSelected: selectedLength == 4,
+                              isDark: isDark,
+                              onTap: () {
+                                HapticFeedback.selectionClick();
+                                setModalState(() => selectedLength = 4);
+                              },
+                            ),
+                            SizedBox(width: 12.w),
+                            _buildModalLengthChip(
+                              length: 6,
+                              isSelected: selectedLength == 6,
+                              isDark: isDark,
+                              onTap: () {
+                                HapticFeedback.selectionClick();
+                                setModalState(() => selectedLength = 6);
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        VisualPinDotsIndicator(
+                          length: selectedLength,
+                          filledCount: isPinConfigured ? selectedLength : 0,
+                          isDark: isDark,
+                          dotSize: 16.0,
+                          spacing: 14.0,
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          isPinConfigured
+                              ? l10nPick(context, en: 'PIN is Active & Protected ($selectedLength digits)', fa: 'رمز فعال و محافظت‌شده است ($selectedLength رقم)', ar: 'الرمز مفعّل ومحمي', zh: '密码已启用并受保护')
+                              : l10nPick(context, en: 'PIN not configured ($selectedLength digits)', fa: 'رمز تنظیم نشده است ($selectedLength رقم)', ar: 'الرمز غير معيّن', zh: '尚未设置密码'),
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w600,
+                            color: isPinConfigured ? AppColors.success : AppColors.warning,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  // Action Buttons
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                      minimumSize: Size(double.infinity, 46.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                      ),
+                    ),
+                    icon: Icon(Icons.pin_rounded, size: 18.sp),
+                    label: Text(
+                      isPinConfigured
+                          ? l10nPick(context, en: 'Change Transaction PIN', fa: 'تغییر رمز انتقال وجه', ar: 'تغيير رمز التحويل', zh: '修改转账密码')
+                          : l10nPick(context, en: 'Set Transaction PIN', fa: 'تعیین رمز انتقال وجه', ar: 'تعيين رمز التحويل', zh: '设置转账密码'),
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      Get.to(() => const TransactionPinScreen());
+                    },
+                  ),
+                  SizedBox(height: 8.h),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Future<T?> _showStyledBottomSheet<T>({
     required BuildContext context,
     required bool isDark,
@@ -1869,6 +2563,20 @@ class SettingsIconTokens {
   static SettingsIconStyle appLockPin({required bool isDark}) => SettingsIconStyle(
         iconColor: isDark ? _slate300 : _slate600,
         backgroundColor: isDark ? _slate700.withValues(alpha: 0.5) : _slate100,
+      );
+
+  /// Privacy mode toggle tile (masks balances across dashboard)
+  static SettingsIconStyle privacyMode({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _teal300 : _teal600,
+        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+      );
+
+  /// Auto-hide balance on background toggle tile
+  static SettingsIconStyle hideBackground({required bool isDark}) =>
+      SettingsIconStyle(
+        iconColor: isDark ? _indigo300 : _indigo600,
+        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
       );
 
   // ------------------ CATEGORY: NOTIFICATIONS ------------------

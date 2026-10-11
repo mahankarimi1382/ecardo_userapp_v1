@@ -17,6 +17,7 @@ class ReplyTicketController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isReplayTicketLoading = false.obs;
   final RxBool isCloseTicketLoading = false.obs;
+  final RxBool isReopenTicketLoading = false.obs;
   final Rx<TicketMessageModel> ticketMessageModel = TicketMessageModel().obs;
   final MultipleImagePickerController controller = Get.put(
     MultipleImagePickerController(),
@@ -171,6 +172,42 @@ class ReplyTicketController extends GetxController {
       );
     } finally {
       isCloseTicketLoading.value = false;
+    }
+  }
+
+  // Reopen Ticket
+  Future<void> submitReopenTicket({required String ticketUid}) async {
+    isReopenTicketLoading.value = true;
+    try {
+      final response = await Get.find<NetworkService>().post(
+        endpoint: "${ApiPath.supportTicketsEndpoint}/action/$ticketUid",
+        data: {'action': 'reopen', 'status': 'open'},
+      );
+      if (response.status == Status.completed) {
+        final msg = response.data?['message'];
+        ToastHelper().showSuccessToast(msg is String && msg.isNotEmpty
+            ? msg
+            : (Get.context != null
+                ? l10nPick(
+                    Get.context!,
+                    en: 'Ticket reopened',
+                    fa: 'تیکت مجدداً باز شد',
+                    ar: 'تمت إعادة فتح التذكرة',
+                    tr: 'Talep yeniden açıldı',
+                    ru: 'Тикет повторно открыт',
+                    zh: '工单已重新开启',
+                  )
+                : 'Ticket reopened'));
+        await fetchTicketMessage(ticketUid: ticketUid);
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ submitReopenTicket() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+      );
+    } finally {
+      isReopenTicketLoading.value = false;
     }
   }
 

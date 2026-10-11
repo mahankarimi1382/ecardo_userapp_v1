@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../models/loan_models.dart';
@@ -139,27 +140,59 @@ class InstallmentItem {
   }
 }
 
-/// Detailed amortization schedule component supporting compact card view
-/// and full horizontal data table view, with summary metrics and pay actions.
+/// Clean Amortization Schedule Preview Table matching modern fintech standards.
+/// Shows Month #, Principal, Interest, Total Payment, and Remaining Balance.
 class LoanAmortizationSchedule extends StatefulWidget {
-  final List<InstallmentItem> installments;
+  final List<InstallmentItem>? installments;
+  final double? principal;
+  final double? annualInterestRatePct;
+  final int? tenureMonths;
+  final int gracePeriodMonths;
   final double? totalPrincipal;
   final double? totalInterest;
   final String currency;
   final void Function(InstallmentItem item)? onPayInstallment;
   final bool showHeader;
   final bool isCompactInitially;
+  final bool initiallyExpanded;
 
   const LoanAmortizationSchedule({
     super.key,
-    required this.installments,
+    this.installments,
+    this.principal,
+    this.annualInterestRatePct,
+    this.tenureMonths,
+    this.gracePeriodMonths = 0,
     this.totalPrincipal,
     this.totalInterest,
-    this.currency = 'IRR',
+    this.currency = 'USD',
     this.onPayInstallment,
     this.showHeader = true,
-    this.isCompactInitially = true,
+    this.isCompactInitially = false,
+    this.initiallyExpanded = true,
   });
+
+  /// Factory constructor for live interactive loan preview during application
+  factory LoanAmortizationSchedule.preview({
+    Key? key,
+    required double principal,
+    required double annualInterestRatePct,
+    required int tenureMonths,
+    int gracePeriodMonths = 0,
+    String currency = 'USD',
+    bool showHeader = true,
+  }) {
+    return LoanAmortizationSchedule(
+      key: key,
+      principal: principal,
+      annualInterestRatePct: annualInterestRatePct,
+      tenureMonths: tenureMonths,
+      gracePeriodMonths: gracePeriodMonths,
+      currency: currency,
+      showHeader: showHeader,
+      isCompactInitially: false,
+    );
+  }
 
   @override
   State<LoanAmortizationSchedule> createState() => _LoanAmortizationScheduleState();
@@ -176,9 +209,31 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     _isCompactView = widget.isCompactInitially;
   }
 
+  List<InstallmentItem> get _resolvedInstallments {
+    if (widget.installments != null && widget.installments!.isNotEmpty) {
+      return widget.installments!;
+    }
+    if (widget.principal != null && widget.principal! > 0 && widget.tenureMonths != null && widget.tenureMonths! > 0) {
+      return InstallmentItem.generateSchedule(
+        principal: widget.principal!,
+        annualInterestRatePct: widget.annualInterestRatePct ?? 14.0,
+        tenureMonths: widget.tenureMonths!,
+        gracePeriodMonths: widget.gracePeriodMonths,
+      );
+    }
+    return const [];
+  }
+
   String _formatAmount(double val) {
-    if (widget.currency == 'USD') {
-      return val.toStringAsFixed(2);
+    if (widget.currency.toUpperCase() == 'USD') {
+      final isWhole = (val - val.truncateToDouble()).abs() < 0.001;
+      final fixedStr = isWhole ? val.toStringAsFixed(0) : val.toStringAsFixed(2);
+      final parts = fixedStr.split('.');
+      final intPart = parts[0].replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (m) => '${m[1]},',
+      );
+      return parts.length > 1 ? '$intPart.${parts[1]}' : intPart;
     }
     final rounded = val.round();
     return rounded.toString().replaceAllMapped(
@@ -203,7 +258,7 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
   }
 
   String _currencyLabel(BuildContext context) {
-    if (widget.currency == 'USD') return r'$';
+    if (widget.currency.toUpperCase() == 'USD') return 'USD';
     return l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔');
   }
 
@@ -211,77 +266,86 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     if (widget.totalPrincipal != null && widget.totalPrincipal! > 0) {
       return widget.totalPrincipal!;
     }
-    return widget.installments.fold<double>(0.0, (sum, i) => sum + i.principalAmount);
+    final items = _resolvedInstallments;
+    if (items.isEmpty) return widget.principal ?? 0.0;
+    return items.fold<double>(0.0, (sum, i) => sum + i.principalAmount);
   }
 
   double get _computedTotalInterest {
     if (widget.totalInterest != null && widget.totalInterest! > 0) {
       return widget.totalInterest!;
     }
-    return widget.installments.fold<double>(0.0, (sum, i) => sum + i.interestAmount);
+    final items = _resolvedInstallments;
+    return items.fold<double>(0.0, (sum, i) => sum + i.interestAmount);
   }
 
   double get _computedTotalRepayment => _computedTotalPrincipal + _computedTotalInterest;
 
-  int get _paidCount => widget.installments.where((i) => i.isPaid).length;
-  int get _overdueCount => widget.installments.where((i) => i.isOverdue).length;
+  int get _paidCount => _resolvedInstallments.where((i) => i.isPaid).length;
+  int get _overdueCount => _resolvedInstallments.where((i) => i.isOverdue).length;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.installments.isEmpty) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final items = _resolvedInstallments;
+
+    if (items.isEmpty) {
       return Container(
-        padding: EdgeInsets.all(16.r),
+        padding: EdgeInsetsDirectional.all(AppSpacing.lg.r),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.lightBorder),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
         child: Center(
           child: Text(
             l10nPick(
               context,
-              fa: 'برنامه اقساط ثبت نشده است',
-              en: 'No amortization schedule recorded',
-              ar: 'لا يوجد جدول أقساط',
+              fa: 'برنامه استهلاک اقساط یافت نشد',
+              en: 'No amortization schedule available',
+              ar: 'لا يوجد جدول استهلاك',
               zh: '暂无还款计划表',
             ),
-            style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
           ),
         ),
       );
     }
 
-    final displayedItems = _showAllItems || widget.installments.length <= _previewLimit
-        ? widget.installments
-        : widget.installments.take(_previewLimit).toList();
+    final displayedItems = _showAllItems || items.length <= _previewLimit
+        ? items
+        : items.take(_previewLimit).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Summary Header Card
         if (widget.showHeader) ...[
-          _buildSummaryHeader(context),
-          SizedBox(height: 12.h),
+          _buildSummaryHeader(context, isDark, items.length),
+          SizedBox(height: AppSpacing.md.h),
         ],
 
-        // View Mode Toggle (Compact Cards vs Amortization Table)
-        _buildViewToggleBar(context),
-        SizedBox(height: 12.h),
+        // Toggle Bar: Cards vs Clean Table
+        _buildViewToggleBar(context, isDark, items.length),
+        SizedBox(height: AppSpacing.sm.h),
 
         // Content
         if (_isCompactView)
-          _buildCompactCardsList(context, displayedItems)
+          _buildCompactCardsList(context, displayedItems, isDark)
         else
-          _buildFullAmortizationTable(context, displayedItems),
+          _buildFullAmortizationTable(context, displayedItems, isDark),
 
-        // Show More / Show Less Button if long list
-        if (widget.installments.length > _previewLimit) ...[
-          SizedBox(height: 8.h),
+        // Show More / Show Less Button for long schedules
+        if (items.length > _previewLimit) ...[
+          SizedBox(height: AppSpacing.xs.h),
           Center(
             child: TextButton.icon(
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.lightPrimary,
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 8.h),
               ),
               icon: Icon(
                 _showAllItems ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
@@ -291,12 +355,12 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                 _showAllItems
                     ? l10nPick(
                         context,
-                        fa: 'بستن و نمایش کمتر',
+                        fa: 'بستن جدول و نمایش کمتر',
                         en: 'Show Less',
                         ar: 'عرض أقل',
                         zh: '收起',
                       )
-                    : '${l10nPick(context, fa: 'مشاهده تمام', en: 'View All', ar: 'عرض جميع', zh: '查看全部')} ${widget.installments.length} ${l10nPick(context, fa: 'قسط', en: 'Installments', ar: 'أقساط', zh: '期')}',
+                    : '${l10nPick(context, fa: 'مشاهده تمام', en: 'View All', ar: 'عرض جميع', zh: '查看全部')} ${items.length} ${l10nPick(context, fa: 'قسط', en: 'Installments', ar: 'أقساط', zh: '期')}',
                 style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700),
               ),
               onPressed: () {
@@ -311,24 +375,29 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     );
   }
 
-  Widget _buildSummaryHeader(BuildContext context) {
+  Widget _buildSummaryHeader(BuildContext context, bool isDark, int totalCount) {
     final principal = _computedTotalPrincipal;
     final interest = _computedTotalInterest;
     final total = _computedTotalRepayment;
 
     final principalPct = total > 0 ? (principal / total * 100).round() : 100;
     final interestPct = total > 0 ? (100 - principalPct) : 0;
-    final totalItems = widget.installments.length;
+
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
 
     return Container(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.lightBorder),
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+        border: Border.all(color: borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -340,25 +409,42 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10nPick(
-                  context,
-                  fa: 'خلاصه تسهیلات و بازپرداخت',
-                  en: 'Loan & Repayment Summary',
-                  ar: 'ملخص التسهيل والسداد',
-                  zh: '贷款与还款汇总',
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(Icons.pie_chart_outline_rounded, size: 16.sp, color: primaryAccent),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          fa: 'خلاصه تسهیلات و سهم اصل و سود',
+                          en: 'Repayment & Amortization Summary',
+                          ar: 'ملخص السداد والاستهلاك',
+                          zh: '还款与利息分布',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12.5.sp,
+                          fontWeight: FontWeight.w800,
+                          color: textPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
               ),
-              if (_paidCount > 0)
+              if (_paidCount > 0) ...[
+                SizedBox(width: 6.w),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
                   decoration: BoxDecoration(
                     color: AppColors.successContainer,
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                   ),
                   child: Text(
-                    '$_paidCount / $totalItems ${l10nPick(context, fa: 'تسویه شده', en: 'paid', ar: 'مسدد', zh: '已付')}',
+                    '$_paidCount / $totalCount ${l10nPick(context, fa: 'تسویه شده', en: 'paid', ar: 'مسدد', zh: '已付')}',
                     style: TextStyle(
                       fontSize: 10.5.sp,
                       fontWeight: FontWeight.w800,
@@ -366,58 +452,62 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                     ),
                   ),
                 ),
+              ],
             ],
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSpacing.sm.h),
 
-          // 3 Metric columns: Principal, Interest, Total
+          // 3 Metric columns: Principal, Interest, Total Due
           Row(
             children: [
               Expanded(
                 child: _buildHeaderMetric(
                   context,
-                  label: l10nPick(context, fa: 'اصل وام', en: 'Principal', ar: 'أصل التسهيل', zh: '本金'),
+                  label: l10nPick(context, fa: 'اصل وام', en: 'Principal', ar: 'الأصل', zh: '本金'),
                   value: _formatAmount(principal),
-                  color: AppColors.lightTextPrimary,
+                  color: textPrimary,
+                  textSecondary: textSecondary,
                 ),
               ),
-              Container(width: 1, height: 35.h, color: AppColors.lightBorder),
+              Container(width: 1, height: 35.h, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w),
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w),
                   child: _buildHeaderMetric(
                     context,
                     label: l10nPick(context, fa: 'کل سود', en: 'Total Interest', ar: 'إجمالي الفائدة', zh: '总利息'),
                     value: _formatAmount(interest),
                     color: const Color(0xFFD97706),
+                    textSecondary: textSecondary,
                   ),
                 ),
               ),
-              Container(width: 1, height: 35.h, color: AppColors.lightBorder),
+              Container(width: 1, height: 35.h, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
               Expanded(
                 child: _buildHeaderMetric(
                   context,
                   label: l10nPick(context, fa: 'مجموع بازپرداخت', en: 'Total Due', ar: 'الإجمالي', zh: '总还款'),
                   value: _formatAmount(total),
-                  color: AppColors.lightPrimary,
+                  color: primaryAccent,
+                  textSecondary: textSecondary,
                 ),
               ),
             ],
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSpacing.sm.h),
 
           // Principal vs Interest Stacked Bar
           ClipRRect(
-            borderRadius: BorderRadius.circular(6.r),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
             child: SizedBox(
-              height: 7.h,
+              height: 6.h,
               child: Row(
                 children: [
                   Expanded(
                     flex: principalPct.clamp(1, 99),
-                    child: Container(color: AppColors.lightPrimary),
+                    child: Container(color: primaryAccent),
                   ),
                   Expanded(
                     flex: interestPct.clamp(1, 99),
@@ -428,56 +518,71 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
             ),
           ),
 
-          SizedBox(height: 6.h),
+          SizedBox(height: 5.h),
 
           // Legend
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 8.r,
-                    height: 8.r,
-                    decoration: const BoxDecoration(
-                      color: AppColors.lightPrimary,
-                      shape: BoxShape.circle,
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 7.r,
+                      height: 7.r,
+                      decoration: BoxDecoration(
+                        color: primaryAccent,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '${l10nPick(context, fa: 'اصل وام', en: 'Principal', ar: 'الأصل', zh: '本金')}: $principalPct٪',
-                    style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
-                  ),
-                ],
+                    SizedBox(width: 4.w),
+                    Flexible(
+                      child: Text(
+                        '${l10nPick(context, fa: 'اصل وام', en: 'Principal', ar: 'الأصل', zh: '本金')}: $principalPct٪',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 10.sp, color: textSecondary),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Container(
-                    width: 8.r,
-                    height: 8.r,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF59E0B),
-                      shape: BoxShape.circle,
+              SizedBox(width: 8.w),
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 7.r,
+                      height: 7.r,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF59E0B),
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '${l10nPick(context, fa: 'سود تسهیلات', en: 'Interest', ar: 'الفائدة', zh: '利息')}: $interestPct٪',
-                    style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
-                  ),
-                ],
+                    SizedBox(width: 4.w),
+                    Flexible(
+                      child: Text(
+                        '${l10nPick(context, fa: 'سود تسهیلات', en: 'Interest', ar: 'الفائدة', zh: '利息')}: $interestPct٪',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 10.sp, color: textSecondary),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
 
           if (_overdueCount > 0) ...[
-            SizedBox(height: 10.h),
+            SizedBox(height: AppSpacing.sm.h),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
                 color: AppColors.errorContainer,
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                 border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
               ),
               child: Row(
@@ -488,10 +593,10 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                     child: Text(
                       '$_overdueCount ${l10nPick(
                             context,
-                            fa: 'قسط معوق سررسید گذشته دارید. لطفاً جهت جلوگیری از جریمه تأخیر تسویه فرمایید.',
+                            fa: 'قسط معوق سررسید گذشته دارید. لطفاً تسویه فرمایید.',
                             en: 'overdue installment(s). Please settle to prevent late fees.',
                             ar: 'قسط متأخر. يرجى السداد لتجنب الغرامات.',
-                            zh: '笔分期已逾期。请及时还款以避免产生滞纳金。',
+                            zh: '笔分期已逾期。请及时还款。',
                           )}',
                       style: TextStyle(
                         fontSize: 10.5.sp,
@@ -514,13 +619,14 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     required String label,
     required String value,
     required Color color,
+    required Color textSecondary,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 10.5.sp, color: AppColors.lightTextSecondary),
+          style: TextStyle(fontSize: 10.sp, color: textSecondary),
         ),
         SizedBox(height: 2.h),
         Text(
@@ -529,50 +635,65 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
             fontSize: 12.5.sp,
             fontWeight: FontWeight.w800,
             color: color,
+            fontFeatures: const [FontFeature.tabularFigures()],
           ),
         ),
         Text(
           _currencyLabel(context),
           style: TextStyle(
-            fontSize: 9.sp,
-            color: AppColors.lightTextSecondary.withValues(alpha: 0.7),
+            fontSize: 8.5.sp,
+            color: textSecondary.withValues(alpha: 0.7),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildViewToggleBar(BuildContext context) {
+  Widget _buildViewToggleBar(BuildContext context, bool isDark, int count) {
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          '${l10nPick(context, fa: 'جدول اقساط', en: 'Installments', ar: 'الأقساط', zh: '还款明细')} (${widget.installments.length})',
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+        Expanded(
+          child: Text(
+            '${l10nPick(context, fa: 'جدول استهلاک اقساط', en: 'Amortization Table', ar: 'جدول الاستهلاك', zh: '还款计划表')} ($count)',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: textPrimary),
+          ),
         ),
+        SizedBox(width: 8.w),
         Container(
-          padding: EdgeInsets.all(3.r),
+          padding: EdgeInsetsDirectional.all(2.r),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: AppColors.lightBorder),
+            color: surfaceColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+            border: Border.all(color: borderColor),
           ),
           child: Row(
             children: [
               _buildViewToggleButton(
                 context,
+                icon: Icons.table_chart_outlined,
+                label: l10nPick(context, fa: 'جدول', en: 'Table', ar: 'جدول', zh: '表格'),
+                isSelected: !_isCompactView,
+                primaryAccent: primaryAccent,
+                isDark: isDark,
+                onTap: () => setState(() => _isCompactView = false),
+              ),
+              SizedBox(width: 2.w),
+              _buildViewToggleButton(
+                context,
                 icon: Icons.view_agenda_outlined,
                 label: l10nPick(context, fa: 'کارت‌ها', en: 'Cards', ar: 'بطاقات', zh: '卡片'),
                 isSelected: _isCompactView,
+                primaryAccent: primaryAccent,
+                isDark: isDark,
                 onTap: () => setState(() => _isCompactView = true),
-              ),
-              SizedBox(width: 4.w),
-              _buildViewToggleButton(
-                context,
-                icon: Icons.table_chart_outlined,
-                label: l10nPick(context, fa: 'جدول استهلاک', en: 'Table', ar: 'جدول', zh: '表格'),
-                isSelected: !_isCompactView,
-                onTap: () => setState(() => _isCompactView = false),
               ),
             ],
           ),
@@ -586,32 +707,38 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     required IconData icon,
     required String label,
     required bool isSelected,
+    required Color primaryAccent,
+    required bool isDark,
     required VoidCallback onTap,
   }) {
     return InkWell(
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(6.r),
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+        duration: AppSpacing.fast,
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 4.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.lightPrimary : Colors.transparent,
-          borderRadius: BorderRadius.circular(8.r),
+          color: isSelected ? primaryAccent : Colors.transparent,
+          borderRadius: BorderRadius.circular(6.r),
         ),
         child: Row(
           children: [
             Icon(
               icon,
               size: 13.sp,
-              color: isSelected ? Colors.white : AppColors.lightTextSecondary,
+              color: isSelected
+                  ? (isDark ? AppColors.deepBlack : Colors.white)
+                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: 3.w),
             Text(
               label,
               style: TextStyle(
-                fontSize: 10.5.sp,
+                fontSize: 10.sp,
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected ? Colors.white : AppColors.lightTextSecondary,
+                color: isSelected
+                    ? (isDark ? AppColors.deepBlack : Colors.white)
+                    : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
               ),
             ),
           ],
@@ -620,37 +747,197 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     );
   }
 
-  Widget _buildCompactCardsList(BuildContext context, List<InstallmentItem> items) {
+  /// Clean Amortization Schedule Table showing:
+  /// Month #, Principal, Interest, and Remaining Balance
+  Widget _buildFullAmortizationTable(BuildContext context, List<InstallmentItem> items, bool isDark) {
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final headerBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final zebraColor = isDark
+        ? AppColors.darkSurfaceVariant.withValues(alpha: 0.4)
+        : AppColors.lightBackground.withValues(alpha: 0.6);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+        border: Border.all(color: borderColor),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: DataTable(
+            headingRowColor: WidgetStateProperty.all(headerBg),
+            headingTextStyle: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w800,
+              color: textPrimary,
+            ),
+            dataTextStyle: TextStyle(
+              fontSize: 10.5.sp,
+              color: textPrimary,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+            horizontalMargin: 12.w,
+            columnSpacing: 14.w,
+            columns: [
+              DataColumn(
+                label: Text(l10nPick(context, fa: 'ماه #', en: 'Month #', ar: 'الشهر', zh: '期数')),
+              ),
+              DataColumn(
+                label: Text(l10nPick(context, fa: 'اصل وام', en: 'Principal', ar: 'الأصل', zh: '本金')),
+              ),
+              DataColumn(
+                label: Text(l10nPick(context, fa: 'سود', en: 'Interest', ar: 'الفائدة', zh: '利息')),
+              ),
+              DataColumn(
+                label: Text(l10nPick(context, fa: 'مبلغ قسط', en: 'Payment', ar: 'القسط', zh: '总额')),
+              ),
+              DataColumn(
+                label: Text(l10nPick(context, fa: 'مانده اصل', en: 'Remaining Balance', ar: 'المتبقي', zh: '剩余本金')),
+              ),
+              DataColumn(
+                label: Text(l10nPick(context, fa: 'سررسید', en: 'Due Date', ar: 'الاستحقاق', zh: '到期日')),
+              ),
+              DataColumn(
+                label: Text(l10nPick(context, fa: 'وضعیت', en: 'Status', ar: 'الحالة', zh: '状态')),
+              ),
+              if (widget.onPayInstallment != null)
+                DataColumn(
+                  label: Text(l10nPick(context, fa: 'عملیات', en: 'Action', ar: 'إجراء', zh: '操作')),
+                ),
+            ],
+            rows: items.map((item) {
+              final isEven = item.installmentNumber % 2 == 0;
+              Color rowColor;
+              if (item.isOverdue) {
+                rowColor = AppColors.errorContainer.withValues(alpha: isDark ? 0.2 : 0.4);
+              } else if (item.isGracePeriod) {
+                rowColor = const Color(0xFFFEF3C7).withValues(alpha: isDark ? 0.15 : 0.35);
+              } else if (isEven) {
+                rowColor = zebraColor;
+              } else {
+                rowColor = surfaceColor;
+              }
+
+              return DataRow(
+                color: WidgetStateProperty.all(rowColor),
+                cells: [
+                  // Month #
+                  DataCell(
+                    Text(
+                      '${item.installmentNumber}',
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  // Principal
+                  DataCell(
+                    Text(
+                      _formatAmount(item.principalAmount),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: item.principalAmount > 0 ? textPrimary : AppColors.softGray,
+                      ),
+                    ),
+                  ),
+                  // Interest
+                  DataCell(
+                    Text(
+                      _formatAmount(item.interestAmount),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFFD97706),
+                      ),
+                    ),
+                  ),
+                  // Payment
+                  DataCell(
+                    Text(
+                      _formatAmount(item.totalPayment),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      ),
+                    ),
+                  ),
+                  // Remaining Balance
+                  DataCell(
+                    Text(
+                      _formatAmount(item.remainingBalance),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: textPrimary,
+                      ),
+                    ),
+                  ),
+                  // Due Date
+                  DataCell(Text(_formatDate(item.dueDate, context))),
+                  // Status
+                  DataCell(_buildStatusBadge(context, item, isDark)),
+                  // Action if needed
+                  if (widget.onPayInstallment != null)
+                    DataCell(
+                      !item.isPaid
+                          ? TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: item.isOverdue ? AppColors.error : AppColors.lightPrimary,
+                                padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
+                              ),
+                              onPressed: () => widget.onPayInstallment!(item),
+                              child: Text(
+                                l10nPick(context, fa: 'پرداخت', en: 'Pay', ar: 'سداد', zh: '支付'),
+                                style: const TextStyle(fontWeight: FontWeight.w800),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompactCardsList(BuildContext context, List<InstallmentItem> items, bool isDark) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: items.length,
-      separatorBuilder: (_, _) => SizedBox(height: 8.h),
+      separatorBuilder: (_, _) => SizedBox(height: AppSpacing.sm.h),
       itemBuilder: (ctx, index) {
         final item = items[index];
-        return _buildInstallmentCard(context, item);
+        return _buildInstallmentCard(context, item, isDark);
       },
     );
   }
 
-  Widget _buildInstallmentCard(BuildContext context, InstallmentItem item) {
+  Widget _buildInstallmentCard(BuildContext context, InstallmentItem item, bool isDark) {
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+
     final principalRatio = item.totalPayment > 0 ? (item.principalAmount / item.totalPayment).clamp(0.0, 1.0) : 0.0;
     final interestRatio = item.totalPayment > 0 ? (item.interestAmount / item.totalPayment).clamp(0.0, 1.0) : 0.0;
 
     return Container(
-      padding: EdgeInsets.all(12.r),
+      padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14.r),
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
         border: Border.all(
-          color: item.isOverdue
-              ? AppColors.error.withValues(alpha: 0.5)
-              : AppColors.lightBorder,
+          color: item.isOverdue ? AppColors.error.withValues(alpha: 0.6) : borderColor,
           width: item.isOverdue ? 1.4 : 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -659,31 +946,35 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row 1: Seq #, Grace Pill, Due Date, Status Badge
+          // Row 1: Seq #, Grace Pill, Status Badge
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
                     decoration: BoxDecoration(
-                      color: AppColors.lightBackground,
-                      borderRadius: BorderRadius.circular(6.r),
-                      border: Border.all(color: AppColors.lightBorder),
+                      color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      border: Border.all(color: borderColor),
                     ),
                     child: Text(
-                      '${l10nPick(context, fa: 'قسط', en: 'Inst.', ar: 'قسط', zh: '期')} ${item.installmentNumber}',
-                      style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w800),
+                      '${l10nPick(context, fa: 'قسط', en: 'Month', ar: 'قسط', zh: '期')} ${item.installmentNumber}',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w800,
+                        color: textPrimary,
+                      ),
                     ),
                   ),
                   if (item.isGracePeriod) ...[
                     SizedBox(width: 6.w),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFEF3C7),
-                        borderRadius: BorderRadius.circular(6.r),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                       ),
                       child: Text(
                         l10nPick(context, fa: 'تنفس (فقط سود)', en: 'Grace', ar: 'سماح', zh: '宽限'),
@@ -697,13 +988,13 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                   ],
                 ],
               ),
-              _buildStatusBadge(context, item),
+              _buildStatusBadge(context, item, isDark),
             ],
           ),
 
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.sm.h),
 
-          // Row 2: Amount & Due Date
+          // Row 2: Payment Amount & Due Date
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -714,7 +1005,8 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.lightTextPrimary,
+                  color: textPrimary,
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
               Text(
@@ -722,25 +1014,25 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextSecondary,
+                  color: textSecondary,
                 ),
               ),
             ],
           ),
 
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSpacing.sm.h),
 
-          // Row 3: Principal vs Interest Progress Bar
+          // Row 3: Principal vs Interest Bar
           ClipRRect(
             borderRadius: BorderRadius.circular(4.r),
             child: SizedBox(
-              height: 5.h,
+              height: 4.5.h,
               child: Row(
                 children: [
                   if (principalRatio > 0)
                     Expanded(
                       flex: (principalRatio * 100).round().clamp(1, 100),
-                      child: Container(color: AppColors.lightPrimary),
+                      child: Container(color: primaryAccent),
                     ),
                   if (interestRatio > 0)
                     Expanded(
@@ -752,19 +1044,27 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
             ),
           ),
 
-          SizedBox(height: 4.h),
+          SizedBox(height: 5.h),
 
-          // Details: Principal vs Interest parts
+          // Details: Principal vs Interest
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '${l10nPick(context, fa: 'سهم اصل', en: 'Principal', ar: 'الأصل', zh: '本金')}: ${_formatAmount(item.principalAmount)}',
-                style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
+                style: TextStyle(
+                  fontSize: 10.5.sp,
+                  color: textSecondary,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
               ),
               Text(
                 '${l10nPick(context, fa: 'سهم سود', en: 'Interest', ar: 'الفائدة', zh: '利息')}: ${_formatAmount(item.interestAmount)}',
-                style: TextStyle(fontSize: 10.sp, color: const Color(0xFFD97706)),
+                style: TextStyle(
+                  fontSize: 10.5.sp,
+                  color: const Color(0xFFD97706),
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
               ),
             ],
           ),
@@ -776,20 +1076,21 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${l10nPick(context, fa: 'مانده اصل', en: 'Balance', ar: 'المتبقي', zh: '本金余额')}: ${_formatAmount(item.remainingBalance)} ${_currencyLabel(context)}',
+                '${l10nPick(context, fa: 'مانده اصل', en: 'Remaining Balance', ar: 'المتبقي', zh: '本金余额')}: ${_formatAmount(item.remainingBalance)} ${_currencyLabel(context)}',
                 style: TextStyle(
                   fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextSecondary,
+                  fontWeight: FontWeight.w700,
+                  color: textSecondary,
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
               if (!item.isPaid && widget.onPayInstallment != null)
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: item.isOverdue ? AppColors.error : AppColors.lightPrimary,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    backgroundColor: item.isOverdue ? AppColors.error : primaryAccent,
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
                     minimumSize: Size(0, 28.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
                   ),
                   icon: Icon(
                     item.isOverdue ? Icons.priority_high_rounded : Icons.payment_rounded,
@@ -809,13 +1110,13 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     );
   }
 
-  Widget _buildStatusBadge(BuildContext context, InstallmentItem item) {
+  Widget _buildStatusBadge(BuildContext context, InstallmentItem item, bool isDark) {
     if (item.isPaid) {
       return Container(
-        padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
         decoration: BoxDecoration(
           color: AppColors.successContainer,
-          borderRadius: BorderRadius.circular(6.r),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
           border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
         ),
         child: Row(
@@ -838,10 +1139,10 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
 
     if (item.isOverdue) {
       return Container(
-        padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
         decoration: BoxDecoration(
           color: AppColors.errorContainer,
-          borderRadius: BorderRadius.circular(6.r),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
           border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
         ),
         child: Row(
@@ -864,119 +1165,30 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
 
     // Pending
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: AppColors.lightBackground,
-        borderRadius: BorderRadius.circular(6.r),
-        border: Border.all(color: AppColors.lightBorder),
+        color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.schedule_rounded, size: 12.sp, color: AppColors.lightTextSecondary),
+          Icon(
+            Icons.schedule_rounded,
+            size: 12.sp,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          ),
           SizedBox(width: 4.w),
           Text(
-            l10nPick(context, fa: 'در انتظار', en: 'Pending', ar: 'قيد الانتظار', zh: '待付'),
+            l10nPick(context, fa: 'در انتظار', en: 'Pending', ar: 'معلق', zh: '待付'),
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextSecondary,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFullAmortizationTable(BuildContext context, List<InstallmentItem> items) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.lightBorder),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14.r),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.all(AppColors.lightBackground),
-            headingTextStyle: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w800,
-              color: AppColors.lightTextPrimary,
-            ),
-            dataTextStyle: TextStyle(
-              fontSize: 10.5.sp,
-              color: AppColors.lightTextPrimary,
-            ),
-            horizontalMargin: 12.w,
-            columnSpacing: 16.w,
-            columns: [
-              DataColumn(label: Text(l10nPick(context, fa: '#', en: '#', ar: '#', zh: '#'))),
-              DataColumn(label: Text(l10nPick(context, fa: 'سررسید', en: 'Due Date', ar: 'الاستحقاق', zh: '到期日'))),
-              DataColumn(label: Text(l10nPick(context, fa: 'مبلغ قسط', en: 'Payment', ar: 'القسط', zh: '应付金额'))),
-              DataColumn(label: Text(l10nPick(context, fa: 'سهم اصل', en: 'Principal', ar: 'الأصل', zh: '本金'))),
-              DataColumn(label: Text(l10nPick(context, fa: 'سهم سود', en: 'Interest', ar: 'الفائدة', zh: '利息'))),
-              DataColumn(label: Text(l10nPick(context, fa: 'مانده اصل', en: 'Balance', ar: 'المتبقي', zh: '本金余额'))),
-              DataColumn(label: Text(l10nPick(context, fa: 'وضعیت', en: 'Status', ar: 'الحالة', zh: '状态'))),
-              if (widget.onPayInstallment != null)
-                DataColumn(label: Text(l10nPick(context, fa: 'عملیات', en: 'Action', ar: 'الإجراء', zh: '操作'))),
-            ],
-            rows: items.map((item) {
-              final isEven = item.installmentNumber % 2 == 0;
-              final rowColor = item.isOverdue
-                  ? AppColors.errorContainer.withValues(alpha: 0.3)
-                  : (item.isGracePeriod
-                      ? const Color(0xFFFEF3C7).withValues(alpha: 0.3)
-                      : (isEven ? AppColors.lightBackground.withValues(alpha: 0.5) : Colors.white));
-
-              return DataRow(
-                color: WidgetStateProperty.all(rowColor),
-                cells: [
-                  DataCell(
-                    Text(
-                      '${item.installmentNumber}',
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  DataCell(Text(_formatDate(item.dueDate, context))),
-                  DataCell(
-                    Text(
-                      _formatAmount(item.totalPayment),
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                  DataCell(Text(_formatAmount(item.principalAmount))),
-                  DataCell(
-                    Text(
-                      _formatAmount(item.interestAmount),
-                      style: const TextStyle(color: Color(0xFFD97706)),
-                    ),
-                  ),
-                  DataCell(Text(_formatAmount(item.remainingBalance))),
-                  DataCell(_buildStatusBadge(context, item)),
-                  if (widget.onPayInstallment != null)
-                    DataCell(
-                      !item.isPaid
-                          ? TextButton(
-                              style: TextButton.styleFrom(
-                                foregroundColor: item.isOverdue ? AppColors.error : AppColors.lightPrimary,
-                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                              ),
-                              onPressed: () => widget.onPayInstallment!(item),
-                              child: Text(
-                                l10nPick(context, fa: 'پرداخت', en: 'Pay', ar: 'سداد', zh: '支付'),
-                                style: const TextStyle(fontWeight: FontWeight.w800),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                ],
-              );
-            }).toList(),
-          ),
-        ),
       ),
     );
   }

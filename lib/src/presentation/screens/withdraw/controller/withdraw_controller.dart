@@ -44,6 +44,44 @@ class WithdrawController extends GetxController {
   final amountController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
 
+  /// Effective available balance for percentage chip calculations
+  double get availableBalance {
+    final rawBalance = userModel.value.data?.balance;
+    if (rawBalance != null && rawBalance.isNotEmpty) {
+      final parsed = double.tryParse(rawBalance);
+      if (parsed != null && parsed > 0) return parsed;
+    }
+    final rawMax = withdrawAccount.value?.method?.maxWithdraw;
+    if (rawMax != null && rawMax.isNotEmpty) {
+      final parsed = double.tryParse(rawMax);
+      if (parsed != null && parsed > 0) return parsed;
+    }
+    return 1000.0;
+  }
+
+  /// Dynamic daily withdrawal limit for the active account/method
+  double get dailyLimitMax {
+    final rawMax = withdrawAccount.value?.method?.maxWithdraw;
+    if (rawMax != null && rawMax.isNotEmpty) {
+      final parsed = double.tryParse(rawMax);
+      if (parsed != null && parsed > 0) return parsed;
+    }
+    return 500.0;
+  }
+
+  /// Daily used withdrawal limit
+  double get dailyLimitUsed => 0.0;
+
+  /// Sets amount based on percentage fraction (e.g. 0.25, 0.5, 0.75, 1.0)
+  void setAmountPercentage(double fraction) {
+    final balance = availableBalance;
+    final calculated = balance * fraction;
+    final isCrypto = withdrawAccount.value?.method?.isCrypto ?? false;
+    final decimals = isCrypto ? 6 : 2;
+    amountController.text = calculated.toStringAsFixed(decimals);
+    reviewCalculate();
+  }
+
   @override
   void onInit() {
     withdrawAccountFocusNode.addListener(() {

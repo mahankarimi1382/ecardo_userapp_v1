@@ -163,6 +163,7 @@ void _installGlobalErrorHandlers() {
 Future<void> _initializeServices() async {
   Get.put(SettingsService());
   await Get.find<SettingsService>().loadRateUnitIntoRx();
+  await Get.find<SettingsService>().initPrivacySettings();
   // Register the in-app self-update controller for the user app.
   // Pass [AppUpdateConfig.merchant] / [AppUpdateConfig.agent] in the
   // respective merchant / agent apps.

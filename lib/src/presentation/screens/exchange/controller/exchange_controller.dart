@@ -651,12 +651,15 @@ class ExchangeController extends GetxController {
 
     final fromWalletId = from?.id ?? 0;
     final toWalletId = to?.id ?? 0;
+    final isFromDefault = from?.isDefault == true || fromWalletId == 0;
+    final isToDefault = to?.isDefault == true || toWalletId == 0;
 
     final Map<String, dynamic> requestBody = {
       'amount': amountController.text.trim(),
-      'from_wallet': fromWalletId == 0 ? "default" : fromWalletId.toString(),
-      'to_wallet': toWalletId == 0 ? "default" : toWalletId.toString(),
+      'from_wallet': isFromDefault ? "default" : fromWalletId.toString(),
+      'to_wallet': isToDefault ? "default" : toWalletId.toString(),
       'rate': rateToSend.toStringAsFixed(8),
+      'expected_rate': rateToSend.toStringAsFixed(8),
       'total_amount': totalAmount.value.toStringAsFixed(8),
       'charge': charge.value.toStringAsFixed(8),
       'exchange_amount': exchangeAmount.value.toStringAsFixed(8),

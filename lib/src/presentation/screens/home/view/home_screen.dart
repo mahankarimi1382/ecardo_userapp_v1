@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/common/widgets/stale_data_banner.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/services_entry_section.dart';
+import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/recent_transactions_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/home_skeleton_loader.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/referral_stats_section.dart';
@@ -196,11 +197,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),
-                      // SERVICES HUB MOVE: entry card to the dedicated
-                      // All-Services page (financial / travel / business
-                      // grids + recent transactions live there now).
+                      // SERVICES HUB ENTRY: leading to dedicated All-Services page
                       const SliverToBoxAdapter(
                         child: ServicesEntrySection(),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: SizedBox(height: AppSpacing.sectionGap),
+                      ),
+                      // RECENT TRANSACTIONS STREAM: live activity directly on dashboard
+                      const SliverToBoxAdapter(
+                        child: RecentTransactionsSection(),
                       ),
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),

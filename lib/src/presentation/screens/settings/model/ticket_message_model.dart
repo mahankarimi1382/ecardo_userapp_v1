@@ -78,6 +78,18 @@ class Ticket {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
+  String get cleanMessage {
+    if (message == null) return '';
+    return message!
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#039;', "'")
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .trim();
+  }
 }
 
 class Attachments {
@@ -93,6 +105,42 @@ class Attachments {
     url = json['url'];
     size = json['size'];
     type = json['type'];
+  }
+
+  bool get isImage {
+    final t = (type ?? '').toLowerCase();
+    if (t.contains('image') ||
+        t == 'jpg' ||
+        t == 'jpeg' ||
+        t == 'png' ||
+        t == 'webp' ||
+        t == 'gif' ||
+        t == 'heic' ||
+        t == 'svg') {
+      return true;
+    }
+    final u = (url ?? '').toLowerCase().replaceAll(RegExp(r'["\[\]]'), '').trim();
+    return u.endsWith('.png') ||
+        u.endsWith('.jpg') ||
+        u.endsWith('.jpeg') ||
+        u.endsWith('.webp') ||
+        u.endsWith('.gif') ||
+        u.endsWith('.svg');
+  }
+
+  String get formattedSize {
+    if (size == null || size! <= 0) return '';
+    if (size! < 1024) return '$size B';
+    if (size! < 1024 * 1024) return '${(size! / 1024).toStringAsFixed(1)} KB';
+    return '${(size! / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
+
+  String get cleanUrl {
+    final raw = (url ?? '').replaceAll(RegExp(r'["\[\]]'), '').trim();
+    if (raw.isEmpty) return '';
+    if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+    if (raw.startsWith('/')) return 'https://ecardo.ir$raw';
+    return 'https://ecardo.ir/$raw';
   }
 }
 
@@ -144,6 +192,18 @@ class Messages {
     isAdmin = json['is_admin'];
     createdAt = json['created_at'];
     createdAtFormatted = json['created_at_formatted'];
+  }
+
+  String get cleanMessage {
+    if (message == null) return '';
+    return message!
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#039;', "'")
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .trim();
   }
 }
 

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
-/// Interactive financial loan slider with amount slider, quick chips,
-/// term duration selector, grace period toggle, and live computed metrics.
+/// Modern interactive fintech loan calculator with dual sliders
+/// (Amount slider and Duration slider), tactile haptic feedback on notch changes,
+/// quick preset duration chips (3, 6, 12, 24 months), and live repayment metrics:
+/// Monthly Installment (قسط ماهانه), Total Interest (کل سود), Total Repayment (کل بازپرداخت), APR percentage.
 class LoanCalculatorSlider extends StatefulWidget {
   final double? initialAmount;
   final int? initialMonths;
@@ -14,27 +17,42 @@ class LoanCalculatorSlider extends StatefulWidget {
   final double minAmount;
   final double maxAmount;
   final double stepAmount;
-  final double annualInterestRate;
-  final List<int> termOptions;
+  final double annualInterestRate; // APR percentage
+  final int minMonths;
+  final int maxMonths;
+  final List<int> presetDurations; // Default: [3, 6, 12, 24]
   final List<int> gracePeriodOptions;
   final List<double>? quickAmounts;
-  final String currency;
+  final String currency; // 'USD' or 'IRR'
+  final bool showGracePeriod;
   final void Function(double amount, int months, int graceMonths, double monthlyPayment)? onPlanChanged;
+  final void Function({
+    required double amount,
+    required int months,
+    required double monthlyPayment,
+    required double totalInterest,
+    required double totalRepayment,
+    required double aprRate,
+  })? onCalculationChanged;
 
   const LoanCalculatorSlider({
     super.key,
     this.initialAmount,
     this.initialMonths,
     this.initialGraceMonths,
-    this.minAmount = 5000000.0,
-    this.maxAmount = 500000000.0,
-    this.stepAmount = 1000000.0,
-    this.annualInterestRate = 18.0,
-    this.termOptions = const [3, 6, 12, 18, 24, 36],
+    this.minAmount = 500.0,
+    this.maxAmount = 100000.0,
+    this.stepAmount = 500.0,
+    this.annualInterestRate = 14.0,
+    this.minMonths = 3,
+    this.maxMonths = 24,
+    this.presetDurations = const [3, 6, 12, 24],
     this.gracePeriodOptions = const [0, 1, 2, 3],
     this.quickAmounts,
-    this.currency = 'IRR',
+    this.currency = 'USD',
+    this.showGracePeriod = false,
     this.onPlanChanged,
+    this.onCalculationChanged,
   });
 
   @override
@@ -49,11 +67,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   @override
   void initState() {
     super.initState();
-    _amount = (widget.initialAmount ?? 50000000.0).clamp(widget.minAmount, widget.maxAmount);
-    _months = widget.initialMonths ?? 12;
-    if (!widget.termOptions.contains(_months) && widget.termOptions.isNotEmpty) {
-      _months = widget.termOptions.first;
-    }
+    _amount = (widget.initialAmount ?? (widget.currency == 'USD' ? 10000.0 : 50000000.0))
+        .clamp(widget.minAmount, widget.maxAmount);
+    _months = (widget.initialMonths ?? 12).clamp(widget.minMonths, widget.maxMonths);
     _graceMonths = widget.initialGraceMonths ?? 0;
     if (!widget.gracePeriodOptions.contains(_graceMonths)) {
       _graceMonths = 0;
@@ -81,8 +97,14 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     }
 
     if (widget.initialMonths != null && widget.initialMonths != oldWidget.initialMonths) {
-      _months = widget.initialMonths!;
+      _months = widget.initialMonths!.clamp(widget.minMonths, widget.maxMonths);
       changed = true;
+    } else {
+      final clampedM = _months.clamp(widget.minMonths, widget.maxMonths);
+      if (clampedM != _months) {
+        _months = clampedM;
+        changed = true;
+      }
     }
 
     if (widget.annualInterestRate != oldWidget.annualInterestRate) {
@@ -96,9 +118,10 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
   double get _monthlyRate => (widget.annualInterestRate / 100.0) / 12.0;
 
-  int get _effectiveGraceMonths => _graceMonths.clamp(0, math.max(0, _months - 1)).toInt();
+  int get _effectiveGraceMonths =>
+      widget.showGracePeriod ? _graceMonths.clamp(0, math.max(0, _months - 1)).toInt() : 0;
 
-  /// Standard EMI during regular amortizing period
+  /// Standard EMI calculation using French amortization
   double get _monthlyPayment {
     final p = _amount;
     final r = _monthlyRate;
@@ -126,15 +149,23 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     return math.max(0.0, (graceInterest + amortizingTotal) - _amount);
   }
 
-  /// Total repayment (principal + interest)
+  /// Total repayment (principal + total interest)
   double get _totalRepayment => _amount + _totalInterest;
 
   void _notifyChange() {
     widget.onPlanChanged?.call(_amount, _months, _graceMonths, _monthlyPayment);
+    widget.onCalculationChanged?.call(
+      amount: _amount,
+      months: _months,
+      monthlyPayment: _monthlyPayment,
+      totalInterest: _totalInterest,
+      totalRepayment: _totalRepayment,
+      aprRate: widget.annualInterestRate,
+    );
   }
 
   String _formatAmount(double val) {
-    if (widget.currency == 'USD') {
+    if (widget.currency.toUpperCase() == 'USD') {
       final isWhole = (val - val.truncateToDouble()).abs() < 0.001;
       final fixedStr = isWhole ? val.toStringAsFixed(0) : val.toStringAsFixed(2);
       final parts = fixedStr.split('.');
@@ -152,70 +183,16 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   }
 
   String _currencyLabel(BuildContext context) {
-    if (widget.currency == 'USD') return r'$';
+    if (widget.currency.toUpperCase() == 'USD') return 'USD';
     return l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔');
-  }
-
-  Widget _buildCurrencyBadge(BuildContext context) {
-    final isUsd = widget.currency.toUpperCase() == 'USD';
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: isUsd
-            ? const Color(0xFF10B981).withValues(alpha: 0.12)
-            : AppColors.lightPrimary.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(
-          color: isUsd
-              ? const Color(0xFF10B981).withValues(alpha: 0.3)
-              : AppColors.lightPrimary.withValues(alpha: 0.25),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isUsd ? Icons.attach_money_rounded : Icons.account_balance_wallet_outlined,
-            size: 13.sp,
-            color: isUsd ? const Color(0xFF059669) : AppColors.lightPrimary,
-          ),
-          SizedBox(width: 4.w),
-          Text(
-            isUsd ? r'USD ($)' : 'IRR (${_currencyLabel(context)})',
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w800,
-              color: isUsd ? const Color(0xFF059669) : AppColors.lightPrimary,
-              letterSpacing: 0.2,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _quickChipLabel(BuildContext context, double amount) {
-    if (widget.currency == 'USD') {
-      if (amount >= 1000) {
-        return '\$${(amount / 1000).toInt()}k';
-      }
-      return '\$${amount.toInt()}';
-    }
-    // Persian IRR representation
-    if (amount >= 1000000) {
-      final millions = (amount / 1000000).toInt();
-      return '$millions ${l10nPick(context, fa: 'م', en: 'M', ar: 'م', zh: '百万')}';
-    }
-    return _formatAmount(amount);
   }
 
   List<double> get _effectiveQuickAmounts {
     if (widget.quickAmounts != null && widget.quickAmounts!.isNotEmpty) {
       return widget.quickAmounts!;
     }
-    if (widget.currency == 'USD') {
-      return [1000.0, 5000.0, 10000.0, 25000.0, 50000.0]
+    if (widget.currency.toUpperCase() == 'USD') {
+      return [1000.0, 5000.0, 10000.0, 25000.0, 50000.0, 100000.0]
           .where((a) => a >= widget.minAmount && a <= widget.maxAmount)
           .toList();
     }
@@ -224,54 +201,107 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
         .toList();
   }
 
+  String _quickChipLabel(BuildContext context, double amount) {
+    if (widget.currency.toUpperCase() == 'USD') {
+      if (amount >= 1000) {
+        return '\$${(amount / 1000).toInt()}k';
+      }
+      return '\$${amount.toInt()}';
+    }
+    if (amount >= 1000000) {
+      final millions = (amount / 1000000).toInt();
+      return '$millions ${l10nPick(context, fa: 'م', en: 'M', ar: 'م', zh: '百万')}';
+    }
+    return _formatAmount(amount);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final divisions = ((widget.maxAmount - widget.minAmount) / widget.stepAmount).round();
-    final effectiveDivisions = divisions > 0 && divisions <= 500 ? divisions : null;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final sunkenColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+
+    final amountDivisions = ((widget.maxAmount - widget.minAmount) / widget.stepAmount).round();
+    final effectiveAmountDivisions = amountDivisions > 0 && amountDivisions <= 500 ? amountDivisions : null;
+
+    final durationRange = widget.maxMonths - widget.minMonths;
+    final durationDivisions = durationRange > 0 ? durationRange : null;
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.lightBorder),
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+        border: Border.all(color: borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 12,
+            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+            blurRadius: 14,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsetsDirectional.all(AppSpacing.lg.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section 1: Amount Header & Big Display
+          // ------------------ SECTION 1: AMOUNT SLIDER ------------------
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  l10nPick(
-                    context,
-                    fa: 'مبلغ تسهیلات درخواستی',
-                    en: 'Loan Amount',
-                    ar: 'مبلغ التسهيل',
-                    zh: '融资金额',
-                  ),
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextSecondary,
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32.r,
+                      height: 32.r,
+                      decoration: BoxDecoration(
+                        color: primaryAccent.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.payments_outlined,
+                          size: 17.sp,
+                          color: primaryAccent,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: AppSpacing.sm.w),
+                    Expanded(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          fa: 'مبلغ تسهیلات درخواستی',
+                          en: 'Loan Amount',
+                          ar: 'مبلغ القرض',
+                          zh: '融资金额',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(width: 8.w),
-              _buildCurrencyBadge(context),
+              _buildCurrencyPill(context, isDark, primaryAccent),
             ],
           ),
-          SizedBox(height: 6.h),
+
+          SizedBox(height: AppSpacing.sm.h),
+
+          // Big Displayed Amount
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
@@ -283,36 +313,36 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                   child: Text(
                     _formatAmount(_amount),
                     style: TextStyle(
-                      fontSize: 22.sp,
+                      fontSize: 26.sp,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.lightTextPrimary,
+                      color: textPrimary,
                       letterSpacing: -0.5,
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 6.w),
+              SizedBox(width: AppSpacing.xs.w),
               Text(
-                widget.currency == 'USD' ? 'USD' : _currencyLabel(context),
+                _currencyLabel(context),
                 style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextSecondary,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  color: primaryAccent,
                 ),
               ),
             ],
           ),
 
-          SizedBox(height: 10.h),
+          SizedBox(height: AppSpacing.xs.h),
 
-          // Slider
+          // Amount Slider with Tactile Haptic Feedback
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: AppColors.lightPrimary,
-              inactiveTrackColor: AppColors.lightBorder,
-              thumbColor: AppColors.lightPrimary,
-              overlayColor: AppColors.lightPrimary.withValues(alpha: 0.12),
+              activeTrackColor: primaryAccent,
+              inactiveTrackColor: isDark ? AppColors.darkOutlineVariant : AppColors.lightOutlineVariant,
+              thumbColor: primaryAccent,
+              overlayColor: primaryAccent.withValues(alpha: 0.15),
               trackHeight: 5.h,
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.r, elevation: 3),
               overlayShape: RoundSliderOverlayShape(overlayRadius: 18.r),
@@ -321,7 +351,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               value: _amount,
               min: widget.minAmount,
               max: widget.maxAmount,
-              divisions: effectiveDivisions,
+              divisions: effectiveAmountDivisions,
               onChanged: (val) {
                 final stepped = (val / widget.stepAmount).round() * widget.stepAmount;
                 final clamped = stepped.clamp(widget.minAmount, widget.maxAmount);
@@ -336,47 +366,47 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
             ),
           ),
 
-          // Min/Max bounds indicators
+          // Amount Bounds (Min / Max)
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.xs.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Text(
-                    '${l10nPick(context, fa: 'حداقل', en: 'Min', ar: 'الحد الأدنى', zh: '最小')}: ${_formatAmount(widget.minAmount)}',
+                    '${l10nPick(context, fa: 'حداقل', en: 'Min', ar: 'الأدنى', zh: '最小')}: ${_formatAmount(widget.minAmount)}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
+                    style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
                   ),
                 ),
                 SizedBox(width: 8.w),
                 Flexible(
                   child: Text(
-                    '${l10nPick(context, fa: 'حداکثر', en: 'Max', ar: 'الحد الأقصى', zh: '最大')}: ${_formatAmount(widget.maxAmount)}',
+                    '${l10nPick(context, fa: 'حداکثر', en: 'Max', ar: 'الأقصى', zh: '最大')}: ${_formatAmount(widget.maxAmount)}',
                     maxLines: 1,
                     textAlign: TextAlign.end,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary),
+                    style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
                   ),
                 ),
               ],
             ),
           ),
 
-          SizedBox(height: 12.h),
-
           // Quick Amount Chips
           if (_effectiveQuickAmounts.isNotEmpty) ...[
+            SizedBox(height: AppSpacing.sm.h),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
               child: Row(
                 children: _effectiveQuickAmounts.map((q) {
                   final isSelected = (_amount - q).abs() < (widget.stepAmount / 2);
                   return Padding(
-                    padding: EdgeInsetsDirectional.only(end: 6.w),
+                    padding: EdgeInsetsDirectional.only(end: AppSpacing.xs.w),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(10.r),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                       onTap: () {
                         HapticFeedback.selectionClick();
                         setState(() {
@@ -385,15 +415,13 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                         _notifyChange();
                       },
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 180),
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                        duration: AppSpacing.fast,
+                        padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 5.h),
                         decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.lightPrimary
-                              : AppColors.lightBackground,
-                          borderRadius: BorderRadius.circular(10.r),
+                          color: isSelected ? primaryAccent : sunkenColor,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                           border: Border.all(
-                            color: isSelected ? AppColors.lightPrimary : AppColors.lightBorder,
+                            color: isSelected ? primaryAccent : borderColor,
                             width: 1.2,
                           ),
                         ),
@@ -402,7 +430,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                            color: isSelected ? Colors.white : AppColors.lightTextPrimary,
+                            color: isSelected
+                                ? (isDark ? AppColors.deepBlack : Colors.white)
+                                : textPrimary,
                           ),
                         ),
                       ),
@@ -411,189 +441,187 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                 }).toList(),
               ),
             ),
-            SizedBox(height: 16.h),
           ],
 
-          const Divider(height: 1, color: AppColors.lightBorder),
-          SizedBox(height: 14.h),
+          SizedBox(height: AppSpacing.md.h),
+          Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+          SizedBox(height: AppSpacing.md.h),
 
-          // Section 2: Term / Duration Selector
+          // ------------------ SECTION 2: DURATION SLIDER & PRESETS ------------------
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10nPick(
-                  context,
-                  fa: 'مدت زمان بازپرداخت',
-                  en: 'Repayment Term',
-                  ar: 'مدة السداد',
-                  zh: '还款期限',
-                ),
-                style: TextStyle(
-                  fontSize: 12.5.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextPrimary,
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32.r,
+                      height: 32.r,
+                      decoration: BoxDecoration(
+                        color: primaryAccent.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.calendar_month_outlined,
+                          size: 17.sp,
+                          color: primaryAccent,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: AppSpacing.sm.w),
+                    Expanded(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          fa: 'مدت زمان بازپرداخت',
+                          en: 'Repayment Duration',
+                          ar: 'مدة السداد',
+                          zh: '还款期限',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                '$_months ${l10nPick(context, fa: 'ماهه', en: 'months', ar: 'شهر', zh: '个月')}',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.lightPrimary,
+              SizedBox(width: 8.w),
+              Container(
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: primaryAccent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                ),
+                child: Text(
+                  '$_months ${l10nPick(context, fa: 'ماهه', en: 'Months', ar: 'شهراً', zh: '个月')}',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w900,
+                    color: primaryAccent,
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8.h),
-          Wrap(
-            spacing: 6.w,
-            runSpacing: 6.h,
-            children: widget.termOptions.map((m) {
-              final isSelected = _months == m;
-              return InkWell(
-                borderRadius: BorderRadius.circular(12.r),
-                onTap: () {
+
+          SizedBox(height: AppSpacing.xs.h),
+
+          // Duration Slider with Tactile Haptic Feedback
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: primaryAccent,
+              inactiveTrackColor: isDark ? AppColors.darkOutlineVariant : AppColors.lightOutlineVariant,
+              thumbColor: primaryAccent,
+              overlayColor: primaryAccent.withValues(alpha: 0.15),
+              trackHeight: 5.h,
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.r, elevation: 3),
+              overlayShape: RoundSliderOverlayShape(overlayRadius: 18.r),
+            ),
+            child: Slider(
+              value: _months.toDouble(),
+              min: widget.minMonths.toDouble(),
+              max: widget.maxMonths.toDouble(),
+              divisions: durationDivisions,
+              onChanged: (val) {
+                final stepped = val.round().clamp(widget.minMonths, widget.maxMonths);
+                if (stepped != _months) {
                   HapticFeedback.selectionClick();
                   setState(() {
-                    _months = m;
+                    _months = stepped;
                     if (_graceMonths >= _months) {
                       _graceMonths = 0;
                     }
                   });
                   _notifyChange();
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.lightPrimary : Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: isSelected ? AppColors.lightPrimary : AppColors.lightBorder,
-                      width: 1.3,
-                    ),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: AppColors.lightPrimary.withValues(alpha: 0.18),
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Text(
-                    '$m ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}',
-                    style: TextStyle(
-                      fontSize: 11.5.sp,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                      color: isSelected ? Colors.white : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-
-          SizedBox(height: 16.h),
-          const Divider(height: 1, color: AppColors.lightBorder),
-          SizedBox(height: 14.h),
-
-          // Section 3: Grace Period Toggle (دوره تنفس)
-          Row(
-            children: [
-              Icon(Icons.hourglass_top_rounded, size: 16.sp, color: const Color(0xFFF59E0B)),
-              SizedBox(width: 6.w),
-              Expanded(
-                child: Text(
-                  l10nPick(
-                    context,
-                    fa: 'دوره تنفس (تعویق بازپرداخت اصل)',
-                    en: 'Grace Period (Deferred Principal)',
-                    ar: 'فترة السماح (تأجيل سداد الأصل)',
-                    zh: '宽限期（延后本金偿还）',
-                  ),
-                  style: TextStyle(
-                    fontSize: 12.5.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextPrimary,
-                  ),
-                ),
-              ),
-              if (_graceMonths > 0)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFEF3C7),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    '$_graceMonths ${l10nPick(context, fa: 'ماه تنفس', en: 'mo grace', ar: 'سماح', zh: '宽限')}',
-                    style: TextStyle(
-                      fontSize: 10.5.sp,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFFB45309),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            l10nPick(
-              context,
-              fa: 'در ماه‌های تنفس فقط سود محاسبه شده پرداخت می‌شود و بازپرداخت اصل وام پس از آن آغاز می‌گردد.',
-              en: 'During the grace period, only interest is serviced; principal amortization begins afterward.',
-              ar: 'خلال فترة السماح يتم سداد الفائدة فقط، ويبدأ استهلاك أصل القرض لاحقاً.',
-              zh: '在宽限期内仅支付利息，期满后开始正常本息摊还。',
+                }
+              },
             ),
-            style: TextStyle(fontSize: 10.5.sp, color: AppColors.lightTextSecondary, height: 1.4),
           ),
-          SizedBox(height: 8.h),
-          Row(
-            children: widget.gracePeriodOptions.map((g) {
-              final isSelected = _graceMonths == g;
-              final label = g == 0
-                  ? l10nPick(context, fa: 'بدون تنفس', en: 'None', ar: 'بدون', zh: '无')
-                  : '$g ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}';
 
+          // Duration Bounds
+          Padding(
+            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.xs.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    '${widget.minMonths} ${l10nPick(context, fa: 'ماه', en: 'mo', ar: 'شهر', zh: '月')}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Flexible(
+                  child: Text(
+                    '${widget.maxMonths} ${l10nPick(context, fa: 'ماه', en: 'mo', ar: 'شهر', zh: '月')}',
+                    maxLines: 1,
+                    textAlign: TextAlign.end,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: AppSpacing.sm.h),
+
+          // Quick Preset Duration Chips (3, 6, 12, 24 months)
+          Row(
+            children: widget.presetDurations.map((m) {
+              final isSelected = _months == m;
               return Expanded(
                 child: Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    start: g == widget.gracePeriodOptions.first ? 0 : 3.w,
-                    end: g == widget.gracePeriodOptions.last ? 0 : 3.w,
-                  ),
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 3.w),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(10.r),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                     onTap: () {
                       HapticFeedback.selectionClick();
                       setState(() {
-                        _graceMonths = g;
+                        _months = m.clamp(widget.minMonths, widget.maxMonths);
+                        if (_graceMonths >= _months) {
+                          _graceMonths = 0;
+                        }
                       });
                       _notifyChange();
                     },
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      padding: EdgeInsets.symmetric(vertical: 7.h),
+                      duration: AppSpacing.fast,
+                      padding: EdgeInsetsDirectional.symmetric(vertical: 8.h),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? (g > 0 ? const Color(0xFFD97706) : AppColors.lightPrimary)
-                            : AppColors.lightBackground,
-                        borderRadius: BorderRadius.circular(10.r),
+                        color: isSelected ? primaryAccent : sunkenColor,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                         border: Border.all(
-                          color: isSelected
-                              ? (g > 0 ? const Color(0xFFD97706) : AppColors.lightPrimary)
-                              : AppColors.lightBorder,
+                          color: isSelected ? primaryAccent : borderColor,
+                          width: isSelected ? 1.4 : 1.0,
                         ),
+                        boxShadow: isSelected
+                            ? [
+                                BoxShadow(
+                                  color: primaryAccent.withValues(alpha: 0.25),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ]
+                            : null,
                       ),
                       child: Text(
-                        label,
+                        '$m ${l10nPick(context, fa: 'ماهه', en: 'Mo', ar: 'شهر', zh: '月')}',
                         style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                          color: isSelected ? Colors.white : AppColors.lightTextPrimary,
+                          fontSize: 11.5.sp,
+                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                          color: isSelected
+                              ? (isDark ? AppColors.deepBlack : Colors.white)
+                              : textPrimary,
                         ),
                       ),
                     ),
@@ -603,26 +631,42 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
             }).toList(),
           ),
 
-          SizedBox(height: 16.h),
+          // Optional Grace Period Toggle
+          if (widget.showGracePeriod) ...[
+            SizedBox(height: AppSpacing.md.h),
+            Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+            SizedBox(height: AppSpacing.md.h),
+            _buildGracePeriodSelector(context, isDark, primaryAccent, borderColor, sunkenColor, textPrimary, textSecondary),
+          ],
 
-          // Section 4: Live Computed Metrics Card
+          SizedBox(height: AppSpacing.lg.h),
+
+          // ------------------ SECTION 3: LIVE REPAYMENT DISPLAY ------------------
+          // 4-tile grid: Monthly Installment, Total Interest, Total Repayment, APR percentage
           Container(
-            padding: EdgeInsets.all(14.r),
+            padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  AppColors.lightPrimary.withValues(alpha: 0.04),
-                  AppColors.lightPrimary.withValues(alpha: 0.08),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                colors: isDark
+                    ? [
+                        AppColors.darkSurfaceVariant,
+                        AppColors.darkSurfaceVariant.withValues(alpha: 0.7),
+                      ]
+                    : [
+                        primaryAccent.withValues(alpha: 0.05),
+                        primaryAccent.withValues(alpha: 0.09),
+                      ],
+                begin: AlignmentDirectional.topStart,
+                end: AlignmentDirectional.bottomEnd,
               ),
-              borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: AppColors.lightPrimary.withValues(alpha: 0.15)),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : primaryAccent.withValues(alpha: 0.18),
+              ),
             ),
             child: Column(
               children: [
-                // Row 1: Monthly Installment & Effective Rate
+                // Row 1: Monthly Installment & APR percentage
                 Row(
                   children: [
                     Expanded(
@@ -630,59 +674,69 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                         context,
                         title: l10nPick(
                           context,
-                          fa: 'مبلغ قسط ماهانه',
+                          fa: 'قسط ماهانه',
                           en: 'Monthly Installment',
                           ar: 'القسط الشهري',
-                          zh: '月供金额',
+                          zh: '每月供款',
                         ),
                         value: '${_formatAmount(_monthlyPayment)} ${_currencyLabel(context)}',
-                        caption: _graceMonths > 0
+                        caption: _effectiveGraceMonths > 0
                             ? l10nPick(
                                 context,
-                                fa: 'پس از اتمام تنفس (${_months - _graceMonths} قسط)',
-                                en: 'After grace period (${_months - _graceMonths} inst.)',
+                                fa: 'پس از تنفس (${_months - _effectiveGraceMonths} قسط)',
+                                en: 'Post grace (${_months - _effectiveGraceMonths} inst.)',
                                 ar: 'بعد فترة السماح',
-                                zh: '宽限期后（${_months - _graceMonths}期）',
+                                zh: '宽限期后',
                               )
                             : l10nPick(
                                 context,
                                 fa: 'طی $_months قسط مساوی',
-                                en: 'Over $_months equal installments',
+                                en: 'Over $_months installments',
                                 ar: 'على $_months قسط',
-                                zh: '共 $_months 期等额本息',
+                                zh: '共 $_months 期',
                               ),
                         isEmphasized: true,
+                        accentColor: primaryAccent,
+                        isDark: isDark,
                       ),
                     ),
-                    Container(width: 1, height: 45.h, color: AppColors.lightBorder),
+                    Container(
+                      width: 1,
+                      height: 48.h,
+                      color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsetsDirectional.only(start: 8.w),
+                        padding: EdgeInsetsDirectional.only(start: AppSpacing.sm.w),
                         child: _buildMetricTile(
                           context,
                           title: l10nPick(
                             context,
-                            fa: 'نرخ سود سالانه',
-                            en: 'Annual Rate',
-                            ar: 'الفائدة السنوية',
-                            zh: '年化利率',
+                            fa: 'نرخ سود سالانه (APR)',
+                            en: 'APR Percentage',
+                            ar: 'الفائدة السنوية APR',
+                            zh: '年化利率 (APR)',
                           ),
                           value: '${widget.annualInterestRate.toStringAsFixed(1)}٪',
                           caption: l10nPick(
                             context,
                             fa: 'فرمول بانکی استاندارد',
-                            en: 'Standard Banking Rate',
-                            ar: 'المعدل البنكي',
-                            zh: '标准银行综合利率',
+                            en: 'Annualized fixed rate',
+                            ar: 'المعدل السنوي',
+                            zh: '综合年化率',
                           ),
                           isEmphasized: false,
+                          isDark: isDark,
                         ),
                       ),
                     ),
                   ],
                 ),
 
-                const Divider(height: 18, color: AppColors.lightBorder),
+                Divider(
+                  height: AppSpacing.lg.h,
+                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                ),
 
                 // Row 2: Total Interest & Total Repayment
                 Row(
@@ -695,28 +749,34 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           fa: 'کل سود تسهیلات',
                           en: 'Total Interest',
                           ar: 'إجمالي الفائدة',
-                          zh: '利息总计',
+                          zh: '总利息',
                         ),
                         value: '${_formatAmount(_totalInterest)} ${_currencyLabel(context)}',
                         caption: l10nPick(
                           context,
-                          fa: 'هزینه مالی کل دوره',
+                          fa: 'هزینه کل دریافت وام',
                           en: 'Total borrowing cost',
-                          ar: 'تكلفة التمويل الإجمالية',
-                          zh: '全程利息成本',
+                          ar: 'تكلفة الاقتراض',
+                          zh: '融资总成本',
                         ),
                         isEmphasized: false,
+                        accentColor: const Color(0xFFF59E0B),
+                        isDark: isDark,
                       ),
                     ),
-                    Container(width: 1, height: 45.h, color: AppColors.lightBorder),
+                    Container(
+                      width: 1,
+                      height: 48.h,
+                      color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsetsDirectional.only(start: 8.w),
+                        padding: EdgeInsetsDirectional.only(start: AppSpacing.sm.w),
                         child: _buildMetricTile(
                           context,
                           title: l10nPick(
                             context,
-                            fa: 'مجموع بازپرداخت',
+                            fa: 'کل بازپرداخت',
                             en: 'Total Repayment',
                             ar: 'إجمالي السداد',
                             zh: '还款总计',
@@ -724,60 +784,176 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           value: '${_formatAmount(_totalRepayment)} ${_currencyLabel(context)}',
                           caption: l10nPick(
                             context,
-                            fa: 'اصل + کل سود',
+                            fa: 'اصل وام + سود کل',
                             en: 'Principal + Interest',
                             ar: 'الأصل + الفائدة',
                             zh: '本金 + 总利息',
                           ),
                           isEmphasized: true,
-                          accentColor: AppColors.lightPrimary,
+                          isDark: isDark,
                         ),
                       ),
                     ),
                   ],
                 ),
 
-                // Grace period callout note (smooth animated height)
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 220),
-                  curve: Curves.easeInOut,
-                  child: _graceMonths > 0
-                      ? Padding(
-                          padding: EdgeInsets.only(top: 10.h),
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFEF3C7).withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(8.r),
-                              border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.4)),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.info_outline, size: 14.sp, color: const Color(0xFFB45309)),
-                                SizedBox(width: 6.w),
-                                Expanded(
-                                  child: Text(
-                                    '${l10nPick(context, fa: 'قسط ماهیانه در دوره تنفس (فقط سود)', en: 'Grace monthly payment (interest only)', ar: 'قسط فترة السماح', zh: '宽限期月付（仅付利息）')}: ${_formatAmount(_graceMonthlyPayment)} ${_currencyLabel(context)}',
-                                    style: TextStyle(
-                                      fontSize: 10.5.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF92400E),
-                                      fontFeatures: const [FontFeature.tabularFigures()],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                // Grace period callout banner if active
+                if (_effectiveGraceMonths > 0) ...[
+                  SizedBox(height: AppSpacing.sm.h),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFEF3C7).withValues(alpha: 0.8),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.4)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.info_outline, size: 14.sp, color: const Color(0xFFB45309)),
+                        SizedBox(width: 6.w),
+                        Expanded(
+                          child: Text(
+                            '${l10nPick(context, fa: 'قسط ماهانه دوره تنفس (فقط سود)', en: 'Grace monthly installment (interest only)', ar: 'قسط فترة السماح', zh: '宽限期月供')}: ${_formatAmount(_graceMonthlyPayment)} ${_currencyLabel(context)}',
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF92400E),
+                              fontFeatures: const [FontFeature.tabularFigures()],
                             ),
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCurrencyPill(BuildContext context, bool isDark, Color primaryAccent) {
+    final isUsd = widget.currency.toUpperCase() == 'USD';
+    const greenAccent = Color(0xFF10B981);
+
+    return Container(
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: isUsd
+            ? greenAccent.withValues(alpha: 0.12)
+            : primaryAccent.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+        border: Border.all(
+          color: isUsd
+              ? greenAccent.withValues(alpha: 0.3)
+              : primaryAccent.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isUsd ? Icons.attach_money_rounded : Icons.account_balance_wallet_outlined,
+            size: 13.sp,
+            color: isUsd ? greenAccent : primaryAccent,
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            isUsd ? r'USD ($)' : 'IRR (${_currencyLabel(context)})',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w800,
+              color: isUsd ? greenAccent : primaryAccent,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGracePeriodSelector(
+    BuildContext context,
+    bool isDark,
+    Color primaryAccent,
+    Color borderColor,
+    Color sunkenColor,
+    Color textPrimary,
+    Color textSecondary,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.hourglass_top_rounded, size: 16.sp, color: const Color(0xFFF59E0B)),
+            SizedBox(width: 6.w),
+            Expanded(
+              child: Text(
+                l10nPick(
+                  context,
+                  fa: 'دوره تنفس (تعویق بازپرداخت اصل وام)',
+                  en: 'Grace Period (Deferred Principal)',
+                  ar: 'فترة السماح',
+                  zh: '宽限期',
+                ),
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  fontWeight: FontWeight.w700,
+                  color: textPrimary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: AppSpacing.xs.h),
+        Row(
+          children: widget.gracePeriodOptions.map((g) {
+            final isSelected = _graceMonths == g;
+            final label = g == 0
+                ? l10nPick(context, fa: 'بدون تنفس', en: 'None', ar: 'بدون', zh: '无')
+                : '$g ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}';
+
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 2.w),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    setState(() {
+                      _graceMonths = g;
+                    });
+                    _notifyChange();
+                  },
+                  child: AnimatedContainer(
+                    duration: AppSpacing.fast,
+                    padding: EdgeInsetsDirectional.symmetric(vertical: 6.h),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected ? const Color(0xFFD97706) : sunkenColor,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      border: Border.all(
+                        color: isSelected ? const Color(0xFFD97706) : borderColor,
+                      ),
+                    ),
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        color: isSelected ? Colors.white : textPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
@@ -787,8 +963,12 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     required String value,
     required String caption,
     required bool isEmphasized,
+    required bool isDark,
     Color? accentColor,
   }) {
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -800,7 +980,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           style: TextStyle(
             fontSize: 11.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.lightTextSecondary,
+            color: textSecondary,
           ),
         ),
         SizedBox(height: 3.h),
@@ -811,9 +991,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
             value,
             maxLines: 1,
             style: TextStyle(
-              fontSize: isEmphasized ? 14.sp : 13.sp,
+              fontSize: isEmphasized ? 15.sp : 13.5.sp,
               fontWeight: isEmphasized ? FontWeight.w900 : FontWeight.w700,
-              color: accentColor ?? AppColors.lightTextPrimary,
+              color: accentColor ?? textPrimary,
               letterSpacing: -0.3,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
@@ -826,7 +1006,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 9.5.sp,
-            color: AppColors.lightTextSecondary.withValues(alpha: 0.8),
+            color: textSecondary.withValues(alpha: 0.8),
           ),
         ),
       ],

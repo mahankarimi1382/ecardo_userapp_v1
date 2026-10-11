@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
 
 enum WalletFilterType { all, fiat, crypto }
 
@@ -30,7 +31,11 @@ class WalletsController extends GetxController {
   }
 
   void togglePrivacyMode() {
-    isPrivacyMode.value = !isPrivacyMode.value;
+    final next = !isPrivacyMode.value;
+    isPrivacyMode.value = next;
+    if (Get.isRegistered<SettingsService>()) {
+      Get.find<SettingsService>().setPrivacyMode(next);
+    }
   }
 
   bool isWalletCrypto(Wallets wallet) {
@@ -121,6 +126,13 @@ class WalletsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (Get.isRegistered<SettingsService>()) {
+      final settings = Get.find<SettingsService>();
+      isPrivacyMode.value = settings.isPrivacyMode.value;
+      ever<bool>(settings.isPrivacyMode, (val) {
+        if (isPrivacyMode.value != val) isPrivacyMode.value = val;
+      });
+    }
     fetchWallets();
     _listenToEvents();
   }

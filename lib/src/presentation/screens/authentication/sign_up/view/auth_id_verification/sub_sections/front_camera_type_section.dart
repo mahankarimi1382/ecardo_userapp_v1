@@ -1,35 +1,110 @@
-import 'dart:ui';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/document_alignment_guide.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_capture.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart';
+import 'package:ecardo_user/src/presentation/widgets/dynamic_attachment_preview.dart';
 
 class FrontCameraTypeSection extends StatelessWidget {
   final Fields field;
 
   const FrontCameraTypeSection({super.key, required this.field});
 
+  void _proceedToNext(BuildContext context, AuthIdVerificationController controller) {
+    final currentFieldIndex = controller.fields.indexWhere((f) => f.name == field.name);
+    if (currentFieldIndex != -1 && currentFieldIndex + 1 < controller.fields.length) {
+      final nextField = controller.fields[currentFieldIndex + 1];
+      controller.currentFieldIndex.value = currentFieldIndex + 1;
+      final type = nextField.type?.toLowerCase();
+      if (type == 'camera') {
+        Get.to(() => CameraTypeSection(field: nextField));
+      } else if (type == 'file') {
+        Get.to(() => FileTypeSection(field: nextField));
+      } else if (type == 'front_camera') {
+        Get.to(() => FrontCameraTypeSection(field: nextField));
+      } else {
+        Get.to(() => const KycSubmissionSection());
+      }
+    } else {
+      Get.to(() => const KycSubmissionSection());
+    }
+  }
+
+  Future<void> _captureWithFrontCamera(
+    BuildContext context,
+    AuthIdVerificationController controller,
+  ) async {
+    final file = await Get.to<File?>(
+      () => FrontCameraCapture(fieldName: field.name ?? ""),
+    );
+    if (file != null) {
+      controller.fieldFiles[field.name ?? ""] = file;
+    }
+  }
+
+  Future<void> _pickFromGallery(
+    BuildContext context,
+    AuthIdVerificationController controller,
+  ) async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+        maxWidth: 1920,
+        maxHeight: 1080,
+      );
+      if (picked != null) {
+        final rawFile = File(picked.path);
+        if (UploadHelper.exceedsSize(rawFile, UploadHelper.maxKycDocBytes)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'File size must not exceed 20MB',
+              fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
+            ),
+          );
+          return;
+        }
+        final compressed = await UploadHelper.compressImageIfNeeded(rawFile);
+        controller.fieldFiles[field.name ?? ""] = compressed;
+      }
+    } catch (e) {
+      debugPrint('Gallery pick error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final AuthIdVerificationController controller = Get.find();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor =
+        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final borderCol = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      appBar: const CommonDefaultAppBar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -56,182 +131,175 @@ class FrontCameraTypeSection extends StatelessWidget {
                         }
                       },
                     ),
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.symmetric(
-                                horizontal: 18.w,
-                              ),
-                              child: Text(
-                                field.name ??
-                                    localizations.frontCameraTypeNotAvailable,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 24.sp,
-                                  color: AppColors.lightTextPrimary,
-                                ),
-                              ),
+                    SizedBox(height: 12.h),
+
+                    // Title & Instructions
+                    Padding(
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w),
+                      child: Column(
+                        children: [
+                          Text(
+                            field.name ?? localizations.frontCameraTypeNotAvailable,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 22.sp,
+                              color: primaryTextColor,
                             ),
-                            SizedBox(height: 6.h),
-                            Padding(
-                              padding: EdgeInsetsDirectional.symmetric(
-                                horizontal: 18.w,
-                              ),
-                              child: Text(
-                                field.instructions ??
-                                    localizations.frontCameraTypeNotAvailable,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14.sp,
-                                  color: AppColors.lightTextTertiary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                          child: Image.asset(
-                            PngAssets.splashFrame,
-                            height: 250.h,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 6.h),
+                          Text(
+                            field.instructions ?? localizations.frontCameraTypeNotAvailable,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13.sp,
+                              color: secondaryTextColor,
+                              height: 1.35,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 16.h),
+
+                    // Real-time tips banner
+                    RealtimeTipsBanner(
+                      isDark: isDark,
+                      autoCycle: true,
+                      backgroundColor: isDark
+                          ? AppColors.darkSurface
+                          : const Color(0xFFF8FAFC),
+                    ),
+                    SizedBox(height: 16.h),
+
+                    // Main Container
                     Expanded(
                       child: Container(
-                        margin: EdgeInsetsDirectional.symmetric(
-                          horizontal: 18.w,
-                        ),
-                        padding: EdgeInsetsDirectional.only(
-                          top: 3.h,
-                          start: 18.w,
-                          end: 18.w,
-                        ),
+                        margin: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
+                        padding: EdgeInsetsDirectional.all(18.w),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadiusDirectional.only(
-                            topStart: Radius.circular(30.r),
-                            topEnd: Radius.circular(30.r),
+                            topStart: Radius.circular(28.r),
+                            topEnd: Radius.circular(28.r),
                           ),
-                          color: AppColors.white,
+                          color: cardBg,
+                          border: Border.all(color: borderCol, width: 1),
                           boxShadow: [
                             BoxShadow(
-                              offset: const Offset(0, 0),
-                              blurRadius: 40.r,
-                              color: AppColors.black.withValues(alpha: 0.06),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 40.h),
-                            Image.asset(
-                              PngAssets.idVerificationImage,
-                              width: 220.w,
-                              height: 220.h,
-                            ),
-                            SizedBox(height: 50.h),
-                            CommonButton(
-                              text: localizations.frontCameraTypeButton,
-                              width: double.infinity,
-
-                              onPressed: () async {
-                                final file = await Get.to(
-                                  () => FrontCameraCapture(
-                                    fieldName: field.name ?? "",
-                                  ),
-                                );
-                                if (file != null) {
-                                  controller.fieldFiles[field.name ?? ""] =
-                                      file;
-                                  if (context.mounted && Navigator.canPop(context)) {
-                                    Navigator.pop(context, file);
-                                  } else {
-                                    Get.to(() => const KycSubmissionSection());
-                                  }
-                                }
-                              },
-                            ),
-
-                            if (field.validation == "nullable") ...[
-                              SizedBox(height: 20.h),
-                              CommonButton(
-                                backgroundColor: AppColors.transparent,
-                                text: localizations.frontCameraTypeSkip,
-                                width: 120.w,
-
-                                onPressed: () {
-                                  final controller =
-                                      Get.find<AuthIdVerificationController>();
-                                  final isNullable =
-                                      field.validation == "nullable";
-
-                                  if (isNullable) {
-                                    controller.skipField(field.name ?? "");
-
-                                    final currentFieldIndex = controller.fields
-                                        .indexWhere(
-                                          (f) => f.name == field.name,
-                                        );
-
-                                    if (currentFieldIndex != -1 &&
-                                        currentFieldIndex + 1 <
-                                            controller.fields.length) {
-                                      final nextField = controller
-                                          .fields[currentFieldIndex + 1];
-
-                                      if (nextField.type?.toLowerCase() ==
-                                          "camera") {
-                                        Get.to(
-                                          () => CameraTypeSection(
-                                            field: nextField,
-                                          ),
-                                        );
-                                      } else if (nextField.type
-                                              ?.toLowerCase() ==
-                                          "file") {
-                                        Get.to(
-                                          () =>
-                                              FileTypeSection(field: nextField),
-                                        );
-                                      } else if (nextField.type
-                                              ?.toLowerCase() ==
-                                          "front_camera") {
-                                        Get.to(
-                                          () => FrontCameraTypeSection(
-                                            field: nextField,
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      Get.to(
-                                        () => const KycSubmissionSection(),
-                                      );
-                                    }
-                                  } else {
-                                    Navigator.pop(context, null);
-                                  }
-                                },
-                                borderColor: AppColors.lightPrimary.withValues(
-                                  alpha: 0.50,
-                                ),
-                                borderWidth: 2,
-                                textColor: AppColors.lightTextPrimary,
+                              offset: const Offset(0, -2),
+                              blurRadius: 20.r,
+                              color: AppColors.black.withValues(
+                                alpha: isDark ? 0.25 : 0.04,
                               ),
-                            ],
-                            SizedBox(
-                              height: AppSpacing.bottomSafe(context, 20.h),
                             ),
                           ],
                         ),
+                        child: Obx(() {
+                          final file = controller.fieldFiles[field.name ?? ""];
+                          final hasFile = file != null && file.existsSync();
+
+                          return Column(
+                            children: [
+                              SizedBox(height: 10.h),
+
+                              if (!hasFile)
+                                _buildSelfieGuidePlaceholder(
+                                  context: context,
+                                  isDark: isDark,
+                                  onCaptureTap: () => _captureWithFrontCamera(context, controller),
+                                  primaryText: primaryTextColor,
+                                  secondaryText: secondaryTextColor,
+                                )
+                              else
+                                _buildCapturedThumbnailCard(
+                                  context: context,
+                                  file: file,
+                                  isDark: isDark,
+                                  onRetakeTap: () => _captureWithFrontCamera(context, controller),
+                                  onDeleteTap: () => controller.fieldFiles.remove(field.name ?? ""),
+                                  primaryText: primaryTextColor,
+                                  secondaryText: secondaryTextColor,
+                                ),
+
+                              const Spacer(),
+                              SizedBox(height: 20.h),
+
+                              // Primary Action Button
+                              if (!hasFile) ...[
+                                CommonButton(
+                                  text: localizations.frontCameraTypeButton,
+                                  width: double.infinity,
+                                  onPressed: () => _captureWithFrontCamera(context, controller),
+                                ),
+                                SizedBox(height: 10.h),
+                                OutlinedButton.icon(
+                                  onPressed: () => _pickFromGallery(context, controller),
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: Size(double.infinity, 46.h),
+                                    side: BorderSide(
+                                      color: isDark
+                                          ? AppColors.darkBorder
+                                          : AppColors.lightBorder,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16.r),
+                                    ),
+                                  ),
+                                  icon: const Icon(Icons.photo_library_outlined, size: 18),
+                                  label: Text(
+                                    l10nPick(
+                                      context,
+                                      en: 'Or Upload from Gallery',
+                                      fa: 'یا انتخاب تصویر از گالری',
+                                      ar: 'أو التحميل من المعرض',
+                                      zh: '或从相册选择',
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: primaryTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ] else ...[
+                                CommonButton(
+                                  text: l10nPick(
+                                    context,
+                                    en: 'Confirm & Continue',
+                                    fa: 'تأیید و ادامه',
+                                    ar: 'تأكيد ومتابعة',
+                                    zh: '确认并继续',
+                                  ),
+                                  width: double.infinity,
+                                  onPressed: () {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context, file);
+                                    } else {
+                                      _proceedToNext(context, controller);
+                                    }
+                                  },
+                                ),
+                              ],
+
+                              // Skip option if nullable
+                              if (field.validation == "nullable") ...[
+                                SizedBox(height: 10.h),
+                                CommonButton(
+                                  backgroundColor: AppColors.transparent,
+                                  text: localizations.frontCameraTypeSkip,
+                                  width: 120.w,
+                                  textColor: secondaryTextColor,
+                                  onPressed: () {
+                                    controller.skipField(field.name ?? "");
+                                    _proceedToNext(context, controller);
+                                  },
+                                ),
+                              ],
+                              SizedBox(height: 16.h),
+                            ],
+                          );
+                        }),
                       ),
                     ),
                   ],
@@ -240,6 +308,289 @@ class FrontCameraTypeSection extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  /// Selfie Biometric Guide Placeholder
+  Widget _buildSelfieGuidePlaceholder({
+    required BuildContext context,
+    required bool isDark,
+    required VoidCallback onCaptureTap,
+    required Color primaryText,
+    required Color secondaryText,
+  }) {
+    return GestureDetector(
+      onTap: onCaptureTap,
+      child: Container(
+        width: double.infinity,
+        height: 220.h,
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : const Color(0xFFCBD5E1),
+            width: 1.5,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 72.w,
+                height: 88.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(36.r),
+                  border: Border.all(
+                    color: const Color(0xFF10B981),
+                    width: 2.5,
+                  ),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.10),
+                ),
+                child: Icon(
+                  Icons.face_rounded,
+                  size: 38.sp,
+                  color: const Color(0xFF10B981),
+                ),
+              ),
+              SizedBox(height: 14.h),
+              Text(
+                l10nPick(
+                  context,
+                  en: 'Position Face Inside Oval Frame',
+                  fa: 'صورت را در مرکز کادر بیضی قرار دهید',
+                  ar: 'ضع الوجه داخل الإطار البيضاوي',
+                  zh: '请将脸部置于椭圆框内',
+                ),
+                style: TextStyle(
+                  fontSize: 14.5.sp,
+                  fontWeight: FontWeight.w800,
+                  color: primaryText,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Text(
+                  l10nPick(
+                    context,
+                    en: 'Ensure good lighting, look straight ahead, and remove sunglasses',
+                    fa: 'نور محیط را تنظیم کرده، مستقیم نگاه کنید و عینک آفتابی یا ماسک را بردارید',
+                    ar: 'تأكد من الإضاءة الجيدة وانظر للأمام وقم بإزالة النظارات',
+                    zh: '请保持光线充足，正视镜头并摘除墨镜与口罩',
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    color: secondaryText,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Thumbnail card with file size check badge and replace/retake button
+  Widget _buildCapturedThumbnailCard({
+    required BuildContext context,
+    required File file,
+    required bool isDark,
+    required VoidCallback onRetakeTap,
+    required VoidCallback onDeleteTap,
+    required Color primaryText,
+    required Color secondaryText,
+  }) {
+    final fileLength = file.lengthSync();
+    final sizeInMB = fileLength / (1024 * 1024);
+    final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
+    final isValidSize = !UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes);
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(18.r),
+        border: Border.all(
+          color: const Color(0xFF10B981).withValues(alpha: 0.5),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        children: [
+          // Thumbnail Preview with Zoom tap
+          GestureDetector(
+            onTap: () {
+              final decodedImage = Image.file(file);
+              decodedImage.image
+                  .resolve(const ImageConfiguration())
+                  .addListener(
+                    ImageStreamListener((ImageInfo info, bool _) {
+                      final imageHeight = info.image.height.toDouble();
+                      final imageWidth = info.image.width.toDouble();
+                      final screenWidth = MediaQuery.of(context).size.width - 36;
+                      final scaledHeight = (imageHeight / imageWidth) * screenWidth;
+                      Get.bottomSheet(
+                        DynamicAttachmentPreview(
+                          file: file,
+                          scaledHeight: scaledHeight,
+                          bottomExtraHeight: 50.0,
+                        ),
+                        isScrollControlled: true,
+                        enableDrag: true,
+                        backgroundColor: AppColors.transparent,
+                      );
+                    }),
+                  );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 180.h,
+                    width: double.infinity,
+                    child: Image.file(
+                      file,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 8.h,
+                    right: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.zoom_in_rounded,
+                            size: 13,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Size check and Retake bar
+          Padding(
+            padding: EdgeInsets.all(12.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // File Size Status Pill
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: (isValidSize
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFFDC2626))
+                        .withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isValidSize
+                            ? Icons.check_circle_rounded
+                            : Icons.error_outline_rounded,
+                        size: 13.sp,
+                        color: isValidSize
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFFDC2626),
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '$sizeString / 20MB',
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isValidSize
+                              ? const Color(0xFF10B981)
+                              : const Color(0xFFDC2626),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Retake / Delete
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: onRetakeTap,
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 6.h,
+                        ),
+                        side: BorderSide(
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        ),
+                      ),
+                      icon: const Icon(Icons.refresh_rounded, size: 15),
+                      label: Text(
+                        l10nPick(
+                          context,
+                          en: 'Retake',
+                          fa: 'عکس مجدد',
+                          ar: 'إعادة الالتقاط',
+                          zh: '重拍',
+                        ),
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: primaryText,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline_rounded,
+                        color: AppColors.error,
+                        size: 20,
+                      ),
+                      onPressed: onDeleteTap,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -30,11 +30,13 @@ class ConverterData {
   });
 
   ConverterData.fromJson(Map<String, dynamic> json) {
-    baseCurrency = json['base_currency'];
-    targetCurrency = json['target_currency'];
-    baseAmount = json['base_amount'];
-    convertedAmount = json['converted_amount'];
-    rate = json['rate'];
-    thousandSeparatorRemove = json['thousandSeparatorRemove'];
+    baseCurrency = json['base_currency']?.toString();
+    targetCurrency = json['target_currency']?.toString();
+    baseAmount = json['base_amount']?.toString();
+    convertedAmount = json['converted_amount']?.toString();
+    rate = json['rate']?.toString();
+    thousandSeparatorRemove = json['thousandSeparatorRemove'] is bool
+        ? json['thousandSeparatorRemove']
+        : json['thousandSeparatorRemove']?.toString() == 'true';
   }
 }

@@ -36,6 +36,11 @@ class SettingsService extends GetxService {
   final RxString rateUnitRx = 'irr'.obs;
   static const String appPinKey = 'app_pin_4';
 
+  static const String privacyModeKey = 'privacy_mode_enabled';
+  static const String hideBalanceOnBackgroundKey = 'hide_balance_on_background';
+  final RxBool isPrivacyMode = false.obs;
+  final RxBool hideBalanceOnBackground = true.obs;
+
   static const String currentEmailVerifiedKey = 'current_email_verified';
   static const String currentSetUpPasswordKey = 'current_set_up_password';
   static const String currentBonusShowKey = 'current_bonus_pop_up_shown';
@@ -401,5 +406,35 @@ class SettingsService extends GetxService {
   Future<void> setAppPin(String pin) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(appPinKey, pin);
+  }
+
+  /// Privacy Mode: masks balances with asterisks across the entire app
+  Future<bool> getPrivacyMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(privacyModeKey) ?? false;
+  }
+
+  Future<void> setPrivacyMode(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(privacyModeKey, enabled);
+    isPrivacyMode.value = enabled;
+  }
+
+  /// Automatically obscure balances whenever the app enters background/inactive
+  Future<bool> getHideBalanceOnBackground() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(hideBalanceOnBackgroundKey) ?? true;
+  }
+
+  Future<void> setHideBalanceOnBackground(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(hideBalanceOnBackgroundKey, enabled);
+    hideBalanceOnBackground.value = enabled;
+  }
+
+  /// Initialize privacy states on startup
+  Future<void> initPrivacySettings() async {
+    isPrivacyMode.value = await getPrivacyMode();
+    hideBalanceOnBackground.value = await getHideBalanceOnBackground();
   }
 }

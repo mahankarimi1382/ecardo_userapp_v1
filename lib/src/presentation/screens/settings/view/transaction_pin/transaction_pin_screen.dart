@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -10,10 +11,14 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
-import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/device_sessions_security/view/widgets/visual_pin_dots_indicator.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/transaction_pin_controller.dart';
 
-/// System B — رمز انتقال وجه (Transaction PIN). Not 2FA, not App Lock.
+/// System B — رمز انتقال وجه (Transaction PIN) with visual 4-dot / 6-dot indicator:
+/// - Real-time visual dot scaling and filled animations
+/// - Dynamic 4-digit / 6-digit length switch
+/// - Mismatch shake and match success indicators
+/// - Clean dark mode & RTL support
 class TransactionPinScreen extends StatefulWidget {
   const TransactionPinScreen({super.key});
 
@@ -23,22 +28,56 @@ class TransactionPinScreen extends StatefulWidget {
 
 class _TransactionPinScreenState extends State<TransactionPinScreen> {
   late final TransactionPinController c;
+  int _pinLength = 4; // 4 or 6 dots
 
   @override
   void initState() {
     super.initState();
     c = Get.put(TransactionPinController());
+
+    // Rebuild visual dots on digit input
+    c.passcodeController.addListener(_onTextChanged);
+    c.confirmController.addListener(_onTextChanged);
+    c.oldController.addListener(_onTextChanged);
+    c.newController.addListener(_onTextChanged);
+    c.changeConfirmController.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    c.passcodeController.removeListener(_onTextChanged);
+    c.confirmController.removeListener(_onTextChanged);
+    c.oldController.removeListener(_onTextChanged);
+    c.newController.removeListener(_onTextChanged);
+    c.changeConfirmController.removeListener(_onTextChanged);
+    super.dispose();
   }
 
   List<TextInputFormatter> get _fmt => [
         FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(PasscodeHelper.maxDigits),
+        LengthLimitingTextInputFormatter(_pinLength),
       ];
+
+  void _setPinLength(int length) {
+    if (_pinLength == length) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _pinLength = length;
+      c.passcodeController.clear();
+      c.confirmController.clear();
+      c.oldController.clear();
+      c.newController.clear();
+      c.changeConfirmController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final range = '${PasscodeHelper.minDigits}–${PasscodeHelper.maxDigits}';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
@@ -85,21 +124,16 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: AppSpacing.sm),
+
+              // Visual 4-Dot / 6-Dot Length Selector
               Padding(
-                padding: const EdgeInsets.fromLTRB(18, 6, 18, 16),
-                child: Text(
-                  l10nPick(
-                    context,
-                    en: '($range digits)',
-                    fa: '($range رقم)',
-                    ar: '($range أرقام)',
-                    zh: '($range 位数字)',
-                  ),
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: secondaryTextColor.withValues(alpha: 0.8),
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: _buildLengthSelector(isDark),
               ),
+
+              SizedBox(height: AppSpacing.md),
+
               Expanded(
                 child: Obx(() {
                   if (c.isLoading.value) {
@@ -126,30 +160,107 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
     );
   }
 
+  Widget _buildLengthSelector(bool isDark) {
+    return Container(
+      padding: EdgeInsets.all(3.w),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildLengthTab(4, isDark),
+          SizedBox(width: 4.w),
+          _buildLengthTab(6, isDark),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLengthTab(int length, bool isDark) {
+    final isSelected = _pinLength == length;
+    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+
+    return InkWell(
+      onTap: () => _setPinLength(length),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? (isDark ? AppColors.darkSurface : AppColors.white)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            VisualPinDotsIndicator.compact(
+              length: length,
+              isConfigured: isSelected,
+              isDark: isDark,
+              dotSize: 5.5,
+              spacing: 3.0,
+            ),
+            SizedBox(width: 6.w),
+            Text(
+              length == 4
+                  ? l10nPick(context, en: '4 Digits', fa: '۴ رقم', ar: '4 أرقام', zh: '4位')
+                  : l10nPick(context, en: '6 Digits', fa: '۶ رقم', ar: '6 أرقام', zh: '6位'),
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? primaryColor : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _set(
     AppLocalizations loc,
     bool isDark,
     Color primaryTextColor,
     Color secondaryTextColor,
   ) {
+    final isConfirmMismatch = c.passcodeController.text.length == _pinLength &&
+        c.confirmController.text.length == _pinLength &&
+        c.passcodeController.text != c.confirmController.text;
+    final isConfirmMatch = c.passcodeController.text.length == _pinLength &&
+        c.confirmController.text.length == _pinLength &&
+        c.passcodeController.text == c.confirmController.text;
+
     return Column(
       children: [
         _card(
           isDark: isDark,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CommonRequiredLabelAndDynamicField(
                 labelText: l10nPick(
                   context,
-                  en: 'Transaction PIN',
-                  fa: 'رمز انتقال وجه',
-                  ar: 'رمز التحويل',
-                  zh: '转账密码',
+                  en: 'Transaction PIN ($_pinLength digits)',
+                  fa: 'رمز انتقال وجه ($_pinLength رقم)',
+                  ar: 'رمز التحويل ($_pinLength أرقام)',
+                  zh: '转账密码 ($_pinLength 位)',
                 ),
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: '••••',
+                    hintText: '•' * _pinLength,
                     controller: c.passcodeController,
                     focusNode: c.passcodeFocus,
                     isFocused: c.isPasscodeFocused.value,
@@ -164,7 +275,19 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: AppSpacing.md),
+
+              // Visual Dots Indicator for New PIN
+              SizedBox(height: 10.h),
+              Center(
+                child: VisualPinDotsIndicator(
+                  length: _pinLength,
+                  filledCount: c.passcodeController.text.length,
+                  isDark: isDark,
+                ),
+              ),
+
+              SizedBox(height: AppSpacing.lg),
+
               CommonRequiredLabelAndDynamicField(
                 labelText: l10nPick(
                   context,
@@ -176,7 +299,7 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: '••••',
+                    hintText: '•' * _pinLength,
                     controller: c.confirmController,
                     focusNode: c.confirmFocus,
                     isFocused: c.isConfirmFocused.value,
@@ -191,7 +314,21 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                   ),
                 ),
               ),
+
+              // Visual Dots Indicator for Confirm PIN (shakes on mismatch, pulses on match)
+              SizedBox(height: 10.h),
+              Center(
+                child: VisualPinDotsIndicator(
+                  length: _pinLength,
+                  filledCount: c.confirmController.text.length,
+                  isError: isConfirmMismatch,
+                  isSuccess: isConfirmMatch,
+                  isDark: isDark,
+                ),
+              ),
+
               SizedBox(height: AppSpacing.xxl),
+
               CommonButton(
                 width: double.infinity,
                 text: l10nPick(
@@ -221,6 +358,13 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
     Color primaryTextColor,
     Color secondaryTextColor,
   ) {
+    final isChangeMismatch = c.newController.text.length == _pinLength &&
+        c.changeConfirmController.text.length == _pinLength &&
+        c.newController.text != c.changeConfirmController.text;
+    final isChangeMatch = c.newController.text.length == _pinLength &&
+        c.changeConfirmController.text.length == _pinLength &&
+        c.newController.text == c.changeConfirmController.text;
+
     return Column(
       children: [
         _card(
@@ -242,6 +386,8 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                 ),
               ),
               SizedBox(height: AppSpacing.md),
+
+              // 1. Current PIN
               CommonRequiredLabelAndDynamicField(
                 labelText: l10nPick(
                   context,
@@ -253,7 +399,7 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: '••••',
+                    hintText: '•' * _pinLength,
                     controller: c.oldController,
                     focusNode: c.oldFocus,
                     isFocused: c.isOldFocused.value,
@@ -268,19 +414,30 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: 8.h),
+              Center(
+                child: VisualPinDotsIndicator(
+                  length: _pinLength,
+                  filledCount: c.oldController.text.length,
+                  isDark: isDark,
+                ),
+              ),
+
               SizedBox(height: AppSpacing.md),
+
+              // 2. New PIN
               CommonRequiredLabelAndDynamicField(
                 labelText: l10nPick(
                   context,
-                  en: 'New PIN',
-                  fa: 'رمز انتقال جدید',
-                  ar: 'رمز التحويل الجديد',
-                  zh: '新转账密码',
+                  en: 'New PIN ($_pinLength digits)',
+                  fa: 'رمز انتقال جدید ($_pinLength رقم)',
+                  ar: 'رمز التحويل الجديد ($_pinLength أرقام)',
+                  zh: '新转账密码 ($_pinLength 位)',
                 ),
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: '••••',
+                    hintText: '•' * _pinLength,
                     controller: c.newController,
                     focusNode: c.newFocus,
                     isFocused: c.isNewFocused.value,
@@ -295,7 +452,18 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: 8.h),
+              Center(
+                child: VisualPinDotsIndicator(
+                  length: _pinLength,
+                  filledCount: c.newController.text.length,
+                  isDark: isDark,
+                ),
+              ),
+
               SizedBox(height: AppSpacing.md),
+
+              // 3. Confirm New PIN
               CommonRequiredLabelAndDynamicField(
                 labelText: l10nPick(
                   context,
@@ -307,7 +475,7 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                 isLabelRequired: true,
                 dynamicField: Obx(
                   () => CommonTextInputField(
-                    hintText: '••••',
+                    hintText: '•' * _pinLength,
                     controller: c.changeConfirmController,
                     focusNode: c.changeConfirmFocus,
                     isFocused: c.isChangeConfirmFocused.value,
@@ -322,6 +490,17 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: 8.h),
+              Center(
+                child: VisualPinDotsIndicator(
+                  length: _pinLength,
+                  filledCount: c.changeConfirmController.text.length,
+                  isError: isChangeMismatch,
+                  isSuccess: isChangeMatch,
+                  isDark: isDark,
+                ),
+              ),
+
               SizedBox(height: AppSpacing.xl),
               CommonButton(
                 width: double.infinity,

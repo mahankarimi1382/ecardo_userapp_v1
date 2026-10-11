@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/upload_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/document_alignment_guide.dart';
 
 class BackCameraCapture extends StatefulWidget {
   final String fieldName;
@@ -22,6 +23,7 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
   bool isCapturing = false;
   bool _isCheckingPermission = true;
   bool _hasPermission = false;
+  KycDocumentType _documentType = KycDocumentType.nationalCard;
 
   @override
   void initState() {
@@ -53,7 +55,36 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
     final file = File(filePath);
     final compressed = await UploadHelper.compressImageIfNeeded(file);
     if (!mounted) return;
-    Navigator.of(context).pop(compressed);
+    _showConfirmationSheet(compressed);
+  }
+
+  void _showConfirmationSheet(File file) {
+    final title = widget.fieldName.isNotEmpty
+        ? widget.fieldName
+        : l10nPick(
+            context,
+            en: 'ID Document Verification',
+            fa: 'تأیید مدرک شناسایی',
+          );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => DocumentConfirmationPreviewSheet(
+        file: file,
+        documentTitle: title,
+        onRetake: () {
+          Navigator.pop(ctx); // Return to camera
+        },
+        onConfirm: () {
+          Navigator.pop(ctx); // Close sheet
+          if (mounted) {
+            Navigator.of(context).pop(file); // Pop camera with captured file
+          }
+        },
+      ),
+    );
   }
 
   Future<void> _pickWithSystemCamera() async {
@@ -198,8 +229,11 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
+        fit: StackFit.expand,
         children: [
+          // Live Camera viewfinder
           CameraAwesomeBuilder.awesome(
             saveConfig: SaveConfig.photo(),
             sensorConfig: SensorConfig.single(
@@ -220,12 +254,12 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
               left: IconButton(
                 icon: const Icon(Icons.photo_library_outlined, color: Colors.white, size: 28),
                 onPressed: _pickFromGallery,
-                tooltip: 'انتخاب از گالری',
+                tooltip: l10nPick(context, en: 'Choose from Gallery', fa: 'انتخاب از گالری'),
               ),
               right: IconButton(
                 icon: const Icon(Icons.camera_rounded, color: Colors.white, size: 28),
                 onPressed: _pickWithSystemCamera,
-                tooltip: 'دوربین سیستم',
+                tooltip: l10nPick(context, en: 'System Camera', fa: 'دوربین سیستم'),
               ),
             ),
             onMediaCaptureEvent: (event) {
@@ -250,18 +284,112 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
               }
             },
           ),
-          Positioned(
-            top: MediaQuery.paddingOf(context).top + 8,
-            left: 12,
-            child: CircleAvatar(
-              backgroundColor: Colors.black45,
-              child: IconButton(
-                icon: const Icon(Icons.close_rounded, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+
+          // Professional Document Alignment Guide Frame overlay with corner markers
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DocumentAlignmentGuideBox(
+                documentType: _documentType,
+                showScannerLine: true,
+                isDark: true,
               ),
             ),
           ),
+
+          // Real-time tips banner (cycling through tips: glare, 4 corners, legible)
+          Positioned(
+            top: MediaQuery.paddingOf(context).top + 52.h,
+            left: 0,
+            right: 0,
+            child: const Center(
+              child: RealtimeTipsBanner(
+                isDark: true,
+                autoCycle: true,
+              ),
+            ),
+          ),
+
+          // Top Header: Close button & Document Type switch
+          Positioned(
+            top: MediaQuery.paddingOf(context).top + 6.h,
+            left: 12.w,
+            right: 12.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.black54,
+                  radius: 20.r,
+                  child: IconButton(
+                    icon: const Icon(Icons.close_rounded, color: Colors.white, size: 20),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+
+                // Document type switcher (National Card / Passport)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildDocTypeChip(
+                        type: KycDocumentType.nationalCard,
+                        label: l10nPick(context, en: 'National ID', fa: 'کارت ملی'),
+                        isSelected: _documentType == KycDocumentType.nationalCard,
+                      ),
+                      _buildDocTypeChip(
+                        type: KycDocumentType.passport,
+                        label: l10nPick(context, en: 'Passport', fa: 'پاسپورت'),
+                        isSelected: _documentType == KycDocumentType.passport,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 40), // Balance close button spacing
+              ],
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDocTypeChip({
+    required KycDocumentType type,
+    required String label,
+    required bool isSelected,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _documentType = type;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFF10B981)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 11.sp,
+            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

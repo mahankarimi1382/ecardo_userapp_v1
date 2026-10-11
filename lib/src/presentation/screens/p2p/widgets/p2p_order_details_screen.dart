@@ -22,13 +22,14 @@ class P2pOrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final controller = Get.put(
       P2pOrderDetailsController(orderId: orderId),
       tag: 'order_details_$orderId',
     );
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Obx(() {
         if (controller.isLoading.value && controller.orderData.value == null) {

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_success_celebration.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_step_indicator.dart';
 
 class CashOutSuccessStepSection extends StatefulWidget {
   const CashOutSuccessStepSection({super.key});
@@ -31,14 +35,30 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
     final localizations = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final wallet = controller.wallet.value;
+    final currency = wallet?.code ?? "USD";
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.wallet.value!.name!,
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      )!,
-      isCrypto: controller.wallet.value!.isCrypto!,
+      currencyCode: currency,
+      siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
+      isCrypto: wallet?.isCrypto ?? false,
     );
+
+    final rawAmount = controller.successCashOutData.value?["final_amount"] ??
+        controller.amountController.text;
+    final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
+
+    final tnxId = controller.successCashOutData.value?["tnx"]?.toString() ??
+        'CSH-${DateTime.now().millisecondsSinceEpoch}';
+    final createdAt =
+        controller.successCashOutData.value?["created_at"]?.toString() ?? '';
+    final rawCharge = controller.successCashOutData.value?["charge"];
+    final chargeStr = (double.tryParse(rawCharge?.toString() ?? '0') ??
+            controller.charge.value)
+        .toStringAsFixed(calculateDecimals);
+    final agentAid = controller.agentAidController.text.trim();
 
     return Obx(
       () => controller.isCashOutLoading.value
@@ -51,155 +71,108 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(height: AppSpacing.xl),
-                    // Success Hero Banner
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.xl,
+                    // Step Indicator (Completed: Step 2)
+                    const WithdrawStepIndicator(currentStep: 2),
+
+                    const SizedBox(height: AppSpacing.md),
+
+                    // 1. Celebratory Success Animation Header
+                    TransferSuccessCelebration(
+                      title: localizations.cashOutSuccessTitle,
+                      subtitle: l10nPick(
+                        context,
+                        en: 'Agent payout processed successfully',
+                        fa: 'تسویه نقدی با نماینده با موفقیت انجام شد',
+                        ar: 'تمت معالجة السحب النقدي بنجاح',
+                        tr: 'Nakit çekim işlemi başarıyla tamamlandı',
+                        ru: 'Выдача наличных успешно подтверждена',
                       ),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? AppColors.darkSurfaceVariant
-                            : AppColors.success.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusXl,
-                        ),
-                        border: Border.all(
-                          color: AppColors.success.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            PngAssets.commonSuccessIcon,
-                            width: 72,
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          Text(
-                            localizations.cashOutSuccessTitle,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 22,
-                              color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
+                      dateTime: createdAt.isNotEmpty ? createdAt : null,
                     ),
+
                     const SizedBox(height: AppSpacing.xl),
 
-                    // Transaction Detail Card
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.lg,
+                    // 2. Ultra-Premium Digital Receipt (Design System)
+                    EcardoDigitalReceipt(
+                      title: l10nPick(
+                        context,
+                        en: 'Agent Cash-Out Receipt',
+                        fa: 'رسید تسویه نقدی نماینده',
+                        ar: 'إيصال السحب النقدي',
+                        tr: 'Temsilci Nakit Çekim Makbuzu',
+                        ru: 'Квитанция о выдаче наличных',
                       ),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusLg,
+                      transactionReference: tnxId,
+                      formattedTimestamp:
+                          createdAt.isNotEmpty ? createdAt : null,
+                      primaryAmount: amount,
+                      primaryCurrency: currency,
+                      primaryDecimals: calculateDecimals,
+                      status: EcardoReceiptStatus.success,
+                      note: l10nPick(
+                        context,
+                        en: 'Cash paid out directly by authorized eCardo agent.',
+                        fa: 'مبلغ نقدی مستقیماً توسط نماینده مجاز اکاردو تحویل داده شد.',
+                        ar: 'تم استلام المبلغ نقداً من وكيل إيكاردو المعتمد.',
+                        tr: 'Nakit tutar yetkili temsilci tarafından teslim edildi.',
+                        ru: 'Наличные выданы авторизованным агентом eCardo.',
+                      ),
+                      items: [
+                        EcardoReceiptItem(
+                          label: localizations.cashOutReviewAgentAccount,
+                          value: 'AID: $agentAid',
                         ),
-                        border: Border.all(
-                          color: isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder,
+                        EcardoReceiptItem(
+                          label: localizations.cashOutSuccessWalletName,
+                          value: wallet?.name ?? '',
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: isDark
-                                ? AppColors.darkShadow
-                                : AppColors.lightShadow,
-                            blurRadius: AppSpacing.md,
-                            offset: const Offset(0, 3),
+                        EcardoReceiptItem(
+                          label: localizations.cashOutSuccessCharge,
+                          value: '$chargeStr $currency',
+                          valueColor: AppColors.warning,
+                        ),
+                        EcardoReceiptItem(
+                          label: localizations.cashOutSuccessFinalAmount,
+                          value:
+                              '${amount.toStringAsFixed(calculateDecimals)} $currency',
+                          isHighlighted: true,
+                          valueColor: AppColors.success,
+                        ),
+                        EcardoReceiptItem(
+                          label: localizations.cashOutSuccessTransactionId,
+                          value: tnxId,
+                          isCopyable: true,
+                          copyText: tnxId,
+                        ),
+                      ],
+                      onShare: () {
+                        HapticFeedback.lightImpact();
+                        SharePlus.instance.share(
+                          ShareParams(
+                            text:
+                                'eCardo Cash-Out Receipt\nRef: $tnxId\nAmount: $amount $currency\nAgent: $agentAid\nStatus: Completed',
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localizations.cashOutSuccessAmount,
-                            content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
+                        );
+                      },
+                      onDownload: () {
+                        HapticFeedback.lightImpact();
+                        Clipboard.setData(ClipboardData(text: tnxId));
+                        ToastHelper().showSuccessToast(
+                          l10nPick(
+                            context,
+                            en: 'Transaction reference copied',
+                            fa: 'شناسه تراکنش در کلیپ‌بورد کپی شد',
+                            ar: 'تم نسخ رقم المرجع',
+                            tr: 'İşlem referansı kopyalandı',
+                            ru: 'Код транзакции скопирован',
                           ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localizations.cashOutSuccessTransactionId,
-                            content:
-                                "${controller.successCashOutData.value?["tnx"] ?? ''}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                            isCopyable: true,
-                          ),
-                          _buildDivider(isDark),
-                          Obx(
-                            () => _buildDynamicRow(
-                              isDark: isDark,
-                              title: localizations.cashOutSuccessWalletName,
-                              content: controller.wallet.value!.name!,
-                              contentColor: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          _buildDivider(isDark),
-                          Obx(
-                            () => _buildDynamicRow(
-                              isDark: isDark,
-                              title: localizations.cashOutSuccessPaymentMethod,
-                              content: controller.wallet.value!.code!,
-                              contentColor: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          _buildDivider(isDark),
-                          Obx(
-                            () => _buildDynamicRow(
-                              isDark: isDark,
-                              title: localizations.cashOutSuccessCharge,
-                              content:
-                                  "${(double.tryParse(controller.successCashOutData.value?["charge"]?.toString() ?? "0") ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                              contentColor: AppColors.warning,
-                            ),
-                          ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localizations.cashOutSuccessType,
-                            content:
-                                "${controller.successCashOutData.value?["type"] ?? ''}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                          ),
-                          _buildDivider(isDark),
-                          Obx(
-                            () => _buildDynamicRow(
-                              isDark: isDark,
-                              title: localizations.cashOutSuccessFinalAmount,
-                              content:
-                                  "${(double.tryParse(controller.successCashOutData.value?["final_amount"]?.toString() ?? "0") ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code}",
-                              contentColor: AppColors.success,
-                              isTotal: true,
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                    const SizedBox(height: AppSpacing.xxxl),
 
+                    const SizedBox(height: AppSpacing.xxl),
+
+                    // 3. Action CTAs
                     CommonButton(
                       onPressed: () async {
                         HapticFeedback.lightImpact();
@@ -210,13 +183,15 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                       width: double.infinity,
                       text: localizations.cashOutSuccessCashOutAgain,
                     ),
+
                     const SizedBox(height: AppSpacing.md),
+
                     CommonButton(
                       onPressed: () async {
                         HapticFeedback.lightImpact();
                         Get.delete<CashOutController>();
-                        Get.toNamed(BaseRoute.navigation);
                         await Get.find<HomeController>().loadData();
+                        Get.toNamed(BaseRoute.navigation);
                       },
                       width: double.infinity,
                       text: localizations.cashOutSuccessBackHome,
@@ -231,92 +206,12 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
                     ),
+
                     const SizedBox(height: AppSpacing.huge),
                   ],
                 ),
               ),
             ),
-    );
-  }
-
-  static Widget _buildDivider(bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-      child: Divider(
-        height: 1,
-        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-      ),
-    );
-  }
-
-  static Widget _buildDynamicRow({
-    required bool isDark,
-    required String title,
-    required String content,
-    required Color contentColor,
-    bool isTotal = false,
-    bool isCopyable = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
-              fontSize: isTotal ? 16 : 14,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: Text(
-                    content,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: isTotal ? FontWeight.w900 : FontWeight.w700,
-                      fontSize: isTotal ? 17 : 14,
-                      color: contentColor,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-                if (isCopyable) ...[
-                  const SizedBox(width: AppSpacing.xs),
-                  InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      Clipboard.setData(ClipboardData(text: content));
-                      ToastHelper().showSuccessToast("Copied to clipboard");
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xs),
-                      child: Icon(
-                        Icons.copy_rounded,
-                        size: 16,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextTertiary,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -11,7 +11,8 @@ import 'package:ecardo_user/src/presentation/screens/settings/controller/support
 
 class AddNewTicketController extends GetxController {
   // Global Variables
-  final localization = AppLocalizations.of(Get.context!)!;
+  AppLocalizations? get localization =>
+      Get.context != null ? AppLocalizations.of(Get.context!) : null;
   final isAddTicketLoading = false.obs;
   final MultipleImagePickerController multipleImagePickerController = Get.put(
     MultipleImagePickerController(),
@@ -19,43 +20,63 @@ class AddNewTicketController extends GetxController {
   final attachments = <int>[].obs;
   int _nextId = 0;
 
+  // Department & Priority
+  final RxString selectedDepartment = 'finance'.obs;
+  final RxString selectedPriority = 'low'.obs;
+
   // Title
   final RxBool isTitleFocused = false.obs;
   final FocusNode titleFocusNode = FocusNode();
   final titleController = TextEditingController();
+  final RxInt titleLength = 0.obs;
 
   // Description
   final RxBool isDescriptionFocused = false.obs;
   final FocusNode descriptionFocusNode = FocusNode();
   final descriptionController = TextEditingController();
+  final RxInt descriptionLength = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    addAttachment();
     titleFocusNode.addListener(() {
       isTitleFocused.value = titleFocusNode.hasFocus;
     });
     descriptionFocusNode.addListener(() {
       isDescriptionFocused.value = descriptionFocusNode.hasFocus;
     });
+    titleController.addListener(() {
+      titleLength.value = titleController.text.length;
+    });
+    descriptionController.addListener(() {
+      descriptionLength.value = descriptionController.text.length;
+    });
+  }
+
+  int addAttachmentSlot() {
+    final id = _nextId++;
+    attachments.add(id);
+    return id;
   }
 
   void addAttachment() {
-    attachments.add(_nextId++);
+    addAttachmentSlot();
   }
 
   void removeAttachment(int id) {
     attachments.remove(id);
     multipleImagePickerController.attachedImages.remove(id);
+    multipleImagePickerController.update();
   }
 
   Future<void> addNewTicket() async {
     isAddTicketLoading.value = true;
     try {
       final formDataPayload = dio.FormData.fromMap({
-        'title': titleController.text,
-        'message': descriptionController.text,
+        'title': titleController.text.trim(),
+        'message': descriptionController.text.trim(),
+        'department': selectedDepartment.value,
+        'priority': selectedPriority.value,
       });
 
       multipleImagePickerController.attachedImages.forEach((key, value) {
@@ -85,7 +106,7 @@ class AddNewTicketController extends GetxController {
         ToastHelper().showSuccessToast(
           responseData["message"] is String
               ? responseData["message"]
-              : localization.addNewTicketSuccess,
+              : (localization?.addNewTicketSuccess ?? 'Ticket created successfully'),
         );
         clearForm();
         Get.back();
@@ -94,7 +115,9 @@ class AddNewTicketController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ addNewTicket() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Error',
+      );
     } finally {
       isAddTicketLoading.value = false;
     }
@@ -103,15 +126,18 @@ class AddNewTicketController extends GetxController {
   // Validate
   bool validateForm() {
     // Validate Title
-    if (titleController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization.addNewValidationEnterTitle);
+    if (titleController.text.trim().isEmpty) {
+      ToastHelper().showErrorToast(
+        localization?.addNewValidationEnterTitle ?? 'Please enter title',
+      );
       return false;
     }
 
     // Validate Description
-    if (descriptionController.text.isEmpty) {
+    if (descriptionController.text.trim().isEmpty) {
       ToastHelper().showErrorToast(
-        localization.addNewValidationEnterDescription,
+        localization?.addNewValidationEnterDescription ??
+            'Please enter description',
       );
       return false;
     }
@@ -122,10 +148,13 @@ class AddNewTicketController extends GetxController {
   void clearForm() {
     titleController.clear();
     descriptionController.clear();
+    titleLength.value = 0;
+    descriptionLength.value = 0;
+    selectedDepartment.value = 'finance';
+    selectedPriority.value = 'low';
     multipleImagePickerController.attachedImages.clear();
     attachments.clear();
     _nextId = 0;
-    addAttachment();
   }
 
   @override

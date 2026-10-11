@@ -509,22 +509,14 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
       key: const ValueKey('obscured_balance'),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            6,
-            (index) => Container(
-              width: 12,
-              height: 12,
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isDark
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary.withValues(alpha: 0.7),
-              ),
-            ),
+        child: Text(
+          '••••••••',
+          style: AppTextStyles.displayMedium.copyWith(
+            fontWeight: FontWeight.w800,
+            letterSpacing: 4.0,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
       ),

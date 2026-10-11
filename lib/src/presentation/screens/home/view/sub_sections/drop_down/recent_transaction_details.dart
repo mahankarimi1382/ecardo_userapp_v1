@@ -5,19 +5,33 @@ import 'dart:ui' as ui show ImageByteFormat;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/status_label_helper.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
-import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_icon.dart';
 
+/// Luxury Digital Receipt modal bottom sheet for eCardo.
+///
+/// Features:
+/// - High-end card modal with smooth rounded corners (24r) and dark mode styling.
+/// - Prominent hero amount with live status badge and category identifier.
+/// - Detailed breakdown rows: Transaction ID with quick copy button,
+///   Date & Exact Time (Jalali + Gregorian), Source Wallet, Target/Beneficiary,
+///   Fee/Charge, Exchange Rate (if applicable), and Total Amount.
+/// - 3 Action Buttons at bottom:
+///   1. Repeat Transfer/Payment (navigates to relevant flow with prefilled data).
+///   2. Share Receipt (rasterizes digital PNG with text fallback via share_plus).
+///   3. Support Inquiry (opens support ticket with reference prefilled).
 class RecentTransactionDetails extends StatefulWidget {
   final Transactions transaction;
 
@@ -29,8 +43,6 @@ class RecentTransactionDetails extends StatefulWidget {
 }
 
 class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
-  /// v1.0.35 (RECEIPT-SHARE): rasterizes the receipt card below into a
-  /// branded PNG and opens the system share sheet.
   final GlobalKey _receiptKey = GlobalKey();
   bool _sharing = false;
   bool _copiedTnx = false;
@@ -43,8 +55,6 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
   }
 
   Color _getStatusColor(String? status) {
-    // M-4 pattern: backend status casing is not guaranteed — compare on a
-    // normalized form. "approved" and "completed" are accepted alongside "success".
     switch ((status ?? '').trim().toLowerCase()) {
       case 'success':
       case 'approved':
@@ -62,7 +72,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
   }
 
   Color _getAmountColor(bool? isPlus) {
-    return isPlus == true ? AppColors.success : AppColors.error;
+    return isPlus == true ? const Color(0xFF10B981) : const Color(0xFFDC2626);
   }
 
   String _getAmountPrefix(bool? isPlus) {
@@ -81,28 +91,71 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     return "$currencySymbol$amount";
   }
 
+  void _onRepeat() {
+    HapticFeedback.lightImpact();
+    Get.back();
+    final type = widget.transaction.type?.toLowerCase() ?? '';
+    String targetRoute = BaseRoute.transfer;
+    if (type.contains('exchange')) {
+      targetRoute = BaseRoute.exchange;
+    } else if (type.contains('deposit') || type.contains('add_money')) {
+      targetRoute = BaseRoute.addMoney;
+    } else if (type.contains('withdraw') || type.contains('cash_out')) {
+      targetRoute = BaseRoute.withdraw;
+    } else if (type.contains('payment') || type.contains('card')) {
+      targetRoute = BaseRoute.makePayment;
+    }
+    Get.toNamed(targetRoute, arguments: {
+      'amount': widget.transaction.amount,
+      'currency': widget.transaction.trxCurrencyCode,
+      'method': widget.transaction.method,
+    });
+  }
+
+  void _onSupportInquiry() {
+    HapticFeedback.lightImpact();
+    Get.back();
+    final tnx = widget.transaction.tnx ?? '';
+    final subject = 'TX #$tnx';
+    try {
+      Get.toNamed(
+        BaseRoute.addNewTicket,
+        arguments: {'subject': subject, 'tnx': tnx},
+      );
+    } catch (_) {
+      Get.toNamed(BaseRoute.supportTickets);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final transaction = widget.transaction;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedContainer(
       width: double.infinity,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutQuart,
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 12),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? const Color(0xFF1E1E24) : AppColors.white,
         borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+          topStart: Radius.circular(24),
+          topEnd: Radius.circular(24),
+        ),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+          width: 0.8,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
-            blurRadius: 40,
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.45)
+                : AppColors.black.withValues(alpha: 0.08),
+            blurRadius: 36,
             spreadRadius: 0,
-            offset: Offset.zero,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
@@ -110,114 +163,96 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
         child: Column(
           children: [
-            _buildHeader(),
+            _buildHeader(isDark),
             Expanded(
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: RepaintBoundary(
                   key: _receiptKey,
                   child: Container(
-                    color: AppColors.white,
+                    color: isDark ? const Color(0xFF1E1E24) : AppColors.white,
                     child: Column(
                       children: [
                         _buildBrandedShareHeader(),
                         const SizedBox(height: 16),
-                        _buildTransactionInfo(),
-                        const SizedBox(height: 30),
-                        _buildDescription(),
-                        const SizedBox(height: 30),
+                        _buildTransactionInfo(isDark),
+                        const SizedBox(height: 24),
+                        if (transaction.description != null &&
+                            transaction.description!.trim().isNotEmpty) ...[
+                          _buildDescription(isDark),
+                          const SizedBox(height: 20),
+                        ],
+                        _buildDivider(isDark),
+                        const SizedBox(height: 16),
+                        // Detailed Breakdown Rows
+                        _buildTransactionIdRow(transaction.tnx, isDark),
+                        _buildDateTimeBreakdownRow(
+                          context,
+                          transaction.createdAt,
+                          isDark,
+                        ),
                         _buildDetailRow(
                           label: localization.transactionDetailsWallet,
                           value: Text(
-                            "${transaction.walletType} (${transaction.trxCurrencyCode})",
+                            "${transaction.walletType ?? 'Main'} (${transaction.trxCurrencyCode ?? 'USD'})",
                             style: TextStyle(
                               letterSpacing: 0,
-                              fontSize: 16,
-                              color: AppColors.lightTextPrimary,
-                              fontWeight: FontWeight.w900,
+                              fontSize: 15,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
+                          isDark: isDark,
+                        ),
+                        _buildDetailRow(
+                          label: localization.transactionDetailsMethod,
+                          value: Text(
+                            transaction.method ?? "—",
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontSize: 15,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          isDark: isDark,
                         ),
                         _buildAmountRow(
                           localization.transactionDetailsCharge,
-                          transaction.charge ?? "",
+                          transaction.charge ?? "0.00",
                           transaction.charge,
                           transaction.isPlus,
                           transaction.isCrypto,
                           transaction.trxCurrencyCode,
                           transaction.trxCurrencySymbol,
+                          isDark: isDark,
                         ),
-                        _buildTransactionIdRow(transaction.tnx),
-                        _buildDetailRow(
-                          label: localization.transactionDetailsMethod,
-                          value: Text(
-                            transaction.method ?? "",
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontSize: 16,
-                              color: AppColors.lightTextPrimary,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ),
+                        _buildExchangeRateRow(context, isDark),
                         _buildAmountRow(
                           localization.transactionDetailsTotalAmount,
-                          transaction.finalAmount ?? "",
+                          transaction.finalAmount ?? transaction.amount ?? "0.00",
                           transaction.finalAmount,
                           transaction.isPlus,
                           transaction.isCrypto,
                           transaction.trxCurrencyCode,
                           transaction.trxCurrencySymbol,
-                        ),
-                        _buildDetailRow(
-                          label: localization.transactionDetailsStatus,
-                          value: _buildStatusChip(transaction.status),
+                          isDark: isDark,
                         ),
                         const SizedBox(height: 18),
-                        _buildReceiptFooter(),
+                        _buildReceiptFooter(isDark),
+                        const SizedBox(height: 12),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            // v1.0.35 (RECEIPT-SHARE): fixed share action below the receipt.
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 14),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.lightPrimary,
-                      foregroundColor: AppColors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: _sharing ? null : () => _shareReceipt(),
-                    icon: _sharing
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.white,
-                            ),
-                          )
-                        : const Icon(Icons.ios_share_rounded, size: 18),
-                    label: Text(
-                      localization.shareReceipt,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // 3 Bottom Action Buttons
+            _buildBottomActionButtons(isDark),
           ],
         ),
       ),
@@ -231,49 +266,160 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     bool? isPlus,
     bool? isCrypto,
     String? currencyCode,
-    String? currencySymbol,
-  ) {
-    final isCharge = label.toLowerCase().contains("charge");
+    String? currencySymbol, {
+    required bool isDark,
+  }) {
+    final isCharge = label.toLowerCase().contains("charge") ||
+        label.contains("کارمزد") ||
+        label.contains("رسوم");
     final color = isCharge ? AppColors.error : _getAmountColor(isPlus);
     final prefix = isCharge ? "-" : _getAmountPrefix(isPlus);
 
     return _buildDetailRow(
       label: label,
-      value: Row(
+      isDark: isDark,
+      value: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Text(
+          '$prefix${_formatAmount(amount, isCrypto, currencyCode, currencySymbol)}',
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.visible,
+          softWrap: true,
+          style: TextStyle(
+            letterSpacing: 0,
+            fontWeight: FontWeight.w900,
+            fontSize: 15.5,
+            fontFeatures: const [
+              FontFeature.tabularFigures(),
+            ],
+            color: color,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExchangeRateRow(BuildContext context, bool isDark) {
+    final tx = widget.transaction;
+    final isExchange = tx.type?.toLowerCase() == 'exchange';
+    final hasPay = tx.payAmount != null &&
+        tx.payAmount!.trim().isNotEmpty &&
+        tx.payCurrency != null &&
+        tx.payCurrency!.trim().isNotEmpty;
+
+    if (!isExchange && !hasPay) return const SizedBox.shrink();
+
+    final exchangeValue = hasPay
+        ? '${tx.payAmount} ${tx.payCurrency}'
+        : (tx.method ?? '—');
+
+    return _buildDetailRow(
+      label: l10nPick(
+        context,
+        en: 'Exchange / Paid',
+        fa: 'مبلغ پرداختی / تبدیل',
+        ar: 'المبلغ المدفوع / الصرف',
+        zh: '支付/兑换金额',
+        ru: 'Сумма обмена',
+        tr: 'Ödenen / Dönüşüm',
+      ),
+      isDark: isDark,
+      value: Text(
+        exchangeValue,
+        style: TextStyle(
+          letterSpacing: 0,
+          fontSize: 15,
+          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateTimeBreakdownRow(
+    BuildContext context,
+    String? rawCreatedAt,
+    bool isDark,
+  ) {
+    if (rawCreatedAt == null || rawCreatedAt.trim().isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final parsed = JalaliDateHelper.tryParse(rawCreatedAt);
+    final jalaliText = JalaliDateHelper.format(rawCreatedAt);
+    final gregorianText = parsed != null
+        ? DateFormat('d MMM yyyy, HH:mm').format(
+            parsed.isUtc ? parsed.toLocal() : parsed,
+          )
+        : '';
+
+    final isFa = Localizations.localeOf(context).languageCode == 'fa' ||
+        Localizations.localeOf(context).languageCode == 'ar';
+
+    return _buildDetailRow(
+      label: l10nPick(
+        context,
+        en: 'Date & Exact Time',
+        fa: 'تاریخ و زمان دقیق',
+        ar: 'التاريخ والوقت بالتفصيل',
+        zh: '确切日期与时间',
+        ru: 'Дата и точное время',
+        tr: 'Tarih ve Tam Saat',
+      ),
+      isDark: isDark,
+      value: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            prefix,
+            isFa
+                ? jalaliText
+                : (gregorianText.isNotEmpty ? gregorianText : jalaliText),
             style: TextStyle(
               letterSpacing: 0,
-              fontWeight: FontWeight.w900,
-              fontSize: 16,
-              color: color,
+              fontSize: 14.5,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(width: 2),
-          Flexible(
-            child: Text(
-              _formatAmount(amount, isCrypto, currencyCode, currencySymbol),
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.visible,
-              softWrap: true,
+          if (gregorianText.isNotEmpty && isFa) ...[
+            const SizedBox(height: 2),
+            Text(
+              '$gregorianText (میلادی)',
               style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 16,
-                color: color,
+                fontSize: 11.5,
+                color: isDark
+                    ? AppColors.darkTextTertiary
+                    : AppColors.lightTextTertiary,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ),
+          ] else if (!isFa && jalaliText.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(
+              '$jalaliText (Jalali)',
+              style: TextStyle(
+                fontSize: 11.5,
+                color: isDark
+                    ? AppColors.darkTextTertiary
+                    : AppColors.lightTextTertiary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow({required String label, required Widget value}) {
+  Widget _buildDetailRow({
+    required String label,
+    required Widget value,
+    required bool isDark,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 18),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -283,8 +429,10 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
               label,
               style: TextStyle(
                 letterSpacing: 0,
-                fontSize: 15,
-                color: AppColors.lightTextTertiary,
+                fontSize: 14.5,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextTertiary,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -302,12 +450,13 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     );
   }
 
-  Widget _buildTransactionIdRow(String? tnx) {
+  Widget _buildTransactionIdRow(String? tnx, bool isDark) {
     final localization = AppLocalizations.of(context)!;
     final tnxText = (tnx ?? '').trim();
 
     return _buildDetailRow(
       label: localization.transactionDetailsTransactionId,
+      isDark: isDark,
       value: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -318,10 +467,12 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 letterSpacing: 0.5,
-                fontSize: 15,
+                fontSize: 14.5,
                 fontFamily: 'monospace',
-                color: AppColors.lightTextPrimary,
-                fontWeight: FontWeight.w900,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ),
@@ -365,13 +516,19 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: _copiedTnx
-                          ? AppColors.success.withValues(alpha: 0.12)
-                          : AppColors.lightTextPrimary.withValues(alpha: 0.07),
+                          ? AppColors.success.withValues(alpha: 0.14)
+                          : (isDark
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.lightTextPrimary
+                                  .withValues(alpha: 0.07)),
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: _copiedTnx
                             ? AppColors.success.withValues(alpha: 0.35)
-                            : AppColors.lightTextPrimary.withValues(alpha: 0.12),
+                            : (isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightTextPrimary
+                                    .withValues(alpha: 0.12)),
                         width: 0.6,
                       ),
                     ),
@@ -380,7 +537,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                       size: 14,
                       color: _copiedTnx
                           ? AppColors.success
-                          : AppColors.lightTextSecondary,
+                          : (isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary),
                     ),
                   ),
                 ),
@@ -392,7 +551,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     );
   }
 
-  Widget _buildStatusChip(String? status) {
+  Widget _buildStatusChip(String? status, bool isDark) {
     final statusColor = _getStatusColor(status);
     final localization = AppLocalizations.of(context)!;
     final localizedLabel =
@@ -418,26 +577,26 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: statusColor.withValues(alpha: 0.25),
+          color: statusColor.withValues(alpha: isDark ? 0.40 : 0.25),
           width: 0.8,
         ),
-        color: statusColor.withValues(alpha: 0.08),
+        color: statusColor.withValues(alpha: isDark ? 0.18 : 0.08),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(statusIcon, color: statusColor, size: 13),
-          const SizedBox(width: 4),
+          Icon(statusIcon, color: statusColor, size: 14),
+          const SizedBox(width: 5),
           Text(
             localizedLabel,
             style: TextStyle(
               fontWeight: FontWeight.w900,
               letterSpacing: 0,
-              fontSize: 12.5,
+              fontSize: 13,
               color: statusColor,
             ),
           ),
@@ -446,65 +605,64 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     );
   }
 
-  Widget _buildDivider() {
+  Widget _buildDivider(bool isDark) {
     return Container(
       width: double.infinity,
-      height: 1.1,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.white,
-            AppColors.lightTextPrimary.withValues(alpha: 0.1),
-            AppColors.white,
-          ],
-        ),
-      ),
+      height: 1.0,
+      color: isDark
+          ? AppColors.darkDivider
+          : AppColors.lightDivider.withValues(alpha: 0.5),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isDark) {
     final localization = AppLocalizations.of(context)!;
 
     return Column(
       children: [
         const SizedBox(height: 12),
+        // Drag pill handle
         Container(
           width: 40,
           height: 5,
           decoration: BoxDecoration(
-            color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.22)
+                : AppColors.lightTextPrimary.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(30),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 18),
         Text(
           localization.transactionDetailsTitle,
+          textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
+            fontSize: 19,
+            fontWeight: FontWeight.w800,
             letterSpacing: 0,
-            color: AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
-        const SizedBox(height: 16),
-        _buildDivider(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
+        _buildDivider(isDark),
+        const SizedBox(height: 14),
       ],
     );
   }
 
-  /// Branded band rendered at the top of the captured receipt image — makes
-  /// the shared PNG read as an official eCardo document, not a screenshot.
+  /// Branded band rendered at top of shared receipt image.
   Widget _buildBrandedShareHeader() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        gradient: LinearGradient(
+        borderRadius: BorderRadius.circular(14),
+        gradient: const LinearGradient(
           colors: [
-            AppColors.lightPrimary,
-            AppColors.lightPrimary.withValues(alpha: 0.78),
+            AppColors.brandViolet,
+            AppColors.brandVioletDeep,
           ],
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
@@ -542,39 +700,64 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     );
   }
 
-  /// Rasterizes the receipt boundary to a PNG and opens the system share
-  /// sheet. Failures never crash the sheet — a localized toast is shown.
+  /// Rasterizes the receipt to a PNG or shares a formatted text summary.
   Future<void> _shareReceipt() async {
     if (_sharing) return;
-    // Capture before any await — BuildContext must not cross async gaps.
     final localization = AppLocalizations.of(context);
     setState(() => _sharing = true);
     try {
       final boundary = _receiptKey.currentContext?.findRenderObject();
-      if (boundary is! RenderRepaintBoundary) return;
+      if (boundary is RenderRepaintBoundary) {
+        try {
+          final image = await boundary.toImage(pixelRatio: 3);
+          final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+          image.dispose();
+          if (byteData != null) {
+            final dir = await getTemporaryDirectory();
+            final file = File(
+              '${dir.path}/ecardo_receipt_${DateTime.now().millisecondsSinceEpoch}.png',
+            );
+            await file.writeAsBytes(byteData.buffer.asUint8List());
 
-      final image = await boundary.toImage(pixelRatio: 3);
-      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      image.dispose();
-      if (byteData == null) return;
+            await SharePlus.instance.share(
+              ShareParams(
+                files: [XFile(file.path)],
+                text: localization?.shareReceiptBody ??
+                    'My eCardo transaction receipt',
+                subject: 'eCardo Receipt',
+              ),
+            );
+            return;
+          }
+        } catch (imgError) {
+          debugPrint('Image rasterization failed, falling back to text ticket: $imgError');
+        }
+      }
 
-      final dir = await getTemporaryDirectory();
-      final file = File(
-        '${dir.path}/ecardo_receipt_${DateTime.now().millisecondsSinceEpoch}.png',
-      );
-      await file.writeAsBytes(byteData.buffer.asUint8List());
+      // Text ticket fallback
+      final tx = widget.transaction;
+      final textSummary = '''
+eCardo Digital Receipt
+------------------------------
+Reference: ${tx.tnx ?? '—'}
+Type: ${tx.type ?? 'Transaction'}
+Amount: ${tx.isPlus == true ? '+' : '-'}${tx.trxCurrencySymbol ?? ''}${tx.amount ?? '0.00'} ${tx.trxCurrencyCode ?? ''}
+Date: ${JalaliDateHelper.format(tx.createdAt)}
+Status: ${tx.status ?? 'Success'}
+Method: ${tx.method ?? '—'}
+------------------------------
+Verified by eCardo · ecardo.ir
+''';
 
       await SharePlus.instance.share(
         ShareParams(
-          files: [XFile(file.path)],
-          text: localization?.shareReceiptBody ?? 'My eCardo transaction receipt',
-          subject: 'eCardo',
+          text: textSummary,
+          subject: 'eCardo Transaction Receipt ${tx.tnx ?? ""}',
         ),
       );
     } catch (e) {
       debugPrint('Receipt share failed: $e');
       if (mounted) {
-        final localization = AppLocalizations.of(context);
         ToastHelper().showErrorToast(
           localization?.shareReceiptFailed ?? 'Could not share the receipt.',
         );
@@ -584,7 +767,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     }
   }
 
-  Widget _buildCategoryBadge(String? type) {
+  Widget _buildCategoryBadge(String? type, bool isDark) {
     final categoryName = (type ?? '').trim();
     if (categoryName.isEmpty) return const SizedBox.shrink();
 
@@ -593,10 +776,12 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.lightPrimary.withValues(alpha: 0.08),
+        color: isDark
+            ? AppColors.brandViolet.withValues(alpha: 0.18)
+            : AppColors.brandVioletContainer,
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: AppColors.lightPrimary.withValues(alpha: 0.18),
+          color: AppColors.brandViolet.withValues(alpha: isDark ? 0.35 : 0.25),
           width: 0.8,
         ),
       ),
@@ -610,7 +795,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
             errorBuilder: (_, _, _) => const Icon(
               Icons.receipt_long_rounded,
               size: 17,
-              color: AppColors.lightPrimary,
+              color: AppColors.brandViolet,
             ),
           ),
           const SizedBox(width: 7),
@@ -619,7 +804,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
             style: const TextStyle(
               fontSize: 13.5,
               fontWeight: FontWeight.w800,
-              color: AppColors.lightPrimary,
+              color: AppColors.brandViolet,
               letterSpacing: 0.2,
             ),
           ),
@@ -677,58 +862,66 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     }
   }
 
-  Widget _buildTransactionInfo() {
+  Widget _buildTransactionInfo(bool isDark) {
     final transaction = widget.transaction;
     final formattedDate = _formatTimestamp(context, transaction.createdAt);
 
-    // v1.0.36 (RECEIPT-SHARE): centered hero layout — the amount is the
-    // protagonist of the receipt image, exactly like premium wallet apps.
     return Column(
       children: [
-        _buildCategoryBadge(transaction.type),
+        _buildCategoryBadge(transaction.type, isDark),
         const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              _getAmountPrefix(transaction.isPlus),
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 22,
-                color: _getAmountColor(transaction.isPlus),
-              ),
-            ),
-            const SizedBox(width: 3),
-            Flexible(
-              child: Text(
-                _formatAmount(
-                  transaction.amount ?? "",
-                  transaction.isCrypto,
-                  transaction.trxCurrencyCode,
-                  transaction.trxCurrencySymbol,
-                ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.visible,
-                softWrap: true,
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                _getAmountPrefix(transaction.isPlus),
                 style: TextStyle(
                   letterSpacing: 0,
                   fontWeight: FontWeight.w900,
-                  fontSize: 28,
+                  fontSize: 24,
                   color: _getAmountColor(transaction.isPlus),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 3),
+              Flexible(
+                child: Text(
+                  _formatAmount(
+                    transaction.amount ?? "",
+                    transaction.isCrypto,
+                    transaction.trxCurrencyCode,
+                    transaction.trxCurrencySymbol,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.visible,
+                  softWrap: true,
+                  style: TextStyle(
+                    letterSpacing: 0,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30,
+                    fontFeatures: const [
+                      FontFeature.tabularFigures(),
+                    ],
+                    color: _getAmountColor(transaction.isPlus),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+        const SizedBox(height: 10),
+        _buildStatusChip(transaction.status, isDark),
         if (formattedDate.isNotEmpty) ...[
           const SizedBox(height: 10),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3.5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.05),
+              color: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightTextPrimary.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -737,7 +930,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                 Icon(
                   Icons.access_time_rounded,
                   size: 13,
-                  color: AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                 ),
                 const SizedBox(width: 5),
                 Text(
@@ -745,7 +940,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                   style: TextStyle(
                     letterSpacing: 0,
                     fontSize: 12,
-                    color: AppColors.lightTextTertiary,
+                    color: isDark
+                        ? AppColors.darkTextTertiary
+                        : AppColors.lightTextTertiary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -757,21 +954,26 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     );
   }
 
-  /// Footer rendered inside the shared image — makes the PNG read as an
-  /// official document and gives it a designed bottom edge.
-  Widget _buildReceiptFooter() {
+  Widget _buildReceiptFooter(bool isDark) {
     return Column(
       children: [
         Divider(
           height: 0,
-          color: AppColors.black.withValues(alpha: 0.08),
+          color: isDark
+              ? AppColors.darkDivider
+              : AppColors.black.withValues(alpha: 0.08),
         ),
         const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.shield_rounded,
-                size: 12, color: AppColors.lightTextTertiary),
+            Icon(
+              Icons.shield_rounded,
+              size: 12,
+              color: isDark
+                  ? AppColors.darkTextTertiary
+                  : AppColors.lightTextTertiary,
+            ),
             const SizedBox(width: 5),
             Text(
               'eCardo  ·  ecardo.ir',
@@ -779,7 +981,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                 letterSpacing: 0.4,
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextTertiary,
+                color: isDark
+                    ? AppColors.darkTextTertiary
+                    : AppColors.lightTextTertiary,
               ),
             ),
           ],
@@ -788,7 +992,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(bool isDark) {
     final localization = AppLocalizations.of(context)!;
 
     return Align(
@@ -799,23 +1003,192 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
           Text(
             localization.transactionDetailsDescription,
             style: TextStyle(
-              fontSize: 17,
+              fontSize: 16,
               fontWeight: FontWeight.w900,
               letterSpacing: 0,
-              color: AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             widget.transaction.description ?? "",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13.5,
               letterSpacing: 0,
-              fontWeight: FontWeight.w700,
-              color: AppColors.lightTextTertiary,
+              fontWeight: FontWeight.w600,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextTertiary,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBottomActionButtons(bool isDark) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 12),
+        child: Row(
+          children: [
+            // 1. Repeat Transfer / Payment
+            Expanded(
+              flex: 3,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
+                  side: BorderSide(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    width: 1.0,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  foregroundColor: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+                onPressed: _onRepeat,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.replay_rounded, size: 15),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Repeat',
+                          fa: 'تکرار',
+                          ar: 'تكرار',
+                          tr: 'Tekrarla',
+                          ru: 'Повторить',
+                          zh: '再次',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+
+            // 2. Share Receipt (Hero CTA)
+            Expanded(
+              flex: 4,
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.brandViolet,
+                  foregroundColor: AppColors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 2,
+                  shadowColor: AppColors.brandViolet.withValues(alpha: 0.35),
+                ),
+                onPressed: _sharing ? null : () => _shareReceipt(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_sharing)
+                      const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.white,
+                        ),
+                      )
+                    else
+                      const Icon(Icons.ios_share_rounded, size: 15),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Share',
+                          fa: 'اشتراک',
+                          ar: 'مشاركة',
+                          tr: 'Paylaş',
+                          ru: 'Поделиться',
+                          zh: '分享',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+
+            // 3. Support Inquiry
+            Expanded(
+              flex: 3,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
+                  side: BorderSide(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    width: 1.0,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  foregroundColor: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+                onPressed: _onSupportInquiry,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.headset_mic_rounded, size: 15),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Support',
+                          fa: 'پشتیبانی',
+                          ar: 'الدعم',
+                          tr: 'Destek',
+                          ru: 'Поддержка',
+                          zh: '客服',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

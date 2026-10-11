@@ -38,6 +38,7 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Obx(() {
       final card = controller.virtualCardDetailsModel.value.data;
@@ -52,6 +53,7 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
           !hasGenericContract || card?.capabilities?.canTopup == true;
 
       return Scaffold(
+        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
         appBar: const CommonDefaultAppBar(),
         body: Column(
           children: [
@@ -84,7 +86,7 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
                   ? const CommonLoading()
                   : RefreshIndicator(
                       onRefresh: _fetchCardDetailsByProvider,
-                      color: AppColors.lightPrimary,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.fromLTRB(
                           18.w,
@@ -104,9 +106,9 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
             : Padding(
                 padding: EdgeInsets.only(bottom: 20.h),
                 child: CommonButton(
-                  width: 130,
-                  height: 42,
-                  borderRadius: 12,
+                  width: 140,
+                  height: 44,
+                  borderRadius: 14,
                   fontSize: 13,
                   text: localization.virtualCardDetailsFloatingButton,
                   onPressed: () {

@@ -14,10 +14,14 @@ import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
 import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/widgets/monogram_avatar.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_breakdown_card.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_limit_progress_card.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_step_indicator.dart';
 import 'package:ecardo_user/src/presentation/widgets/qr_scanner_screen.dart';
 
 class CashOutAmountStepSection extends StatefulWidget {
@@ -82,7 +86,8 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: AppSpacing.lg),
+              const WithdrawStepIndicator(currentStep: 0),
+              const SizedBox(height: AppSpacing.md),
               CommonRequiredLabelAndDynamicField(
                 labelText: localizations.cashOutAgentId,
                 isLabelRequired: true,
@@ -244,6 +249,8 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                         chipSpacing: AppSpacing.sm,
                       );
                     }),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildQuickPercentageRow(context, isDark),
                   ],
                 ),
               ),
@@ -271,6 +278,64 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                   ),
                 ),
               ),
+
+              const SizedBox(height: AppSpacing.md),
+
+              // Dynamic Cash-Out Limit Progress Card
+              Obx(() {
+                final enteredAmount = double.tryParse(
+                      controller.amountController.text.trim(),
+                    ) ??
+                    0.0;
+                final currency = controller.wallet.value?.code ?? 'USD';
+                final rawDaily = double.tryParse(
+                      controller.cashOutConfig.value.data?.settings?.dailyLimit ?? '0',
+                    ) ??
+                    0.0;
+                final maxLimit = double.tryParse(
+                      controller.wallet.value?.cashoutLimit?.max ?? '0',
+                    ) ??
+                    1000.0;
+                final dailyLimit = rawDaily > 0 ? rawDaily : maxLimit;
+
+                return WithdrawLimitProgressCard(
+                  dailyLimit: dailyLimit,
+                  usedLimit: 0.0,
+                  enteredAmount: enteredAmount,
+                  currency: currency,
+                  decimals: 2,
+                );
+              }),
+
+              const SizedBox(height: AppSpacing.xs),
+
+              // Live Fee & Net Payout Breakdown Card
+              Obx(() {
+                final requested = double.tryParse(
+                      controller.amountController.text.trim(),
+                    ) ??
+                    0.0;
+                final currency = controller.wallet.value?.code ?? 'USD';
+                final fee = controller.charge.value;
+
+                return WithdrawBreakdownCard(
+                  requestedAmount: requested,
+                  feeAmount: fee,
+                  netPayout: requested,
+                  currency: currency,
+                  settlementTime: l10nPick(
+                    context,
+                    en: 'Instant Agent Payout ⚡',
+                    fa: 'تسویه آنی نقدی از نماینده ⚡',
+                    ar: 'تسوية نقدية فورية ⚡',
+                    tr: 'Temsilciden Anında Nakit ⚡',
+                    ru: 'Мгновенно у агента ⚡',
+                  ),
+                  hasFeeError: controller.chargeLoadFailed.value,
+                  isFeeLoading: controller.isCashoutConfigLoading.value,
+                );
+              }),
+
               const SizedBox(height: AppSpacing.xxxl),
               CommonButton(
                 borderRadius: AppSpacing.radiusLg,
@@ -517,6 +582,81 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildQuickPercentageRow(BuildContext context, bool isDark) {
+    final accentColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final chips = [
+      {'label': '25%', 'value': 0.25},
+      {'label': '50%', 'value': 0.50},
+      {'label': '75%', 'value': 0.75},
+      {
+        'label': l10nPick(
+          context,
+          en: 'Max',
+          fa: 'تمام موجودی',
+          ar: 'الكل',
+          tr: 'Tümü',
+          ru: 'Макс',
+        ),
+        'value': 1.0,
+      },
+    ];
+
+    return Row(
+      children: chips.map((c) {
+        final label = c['label'] as String;
+        final fraction = c['value'] as double;
+        final isMax = fraction == 1.0;
+
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  controller.setAmountPercentage(fraction);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  decoration: BoxDecoration(
+                    color: isMax
+                        ? accentColor.withValues(alpha: isDark ? 0.22 : 0.12)
+                        : (isDark ? AppColors.darkCard : AppColors.white),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    border: Border.all(
+                      color: isMax
+                          ? accentColor.withValues(alpha: 0.5)
+                          : (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: isMax ? 11.5 : 12,
+                        fontWeight: isMax ? FontWeight.w800 : FontWeight.w700,
+                        color: isMax
+                            ? accentColor
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
+                        letterSpacing: 0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

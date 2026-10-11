@@ -17,6 +17,7 @@ import 'package:ecardo_user/src/presentation/screens/virtual_card/view/create_vi
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/choose_card_holder_section.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/create_new_card_holder_section.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/irr_card_order_section.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart';
 
 class CreateVirtualCard extends StatefulWidget {
   const CreateVirtualCard({super.key});
@@ -90,6 +91,7 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          _CreateCardPreviewHero(controller: controller),
                           _UnifiedProviderSelector(controller: controller),
                           Obx(() => controller.creationMode.value == 'product'
                               ? _IrrProductArea(controller: controller)
@@ -448,5 +450,59 @@ class _AvailabilityMessage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _CreateCardPreviewHero extends StatelessWidget {
+  final CreateVirtualCardController controller;
+
+  const _CreateCardPreviewHero({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final product = controller.selectedCardProduct.value;
+      final provider = controller.selectedCardProvider.value;
+      final holder = controller.selectedCardHolder.value;
+      final typedName = controller.nameController.text.trim();
+      final holderName = controller.selectedTab.value
+          ? (holder?.name?.isNotEmpty == true ? holder!.name! : 'CARDHOLDER NAME')
+          : (typedName.isNotEmpty ? typedName : 'CARDHOLDER NAME');
+
+      final cardTitle = product?.display?.title ??
+          product?.name ??
+          provider?.name ??
+          'Virtual Card';
+
+      final network = product?.display?.network ??
+          product?.issuer?.network ??
+          'Visa';
+
+      final currency = product?.currency?.toUpperCase() ?? 'USD';
+
+      return Padding(
+        padding: EdgeInsets.only(bottom: 24.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CommonVirtualCardView(
+              title: cardTitle,
+              cardHolderName: holderName,
+              value: '•••• •••• •••• 4242',
+              firstLabel: 'EXPIRY',
+              firstValue: '12/29',
+              secondLabel: 'CURRENCY',
+              secondValue: currency,
+              status: 'Active',
+              enableFlip: true,
+              showFlipIndicator: true,
+              network: network,
+              brandImage: product?.display?.brandImage,
+              backgroundImage: product?.display?.backgroundImage,
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

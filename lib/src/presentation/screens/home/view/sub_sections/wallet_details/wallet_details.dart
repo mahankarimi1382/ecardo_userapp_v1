@@ -331,7 +331,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                         Get.toNamed(
                           BaseRoute.addMoney,
                           arguments: {
-                            "wallet_id": controller.walletId.toString(),
+                            "wallet_id": controller.walletId.value,
                           },
                         );
                       } else {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
@@ -40,13 +41,16 @@ enum ServiceCategory {
   transactions,
 }
 
-/// Metadata model encapsulating service categorization and search synonyms
+/// Metadata model encapsulating service categorization, visual design, and search synonyms
 class _HubItem {
   final ServiceCategory category;
   final ServiceTile tile;
   final List<String> searchKeywords;
   final bool isQuickAccess;
   final Color? accentColor;
+  final List<Color>? gradientColors;
+  final String Function(BuildContext)? badgeText;
+  final Color? badgeColor;
 
   const _HubItem({
     required this.category,
@@ -54,7 +58,407 @@ class _HubItem {
     this.searchKeywords = const [],
     this.isQuickAccess = false,
     this.accentColor,
+    this.gradientColors,
+    this.badgeText,
+    this.badgeColor,
   });
+}
+
+/// Smooth staggered entrance transition (Slide-up + Fade-in)
+class _SlideFadeTransition extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget child;
+
+  const _SlideFadeTransition({
+    required this.animation,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        final val = animation.value;
+        return Opacity(
+          opacity: val.clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset(0, (1.0 - val) * 22.0),
+            child: child,
+          ),
+        );
+      },
+      child: child,
+    );
+  }
+}
+
+/// Interactive quick-action card for the Quick Access Hero banner
+class _QuickAccessTile extends StatefulWidget {
+  final _HubItem item;
+  final ResolvedTile resolved;
+  final bool isDark;
+
+  const _QuickAccessTile({
+    required this.item,
+    required this.resolved,
+    required this.isDark,
+  });
+
+  @override
+  State<_QuickAccessTile> createState() => _QuickAccessTileState();
+}
+
+class _QuickAccessTileState extends State<_QuickAccessTile> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final tile = widget.resolved.tile;
+    final disabled = widget.resolved.state != TileState.available;
+    final accentColor = widget.item.accentColor ?? AppColors.brandViolet;
+    final gradientColors = widget.item.gradientColors ?? [
+      accentColor,
+      accentColor.withValues(alpha: 0.8),
+    ];
+
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTileTap(context, widget.resolved);
+      },
+      child: AnimatedScale(
+        scale: _isPressed ? 0.94 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOutCubic,
+        child: Opacity(
+          opacity: disabled ? 0.55 : 1.0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+            decoration: BoxDecoration(
+              color: widget.isDark
+                  ? const Color(0xFF261D45).withValues(alpha: 0.75)
+                  : Colors.white.withValues(alpha: 0.88),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: widget.isDark
+                    ? Colors.white.withValues(alpha: 0.12)
+                    : accentColor.withValues(alpha: 0.16),
+                width: 1.1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: (widget.isDark ? Colors.black : accentColor)
+                      .withValues(alpha: widget.isDark ? 0.25 : 0.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      padding: tile.icon != null
+                          ? const EdgeInsets.all(7.5)
+                          : EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: gradientColors,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: gradientColors.first.withValues(alpha: 0.35),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: tile.iconData != null
+                          ? Icon(
+                              tile.iconData,
+                              color: Colors.white,
+                              size: 19,
+                            )
+                          : Image.asset(
+                              tile.icon!,
+                              width: 20,
+                              height: 20,
+                              color: Colors.white,
+                            ),
+                    ),
+                    if (widget.resolved.state == TileState.kycLocked ||
+                        widget.resolved.state == TileState.notBuilt)
+                      PositionedDirectional(
+                        top: -3,
+                        end: -3,
+                        child: Container(
+                          padding: const EdgeInsets.all(2.5),
+                          decoration: BoxDecoration(
+                            color: widget.isDark
+                                ? AppColors.darkGray
+                                : AppColors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: widget.isDark
+                                  ? AppColors.warmWhite.withValues(alpha: 0.15)
+                                  : AppColors.black.withValues(alpha: 0.08),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.lock_rounded,
+                            size: 9,
+                            color: widget.isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextTertiary,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  tile.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: widget.isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Interactive card item for service grid sections
+class _InteractiveServiceCard extends StatefulWidget {
+  final _HubItem item;
+  final ResolvedTile resolved;
+  final bool isDark;
+
+  const _InteractiveServiceCard({
+    required this.item,
+    required this.resolved,
+    required this.isDark,
+  });
+
+  @override
+  State<_InteractiveServiceCard> createState() =>
+      _InteractiveServiceCardState();
+}
+
+class _InteractiveServiceCardState extends State<_InteractiveServiceCard> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final tile = widget.resolved.tile;
+    final disabled = widget.resolved.state != TileState.available;
+    final accentColor = widget.item.accentColor ?? AppColors.brandViolet;
+    final badgeText = widget.item.badgeText?.call(context);
+    final badgeColor = widget.item.badgeColor ?? accentColor;
+
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTileTap(context, widget.resolved);
+      },
+      child: AnimatedScale(
+        scale: _isPressed ? 0.94 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOutCubic,
+        child: Opacity(
+          opacity: disabled ? 0.55 : 1.0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  // Icon container with vibrant gradient/solid background and rounded corners (14-16r)
+                  Container(
+                    width: 46,
+                    height: 46,
+                    padding: tile.icon != null
+                        ? const EdgeInsets.all(9)
+                        : EdgeInsets.zero,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: widget.item.gradientColors != null
+                            ? [
+                                widget.item.gradientColors![0].withValues(
+                                  alpha: widget.isDark ? 0.30 : 0.16,
+                                ),
+                                widget.item.gradientColors![1].withValues(
+                                  alpha: widget.isDark ? 0.15 : 0.08,
+                                ),
+                              ]
+                            : [
+                                accentColor.withValues(
+                                  alpha: widget.isDark ? 0.28 : 0.14,
+                                ),
+                                accentColor.withValues(
+                                  alpha: widget.isDark ? 0.12 : 0.06,
+                                ),
+                              ],
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: accentColor.withValues(
+                          alpha: widget.isDark ? 0.35 : 0.20,
+                        ),
+                        width: 1.2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: accentColor.withValues(
+                            alpha: widget.isDark ? 0.18 : 0.08,
+                          ),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: tile.iconData != null
+                        ? Icon(
+                            tile.iconData,
+                            color: widget.isDark
+                                ? AppColors.darkPrimary
+                                : accentColor,
+                            size: 23,
+                          )
+                        : Image.asset(
+                            tile.icon!,
+                            width: 24,
+                            height: 24,
+                            color: disabled
+                                ? (widget.isDark
+                                    ? AppColors.white.withValues(alpha: 0.30)
+                                    : AppColors.black.withValues(alpha: 0.30))
+                                : (widget.isDark ? AppColors.white : null),
+                          ),
+                  ),
+
+                  // Subtle status badge if applicable (e.g. "Instant / آنی", "New / جدید")
+                  if (badgeText != null &&
+                      widget.resolved.state == TileState.available)
+                    PositionedDirectional(
+                      top: -4,
+                      end: -6,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.5,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: badgeColor,
+                          borderRadius: BorderRadius.circular(6),
+                          boxShadow: [
+                            BoxShadow(
+                              color: badgeColor.withValues(alpha: 0.45),
+                              blurRadius: 4,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          badgeText,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // Lock badge for KYC-gated or unbuilt modules
+                  if (widget.resolved.state == TileState.kycLocked ||
+                      widget.resolved.state == TileState.notBuilt)
+                    PositionedDirectional(
+                      top: -4,
+                      end: -4,
+                      child: Container(
+                        padding: const EdgeInsets.all(2.5),
+                        decoration: BoxDecoration(
+                          color: widget.isDark
+                              ? AppColors.darkGray
+                              : AppColors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: widget.isDark
+                                ? AppColors.warmWhite.withValues(alpha: 0.15)
+                                : AppColors.black.withValues(alpha: 0.08),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.lock_rounded,
+                          size: 9,
+                          color: widget.isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextTertiary,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Text(
+                  tile.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11,
+                    height: 1.25,
+                    color: (widget.isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary)
+                        .withValues(
+                      alpha: disabled ? 0.40 : (widget.isDark ? 0.92 : 0.88),
+                    ),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// PREMIER BLUBANK SERVICES HUB
@@ -63,8 +467,8 @@ class _HubItem {
 /// 1. Instant fuzzy & keyword search with Iranian/regional synonym resolution.
 /// 2. Segmented category filter chips (All, Financial, Travel, Business, Transactions).
 /// 3. BluBank-style Quick Access hero banner for high-frequency actions.
-/// 4. Modern card styling matching brand violet #7445FF with dark mode support.
-/// 5. Full integration of Recent Transactions history moved off the dashboard.
+/// 4. Modern card styling with soft border glow and micro-interaction scale feedback.
+/// 5. Full integration of Recent Transactions history.
 class ServicesScreen extends StatefulWidget {
   const ServicesScreen({super.key});
 
@@ -72,10 +476,17 @@ class ServicesScreen extends StatefulWidget {
   State<ServicesScreen> createState() => _ServicesScreenState();
 }
 
-class _ServicesScreenState extends State<ServicesScreen> {
+class _ServicesScreenState extends State<ServicesScreen>
+    with SingleTickerProviderStateMixin {
   final HomeController _homeController = Get.find<HomeController>();
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
+
+  late final AnimationController _entranceController;
+  late final Animation<double> _searchAnim;
+  late final Animation<double> _chipsAnim;
+  late final Animation<double> _heroAnim;
+  late final Animation<double> _contentAnim;
 
   ServiceCategory _selectedCategory = ServiceCategory.all;
   String _searchQuery = '';
@@ -84,6 +495,28 @@ class _ServicesScreenState extends State<ServicesScreen> {
   @override
   void initState() {
     super.initState();
+    _entranceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+    _searchAnim = CurvedAnimation(
+      parent: _entranceController,
+      curve: const Interval(0.0, 0.45, curve: Curves.easeOutCubic),
+    );
+    _chipsAnim = CurvedAnimation(
+      parent: _entranceController,
+      curve: const Interval(0.10, 0.55, curve: Curves.easeOutCubic),
+    );
+    _heroAnim = CurvedAnimation(
+      parent: _entranceController,
+      curve: const Interval(0.20, 0.70, curve: Curves.easeOutCubic),
+    );
+    _contentAnim = CurvedAnimation(
+      parent: _entranceController,
+      curve: const Interval(0.35, 1.0, curve: Curves.easeOutCubic),
+    );
+    _entranceController.forward();
+
     _searchController.addListener(() {
       final text = _searchController.text.trim();
       if (_searchQuery != text) {
@@ -104,6 +537,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     _searchDebounce?.cancel();
     _searchController.dispose();
     _searchFocusNode.dispose();
+    _entranceController.dispose();
     super.dispose();
   }
 
@@ -120,7 +554,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         .replaceAll('ي', 'ی')
         .replaceAll('ك', 'ک')
         .replaceAll('ة', 'ه')
-        .replaceAll('\u200c', ' ') // Zero-width non-joiner
+        .replaceAll('‌', ' ') // Zero-width non-joiner
         .trim();
   }
 
@@ -136,6 +570,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
         category: ServiceCategory.financial,
         isQuickAccess: true,
         accentColor: const Color(0xFF7445FF),
+        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'Instant',
+          fa: 'آنی',
+          ar: 'فوري',
+          zh: '极速',
+          ru: 'Мгновенно',
+          tr: 'Anında',
+        ),
+        badgeColor: const Color(0xFF10B981),
         searchKeywords: const [
           'رمز',
           'پویا',
@@ -156,6 +601,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
         category: ServiceCategory.financial,
         isQuickAccess: true,
         accentColor: const Color(0xFF10B981),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'Fast',
+          fa: 'سریع',
+          ar: 'سريع',
+          zh: '秒达',
+          ru: 'Быстро',
+          tr: 'Hızlı',
+        ),
+        badgeColor: const Color(0xFF059669),
         searchKeywords: const [
           'انتقال',
           'کارت به کارت',
@@ -177,6 +633,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         category: ServiceCategory.financial,
         isQuickAccess: true,
         accentColor: const Color(0xFF00BFA6),
+        gradientColors: const [Color(0xFF2DD4BF), Color(0xFF0D9488)],
         searchKeywords: const [
           'واریز',
           'شارژ کیف پول',
@@ -196,6 +653,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFFEF4444),
+        gradientColors: const [Color(0xFFF87171), Color(0xFFDC2626)],
         searchKeywords: const [
           'برداشت',
           'تسویه',
@@ -215,6 +673,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
         category: ServiceCategory.financial,
         isQuickAccess: true,
         accentColor: const Color(0xFF0284C7),
+        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0369A1)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'Live',
+          fa: 'لحظه‌ای',
+          ar: 'مباشر',
+          zh: '实时',
+          ru: 'Курс',
+          tr: 'Canlı',
+        ),
+        badgeColor: const Color(0xFF0284C7),
         searchKeywords: const [
           'صرافی',
           'تبدیل ارز',
@@ -234,8 +703,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        isQuickAccess: true,
         accentColor: const Color(0xFF6366F1),
+        gradientColors: const [Color(0xFF818CF8), Color(0xFF4F46E5)],
         searchKeywords: const [
           'کیف پول',
           'موجودی',
@@ -253,6 +722,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFF8B5CF6),
+        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
         searchKeywords: const [
           'تراکنش',
           'تاریخچه',
@@ -271,6 +741,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFF3B82F6),
+        gradientColors: const [Color(0xFF60A5FA), Color(0xFF2563EB)],
         searchKeywords: const [
           'کیو آر',
           'بارکد',
@@ -290,6 +761,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFFEC4899),
+        gradientColors: const [Color(0xFFF472B6), Color(0xFFDB2777)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'Instant',
+          fa: 'آنی',
+          ar: 'فوري',
+          zh: '即时',
+          ru: 'Мгновенно',
+          tr: 'Anında',
+        ),
+        badgeColor: const Color(0xFFEC4899),
         searchKeywords: const [
           'کارت',
           'کارت مجازی',
@@ -311,6 +793,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFFF59E0B),
+        gradientColors: const [Color(0xFFFBBF24), Color(0xFFD97706)],
         searchKeywords: const [
           'قبض',
           'پرداخت قبض',
@@ -332,6 +815,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFF14B8A6),
+        gradientColors: const [Color(0xFF2DD4BF), Color(0xFF0F766E)],
         searchKeywords: const [
           'درخواست پول',
           'مطالبه',
@@ -349,6 +833,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFF0EA5E9),
+        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0284C7)],
         searchKeywords: const [
           'لینک پرداخت',
           'درگاه',
@@ -367,6 +852,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFF4F46E5),
+        gradientColors: const [Color(0xFF6366F1), Color(0xFF4338CA)],
         searchKeywords: const [
           'پرداخت',
           'خرید',
@@ -385,6 +871,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFFE11D48),
+        gradientColors: const [Color(0xFFFB7185), Color(0xFFBE123C)],
         searchKeywords: const [
           'نقد کردن',
           'دریافت وجه',
@@ -402,6 +889,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFFD946EF),
+        gradientColors: const [Color(0xFFE879F9), Color(0xFFC026D3)],
         searchKeywords: const [
           'هدیه',
           'کد هدیه',
@@ -421,6 +909,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFFA855F7),
+        gradientColors: const [Color(0xFFC084FC), Color(0xFF9333EA)],
         searchKeywords: const [
           'کارت هدیه',
           'گیفت کارت',
@@ -439,6 +928,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: const Color(0xFF059669),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF047857)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'Bonus',
+          fa: 'پاداش',
+          ar: 'مكافأة',
+          zh: '奖励',
+          ru: 'Бонус',
+          tr: 'Ödül',
+        ),
+        badgeColor: const Color(0xFF10B981),
         searchKeywords: const [
           'دعوت',
           'معرف',
@@ -462,6 +962,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         category: ServiceCategory.travel,
         isQuickAccess: true,
         accentColor: const Color(0xFF0284C7),
+        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0284C7)],
         searchKeywords: const [
           'پرواز',
           'هواپیما',
@@ -483,6 +984,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFFF97316),
+        gradientColors: const [Color(0xFFFB923C), Color(0xFFEA580C)],
         searchKeywords: const [
           'هتل',
           'اقامتگاه',
@@ -503,7 +1005,19 @@ class _ServicesScreenState extends State<ServicesScreen> {
       ),
       _HubItem(
         category: ServiceCategory.travel,
+        isQuickAccess: true,
         accentColor: const Color(0xFF10B981),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'Global',
+          fa: 'جهانی',
+          ar: 'عالمي',
+          zh: '全球',
+          ru: 'Глобал',
+          tr: 'Küresel',
+        ),
+        badgeColor: const Color(0xFF06B6D4),
         searchKeywords: const [
           'ای سیم',
           'سیم کارت الکترونیکی',
@@ -523,6 +1037,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFFEAB308),
+        gradientColors: const [Color(0xFFFACC15), Color(0xFFCA8A04)],
         searchKeywords: const [
           'تاکسی',
           'اسنپ',
@@ -544,6 +1059,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF8B5CF6),
+        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
         searchKeywords: const [
           'قطار',
           'بلیط قطار',
@@ -564,6 +1080,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF3B82F6),
+        gradientColors: const [Color(0xFF60A5FA), Color(0xFF1D4ED8)],
         searchKeywords: const [
           'اجاره خودرو',
           'کرایه ماشین',
@@ -582,6 +1099,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF14B8A6),
+        gradientColors: const [Color(0xFF2DD4BF), Color(0xFF0F766E)],
         searchKeywords: const [
           'ویزا',
           'روادید',
@@ -602,6 +1120,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF06B6D4),
+        gradientColors: const [Color(0xFF22D3EE), Color(0xFF0891B2)],
         searchKeywords: const [
           'تور',
           'تور گردشگری',
@@ -622,6 +1141,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF0EA5E9),
+        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0284C7)],
         searchKeywords: const [
           'کشتی',
           'قایق',
@@ -644,6 +1164,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF7445FF),
+        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'VIP',
+          fa: 'تشریفات',
+          ar: 'VIP',
+          zh: '贵宾',
+          ru: 'VIP',
+          tr: 'VIP',
+        ),
+        badgeColor: const Color(0xFF7445FF),
         searchKeywords: const [
           'سی آی پی',
           'تشریفات فرودگاه',
@@ -670,6 +1201,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFFEC4899),
+        gradientColors: const [Color(0xFFF472B6), Color(0xFFDB2777)],
         searchKeywords: const [
           'مکان دیدنی',
           'گردشگری محلی',
@@ -690,6 +1222,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFFF43F5E),
+        gradientColors: const [Color(0xFFFB7185), Color(0xFFE11D48)],
         searchKeywords: const [
           'غذا',
           'دلیوری',
@@ -711,6 +1244,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF10B981),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
         searchKeywords: const [
           'سوپرمارکت',
           'خرید آنلاین',
@@ -731,6 +1265,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFFF97316),
+        gradientColors: const [Color(0xFFFB923C), Color(0xFFEA580C)],
         searchKeywords: const [
           'رستوران',
           'کافه',
@@ -751,6 +1286,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF6366F1),
+        gradientColors: const [Color(0xFF818CF8), Color(0xFF4F46E5)],
         searchKeywords: const [
           'فروشگاه',
           'خرید کالا',
@@ -771,6 +1307,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF8B5CF6),
+        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
         searchKeywords: const [
           'مترجم',
           'ترجمه',
@@ -792,6 +1329,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFFEF4444),
+        gradientColors: const [Color(0xFFF87171), Color(0xFFDC2626)],
         searchKeywords: const [
           'اورژانس',
           'امداد',
@@ -812,6 +1350,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF1677FF),
+        gradientColors: const [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'CNY',
+          fa: 'یوان',
+          ar: 'يوان',
+          zh: '支付宝',
+          ru: 'CNY',
+          tr: 'CNY',
+        ),
+        badgeColor: const Color(0xFF1677FF),
         searchKeywords: const [
           'علی پی',
           'چین',
@@ -836,6 +1385,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF2BB673),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF15803D)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'RUB',
+          fa: 'روبل',
+          ar: 'روبل',
+          zh: '卢布',
+          ru: 'RUB',
+          tr: 'RUB',
+        ),
+        badgeColor: const Color(0xFF2BB673),
         searchKeywords: const [
           'میر پی',
           'روسیه',
@@ -861,6 +1421,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF059669),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF047857)],
         searchKeywords: const [
           'شارژ',
           'شارژ سیم کارت',
@@ -885,6 +1446,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: const Color(0xFF0284C7),
+        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0369A1)],
         searchKeywords: const [
           'بیمه',
           'بیمه مسافرتی',
@@ -910,6 +1472,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFF4F46E5),
+        gradientColors: const [Color(0xFF6366F1), Color(0xFF4338CA)],
         searchKeywords: const [
           'حواله',
           'حواله ارزی',
@@ -929,6 +1492,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFF10B981),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
         searchKeywords: const [
           'انتقال تجاری',
           'حواله بیزنس',
@@ -944,6 +1508,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFF8B5CF6),
+        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'P2P',
+          fa: 'مستقیم',
+          ar: 'مباشر',
+          zh: 'C2C',
+          ru: 'P2P',
+          tr: 'P2P',
+        ),
+        badgeColor: const Color(0xFF8B5CF6),
         searchKeywords: const [
           'پی تو پی',
           'ترید',
@@ -962,6 +1537,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFFD97706),
+        gradientColors: const [Color(0xFFF59E0B), Color(0xFFB45309)],
+        badgeText: (c) => l10nPick(
+          c,
+          en: 'Escrow',
+          fa: 'ضمانت',
+          ar: 'أمانة',
+          zh: '担保',
+          ru: 'Эскроу',
+          tr: 'Emanet',
+        ),
+        badgeColor: const Color(0xFFD97706),
         searchKeywords: const [
           'اسکرو',
           'معامله امن',
@@ -980,6 +1566,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFF059669),
+        gradientColors: const [Color(0xFF34D399), Color(0xFF047857)],
         searchKeywords: const [
           'ضمانت',
           'گارانتی',
@@ -997,6 +1584,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFF2563EB),
+        gradientColors: const [Color(0xFF3B82F6), Color(0xFF1E40AF)],
         searchKeywords: const [
           'وام',
           'تسهیلات',
@@ -1017,6 +1605,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFF16A34A),
+        gradientColors: const [Color(0xFF22C55E), Color(0xFF15803D)],
         searchKeywords: const [
           'بورس',
           'سهام',
@@ -1036,6 +1625,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFF7C3AED),
+        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
         searchKeywords: const [
           'سرمایه گذاری',
           'پروژه تجاری',
@@ -1062,6 +1652,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _HubItem(
         category: ServiceCategory.business,
         accentColor: const Color(0xFFEA580C),
+        gradientColors: const [Color(0xFFF97316), Color(0xFFC2410C)],
         searchKeywords: const [
           'لایسنس',
           'مجوز نرم افزار',
@@ -1108,6 +1699,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
               color: isDark
                   ? AppColors.darkSurface
                   : AppColors.lightSurfaceVariant,
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : AppColors.lightOutlineVariant.withValues(alpha: 0.6),
+                width: 1,
+              ),
             ),
             child: Icon(
               Icons.arrow_back_ios_new_rounded,
@@ -1143,7 +1740,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             Text(
               l10nPick(
                 context,
-                en: 'BluBank Edition',
+                en: 'Fintech & Travel Suite',
                 fa: 'دسترسی سریع و یکپارچه',
                 ar: 'وصول سريع وموحد',
                 zh: '一站式极速访问',
@@ -1195,45 +1792,45 @@ class _ServicesScreenState extends State<ServicesScreen> {
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              // 1. Search Bar
+              // 1. Search Bar with slide-up & fade-in entrance
               SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                  child: _buildSearchBar(context, isDark),
+                child: _SlideFadeTransition(
+                  animation: _searchAnim,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    child: _buildSearchBar(context, isDark),
+                  ),
                 ),
               ),
 
               // 2. Category Filter Chips (Hidden when actively searching)
               if (!isSearching)
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: _buildCategoryChips(context, isDark, allHubItems),
+                  child: _SlideFadeTransition(
+                    animation: _chipsAnim,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: _buildCategoryChips(context, isDark, allHubItems),
+                    ),
                   ),
                 ),
 
-              // 3. Quick Access Bar (Shown only in "All" view with empty search)
+              // 3. Quick Access Hero Banner (Shown in "All" view with empty search)
               if (!isSearching && _selectedCategory == ServiceCategory.all) ...[
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 12, 18, 8),
-                    child: _buildQuickAccessHeader(context, isDark),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: _buildQuickAccessGrid(
-                      context,
-                      quickAccessItems,
-                      badge,
-                      isDark,
+                  child: _SlideFadeTransition(
+                    animation: _heroAnim,
+                    child: _buildQuickAccessHero(
+                      context: context,
+                      items: quickAccessItems,
+                      badge: badge,
+                      isDark: isDark,
                     ),
                   ),
                 ),
                 const SliverToBoxAdapter(
-                  child: SizedBox(height: AppSpacing.sectionGap),
+                  child: SizedBox(height: 12),
                 ),
               ],
 
@@ -1246,10 +1843,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   isDark,
                 )
               else if (_selectedCategory == ServiceCategory.transactions)
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: RecentTransactionsSection(),
+                SliverToBoxAdapter(
+                  child: _SlideFadeTransition(
+                    animation: _contentAnim,
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: RecentTransactionsSection(),
+                    ),
                   ),
                 )
               else if (_selectedCategory == ServiceCategory.all) ...[
@@ -1262,6 +1862,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     fa: 'مالی و پرداخت',
                     ar: 'المالية والمدفوعات',
                     zh: '金融与支付',
+                    ru: 'Финансы и платежи',
+                    tr: 'Finans ve Ödemeler',
+                  ),
+                  subtitle: l10nPick(
+                    context,
+                    en: 'Wallets, Transfers, Cards & Utilities',
+                    fa: 'کیف پول، انتقال، کارت و پرداخت قبوض',
+                    ar: 'المحافظ، التحويلات، البطاقات والفواتير',
+                    zh: '钱包、转账、卡券与生活缴费',
+                    ru: 'Кошельки, переводы, карты и счета',
+                    tr: 'Cüzdanlar, Transferler, Kartlar ve Faturalar',
                   ),
                   icon: Icons.account_balance_wallet_rounded,
                   iconColor: AppColors.brandViolet,
@@ -1282,6 +1893,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     fa: 'سفر و گردشگری',
                     ar: 'السفر والسياحة',
                     zh: '旅行与旅游',
+                    ru: 'Путешествия и туризм',
+                    tr: 'Seyahat ve Turizm',
+                  ),
+                  subtitle: l10nPick(
+                    context,
+                    en: 'Flights, Hotels, eSIM, Rides & CIP',
+                    fa: 'پرواز، هتل، ای‌سیم، تاکسی و تشریفات CIP',
+                    ar: 'الطيران، الفنادق، الشرائح الإلكترونية والتاكسي',
+                    zh: '机票、酒店、eSIM、出行与贵宾厅',
+                    ru: 'Авиабилеты, отели, eSIM, такси и CIP',
+                    tr: 'Uçuşlar, Oteller, eSIM, Taksi ve CIP',
                   ),
                   icon: Icons.flight_takeoff_rounded,
                   iconColor: const Color(0xFF0284C7),
@@ -1302,6 +1924,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     fa: 'کسب‌وکار و سرمایه‌گذاری',
                     ar: 'الأعمال والاستثمار',
                     zh: '商务与投资',
+                    ru: 'Бизнес и инвестиции',
+                    tr: 'İş ve Yatırım',
+                  ),
+                  subtitle: l10nPick(
+                    context,
+                    en: 'P2P Trading, Escrow, Loans & Licenses',
+                    fa: 'معاملات مستقیم، حساب امانی، وام و مجوزها',
+                    ar: 'تداول P2P، حساب الضمان، القروض والتراخيص',
+                    zh: 'C2C交易、担保交易、贷款与许可证',
+                    ru: 'P2P торговля, эскроу, кредиты и лицензии',
+                    tr: 'P2P İşlemler, Emanet, Kredi ve Lisanslar',
                   ),
                   icon: Icons.store_rounded,
                   iconColor: const Color(0xFF4F46E5),
@@ -1315,8 +1948,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   child: SizedBox(height: AppSpacing.sectionGap),
                 ),
                 // Recent transactions at bottom of "All"
-                const SliverToBoxAdapter(
-                  child: RecentTransactionsSection(),
+                SliverToBoxAdapter(
+                  child: _SlideFadeTransition(
+                    animation: _contentAnim,
+                    child: const RecentTransactionsSection(),
+                  ),
                 ),
               ] else ...[
                 // Single category selected
@@ -1343,10 +1979,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : AppColors.lightOutlineVariant.withValues(alpha: 0.9),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -1369,6 +2011,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
             fa: 'جستجوی خدمات (انتقال، شارژ، هتل، وام، ویزا...)',
             ar: 'البحث عن الخدمات (تحويل، طيران، فندق، قرض...)',
             zh: '搜索服务（转账、机票、酒店、贷款...）',
+            ru: 'Поиск услуг (перевод, авиабилеты, отель, кредит...)',
+            tr: 'Hizmet ara (transfer, uçuş, otel, kredi...)',
           ),
           hintStyle: TextStyle(
             fontSize: 13,
@@ -1422,6 +2066,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           fa: 'همه',
           ar: 'الكل',
           zh: '全部',
+          ru: 'Все',
+          tr: 'Tümü',
         ),
         count: allItems.length,
         icon: Icons.apps_rounded,
@@ -1434,6 +2080,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           fa: 'مالی و پرداخت',
           ar: 'مالية',
           zh: '金融',
+          ru: 'Финансы',
+          tr: 'Finans',
         ),
         count: allItems
             .where((i) => i.category == ServiceCategory.financial)
@@ -1448,6 +2096,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           fa: 'سفر و گردشگری',
           ar: 'سفر',
           zh: '旅行',
+          ru: 'Путешествия',
+          tr: 'Seyahat',
         ),
         count:
             allItems.where((i) => i.category == ServiceCategory.travel).length,
@@ -1461,6 +2111,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           fa: 'کسب‌وکار',
           ar: 'أعمال',
           zh: '商务',
+          ru: 'Бизнес',
+          tr: 'İş',
         ),
         count: allItems
             .where((i) => i.category == ServiceCategory.business)
@@ -1475,6 +2127,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           fa: 'تراکنش‌ها',
           ar: 'معاملات',
           zh: '明细',
+          ru: 'История',
+          tr: 'İşlemler',
         ),
         count: 0,
         icon: Icons.receipt_long_rounded,
@@ -1493,20 +2147,40 @@ class _ServicesScreenState extends State<ServicesScreen> {
           final chip = chips[index];
           final isSelected = _selectedCategory == chip.category;
 
-          return InkWell(
-            onTap: () => setState(() => _selectedCategory = chip.category),
-            borderRadius: BorderRadius.circular(22),
+          return GestureDetector(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              setState(() => _selectedCategory = chip.category);
+            },
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
+                gradient: isSelected
+                    ? LinearGradient(
+                        colors: isDark
+                            ? [
+                                const Color(0xFF382A6E),
+                                const Color(0xFF271C54),
+                              ]
+                            : [
+                                AppColors.brandViolet,
+                                const Color(0xFF5E2BFF),
+                              ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : null,
                 color: isSelected
-                    ? (isDark ? AppColors.darkPrimaryContainer : AppColors.brandViolet)
+                    ? null
                     : (isDark ? AppColors.darkSurface : AppColors.white),
                 borderRadius: BorderRadius.circular(22),
                 border: Border.all(
                   color: isSelected
-                      ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                      ? (isDark
+                          ? const Color(0xFF9065FF)
+                          : AppColors.brandViolet)
                       : (isDark
                           ? AppColors.darkBorder
                           : AppColors.lightOutlineVariant),
@@ -1515,12 +2189,23 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(alpha: isDark ? 0.2 : 0.35),
-                          blurRadius: 8,
+                          color: (isDark
+                                  ? const Color(0xFF7445FF)
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: isDark ? 0.35 : 0.30),
+                          blurRadius: 10,
                           offset: const Offset(0, 3),
                         ),
                       ]
-                    : [],
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withValues(
+                            alpha: isDark ? 0.15 : 0.02,
+                          ),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -1529,7 +2214,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     chip.icon,
                     size: 16,
                     color: isSelected
-                        ? (isDark ? AppColors.mainSoftBlue : Colors.white)
+                        ? (isDark ? const Color(0xFFD8C7FF) : Colors.white)
                         : (isDark
                             ? AppColors.darkTextSecondary
                             : AppColors.lightTextSecondary),
@@ -1542,7 +2227,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       fontWeight:
                           isSelected ? FontWeight.w800 : FontWeight.w600,
                       color: isSelected
-                          ? (isDark ? AppColors.mainSoftBlue : Colors.white)
+                          ? (isDark ? const Color(0xFFF1EBFF) : Colors.white)
                           : (isDark
                               ? AppColors.darkTextPrimary
                               : AppColors.lightTextPrimary),
@@ -1557,7 +2242,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? (isDark ? AppColors.mainSoftBlue.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.25))
+                            ? Colors.white
+                                .withValues(alpha: isDark ? 0.20 : 0.25)
                             : (isDark
                                 ? AppColors.darkSurfaceVariant
                                 : AppColors.brandVioletContainer),
@@ -1569,7 +2255,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
                           color: isSelected
-                              ? (isDark ? AppColors.mainSoftBlue : Colors.white)
+                              ? Colors.white
                               : (isDark
                                   ? AppColors.darkAccent
                                   : AppColors.brandViolet),
@@ -1587,110 +2273,250 @@ class _ServicesScreenState extends State<ServicesScreen> {
   }
 
   // ─────────────────────────────────────────────────────────────
-  // QUICK ACCESS BANNER (پرتکرارترین‌ها)
+  // QUICK ACCESS HERO BANNER (PREMIER BLUBANK FINTECH CARD)
   // ─────────────────────────────────────────────────────────────
-  Widget _buildQuickAccessHeader(BuildContext context, bool isDark) {
-    return Row(
-      children: [
-        Container(
-          width: 28,
-          height: 28,
-          decoration: BoxDecoration(
-            color: isDark
-                ? AppColors.darkPrimaryContainer
-                : AppColors.brandVioletContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(
-            Icons.bolt_rounded,
-            size: 18,
-            color: AppColors.brandViolet,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          l10nPick(
-            context,
-            en: 'Quick Access',
-            fa: 'دسترسی سریع و پرتکرار',
-            ar: 'وصول سريع ومميز',
-            zh: '常用快捷服务',
-          ),
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w800,
-            color: isDark
-                ? AppColors.darkTextPrimary
-                : AppColors.lightTextPrimary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickAccessGrid(
-    BuildContext context,
-    List<_HubItem> items,
-    KycBadge? badge,
-    bool isDark,
-  ) {
+  Widget _buildQuickAccessHero({
+    required BuildContext context,
+    required List<_HubItem> items,
+    required KycBadge? badge,
+    required bool isDark,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(24),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  const Color(0xFF221743),
+                  const Color(0xFF191333),
+                  const Color(0xFF130F26),
+                ]
+              : [
+                  const Color(0xFFF9F7FF),
+                  const Color(0xFFF1ECFF),
+                  const Color(0xFFE8E2FF),
+                ],
+        ),
         border: Border.all(
           color: isDark
-              ? AppColors.darkBorder
-              : AppColors.brandViolet.withValues(alpha: 0.12),
+              ? const Color(0xFF9065FF).withValues(alpha: 0.28)
+              : AppColors.brandViolet.withValues(alpha: 0.18),
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.brandViolet.withValues(alpha: 0.05),
-            blurRadius: 16,
+            color: (isDark ? const Color(0xFF7445FF) : AppColors.brandViolet)
+                .withValues(alpha: isDark ? 0.22 : 0.08),
+            blurRadius: 20,
             offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isNarrow = constraints.maxWidth < 360;
-          if (isNarrow) {
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              child: Row(
-                children: items.map((item) {
-                  final resolved = resolveTile(item.tile, badge);
-                  return SizedBox(
-                    width: 68,
-                    child: _buildTileView(
-                      context: context,
-                      resolved: resolved,
-                      accentColor: item.accentColor ?? AppColors.brandViolet,
-                      isDark: isDark,
-                    ),
-                  );
-                }).toList(),
-              ),
-            );
-          }
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: items.map((item) {
-              final resolved = resolveTile(item.tile, badge);
-              return Expanded(
-                child: _buildTileView(
-                  context: context,
-                  resolved: resolved,
-                  accentColor: item.accentColor ?? AppColors.brandViolet,
-                  isDark: isDark,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          children: [
+            // Ambient blurred glow circles in background
+            PositionedDirectional(
+              top: -30,
+              end: -30,
+              child: Container(
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFF7445FF)
+                          .withValues(alpha: isDark ? 0.35 : 0.16),
+                      Colors.transparent,
+                    ],
+                  ),
                 ),
-              );
-            }).toList(),
-          );
-        },
+              ),
+            ),
+            PositionedDirectional(
+              bottom: -35,
+              start: -25,
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFF00BFA6)
+                          .withValues(alpha: isDark ? 0.25 : 0.12),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top Header Row
+                  Row(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFF7445FF),
+                              Color(0xFF9065FF),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF7445FF)
+                                  .withValues(alpha: 0.35),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.bolt_rounded,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Quick Access',
+                                fa: 'دسترسی سریع و پرتکرار',
+                                ar: 'الوصول السريع',
+                                zh: '快捷通道',
+                                ru: 'Быстрый доступ',
+                                tr: 'Hızlı Erişim',
+                              ),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                                color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 1),
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Top financial & travel actions',
+                                fa: 'عملیات برگزیده مالی و مسافرتی',
+                                ar: 'أبرز الخدمات المالية والسياحية',
+                                zh: '精选金融与商旅服务',
+                                ru: 'Топ финансовые и туристические сервисы',
+                                tr: 'Öne Çıkan Finans ve Seyahat İşlemleri',
+                              ),
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: (isDark
+                                  ? const Color(0xFF7445FF)
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: isDark ? 0.22 : 0.12),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: (isDark
+                                    ? const Color(0xFF9065FF)
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: 0.25),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.auto_awesome_rounded,
+                              size: 11,
+                              color: isDark
+                                  ? const Color(0xFFB79CFF)
+                                  : AppColors.brandViolet,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${items.length}',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w900,
+                                color: isDark
+                                    ? const Color(0xFFB79CFF)
+                                    : AppColors.brandViolet,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Grid of top actions
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: items.length,
+                        padding: EdgeInsets.zero,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          mainAxisExtent: 86,
+                        ),
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+                          final resolved = resolveTile(item.tile, badge);
+                          return _QuickAccessTile(
+                            item: item,
+                            resolved: resolved,
+                            isDark: isDark,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1701,6 +2527,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Widget _buildCategorizedSectionSliver({
     required BuildContext context,
     required String title,
+    required String subtitle,
     required IconData icon,
     required Color iconColor,
     required List<_HubItem> items,
@@ -1708,68 +2535,113 @@ class _ServicesScreenState extends State<ServicesScreen> {
     required bool isDark,
   }) {
     return SliverToBoxAdapter(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
-            child: Row(
-              children: [
-                Icon(icon, size: 20, color: iconColor),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
+      child: _SlideFadeTransition(
+        animation: _contentAnim,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: iconColor.withValues(alpha: isDark ? 0.22 : 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color:
+                            iconColor.withValues(alpha: isDark ? 0.35 : 0.20),
+                        width: 1,
+                      ),
+                    ),
+                    child: Icon(icon, size: 18, color: iconColor),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: iconColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '${items.length}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: iconColor,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 1),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 2.5),
+                    decoration: BoxDecoration(
+                      color: iconColor.withValues(alpha: isDark ? 0.20 : 0.10),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '${items.length}',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w800,
+                        color: iconColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 6),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 18),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkSurface : AppColors.white,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.06)
+                      : AppColors.lightOutlineVariant.withValues(alpha: 0.8),
+                  width: 1.2,
                 ),
-              ],
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                  BoxShadow(
+                    color: iconColor.withValues(alpha: isDark ? 0.04 : 0.02),
+                    blurRadius: 20,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: _buildGridOfItems(
+                context: context,
+                items: items,
+                badge: badge,
+                isDark: isDark,
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 18),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurface : AppColors.white,
-              borderRadius: BorderRadius.circular(22),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                  blurRadius: 14,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: _buildGridOfItems(
-              context: context,
-              items: items,
-              badge: badge,
-              isDark: isDark,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1784,25 +2656,34 @@ class _ServicesScreenState extends State<ServicesScreen> {
     bool isDark,
   ) {
     return SliverToBoxAdapter(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 18),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.white,
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-              blurRadius: 14,
-              offset: const Offset(0, 4),
+      child: _SlideFadeTransition(
+        animation: _contentAnim,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 18),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSurface : AppColors.white,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : AppColors.lightOutlineVariant.withValues(alpha: 0.8),
+              width: 1.2,
             ),
-          ],
-        ),
-        child: _buildGridOfItems(
-          context: context,
-          items: items,
-          badge: badge,
-          isDark: isDark,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: _buildGridOfItems(
+            context: context,
+            items: items,
+            badge: badge,
+            isDark: isDark,
+          ),
         ),
       ),
     );
@@ -1825,17 +2706,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 72,
-                height: 72,
+                width: 76,
+                height: 76,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isDark
                       ? AppColors.darkPrimaryContainer
                       : AppColors.brandVioletContainer,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.brandViolet
+                          .withValues(alpha: isDark ? 0.3 : 0.15),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: const Icon(
                   Icons.search_off_rounded,
-                  size: 36,
+                  size: 38,
                   color: AppColors.brandViolet,
                 ),
               ),
@@ -1847,6 +2736,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   fa: 'خدمتی با این مشخصات یافت نشد',
                   ar: 'لم يتم العثور على خدمات',
                   zh: '未找到相关服务',
+                  ru: 'Услуги не найдены',
+                  tr: 'Hizmet bulunamadı',
                 ),
                 style: TextStyle(
                   fontSize: 16,
@@ -1864,6 +2755,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   fa: 'پیشنهاد: عباراتی مانند «انتقال»، «شارژ»، «پرواز»، «وام» یا «کارت» را امتحان کنید.',
                   ar: 'جرب البحث عن: تحويل، طيران، فندق، قرض، أو شحن',
                   zh: '请尝试搜索：转账、机票、酒店、贷款或充值',
+                  ru: 'Попробуйте: перевод, перелет, отель, кредит или пополнение',
+                  tr: 'Şunları aramayı deneyin: transfer, uçuş, otel, kredi veya yükleme',
                 ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -1888,6 +2781,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     fa: 'پاک کردن جستجو',
                     ar: 'مسح البحث',
                     zh: '清空搜索',
+                    ru: 'Очистить поиск',
+                    tr: 'Aramayı Temizle',
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -1915,6 +2810,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 fa: '${items.length} خدمت یافت شد',
                 ar: 'تم العثور على ${items.length} خدمة',
                 zh: '找到 ${items.length} 个相关服务',
+                ru: 'Найдено ${items.length} услуг',
+                tr: '${items.length} eşleşen hizmet bulundu',
               ),
               style: TextStyle(
                 fontSize: 14,
@@ -1931,10 +2828,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
             decoration: BoxDecoration(
               color: isDark ? AppColors.darkSurface : AppColors.white,
               borderRadius: BorderRadius.circular(22),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.06)
+                    : AppColors.lightOutlineVariant.withValues(alpha: 0.8),
+                width: 1.2,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                  blurRadius: 14,
+                  color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                  blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),
               ],
@@ -1967,132 +2870,19 @@ class _ServicesScreenState extends State<ServicesScreen> {
       padding: EdgeInsets.zero,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 4,
-        mainAxisExtent: 86,
+        mainAxisSpacing: 14,
+        crossAxisSpacing: 6,
+        mainAxisExtent: 96,
       ),
       itemBuilder: (context, index) {
         final item = items[index];
         final resolved = resolveTile(item.tile, badge);
-        return _buildTileView(
-          context: context,
+        return _InteractiveServiceCard(
+          item: item,
           resolved: resolved,
-          accentColor: item.accentColor ?? AppColors.brandViolet,
           isDark: isDark,
         );
       },
-    );
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // INDIVIDUAL TILE VIEW (PREMIER BLUBANK STYLE)
-  // ─────────────────────────────────────────────────────────────
-  Widget _buildTileView({
-    required BuildContext context,
-    required ResolvedTile resolved,
-    required Color accentColor,
-    required bool isDark,
-  }) {
-    final tile = resolved.tile;
-    final disabled = resolved.state != TileState.available;
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(14),
-      onTap: () => onTileTap(context, resolved),
-      child: Opacity(
-        opacity: disabled ? 0.55 : 1,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Icon squircle container with soft tinted background
-                Container(
-                  width: 44,
-                  height: 44,
-                  padding: tile.icon != null
-                      ? const EdgeInsets.all(9)
-                      : EdgeInsets.zero,
-                  decoration: BoxDecoration(
-                    color: accentColor.withValues(alpha: isDark ? 0.16 : 0.08),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color:
-                          accentColor.withValues(alpha: isDark ? 0.25 : 0.12),
-                      width: 1,
-                    ),
-                  ),
-                  child: tile.iconData != null
-                      ? Icon(
-                          tile.iconData,
-                          color: isDark ? AppColors.darkPrimary : accentColor,
-                          size: 22,
-                        )
-                      : Image.asset(
-                          tile.icon!,
-                          width: 24,
-                          height: 24,
-                          color: disabled
-                              ? (isDark
-                                  ? AppColors.white.withValues(alpha: 0.30)
-                                  : AppColors.black.withValues(alpha: 0.30))
-                              : (isDark ? AppColors.white : null),
-                        ),
-                ),
-                // Lock badge for KYC-gated or unbuilt modules
-                if (resolved.state == TileState.kycLocked ||
-                    resolved.state == TileState.notBuilt)
-                  PositionedDirectional(
-                    top: -4,
-                    end: -4,
-                    child: Container(
-                      padding: const EdgeInsets.all(2.5),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkGray : AppColors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isDark
-                              ? AppColors.warmWhite.withValues(alpha: 0.15)
-                              : AppColors.black.withValues(alpha: 0.08),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.lock_rounded,
-                        size: 9,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextTertiary,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Text(
-                tile.title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 11,
-                  height: 1.2,
-                  color: (isDark
-                          ? AppColors.darkTextPrimary
-                          : const Color(0xFF2D2D2D))
-                      .withValues(
-                    alpha: disabled ? 0.40 : (isDark ? 0.90 : 0.85),
-                  ),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

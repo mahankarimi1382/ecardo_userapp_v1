@@ -67,6 +67,20 @@ class CashOutController extends GetxController {
     isAmountFocused.value = amountFocusNode.hasFocus;
   }
 
+  void setAmountPercentage(double fraction) {
+    final w = wallet.value;
+    if (w == null) return;
+    final balance = double.tryParse(w.balance ?? '0') ?? 0.0;
+    final effectiveBalance = balance > 0
+        ? balance
+        : (double.tryParse(w.cashoutLimit?.max ?? '1000') ?? 1000.0);
+    final calculated = effectiveBalance * fraction;
+    final isCrypto = w.isCrypto ?? false;
+    final decimals = isCrypto ? 6 : 2;
+    amountController.text = calculated.toStringAsFixed(decimals);
+    _calculateCharge();
+  }
+
   Future<void> nextStepWithValidation() async {
     if (currentStep.value == 0) {
       if (!validateAmountStep()) {

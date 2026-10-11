@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
@@ -69,6 +70,9 @@ class _AuthIdVerificationScreenState extends State<AuthIdVerificationScreen> {
           _handleBack();
         },
         child: Scaffold(
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkBackground
+              : AppColors.lightBackground,
           appBar: CommonDefaultAppBar(),
           body: Obx(() {
             if (fields.isEmpty) {

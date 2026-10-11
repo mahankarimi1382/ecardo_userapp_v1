@@ -21,11 +21,16 @@ import 'package:ecardo_user/src/presentation/screens/settings/view/support_ticke
 class _MockReplyTicketController extends ReplyTicketController {
   int fetchCallCount = 0;
   int submitCallCount = 0;
+  int reopenCallCount = 0;
+  int closeCallCount = 0;
   bool shouldPopulateDataOnFetch = false;
   TicketMessageModel? predefinedModel;
 
   @override
-  Future<void> fetchTicketMessage({required String ticketUid}) async {
+  Future<void> fetchTicketMessage({
+    required String ticketUid,
+    bool isSilent = false,
+  }) async {
     fetchCallCount++;
     if (predefinedModel != null) {
       ticketMessageModel.value = predefinedModel!;
@@ -35,6 +40,16 @@ class _MockReplyTicketController extends ReplyTicketController {
   @override
   Future<void> submitReplayTicket({required String ticketUid}) async {
     submitCallCount++;
+  }
+
+  @override
+  Future<void> submitReopenTicket({required String ticketUid}) async {
+    reopenCallCount++;
+  }
+
+  @override
+  Future<void> submitCloseTicket({required String ticketUid}) async {
+    closeCallCount++;
   }
 }
 
@@ -294,6 +309,82 @@ void main() {
       expect(mockController.controller.attachedImages.isEmpty, isTrue);
       // 4. Conversation refetched
       expect(mockController.fetchCallCount, greaterThan(initialFetchCount));
+    });
+
+    test('TicketMessageModel and Attachments helper getters operate properly', () {
+      final msg = Messages(
+        message: 'Hello<br />world &amp; welcome &lt;support&gt;',
+      );
+      expect(msg.cleanMessage, 'Hello\nworld & welcome <support>');
+
+      final imgAttachment = Attachments(
+        url: 'https://ecardo.ir/storage/ticket_1.png',
+        size: 2048 * 1024,
+        type: 'png',
+      );
+      expect(imgAttachment.isImage, isTrue);
+      expect(imgAttachment.formattedSize, '2.0 MB');
+      expect(imgAttachment.cleanUrl, 'https://ecardo.ir/storage/ticket_1.png');
+
+      final relativeDoc = Attachments(
+        url: '/storage/guide.pdf',
+        size: 512 * 1024,
+        type: 'pdf',
+      );
+      expect(relativeDoc.isImage, isFalse);
+      expect(relativeDoc.formattedSize, '512.0 KB');
+      expect(relativeDoc.cleanUrl, 'https://ecardo.ir/storage/guide.pdf');
+    });
+
+    testWidgets(
+        'Closed ticket displays resolved banner and Reopen button calls controller',
+        (tester) async {
+      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final mockController = _MockReplyTicketController();
+      Get.put<ReplyTicketController>(mockController);
+      mockController.predefinedModel = TicketMessageModel(
+        data: TicketMessageData(
+          ticket: Ticket(
+            uuid: 'TKT-CLOSED-01',
+            title: 'Billing inquiry resolved',
+            status: 'closed',
+            isClosed: true,
+            canReply: false,
+            priority: 'high',
+          ),
+          messages: [
+            Messages(
+              id: 1,
+              message: 'Your billing question is settled.',
+              isAdmin: true,
+              user: User(name: 'Finance Admin', email: 'billing@ecardo.ir'),
+              createdAtFormatted: '01 Mar, 2026 12:00 PM',
+            ),
+          ],
+        ),
+      );
+
+      await tester.pumpWidget(
+        _wrapWithApp(const ReplayTicket(ticketUid: 'TKT-CLOSED-01')),
+      );
+      await tester.pumpAndSettle();
+
+      // Subject context card is rendered
+      expect(find.text('Billing inquiry resolved'), findsOneWidget);
+
+      // Reopen button is present in resolved banner
+      final reopenButtonFinder = find.widgetWithText(OutlinedButton, 'Reopen');
+      expect(reopenButtonFinder, findsOneWidget);
+
+      // Tap Reopen button
+      await tester.tap(reopenButtonFinder);
+      await tester.pumpAndSettle();
+
+      // submitReopenTicket was triggered
+      expect(mockController.reopenCallCount, 1);
     });
   });
 }

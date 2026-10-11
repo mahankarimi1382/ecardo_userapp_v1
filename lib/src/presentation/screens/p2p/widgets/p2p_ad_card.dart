@@ -1,18 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/svg/svg_assets.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/model/p2p_marketplace_response_model.dart'
     as marketplace;
 import 'package:ecardo_user/src/presentation/screens/p2p/widgets/p2p_buy_sell_ad_screen.dart';
 
-/// P2P Advertisement Card with enhanced Trader Reputation Badge,
-/// completion rate %, order volume, payment methods, and dark mode support.
+/// Micro-scale tap interaction wrapper providing high-tactility micro-feedback.
+class MicroScaleTap extends StatefulWidget {
+  final Widget child;
+  final VoidCallback? onTap;
+  final double scaleFactor;
+
+  const MicroScaleTap({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.scaleFactor = 0.94,
+  });
+
+  @override
+  State<MicroScaleTap> createState() => _MicroScaleTapState();
+}
+
+class _MicroScaleTapState extends State<MicroScaleTap> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = widget.onTap != null;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: enabled
+          ? (_) => setState(() => _isPressed = true)
+          : null,
+      onTapUp: enabled
+          ? (_) {
+              setState(() => _isPressed = false);
+              HapticFeedback.mediumImpact();
+              widget.onTap!();
+            }
+          : null,
+      onTapCancel: enabled
+          ? () {
+              if (_isPressed) setState(() => _isPressed = false);
+            }
+          : null,
+      child: AnimatedScale(
+        scale: _isPressed ? widget.scaleFactor : 1.0,
+        duration: const Duration(milliseconds: 110),
+        curve: Curves.easeInOut,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+/// World-Class P2P Advertisement Card (Binance P2P / OKX / Bybit standard)
+/// Features:
+/// - Trader Header: Avatar with initials, online pulse indicator, verified pro-merchant gold badge,
+///   trade count and completion rate percentage ("99.4% (320 trades)").
+/// - Price & Limit Typography: Big crisp price in fiat/IRT, available crypto quantity, and order limit range (Min - Max).
+/// - Payment Method Badges: Colorful tag chips (Bank Transfer, Sheba, Card to Card, eCardo Internal, Cash).
+/// - Distinctive "Buy USDT" / "Sell USDT" CTA button with micro-scale tap interaction and haptics.
+/// - Full Dark mode & RTL support using AppColors, AppSpacing, and l10nPick.
 class P2pAdCard extends StatelessWidget {
   final marketplace.Ad item;
 
@@ -29,19 +84,31 @@ class P2pAdCard extends StatelessWidget {
     final avatarText = (item.advertiser?.avatarText?.trim().isNotEmpty ?? false)
         ? item.advertiser!.avatarText!
         : (traderName.isNotEmpty ? traderName[0].toUpperCase() : 'T');
-    final paymentMethod = item.paymentMethods?.isNotEmpty == true
-        ? (item.paymentMethods!.first.paymentMethod?.name ?? '--')
-        : '--';
+
     final completionRate = (item.completionRate ?? 0).toDouble();
     final completedOrders = item.completedOrders ?? 0;
+    final isVerifiedTrader = item.advertiser?.isVerifiedTrader == true;
+
     final isOwnAd = item.isOwnAd == true;
     final isAdTypeBuy = (item.adType ?? '').toLowerCase() == 'buy';
-    final actionLabel = isAdTypeBuy ? localization.p2pSell : localization.p2pBuy;
+    final assetCode = item.assetCurrency?.code ?? 'USDT';
+
+    // Button action text: When ad is "buy", user sells to advertiser. When "sell", user buys from advertiser.
+    final actionButtonText = isOwnAd
+        ? l10nPick(context, en: 'Your Ad', fa: 'آگهی شما')
+        : isAdTypeBuy
+            ? l10nPick(context, en: 'Sell $assetCode', fa: 'فروش $assetCode')
+            : l10nPick(context, en: 'Buy $assetCode', fa: 'خرید $assetCode');
+
+    final emeraldGreen = const Color(0xFF10B981);
+    final rubyRed = const Color(0xFFEF4444);
 
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    final paymentMethodsList = item.paymentMethods ?? <marketplace.PaymentMethodElement>[];
 
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
@@ -52,42 +119,51 @@ class P2pAdCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Trader Header & Reputation Badges
+          // 1. Trader Header: Avatar, Pro-Merchant Gold Badge, Completion %, Orders Volume
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Avatar with Online Indicator
+              // Avatar with Online Pulse Indicator
               Stack(
                 clipBehavior: Clip.none,
                 children: [
                   Container(
-                    width: 38.r,
-                    height: 38.r,
+                    width: 42.r,
+                    height: 42.r,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: isDark
-                            ? [AppColors.darkPrimary, AppColors.mutedBlue]
-                            : [AppColors.deepBlack, AppColors.darkGray],
+                            ? const [Color(0xFF312E81), Color(0xFF4338CA)]
+                            : const [Color(0xFF1E293B), Color(0xFF334155)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: (isDark ? const Color(0xFF4338CA) : Colors.black)
+                              .withValues(alpha: 0.20),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Center(
                       child: Text(
                         avatarText,
                         style: TextStyle(
+                          letterSpacing: 0,
                           fontWeight: FontWeight.w900,
                           fontSize: 16.sp,
-                          color: isDark ? AppColors.deepBlack : AppColors.white,
+                          color: AppColors.white,
                         ),
                       ),
                     ),
@@ -96,12 +172,18 @@ class P2pAdCard extends StatelessWidget {
                     bottom: 0,
                     end: 0,
                     child: Container(
-                      width: 10.r,
-                      height: 10.r,
+                      width: 12.r,
+                      height: 12.r,
                       decoration: BoxDecoration(
-                        color: AppColors.success,
+                        color: emeraldGreen,
                         shape: BoxShape.circle,
                         border: Border.all(color: cardBg, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: emeraldGreen.withValues(alpha: 0.5),
+                            blurRadius: 4,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -109,7 +191,7 @@ class P2pAdCard extends StatelessWidget {
               ),
               SizedBox(width: AppSpacing.sm.w),
 
-              // Trader Name & Verified Badge
+              // Trader Name, Verified Pro-Merchant Badge & Completion Row
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,65 +205,60 @@ class P2pAdCard extends StatelessWidget {
                             style: TextStyle(
                               letterSpacing: 0,
                               fontWeight: FontWeight.w800,
-                              fontSize: 14.sp,
+                              fontSize: 14.5.sp,
                               color: textPrimary,
                             ),
                           ),
                         ),
-                        if (item.advertiser?.isVerifiedTrader == true) ...[
-                          SizedBox(width: 4.w),
-                          SvgPicture.asset(
-                            SvgAssets.commonIdVerifiedBadgeIcon,
-                            width: 15.w,
-                            height: 15.h,
-                          ),
+                        if (isVerifiedTrader) ...[
+                          SizedBox(width: 6.w),
+                          _buildProMerchantBadge(context, isDark),
                         ],
                       ],
                     ),
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 4.h),
 
-                    // Trader Reputation Badges Row (Success Rate % & Volume)
+                    // Trade count & completion rate percentage (e.g. "99.4% (320 trades)")
                     Row(
                       children: [
-                        // Completion % Badge
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.5.h),
                           decoration: BoxDecoration(
-                            color: AppColors.success.withValues(alpha: isDark ? 0.2 : 0.12),
+                            color: emeraldGreen.withValues(alpha: isDark ? 0.18 : 0.10),
                             borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                            border: Border.all(
+                              color: emeraldGreen.withValues(alpha: isDark ? 0.35 : 0.22),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.check_circle_outline_rounded, size: 11.r, color: AppColors.success),
-                              SizedBox(width: 3.w),
+                              Icon(
+                                Icons.check_circle_rounded,
+                                size: 11.5.r,
+                                color: emeraldGreen,
+                              ),
+                              SizedBox(width: 3.5.w),
                               Text(
                                 '${completionRate.toStringAsFixed(1)}%',
                                 style: TextStyle(
+                                  letterSpacing: 0,
                                   fontSize: 10.5.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.success,
+                                  fontWeight: FontWeight.w700,
+                                  color: emeraldGreen,
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              Text(
+                                '($completedOrders ${l10nPick(context, en: 'trades', fa: 'معامله')})',
+                                style: TextStyle(
+                                  letterSpacing: 0,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: emeraldGreen.withValues(alpha: 0.9),
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                        SizedBox(width: 6.w),
-
-                        // Orders Volume Badge
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                          decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
-                          ),
-                          child: Text(
-                            '$completedOrders ${localization.p2pOrders.toLowerCase()}',
-                            style: TextStyle(
-                              fontSize: 10.5.sp,
-                              fontWeight: FontWeight.w600,
-                              color: textSecondary,
-                            ),
                           ),
                         ),
                       ],
@@ -192,25 +269,29 @@ class P2pAdCard extends StatelessWidget {
 
               // Response Time Badge
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.timer_outlined,
-                      size: 12.r,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                      Icons.bolt_rounded,
+                      size: 13.r,
+                      color: const Color(0xFFF59E0B),
                     ),
-                    SizedBox(width: 3.w),
+                    SizedBox(width: 2.w),
                     Text(
-                      item.responseTime ?? '15m',
+                      item.responseTime ?? '≤15m',
                       style: TextStyle(
+                        letterSpacing: 0,
                         fontSize: 10.5.sp,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: textSecondary,
                       ),
                     ),
@@ -225,88 +306,108 @@ class P2pAdCard extends StatelessWidget {
             height: 1,
             color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
           ),
-          SizedBox(height: AppSpacing.sm.h),
+          SizedBox(height: AppSpacing.md.h),
 
-          // Price & Order Details
+          // 2. Price, Limits Typography & Payment Badges + Distinctive CTA
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Price, Limits & Available
+              // Left Column: Big Crisp Price, Available Crypto, Order Limit Range (Min - Max)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Price typography: Big Crisp Price
                     Text(
                       item.price ?? '--',
                       style: TextStyle(
-                        letterSpacing: 0,
+                        letterSpacing: -0.4,
                         fontWeight: FontWeight.w900,
-                        fontSize: 17.sp,
+                        fontSize: 20.sp,
                         color: textPrimary,
                       ),
                     ),
-                    SizedBox(height: AppSpacing.xs.h),
-                    _buildCardInfoText(localization.p2pLimit, item.orderLimit ?? '--', textPrimary, textSecondary),
-                    SizedBox(height: 3.h),
-                    _buildCardInfoText(localization.p2pAvailable, item.totalAmount ?? '--', textPrimary, textSecondary),
+                    SizedBox(height: 6.h),
+
+                    // Available Crypto Quantity
+                    _buildCryptoMetricRow(
+                      icon: Icons.account_balance_wallet_outlined,
+                      label: localization.p2pAvailable,
+                      value: item.totalAmount ?? '--',
+                      textPrimary: textPrimary,
+                      textSecondary: textSecondary,
+                    ),
+                    SizedBox(height: 4.h),
+
+                    // Order Limit Range (Min - Max)
+                    _buildCryptoMetricRow(
+                      icon: Icons.tune_rounded,
+                      label: localization.p2pLimit,
+                      value: item.orderLimit ?? '--',
+                      textPrimary: textPrimary,
+                      textSecondary: textSecondary,
+                    ),
                   ],
                 ),
               ),
 
               SizedBox(width: AppSpacing.sm.w),
 
-              // Payment Method Pill & Action Button
+              // Right Column: Payment Method Tag Chips & Distinctive CTA Button
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                    decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurfaceVariant : AppColors.infoContainer,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                    ),
-                    child: Text(
-                      paymentMethod,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 11.sp,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: AppSpacing.sm.h),
-                  SizedBox(
-                    height: 38.h,
-                    child: ElevatedButton(
-                      onPressed: isOwnAd
-                          ? null
-                          : () {
-                              HapticFeedback.lightImpact();
-                              final adId = item.id;
-                              if (adId == null) return;
-                              Get.to(
-                                () => P2pBuySellAdScreen(
-                                  adId: adId,
-                                  isSellMode: isAdTypeBuy,
+                  // Payment Method Badges: Colorful tag chips with distinctive colors
+                  _buildPaymentMethodBadges(paymentMethodsList, isDark),
+                  SizedBox(height: 10.h),
+
+                  // Distinctive "Buy USDT" / "Sell USDT" CTA with micro-scale tap interaction
+                  MicroScaleTap(
+                    onTap: isOwnAd
+                        ? null
+                        : () {
+                            final adId = item.id;
+                            if (adId == null) return;
+                            Get.to(
+                              () => P2pBuySellAdScreen(
+                                adId: adId,
+                                isSellMode: isAdTypeBuy,
+                              ),
+                            );
+                          },
+                    child: Container(
+                      height: 40.h,
+                      constraints: BoxConstraints(minWidth: 105.w),
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      decoration: BoxDecoration(
+                        color: isOwnAd
+                            ? (isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300)
+                            : isAdTypeBuy
+                                ? rubyRed
+                                : emeraldGreen,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        boxShadow: isOwnAd
+                            ? null
+                            : [
+                                BoxShadow(
+                                  color: (isAdTypeBuy ? rubyRed : emeraldGreen)
+                                      .withValues(alpha: 0.35),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
                                 ),
-                              );
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isAdTypeBuy
-                            ? (isOwnAd ? textSecondary.withValues(alpha: 0.2) : AppColors.error)
-                            : (isOwnAd ? textSecondary.withValues(alpha: 0.2) : AppColors.success),
-                        foregroundColor: AppColors.white,
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                        ),
-                        elevation: 0,
+                              ],
                       ),
-                      child: Text(
-                        actionLabel,
-                        style: TextStyle(
-                          fontSize: 12.5.sp,
-                          fontWeight: FontWeight.w800,
+                      child: Center(
+                        child: Text(
+                          actionButtonText,
+                          style: TextStyle(
+                            letterSpacing: 0,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: isOwnAd
+                                ? (isDark ? AppColors.darkTextSecondary : AppColors.softGray)
+                                : AppColors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -320,30 +421,291 @@ class P2pAdCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCardInfoText(String title, String value, Color textPrimary, Color textSecondary) {
-    return RichText(
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: '$title: ',
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w600,
-              color: textSecondary,
-            ),
+  /// Pro-Merchant Gold Badge (Verified with Gold Shield / Star)
+  Widget _buildProMerchantBadge(BuildContext context, bool isDark) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5.5.w, vertical: 2.h),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFB800), Color(0xFFF59E0B)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(4.r),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
           ),
-          TextSpan(
-            text: value,
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.verified_rounded,
+            size: 11.5.r,
+            color: Colors.black87,
+          ),
+          SizedBox(width: 3.w),
+          Text(
+            'PRO',
             style: TextStyle(
-              fontSize: 11.5.sp,
-              fontWeight: FontWeight.w700,
-              color: textPrimary,
+              letterSpacing: 0.4,
+              fontSize: 9.5.sp,
+              fontWeight: FontWeight.w900,
+              color: Colors.black87,
             ),
           ),
         ],
       ),
     );
   }
+
+  /// Crypto Metric Row (Limits & Available)
+  Widget _buildCryptoMetricRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color textPrimary,
+    required Color textSecondary,
+  }) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 12.5.r,
+          color: textSecondary.withValues(alpha: 0.7),
+        ),
+        SizedBox(width: 4.w),
+        Expanded(
+          child: RichText(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '$label: ',
+                  style: TextStyle(
+                    letterSpacing: 0,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w600,
+                    color: textSecondary,
+                  ),
+                ),
+                TextSpan(
+                  text: value,
+                  style: TextStyle(
+                    letterSpacing: 0,
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w700,
+                    color: textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Colorful Payment Method Tag Chips (Bank Transfer, Sheba, Card to Card, eCardo Internal, Cash)
+  Widget _buildPaymentMethodBadges(
+    List<marketplace.PaymentMethodElement> methods,
+    bool isDark,
+  ) {
+    if (methods.isEmpty) {
+      return _buildPaymentChip(
+        name: '--',
+        badgeTheme: _getPaymentMethodTheme('--', isDark),
+        isDark: isDark,
+      );
+    }
+
+    // Display up to 2 payment methods to keep layout clean, plus a "+N" overflow chip if more
+    final displayMethods = methods.take(2).toList();
+    final remainingCount = methods.length - displayMethods.length;
+
+    return Wrap(
+      alignment: WrapAlignment.end,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 4.w,
+      runSpacing: 4.h,
+      children: [
+        for (final m in displayMethods)
+          _buildPaymentChip(
+            name: m.paymentMethod?.name ?? '--',
+            badgeTheme: _getPaymentMethodTheme(m.paymentMethod?.name ?? '', isDark),
+            isDark: isDark,
+          ),
+        if (remainingCount > 0)
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+            ),
+            child: Text(
+              '+$remainingCount',
+              style: TextStyle(
+                letterSpacing: 0,
+                fontSize: 9.5.sp,
+                fontWeight: FontWeight.w700,
+                color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentChip({
+    required String name,
+    required _PaymentBadgeTheme badgeTheme,
+    required bool isDark,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.5.h),
+      decoration: BoxDecoration(
+        color: badgeTheme.bg,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+        border: Border.all(color: badgeTheme.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 3.5.w,
+            height: 9.h,
+            decoration: BoxDecoration(
+              color: badgeTheme.accent,
+              borderRadius: BorderRadius.circular(1.r),
+            ),
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              letterSpacing: 0,
+              fontWeight: FontWeight.w700,
+              fontSize: 10.5.sp,
+              color: badgeTheme.text,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Distinctive Colors for Payment Methods:
+  /// - Bank Transfer (انتقال بانکی): Royal Blue (#2563EB)
+  /// - Sheba / Paya (شبا / پایا): Teal (#0D9488)
+  /// - Card to Card (کارت به کارت): Purple / Indigo (#7C3AED)
+  /// - eCardo Internal (داخلی / اکاردو): Brand Violet (#7445FF)
+  /// - Cash / Dollar (نقدی / دلار نقد): Amber / Orange (#EA580C)
+  /// - Other: Slate Gray (#475569)
+  _PaymentBadgeTheme _getPaymentMethodTheme(String rawName, bool isDark) {
+    final lower = rawName.toLowerCase();
+
+    // 1. eCardo Internal / Wallet
+    if (lower.contains('ecardo') ||
+        lower.contains('اکاردو') ||
+        lower.contains('internal') ||
+        lower.contains('کیف پول') ||
+        lower.contains('wallet')) {
+      const violet = Color(0xFF7445FF);
+      return _PaymentBadgeTheme(
+        bg: isDark ? const Color(0xFF2B1B54) : const Color(0xFFF3E8FF),
+        text: isDark ? const Color(0xFFC4B5FD) : violet,
+        border: isDark ? const Color(0xFF5B30D9) : const Color(0xFFDDD6FE),
+        accent: violet,
+      );
+    }
+
+    // 2. Sheba / Paya
+    if (lower.contains('sheba') ||
+        lower.contains('شبا') ||
+        lower.contains('paya') ||
+        lower.contains('پایا') ||
+        lower.contains('satna') ||
+        lower.contains('ساتنا') ||
+        lower.contains('iban')) {
+      const teal = Color(0xFF0D9488);
+      return _PaymentBadgeTheme(
+        bg: isDark ? const Color(0xFF0F3935) : const Color(0xFFF0FDFA),
+        text: isDark ? const Color(0xFF2DD4BF) : teal,
+        border: isDark ? const Color(0xFF115E59) : const Color(0xFF99F6E4),
+        accent: teal,
+      );
+    }
+
+    // 3. Card to Card
+    if (lower.contains('card') ||
+        lower.contains('کارت') ||
+        lower.contains('c2c') ||
+        lower.contains('debit')) {
+      const purple = Color(0xFF7C3AED);
+      return _PaymentBadgeTheme(
+        bg: isDark ? const Color(0xFF2F1D50) : const Color(0xFFFAF5FF),
+        text: isDark ? const Color(0xFFA78BFA) : purple,
+        border: isDark ? const Color(0xFF6D28D9) : const Color(0xFFE9D5FF),
+        accent: purple,
+      );
+    }
+
+    // 4. Bank Transfer
+    if (lower.contains('bank') ||
+        lower.contains('بانک') ||
+        lower.contains('transfer') ||
+        lower.contains('انتقال') ||
+        lower.contains('wire')) {
+      const blue = Color(0xFF2563EB);
+      return _PaymentBadgeTheme(
+        bg: isDark ? const Color(0xFF142B59) : const Color(0xFFEFF6FF),
+        text: isDark ? const Color(0xFF60A5FA) : blue,
+        border: isDark ? const Color(0xFF1D4ED8) : const Color(0xFFBFDBFE),
+        accent: blue,
+      );
+    }
+
+    // 5. Cash Dollar / Cash
+    if (lower.contains('cash') ||
+        lower.contains('نقد') ||
+        lower.contains('dollar') ||
+        lower.contains('دلار')) {
+      const orange = Color(0xFFEA580C);
+      return _PaymentBadgeTheme(
+        bg: isDark ? const Color(0xFF451E11) : const Color(0xFFFFF7ED),
+        text: isDark ? const Color(0xFFFB923C) : orange,
+        border: isDark ? const Color(0xFFC2410C) : const Color(0xFFFED7AA),
+        accent: orange,
+      );
+    }
+
+    // 6. Generic / Default
+    return _PaymentBadgeTheme(
+      bg: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9),
+      text: isDark ? AppColors.darkTextSecondary : const Color(0xFF475569),
+      border: isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0),
+      accent: const Color(0xFF64748B),
+    );
+  }
+}
+
+class _PaymentBadgeTheme {
+  final Color bg;
+  final Color text;
+  final Color border;
+  final Color accent;
+
+  const _PaymentBadgeTheme({
+    required this.bg,
+    required this.text,
+    required this.border,
+    required this.accent,
+  });
 }

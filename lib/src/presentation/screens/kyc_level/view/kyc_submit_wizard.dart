@@ -238,6 +238,23 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   ) {
     final docLabel = KycDocLabels.label(localization, docKey);
     final isUploaded = _documents.containsKey(docKey);
+    final filePath = _documents[docKey];
+    File? uploadedFile;
+    int fileSize = 0;
+    bool isImage = false;
+    if (isUploaded && filePath != null) {
+      uploadedFile = File(filePath);
+      if (uploadedFile.existsSync()) {
+        fileSize = uploadedFile.lengthSync();
+        final lower = filePath.toLowerCase();
+        isImage = lower.endsWith('.jpg') ||
+            lower.endsWith('.jpeg') ||
+            lower.endsWith('.png') ||
+            lower.endsWith('.webp');
+      }
+    }
+
+    final fileSizeMB = (fileSize / (1024 * 1024)).toStringAsFixed(1);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,80 +264,357 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
         ),
         SizedBox(height: AppSpacing.xs),
-        Text(
-          docLabel,
-          style: AppTextStyles.titleMedium.copyWith(
-            fontWeight: FontWeight.w800,
-            color: primaryTextColor,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                docLabel,
+                style: AppTextStyles.titleMedium.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: primaryTextColor,
+                ),
+              ),
+            ),
+            if (isUploaded)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      size: 13,
+                      color: Color(0xFF10B981),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '$fileSizeMB MB / 20 MB',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        fontSize: 9.5.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF10B981),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         ),
-        SizedBox(height: AppSpacing.xl),
-        GestureDetector(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            _pickDocument(docKey, isDark, primaryTextColor);
-          },
-          child: Container(
+        SizedBox(height: AppSpacing.md),
+
+        // Real-time tips banner
+        _buildTipsBanner(context, isDark),
+        SizedBox(height: AppSpacing.md),
+
+        // Upload Area / Thumbnail Preview
+        if (!isUploaded)
+          GestureDetector(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              _pickDocument(docKey, isDark, primaryTextColor);
+            },
+            child: Container(
+              width: double.infinity,
+              height: 200.h,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkSurface : AppColors.white,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  width: 1.5,
+                ),
+                boxShadow: !isDark
+                    ? [
+                        BoxShadow(
+                          color: AppColors.black.withValues(alpha: 0.03),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Stack(
+                children: [
+                  // Corner alignment guides
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Color(0xFF10B981), width: 3),
+                          left: BorderSide(color: Color(0xFF10B981), width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Color(0xFF10B981), width: 3),
+                          right: BorderSide(color: Color(0xFF10B981), width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 12,
+                    left: 12,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Color(0xFF10B981), width: 3),
+                          left: BorderSide(color: Color(0xFF10B981), width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 12,
+                    right: 12,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Color(0xFF10B981), width: 3),
+                          right: BorderSide(color: Color(0xFF10B981), width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 56.w,
+                          height: 56.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: 0.12),
+                          ),
+                          child: Icon(
+                            Icons.cloud_upload_outlined,
+                            size: 28.sp,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.lightPrimary,
+                          ),
+                        ),
+                        SizedBox(height: AppSpacing.sm),
+                        Text(
+                          localization?.kycSubmitWizardTapToUpload ??
+                              l10nPick(
+                                context,
+                                en: 'Tap to capture or upload',
+                                fa: 'برای تصویربرداری یا بارگذاری لمس کنید',
+                              ),
+                          style: AppTextStyles.titleSmall.copyWith(
+                            color: primaryTextColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          localization?.kycSubmitWizardFileFormat ??
+                              'JPG, PNG, PDF — Max 20MB',
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: isDark
+                                ? AppColors.softGray
+                                : AppColors.lightTextHint,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          // Clear Thumbnail Preview Card with File Size Check & Retake Button
+          Container(
             width: double.infinity,
-            height: 190.h,
             decoration: BoxDecoration(
               color: isDark ? AppColors.darkSurface : AppColors.white,
               borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
               border: Border.all(
-                color: isUploaded
-                    ? AppColors.success
-                    : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                width: isUploaded ? 2 : 1.2,
+                color: const Color(0xFF10B981).withValues(alpha: 0.5),
+                width: 1.5,
               ),
-              boxShadow: !isDark
-                  ? [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.03),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ]
-                  : null,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  isUploaded ? Icons.check_circle_rounded : Icons.cloud_upload_outlined,
-                  size: 46.sp,
-                  color: isUploaded
-                      ? AppColors.success
-                      : (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary),
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(AppSpacing.radiusLg - 1),
+                  ),
+                  child: isImage && uploadedFile != null
+                      ? SizedBox(
+                          height: 180.h,
+                          width: double.infinity,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.file(
+                                uploadedFile,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                    vertical: 4.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.7),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusSm,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.check_circle_rounded,
+                                        size: 12,
+                                        color: Color(0xFF10B981),
+                                      ),
+                                      SizedBox(width: 4.w),
+                                      Text(
+                                        '$fileSizeMB MB',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          height: 120.h,
+                          color: isDark
+                              ? AppColors.darkBackground
+                              : const Color(0xFFF1F5F9),
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.description_rounded,
+                                size: 36.sp,
+                                color: const Color(0xFF10B981),
+                              ),
+                              SizedBox(width: 10.w),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    filePath?.split('/').last ?? 'Document',
+                                    style: AppTextStyles.labelMedium.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      color: primaryTextColor,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    '$fileSizeMB MB',
+                                    style: AppTextStyles.labelSmall.copyWith(
+                                      color: secondaryTextColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                 ),
-                SizedBox(height: AppSpacing.sm),
-                Text(
-                  isUploaded
-                      ? (localization?.kycSubmitWizardUploaded(
-                            _documents[docKey]!.split('/').last,
-                          ) ??
-                          'Uploaded: ${_documents[docKey]!.split('/').last}')
-                      : (localization?.kycSubmitWizardTapToUpload ??
-                          'Tap to upload'),
-                  style: AppTextStyles.titleSmall.copyWith(
-                    color: isUploaded ? AppColors.success : primaryTextColor,
-                    fontWeight: isUploaded ? FontWeight.w700 : FontWeight.w600,
+                Padding(
+                  padding: EdgeInsets.all(AppSpacing.sm),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            _pickDocument(docKey, isDark, primaryTextColor);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(AppSpacing.radiusMd),
+                            ),
+                          ),
+                          icon: const Icon(Icons.refresh_rounded, size: 16),
+                          label: Text(
+                            l10nPick(
+                              context,
+                              en: 'Retake / Replace',
+                              fa: 'تغییر یا عکس مجدد',
+                              ar: 'إعادة الالتقاط / استبدال',
+                              zh: '重新拍摄/更换',
+                            ),
+                            style: AppTextStyles.labelSmall.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      IconButton(
+                        tooltip: l10nPick(context, en: 'Remove', fa: 'حذف'),
+                        icon: const Icon(
+                          Icons.delete_outline_rounded,
+                          color: AppColors.error,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          setState(() {
+                            _documents.remove(docKey);
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                if (!isUploaded) ...[
-                  SizedBox(height: 4.h),
-                  Text(
-                    localization?.kycSubmitWizardFileFormat ??
-                        'Format: JPG, PNG, PDF — max 20MB',
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: isDark ? AppColors.softGray : AppColors.lightTextHint,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
-        ),
         SizedBox(height: AppSpacing.lg),
+
         // Document requirements instruction
         Container(
           padding: EdgeInsets.all(AppSpacing.md),
@@ -347,6 +641,107 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                 ),
               ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTipsBanner(BuildContext context, bool isDark) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF1E293B)
+            : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.lightbulb_outline_rounded,
+                size: 16,
+                color: Color(0xFFF59E0B),
+              ),
+              SizedBox(width: 6.w),
+              Text(
+                l10nPick(
+                  context,
+                  en: 'Important Photo Guidelines',
+                  fa: 'نکات مهم تصویربرداری',
+                  ar: 'إرشادات مهمة للتصوير',
+                  zh: '拍摄注意事项',
+                ),
+                style: AppTextStyles.labelSmall.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 6.h),
+          _buildTipRow(
+            Icons.wb_sunny_outlined,
+            l10nPick(
+              context,
+              en: 'Avoid glare and shadows',
+              fa: 'از بازتاب مستقیم نور و سایه خودداری کنید',
+              ar: 'تجنب الوهج والظلال',
+              zh: '避免反光和阴影',
+            ),
+            isDark,
+          ),
+          SizedBox(height: 4.h),
+          _buildTipRow(
+            Icons.crop_free_rounded,
+            l10nPick(
+              context,
+              en: 'Ensure all 4 corners are visible',
+              fa: 'مطمئن شوید هر ۴ گوشه مدرک داخل کادر قرار دارد',
+              ar: 'تأكد من ظهور الزوايا الأربع',
+              zh: '确保四个边角完整可见',
+            ),
+            isDark,
+          ),
+          SizedBox(height: 4.h),
+          _buildTipRow(
+            Icons.text_fields_rounded,
+            l10nPick(
+              context,
+              en: 'Text and photo must be completely legible',
+              fa: 'متن و تصویر مدرک باید کاملاً شفاف و خوانا باشد',
+              ar: 'يجب أن تكون النصوص واضحة ومقروءة',
+              zh: '文字与图像清晰可读',
+            ),
+            isDark,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTipRow(IconData icon, String text, bool isDark) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 13.sp,
+          color: const Color(0xFF10B981),
+        ),
+        SizedBox(width: 6.w),
+        Expanded(
+          child: Text(
+            text,
+            style: AppTextStyles.bodySmall.copyWith(
+              fontSize: 10.5.sp,
+              color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+            ),
           ),
         ),
       ],

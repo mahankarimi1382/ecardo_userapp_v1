@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/upload_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/document_alignment_guide.dart';
 
 class FrontCameraCapture extends StatefulWidget {
   final String fieldName;
@@ -53,7 +54,36 @@ class _FrontCameraCaptureState extends State<FrontCameraCapture> {
     final file = File(filePath);
     final compressed = await UploadHelper.compressImageIfNeeded(file);
     if (!mounted) return;
-    Navigator.of(context).pop(compressed);
+    _showConfirmationSheet(compressed);
+  }
+
+  void _showConfirmationSheet(File file) {
+    final title = widget.fieldName.isNotEmpty
+        ? widget.fieldName
+        : l10nPick(
+            context,
+            en: 'Biometric Face Verification',
+            fa: 'تصویربرداری چهره و سلفی',
+          );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => DocumentConfirmationPreviewSheet(
+        file: file,
+        documentTitle: title,
+        onRetake: () {
+          Navigator.pop(ctx); // Return to camera
+        },
+        onConfirm: () {
+          Navigator.pop(ctx); // Close sheet
+          if (mounted) {
+            Navigator.of(context).pop(file); // Pop camera with captured file
+          }
+        },
+      ),
+    );
   }
 
   Future<void> _pickWithSystemCamera() async {
@@ -199,8 +229,11 @@ class _FrontCameraCaptureState extends State<FrontCameraCapture> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
+        fit: StackFit.expand,
         children: [
+          // Live Front Camera viewfinder
           CameraAwesomeBuilder.awesome(
             saveConfig: SaveConfig.photo(),
             sensorConfig: SensorConfig.single(
@@ -221,12 +254,12 @@ class _FrontCameraCaptureState extends State<FrontCameraCapture> {
               left: IconButton(
                 icon: const Icon(Icons.photo_library_outlined, color: Colors.white, size: 28),
                 onPressed: _pickFromGallery,
-                tooltip: 'انتخاب از گالری',
+                tooltip: l10nPick(context, en: 'Choose from Gallery', fa: 'انتخاب از گالری'),
               ),
               right: IconButton(
                 icon: const Icon(Icons.camera_rounded, color: Colors.white, size: 28),
                 onPressed: _pickWithSystemCamera,
-                tooltip: 'دوربین سیستم',
+                tooltip: l10nPick(context, en: 'System Camera', fa: 'دوربین سیستم'),
               ),
             ),
             onMediaCaptureEvent: (event) {
@@ -251,13 +284,40 @@ class _FrontCameraCaptureState extends State<FrontCameraCapture> {
               }
             },
           ),
+
+          // Biometric Face Frame (Oval overlay)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DocumentAlignmentGuideBox(
+                documentType: KycDocumentType.selfie,
+                showScannerLine: true,
+                isDark: true,
+              ),
+            ),
+          ),
+
+          // Real-time tips banner
           Positioned(
-            top: MediaQuery.paddingOf(context).top + 8,
-            left: 12,
+            top: MediaQuery.paddingOf(context).top + 52.h,
+            left: 0,
+            right: 0,
+            child: const Center(
+              child: RealtimeTipsBanner(
+                isDark: true,
+                autoCycle: true,
+              ),
+            ),
+          ),
+
+          // Close button
+          Positioned(
+            top: MediaQuery.paddingOf(context).top + 8.h,
+            left: 12.w,
             child: CircleAvatar(
-              backgroundColor: Colors.black45,
+              backgroundColor: Colors.black54,
+              radius: 20.r,
               child: IconButton(
-                icon: const Icon(Icons.close_rounded, color: Colors.white),
+                icon: const Icon(Icons.close_rounded, color: Colors.white, size: 20),
                 onPressed: () => Navigator.pop(context),
               ),
             ),

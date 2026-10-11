@@ -196,42 +196,140 @@ class P2pViewScreen extends GetView<P2pController> {
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
-    return Obx(
-      () => Container(
+    return Obx(() {
+      final isBuy = controller.selectedTradeTypeIndex.value == 0;
+      final emeraldGreen = const Color(0xFF10B981);
+      final rubyRed = const Color(0xFFEF4444);
+      final activeColor = isBuy ? emeraldGreen : rubyRed;
+
+      return Container(
+        height: 44.h,
         padding: EdgeInsets.all(4.w),
         decoration: BoxDecoration(
           color: surfaceColor,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
           border: Border.all(color: borderColor),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildTradeToggleButton(
-                title: localization.p2pBuy,
-                isSelected: controller.selectedTradeTypeIndex.value == 0,
-                selectedColor: AppColors.success,
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  controller.onTradeTypeChanged(0);
-                },
-              ),
-            ),
-            Expanded(
-              child: _buildTradeToggleButton(
-                title: localization.p2pSell,
-                isSelected: controller.selectedTradeTypeIndex.value == 1,
-                selectedColor: AppColors.error,
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  controller.onTradeTypeChanged(1);
-                },
-              ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+              blurRadius: 6,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
-      ),
-    );
+        child: Stack(
+          children: [
+            // Smoothly Animated Sliding Pill Indicator
+            AnimatedAlign(
+              alignment: isBuy
+                  ? AlignmentDirectional.centerStart
+                  : AlignmentDirectional.centerEnd,
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeInOutCubic,
+              child: FractionallySizedBox(
+                widthFactor: 0.5,
+                heightFactor: 1.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: activeColor,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: activeColor.withValues(alpha: 0.38),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Tap Targets for Buy & Sell
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      if (!isBuy) {
+                        HapticFeedback.selectionClick();
+                        controller.onTradeTypeChanged(0);
+                      }
+                    },
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.arrow_downward_rounded,
+                            size: 14.r,
+                            color: isBuy
+                                ? AppColors.white
+                                : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                          ),
+                          SizedBox(width: 4.w),
+                          AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 180),
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontWeight: isBuy ? FontWeight.w800 : FontWeight.w600,
+                              fontSize: 13.5.sp,
+                              color: isBuy
+                                  ? AppColors.white
+                                  : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                            ),
+                            child: Text(localization.p2pBuy),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      if (isBuy) {
+                        HapticFeedback.selectionClick();
+                        controller.onTradeTypeChanged(1);
+                      }
+                    },
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.arrow_upward_rounded,
+                            size: 14.r,
+                            color: !isBuy
+                                ? AppColors.white
+                                : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                          ),
+                          SizedBox(width: 4.w),
+                          AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 180),
+                            style: TextStyle(
+                              letterSpacing: 0,
+                              fontWeight: !isBuy ? FontWeight.w800 : FontWeight.w600,
+                              fontSize: 13.5.sp,
+                              color: !isBuy
+                                  ? AppColors.white
+                                  : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                            ),
+                            child: Text(localization.p2pSell),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   String _localizedTopTabTitle(AppLocalizations localization, int index) {
@@ -254,35 +352,6 @@ class P2pViewScreen extends GetView<P2pController> {
   }
 
   AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
-
-  Widget _buildTradeToggleButton({
-    required String title,
-    required bool isSelected,
-    required Color selectedColor,
-    required GestureTapCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 34.h,
-        decoration: BoxDecoration(
-          color: isSelected ? selectedColor : AppColors.transparent,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: FontWeight.w700,
-              fontSize: 13.5.sp,
-              color: isSelected ? AppColors.white : AppColors.softGray,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildFilterRow(BuildContext context, bool isDark) {
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
@@ -358,7 +427,7 @@ class P2pViewScreen extends GetView<P2pController> {
   Widget _buildOfferQuickFilterChips(BuildContext context, bool isDark) {
     final filters = [
       {'label': l10nPick(context, en: 'All Offers', fa: 'همه پیشنهادها'), 'icon': Icons.tune_rounded},
-      {'label': l10nPick(context, en: 'Verified ⭐', fa: 'فروشندگان معتبر ⭐'), 'icon': Icons.verified_user_rounded},
+      {'label': l10nPick(context, en: 'Verified PRO', fa: 'فروشندگان معتبر'), 'icon': Icons.verified_user_rounded},
       {'label': l10nPick(context, en: 'Completion >95%', fa: 'تکمیل بالای ۹۵٪'), 'icon': Icons.thumb_up_alt_rounded},
       {'label': l10nPick(context, en: 'Fast Payout (≤15m)', fa: 'آزادسازی فوری'), 'icon': Icons.bolt_rounded},
     ];
@@ -372,7 +441,7 @@ class P2pViewScreen extends GetView<P2pController> {
           return Padding(
             padding: EdgeInsetsDirectional.only(end: 8.w),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.white,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
@@ -386,11 +455,11 @@ class P2pViewScreen extends GetView<P2pController> {
                     size: 13.r,
                     color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
                   ),
-                  SizedBox(width: 4.w),
+                  SizedBox(width: 5.w),
                   Text(
                     f['label'] as String,
                     style: TextStyle(
-                      fontSize: 11.sp,
+                      fontSize: 11.5.sp,
                       fontWeight: FontWeight.w600,
                       color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
@@ -536,6 +605,7 @@ class P2pViewScreen extends GetView<P2pController> {
   Widget _buildP2pShimmer(bool isDark) {
     final baseColor = isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300;
     final highlightColor = isDark ? AppColors.darkSurface : Colors.grey.shade100;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -545,10 +615,129 @@ class P2pViewScreen extends GetView<P2pController> {
         itemCount: 4,
         separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
         itemBuilder: (_, _) => Container(
-          height: 140.h,
+          padding: EdgeInsets.all(AppSpacing.md.r),
           decoration: BoxDecoration(
-            color: baseColor,
+            color: cardBg,
             borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 40.r,
+                    height: 40.r,
+                    decoration: BoxDecoration(
+                      color: baseColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  SizedBox(width: AppSpacing.sm.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 120.w,
+                          height: 14.h,
+                          decoration: BoxDecoration(
+                            color: baseColor,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Container(
+                          width: 80.w,
+                          height: 10.h,
+                          decoration: BoxDecoration(
+                            color: baseColor,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 50.w,
+                    height: 18.h,
+                    decoration: BoxDecoration(
+                      color: baseColor,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: AppSpacing.md.h),
+              Divider(
+                height: 1,
+                color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+              ),
+              SizedBox(height: AppSpacing.sm.h),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 140.w,
+                          height: 20.h,
+                          decoration: BoxDecoration(
+                            color: baseColor,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Container(
+                          width: 100.w,
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            color: baseColor,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Container(
+                          width: 110.w,
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            color: baseColor,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        width: 70.w,
+                        height: 18.h,
+                        decoration: BoxDecoration(
+                          color: baseColor,
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Container(
+                        width: 90.w,
+                        height: 38.h,
+                        decoration: BoxDecoration(
+                          color: baseColor,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

@@ -1,19 +1,23 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/model/user_kyc_model.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/back_camera_capture.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/document_alignment_guide.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_capture.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart';
@@ -32,6 +36,8 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     return PopScope(
       canPop: false,
@@ -45,13 +51,14 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
         );
       },
       child: Scaffold(
-        appBar: CommonDefaultAppBar(),
+        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        appBar: const CommonDefaultAppBar(),
         body: Stack(
           children: [
             Obx(() {
               return Column(
                 children: [
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   CommonAppBar(
                     title: localizations.kycSubmissionIdVerification,
                     isBackLogicApply: true,
@@ -71,23 +78,64 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                       }
                     },
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: 16.h),
+
+                  // Real-time tips banner before final submission
+                  RealtimeTipsBanner(
+                    isDark: isDark,
+                    autoCycle: true,
+                    backgroundColor: isDark
+                        ? AppColors.darkSurface
+                        : const Color(0xFFF8FAFC),
+                  ),
+                  SizedBox(height: 14.h),
+
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 18,
-                        ),
+                        padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Review Documents Before Submission',
+                                fa: 'بررسی نهایی مدارک قبل از ارسال',
+                                ar: 'مراجعة المستندات قبل الإرسال',
+                                zh: '提交前核对证件信息',
+                              ),
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w800,
+                                color: primaryTextColor,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Ensure details are sharp and 4 corners are visible.',
+                                fa: 'اطمینان حاصل کنید متن مدارک واضح بوده و هر ۴ گوشه در تصویر مشخص است.',
+                                ar: 'تأكد من وضوح البيانات وظهور جميع الزوايا الأربع.',
+                                zh: '请确保细节清晰且四个角完整可见。',
+                              ),
+                              style: TextStyle(
+                                fontSize: 11.5.sp,
+                                color: isDark
+                                    ? AppColors.softGray
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+
                             ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: controller.fields.length,
                               itemBuilder: (context, index) {
                                 final field = controller.fields[index];
-                                final file =
-                                    controller.fieldFiles[field.name ?? ""];
+                                final file = controller.fieldFiles[field.name ?? ""];
 
                                 if (file == null) {
                                   return const SizedBox.shrink();
@@ -100,14 +148,17 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                                       context,
                                       index,
                                       file,
+                                      isDark,
                                     ),
-                                    const SizedBox(height: 30),
+                                    SizedBox(height: 18.h),
                                   ],
                                 );
                               },
                             ),
+
+                            SizedBox(height: 10.h),
                             _buildActionButton(),
-                            const SizedBox(height: 50),
+                            SizedBox(height: 40.h),
                           ],
                         ),
                       ),
@@ -116,23 +167,25 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                 ],
               );
             }),
+
+            // Loading overlay with upload progress
             Obx(() {
               if (!controller.isLoading.value) return const SizedBox.shrink();
               final progress = controller.uploadProgress.value;
               return Container(
                 width: double.infinity,
                 height: double.infinity,
-                color: AppColors.black.withValues(alpha: 0.35),
+                color: AppColors.black.withValues(alpha: 0.45),
                 child: Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
-                    margin: const EdgeInsets.symmetric(horizontal: 36),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 22.h),
+                    margin: EdgeInsets.symmetric(horizontal: 36.w),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(16),
+                      color: isDark ? AppColors.darkSurface : AppColors.white,
+                      borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.black.withValues(alpha: 0.15),
+                          color: AppColors.black.withValues(alpha: 0.20),
                           blurRadius: 20,
                         ),
                       ],
@@ -141,7 +194,7 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const CommonLoading(size: 40),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         Text(
                           progress > 0
                               ? '${(progress * 100).toInt()}% ${l10nPickAuto(en: 'Uploaded', fa: 'بارگذاری شد')}'
@@ -152,20 +205,22 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            fontSize: 14.sp,
+                            color: primaryTextColor,
                           ),
                         ),
                         if (progress > 0) ...[
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                             child: LinearProgressIndicator(
                               value: progress,
-                              minHeight: 6,
-                              backgroundColor: AppColors.lightBorder,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).primaryColor,
+                              minHeight: 6.h,
+                              backgroundColor: isDark
+                                  ? AppColors.darkDivider
+                                  : AppColors.lightBorder,
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                Color(0xFF10B981),
                               ),
                             ),
                           ),
@@ -196,7 +251,6 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
 
     return CommonButton(
       width: double.infinity,
-
       text: allFieldsProcessed
           ? localizations.kycSubmissionSubmit
           : localizations.kycSubmissionNext,
@@ -206,18 +260,12 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
           return;
         }
 
-        // Lead fix (wave Task-10): `nextUnprocessedField` is a mutated local
-        // captured by this closure, so flow analysis cannot promote it after
-        // the null check (new SDK surfaces this as
-        // unchecked_use_of_nullable_value). Copying it into a final local
-        // restores promotion and keeps the await-safe null guarantee.
         final Fields? fieldToProcess = nextUnprocessedField;
         if (fieldToProcess != null) {
           final result = await _navigateToFieldScreen(fieldToProcess);
 
           if (result != null) {
             controller.fieldFiles[fieldToProcess.name ?? ""] = result;
-
             controller.currentFieldIndex.value = controller.fields.indexOf(
               fieldToProcess,
             );
@@ -244,64 +292,127 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
     Fields field,
     BuildContext context,
     int fieldIndex,
-    dynamic file,
+    File file,
+    bool isDark,
   ) {
     final localizations = AppLocalizations.of(context)!;
-    String name = field.name ?? "";
-    String validation = field.validation ?? "";
-    String type = field.type ?? "";
+    final name = field.name ?? "";
+    final validation = field.validation ?? "";
+    final type = field.type ?? "";
+    final primaryText = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryText = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final borderCol = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    final fileLength = file.existsSync() ? file.lengthSync() : 0;
+    final sizeInMB = fileLength / (1024 * 1024);
+    final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
+    final isValidSize = !UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes);
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        color: cardBg,
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          width: 2,
-          color: AppColors.lightTextPrimary.withValues(alpha: 0.16),
+          width: 1.5,
+          color: const Color(0xFF10B981).withValues(alpha: 0.45),
         ),
+        boxShadow: !isDark
+            ? [
+                BoxShadow(
+                  color: AppColors.black.withValues(alpha: 0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Bar
           Container(
-            height: 40,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFEEEEEE),
-              borderRadius: const BorderRadiusDirectional.only(
-                topStart: Radius.circular(30),
-                topEnd: Radius.circular(30),
+              color: isDark
+                  ? const Color(0xFF1E293B)
+                  : const Color(0xFFF1F5F9),
+              borderRadius: BorderRadiusDirectional.only(
+                topStart: Radius.circular(18.r),
+                topEnd: Radius.circular(18.r),
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20,
-                    color: AppColors.lightTextPrimary,
-                    letterSpacing: 0,
-                  ),
-                ),
-                Visibility(
-                  visible: validation == "required",
-                  child: const Text(
-                    "*",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20,
-                      color: AppColors.error,
-                      letterSpacing: 0,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15.sp,
+                        color: primaryText,
+                      ),
                     ),
+                    if (validation == "required")
+                      const Text(
+                        " *",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                          color: AppColors.error,
+                        ),
+                      ),
+                  ],
+                ),
+
+                // Size Badge
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                  decoration: BoxDecoration(
+                    color: (isValidSize
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFFDC2626))
+                        .withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isValidSize
+                            ? Icons.check_circle_rounded
+                            : Icons.error_outline_rounded,
+                        size: 12.sp,
+                        color: isValidSize
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFFDC2626),
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '$sizeString / 20MB',
+                        style: TextStyle(
+                          fontSize: 9.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isValidSize
+                              ? const Color(0xFF10B981)
+                              : const Color(0xFFDC2626),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
+
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(14.w),
             child: Column(
               children: [
+                // Clear Thumbnail Preview with Zoom tap
                 GestureDetector(
                   onTap: () {
                     final decodedImage = Image.file(file);
@@ -311,18 +422,15 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                           ImageStreamListener((ImageInfo info, bool _) {
                             final imageHeight = info.image.height.toDouble();
                             final imageWidth = info.image.width.toDouble();
-
                             final screenWidth =
                                 MediaQuery.of(context).size.width - 36;
                             final scaledHeight =
                                 (imageHeight / imageWidth) * screenWidth;
-                            final bottomExtraHeight = 50.0;
-
                             Get.bottomSheet(
                               DynamicAttachmentPreview(
                                 file: file,
                                 scaledHeight: scaledHeight,
-                                bottomExtraHeight: bottomExtraHeight,
+                                bottomExtraHeight: 50.0,
                               ),
                               isScrollControlled: true,
                               enableDrag: true,
@@ -332,59 +440,161 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                         );
                   },
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.file(
-                      file,
-                      width: double.infinity,
-                      fit: BoxFit.fitWidth,
-                      cacheWidth: 800,
+                    borderRadius: BorderRadius.circular(16.r),
+                    child: Stack(
+                      children: [
+                        SizedBox(
+                          height: 180.h,
+                          width: double.infinity,
+                          child: Image.file(
+                            file,
+                            fit: BoxFit.cover,
+                            cacheWidth: 800,
+                          ),
+                        ),
+                        Positioned(
+                          top: 8.h,
+                          right: 8.w,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.7),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.zoom_in_rounded,
+                                  size: 13,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+                SizedBox(height: 12.h),
 
-                const SizedBox(height: 30),
-                CommonIconButton(
-                  onPressed: () async {
-                    if (type == "file") {
-                      await controller.pickFile(field.name ?? "");
-                    } else if (type == "camera") {
-                      final result = await Get.to(
-                        () => BackCameraCapture(fieldName: field.name ?? ""),
-                      );
-                      if (result != null) {
-                        controller.fieldFiles[field.name ?? ""] = result;
-                      }
-                    } else if (type == "front_camera") {
-                      final result = await Get.to(
-                        () => FrontCameraCapture(fieldName: field.name ?? ""),
-                      );
-                      if (result != null) {
-                        controller.fieldFiles[field.name ?? ""] = result;
-                      }
-                    }
-                  },
-                  backgroundColor: AppColors.transparent,
-                  borderColor: AppColors.lightPrimary.withValues(alpha: 0.50),
-                  borderWidth: 2,
-                  textColor: AppColors.lightTextPrimary,
+                // Quality Checks Status row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildQualityCheck(
+                      Icons.crop_free_rounded,
+                      l10nPick(context, en: '4 Corners Visible', fa: '۴ گوشه مشخص'),
+                      const Color(0xFF10B981),
+                      secondaryText,
+                    ),
+                    _buildQualityCheck(
+                      Icons.wb_sunny_outlined,
+                      l10nPick(context, en: 'No Glare', fa: 'بدون بازتاب'),
+                      const Color(0xFF10B981),
+                      secondaryText,
+                    ),
+                    _buildQualityCheck(
+                      Icons.text_fields_rounded,
+                      l10nPick(context, en: 'Text Legible', fa: 'متن خوانا'),
+                      const Color(0xFF10B981),
+                      secondaryText,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 14.h),
+
+                // Retake / Re-upload Button
+                SizedBox(
                   width: double.infinity,
-                  height: 52,
-                  text: type == "file"
-                      ? localizations.kycSubmissionReUpload
-                      : localizations.kycSubmissionRetake,
-                  icon: type == "file"
-                      ? PngAssets.commonReSubmitIcon
-                      : PngAssets.commonRetackIcon,
-                  iconWidth: 20,
-                  iconHeight: 20,
-                  iconAndTextSpace: 10,
-                  iconColor: AppColors.lightPrimary,
+                  height: 44.h,
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      if (type == "file") {
+                        await controller.pickFile(field.name ?? "");
+                      } else if (type == "camera") {
+                        final result = await Get.to(
+                          () => BackCameraCapture(fieldName: field.name ?? ""),
+                        );
+                        if (result != null) {
+                          controller.fieldFiles[field.name ?? ""] = result;
+                        }
+                      } else if (type == "front_camera") {
+                        final result = await Get.to(
+                          () => FrontCameraCapture(fieldName: field.name ?? ""),
+                        );
+                        if (result != null) {
+                          controller.fieldFiles[field.name ?? ""] = result;
+                        }
+                      }
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: isDark ? borderCol : AppColors.lightPrimary.withValues(alpha: 0.6),
+                        width: 1.2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    icon: Icon(
+                      Icons.refresh_rounded,
+                      size: 18.sp,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    ),
+                    label: Text(
+                      type == "file"
+                          ? localizations.kycSubmissionReUpload
+                          : localizations.kycSubmissionRetake,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildQualityCheck(
+    IconData icon,
+    String label,
+    Color color,
+    Color textColor,
+  ) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 13.sp, color: color),
+        SizedBox(width: 4.w),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 10.5.sp,
+            fontWeight: FontWeight.w600,
+            color: textColor,
+          ),
+        ),
+      ],
     );
   }
 }

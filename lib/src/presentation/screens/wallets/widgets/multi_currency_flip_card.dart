@@ -771,7 +771,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       ),
                       icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white, size: 13),
                       onTap: () {
-                        Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id});
+                        Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id?.toString() ?? ''});
                       },
                     ),
                   ),
@@ -789,7 +789,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       ),
                       icon: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 13),
                       onTap: () {
-                        Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id});
+                        Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id?.toString() ?? ''});
                       },
                     ),
                   ),

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_success_celebration.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/withdraw_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_destination_card.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_step_indicator.dart';
 
 class WithdrawSuccessStepSection extends StatefulWidget {
   const WithdrawSuccessStepSection({super.key});
@@ -29,19 +33,56 @@ class _WithdrawSuccessStepSectionState
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final selectedAccount = controller.withdrawAccount.value;
+    final currency =
+        controller.successWithdrawData.value?["transaction"]?["pay_currency"] ??
+            selectedAccount?.currency ??
+            "USD";
+    final isCrypto = selectedAccount?.method?.isCrypto ?? false;
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.withdrawAccount.value?.currency ?? "",
+      currencyCode: currency,
       siteCurrencyCode: Get.find<SettingsService>().getSetting(
         "site_currency",
       )!,
       siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
         "site_currency_decimals",
       )!,
-      isCrypto: controller.withdrawAccount.value?.method?.isCrypto ?? false,
+      isCrypto: isCrypto,
     );
+
+    final rawAmount =
+        controller.successWithdrawData.value?["transaction"]?["final_amount"] ??
+            controller.amountController.text;
+    final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
+
+    final tnxId =
+        controller.successWithdrawData.value?["transaction"]?["tnx"]?.toString() ??
+            'WTH-${DateTime.now().millisecondsSinceEpoch}';
+    final createdAt = controller.successWithdrawData.value?["transaction"]
+            ?["created_at"]
+            ?.toString() ??
+        '';
+    final charge = (double.tryParse(controller
+                    .successWithdrawData.value?["transaction"]?["charge"]
+                    ?.toString() ??
+                "0") ??
+            0.0)
+        .toStringAsFixed(calculateDecimals);
+
+    final destinationName = selectedAccount?.methodName ?? "Bank Account";
+    final maskedDestination = WithdrawDestinationCard.maskAccountNumber(selectedAccount);
+    final settlementTime = selectedAccount?.method?.time ??
+        l10nPick(
+          context,
+          en: 'Instant ⚡ (Paya next cycle)',
+          fa: 'تسویه آنی ⚡ / پایا سیکل بعدی',
+          ar: 'تسوية فورية ⚡ / بايا',
+          tr: 'Anında ⚡ / Sonraki döngü',
+          ru: 'Мгновенно ⚡ / след. цикл',
+        );
 
     return Obx(
       () => controller.isWithdrawLoading.value
@@ -54,134 +95,150 @@ class _WithdrawSuccessStepSectionState
                 ),
                 child: Column(
                   children: [
-                    const SizedBox(height: AppSpacing.xl),
-                    // Success Hero Banner
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.xl,
+                    // Step Indicator (Completed: Step 2)
+                    const WithdrawStepIndicator(currentStep: 2),
+
+                    const SizedBox(height: AppSpacing.md),
+
+                    // 1. Celebratory Success Animation Header
+                    TransferSuccessCelebration(
+                      title: l10nPick(
+                        context,
+                        en: 'Withdrawal Request Submitted!',
+                        fa: 'درخواست برداشت با موفقیت ثبت شد!',
+                        ar: 'تم تقديم طلب السحب بنجاح!',
+                        tr: 'Çekim Talebi Başarıyla Alındı!',
+                        ru: 'Запрос на вывод успешно отправлен!',
                       ),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? AppColors.darkSurfaceVariant
-                            : AppColors.success.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusXl,
-                        ),
-                        border: Border.all(
-                          color: AppColors.success.withValues(alpha: 0.3),
-                        ),
+                      subtitle: l10nPick(
+                        context,
+                        en: 'Your payout is being processed according to the settlement schedule',
+                        fa: 'مبلغ درخواستی طبق زمان‌بندی تسویه به حساب بانکی شما واریز خواهد شد',
+                        ar: 'تتم معالجة السحب وفقاً لجدول التسوية',
+                        tr: 'Çekiminiz takas takvimine göre işlenmektedir',
+                        ru: 'Выплата обрабатывается по графику зачислений',
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            PngAssets.commonSuccessIcon,
-                            width: 72,
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          Text(
-                            localization.withdrawSuccessStepSectionTitle,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 22,
-                              color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
+                      dateTime: createdAt.isNotEmpty ? createdAt : null,
                     ),
+
                     const SizedBox(height: AppSpacing.xl),
 
-                    // Transaction Detail Card
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.lg,
+                    // 2. Ultra-Premium Digital Receipt (Design System)
+                    EcardoDigitalReceipt(
+                      title: l10nPick(
+                        context,
+                        en: 'Withdrawal Payout Receipt',
+                        fa: 'رسید دیجیتال برداشت وجه',
+                        ar: 'إيصال سحب الأموال',
+                        tr: 'Para Çekme Makbuzu',
+                        ru: 'Квитанция о выводе средств',
                       ),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusLg,
+                      transactionReference: tnxId,
+                      formattedTimestamp:
+                          createdAt.isNotEmpty ? createdAt : null,
+                      primaryAmount: amount,
+                      primaryCurrency: currency,
+                      primaryDecimals: calculateDecimals,
+                      status: EcardoReceiptStatus.success,
+                      note: l10nPick(
+                        context,
+                        en: 'Funds will be deposited to your destination account per banking network settlement.',
+                        fa: 'مبلغ فوق از طریق سامانه پایا/شتاب به حساب ثبت‌شده واریز می‌گردد.',
+                        ar: 'سيتم إيداع المبلغ في حسابك وفقاً لجدول التسوية المصرفية.',
+                        tr: 'Tutar, banka takas sistemine göre hesabınıza aktarılacaktır.',
+                        ru: 'Средства поступят на указанный счет согласно банковскому регламенту.',
+                      ),
+                      items: [
+                        EcardoReceiptItem(
+                          label: l10nPick(
+                            context,
+                            en: 'Destination Account',
+                            fa: 'حساب مقصد',
+                            ar: 'حساب الوجهة',
+                            tr: 'Hedef Hesap',
+                            ru: 'Счет назначения',
+                          ),
+                          value: '$destinationName ($maskedDestination)',
                         ),
-                        border: Border.all(
-                          color: isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder,
+                        EcardoReceiptItem(
+                          label: l10nPick(
+                            context,
+                            en: 'Transfer Fee',
+                            fa: 'کارمزد انتقال',
+                            ar: 'رسوم التحويل',
+                            tr: 'Transfer Ücreti',
+                            ru: 'Комиссия',
+                          ),
+                          value: '$charge $currency',
+                          valueColor: AppColors.warning,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: isDark
-                                ? AppColors.darkShadow
-                                : AppColors.lightShadow,
-                            blurRadius: AppSpacing.md,
-                            offset: const Offset(0, 3),
+                        EcardoReceiptItem(
+                          label: l10nPick(
+                            context,
+                            en: 'Net Payout to Bank',
+                            fa: 'مبلغ خالص دریافتی',
+                            ar: 'صافي المبلغ المستلم',
+                            tr: 'Net Alınacak Tutar',
+                            ru: 'Чистая сумма к зачислению',
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title:
-                                localization.withdrawSuccessStepSectionAmount,
-                            content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${controller.successWithdrawData.value?["transaction"]?["pay_currency"] ?? ''}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
+                          value: '${amount.toStringAsFixed(calculateDecimals)} $currency',
+                          isHighlighted: true,
+                          valueColor: AppColors.success,
+                        ),
+                        EcardoReceiptItem(
+                          label: l10nPick(
+                            context,
+                            en: 'Estimated Settlement',
+                            fa: 'زمان تخمینی تسویه',
+                            ar: 'وقت التسوية',
+                            tr: 'Tahmini Takas',
+                            ru: 'Время зачисления',
                           ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization
-                                .withdrawSuccessStepSectionTransactionId,
-                            content:
-                                "${controller.successWithdrawData.value?["transaction"]?["tnx"] ?? ''}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                            isCopyable: true,
+                          value: settlementTime,
+                        ),
+                        EcardoReceiptItem(
+                          label: l10nPick(
+                            context,
+                            en: 'Reference ID',
+                            fa: 'کد پیگیری تراکنش',
+                            ar: 'رقم المرجع',
+                            tr: 'İşlem Referansı',
+                            ru: 'Код транзакции',
                           ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title:
-                                localization.withdrawSuccessStepSectionCharge,
-                            content:
-                                "${(double.tryParse(controller.successWithdrawData.value?["transaction"]?["charge"]?.toString() ?? "0") ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.successWithdrawData.value?["transaction"]?["pay_currency"] ?? ''}",
-                            contentColor: AppColors.warning,
+                          value: tnxId,
+                          isCopyable: true,
+                          copyText: tnxId,
+                        ),
+                      ],
+                      onShare: () {
+                        HapticFeedback.lightImpact();
+                        SharePlus.instance.share(
+                          ShareParams(
+                            text:
+                                'eCardo Withdrawal Receipt\nRef: $tnxId\nAmount: $amount $currency\nDestination: $destinationName\nStatus: Confirmed',
                           ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization
-                                .withdrawSuccessStepSectionTransactionType,
-                            content:
-                                "${controller.successWithdrawData.value?["transaction"]?["type"] ?? ''}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
+                        );
+                      },
+                      onDownload: () {
+                        HapticFeedback.lightImpact();
+                        Clipboard.setData(ClipboardData(text: tnxId));
+                        ToastHelper().showSuccessToast(
+                          l10nPick(
+                            context,
+                            en: 'Receipt Reference copied to clipboard',
+                            fa: 'کد پیگیری رسید در کلیپ‌بورد کپی شد',
+                            ar: 'تم نسخ رقم المرجع إلى الحافظة',
+                            tr: 'Makbuz referansı kopyalandı',
+                            ru: 'Код квитанции скопирован в буфер',
                           ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization
-                                .withdrawSuccessStepSectionFinalAmount,
-                            content:
-                                "${(double.tryParse(controller.successWithdrawData.value?["transaction"]?["final_amount"]?.toString() ?? "0") ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.successWithdrawData.value?["transaction"]?["pay_currency"] ?? ''}",
-                            contentColor: AppColors.success,
-                            isTotal: true,
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                    const SizedBox(height: AppSpacing.xxxl),
 
+                    const SizedBox(height: AppSpacing.xxl),
+
+                    // 3. Action CTAs
+                    // Withdraw Again Button
                     CommonButton(
                       onPressed: () async {
                         HapticFeedback.lightImpact();
@@ -189,10 +246,19 @@ class _WithdrawSuccessStepSectionState
                         controller.clearFields();
                       },
                       width: double.infinity,
-                      text: localization
-                          .withdrawSuccessStepSectionWithdrawAgainButton,
+                      text: l10nPick(
+                        context,
+                        en: 'New Withdrawal Request',
+                        fa: 'ثبت درخواست برداشت جدید',
+                        ar: 'طلب سحب جديد',
+                        tr: 'Yeni Çekim Talebi',
+                        ru: 'Новый вывод средств',
+                      ),
                     ),
+
                     const SizedBox(height: AppSpacing.md),
+
+                    // Back to Dashboard CTA (Primary CTA)
                     CommonButton(
                       onPressed: () async {
                         HapticFeedback.lightImpact();
@@ -201,8 +267,14 @@ class _WithdrawSuccessStepSectionState
                         Get.toNamed(BaseRoute.navigation);
                       },
                       width: double.infinity,
-                      text:
-                          localization.withdrawSuccessStepSectionBackHomeButton,
+                      text: l10nPick(
+                        context,
+                        en: 'Back to Dashboard',
+                        fa: 'بازگشت به داشبورد اصلی',
+                        ar: 'العودة إلى لوحة التحكم',
+                        tr: 'Ana Sayfaya Dön',
+                        ru: 'Вернуться на главную',
+                      ),
                       backgroundColor: isDark
                           ? AppColors.darkSurfaceVariant
                           : AppColors.lightPrimary.withValues(alpha: 0.06),
@@ -214,92 +286,12 @@ class _WithdrawSuccessStepSectionState
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
                     ),
+
                     const SizedBox(height: AppSpacing.huge),
                   ],
                 ),
               ),
             ),
-    );
-  }
-
-  static Widget _buildDivider(bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-      child: Divider(
-        height: 1,
-        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-      ),
-    );
-  }
-
-  static Widget _buildDynamicRow({
-    required bool isDark,
-    required String title,
-    required String content,
-    required Color contentColor,
-    bool isTotal = false,
-    bool isCopyable = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
-              fontSize: isTotal ? 16 : 14,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: Text(
-                    content,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: isTotal ? FontWeight.w900 : FontWeight.w700,
-                      fontSize: isTotal ? 17 : 14,
-                      color: contentColor,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-                if (isCopyable) ...[
-                  const SizedBox(width: AppSpacing.xs),
-                  InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      Clipboard.setData(ClipboardData(text: content));
-                      ToastHelper().showSuccessToast("Copied to clipboard");
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xs),
-                      child: Icon(
-                        Icons.copy_rounded,
-                        size: 16,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextTertiary,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

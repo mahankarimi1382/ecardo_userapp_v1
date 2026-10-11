@@ -46,6 +46,10 @@ class Tickets {
   bool? canReply;
   String? createdAt;
   String? updatedAt;
+  String? department;
+  String? lastReply;
+  String? lastReplySender;
+  bool? lastReplyFromUser;
 
   Tickets({
     this.id,
@@ -60,6 +64,10 @@ class Tickets {
     this.canReply,
     this.createdAt,
     this.updatedAt,
+    this.department,
+    this.lastReply,
+    this.lastReplySender,
+    this.lastReplyFromUser,
   });
 
   Tickets.fromJson(Map<String, dynamic> json) {
@@ -69,6 +77,21 @@ class Tickets {
     priority = json['priority'];
     status = json['status'];
     message = json['message'];
+    department = json['department']?.toString() ??
+        json['category']?.toString() ??
+        json['topic']?.toString();
+    lastReply = json['last_reply']?.toString() ??
+        json['last_message']?.toString() ??
+        json['latest_reply']?.toString();
+    lastReplySender = json['last_reply_by']?.toString() ??
+        json['last_sender_type']?.toString() ??
+        json['last_message_by']?.toString();
+    if (json['last_reply_from_user'] is bool) {
+      lastReplyFromUser = json['last_reply_from_user'] as bool;
+    } else if (lastReplySender != null) {
+      final s = lastReplySender!.toLowerCase();
+      lastReplyFromUser = s == 'user' || s == 'client' || s == 'customer';
+    }
     if (json['attachments'] != null) {
       attachments = <Attachments>[];
       json['attachments'].forEach((v) {

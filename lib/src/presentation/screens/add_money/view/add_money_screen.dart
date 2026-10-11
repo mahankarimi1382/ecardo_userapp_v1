@@ -28,13 +28,23 @@ class AddMoneyScreen extends StatefulWidget {
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
   final AddMoneyController controller = Get.find<AddMoneyController>();
-  final String walletId = Get.arguments?["wallet_id"] ?? "";
+
+  String get walletId {
+    final args = Get.arguments;
+    if (args is Map) {
+      final val = args["wallet_id"];
+      if (val != null) return val.toString();
+    } else if (args != null) {
+      return args.toString();
+    }
+    return "";
+  }
 
   @override
   void initState() {
     super.initState();
     walletId.isNotEmpty
-        ? controller.findWallet(walletIdQuery: walletId.toString())
+        ? controller.findWallet(walletIdQuery: walletId)
         : loadData();
   }
 

@@ -157,16 +157,30 @@ class AddMoneyController extends GetxController {
         ? isGatewayMethodsLoading.value = true
         : isLoading.value = true;
     try {
+      final code = wallet.value?.code ?? '';
       final response = await Get.find<NetworkService>().get(
-        endpoint:
-            "${ApiPath.getGatewayMethodsEndpoint}?currency=${wallet.value!.code}",
+        endpoint: code.isNotEmpty
+            ? "${ApiPath.getGatewayMethodsEndpoint}?currency=$code"
+            : ApiPath.getGatewayMethodsEndpoint,
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         final gatewayMethodsModel = GatewayMethodsModel.fromJson(
           response.data!,
         );
         gatewayMethodsList.clear();
-        gatewayMethodsList.assignAll(gatewayMethodsModel.data!);
+        final methods = gatewayMethodsModel.data ?? [];
+        if (methods.isNotEmpty) {
+          gatewayMethodsList.assignAll(methods);
+        } else if (code.isNotEmpty) {
+          // Fallback: If no gateways specifically for this currency, fetch all active gateways
+          final fallbackResponse = await Get.find<NetworkService>().get(
+            endpoint: ApiPath.getGatewayMethodsEndpoint,
+          );
+          if (fallbackResponse.status == Status.completed && fallbackResponse.data != null) {
+            final fallbackModel = GatewayMethodsModel.fromJson(fallbackResponse.data!);
+            gatewayMethodsList.assignAll(fallbackModel.data ?? []);
+          }
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchGatewayMethods() error: $e');
@@ -192,7 +206,7 @@ class AddMoneyController extends GetxController {
         walletsList.assignAll(walletsModel.data?.wallets ?? []);
         wallet.value = walletsList.firstWhere(
           (w) => w.id.toString() == walletIdQuery,
-          orElse: () => Wallets(),
+          orElse: () => walletsList.isNotEmpty ? walletsList.first : Wallets(),
         );
         gatewayMethod.value = GatewayMethodsData();
         gatewayController.clear();

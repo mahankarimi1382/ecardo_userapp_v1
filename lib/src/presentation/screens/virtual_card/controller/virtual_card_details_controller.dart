@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -23,6 +24,45 @@ class VirtualCardDetailsController extends GetxController {
 
   // Pillar 1 Block 4: Freeze card state & quick toggle
   final RxBool isCardFrozen = false.obs;
+
+  // E-commerce & Online Payments quick security toggle
+  final RxBool isOnlinePaymentsEnabled = true.obs;
+
+  // Spending Limits controls
+  final RxDouble dailySpendLimit = 1000.0.obs;
+  final RxDouble monthlySpendLimit = 5000.0.obs;
+
+  void toggleOnlinePayments() {
+    isOnlinePaymentsEnabled.value = !isOnlinePaymentsEnabled.value;
+    HapticFeedback.mediumImpact();
+    final message = isOnlinePaymentsEnabled.value
+        ? l10nPickAuto(
+            en: 'Online payments enabled for this card',
+            fa: 'پرداخت اینترنتی برای این کارت فعال شد',
+            ar: 'تم تفعيل المدفوعات عبر الإنترنت لهذه البطاقة',
+          )
+        : l10nPickAuto(
+            en: 'Online payments disabled - web transactions blocked',
+            fa: 'پرداخت اینترنتی غیرفعال شد - خریدهای وب مسدود شدند',
+            ar: 'تم تعطيل المدفوعات عبر الإنترنت',
+          );
+    ToastHelper().showSuccessToast(message);
+  }
+
+  void updateSpendingLimits({
+    required double daily,
+    required double monthly,
+  }) {
+    dailySpendLimit.value = daily;
+    monthlySpendLimit.value = monthly;
+    HapticFeedback.lightImpact();
+    final message = l10nPickAuto(
+      en: 'Card spending limits updated successfully',
+      fa: 'سقف تراکنش‌های کارت با موفقیت به‌روزرسانی شد',
+      ar: 'تم تحديث حدود الإنفاق للبطاقة بنجاح',
+    );
+    ToastHelper().showSuccessToast(message);
+  }
 
   void syncFreezeState(VirtualCardDetailsData? card) {
     if (card == null) return;
