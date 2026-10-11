@@ -8,14 +8,24 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../models/loan_models.dart';
 
-/// 4-step progress stepper for loan applications:
+/// Five-stage milestone status stepper for Loan & Credit applications,
+/// also supporting 4-stage application flow when currentStep is provided.
+///
+/// 5-stage milestones (by status):
+/// 1. Apply (ثبت درخواست) -> DRAFT
+/// 2. Credit Scoring (سنجش اعتبار) -> UNDER_ASSESSMENT, COMPLEMENT_REQUIRED
+/// 3. Offer & Collateral (پیشنهاد و وثیقه) -> OFFERED, AWAITING_COLLATERAL
+/// 4. Signing (امضای قرارداد) -> AWAITING_SIGNING, REVIEW
+/// 5. Disbursed (واریز و اقساط) -> DISBURSED, ACTIVE, COMPLETED, OVERDUE, DEFAULTED
+///
+/// 4-stage workflow (when currentStep != null):
 /// 1. Eligibility (احراز صلاحیت)
-/// 2. Application & Collateral (درخواست و وثیقه‌گذاری)
+/// 2. Application & Collateral (درخواست و وثیقه)
 /// 3. Review (بررسی و امضا)
 /// 4. Disbursed (واریز به حساب)
 class LoanStatusStepper extends StatelessWidget {
   final String? currentStatus;
-  final int? currentStep; // 0, 1, 2, 3
+  final int? currentStep;
   final bool isCompact;
 
   const LoanStatusStepper({
@@ -25,29 +35,26 @@ class LoanStatusStepper extends StatelessWidget {
     this.isCompact = false,
   });
 
-  /// Map loan status string to 4-step index (0..3)
-  int get effectiveStep {
-    if (currentStep != null) {
-      return currentStep!.clamp(0, 3);
-    }
+  /// Map loan status string to 5-step milestone index (0..4)
+  int _stepFromStatus() {
     switch (currentStatus) {
       case 'DRAFT':
-      case 'ELIGIBILITY_CHECK':
-        return 0; // 1. Eligibility
+        return 0; // 1. Apply (ثبت درخواست)
       case 'UNDER_ASSESSMENT':
       case 'COMPLEMENT_REQUIRED':
+        return 1; // 2. Credit Scoring (سنجش اعتبار)
       case 'OFFERED':
       case 'AWAITING_COLLATERAL':
-        return 1; // 2. Application & Collateral
+        return 2; // 3. Offer & Collateral (پیشنهاد و وثیقه)
       case 'AWAITING_SIGNING':
       case 'REVIEW':
-        return 2; // 3. Review
+        return 3; // 4. Signing (امضای قرارداد)
       case 'DISBURSED':
       case 'ACTIVE':
       case 'COMPLETED':
       case 'OVERDUE':
       case 'DEFAULTED':
-        return 3; // 4. Disbursed
+        return 4; // 5. Disbursed (واریز و اقساط)
       default:
         return 1;
     }
@@ -56,30 +63,65 @@ class LoanStatusStepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeStep = effectiveStep;
+    final isFourStep = currentStep != null;
 
-    final steps = [
-      {
-        'title': l10nPick(context, fa: 'احراز صلاحیت', en: 'Eligibility', ar: 'الأهلية', zh: '资质审核'),
-        'subtitle': l10nPick(context, fa: 'اعتبارسنجی', en: 'Scoring', ar: 'التقييم', zh: '信用评估'),
-        'icon': Icons.verified_user_outlined,
-      },
-      {
-        'title': l10nPick(context, fa: 'درخواست و وثیقه', en: 'Application & Collateral', ar: 'الطلب والضمان', zh: '申请与质押'),
-        'subtitle': l10nPick(context, fa: 'انتخاب طرح', en: 'Terms & Collateral', ar: 'تحديد الضمان', zh: '确定额度'),
-        'icon': Icons.account_balance_wallet_outlined,
-      },
-      {
-        'title': l10nPick(context, fa: 'بررسی و امضا', en: 'Review', ar: 'المراجعة والتوقيع', zh: '审核与签约'),
-        'subtitle': l10nPick(context, fa: 'امضای قرارداد', en: 'Contract sign', ar: 'العقد الإلكتروني', zh: '电子签署'),
-        'icon': Icons.draw_outlined,
-      },
-      {
-        'title': l10nPick(context, fa: 'واریز به حساب', en: 'Disbursed', ar: 'الصرف إلى الحساب', zh: '放款入账'),
-        'subtitle': l10nPick(context, fa: 'دریافت وجه', en: 'Fund released', ar: 'تحويل الأموال', zh: '资金到账'),
-        'icon': Icons.payments_outlined,
-      },
-    ];
+    final List<Map<String, dynamic>> steps;
+    final int activeStep;
+
+    if (isFourStep) {
+      activeStep = currentStep!.clamp(0, 3);
+      steps = [
+        {
+          'title': l10nPick(context, fa: 'احراز صلاحیت', en: 'Eligibility', ar: 'الأهلية', zh: '资质审核'),
+          'subtitle': l10nPick(context, fa: 'اعتبارسنجی', en: 'Scoring', ar: 'التقييم', zh: '信用评估'),
+          'icon': Icons.verified_user_outlined,
+        },
+        {
+          'title': l10nPick(context, fa: 'درخواست و وثیقه', en: 'Application & Collateral', ar: 'الطلب والضمان', zh: '申请与质押'),
+          'subtitle': l10nPick(context, fa: 'انتخاب طرح', en: 'Terms & Collateral', ar: 'تحديد الضمان', zh: '确定额度'),
+          'icon': Icons.account_balance_wallet_outlined,
+        },
+        {
+          'title': l10nPick(context, fa: 'بررسی و امضا', en: 'Review', ar: 'المراجعة والتوقيع', zh: '审核与签约'),
+          'subtitle': l10nPick(context, fa: 'امضای قرارداد', en: 'Contract sign', ar: 'العقد الإلكتروني', zh: '电子签署'),
+          'icon': Icons.draw_outlined,
+        },
+        {
+          'title': l10nPick(context, fa: 'واریز به حساب', en: 'Disbursed', ar: 'الصرف إلى الحساب', zh: '放款入账'),
+          'subtitle': l10nPick(context, fa: 'دریافت وجه', en: 'Fund released', ar: 'تحويل الأموال', zh: '资金到账'),
+          'icon': Icons.payments_outlined,
+        },
+      ];
+    } else {
+      activeStep = _stepFromStatus();
+      steps = [
+        {
+          'title': l10nPick(context, fa: 'ثبت درخواست', en: 'Apply', ar: 'تقديم الطلب', zh: '提交申请'),
+          'subtitle': l10nPick(context, fa: 'تکمیل فرم', en: 'Application form', ar: 'تعبئة النموذج', zh: '填写资料'),
+          'icon': Icons.post_add_rounded,
+        },
+        {
+          'title': l10nPick(context, fa: 'سنجش اعتبار', en: 'Credit Scoring', ar: 'التقييم الائتماني', zh: '信用评估'),
+          'subtitle': l10nPick(context, fa: 'اعتبارسنجی', en: 'Scoring', ar: 'التقييم', zh: '额度测算'),
+          'icon': Icons.fact_check_outlined,
+        },
+        {
+          'title': l10nPick(context, fa: 'پیشنهاد و وثیقه', en: 'Offer & Collateral', ar: 'العرض والضمان', zh: '方案与质押'),
+          'subtitle': l10nPick(context, fa: 'انتخاب طرح', en: 'Terms & Collateral', ar: 'تحديد الضمان', zh: '确认抵押'),
+          'icon': Icons.lock_clock_outlined,
+        },
+        {
+          'title': l10nPick(context, fa: 'امضای قرارداد', en: 'Signing', ar: 'توقيع العقد', zh: '签署合同'),
+          'subtitle': l10nPick(context, fa: 'امضای الکترونیک', en: 'Contract sign', ar: 'التوقيع الإلكتروني', zh: '电子签约'),
+          'icon': Icons.draw_outlined,
+        },
+        {
+          'title': l10nPick(context, fa: 'واریز و اقساط', en: 'Disbursed', ar: 'الصرف والأقساط', zh: '放款与还款'),
+          'subtitle': l10nPick(context, fa: 'دریافت وجه', en: 'Fund released', ar: 'تحويل الأموال', zh: '到账还款'),
+          'icon': Icons.payments_outlined,
+        },
+      ];
+    }
 
     final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final inactiveBorder = isDark ? AppColors.darkOutline : AppColors.lightOutlineVariant;
@@ -87,6 +129,9 @@ class LoanStatusStepper extends StatelessWidget {
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
+    final circleSize = (steps.length > 4 || isCompact) ? 28.w : 32.w;
+    final iconSize = (steps.length > 4 || isCompact) ? 13.sp : 15.sp;
 
     return Container(
       padding: EdgeInsetsDirectional.all(isCompact ? AppSpacing.sm.r : AppSpacing.md.r),
@@ -114,7 +159,7 @@ class LoanStatusStepper extends StatelessWidget {
                   l10nPick(
                     context,
                     fa: 'مراحل دریافت تسهیلات',
-                    en: 'Application Progress',
+                    en: 'Loan Application Progress',
                     ar: 'مراحل التسهيل',
                     zh: '贷款办理进度',
                   ),
@@ -135,7 +180,7 @@ class LoanStatusStepper extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
                 child: Text(
-                  '${activeStep + 1} / ${steps.length}',
+                  '${activeStep.clamp(0, steps.length - 1) + 1} / ${steps.length}',
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w900,
@@ -188,14 +233,14 @@ class LoanStatusStepper extends StatelessWidget {
               }
 
               return Container(
-                width: 32.w,
-                height: 32.w,
+                width: circleSize,
+                height: circleSize,
                 decoration: BoxDecoration(
                   color: circleBg,
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: circleBorder,
-                    width: isCurrent ? 2.2 : 1.2,
+                    width: isCurrent ? 2.0 : 1.2,
                   ),
                   boxShadow: isCurrent
                       ? [
@@ -212,7 +257,7 @@ class LoanStatusStepper extends StatelessWidget {
                     isCompleted
                         ? Icons.check_rounded
                         : (steps[stepIndex]['icon'] as IconData),
-                    size: 15.sp,
+                    size: iconSize,
                     color: iconColor,
                   ),
                 ),

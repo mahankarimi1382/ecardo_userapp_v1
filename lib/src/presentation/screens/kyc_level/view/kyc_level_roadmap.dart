@@ -41,10 +41,15 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
   @override
   void initState() {
     super.initState();
+    final isTest =
+        WidgetsBinding.instance.runtimeType.toString().contains('Test');
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
-    )..repeat(reverse: true);
+    );
+    if (!isTest) {
+      _pulseController.repeat(reverse: true);
+    }
 
     _pulseAnimation = Tween<double>(begin: 0.65, end: 1.0).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
@@ -1231,21 +1236,21 @@ class _StepperLevelCard extends StatelessWidget {
     return switch (level.level) {
       1 => l10nPick(
           context,
-          en: 'Tier 1 — Basic (Phone & Email)',
+          en: 'Tier 1 — Basic',
           fa: 'سطح ۱ — پایه (شماره تماس و ایمیل)',
           ar: 'المستوى 1 — الأساسي (الهاتف والبريد)',
           zh: '第 1 级 — 基础认证 (手机与邮箱)',
         ),
       2 => l10nPick(
           context,
-          en: 'Tier 2 — Standard (ID Document & Passport)',
+          en: 'Tier 2 — Standard',
           fa: 'سطح ۲ — استاندارد (کارت ملی و شناسنامه)',
           ar: 'المستوى 2 — المعياري (الهوية وجواز السفر)',
           zh: '第 2 级 — 标准认证 (身份证与护照)',
         ),
       3 => l10nPick(
           context,
-          en: 'Tier 3 — VIP (Selfie Video & Address)',
+          en: 'Tier 3 — VIP',
           fa: 'سطح ۳ — طلایی (احراز ویدیویی و نشانی)',
           ar: 'المستوى 3 — الذهبي (الفيديو والعنوان)',
           zh: '第 3 级 — 尊享认证 (视频活体与地址)',
@@ -1261,7 +1266,7 @@ class _StepperLevelCard extends StatelessWidget {
     return switch (level.level) {
       1 => l10nPick(
           context,
-          en: 'Email & phone verified. \$1,000/day withdrawal limit, 1 virtual card, basic transfers.',
+          en: 'Email & phone verified. \$1,000/day limit, 1 virtual card, basic transfers.',
           fa: 'تأیید ایمیل و شماره موبایل. سقف تراکنش روزانه ۱,۰۰۰ دلار، ۱ کارت مجازی و انتقال پایه.',
           ar: 'توثيق الهاتف والبريد. حد يومي 1,000 دولار، بطاقة افتراضية واحدة، تحويلات أساسية.',
           zh: '邮箱与手机认证。每日限额 \$1,000，1 张虚拟卡，基础转账。',

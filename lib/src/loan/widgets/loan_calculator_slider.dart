@@ -8,7 +8,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 /// Modern interactive fintech loan calculator with dual sliders
 /// (Amount slider and Duration slider), tactile haptic feedback on notch changes,
-/// quick preset duration chips (3, 6, 12, 24 months), and live repayment metrics:
+/// quick preset duration chips, grace period toggle, and live repayment metrics:
 /// Monthly Installment (قسط ماهانه), Total Interest (کل سود), Total Repayment (کل بازپرداخت), APR percentage.
 class LoanCalculatorSlider extends StatefulWidget {
   final double? initialAmount;
@@ -20,11 +20,12 @@ class LoanCalculatorSlider extends StatefulWidget {
   final double annualInterestRate; // APR percentage
   final int minMonths;
   final int maxMonths;
-  final List<int> presetDurations; // Default: [3, 6, 12, 24]
+  final List<int> termOptions;
+  final List<int>? presetDurations;
   final List<int> gracePeriodOptions;
   final List<double>? quickAmounts;
   final String currency; // 'USD' or 'IRR'
-  final bool showGracePeriod;
+  final bool? showGracePeriod;
   final void Function(double amount, int months, int graceMonths, double monthlyPayment)? onPlanChanged;
   final void Function({
     required double amount,
@@ -45,12 +46,13 @@ class LoanCalculatorSlider extends StatefulWidget {
     this.stepAmount = 500.0,
     this.annualInterestRate = 14.0,
     this.minMonths = 3,
-    this.maxMonths = 24,
-    this.presetDurations = const [3, 6, 12, 24],
+    this.maxMonths = 36,
+    this.termOptions = const [3, 6, 12, 18, 24, 36],
+    this.presetDurations,
     this.gracePeriodOptions = const [0, 1, 2, 3],
     this.quickAmounts,
     this.currency = 'USD',
-    this.showGracePeriod = false,
+    this.showGracePeriod,
     this.onPlanChanged,
     this.onCalculationChanged,
   });
@@ -64,12 +66,33 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   late int _months;
   late int _graceMonths;
 
+  bool get effectiveShowGracePeriod => widget.showGracePeriod ?? (widget.presetDurations == null);
+
+  List<int> get effectiveTerms => widget.presetDurations ?? widget.termOptions;
+
+  int get minM {
+    if (widget.presetDurations != null && widget.presetDurations!.isNotEmpty) {
+      return widget.presetDurations!.reduce(math.min);
+    }
+    return widget.minMonths;
+  }
+
+  int get maxM {
+    if (widget.presetDurations != null && widget.presetDurations!.isNotEmpty) {
+      return widget.presetDurations!.reduce(math.max);
+    }
+    return widget.maxMonths;
+  }
+
   @override
   void initState() {
     super.initState();
-    _amount = (widget.initialAmount ?? (widget.currency == 'USD' ? 10000.0 : 50000000.0))
+    _amount = (widget.initialAmount ?? (widget.currency.toUpperCase() == 'USD' ? 10000.0 : 50000000.0))
         .clamp(widget.minAmount, widget.maxAmount);
-    _months = (widget.initialMonths ?? 12).clamp(widget.minMonths, widget.maxMonths);
+    _months = (widget.initialMonths ?? 12).clamp(minM, maxM);
+    if (!effectiveTerms.contains(_months) && effectiveTerms.isNotEmpty) {
+      _months = effectiveTerms.first;
+    }
     _graceMonths = widget.initialGraceMonths ?? 0;
     if (!widget.gracePeriodOptions.contains(_graceMonths)) {
       _graceMonths = 0;
@@ -97,10 +120,10 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     }
 
     if (widget.initialMonths != null && widget.initialMonths != oldWidget.initialMonths) {
-      _months = widget.initialMonths!.clamp(widget.minMonths, widget.maxMonths);
+      _months = widget.initialMonths!.clamp(minM, maxM);
       changed = true;
     } else {
-      final clampedM = _months.clamp(widget.minMonths, widget.maxMonths);
+      final clampedM = _months.clamp(minM, maxM);
       if (clampedM != _months) {
         _months = clampedM;
         changed = true;
@@ -119,7 +142,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   double get _monthlyRate => (widget.annualInterestRate / 100.0) / 12.0;
 
   int get _effectiveGraceMonths =>
-      widget.showGracePeriod ? _graceMonths.clamp(0, math.max(0, _months - 1)).toInt() : 0;
+      effectiveShowGracePeriod ? _graceMonths.clamp(0, math.max(0, _months - 1)).toInt() : 0;
 
   /// Standard EMI calculation using French amortization
   double get _monthlyPayment {
@@ -229,7 +252,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     final amountDivisions = ((widget.maxAmount - widget.minAmount) / widget.stepAmount).round();
     final effectiveAmountDivisions = amountDivisions > 0 && amountDivisions <= 500 ? amountDivisions : null;
 
-    final durationRange = widget.maxMonths - widget.minMonths;
+    final durationRange = maxM - minM;
     final durationDivisions = durationRange > 0 ? durationRange : null;
 
     return Container(
@@ -324,7 +347,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               ),
               SizedBox(width: AppSpacing.xs.w),
               Text(
-                _currencyLabel(context),
+                widget.currency.toUpperCase() == 'USD' ? 'USD' : _currencyLabel(context),
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w700,
@@ -524,12 +547,12 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               overlayShape: RoundSliderOverlayShape(overlayRadius: 18.r),
             ),
             child: Slider(
-              value: _months.toDouble(),
-              min: widget.minMonths.toDouble(),
-              max: widget.maxMonths.toDouble(),
+              value: _months.toDouble().clamp(minM.toDouble(), maxM.toDouble()),
+              min: minM.toDouble(),
+              max: maxM.toDouble(),
               divisions: durationDivisions,
               onChanged: (val) {
-                final stepped = val.round().clamp(widget.minMonths, widget.maxMonths);
+                final stepped = val.round().clamp(minM, maxM);
                 if (stepped != _months) {
                   HapticFeedback.selectionClick();
                   setState(() {
@@ -552,7 +575,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               children: [
                 Flexible(
                   child: Text(
-                    '${widget.minMonths} ${l10nPick(context, fa: 'ماه', en: 'mo', ar: 'شهر', zh: '月')}',
+                    '$minM ${l10nPick(context, fa: 'ماه', en: 'mo', ar: 'شهر', zh: '月')}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
@@ -561,7 +584,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                 SizedBox(width: 8.w),
                 Flexible(
                   child: Text(
-                    '${widget.maxMonths} ${l10nPick(context, fa: 'ماه', en: 'mo', ar: 'شهر', zh: '月')}',
+                    '$maxM ${l10nPick(context, fa: 'ماه', en: 'mo', ar: 'شهر', zh: '月')}',
                     maxLines: 1,
                     textAlign: TextAlign.end,
                     overflow: TextOverflow.ellipsis,
@@ -574,65 +597,119 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
           SizedBox(height: AppSpacing.sm.h),
 
-          // Quick Preset Duration Chips (3, 6, 12, 24 months)
-          Row(
-            children: widget.presetDurations.map((m) {
-              final isSelected = _months == m;
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 3.w),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      setState(() {
-                        _months = m.clamp(widget.minMonths, widget.maxMonths);
-                        if (_graceMonths >= _months) {
-                          _graceMonths = 0;
-                        }
-                      });
-                      _notifyChange();
-                    },
-                    child: AnimatedContainer(
-                      duration: AppSpacing.fast,
-                      padding: EdgeInsetsDirectional.symmetric(vertical: 8.h),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isSelected ? primaryAccent : sunkenColor,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                        border: Border.all(
-                          color: isSelected ? primaryAccent : borderColor,
-                          width: isSelected ? 1.4 : 1.0,
+          // Quick Preset Duration / Term Chips
+          if (widget.presetDurations != null) ...[
+            Row(
+              children: widget.presetDurations!.map((m) {
+                final isSelected = _months == m;
+                return Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: 3.w),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        setState(() {
+                          _months = m.clamp(minM, maxM);
+                          if (_graceMonths >= _months) {
+                            _graceMonths = 0;
+                          }
+                        });
+                        _notifyChange();
+                      },
+                      child: AnimatedContainer(
+                        duration: AppSpacing.fast,
+                        padding: EdgeInsetsDirectional.symmetric(vertical: 8.h),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isSelected ? primaryAccent : sunkenColor,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          border: Border.all(
+                            color: isSelected ? primaryAccent : borderColor,
+                            width: isSelected ? 1.4 : 1.0,
+                          ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: primaryAccent.withValues(alpha: 0.25),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : null,
                         ),
-                        boxShadow: isSelected
-                            ? [
-                                BoxShadow(
-                                  color: primaryAccent.withValues(alpha: 0.25),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ]
-                            : null,
-                      ),
-                      child: Text(
-                        '$m ${l10nPick(context, fa: 'ماهه', en: 'Mo', ar: 'شهر', zh: '月')}',
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                          color: isSelected
-                              ? (isDark ? AppColors.deepBlack : Colors.white)
-                              : textPrimary,
+                        child: Text(
+                          '$m ${l10nPick(context, fa: 'ماهه', en: 'Mo', ar: 'شهر', zh: '月')}',
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                            color: isSelected
+                                ? (isDark ? AppColors.deepBlack : Colors.white)
+                                : textPrimary,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
+                );
+              }).toList(),
+            ),
+          ] else ...[
+            Wrap(
+              spacing: 6.w,
+              runSpacing: 6.h,
+              children: widget.termOptions.map((m) {
+                final isSelected = _months == m;
+                return InkWell(
+                  borderRadius: BorderRadius.circular(12.r),
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    setState(() {
+                      _months = m.clamp(minM, maxM);
+                      if (_graceMonths >= _months) {
+                        _graceMonths = 0;
+                      }
+                    });
+                    _notifyChange();
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+                    decoration: BoxDecoration(
+                      color: isSelected ? primaryAccent : (isDark ? sunkenColor : Colors.white),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: isSelected ? primaryAccent : borderColor,
+                        width: 1.3,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: primaryAccent.withValues(alpha: 0.18),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Text(
+                      '$m ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}',
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        color: isSelected
+                            ? (isDark ? AppColors.deepBlack : Colors.white)
+                            : textPrimary,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
 
           // Optional Grace Period Toggle
-          if (widget.showGracePeriod) ...[
+          if (effectiveShowGracePeriod) ...[
             SizedBox(height: AppSpacing.md.h),
             Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
             SizedBox(height: AppSpacing.md.h),
@@ -642,7 +719,6 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           SizedBox(height: AppSpacing.lg.h),
 
           // ------------------ SECTION 3: LIVE REPAYMENT DISPLAY ------------------
-          // 4-tile grid: Monthly Installment, Total Interest, Total Repayment, APR percentage
           Container(
             padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
             decoration: BoxDecoration(
@@ -814,7 +890,7 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                         SizedBox(width: 6.w),
                         Expanded(
                           child: Text(
-                            '${l10nPick(context, fa: 'قسط ماهانه دوره تنفس (فقط سود)', en: 'Grace monthly installment (interest only)', ar: 'قسط فترة السماح', zh: '宽限期月供')}: ${_formatAmount(_graceMonthlyPayment)} ${_currencyLabel(context)}',
+                            '${l10nPick(context, fa: 'قسط ماهانه دوره تنفس (فقط سود)', en: 'Grace monthly payment (interest only)', ar: 'قسط فترة السماح', zh: '宽限期月供')}: ${_formatAmount(_graceMonthlyPayment)} ${_currencyLabel(context)}',
                             style: TextStyle(
                               fontSize: 10.5.sp,
                               fontWeight: FontWeight.w700,
