@@ -1271,8 +1271,12 @@ class _HeroWalletCardState extends State<HeroWalletCard>
                       Directionality.of(context),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.88),
+                      color: Colors.white.withValues(alpha: 0.16),
                       borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.24),
+                        width: 0.8,
+                      ),
                     ),
                     child: Text(
                       accountNo,
@@ -1280,7 +1284,7 @@ class _HeroWalletCardState extends State<HeroWalletCard>
                       softWrap: false,
                       textDirection: TextDirection.ltr,
                       style: const TextStyle(
-                        color: Colors.black87,
+                        color: Colors.white,
                         fontSize: 11,
                         fontFamily: 'monospace',
                         fontWeight: FontWeight.bold,

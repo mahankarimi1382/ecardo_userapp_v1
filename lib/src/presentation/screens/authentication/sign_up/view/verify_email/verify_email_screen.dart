@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -9,6 +10,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'package:ecardo_user/src/helper/mask_email_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/shared/ambient_auth_background.dart';
@@ -247,61 +249,68 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
                                   // PIN Code Input
                                   Obx(
-                                    () => PinCodeTextField(
-                                      keyboardType: TextInputType.number,
-                                      cursorColor: isDark
-                                          ? const Color(0xFF38BDF8)
-                                          : AppColors.lightPrimary,
-                                      textStyle: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 18.sp,
-                                        color: primaryTextColor,
-                                        letterSpacing: 0,
-                                      ),
-                                      controller: controller.pinCodeController,
-                                      enableActiveFill:
-                                          controller.isPinEnabled.value,
-                                      pinTheme: PinTheme(
-                                        borderWidth: 1.5.w,
-                                        activeBorderWidth: 1.5.w,
-                                        disabledBorderWidth: 1.5.w,
-                                        inactiveBorderWidth: 1.5.w,
-                                        shape: PinCodeFieldShape.box,
-                                        fieldHeight: 50.h,
-                                        fieldWidth: 44.w,
-                                        activeColor: isDark
+                                    () => Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: PinCodeTextField(
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [
+                                          const DigitNormalizationFormatter(maxLength: 6),
+                                          FilteringTextInputFormatter.digitsOnly,
+                                        ],
+                                        cursorColor: isDark
                                             ? const Color(0xFF38BDF8)
                                             : AppColors.lightPrimary,
-                                        activeFillColor: isDark
-                                            ? Colors.white.withValues(alpha: 0.06)
-                                            : const Color(0xFFF8FAFC),
-                                        inactiveColor: isDark
-                                            ? Colors.white.withValues(alpha: 0.15)
-                                            : AppColors.lightBorder,
-                                        inactiveFillColor: Colors.transparent,
-                                        selectedColor: isDark
-                                            ? const Color(0xFF38BDF8)
-                                            : AppColors.lightPrimary,
-                                        selectedFillColor: isDark
-                                            ? const Color(0xFF38BDF8)
-                                                .withValues(alpha: 0.1)
-                                            : AppColors.lightSecondaryContainer,
-                                        selectedBorderWidth: 1.5.w,
-                                        borderRadius:
-                                            BorderRadius.circular(14.r),
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 18.sp,
+                                          color: primaryTextColor,
+                                          letterSpacing: 0,
+                                        ),
+                                        controller: controller.pinCodeController,
+                                        enableActiveFill:
+                                            controller.isPinEnabled.value,
+                                        pinTheme: PinTheme(
+                                          borderWidth: 1.5.w,
+                                          activeBorderWidth: 1.5.w,
+                                          disabledBorderWidth: 1.5.w,
+                                          inactiveBorderWidth: 1.5.w,
+                                          shape: PinCodeFieldShape.box,
+                                          fieldHeight: 50.h,
+                                          fieldWidth: 44.w,
+                                          activeColor: isDark
+                                              ? const Color(0xFF38BDF8)
+                                              : AppColors.lightPrimary,
+                                          activeFillColor: isDark
+                                              ? Colors.white.withValues(alpha: 0.06)
+                                              : const Color(0xFFF8FAFC),
+                                          inactiveColor: isDark
+                                              ? Colors.white.withValues(alpha: 0.15)
+                                              : AppColors.lightBorder,
+                                          inactiveFillColor: Colors.transparent,
+                                          selectedColor: isDark
+                                              ? const Color(0xFF38BDF8)
+                                              : AppColors.lightPrimary,
+                                          selectedFillColor: isDark
+                                              ? const Color(0xFF38BDF8)
+                                                  .withValues(alpha: 0.1)
+                                              : AppColors.lightSecondaryContainer,
+                                          selectedBorderWidth: 1.5.w,
+                                          borderRadius:
+                                              BorderRadius.circular(14.r),
+                                        ),
+                                        appContext: context,
+                                        length: 6,
+                                        onCompleted: (_) async {
+                                          if (email != null &&
+                                              controller.pinCodeController.text
+                                                      .length ==
+                                                  6) {
+                                            await controller.validateVerifyEmail(
+                                              email: email!,
+                                            );
+                                          }
+                                        },
                                       ),
-                                      appContext: context,
-                                      length: 6,
-                                      onCompleted: (_) async {
-                                        if (email != null &&
-                                            controller.pinCodeController.text
-                                                    .length ==
-                                                6) {
-                                          await controller.validateVerifyEmail(
-                                            email: email!,
-                                          );
-                                        }
-                                      },
                                     ),
                                   ),
 

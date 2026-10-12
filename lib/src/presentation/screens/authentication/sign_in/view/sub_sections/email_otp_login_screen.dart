@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/mask_email_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/email_otp_login_controller.dart';
@@ -218,45 +219,51 @@ class EmailOtpLoginScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: 24.h),
-        PinCodeTextField(
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          autoFocus: true,
-          autoDismissKeyboard: false,
-          cursorColor: AppColors.lightPrimary,
-          textStyle: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 16.sp,
-            color: AppColors.lightTextPrimary,
-            letterSpacing: 0,
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: PinCodeTextField(
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              const DigitNormalizationFormatter(maxLength: 6),
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            autoFocus: true,
+            autoDismissKeyboard: false,
+            cursorColor: AppColors.lightPrimary,
+            textStyle: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 16.sp,
+              color: AppColors.lightTextPrimary,
+              letterSpacing: 0,
+            ),
+            controller: controller.pinCodeController,
+            pinTheme: PinTheme(
+              borderWidth: 1.5.w,
+              activeBorderWidth: 1.5.w,
+              inactiveBorderWidth: 1.5.w,
+              shape: PinCodeFieldShape.box,
+              fieldHeight: 48.h,
+              fieldWidth: 45.w,
+              activeColor: AppColors.lightPrimary.withValues(alpha: 0.60),
+              activeFillColor: AppColors.transparent,
+              inactiveColor: AppColors.lightTextPrimary.withValues(alpha: 0.20),
+              inactiveFillColor: AppColors.transparent,
+              selectedColor: AppColors.lightPrimary.withValues(alpha: 0.60),
+              selectedFillColor: AppColors.transparent,
+              selectedBorderWidth: 1.5.w,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            appContext: context,
+            length: 6,
+            // UX-FIX (otp): auto-verify the moment the 6th digit lands —
+            // the user no longer needs to hunt for the Verify button.
+            onChanged: (value) {
+              if (value.length == 6 &&
+                  !controller.isLoading.value) {
+                controller.verifyCode();
+              }
+            },
           ),
-          controller: controller.pinCodeController,
-          pinTheme: PinTheme(
-            borderWidth: 1.5.w,
-            activeBorderWidth: 1.5.w,
-            inactiveBorderWidth: 1.5.w,
-            shape: PinCodeFieldShape.box,
-            fieldHeight: 48.h,
-            fieldWidth: 45.w,
-            activeColor: AppColors.lightPrimary.withValues(alpha: 0.60),
-            activeFillColor: AppColors.transparent,
-            inactiveColor: AppColors.lightTextPrimary.withValues(alpha: 0.20),
-            inactiveFillColor: AppColors.transparent,
-            selectedColor: AppColors.lightPrimary.withValues(alpha: 0.60),
-            selectedFillColor: AppColors.transparent,
-            selectedBorderWidth: 1.5.w,
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          appContext: context,
-          length: 6,
-          // UX-FIX (otp): auto-verify the moment the 6th digit lands —
-          // the user no longer needs to hunt for the Verify button.
-          onChanged: (value) {
-            if (value.length == 6 &&
-                !controller.isLoading.value) {
-              controller.verifyCode();
-            }
-          },
         ),
         SizedBox(height: 20.h),
         Obx(

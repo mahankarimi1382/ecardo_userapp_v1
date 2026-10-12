@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
@@ -41,16 +42,17 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
 
     return Scaffold(
       backgroundColor: bgColor,
+      appBar: CommonDefaultAppBar(
+        backgroundColor: bgColor,
+      ),
       body: SafeArea(
         top: false,
         child: Stack(
           children: [
             Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.paddingOf(context).top,
-                  ),
+                Container(
+                  color: bgColor,
                   child: Column(
                     children: [
                       // Title row + history menu (only on step 0)
@@ -99,6 +101,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                           currentStep: controller.currentStep.value,
                         ),
                       ),
+                      const SizedBox(height: AppSpacing.xs),
                     ],
                   ),
                 ),

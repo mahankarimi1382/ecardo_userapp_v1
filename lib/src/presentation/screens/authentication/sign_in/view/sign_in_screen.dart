@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -15,6 +16,7 @@ import 'package:ecardo_user/src/common/widgets/bottom_sheet/common_alert_bottom_
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/mask_email_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -761,47 +763,54 @@ class _SignInScreenState extends State<SignInScreen>
                   ),
                 ),
                 SizedBox(height: 16.h),
-                PinCodeTextField(
-                  appContext: context,
-                  length: 6,
-                  controller: otpController.pinCodeController,
-                  keyboardType: TextInputType.number,
-                  cursorColor: isDark
-                      ? const Color(0xFF38BDF8)
-                      : AppColors.lightPrimary,
-                  textStyle: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w900,
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                  ),
-                  pinTheme: PinTheme(
-                    shape: PinCodeFieldShape.box,
-                    borderRadius: BorderRadius.circular(14.r),
-                    fieldHeight: 48.h,
-                    fieldWidth: 42.w,
-                    activeColor: isDark
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: PinCodeTextField(
+                    appContext: context,
+                    length: 6,
+                    controller: otpController.pinCodeController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      const DigitNormalizationFormatter(maxLength: 6),
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    cursorColor: isDark
                         ? const Color(0xFF38BDF8)
                         : AppColors.lightPrimary,
-                    inactiveColor: isDark
-                        ? Colors.white.withValues(alpha: 0.15)
-                        : AppColors.lightBorder,
-                    selectedColor: isDark
-                        ? const Color(0xFF38BDF8)
-                        : AppColors.lightPrimary,
-                    activeFillColor: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : const Color(0xFFF8FAFC),
-                    inactiveFillColor: Colors.transparent,
-                    selectedFillColor: isDark
-                        ? const Color(0xFF38BDF8).withValues(alpha: 0.1)
-                        : AppColors.lightSecondaryContainer,
+                    textStyle: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w900,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(14.r),
+                      fieldHeight: 48.h,
+                      fieldWidth: 42.w,
+                      activeColor: isDark
+                          ? const Color(0xFF38BDF8)
+                          : AppColors.lightPrimary,
+                      inactiveColor: isDark
+                          ? Colors.white.withValues(alpha: 0.15)
+                          : AppColors.lightBorder,
+                      selectedColor: isDark
+                          ? const Color(0xFF38BDF8)
+                          : AppColors.lightPrimary,
+                      activeFillColor: isDark
+                          ? Colors.white.withValues(alpha: 0.05)
+                          : const Color(0xFFF8FAFC),
+                      inactiveFillColor: Colors.transparent,
+                      selectedFillColor: isDark
+                          ? const Color(0xFF38BDF8).withValues(alpha: 0.1)
+                          : AppColors.lightSecondaryContainer,
+                    ),
+                    enableActiveFill: true,
+                    onCompleted: (_) {
+                      otpController.verifyCode();
+                    },
                   ),
-                  enableActiveFill: true,
-                  onCompleted: (_) {
-                    otpController.verifyCode();
-                  },
                 ),
                 SizedBox(height: 10.h),
                 Row(

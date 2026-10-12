@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -10,6 +11,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/two_factor_auth_controller.dart';
 
@@ -120,42 +122,49 @@ class _TwoFactorAuthState extends State<TwoFactorAuth> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        PinCodeTextField(
-                          keyboardType: TextInputType.number,
-                          cursorColor: AppColors.lightPrimary,
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: AppColors.lightTextPrimary,
-                            letterSpacing: 0,
-                          ),
-                          controller: controller.pinCodeController,
-                          pinTheme: PinTheme(
-                            borderWidth: 1.5,
-                            activeBorderWidth: 1.5,
-                            disabledBorderWidth: 1.5,
-                            inactiveBorderWidth: 1.5,
-                            shape: PinCodeFieldShape.box,
-                            fieldHeight: 52,
-                            fieldWidth: 48,
-                            activeColor: AppColors.lightPrimary.withValues(
-                              alpha: 0.60,
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: PinCodeTextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              const DigitNormalizationFormatter(maxLength: 6),
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            cursorColor: AppColors.lightPrimary,
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: AppColors.lightTextPrimary,
+                              letterSpacing: 0,
                             ),
-                            activeFillColor: AppColors.transparent,
-                            inactiveColor: AppColors.lightTextPrimary
-                                .withValues(alpha: 0.20),
-                            inactiveFillColor: AppColors.transparent,
-                            selectedColor: AppColors.lightPrimary.withValues(
-                              alpha: 0.60,
+                            controller: controller.pinCodeController,
+                            pinTheme: PinTheme(
+                              borderWidth: 1.5,
+                              activeBorderWidth: 1.5,
+                              disabledBorderWidth: 1.5,
+                              inactiveBorderWidth: 1.5,
+                              shape: PinCodeFieldShape.box,
+                              fieldHeight: 52,
+                              fieldWidth: 48,
+                              activeColor: AppColors.lightPrimary.withValues(
+                                alpha: 0.60,
+                              ),
+                              activeFillColor: AppColors.transparent,
+                              inactiveColor: AppColors.lightTextPrimary
+                                  .withValues(alpha: 0.20),
+                              inactiveFillColor: AppColors.transparent,
+                              selectedColor: AppColors.lightPrimary.withValues(
+                                alpha: 0.60,
+                              ),
+                              selectedFillColor: AppColors.transparent,
+                              disabledColor: AppColors.lightTextPrimary
+                                  .withValues(alpha: 0.05),
+                              selectedBorderWidth: 1.5,
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                            selectedFillColor: AppColors.transparent,
-                            disabledColor: AppColors.lightTextPrimary
-                                .withValues(alpha: 0.05),
-                            selectedBorderWidth: 1.5,
-                            borderRadius: BorderRadius.circular(16),
+                            appContext: context,
+                            length: 6,
                           ),
-                          appContext: context,
-                          length: 6,
                         ),
 
                         SizedBox(height: 30),

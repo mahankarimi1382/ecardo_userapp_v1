@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -10,6 +11,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
 import 'package:ecardo_user/src/helper/mask_email_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/forgot_password/controller/forgot_password_pin_verification_controller.dart';
@@ -159,45 +161,52 @@ class _ForgotPasswordPinVerificationState
                       ),
                       SizedBox(height: 30.h),
                       Obx(
-                        () => PinCodeTextField(
-                          keyboardType: TextInputType.number,
-                          // phase2-fix: the OTP field never locks anymore.
-                          enabled: true,
-                          cursorColor: AppColors.lightPrimary,
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16.sp,
-                            color: AppColors.lightTextPrimary,
-                            letterSpacing: 0,
-                          ),
-                          controller: controller.pinCodeController,
-                          enableActiveFill: controller.isPinEnabled.value,
-                          pinTheme: PinTheme(
-                            borderWidth: 1.5.w,
-                            activeBorderWidth: 1.5.w,
-                            disabledBorderWidth: 1.5.w,
-                            inactiveBorderWidth: 1.5.w,
-                            shape: PinCodeFieldShape.box,
-                            fieldHeight: 48.h,
-                            fieldWidth: 45.w,
-                            activeColor: AppColors.lightPrimary.withValues(
-                              alpha: 0.60,
+                        () => Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: PinCodeTextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              const DigitNormalizationFormatter(maxLength: 6),
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            // phase2-fix: the OTP field never locks anymore.
+                            enabled: true,
+                            cursorColor: AppColors.lightPrimary,
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16.sp,
+                              color: AppColors.lightTextPrimary,
+                              letterSpacing: 0,
                             ),
-                            activeFillColor: AppColors.transparent,
-                            inactiveColor: AppColors.lightTextPrimary
-                                .withValues(alpha: 0.20),
-                            inactiveFillColor: AppColors.transparent,
-                            selectedColor: AppColors.lightPrimary.withValues(
-                              alpha: 0.60,
+                            controller: controller.pinCodeController,
+                            enableActiveFill: controller.isPinEnabled.value,
+                            pinTheme: PinTheme(
+                              borderWidth: 1.5.w,
+                              activeBorderWidth: 1.5.w,
+                              disabledBorderWidth: 1.5.w,
+                              inactiveBorderWidth: 1.5.w,
+                              shape: PinCodeFieldShape.box,
+                              fieldHeight: 48.h,
+                              fieldWidth: 45.w,
+                              activeColor: AppColors.lightPrimary.withValues(
+                                alpha: 0.60,
+                              ),
+                              activeFillColor: AppColors.transparent,
+                              inactiveColor: AppColors.lightTextPrimary
+                                  .withValues(alpha: 0.20),
+                              inactiveFillColor: AppColors.transparent,
+                              selectedColor: AppColors.lightPrimary.withValues(
+                                alpha: 0.60,
+                              ),
+                              selectedFillColor: AppColors.transparent,
+                              disabledColor: AppColors.lightTextPrimary
+                                  .withValues(alpha: 0.05),
+                              selectedBorderWidth: 1.5.w,
+                              borderRadius: BorderRadius.circular(16.r),
                             ),
-                            selectedFillColor: AppColors.transparent,
-                            disabledColor: AppColors.lightTextPrimary
-                                .withValues(alpha: 0.05),
-                            selectedBorderWidth: 1.5.w,
-                            borderRadius: BorderRadius.circular(16.r),
+                            appContext: context,
+                            length: 6,
                           ),
-                          appContext: context,
-                          length: 6,
                         ),
                       ),
 
