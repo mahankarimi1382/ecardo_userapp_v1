@@ -54,6 +54,23 @@ class NetworkService extends getx.GetxService {
     // (FIX-R5), but that middleware is a pass-through when the header is
     // absent — so without this entry the double-debit guard was inert.
     '/user/remittance/store',
+    // World-Class Fintech standard: All money movements and commitments carry idempotency keys
+    '/user/loans/apply',
+    '/user/loans/repay',
+    '/user/loans/early-repayment',
+    '/user/escrow/store',
+    '/user/escrow/pay',
+    '/user/escrow/release',
+    '/user/stocks/order',
+    '/user/guarantee/apply',
+    '/user/guarantee/deposit-margin',
+    '/user/virtual-card/create',
+    '/user/virtual-card/fund',
+    '/user/p2p/create-order',
+    '/user/p2p/release-order',
+    '/user/p2p/pay-order',
+    '/user/travel/book',
+    '/user/travel/order',
   ];
 
   AppLocalizations? get localization {

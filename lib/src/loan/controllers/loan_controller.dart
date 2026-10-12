@@ -496,8 +496,10 @@ class LoanController extends GetxController {
   void _simulateInstallmentPaid(int caseId, int installmentId) {
     final c = selectedCase.value;
     if (c != null && c.id == caseId) {
+      double paidThisTime = 0.0;
       final updatedInstallments = c.installments.map((inst) {
-        if (inst.id == installmentId || inst.status == 'PENDING') {
+        if (inst.id == installmentId && inst.status != 'PAID') {
+          paidThisTime = inst.amount;
           return LoanInstallmentModel(
             id: inst.id,
             seq: inst.seq,
@@ -506,14 +508,15 @@ class LoanController extends GetxController {
             principalPart: inst.principalPart,
             interestPart: inst.interestPart,
             paidAmount: inst.amount,
-            lateFeeAccrued: inst.lateFeeAccrued,
+            lateFeeAccrued: 0.0,
             status: 'PAID',
           );
         }
         return inst;
       }).toList();
 
-      final newOutstanding = (c.outstandingAmount - 1140.0).clamp(0.0, 999999.0);
+      final newOutstanding = (c.outstandingAmount - paidThisTime).clamp(0.0, double.infinity);
+      final hasUnpaid = updatedInstallments.any((i) => i.status != 'PAID');
       selectedCase.value = LoanCaseModel(
         id: c.id,
         caseNo: c.caseNo,
@@ -521,7 +524,7 @@ class LoanController extends GetxController {
         product: c.product,
         requestedAmount: c.requestedAmount,
         tenureMonths: c.tenureMonths,
-        status: newOutstanding <= 0 ? 'COMPLETED' : c.status,
+        status: (!hasUnpaid || newOutstanding <= 0) ? 'COMPLETED' : c.status,
         customCoveragePct: c.customCoveragePct,
         customCollateralValueUsd: c.customCollateralValueUsd,
         collaterals: c.collaterals,

@@ -26,6 +26,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class AppUpdateScreen extends StatefulWidget {
   const AppUpdateScreen({super.key});
@@ -905,9 +906,15 @@ class _ErrorView extends StatelessWidget {
                 },
                 icon: const Icon(Icons.open_in_browser_rounded),
                 label: Text(
-                  Directionality.of(context) == TextDirection.rtl
-                      ? 'دانلود مستقیم از وب‌سایت'
-                      : 'Download from website',
+                  l10nPick(
+                    context,
+                    en: 'Download from website',
+                    fa: 'دانلود مستقیم از وب‌سایت',
+                    ar: 'تنزيل مباشر من الموقع',
+                    tr: 'Web sitesinden doğrudan indir',
+                    ru: 'Прямая загрузка с сайта',
+                    zh: '从网站直接下载',
+                  ),
                   style: AppTextStyles.labelMedium.copyWith(
                     fontWeight: FontWeight.w700,
                   ),

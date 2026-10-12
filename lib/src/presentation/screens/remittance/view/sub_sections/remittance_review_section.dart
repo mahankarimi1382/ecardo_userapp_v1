@@ -14,6 +14,8 @@ class RemittanceReviewSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = Get.find<RemittanceController>();
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Obx(() {
       final q = c.currentQuote.value;
       final m = c.selectedMethod.value;
@@ -24,9 +26,9 @@ class RemittanceReviewSection extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l.remittanceReviewConfirm, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+          Text(l.remittanceReviewConfirm, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
           SizedBox(height: 8.h),
-          Text(l.remittanceReviewHint, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
+          Text(l.remittanceReviewHint, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
           SizedBox(height: 16.h),
 
           // Rate hold countdown banner (matches review_transfer.html)
@@ -115,11 +117,15 @@ class RemittanceReviewSection extends StatelessWidget {
           SizedBox(height: 20.h),
           Container(
             padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(color: AppColors.warningContainer, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.warning.withValues(alpha: 0.3))),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.3)),
+            ),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Icon(Icons.info_outline, color: AppColors.warning, size: 18.sp),
               SizedBox(width: 8.w),
-              Expanded(child: Text(l.remittanceTermsNotice, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextPrimary))),
+              Expanded(child: Text(l.remittanceTermsNotice, style: TextStyle(fontSize: 11.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary))),
             ]),
           ),
         ],
@@ -134,15 +140,22 @@ class _Card extends StatelessWidget {
   const _Card(this.title, this.children);
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(color: AppColors.lightSurface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.lightBorder)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
-          SizedBox(height: 12.h),
-          ...children,
-        ]),
-      );
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+        SizedBox(height: 12.h),
+        ...children,
+      ]),
+    );
+  }
 }
 
 class _Row extends StatelessWidget {
@@ -151,12 +164,15 @@ class _Row extends StatelessWidget {
   const _Row(this.label, this.value, {this.bold = false});
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.only(bottom: 6.h),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
-          SizedBox(width: 12.w),
-          Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
-        ]),
-      );
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: EdgeInsets.only(bottom: 6.h),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(label, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+        SizedBox(width: 12.w),
+        Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
+      ]),
+    );
+  }
 }

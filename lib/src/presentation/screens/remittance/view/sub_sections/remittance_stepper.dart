@@ -17,6 +17,7 @@ class RemittanceStepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final stepLabels = [
       l.remittanceStepAmount,
       l.remittanceStepSender,
@@ -28,10 +29,10 @@ class RemittanceStepper extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkCard : AppColors.white,
         border: Border(
           bottom: BorderSide(
-            color: AppColors.lightBackground,
+            color: isDark ? AppColors.darkBorder : AppColors.lightBackground,
             width: 0.5,
           ),
         ),
@@ -48,7 +49,7 @@ class RemittanceStepper extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: 4.w),
                 color: isCompleted
                     ? AppColors.lightPrimary
-                    : AppColors.lightBackground,
+                    : (isDark ? AppColors.darkBorder : AppColors.lightBackground),
               ),
             );
           }
@@ -63,6 +64,7 @@ class RemittanceStepper extends StatelessWidget {
             label: stepLabels[stepIndex],
             isCurrent: isCurrent,
             isCompleted: isCompleted,
+            isDark: isDark,
           );
         }),
       ),
@@ -75,12 +77,14 @@ class _StepIndicator extends StatelessWidget {
   final String label;
   final bool isCurrent;
   final bool isCompleted;
+  final bool isDark;
 
   const _StepIndicator({
     required this.stepNumber,
     required this.label,
     required this.isCurrent,
     required this.isCompleted,
+    this.isDark = false,
   });
 
   @override
@@ -96,11 +100,11 @@ class _StepIndicator extends StatelessWidget {
     } else if (isCurrent) {
       bgColor = AppColors.lightPrimary;
       iconColor = AppColors.white;
-      textColor = AppColors.lightPrimary;
+      textColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
     } else {
-      bgColor = AppColors.lightBackground;
-      iconColor = AppColors.lightTextPrimary;
-      textColor = AppColors.lightTextPrimary;
+      bgColor = isDark ? const Color(0xFF26262C) : AppColors.lightBackground;
+      iconColor = isDark ? const Color(0xFF9E9EA4) : AppColors.lightTextPrimary.withValues(alpha: 0.6);
+      textColor = isDark ? const Color(0xFF9E9EA4) : AppColors.lightTextPrimary.withValues(alpha: 0.6);
     }
 
     return Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -31,8 +32,11 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      appBar: const CommonDefaultAppBar(),
       body: Column(
         children: [
           SizedBox(height: 16.h),
@@ -48,6 +52,7 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                 fontSize: 12,
                 backgroundColor: AppColors.success,
                 onPressed: () {
+                  HapticFeedback.lightImpact();
                   controller.fetchCardTransactionsBySync(
                     cardId: cardId,
                     isSync: "true",
@@ -64,14 +69,14 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                 cardId: cardId,
                 endpoint: endpoint,
               ),
-              color: AppColors.lightPrimary,
+              color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
               child: Obx(() {
                 if (controller.isLoading.value) {
                   return const CommonLoading();
                 }
 
                 if (controller.cardTransactionList.isEmpty) {
-                  return NoDataFound();
+                  return const NoDataFound();
                 }
 
                 return ListView.separated(
@@ -80,7 +85,7 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                     vertical: 16.h,
                   ),
                   itemCount: controller.cardTransactionList.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                  separatorBuilder: (context, index) => SizedBox(height: 10.h),
                   itemBuilder: (context, index) {
                     final transaction = controller.cardTransactionList[index];
                     final isSuccess = transaction.status == "Success";
@@ -98,18 +103,33 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                         ? Icons.pending_rounded
                         : Icons.error_rounded;
 
-                    return Padding(
-                      padding: EdgeInsets.all(16.r),
+                    return Container(
+                      padding: EdgeInsets.all(14.r),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkSurface : AppColors.white,
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          width: 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
                       child: Row(
                         children: [
                           Container(
-                            width: 40.w,
-                            height: 40.h,
+                            width: 42.w,
+                            height: 42.h,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.r),
-                              color: statusColor.withValues(alpha: 0.1),
+                              color: statusColor.withValues(alpha: isDark ? 0.20 : 0.12),
                             ),
-                            child: Icon(icon, color: statusColor, size: 20.w),
+                            child: Icon(icon, color: statusColor, size: 22.w),
                           ),
                           SizedBox(width: 12.w),
                           Expanded(
@@ -120,23 +140,23 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        transaction.merchantData!.name!,
+                                        transaction.merchantData?.name ?? '--',
                                         style: TextStyle(
                                           letterSpacing: 0,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14.sp,
-                                          color: AppColors.lightTextPrimary,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 14.5.sp,
+                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     SizedBox(width: 8.w),
                                     Text(
-                                      "${transaction.amount} ${transaction.currency}",
+                                      "${transaction.amount ?? '0'} ${transaction.currency ?? ''}",
                                       style: TextStyle(
                                         letterSpacing: 0,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 14.5.sp,
                                         color: isSuccess
                                             ? AppColors.success
                                             : AppColors.error,
@@ -144,28 +164,28 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 4.h),
+                                SizedBox(height: 5.h),
                                 Row(
                                   children: [
                                     Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 8.w,
-                                        vertical: 4.h,
+                                        vertical: 3.h,
                                       ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
-                                          12.r,
+                                          6.r,
                                         ),
                                         color: statusColor.withValues(
-                                          alpha: 0.1,
+                                          alpha: isDark ? 0.20 : 0.10,
                                         ),
                                       ),
                                       child: Text(
-                                        transaction.status!,
+                                        transaction.status ?? '--',
                                         style: TextStyle(
                                           letterSpacing: 0,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 10.5.sp,
                                           color: statusColor,
                                         ),
                                       ),
@@ -173,12 +193,12 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                                     SizedBox(width: 8.w),
                                     Expanded(
                                       child: Text(
-                                        transaction.created!,
+                                        transaction.created ?? '',
                                         style: TextStyle(
                                           letterSpacing: 0,
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 12.sp,
-                                          color: AppColors.lightTextTertiary,
+                                          fontSize: 11.5.sp,
+                                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),

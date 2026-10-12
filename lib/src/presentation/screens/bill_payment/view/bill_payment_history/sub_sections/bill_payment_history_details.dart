@@ -16,6 +16,7 @@ class BillPaymentHistoryDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final currency = Get.find<SettingsService>().getSetting("site_currency");
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedContainer(
       width: double.infinity,
@@ -23,11 +24,14 @@ class BillPaymentHistoryDetails extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       margin: const EdgeInsetsDirectional.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : Colors.transparent,
+        ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
+            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.06),
             blurRadius: 40,
           ),
         ],
@@ -36,7 +40,7 @@ class BillPaymentHistoryDetails extends StatelessWidget {
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
         child: Column(
           children: [
-            _buildHeader(localization),
+            _buildHeader(localization, isDark),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -46,33 +50,38 @@ class BillPaymentHistoryDetails extends StatelessWidget {
                     _detail(
                       localization.billPaymentDetailsTime,
                       bill.createdAt,
+                      isDark: isDark,
                     ),
 
                     _detail(
                       localization.billPaymentDetailsAmount,
                       '${bill.amount} $currency',
+                      isDark: isDark,
                     ),
 
                     _detail(
                       localization.billPaymentDetailsCharge,
                       '${bill.charge} $currency',
                       color: AppColors.error,
+                      isDark: isDark,
                     ),
 
                     _detail(
                       localization.billPaymentDetailsMethod,
                       bill.method,
-                      color: AppColors.lightPrimary,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      isDark: isDark,
                     ),
 
                     _buildDetailRow(
                       label: localization.billPaymentDetailsStatus,
                       value: _buildStatusChip(bill.status),
+                      isDark: isDark,
                     ),
 
                     if (bill.metadata != null && bill.metadata!.isNotEmpty)
                       ...bill.metadata!.map(
-                        (meta) => _detail(meta.key, meta.value),
+                        (meta) => _detail(meta.key, meta.value, isDark: isDark),
                       ),
 
                     const SizedBox(height: 50),
@@ -86,21 +95,22 @@ class BillPaymentHistoryDetails extends StatelessWidget {
     );
   }
 
-  Widget _detail(String label, String? value, {Color? color}) {
+  Widget _detail(String label, String? value, {Color? color, required bool isDark}) {
     return _buildDetailRow(
       label: label,
+      isDark: isDark,
       value: Text(
         value ?? '',
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w900,
-          color: color ?? AppColors.lightTextPrimary,
+          color: color ?? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
         ),
       ),
     );
   }
 
-  Widget _buildDetailRow({required String label, required Widget value}) {
+  Widget _buildDetailRow({required String label, required Widget value, required bool isDark}) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 20),
       child: Row(
@@ -111,7 +121,7 @@ class BillPaymentHistoryDetails extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextTertiary,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
             ),
           ),
           Flexible(child: value),
@@ -120,7 +130,7 @@ class BillPaymentHistoryDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(AppLocalizations localization) {
+  Widget _buildHeader(AppLocalizations localization, bool isDark) {
     return Column(
       children: [
         const SizedBox(height: 12),
@@ -128,17 +138,21 @@ class BillPaymentHistoryDetails extends StatelessWidget {
           width: 40,
           height: 5,
           decoration: BoxDecoration(
-            color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+            color: (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary).withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(30),
           ),
         ),
         const SizedBox(height: 20),
         Text(
           localization.billPaymentDetailsTitle,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
         ),
         const SizedBox(height: 16),
-        Divider(color: AppColors.lightTextPrimary.withValues(alpha: 0.1)),
+        Divider(color: isDark ? AppColors.darkDivider : AppColors.lightTextPrimary.withValues(alpha: 0.1)),
         const SizedBox(height: 16),
       ],
     );

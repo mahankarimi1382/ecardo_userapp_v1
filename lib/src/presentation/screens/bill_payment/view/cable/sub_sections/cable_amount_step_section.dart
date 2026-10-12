@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -20,6 +20,10 @@ class CableAmountStepSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final CableController controller = Get.find();
     final localization = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final containerBg = isDark ? AppColors.darkSurface : AppColors.white;
+    final inputBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final suffixColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
 
     return Expanded(
       child: Container(
@@ -30,19 +34,19 @@ class CableAmountStepSection extends StatelessWidget {
             topStart: Radius.circular(30.r),
             topEnd: Radius.circular(30.r),
           ),
-          color: AppColors.white,
+          color: containerBg,
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.06),
+              color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.06),
               spreadRadius: 0,
               blurRadius: 40,
-              offset: Offset(0, 0),
+              offset: const Offset(0, 0),
             ),
           ],
         ),
         child: Obx(() {
           if (controller.isLoading.value) {
-            return CommonLoading();
+            return const CommonLoading();
           }
           return SingleChildScrollView(
             child: Column(
@@ -53,10 +57,13 @@ class CableAmountStepSection extends StatelessWidget {
                   isLabelRequired: true,
                   dynamicField: Obx(
                     () => CommonTextInputField(
-                      suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
+                      suffixIcon: Image.asset(
+                        PngAssets.arrowDownCommonIcon,
+                        color: isDark ? AppColors.darkTextSecondary : null,
+                      ),
                       focusNode: controller.countryFocusNode,
                       isFocused: controller.isCountryFocused.value,
-                      backgroundColor: AppColors.lightBackground,
+                      backgroundColor: inputBg,
                       onTap: () {
                         Get.bottomSheet(
                           CommonDropdownBottomSheet(
@@ -103,7 +110,7 @@ class CableAmountStepSection extends StatelessWidget {
                       },
                       hintText: localization.cableCountryHint,
                       controller: controller.countryController,
-                      suffixIconColor: AppColors.lightTextTertiary,
+                      suffixIconColor: suffixColor,
                       readOnly: true,
                     ),
                   ),
@@ -114,10 +121,13 @@ class CableAmountStepSection extends StatelessWidget {
                   isLabelRequired: true,
                   dynamicField: Obx(
                     () => CommonTextInputField(
-                      suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
+                      suffixIcon: Image.asset(
+                        PngAssets.arrowDownCommonIcon,
+                        color: isDark ? AppColors.darkTextSecondary : null,
+                      ),
                       focusNode: controller.serviceFocusNode,
                       isFocused: controller.isServiceFocused.value,
-                      backgroundColor: AppColors.lightBackground,
+                      backgroundColor: inputBg,
                       onTap: () {
                         Get.bottomSheet(
                           CommonDropdownBottomSheetThree<PayBillServiceData>(
@@ -151,7 +161,7 @@ class CableAmountStepSection extends StatelessWidget {
                       },
                       hintText: localization.cableServiceHint,
                       controller: controller.serviceController,
-                      suffixIconColor: AppColors.lightTextTertiary,
+                      suffixIconColor: suffixColor,
                       readOnly: true,
                     ),
                   ),
@@ -186,7 +196,7 @@ class CableAmountStepSection extends StatelessWidget {
                       keyboardType: TextInputType.number,
                       focusNode: controller.amountFocusNode,
                       isFocused: controller.isAmountFocused.value,
-                      backgroundColor: AppColors.lightBackground,
+                      backgroundColor: inputBg,
                       hintText: "",
                       controller: controller.amountController,
                       isSuffixIconCompact: false,
@@ -197,9 +207,11 @@ class CableAmountStepSection extends StatelessWidget {
                             letterSpacing: 0,
                             fontWeight: FontWeight.w900,
                             fontSize: 15,
-                            color: AppColors.lightTextPrimary.withValues(
-                              alpha: 0.40,
-                            ),
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextPrimary.withValues(
+                                    alpha: 0.40,
+                                  ),
                           ),
                         ),
                       ),
@@ -220,7 +232,7 @@ class CableAmountStepSection extends StatelessWidget {
                             () => CommonTextInputField(
                               focusNode: controller.dynamicFieldsFocusNode,
                               isFocused: controller.isDynamicFieldFocused.value,
-                              backgroundColor: AppColors.lightBackground,
+                              backgroundColor: inputBg,
                               controller: entry.value,
                               hintText: "",
                               keyboardType: TextInputType.text,

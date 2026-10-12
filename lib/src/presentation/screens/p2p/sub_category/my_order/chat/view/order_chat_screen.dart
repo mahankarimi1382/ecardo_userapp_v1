@@ -48,22 +48,24 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final counterparty = _counterpartyName(widget.role);
     final initial = counterparty.isNotEmpty
         ? counterparty[0].toUpperCase()
         : 'U';
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
         leading: IconButton(
           onPressed: Get.back,
           icon: Image.asset(
             PngAssets.arrowLeftCommonIcon,
             width: 24.w,
-            color: AppColors.lightTextPrimary,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         titleSpacing: 0,
@@ -71,16 +73,16 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
           children: [
             CircleAvatar(
               radius: 16.r,
-              backgroundColor: AppColors.lightTextPrimary.withValues(
-                alpha: 0.7,
-              ),
+              backgroundColor: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightTextPrimary.withValues(alpha: 0.7),
               child: Text(
                 initial,
                 style: TextStyle(
                   letterSpacing: 0,
                   fontWeight: FontWeight.w700,
                   fontSize: 12.sp,
-                  color: AppColors.white,
+                  color: isDark ? AppColors.warmWhite : AppColors.white,
                 ),
               ),
             ),
@@ -91,7 +93,7 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                 letterSpacing: 0,
                 fontWeight: FontWeight.w700,
                 fontSize: 16.sp,
-                color: AppColors.lightTextPrimary,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
           ],
@@ -105,10 +107,12 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
               child: Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: isDark ? AppColors.darkSurface : AppColors.white,
                   borderRadius: BorderRadius.circular(14.r),
                   border: Border.all(
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.08),
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightTextPrimary.withValues(alpha: 0.08),
                   ),
                 ),
                 child: Obx(() {
@@ -123,9 +127,9 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                           letterSpacing: 0,
                           fontWeight: FontWeight.w500,
                           fontSize: 14.sp,
-                          color: AppColors.lightTextPrimary.withValues(
-                            alpha: 0.6,
-                          ),
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextPrimary.withValues(alpha: 0.6),
                         ),
                       ),
                     );
@@ -149,20 +153,22 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
               ),
             ),
           ),
-          _buildComposer(localization),
+          _buildComposer(localization, isDark),
         ],
       ),
     );
   }
 
-  Widget _buildComposer(AppLocalizations localization) {
+  Widget _buildComposer(AppLocalizations localization, bool isDark) {
+    final primaryAccent = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+
     return Container(
       padding: EdgeInsetsDirectional.fromSTEB(12.w, 8.h, 12.w, 12.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.white,
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -183,8 +189,13 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                     vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.1),
+                    color: isDark
+                        ? AppColors.darkPrimaryContainer
+                        : AppColors.lightPrimary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                      color: primaryAccent.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -197,7 +208,7 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                             letterSpacing: 0,
                             fontWeight: FontWeight.w600,
                             fontSize: 12.sp,
-                            color: AppColors.lightPrimary,
+                            color: primaryAccent,
                           ),
                         ),
                       ),
@@ -206,7 +217,7 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                         child: Icon(
                           Icons.close_rounded,
                           size: 18.w,
-                          color: AppColors.lightPrimary,
+                          color: primaryAccent,
                         ),
                       ),
                     ],
@@ -221,8 +232,11 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                     height: 44.h,
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     decoration: BoxDecoration(
-                      color: AppColors.lightBackground,
+                      color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
                       borderRadius: BorderRadius.circular(22.r),
+                      border: Border.all(
+                        color: isDark ? AppColors.darkBorder : Colors.transparent,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -238,16 +252,18 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13.sp,
-                                color: AppColors.lightTextPrimary.withValues(
-                                  alpha: 0.45,
-                                ),
+                                color: isDark
+                                    ? AppColors.darkTextHint
+                                    : AppColors.lightTextPrimary.withValues(
+                                        alpha: 0.45,
+                                      ),
                               ),
                             ),
                             style: TextStyle(
                               letterSpacing: 0,
                               fontWeight: FontWeight.w500,
                               fontSize: 14.sp,
-                              color: AppColors.lightTextPrimary,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                           ),
                         ),
@@ -256,9 +272,9 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                           child: Icon(
                             Icons.attach_file_rounded,
                             size: 22.w,
-                            color: AppColors.lightTextPrimary.withValues(
-                              alpha: 0.6,
-                            ),
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextPrimary.withValues(alpha: 0.6),
                           ),
                         ),
                       ],
@@ -275,8 +291,15 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                       width: 44.w,
                       height: 44.h,
                       decoration: BoxDecoration(
-                        color: AppColors.lightPrimary,
+                        color: primaryAccent,
                         shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: primaryAccent.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: controller.isSending.value
                           ? Center(
@@ -306,15 +329,19 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
   }
 
   void _showAttachmentPicker() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     Get.bottomSheet(
       Container(
         margin: EdgeInsets.symmetric(horizontal: 12.w),
         padding: EdgeInsetsDirectional.fromSTEB(16.w, 14.h, 16.w, 20.h),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: isDark ? AppColors.darkSurface : AppColors.white,
           borderRadius: BorderRadiusDirectional.only(
             topStart: Radius.circular(20.r),
             topEnd: Radius.circular(20.r),
+          ),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : Colors.transparent,
           ),
         ),
         child: Column(
@@ -324,7 +351,7 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
               width: 45.w,
               height: 6.h,
               decoration: BoxDecoration(
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                color: (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary).withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(30.r),
               ),
             ),
@@ -361,10 +388,11 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
   void _showAttachmentPreview(chat_model.Attachment attachment) {
     final url = attachment.path;
     if (url == null || url.isEmpty) return;
+    final isDark = Theme.of(Get.context!).brightness == Brightness.dark;
 
     Get.dialog(
       Dialog(
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14.r),
         ),
@@ -386,7 +414,7 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                         letterSpacing: 0,
                         fontWeight: FontWeight.w700,
                         fontSize: 14.sp,
-                        color: AppColors.lightTextPrimary,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                   ),
@@ -395,7 +423,7 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                     child: Icon(
                       Icons.close_rounded,
                       size: 20.w,
-                      color: AppColors.lightTextPrimary,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -417,9 +445,11 @@ class _OrderChatScreenState extends State<OrderChatScreen> {
                           letterSpacing: 0,
                           fontWeight: FontWeight.w500,
                           fontSize: 12.sp,
-                          color: AppColors.lightTextPrimary.withValues(
-                            alpha: 0.6,
-                          ),
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextPrimary.withValues(
+                                  alpha: 0.6,
+                                ),
                         ),
                       ),
                     ),

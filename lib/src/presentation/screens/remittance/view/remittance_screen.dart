@@ -24,16 +24,17 @@ class RemittanceScreen extends StatelessWidget {
         ? Get.find<RemittanceController>()
         : Get.put(RemittanceController());
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.lightSurface,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.lightSurface,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
+          icon: Icon(Icons.arrow_back, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
           onPressed: () {
             if (controller.currentStep.value > 0) {
               controller.previousStep();
@@ -42,15 +43,15 @@ class RemittanceScreen extends StatelessWidget {
             }
           },
         ),
-        title: Text(l.remittanceTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+        title: Text(l.remittanceTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.track_changes, color: AppColors.lightTextPrimary),
+            icon: Icon(Icons.track_changes, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
             tooltip: 'رهگیری حواله',
             onPressed: () => Get.toNamed(BaseRoute.remittanceTrack),
           ),
           IconButton(
-            icon: const Icon(Icons.history, color: AppColors.lightTextPrimary),
+            icon: Icon(Icons.history, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
             onPressed: () => Get.toNamed(BaseRoute.remittanceHistory),
           ),
         ],
@@ -72,7 +73,7 @@ class RemittanceScreen extends StatelessWidget {
                     child: _buildStep(controller),
                   ),
           ),
-          _buildBottomButton(controller, l),
+          _buildBottomButton(context, controller, l),
         ]);
       }),
     );
@@ -89,7 +90,8 @@ class RemittanceScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildBottomButton(RemittanceController c, AppLocalizations l) {
+  Widget _buildBottomButton(BuildContext context, RemittanceController c, AppLocalizations l) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Obx(() {
       final step = c.currentStep.value;
       final loading = c.isQuoteLoading.value || c.isSubmitLoading.value || c.isUploadLoading.value;
@@ -154,8 +156,14 @@ class RemittanceScreen extends StatelessWidget {
       return Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.lightSurface,
-          boxShadow: [BoxShadow(color: AppColors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2))],
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          boxShadow: [
+            BoxShadow(
+              color: (isDark ? Colors.black : AppColors.black).withValues(alpha: isDark ? 0.25 : 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: SafeArea(
           child: SizedBox(
@@ -164,7 +172,7 @@ class RemittanceScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.lightPrimary,
+                backgroundColor: isDark ? AppColors.brandViolet : AppColors.lightPrimary,
                 foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 0,

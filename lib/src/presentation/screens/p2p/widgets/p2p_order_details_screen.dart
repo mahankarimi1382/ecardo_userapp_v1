@@ -45,7 +45,7 @@ class P2pOrderDetailsScreen extends StatelessWidget {
                 letterSpacing: 0,
                 fontWeight: FontWeight.w600,
                 fontSize: 14.sp,
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.6),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextPrimary.withValues(alpha: 0.6),
               ),
             ),
           );

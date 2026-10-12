@@ -65,7 +65,7 @@ class LicenseService extends getx.GetxService {
   /// Pay for order from wallet balance
   Future<bool> payOrder(String orderNumber) async {
     final ApiResponse<Map<String, dynamic>> res = await _network.post(
-      endpoint: '/user/licenses/orders/$orderNumber/pay',
+      endpoint: '/user/licenses/orders/$orderNumber/pay-wallet',
       data: {'payment_method': 'WALLET'},
     );
     return res.status == Status.completed;
@@ -74,7 +74,7 @@ class LicenseService extends getx.GetxService {
   /// Get purchased license keys / vault
   Future<List<LicenseKeyItem>> getMyLicenses() async {
     final ApiResponse<Map<String, dynamic>> res = await _network.get(
-      endpoint: '/user/licenses/my',
+      endpoint: '/user/licenses/my-licenses',
     );
     if (res.status == Status.completed && res.data != null) {
       final list = res.data!['data']?['licenses'] as List? ?? [];
@@ -86,7 +86,7 @@ class LicenseService extends getx.GetxService {
   /// Get user's order history
   Future<List<LicenseOrderItem>> getMyOrders() async {
     final ApiResponse<Map<String, dynamic>> res = await _network.get(
-      endpoint: '/user/licenses/orders',
+      endpoint: '/user/licenses/my-orders',
     );
     if (res.status == Status.completed && res.data != null) {
       final list = res.data!['data']?['orders'] as List? ?? [];

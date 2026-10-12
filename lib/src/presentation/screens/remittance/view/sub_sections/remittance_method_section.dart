@@ -38,6 +38,7 @@ class RemittanceMethodSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<RemittanceController>();
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Obx(() {
       // Empty-methods state now carries a RETRY action so a transient
@@ -68,13 +69,13 @@ class RemittanceMethodSection extends StatelessWidget {
             return Padding(
               padding: EdgeInsets.only(top: 8.h),
               child: Row(children: [
-                Icon(Icons.rule, size: 14.sp, color: AppColors.lightTextSecondary),
+                Icon(Icons.rule, size: 14.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                 SizedBox(width: 6.w),
                 Expanded(
                   child: Text(
                     l.remittanceAmountLimitHint(minText, maxText),
                     style: TextStyle(
-                        fontSize: 11.sp, color: AppColors.lightTextSecondary),
+                        fontSize: 11.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                   ),
                 ),
               ]),
@@ -89,7 +90,7 @@ class RemittanceMethodSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextPrimary,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 4.h),
@@ -97,7 +98,7 @@ class RemittanceMethodSection extends StatelessWidget {
             l.remittanceSelectPayoutMethod,
             style: TextStyle(
               fontSize: 11.sp,
-              color: AppColors.lightTextSecondary,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
           ),
           SizedBox(height: 12.h),
@@ -131,12 +132,15 @@ class _YouSendCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: AppColors.lightPrimaryContainer,
+        color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.lightPrimary.withValues(alpha: 0.25)),
+        border: Border.all(color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +150,7 @@ class _YouSendCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightPrimary,
+              color: primaryColor,
             ),
           ),
           SizedBox(height: 10.h),
@@ -166,21 +170,12 @@ class _YouSendCard extends StatelessWidget {
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                   ],
                   isBorderShow: false,
-                  backgroundColor: AppColors.white,
+                  backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
                 ),
               ),
               SizedBox(width: 10.w),
               // Send-currency picker — fixed-width so the amount keeps most
               // of the row; vertically centered with the input.
-              //
-              // T14 FIX (USER-REPORTED gray box): the previous closure
-              // `Obx(() => _SendCurrencyPicker(...))` read NO observable inside
-              // the closure itself — the reads lived inside the child's own
-              // build(), which runs OUTSIDE GetX's tracking window
-              // (RxInterface.notifyChildren). GetX then threw "improper use of
-              // Obx" on every build and Flutter rendered the gray ErrorWidget
-              // exactly where this picker belongs. All observables are now read
-              // HERE and passed down as plain values.
               Expanded(
                 flex: 4,
                 child: Obx(() {
@@ -218,6 +213,7 @@ class _NoMethodsState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
@@ -228,7 +224,7 @@ class _NoMethodsState extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: AppColors.lightTextSecondary,
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 fontSize: 14.sp,
               ),
             ),
@@ -254,9 +250,11 @@ class _MethodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final rcCode = (method.receiveCurrencyCode ?? '').toUpperCase();
     final isActive = method.isActive;
     final subtitle = method.description ?? method.countryCode?.toUpperCase();
+    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
 
     return GestureDetector(
       onTap: isActive
@@ -274,13 +272,15 @@ class _MethodCard extends StatelessWidget {
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.lightPrimaryContainer
-              : (isActive ? AppColors.lightSurface : AppColors.lightBackground.withValues(alpha: 0.6)),
+              ? (isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer)
+              : (isActive
+                  ? (isDark ? AppColors.darkSurface : AppColors.lightSurface)
+                  : (isDark ? AppColors.darkBackground.withValues(alpha: 0.6) : AppColors.lightBackground.withValues(alpha: 0.6))),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? AppColors.lightPrimary
-                : AppColors.lightBorder,
+                ? primaryColor
+                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -291,13 +291,13 @@ class _MethodCard extends StatelessWidget {
               height: 40.w,
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppColors.lightPrimaryContainer
-                    : AppColors.lightBorder.withValues(alpha: 0.5),
+                    ? (isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer)
+                    : (isDark ? AppColors.darkBorder.withValues(alpha: 0.5) : AppColors.lightBorder.withValues(alpha: 0.5)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.account_balance,
-                color: isActive ? AppColors.lightPrimary : AppColors.softGray,
+                color: isActive ? primaryColor : AppColors.softGray,
                 size: 20.sp,
               ),
             ),
@@ -311,7 +311,9 @@ class _MethodCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: isActive ? AppColors.lightTextPrimary : AppColors.softGray,
+                      color: isActive
+                          ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                          : AppColors.softGray,
                     ),
                   ),
                   if (subtitle != null) ...[
@@ -320,7 +322,7 @@ class _MethodCard extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: AppColors.lightTextSecondary,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -347,7 +349,7 @@ class _MethodCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: AppColors.lightBackground,
+                  color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -355,14 +357,14 @@ class _MethodCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextSecondary,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
             ],
             SizedBox(width: 8.w),
             if (isSelected)
-              Icon(Icons.check_circle, color: AppColors.lightPrimary, size: 20.sp),
+              Icon(Icons.check_circle, color: primaryColor, size: 20.sp),
           ],
         ),
       ),
@@ -371,20 +373,12 @@ class _MethodCard extends StatelessWidget {
 }
 
 /// Dropdown picker for the SEND currency.
-///
-/// Renders one of three states based on the controller's Rx state:
-///   - Loading: a disabled DropdownButton with a "Loading…" hint.
-///   - Empty:    a disabled DropdownButton with an "No currencies" hint.
-///   - Ready:    a DropdownButton bound to `selectedSendCurrencyId`.
 class _SendCurrencyPicker extends StatelessWidget {
   const _SendCurrencyPicker({
     required this.controller,
     required this.label,
     required this.loadingLabel,
     required this.emptyLabel,
-    // T14 FIX — plain snapshots of the Rx state, read by the parent Obx
-    // closure (see the call site). This widget must NOT read .value itself:
-    // its build runs outside GetX's tracking window.
     required this.loading,
     required this.selectedId,
     required this.currencies,
@@ -400,13 +394,17 @@ class _SendCurrencyPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final hintColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     if (loading) {
       return _pickerContainer(
+        context: context,
         child: Row(children: [
           SizedBox(width: 14.w, height: 14.w, child: const CircularProgressIndicator(strokeWidth: 2)),
           SizedBox(width: 8.w),
           Flexible(
-            child: Text(loadingLabel, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+            child: Text(loadingLabel, style: TextStyle(fontSize: 12.sp, color: hintColor),
                 overflow: TextOverflow.ellipsis),
           ),
         ]),
@@ -415,7 +413,8 @@ class _SendCurrencyPicker extends StatelessWidget {
 
     if (currencies.isEmpty) {
       return _pickerContainer(
-        child: Text(emptyLabel, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
+        context: context,
+        child: Text(emptyLabel, style: TextStyle(fontSize: 12.sp, color: hintColor)),
       );
     }
 
@@ -430,11 +429,13 @@ class _SendCurrencyPicker extends StatelessWidget {
     }
 
     return _pickerContainer(
+      context: context,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<CurrenciesData>(
           value: selected,
           isExpanded: true,
-          hint: Text(label, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
+          dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
+          hint: Text(label, style: TextStyle(fontSize: 12.sp, color: hintColor)),
           items: currencies.map((c) {
             final code = (c.code ?? '').toUpperCase();
             final name = c.name ?? '';
@@ -442,7 +443,10 @@ class _SendCurrencyPicker extends StatelessWidget {
             return DropdownMenuItem<CurrenciesData>(
               value: c,
               child: Text(display,
-                  style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
                   overflow: TextOverflow.ellipsis),
             );
           }).toList(),
@@ -454,13 +458,14 @@ class _SendCurrencyPicker extends StatelessWidget {
     );
   }
 
-  Widget _pickerContainer({required Widget child}) {
+  Widget _pickerContainer({required BuildContext context, required Widget child}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lightBorder, width: 1),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder, width: 1),
       ),
       child: child,
     );
@@ -475,9 +480,9 @@ class _QuotePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Task-12 — rate-source badge: 'admin' = operator-guaranteed rate,
-    // 'auto' = market rate + margin. Additive quote field; unknown values
-    // hide the badge.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+
     final source = quote.rateSource;
     final sourceLabel = source == 'admin'
         ? l.remittanceRateSourceAdmin
@@ -487,42 +492,39 @@ class _QuotePreview extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: AppColors.lightPrimaryContainer,
+        color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lightPrimary.withValues(alpha: 0.2)),
+        border: Border.all(color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
-            Icon(Icons.lock_clock, color: AppColors.lightPrimary, size: 16.sp),
+            Icon(Icons.lock_clock, color: primaryColor, size: 16.sp),
             SizedBox(width: 6.w),
             Obx(() => Text(l.remittanceRateLocked(controller.rateExpiresInSeconds.value),
-                style: TextStyle(fontSize: 12.sp, color: AppColors.lightPrimary, fontWeight: FontWeight.w600))),
+                style: TextStyle(fontSize: 12.sp, color: primaryColor, fontWeight: FontWeight.w600))),
             const Spacer(),
             if (sourceLabel != null)
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: isDark ? AppColors.darkSurface : AppColors.white,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.lightPrimary.withValues(alpha: 0.3)),
+                  border: Border.all(color: primaryColor.withValues(alpha: isDark ? 0.4 : 0.3)),
                 ),
                 child: Text(sourceLabel,
-                    style: TextStyle(fontSize: 10.sp, color: AppColors.lightPrimary, fontWeight: FontWeight.w600)),
+                    style: TextStyle(fontSize: 10.sp, color: primaryColor, fontWeight: FontWeight.w600)),
               ),
           ]),
           SizedBox(height: 12.h),
           _Row(l.remittanceReceiverGets, controller.formatReceiveAmount(quote.receiveAmount, quote.receiveCurrencyId), bold: true),
           SizedBox(height: 6.h),
-          // T14 FIX — dynamic precision for tiny rates (was toStringAsFixed(4)).
           _Row(l.remittanceExchangeRate, '1 = ${controller.formatRate(quote.exchangeRate)}'),
           SizedBox(height: 6.h),
-          // M-7 — decimals now come from DynamicDecimalsHelper via the
-          // controller (API-driven); falls back to 2 like before.
           _Row(l.remittanceSystemFee, controller.formatAmount(quote.systemFee, currencyId: quote.sendCurrencyId)),
           SizedBox(height: 8.h),
-          Divider(color: AppColors.lightBorder, height: 1),
+          Divider(color: isDark ? AppColors.darkDivider : AppColors.lightBorder, height: 1),
           SizedBox(height: 8.h),
           _Row(l.remittanceTotalPayable, controller.formatAmount(quote.totalPayable, currencyId: quote.sendCurrencyId), bold: true),
         ],
@@ -539,11 +541,12 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: 13.sp, color: AppColors.lightTextSecondary, fontWeight: bold ? FontWeight.w600 : FontWeight.w400)),
-        Text(value, style: TextStyle(fontSize: 13.sp, color: AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500)),
+        Text(label, style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary, fontWeight: bold ? FontWeight.w600 : FontWeight.w400)),
+        Text(value, style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500)),
       ],
     );
   }

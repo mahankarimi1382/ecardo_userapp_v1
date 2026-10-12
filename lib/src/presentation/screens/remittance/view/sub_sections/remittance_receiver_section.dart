@@ -42,10 +42,12 @@ class RemittanceReceiverSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = Get.find<RemittanceController>();
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l.remittanceReceiverInfo, style: _title()),
+        Text(l.remittanceReceiverInfo, style: _title(context)),
         SizedBox(height: 16.h),
         _Label(l.remittanceReceiverName),
         _Field(c.receiverNameController, l.remittanceReceiverName),
@@ -63,11 +65,11 @@ class RemittanceReceiverSection extends StatelessWidget {
         _Label(l.remittanceReceiverPhone),
         _Field(c.receiverPhoneController, '+86 138 0000 0000', keyboardType: TextInputType.phone),
         SizedBox(height: 24.h),
-        Divider(color: AppColors.lightBorder),
+        Divider(color: isDark ? AppColors.darkDivider : AppColors.lightBorder),
         SizedBox(height: 16.h),
-        Text(l.remittancePayoutDetails, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
+        Text(l.remittancePayoutDetails, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
         SizedBox(height: 4.h),
-        Text(l.remittancePayoutDetailsHint, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
+        Text(l.remittancePayoutDetailsHint, style: TextStyle(fontSize: 11.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
         SizedBox(height: 16.h),
         // Task-12 — dynamic fields driven by the selected method. Wrapped
         // in Obx so switching the payout method re-renders the form.
@@ -117,7 +119,10 @@ class RemittanceReceiverSection extends StatelessWidget {
     return RemittanceMethodField(name: name, label: labels[name] ?? name);
   }
 
-  TextStyle _title() => TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary);
+  TextStyle _title(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary);
+  }
 }
 
 class _LabeledField extends StatelessWidget {
@@ -156,10 +161,13 @@ class _Label extends StatelessWidget {
   final String text;
   const _Label(this.text);
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.only(bottom: 6.h),
-        child: Text(text, style: TextStyle(fontSize: 13.sp, color: AppColors.lightTextSecondary)),
-      );
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: EdgeInsets.only(bottom: 6.h),
+      child: Text(text, style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+    );
+  }
 }
 
 class _Field extends StatelessWidget {
@@ -169,18 +177,30 @@ class _Field extends StatelessWidget {
   const _Field(this.controller, this.hint, {this.keyboardType});
 
   @override
-  Widget build(BuildContext context) => TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.lightTextHint),
-          contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightBorder)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightBorder)),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: AppColors.lightPrimary, width: 1.5)),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      style: TextStyle(
+        fontSize: 14.sp,
+        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+      ),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+        hintText: hint,
+        hintStyle: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint),
+        contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: borderColor)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: borderColor)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primaryColor, width: 1.5)),
+      ),
+    );
+  }
 }
 
 class _CountryDropdown extends StatelessWidget {
@@ -196,24 +216,35 @@ class _CountryDropdown extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.lightBorder),
-          borderRadius: BorderRadius.circular(8),
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: countries.any((c) => c.$1 == value) && value.isNotEmpty
+              ? value
+              : null,
+          dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
+          hint: Text(hint, style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint)),
+          isExpanded: true,
+          items: countries
+              .map((c) => DropdownMenuItem(
+                    value: c.$1,
+                    child: Text('${c.$1} — ${c.$2}',
+                        style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+                  ))
+              .toList(),
+          onChanged: onChanged,
         ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: countries.any((c) => c.$1 == value) && value.isNotEmpty
-                ? value
-                : null,
-            hint: Text(hint, style: TextStyle(fontSize: 14.sp, color: AppColors.lightTextHint)),
-            isExpanded: true,
-            items: countries
-                .map((c) => DropdownMenuItem(value: c.$1, child: Text('${c.$1} — ${c.$2}', style: TextStyle(fontSize: 14.sp))))
-                .toList(),
-            onChanged: onChanged,
-          ),
-        ),
-      );
+      ),
+    );
+  }
 }

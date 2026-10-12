@@ -75,6 +75,10 @@ class BillPaymentResultStepSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final dividerColor = isDark ? AppColors.darkDivider : AppColors.lightDivider;
+
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       child: Padding(
@@ -100,86 +104,105 @@ class BillPaymentResultStepSection extends StatelessWidget {
                     Text(
                       textAlign: TextAlign.center,
                       _headline!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w900,
                         fontSize: 18,
-                        color: AppColors.lightTextPrimary,
+                        color: primaryTextColor,
                       ),
                     ),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: isDark ? AppColors.darkSurface : AppColors.white,
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  width: 1.0,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: (isDark ? Colors.black : AppColors.black).withValues(alpha: isDark ? 0.25 : 0.05),
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
                   _buildResultDynamicContent(
+                    context: context,
                     title: amountLabel,
                     content: amountValue,
-                    contentColor: AppColors.lightTextPrimary,
+                    contentColor: primaryTextColor,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
+                    height: 1,
+                    color: dividerColor,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   _buildResultDynamicContent(
+                    context: context,
                     title: chargeLabel,
                     content: chargeValue,
                     contentColor: AppColors.error,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Divider(
-                    height: 0,
-                    color: AppColors.black.withValues(alpha: 0.10),
+                    height: 1,
+                    color: dividerColor,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   _buildResultDynamicContent(
+                    context: context,
                     title: payableLabel,
                     content: payableValue,
-                    contentColor: AppColors.lightTextPrimary,
+                    contentColor: primaryTextColor,
                   ),
                   if (_statusText != null) ...[
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     Divider(
-                      height: 0,
-                      color: AppColors.black.withValues(alpha: 0.10),
+                      height: 1,
+                      color: dividerColor,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     _buildResultDynamicContent(
+                      context: context,
                       title: statusLabel,
                       content: _statusText!,
-                      contentColor: AppColors.lightTextPrimary,
+                      contentColor: primaryTextColor,
                     ),
                   ],
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 36),
             CommonButton(
               onPressed: () => Get.toNamed(BaseRoute.billPaymentHistory),
               width: double.infinity,
               text: historyButtonLabel,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             CommonButton(
               onPressed: onClose,
               width: double.infinity,
               text: closeButtonLabel,
-              backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.06),
-              borderColor: AppColors.lightPrimary.withValues(alpha: 0.60),
-              borderWidth: 2,
-              textColor: AppColors.lightTextPrimary,
+              backgroundColor: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightPrimary.withValues(alpha: 0.06),
+              borderColor: isDark
+                  ? AppColors.darkBorder
+                  : AppColors.lightPrimary.withValues(alpha: 0.60),
+              borderWidth: 1.5,
+              textColor: primaryTextColor,
             ),
-            const SizedBox(height: 80),
+            const SizedBox(height: 60),
           ],
         ),
       ),
@@ -187,10 +210,12 @@ class BillPaymentResultStepSection extends StatelessWidget {
   }
 
   static Widget _buildResultDynamicContent({
+    required BuildContext context,
     required String title,
     required String content,
     required Color contentColor,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -203,7 +228,9 @@ class BillPaymentResultStepSection extends StatelessWidget {
               letterSpacing: 0,
               fontWeight: FontWeight.w700,
               fontSize: 15,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextPrimary.withValues(alpha: 0.60),
             ),
           ),
           Expanded(

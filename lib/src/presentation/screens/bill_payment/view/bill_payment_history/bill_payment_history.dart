@@ -63,8 +63,11 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: CommonDefaultAppBar(),
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      appBar: const CommonDefaultAppBar(),
       body: Obx(
         () => Stack(
           children: [
@@ -78,13 +81,13 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return CommonLoading();
+                      return const CommonLoading();
                     }
 
                     return Column(
                       children: [
                         const SizedBox(height: 16),
-                        _buildBillPaymentHistoryList(),
+                        _buildBillPaymentHistoryList(context, isDark),
                       ],
                     );
                   }),
@@ -103,31 +106,42 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
     );
   }
 
-  Widget _buildBillPaymentHistoryList() {
+  Widget _buildBillPaymentHistoryList(BuildContext context, bool isDark) {
     final bills = controller.billPaymentHistoryModel.value.data?.bills ?? [];
 
     if (controller.isLoading.value) {
-      return Expanded(child: CommonLoading());
+      return const Expanded(child: CommonLoading());
     }
 
     if (bills.isEmpty) {
-      return Expanded(child: NoDataFound());
+      return const Expanded(child: NoDataFound());
     }
 
     return Expanded(
       child: RefreshIndicator(
-        color: AppColors.lightPrimary,
+        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
         onRefresh: () => refreshData(),
         child: controller.isLoading.value
-            ? CommonLoading()
+            ? const CommonLoading()
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 18),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: AppColors.white,
+                  color: isDark ? AppColors.darkSurface : AppColors.white,
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    width: 1.0,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
+                      blurRadius: 15,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: ListView.separated(
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   controller: _scrollController,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   itemBuilder: (context, index) {
@@ -152,7 +166,7 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                     width: 46,
                                     height: 46,
                                     decoration: BoxDecoration(
-                                      color: Color(0xFF4D8D7E),
+                                      color: const Color(0xFF4D8D7E),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Padding(
@@ -172,11 +186,11 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                         Text(
                                           bill.serviceName ?? "",
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             letterSpacing: 0,
                                             fontWeight: FontWeight.w900,
                                             fontSize: 15.5,
-                                            color: AppColors.lightTextPrimary,
+                                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
@@ -186,7 +200,7 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                           style: TextStyle(
                                             letterSpacing: 0,
                                             fontSize: 14,
-                                            color: AppColors.lightTextTertiary,
+                                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
                                             fontWeight: FontWeight.w700,
                                           ),
                                         ),
@@ -203,7 +217,7 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                 Text(
                                   "${bill.amount} ${Get.find<SettingsService>().getSetting("site_currency")}",
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     letterSpacing: 0,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 15,
@@ -219,12 +233,10 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                   },
                   separatorBuilder: (context, index) {
                     return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
                       child: Divider(
-                        color: AppColors.lightTextPrimary.withValues(
-                          alpha: 0.10,
-                        ),
-                        height: 0,
+                        color: isDark ? AppColors.darkDivider : AppColors.lightBorder.withValues(alpha: 0.5),
+                        height: 1,
                       ),
                     );
                   },
