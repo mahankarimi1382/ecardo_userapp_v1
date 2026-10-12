@@ -469,7 +469,14 @@ class LoanStatusTrackingCard extends StatelessWidget {
                       SizedBox(width: 6.w),
                       Flexible(
                         child: Text(
-                          c.product?.name ?? 'Crypto-backed loan',
+                          c.product?.localizedName(context) ??
+                              l10nPick(
+                                context,
+                                fa: 'وام با پشتوانه رمزارز',
+                                en: 'Crypto-backed loan',
+                                ar: 'قرض مدعوم بالعملات المشفرة',
+                                zh: '加密资产抵押贷款',
+                              ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

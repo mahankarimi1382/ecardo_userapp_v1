@@ -353,7 +353,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        p.name,
+                        p.localizedName(context),
                         style: TextStyle(
                           fontSize: 14.5.sp,
                           fontWeight: FontWeight.w800,
@@ -363,7 +363,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                       if (p.tagline.isNotEmpty) ...[
                         SizedBox(height: 2.h),
                         Text(
-                          p.tagline,
+                          p.localizedTagline(context),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -383,7 +383,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                   ),
                   child: Text(
-                    p.slaTag,
+                    p.localizedSla(context),
                     style: TextStyle(
                       fontSize: 10.5.sp,
                       fontWeight: FontWeight.w800,

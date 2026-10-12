@@ -39,6 +39,60 @@ class EquityProjectItem {
       targetAmount > 0 ? (raisedAmount / targetAmount).clamp(0.0, 1.0) : 0.0;
 
   int get progressPercent => (progressRatio * 100).round();
+
+  String localizedTitle(BuildContext context) {
+    if (id == 'eq-001') {
+      return l10nPick(
+        context,
+        fa: 'هاب پایانه‌های پرداخت و حواله منطقه‌ای اکاردو',
+        en: 'eCardo Regional Remittance Node & Payment Terminal Hub',
+        ar: 'مركز إيكاردو الإقليمي للتحويل ومحطات الدفع',
+        zh: 'eCardo 区域汇款节点与支付终端枢纽',
+      );
+    }
+    if (id == 'eq-002') {
+      return l10nPick(
+        context,
+        fa: 'میکروگرید انرژی خورشیدی پاک (فاز ۲)',
+        en: 'Solar Clean Energy Micro-Grid Phase 2',
+        ar: 'الشبكة الصغيرة للطاقة الشمسية النظيفة (المرحلة 2)',
+        zh: '太阳能清洁能源微电网二期',
+      );
+    }
+    if (id == 'eq-003') {
+      return l10nPick(
+        context,
+        fa: 'شبکه لجستیک زنجیره سرد هوشمند کشاورزی',
+        en: 'Smart Agri-Tech Cold Chain Logistics Network',
+        ar: 'شبكة لوجستيات سلسلة التبريد الزراعية الذكية',
+        zh: '智慧农业冷链物流网络',
+      );
+    }
+    return title;
+  }
+
+  String localizedSector(BuildContext context) {
+    final s = sector.toLowerCase();
+    return l10nPick(
+      context,
+      fa: s.contains('clean') || s.contains('energy')
+          ? 'انرژی پاک و زیرساخت'
+          : s.contains('agri')
+              ? 'کشاورزی و زنجیره تأمین'
+              : 'فین‌تک و پرداخت',
+      en: sector,
+      ar: s.contains('clean') || s.contains('energy')
+          ? 'الطاقة النظيفة والبنية التحتية'
+          : s.contains('agri')
+              ? 'الزراعة وسلسلة الإمداد'
+              : 'التكنولوجيا المالية والمدفوعات',
+      zh: s.contains('clean') || s.contains('energy')
+          ? '清洁能源与基础设施'
+          : s.contains('agri')
+              ? '农业与供应链'
+              : '金融科技与支付',
+    );
+  }
 }
 
 class EquityProjectCard extends StatelessWidget {
@@ -88,7 +142,7 @@ class EquityProjectCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                     ),
                     child: Text(
-                      project.sector,
+                      project.localizedSector(context),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -143,7 +197,7 @@ class EquityProjectCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  project.title,
+                  project.localizedTitle(context),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

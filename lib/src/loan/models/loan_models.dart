@@ -1,6 +1,9 @@
 // Loan & Credit Service models — Loan-Service-Flow.md
 // اپ: محصولات، پرونده، پیشنهاد، وثیقه، قسط، تایم‌لاین.
 
+import 'package:flutter/widgets.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+
 class LoanProductModel {
   final int id;
   final String name;
@@ -41,6 +44,107 @@ class LoanProductModel {
   });
 
   double get baseRateAnnual => interestRatePct;
+
+  String localizedName(BuildContext context) {
+    if (id == 1 || name.toLowerCase().contains('crypto') || name.contains('رمزارز')) {
+      return l10nPick(
+        context,
+        fa: 'وام با پشتوانه رمزارز',
+        en: 'Crypto-backed loan',
+        ar: 'قرض مدعوم بالعملات المشفرة',
+        zh: '加密资产抵押贷款',
+      );
+    }
+    if (id == 2 || name.toLowerCase().contains('business') || name.contains('کسب‌وکار')) {
+      return l10nPick(
+        context,
+        fa: 'وام کسب‌وکار (SME)',
+        en: 'Business loan (SME)',
+        ar: 'قرض الأعمال (SME)',
+        zh: '企业商业贷款 (SME)',
+      );
+    }
+    if (id == 3 ||
+        name.toLowerCase().contains('micro') ||
+        name.toLowerCase().contains('personal') ||
+        name.contains('شخصی') ||
+        name.contains('خرد')) {
+      return l10nPick(
+        context,
+        fa: 'وام خرد شخصی',
+        en: 'Personal micro-loan',
+        ar: 'قرض شخصي ميسر',
+        zh: '个人微型贷款',
+      );
+    }
+    return name;
+  }
+
+  String localizedTagline(BuildContext context) {
+    if (id == 1 || name.toLowerCase().contains('crypto') || name.contains('رمزارز')) {
+      return l10nPick(
+        context,
+        fa: 'قفل تتر، دریافت دلار · بدون نیاز به چک و ضامن',
+        en: 'Lock USDT, borrow USD · no credit check',
+        ar: 'احجز USDT واقترض USD · بدون فحص ائتماني',
+        zh: '锁定 USDT，借贷 USD · 免信用审核',
+      );
+    }
+    if (id == 2 || name.toLowerCase().contains('business') || name.contains('کسب‌وکار')) {
+      return l10nPick(
+        context,
+        fa: 'ویژه شرکت‌ها و کسب‌وکارهای ثبت‌شده · نیازمند مدارک',
+        en: 'For registered companies · documents needed',
+        ar: 'للشركات المسجلة · يتطلب مستندات',
+        zh: '适用于注册企业 · 需资质材料',
+      );
+    }
+    if (id == 3 ||
+        name.toLowerCase().contains('micro') ||
+        name.toLowerCase().contains('personal') ||
+        name.contains('شخصی') ||
+        name.contains('خرد')) {
+      return l10nPick(
+        context,
+        fa: 'برای کاربران سطح ۲ احراز هویت به بالا',
+        en: 'For KYC tier 2 and above',
+        ar: 'لمستخدمي المستوى الثاني من التحقق وأعلى',
+        zh: '适用于KYC 2级及以上用户',
+      );
+    }
+    return tagline;
+  }
+
+  String localizedSla(BuildContext context) {
+    if (id == 1 || slaTag.toLowerCase().contains('fast') || slaTag.contains('فوری')) {
+      return l10nPick(
+        context,
+        fa: 'فوری',
+        en: 'Fastest',
+        ar: 'فوري',
+        zh: '极速',
+      );
+    }
+    if (id == 2 || slaTag.contains('5') || slaTag.contains('۵')) {
+      return l10nPick(
+        context,
+        fa: '۵ روز کاری',
+        en: '5 working days',
+        ar: '٥ أيام عمل',
+        zh: '5个工作日',
+      );
+    }
+    if (id == 3 || slaTag.contains('2') || slaTag.contains('۲')) {
+      return l10nPick(
+        context,
+        fa: '۲ روز کاری',
+        en: '2 working days',
+        ar: 'يومان عمل',
+        zh: '2个工作日',
+      );
+    }
+    return slaTag;
+  }
 
   factory LoanProductModel.fromJson(Map<String, dynamic> json) {
     final name = json['name']?.toString() ?? '';

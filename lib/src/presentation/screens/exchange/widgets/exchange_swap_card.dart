@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -744,85 +742,78 @@ class _HeroAmountField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppSpacing.radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: AnimatedContainer(
-          duration: AppSpacing.fast,
-          padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
-          decoration: BoxDecoration(
-            color: isFocused
-                ? ExchangeDesignTokens.glassOverlayFocused(context)
-                : ExchangeDesignTokens.glassOverlay(context),
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
-            border: Border.all(
-              color: ExchangeDesignTokens.glassBorder(
-                context,
-                isFocused: isFocused,
+    return AnimatedContainer(
+      duration: AppSpacing.fast,
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      decoration: BoxDecoration(
+        color: isFocused
+            ? Colors.white.withValues(alpha: 0.28)
+            : Colors.white.withValues(alpha: 0.18),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        border: Border.all(
+          color: isFocused
+              ? Colors.white.withValues(alpha: 0.85)
+              : Colors.white.withValues(alpha: 0.35),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              focusNode: focusNode,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: false,
               ),
-              width: 1.5,
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 28,
+                color: AppColors.white,
+                letterSpacing: 0,
+                fontFeatures: [FontFeature.tabularFigures()],
+              ),
+              decoration: InputDecoration(
+                isCollapsed: true,
+                border: InputBorder.none,
+                hintText: hintText.isEmpty ? '0' : hintText,
+                hintStyle: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 28,
+                  color: AppColors.white.withValues(alpha: 0.45),
+                  fontFeatures: const [
+                    FontFeature.tabularFigures(),
+                  ],
+                ),
+              ),
             ),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: controller,
-                  focusNode: focusNode,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                    signed: false,
-                  ),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 28,
-                    color: AppColors.white,
-                    letterSpacing: 0,
-                    fontFeatures: [FontFeature.tabularFigures()],
-                  ),
-                  decoration: InputDecoration(
-                    isCollapsed: true,
-                    border: InputBorder.none,
-                    hintText: hintText.isEmpty ? '0' : hintText,
-                    hintStyle: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 28,
-                      color: AppColors.white.withValues(alpha: 0.35),
-                      fontFeatures: const [
-                        FontFeature.tabularFigures(),
-                      ],
-                    ),
-                  ),
-                ),
+          const SizedBox(width: AppSpacing.sm),
+          Container(
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.25),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+            ),
+            child: Text(
+              currencyCode,
+              style: const TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 13,
+                color: AppColors.white,
+                letterSpacing: 0.4,
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Container(
-                padding: const EdgeInsetsDirectional.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.16),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                ),
-                child: Text(
-                  currencyCode,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
-                    color: AppColors.white,
-                    letterSpacing: 0.4,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

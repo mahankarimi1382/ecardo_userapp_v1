@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
@@ -170,9 +170,7 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                   textAlign: TextAlign.center,
                   style: AppTextStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -195,17 +193,18 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                       margin: const EdgeInsets.only(bottom: 6),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? (isDark
-                                ? AppColors.mainSoftBlue.withValues(alpha: 0.15)
-                                : AppColors.mainSoftBlue.withValues(alpha: 0.20))
-                            : Colors.transparent,
+                            ? AppColors.mainSoftBlue.withValues(alpha: 0.25)
+                            : Colors.white.withValues(alpha: 0.06),
                         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                         border: isSelected
                             ? Border.all(
-                                color: AppColors.mainSoftBlue.withValues(alpha: 0.5),
-                                width: 1,
+                                color: AppColors.mainSoftBlue.withValues(alpha: 0.6),
+                                width: 1.2,
                               )
-                            : null,
+                            : Border.all(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                width: 0.8,
+                              ),
                       ),
                       child: Row(
                         children: [
@@ -215,15 +214,16 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isDark
-                                  ? AppColors.darkSurfaceVariant
-                                  : AppColors.lightSecondaryContainer,
+                              color: isSelected
+                                  ? AppColors.mainSoftBlue.withValues(alpha: 0.3)
+                                  : Colors.white.withValues(alpha: 0.14),
                             ),
                             child: Text(
                               _currencyIconOrSymbol(code),
                               style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -235,9 +235,9 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                                 fontWeight: isSelected
                                     ? FontWeight.w700
                                     : FontWeight.w500,
-                                color: isDark
-                                    ? AppColors.darkTextPrimary
-                                    : AppColors.lightTextPrimary,
+                                color: isSelected
+                                    ? AppColors.mainSoftBlue
+                                    : Colors.white,
                               ),
                             ),
                           ),
@@ -453,53 +453,56 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
 
     return KeyedSubtree(
       key: const ValueKey('visible_balance'),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          if (!isRtlCurrency) ...[
+      child: Directionality(
+        textDirection: isRtlCurrency ? TextDirection.rtl : TextDirection.ltr,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            if (!isRtlCurrency) ...[
+              Text(
+                _resolvedSymbol,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.mutedBlue,
+                ),
+              ),
+              const SizedBox(width: 4),
+            ],
             Text(
-              _resolvedSymbol,
-              style: AppTextStyles.headlineSmall.copyWith(
-                fontWeight: FontWeight.w600,
-                color: isDark
-                    ? AppColors.mainSoftBlue
-                    : AppColors.mutedBlue,
+              integerPart,
+              style: AppTextStyles.displayMedium.copyWith(
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.8,
+                color: textColor,
               ),
             ),
-            const SizedBox(width: 4),
+            if (decimalPart.isNotEmpty)
+              Text(
+                decimalPart,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.2,
+                  color: textColor.withValues(alpha: 0.55),
+                ),
+              ),
+            if (isRtlCurrency) ...[
+              const SizedBox(width: 6),
+              Text(
+                _resolvedSymbol,
+                style: AppTextStyles.titleMedium.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
+                ),
+              ),
+            ],
           ],
-          Text(
-            integerPart,
-            style: AppTextStyles.displayMedium.copyWith(
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.8,
-              color: textColor,
-            ),
-          ),
-          if (decimalPart.isNotEmpty)
-            Text(
-              decimalPart,
-              style: AppTextStyles.headlineSmall.copyWith(
-                fontWeight: FontWeight.w600,
-                letterSpacing: -0.2,
-                color: textColor.withValues(alpha: 0.55),
-              ),
-            ),
-          if (isRtlCurrency) ...[
-            const SizedBox(width: 6),
-            Text(
-              _resolvedSymbol,
-              style: AppTextStyles.titleMedium.copyWith(
-                fontWeight: FontWeight.w700,
-                color: isDark
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary,
-              ),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }

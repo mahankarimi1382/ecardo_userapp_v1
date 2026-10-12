@@ -113,7 +113,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
           preferredSize: Size.fromHeight(60.h),
           child: SafeArea(
             child: CommonAppBar(
-              title: product.name,
+              title: product.localizedName(context),
               isBackLogicApply: true,
               backLogicFunction: Get.back,
             ),
@@ -246,7 +246,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               ),
               SizedBox(width: 6.w),
               Text(
-                current.name,
+                current.localizedName(context),
                 style: TextStyle(
                   fontSize: 12.5.sp,
                   fontWeight: FontWeight.w800,
@@ -269,7 +269,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               return PopupMenuItem<LoanProductModel>(
                 value: p,
                 child: Text(
-                  p.name,
+                  p.localizedName(context),
                   style: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: p.id == current.id ? FontWeight.w800 : FontWeight.w500,

@@ -111,7 +111,13 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
               color: primaryAccent,
               size: 22.sp,
             ),
-            tooltip: 'پورتفوی من',
+            tooltip: l10nPick(
+              context,
+              fa: 'پورتفوی من',
+              en: 'My Portfolio',
+              ar: 'محفظتي',
+              zh: '我的投资组合',
+            ),
             onPressed: () {
               HapticFeedback.lightImpact();
               Get.to(() => const MyInvestmentsScreen());
@@ -199,10 +205,46 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
     Color primaryAccent,
   ) {
     final sectors = [
-      {'key': 'ALL', 'label': 'همه صنایع'},
-      {'key': 'Fintech', 'label': 'فین‌تک و پرداخت'},
-      {'key': 'Clean Energy', 'label': 'انرژی پاک'},
-      {'key': 'Agriculture', 'label': 'کشاورزی مدرن'},
+      {
+        'key': 'ALL',
+        'label': l10nPick(
+          context,
+          fa: 'همه صنایع',
+          en: 'All Sectors',
+          ar: 'جميع القطاعات',
+          zh: '全部行业',
+        ),
+      },
+      {
+        'key': 'Fintech',
+        'label': l10nPick(
+          context,
+          fa: 'فین‌تک و پرداخت',
+          en: 'Fintech & Payments',
+          ar: 'التكنولوجيا المالية والمدفوعات',
+          zh: '金融科技与支付',
+        ),
+      },
+      {
+        'key': 'Clean Energy',
+        'label': l10nPick(
+          context,
+          fa: 'انرژی پاک',
+          en: 'Clean Energy',
+          ar: 'الطاقة النظيفة',
+          zh: '清洁能源',
+        ),
+      },
+      {
+        'key': 'Agriculture',
+        'label': l10nPick(
+          context,
+          fa: 'کشاورزی مدرن',
+          en: 'Modern Agriculture',
+          ar: 'الزراعة الحديثة',
+          zh: '现代农业',
+        ),
+      },
     ];
 
     return Obx(() {
@@ -357,7 +399,13 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
               ),
               SizedBox(height: AppSpacing.md.h),
               Text(
-                'هنوز سرمایه‌گذاری فعالی ثبت نشده است',
+                l10nPick(
+                  context,
+                  fa: 'هنوز سرمایه‌گذاری فعالی ثبت نشده است',
+                  en: 'No active investments yet',
+                  ar: 'لا توجد استثمارات نشطة بعد',
+                  zh: '暂无活跃投资',
+                ),
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
@@ -368,7 +416,13 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
               ),
               SizedBox(height: AppSpacing.sm.h),
               Text(
-                'طرح‌های تجاری مورد نظر خود را بررسی و سرمایه‌گذاری کنید',
+                l10nPick(
+                  context,
+                  fa: 'طرح‌های تجاری مورد نظر خود را بررسی و سرمایه‌گذاری کنید',
+                  en: 'Explore commercial projects and invest',
+                  ar: 'استكشف المشاريع التجارية واستثمر',
+                  zh: '探索商业项目并进行投资',
+                ),
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: isDark
@@ -404,7 +458,13 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'مجموع ارزش سهام من',
+                      l10nPick(
+                        context,
+                        fa: 'مجموع ارزش سهام من',
+                        en: 'Total Portfolio Value',
+                        ar: 'إجمالي قيمة المحفظة',
+                        zh: '总持股价值',
+                      ),
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: isDark
@@ -429,7 +489,13 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'سود واریزی',
+                      l10nPick(
+                        context,
+                        fa: 'سود واریزی',
+                        en: 'Distributed Dividends',
+                        ar: 'الأرباح الموزعة',
+                        zh: '已派发收益',
+                      ),
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: isDark
@@ -486,7 +552,13 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
-                            'فعال',
+                            l10nPick(
+                              context,
+                              fa: 'فعال',
+                              en: 'Active',
+                              ar: 'نشط',
+                              zh: '活跃',
+                            ),
                             style: TextStyle(
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w700,
@@ -498,7 +570,7 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
                     ),
                     SizedBox(height: 6.h),
                     Text(
-                      'سرمایه: ${h.amountInvested.toStringAsFixed(0)} ${h.currency} • سود سالانه: ${h.expectedYieldPercent}%',
+                      '${l10nPick(context, fa: 'سرمایه', en: 'Principal', ar: 'رأس المال', zh: '投资额')}: ${h.amountInvested.toStringAsFixed(0)} ${h.currency} • ${l10nPick(context, fa: 'سود سالانه', en: 'Annual Yield', ar: 'العائد السنوي', zh: '年化收益')}: ${h.expectedYieldPercent}%',
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: isDark

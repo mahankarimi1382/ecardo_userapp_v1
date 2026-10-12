@@ -236,7 +236,14 @@ class _LoanConfirmScreenState extends State<LoanConfirmScreen> {
                     isDark: isDark,
                     labelFa: 'طرح انتخابی',
                     labelEn: 'Selected Scheme',
-                    value: controller.selectedProduct.value?.name ?? 'تسهیلات هوشمند زرین',
+                    value: controller.selectedProduct.value?.localizedName(context) ??
+                        l10nPick(
+                          context,
+                          fa: 'تسهیلات هوشمند زرین',
+                          en: 'Zarrin Smart Credit',
+                          ar: 'تسهيلات زرين الذكية',
+                          zh: 'Zarrin 智能信贷',
+                        ),
                     isBold: true,
                   ),
                   Divider(height: 20, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
