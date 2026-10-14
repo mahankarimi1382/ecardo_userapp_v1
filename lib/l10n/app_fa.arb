@@ -1854,7 +1854,7 @@
   "travelFlightHero": "سفر رویایی شما از اینجا آغاز می‌شود",
   "travelOrigin": "مبدأ",
   "travelDestination": "مقصد",
-  "travelDepartureDate": "تاریخ خروج",
+  "travelDepartureDate": "تاریخ رفت",
   "travelReturnDate": "تاریخ برگشت",
   "travelOneWay": "یک‌طرفه",
   "travelRoundTrip": "رفت و برگشت",

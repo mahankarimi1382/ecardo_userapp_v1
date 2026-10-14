@@ -400,7 +400,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
               _buildInfoRow(context,
                 icon: Icons.wifi_rounded,
                 label: l10nPick(context, en: 'In-flight Wifi', fa: 'اینترنت پرواز', ar: 'إنترنت الطائرة'),
-                value: 'Available',
+                value: l10nPick(context, en: 'Available', fa: 'فعال', ar: 'متوفر'),
               ),
             ],
           ),
@@ -411,12 +411,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
               _buildInfoRow(context,
                 icon: Icons.power_input_rounded,
                 label: l10nPick(context, en: 'USB Power', fa: 'پورت USB', ar: 'منفذ يو إس بي'),
-                value: 'At seat',
+                value: l10nPick(context, en: 'At seat', fa: 'کنار صندلی', ar: 'بجانب المقعد'),
               ),
               _buildInfoRow(context,
                 icon: Icons.tv_rounded,
                 label: l10nPick(context, en: 'Entertainment', fa: 'سرگرمی', ar: 'تسلية'),
-                value: 'Live TV & Movies',
+                value: l10nPick(context, en: 'Live TV & Movies', fa: 'فیلم و سرگرمی', ar: 'أفلام وترفيه'),
               ),
             ],
           ),
@@ -574,7 +574,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        fareFamily.baggageCabin,
+                        fareFamily.localizedBaggageCabin(lang),
                         style: TextStyle(
                           color: ECardoTokens.ink(context),
                           fontWeight: FontWeight.w800,
@@ -607,7 +607,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        fareFamily.baggageChecked,
+                        fareFamily.localizedBaggageChecked(lang),
                         style: TextStyle(
                           color: ECardoTokens.ink(context),
                           fontWeight: FontWeight.w800,
@@ -628,12 +628,30 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   Widget _buildAircraftAndAmenities(BuildContext context, String lang) {
     final aircraft = widget.offer.metadata['aircraft_type']?.toString() ?? 'Boeing 777-300ER';
     final amenities = [
-      {'icon': Icons.wifi_rounded, 'label': 'Wi-Fi'},
-      {'icon': Icons.power_input_rounded, 'label': 'USB Power'},
-      {'icon': Icons.tv_rounded, 'label': 'Entertainment'},
-      {'icon': Icons.food_bank_rounded, 'label': 'Meal Service'},
-      {'icon': Icons.headphones_rounded, 'label': 'Headphones Provided'},
-      {'icon': Icons.ac_unit_rounded, 'label': 'Individual AC'},
+      {
+        'icon': Icons.wifi_rounded,
+        'label': l10nPick(context, en: 'Wi-Fi', fa: 'اینترنت وای‌فای', ar: 'واي فاي'),
+      },
+      {
+        'icon': Icons.power_input_rounded,
+        'label': l10nPick(context, en: 'USB Power', fa: 'شارژر USB', ar: 'شاحن USB'),
+      },
+      {
+        'icon': Icons.tv_rounded,
+        'label': l10nPick(context, en: 'Entertainment', fa: 'سیستم سرگرمی', ar: 'نظام ترفيه'),
+      },
+      {
+        'icon': Icons.food_bank_rounded,
+        'label': l10nPick(context, en: 'Meal Service', fa: 'پذیرایی و غذا', ar: 'وجبات طعام'),
+      },
+      {
+        'icon': Icons.headphones_rounded,
+        'label': l10nPick(context, en: 'Headphones Provided', fa: 'ارائه هدفون', ar: 'سماعات رأس'),
+      },
+      {
+        'icon': Icons.ac_unit_rounded,
+        'label': l10nPick(context, en: 'Individual AC', fa: 'تهویه مطبوع اختصاصی', ar: 'تكييف مخصص'),
+      },
     ];
 
     return Container(
@@ -869,15 +887,16 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                     fontSize: 11.5.sp,
                   ),
                 ),
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Text(
-                    '\$${item.$2.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      color: ECardoTokens.ink(context),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11.5.sp,
-                    ),
+                Text(
+                  formatTravelPrice(
+                    context,
+                    amount: item.$2,
+                    currency: totalCurrency,
+                  ),
+                  style: TextStyle(
+                    color: ECardoTokens.ink(context),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 11.5.sp,
                   ),
                 ),
               ],
@@ -895,15 +914,16 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  '\$${total.toStringAsFixed(0)}',
-                  style: TextStyle(
-                    color: ECardoTokens.brand700(context),
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w900,
-                  ),
+              Text(
+                formatTravelPrice(
+                  context,
+                  amount: total,
+                  currency: totalCurrency,
+                ),
+                style: TextStyle(
+                  color: ECardoTokens.brand700(context),
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ],
@@ -1054,16 +1074,17 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 ),
               ),
               SizedBox(height: 2.h),
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  '\$${(totalAmount * passengerCount).toStringAsFixed(0)}',
-                  style: TextStyle(
-                    color: ECardoTokens.inkOnBrand,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.5,
-                  ),
+              Text(
+                formatTravelPrice(
+                  context,
+                  amount: (totalAmount * passengerCount),
+                  currency: widget.offer.total.currency.isEmpty ? 'USD' : widget.offer.total.currency,
+                ),
+                style: TextStyle(
+                  color: ECardoTokens.inkOnBrand,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],

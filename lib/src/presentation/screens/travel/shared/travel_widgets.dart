@@ -712,10 +712,67 @@ class TravelJourneyGuide extends StatelessWidget {
 }
 
 String travelMoney(BuildContext context, TravelMoney money) {
-  final value = NumberFormat.decimalPattern(
-    Localizations.localeOf(context).toLanguageTag(),
-  ).format(money.amount);
-  return '$value ${money.currency}';
+  return formatTravelPrice(
+    context,
+    amount: money.amount,
+    currency: money.currency,
+  );
+}
+
+/// Standardized, internationalized price formatter for travel services.
+/// Handles IRR, TOMAN, USD, EUR, AED, TRY with proper symbols, thousand
+/// separators, and localization without ever printing ugly '$190190000 IRR'.
+String formatTravelPrice(
+  BuildContext context, {
+  required double amount,
+  required String currency,
+}) {
+  final lang = Localizations.localeOf(context).languageCode;
+  final numFormat = NumberFormat('#,##0', 'en_US');
+  final formattedAmount = numFormat.format(amount.round());
+
+  final currUpper = currency.toUpperCase().trim();
+  if (currUpper == 'IRR') {
+    return lang == 'fa' ? '$formattedAmount ریال' : '$formattedAmount IRR';
+  } else if (currUpper == 'TOMAN' || currUpper == 'IRT') {
+    return lang == 'fa' ? '$formattedAmount تومان' : '$formattedAmount Toman';
+  } else if (currUpper == 'USD') {
+    return '\$$formattedAmount';
+  } else if (currUpper == 'EUR') {
+    return '€$formattedAmount';
+  } else if (currUpper == 'AED') {
+    return lang == 'fa' ? '$formattedAmount درهم' : '$formattedAmount AED';
+  } else if (currUpper == 'TRY') {
+    return '₺$formattedAmount';
+  } else if (currUpper == 'GBP') {
+    return '£$formattedAmount';
+  }
+  return '$formattedAmount $currency';
+}
+
+/// Localizes flight durations such as "2h 30m" into natural language.
+String formatTravelDuration(String rawDuration, String lang) {
+  final trimmed = rawDuration.trim();
+  if (trimmed.isEmpty) return '';
+  if (lang != 'fa' && lang != 'ar') return trimmed;
+
+  final match = RegExp(r'(\d+)\s*h(?:ours?)?\s*(?:(\d+)\s*m(?:in(?:utes?)?)?)?', caseSensitive: false).firstMatch(trimmed);
+  if (match != null) {
+    final h = match.group(1);
+    final m = match.group(2);
+    if (lang == 'fa') {
+      if (m != null && m.isNotEmpty && m != '0') {
+        return '$h ساعت و $m دقیقه';
+      }
+      return '$h ساعت';
+    } else if (lang == 'ar') {
+      if (m != null && m.isNotEmpty && m != '0') {
+        return '$h س و $m د';
+      }
+      return '$h ساعات';
+    }
+  }
+  return trimmed;
 }
 
 IconData travelProductIcon(TravelProductType type) => switch (type) {

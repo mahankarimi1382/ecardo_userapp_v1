@@ -587,25 +587,31 @@ class _FlightListScreenState extends State<FlightListScreen> {
     final airlineName = offer.attributes['airline_name']?.toString() ??
         offer.metadata['carrier_name']?.toString() ??
         'Emirates';
-    final flightNum = offer.attributes['flight_number']?.toString() ??
+    final rawFlightNum = offer.attributes['flight_number']?.toString() ??
         offer.metadata['flight_number']?.toString() ??
         'EK 972';
+    final flightNum = rawFlightNum.replaceAll(RegExp(r'\.+$'), '').trim();
     final depTime = _formatTime(offer.attributes['departure']?.toString() ?? '10:30');
     final arrTime = _formatTime(offer.attributes['arrival']?.toString() ?? '14:45');
     final originCode = offer.attributes['origin']?.toString() ?? search?.origin ?? 'DXB';
     final destCode = offer.attributes['destination']?.toString() ?? search?.destination ?? 'LHR';
-    final duration = offer.attributes['duration']?.toString() ?? '7h 15m';
+    final rawDuration = offer.attributes['duration']?.toString() ?? '7h 15m';
+    final duration = formatTravelDuration(rawDuration, lang);
     final stopsCount = offer.attributes['stops_count']?.toString() ?? 'Direct';
     final isDirect = stopsCount.toLowerCase().contains('direct') || stopsCount.isEmpty;
     final fareFamily = _getFareFamily(offer);
     final isCompared = _comparedFlightIds.contains(offer.id);
 
-    final adultCount = search?.adultCount ?? 1;
-    final totalAmount = offer.total.amount * adultCount;
     final currency = offer.total.currency.isEmpty ? 'USD' : offer.total.currency;
+    final formattedPrice = formatTravelPrice(
+      context,
+      amount: offer.total.amount,
+      currency: currency,
+    );
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Semantics(
-      label: '$airlineName flight $flightNum from $originCode to $destCode. Departure $depTime, arrival $arrTime. Price \$$totalAmount $currency',
+      label: '$airlineName flight $flightNum from $originCode to $destCode. Departure $depTime, arrival $arrTime. Price $formattedPrice',
       child: Container(
         decoration: BoxDecoration(
           color: ECardoTokens.surfaceCard(context),
@@ -714,66 +720,142 @@ class _FlightListScreenState extends State<FlightListScreen> {
                   ],
                 ),
                 SizedBox(height: 14.h),
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildTimeNode(context, depTime, originCode),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          child: Column(
-                            children: [
-                              Text(
-                                duration,
-                                style: TextStyle(
-                                  color: ECardoTokens.inkMuted(context),
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 3.h),
-                              Stack(
-                                alignment: Alignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: isRtl
+                      ? [
+                          _buildTimeNode(
+                            context,
+                            depTime,
+                            originCode,
+                            label: l10nPick(context, en: 'Departure', fa: 'مبدأ', ar: 'المغادرة'),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: Column(
                                 children: [
-                                  Divider(color: ECardoTokens.border(context), thickness: 1.5),
-                                  Icon(
-                                    Icons.flight_takeoff_rounded,
-                                    size: 14.r,
-                                    color: ECardoTokens.brand500(context),
+                                  Text(
+                                    duration,
+                                    style: TextStyle(
+                                      color: ECardoTokens.inkMuted(context),
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(height: 3.h),
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Divider(color: ECardoTokens.border(context), thickness: 1.5),
+                                      Transform.rotate(
+                                        angle: 3.14159, // Point toward destination (left in RTL)
+                                        child: Icon(
+                                          Icons.flight_takeoff_rounded,
+                                          size: 14.r,
+                                          color: ECardoTokens.brand500(context),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 3.h),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                    decoration: BoxDecoration(
+                                      color: isDirect
+                                          ? ECardoTokens.successBg(context)
+                                          : ECardoTokens.warningBg(context),
+                                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                                    ),
+                                    child: Text(
+                                      isDirect
+                                          ? l10nPick(context, en: 'Direct', fa: 'مستقیم', ar: 'مباشر')
+                                          : stopsCount,
+                                      style: TextStyle(
+                                        color: isDirect
+                                            ? ECardoTokens.success(context)
+                                            : ECardoTokens.warning(context),
+                                        fontSize: 9.sp,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 3.h),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                                decoration: BoxDecoration(
-                                  color: isDirect
-                                      ? ECardoTokens.successBg(context)
-                                      : ECardoTokens.warningBg(context),
-                                  borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                                ),
-                                child: Text(
-                                  isDirect
-                                      ? l10nPick(context, en: 'Direct', fa: 'مستقیم', ar: 'مباشر')
-                                      : stopsCount,
-                                  style: TextStyle(
-                                    color: isDirect
-                                        ? ECardoTokens.success(context)
-                                        : ECardoTokens.warning(context),
-                                    fontSize: 9.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      _buildTimeNode(context, arrTime, destCode),
-                    ],
-                  ),
+                          _buildTimeNode(
+                            context,
+                            arrTime,
+                            destCode,
+                            label: l10nPick(context, en: 'Arrival', fa: 'مقصد', ar: 'الوصول'),
+                          ),
+                        ]
+                      : [
+                          _buildTimeNode(
+                            context,
+                            depTime,
+                            originCode,
+                            label: l10nPick(context, en: 'Departure', fa: 'مبدأ', ar: 'المغادرة'),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    duration,
+                                    style: TextStyle(
+                                      color: ECardoTokens.inkMuted(context),
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(height: 3.h),
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Divider(color: ECardoTokens.border(context), thickness: 1.5),
+                                      Icon(
+                                        Icons.flight_takeoff_rounded,
+                                        size: 14.r,
+                                        color: ECardoTokens.brand500(context),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 3.h),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                    decoration: BoxDecoration(
+                                      color: isDirect
+                                          ? ECardoTokens.successBg(context)
+                                          : ECardoTokens.warningBg(context),
+                                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                                    ),
+                                    child: Text(
+                                      isDirect
+                                          ? l10nPick(context, en: 'Direct', fa: 'مستقیم', ar: 'مباشر')
+                                          : stopsCount,
+                                      style: TextStyle(
+                                        color: isDirect
+                                            ? ECardoTokens.success(context)
+                                            : ECardoTokens.warning(context),
+                                        fontSize: 9.sp,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          _buildTimeNode(
+                            context,
+                            arrTime,
+                            destCode,
+                            label: l10nPick(context, en: 'Arrival', fa: 'مقصد', ar: 'الوصول'),
+                          ),
+                        ],
                 ),
                 Divider(color: ECardoTokens.border(context), height: 24),
                 Row(
@@ -789,15 +871,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                             fontSize: 9.5.sp,
                           ),
                         ),
-                        Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Text(
-                            '\$${offer.total.amount.toStringAsFixed(0)} $currency',
-                            style: TextStyle(
-                              color: ECardoTokens.brand700(context),
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w900,
-                            ),
+                        Text(
+                          formattedPrice,
+                          style: TextStyle(
+                            color: ECardoTokens.brand700(context),
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ],
@@ -837,7 +916,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  Widget _buildTimeNode(BuildContext context, String time, String code) {
+  Widget _buildTimeNode(BuildContext context, String time, String code, {String? label}) {
     return Column(
       children: [
         Text(
@@ -857,6 +936,17 @@ class _FlightListScreenState extends State<FlightListScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
+        if (label != null) ...[
+          SizedBox(height: 2.h),
+          Text(
+            label,
+            style: TextStyle(
+              color: ECardoTokens.inkMuted(context),
+              fontSize: 9.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ],
     );
   }

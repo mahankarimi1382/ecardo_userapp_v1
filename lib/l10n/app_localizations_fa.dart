@@ -5916,7 +5916,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get travelDestination => 'مقصد';
 
   @override
-  String get travelDepartureDate => 'تاریخ خروج';
+  String get travelDepartureDate => 'تاریخ رفت';
 
   @override
   String get travelReturnDate => 'تاریخ برگشت';

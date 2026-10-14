@@ -1,7 +1,9 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
+import 'package:shamsi_date/shamsi_date.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
@@ -419,8 +421,10 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                 title: l10nPick(context, en: 'From', fa: 'مبدأ', ar: 'من'),
                 airport: _selectedOrigin,
                 icon: Icons.flight_takeoff_rounded,
+                lang: lang,
                 onTap: () => _openAirportPicker(
                   context,
+                  lang: lang,
                   title: l10nPick(
                     context,
                     en: 'Select Origin Airport',
@@ -443,8 +447,10 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                 title: l10nPick(context, en: 'To', fa: 'مقصد', ar: 'إلى'),
                 airport: _selectedDestination,
                 icon: Icons.flight_land_rounded,
+                lang: lang,
                 onTap: () => _openAirportPicker(
                   context,
+                  lang: lang,
                   title: l10nPick(
                     context,
                     en: 'Select Destination Airport',
@@ -500,10 +506,14 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
     required AirportItem airport,
     required IconData icon,
     required VoidCallback onTap,
+    required String lang,
   }) {
+    final cityName = airport.localizedCity(lang);
+    final countryName = airport.localizedCountry(lang);
+
     return Semantics(
       button: true,
-      label: '$title ${airport.city} ${airport.code}',
+      label: '$title $cityName ${airport.code}',
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
@@ -546,7 +556,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
               ),
               SizedBox(height: 2.h),
               Text(
-                airport.city,
+                cityName,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -556,7 +566,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                 ),
               ),
               Text(
-                airport.country,
+                countryName,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -568,6 +578,83 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildDateDisplay(DateTime date, String lang, BuildContext context) {
+    if (lang == 'fa') {
+      final j = Jalali.fromDateTime(date);
+      final faDate = '${j.day} ${j.formatter.mN} ${j.year}';
+      final faDay = j.formatter.wN;
+      final enDate = DateFormat('d MMM yyyy').format(date);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            faDate,
+            style: TextStyle(
+              color: ECardoTokens.ink(context),
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            '$faDay • $enDate',
+            style: TextStyle(
+              color: ECardoTokens.inkMuted(context),
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      );
+    } else if (lang == 'ar') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            DateFormat('d MMMM yyyy', 'ar').format(date),
+            style: TextStyle(
+              color: ECardoTokens.ink(context),
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            DateFormat('EEEE', 'ar').format(date),
+            style: TextStyle(
+              color: ECardoTokens.inkMuted(context),
+              fontSize: 10.sp,
+            ),
+          ),
+        ],
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Text(
+            DateFormat('d MMM, yyyy').format(date),
+            style: TextStyle(
+              color: ECardoTokens.ink(context),
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+        SizedBox(height: 2.h),
+        Text(
+          DateFormat('EEEE').format(date),
+          style: TextStyle(
+            color: ECardoTokens.inkMuted(context),
+            fontSize: 10.sp,
+          ),
+        ),
+      ],
     );
   }
 
@@ -617,24 +704,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                       ],
                     ),
                     SizedBox(height: 6.h),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Text(
-                        DateFormat('d MMM, yyyy').format(_departureDate),
-                        style: TextStyle(
-                          color: ECardoTokens.ink(context),
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      DateFormat('EEEE').format(_departureDate),
-                      style: TextStyle(
-                        color: ECardoTokens.inkMuted(context),
-                        fontSize: 10.sp,
-                      ),
-                    ),
+                    _buildDateDisplay(_departureDate, lang, context),
                   ],
                 ),
               ),
@@ -680,24 +750,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         ],
                       ),
                       SizedBox(height: 6.h),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          DateFormat('d MMM, yyyy').format(_returnDate),
-                          style: TextStyle(
-                            color: ECardoTokens.ink(context),
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        DateFormat('EEEE').format(_returnDate),
-                        style: TextStyle(
-                          color: ECardoTokens.inkMuted(context),
-                          fontSize: 10.sp,
-                        ),
-                      ),
+                      _buildDateDisplay(_returnDate, lang, context),
                     ],
                   ),
                 ),
@@ -812,6 +865,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         child: InkWell(
                           onTap: () => _openAirportPicker(
                             context,
+                            lang: lang,
                             title: l10nPick(context, en: 'Origin', fa: 'مبدأ', ar: 'المغادرة'),
                             onSelected: (airport) =>
                                 setState(() => leg.origin = airport.code),
@@ -847,6 +901,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         child: InkWell(
                           onTap: () => _openAirportPicker(
                             context,
+                            lang: lang,
                             title: l10nPick(context, en: 'Destination', fa: 'مقصد', ar: 'الوصول'),
                             onSelected: (airport) =>
                                 setState(() => leg.destination = airport.code),
@@ -874,11 +929,17 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                       Expanded(
                         child: InkWell(
                           onTap: () async {
-                            final picked = await showDatePicker(
+                            final picked = await showModalBottomSheet<DateTime>(
                               context: context,
-                              initialDate: leg.date,
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime.now().add(const Duration(days: 365)),
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (ctx) => _FlightDatePickerBottomSheet(
+                                initialDate: leg.date,
+                                firstDate: DateUtils.dateOnly(DateTime.now()),
+                                lastDate: DateTime.now().add(const Duration(days: 365)),
+                                title: '${l10nPick(context, en: 'Select Date for Leg', fa: 'انتخاب تاریخ مسیر', ar: 'تاريخ مسار')} ${idx + 1}',
+                                lang: lang,
+                              ),
                             );
                             if (picked != null) {
                               setState(() => leg.date = picked);
@@ -893,7 +954,9 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                                   BorderRadius.circular(ECardoTokens.radiusSm),
                             ),
                             child: Text(
-                              DateFormat('d MMM').format(leg.date),
+                              lang == 'fa'
+                                  ? '${Jalali.fromDateTime(leg.date).day} ${Jalali.fromDateTime(leg.date).formatter.mN}'
+                                  : DateFormat('d MMM').format(leg.date),
                               style: TextStyle(
                                 color: ECardoTokens.ink(context),
                                 fontWeight: FontWeight.w700,
@@ -1312,11 +1375,31 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   }
 
   Widget _buildPopularRoutesSection(BuildContext context, String lang) {
-    const popularRoutes = [
-      ('DXB', 'LHR', 'Dubai to London', 'From \$420'),
-      ('IKA', 'IST', 'Tehran to Istanbul', 'From \$210'),
-      ('DOH', 'CDG', 'Doha to Paris', 'From \$490'),
-      ('DXB', 'JFK', 'Dubai to New York', 'From \$680'),
+    final popularRoutes = [
+      (
+        'IKA',
+        'IST',
+        l10nPick(context, en: 'Tehran to Istanbul', fa: 'تهران به استانبول', ar: 'طهران إلى إسطنبول'),
+        210,
+      ),
+      (
+        'DXB',
+        'LHR',
+        l10nPick(context, en: 'Dubai to London', fa: 'دبی به لندن', ar: 'دبي إلى لندن'),
+        420,
+      ),
+      (
+        'DOH',
+        'CDG',
+        l10nPick(context, en: 'Doha to Paris', fa: 'دوحه به پاریس', ar: 'الدوحة إلى باريس'),
+        490,
+      ),
+      (
+        'DXB',
+        'JFK',
+        l10nPick(context, en: 'Dubai to New York', fa: 'دبی به نیویورک', ar: 'دبي إلى نيويورك'),
+        680,
+      ),
     ];
 
     return Column(
@@ -1368,12 +1451,12 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   border: Border.all(color: ECardoTokens.border(context)),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Text(
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
                         '${route.$1} → ${route.$2}',
                         style: TextStyle(
                           color: ECardoTokens.brand500(context),
@@ -1381,17 +1464,22 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                           fontSize: 11.5.sp,
                         ),
                       ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      route.$4,
-                      style: TextStyle(
-                        color: ECardoTokens.success(context),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 11.sp,
+                      SizedBox(width: 8.w),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'From \$${route.$4}',
+                          fa: 'از \$${route.$4}',
+                          ar: 'من \$${route.$4}',
+                        ),
+                        style: TextStyle(
+                          color: ECardoTokens.success(context),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 11.sp,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
@@ -1402,24 +1490,18 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   }
 
   Future<void> _pickDepartureDate(BuildContext context) async {
-    final picked = await showDatePicker(
+    final lang = Localizations.localeOf(context).languageCode;
+    final picked = await showModalBottomSheet<DateTime>(
       context: context,
-      initialDate: _departureDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: ECardoTokens.brand700(context),
-              onPrimary: ECardoTokens.inkOnBrand,
-              surface: ECardoTokens.surfaceCard(context),
-              onSurface: ECardoTokens.ink(context),
-            ),
-          ),
-          child: child!,
-        );
-      },
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => _FlightDatePickerBottomSheet(
+        initialDate: _departureDate,
+        firstDate: DateUtils.dateOnly(DateTime.now()),
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+        title: l10nPick(context, en: 'Select Departure Date', fa: 'انتخاب تاریخ رفت', ar: 'اختر تاريخ المغادرة'),
+        lang: lang,
+      ),
     );
     if (picked != null) {
       AppHaptics.selection();
@@ -1434,26 +1516,20 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   }
 
   Future<void> _pickReturnDate(BuildContext context) async {
+    final lang = Localizations.localeOf(context).languageCode;
     final minDate = _departureDate.add(const Duration(days: 1));
     final initial = _returnDate.isAfter(minDate) ? _returnDate : minDate;
-    final picked = await showDatePicker(
+    final picked = await showModalBottomSheet<DateTime>(
       context: context,
-      initialDate: initial,
-      firstDate: minDate,
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: ECardoTokens.brand700(context),
-              onPrimary: ECardoTokens.inkOnBrand,
-              surface: ECardoTokens.surfaceCard(context),
-              onSurface: ECardoTokens.ink(context),
-            ),
-          ),
-          child: child!,
-        );
-      },
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => _FlightDatePickerBottomSheet(
+        initialDate: initial,
+        firstDate: minDate,
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+        title: l10nPick(context, en: 'Select Return Date', fa: 'انتخاب تاریخ برگشت', ar: 'اختر تاريخ العودة'),
+        lang: lang,
+      ),
     );
     if (picked != null) {
       AppHaptics.selection();
@@ -1464,6 +1540,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   void _openAirportPicker(
     BuildContext context, {
     required String title,
+    required String lang,
     required ValueChanged<AirportItem> onSelected,
   }) {
     showModalBottomSheet<void>(
@@ -1472,6 +1549,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => _AirportSearchBottomSheet(
         title: title,
+        lang: lang,
         onSelected: (airport) {
           onSelected(airport);
           Navigator.pop(sheetContext);
@@ -1515,10 +1593,12 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
 /// Searchable airport selection modal.
 class _AirportSearchBottomSheet extends StatefulWidget {
   final String title;
+  final String lang;
   final ValueChanged<AirportItem> onSelected;
 
   const _AirportSearchBottomSheet({
     required this.title,
+    required this.lang,
     required this.onSelected,
   });
 
@@ -1551,10 +1631,14 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
         _filtered = AirportItem.popularAirports;
       } else {
         _filtered = AirportItem.popularAirports.where((item) {
+          final locCity = item.localizedCity(widget.lang).toLowerCase();
+          final locCountry = item.localizedCountry(widget.lang).toLowerCase();
           return item.code.toLowerCase().contains(query) ||
               item.city.toLowerCase().contains(query) ||
               item.name.toLowerCase().contains(query) ||
-              item.country.toLowerCase().contains(query);
+              item.country.toLowerCase().contains(query) ||
+              locCity.contains(query) ||
+              locCountry.contains(query);
         }).toList();
       }
     });
@@ -1706,7 +1790,7 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
                             ),
                           ),
                           title: Text(
-                            airport.city,
+                            airport.localizedCity(widget.lang),
                             style: TextStyle(
                               color: ECardoTokens.ink(context),
                               fontWeight: FontWeight.w800,
@@ -1714,7 +1798,7 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
                             ),
                           ),
                           subtitle: Text(
-                            '${airport.name}, ${airport.country}',
+                            '${airport.name}, ${airport.localizedCountry(widget.lang)}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -2103,3 +2187,285 @@ class _CabinClassModalSheet extends StatelessWidget {
     );
   }
 }
+
+/// Modernized travel date picker bottom sheet with Shamsi / Gregorian toggle
+class _FlightDatePickerBottomSheet extends StatefulWidget {
+  final DateTime initialDate;
+  final DateTime firstDate;
+  final DateTime lastDate;
+  final String title;
+  final String lang;
+
+  const _FlightDatePickerBottomSheet({
+    required this.initialDate,
+    required this.firstDate,
+    required this.lastDate,
+    required this.title,
+    required this.lang,
+  });
+
+  @override
+  State<_FlightDatePickerBottomSheet> createState() =>
+      _FlightDatePickerBottomSheetState();
+}
+
+class _FlightDatePickerBottomSheetState
+    extends State<_FlightDatePickerBottomSheet> {
+  late DateTime _selectedDate;
+  bool _persianCalendar = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = widget.initialDate;
+    _persianCalendar = widget.lang == 'fa';
+  }
+
+  String _dateSummary(DateTime date) {
+    if (_persianCalendar) {
+      final j = Jalali.fromDateTime(date);
+      return '${j.formatter.wN}، ${j.day} ${j.formatter.mN} ${j.year}';
+    }
+    return DateFormat('EEEE, d MMMM yyyy').format(date);
+  }
+
+  String _secondaryDateSummary(DateTime date) {
+    if (_persianCalendar) {
+      return DateFormat('EEE, d MMM yyyy').format(date);
+    }
+    final j = Jalali.fromDateTime(date);
+    return '${j.formatter.wN}، ${j.day} ${j.formatter.mN} ${j.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final jalaliStr = _dateSummary(_selectedDate);
+    final secondaryStr = _secondaryDateSummary(_selectedDate);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: ECardoTokens.surfaceCard(context),
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(ECardoTokens.radius2xl),
+        ),
+        boxShadow: ECardoTokens.shadowSheet(context),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Container(
+                  width: 38.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: ECardoTokens.borderStrong(context),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusFull),
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      color: ECardoTokens.ink(context),
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close_rounded),
+                    color: ECardoTokens.inkMuted(context),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+              Container(
+                decoration: BoxDecoration(
+                  color: ECardoTokens.surfaceSunken(context),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                ),
+                padding: EdgeInsets.all(4.r),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _persianCalendar = true),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: _persianCalendar
+                                ? ECardoTokens.surfaceCard(context)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            boxShadow: _persianCalendar
+                                ? ECardoTokens.shadowCard(context)
+                                : null,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            l10nPick(context, en: 'Solar Hijri (Jalali)', fa: 'تقویم شمسی', ar: 'التقويم الشمسي'),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: _persianCalendar
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
+                              color: _persianCalendar
+                                  ? ECardoTokens.brand700(context)
+                                  : ECardoTokens.inkMuted(context),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _persianCalendar = false),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: !_persianCalendar
+                                ? ECardoTokens.surfaceCard(context)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            boxShadow: !_persianCalendar
+                                ? ECardoTokens.shadowCard(context)
+                                : null,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            l10nPick(context, en: 'Gregorian', fa: 'تقویم میلادی', ar: 'التقويم الميلادي'),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: !_persianCalendar
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
+                              color: !_persianCalendar
+                                  ? ECardoTokens.brand700(context)
+                                  : ECardoTokens.inkMuted(context),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: ECardoTokens.brand100(context).withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                  border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.2)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.event_available_rounded,
+                      color: ECardoTokens.brand700(context),
+                      size: 20.r,
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            jalaliStr,
+                            style: TextStyle(
+                              color: ECardoTokens.brand700(context),
+                              fontSize: 13.5.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          Text(
+                            secondaryStr,
+                            style: TextStyle(
+                              color: ECardoTokens.inkMuted(context),
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10.h),
+              Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: Theme.of(context).colorScheme.copyWith(
+                    primary: ECardoTokens.brand700(context),
+                    surface: ECardoTokens.surfaceCard(context),
+                  ),
+                ),
+                child: CalendarDatePicker2(
+                  config: CalendarDatePicker2Config(
+                    calendarType: CalendarDatePicker2Type.single,
+                    firstDate: widget.firstDate,
+                    lastDate: widget.lastDate,
+                    selectedDayHighlightColor: ECardoTokens.brand700(context),
+                    controlsTextStyle: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: ECardoTokens.ink(context),
+                      fontSize: 13.sp,
+                    ),
+                    dayTextStyle: TextStyle(
+                      color: ECardoTokens.ink(context),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  value: [_selectedDate],
+                  onValueChanged: (dates) {
+                    final d = dates.firstOrNull;
+                    if (d != null) {
+                      AppHaptics.selection();
+                      setState(() => _selectedDate = d);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(height: 14.h),
+              SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: ElevatedButton(
+                  onPressed: () {
+                    AppHaptics.medium();
+                    Navigator.of(context).pop(_selectedDate);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ECardoTokens.brand700(context),
+                    foregroundColor: ECardoTokens.inkOnBrand,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+                    ),
+                  ),
+                  child: Text(
+                    l10nPick(context, en: 'Confirm Date', fa: 'تأیید تاریخ', ar: 'تأكيد التاريخ'),
+                    style: TextStyle(
+                      fontSize: 13.5.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

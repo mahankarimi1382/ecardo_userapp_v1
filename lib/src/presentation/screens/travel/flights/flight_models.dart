@@ -138,20 +138,20 @@ enum FareFamily {
     if (languageCode == 'fa') {
       switch (this) {
         case FareFamily.basic:
-          return 'پایه (Basic)';
+          return 'پایه';
         case FareFamily.standard:
-          return 'استاندارد (Standard)';
+          return 'استاندارد';
         case FareFamily.flex:
-          return 'منعطف (Flex)';
+          return 'منعطف';
       }
     } else if (languageCode == 'ar') {
       switch (this) {
         case FareFamily.basic:
-          return 'أساسي (Basic)';
+          return 'أساسي';
         case FareFamily.standard:
-          return 'قياسي (Standard)';
+          return 'قياسي';
         case FareFamily.flex:
-          return 'مرن (Flex)';
+          return 'مرن';
       }
     }
     return label;
@@ -167,6 +167,38 @@ enum FareFamily {
       case FareFamily.flex:
         return '2 × 23 kg checked bags';
     }
+  }
+
+  String localizedBaggageCabin(String languageCode) {
+    if (languageCode == 'fa') {
+      return '۱ بار دستی ۷ کیلوگرمی';
+    } else if (languageCode == 'ar') {
+      return 'حقيبة يد واحدة 7 كجم';
+    }
+    return baggageCabin;
+  }
+
+  String localizedBaggageChecked(String languageCode) {
+    if (languageCode == 'fa') {
+      switch (this) {
+        case FareFamily.basic:
+          return 'فاقد بار چمدان';
+        case FareFamily.standard:
+          return '۱ چمدان ۲۳ کیلوگرمی';
+        case FareFamily.flex:
+          return '۲ چمدان ۲۳ کیلوگرمی';
+      }
+    } else if (languageCode == 'ar') {
+      switch (this) {
+        case FareFamily.basic:
+          return 'غير مشمولة';
+        case FareFamily.standard:
+          return 'حقيبة واحدة 23 كجم';
+        case FareFamily.flex:
+          return 'حقيبتان 23 كجم';
+      }
+    }
+    return baggageChecked;
   }
 
   bool get seatSelectionIncluded => this != FareFamily.basic;
@@ -240,6 +272,190 @@ class AirportItem {
 
   String get displayFull => '$city ($code) - $name';
   String get displayShort => '$city ($code)';
+
+  String localizedCity(String languageCode) {
+    if (languageCode == 'fa') {
+      switch (code.toUpperCase()) {
+        case 'IKA':
+        case 'THR':
+          return 'تهران';
+        case 'MHD':
+          return 'مشهد';
+        case 'SYZ':
+          return 'شیراز';
+        case 'ISF':
+        case 'IFN':
+          return 'اصفهان';
+        case 'TBZ':
+          return 'تبریز';
+        case 'KIH':
+          return 'کیش';
+        case 'DXB':
+        case 'DWC':
+          return 'دبی';
+        case 'AUH':
+          return 'ابوظبی';
+        case 'IST':
+        case 'SAW':
+          return 'استانبول';
+        case 'DOH':
+          return 'دوحه';
+        case 'LHR':
+        case 'LGW':
+        case 'STN':
+          return 'لندن';
+        case 'CDG':
+        case 'ORY':
+          return 'پاریس';
+        case 'FRA':
+          return 'فرانکفورت';
+        case 'AMS':
+          return 'آمستردام';
+        case 'JFK':
+        case 'EWR':
+          return 'نیویورک';
+        case 'SIN':
+          return 'سنگاپور';
+        case 'HND':
+        case 'NRT':
+          return 'توکیو';
+        case 'RUH':
+          return 'ریاض';
+        case 'JED':
+          return 'جده';
+        case 'MCT':
+          return 'مسقط';
+        case 'CAI':
+          return 'قاهره';
+        case 'SYD':
+          return 'سیدنی';
+        case 'YYZ':
+          return 'تورنتو';
+        case 'BKK':
+          return 'بانکوک';
+        case 'KUL':
+          return 'کوالالامپور';
+        case 'EVN':
+          return 'ایروان';
+        case 'TBS':
+          return 'تفلیس';
+        case 'BAK':
+        case 'GYD':
+          return 'باکو';
+        case 'NJF':
+          return 'نجف';
+        case 'BGW':
+          return 'بغداد';
+        default:
+          return city;
+      }
+    } else if (languageCode == 'ar') {
+      switch (code.toUpperCase()) {
+        case 'IKA':
+        case 'THR':
+          return 'طهران';
+        case 'DXB':
+        case 'DWC':
+          return 'دبي';
+        case 'AUH':
+          return 'أبوظبي';
+        case 'IST':
+        case 'SAW':
+          return 'إسطنبول';
+        case 'DOH':
+          return 'الدوحة';
+        case 'LHR':
+          return 'لندن';
+        case 'CDG':
+          return 'باريس';
+        default:
+          return city;
+      }
+    }
+    return city;
+  }
+
+  String localizedCountry(String languageCode) {
+    if (languageCode == 'fa') {
+      switch (countryCode.toUpperCase()) {
+        case 'IR':
+          return 'ایران';
+        case 'AE':
+          return 'امارات متحده عربی';
+        case 'TR':
+          return 'ترکیه';
+        case 'QA':
+          return 'قطر';
+        case 'GB':
+          return 'انگلستان';
+        case 'FR':
+          return 'فرانسه';
+        case 'DE':
+          return 'آلمان';
+        case 'NL':
+          return 'هلند';
+        case 'US':
+          return 'ایالات متحده';
+        case 'SG':
+          return 'سنگاپور';
+        case 'JP':
+          return 'ژاپن';
+        case 'SA':
+          return 'عربستان سعودی';
+        case 'OM':
+          return 'عمان';
+        case 'EG':
+          return 'مصر';
+        case 'AU':
+          return 'استرالیا';
+        case 'CA':
+          return 'کانادا';
+        case 'TH':
+          return 'تایلند';
+        case 'MY':
+          return 'مالزی';
+        case 'AM':
+          return 'ارمنستان';
+        case 'GE':
+          return 'گرجستان';
+        case 'AZ':
+          return 'آذربایجان';
+        case 'IQ':
+          return 'عراق';
+        default:
+          return country;
+      }
+    } else if (languageCode == 'ar') {
+      switch (countryCode.toUpperCase()) {
+        case 'IR':
+          return 'إيران';
+        case 'AE':
+          return 'الإمارات';
+        case 'TR':
+          return 'تركيا';
+        case 'QA':
+          return 'قطر';
+        case 'GB':
+          return 'بريطانيا';
+        case 'FR':
+          return 'فرنسا';
+        case 'SA':
+          return 'السعودية';
+        case 'OM':
+          return 'عُمان';
+        case 'EG':
+          return 'مصر';
+        default:
+          return country;
+      }
+    }
+    return country;
+  }
+
+  String localizedDisplay(String languageCode) {
+    final c = localizedCity(languageCode);
+    return '$c ($code)';
+  }
 
   static const List<AirportItem> popularAirports = [
     AirportItem(
