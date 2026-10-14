@@ -52,6 +52,7 @@ class TransactionsController extends GetxController {
   // Status and Type filters
   final RxString status = "".obs;
   final RxString selectedType = "".obs;
+  final RxInt direction = 0.obs; // 0: All, 1: Incoming, 2: Outgoing, 3: Transfer
 
   // Pagination
   final RxInt currentPage = 1.obs;
@@ -80,18 +81,26 @@ class TransactionsController extends GetxController {
     final queryParams = <String>[];
     queryParams.add('page=${currentPage.value}&per_page=15');
 
-    if (transactionIdController.text.isNotEmpty) {
+    if (transactionIdController.text.trim().isNotEmpty) {
       queryParams.add(
-        'txn=${Uri.encodeComponent(transactionIdController.text)}',
+        'txn=${Uri.encodeComponent(transactionIdController.text.trim())}',
       );
     }
 
-    if (status.value.isNotEmpty) {
+    if (status.value.isNotEmpty && status.value.toLowerCase() != 'all') {
       queryParams.add('status=${Uri.encodeComponent(status.value)}');
     }
 
-    if (selectedType.value.isNotEmpty) {
+    if (selectedType.value.isNotEmpty && selectedType.value.toLowerCase() != 'all') {
       queryParams.add('type=${Uri.encodeComponent(selectedType.value)}');
+    }
+
+    if (direction.value == 1) {
+      queryParams.add('direction=incoming');
+    } else if (direction.value == 2) {
+      queryParams.add('direction=outgoing');
+    } else if (direction.value == 3) {
+      queryParams.add('direction=transfer');
     }
 
     return queryParams;
@@ -212,6 +221,9 @@ class TransactionsController extends GetxController {
   void resetFilters() {
     selectedStatusIndex.value = -1;
     status.value = "";
+    selectedTypeIndex.value = 0;
+    selectedType.value = "";
+    direction.value = 0;
     transactionIdController.clear();
     isFilter.value = true;
     fetchDynamicTransactions();
@@ -221,15 +233,14 @@ class TransactionsController extends GetxController {
   bool hasActiveFilters() {
     return selectedType.value.isNotEmpty ||
         status.value.isNotEmpty ||
-        transactionIdController.text.isNotEmpty ||
-        selectedTypeIndex.value != 0;
+        transactionIdController.text.trim().isNotEmpty ||
+        selectedTypeIndex.value != 0 ||
+        direction.value != 0;
   }
 
   // Clear other filters when type is changed
   void clearOtherFiltersOnTypeChange() {
     transactionIdController.clear();
-    selectedStatusIndex.value = -1;
-    status.value = "";
   }
 
   // Update status filter when status is selected in bottom sheet

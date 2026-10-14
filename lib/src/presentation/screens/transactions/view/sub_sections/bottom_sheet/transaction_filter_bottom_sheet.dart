@@ -236,6 +236,7 @@ class _TransactionFilterBottomSheetState
               CommonButton(
                 onPressed: () {
                   HapticFeedback.mediumImpact();
+                  controller.direction.value = _selectedDir;
                   widget.onDirectionChanged?.call(_selectedDir);
                   controller.updateStatusFilter();
                   controller.isFilter.value = true;
@@ -274,14 +275,6 @@ class _TransactionFilterBottomSheetState
             HapticFeedback.selectionClick();
             setState(() {
               _selectedDir = val;
-              if (val == 3) {
-                // Pre-select 'Send Money' if available
-                final idx = controller.typesList.indexOf('Send Money');
-                if (idx != -1) {
-                  controller.selectedTypeIndex.value = idx;
-                  controller.selectedType.value = 'Send Money';
-                }
-              }
             });
           },
           child: AnimatedContainer(

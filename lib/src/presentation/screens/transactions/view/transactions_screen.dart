@@ -64,6 +64,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _dirFilter = controller.direction.value;
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     loadData();
@@ -160,7 +161,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     super.dispose();
   }
 
-  bool get _hasAnyFilter => controller.hasActiveFilters() || _dirFilter != 0;
+  bool get _hasAnyFilter => controller.hasActiveFilters();
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +213,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           HapticFeedback.lightImpact();
           Get.bottomSheet(
             TransactionFilterBottomSheet(
-              initialDirFilter: _dirFilter,
+              initialDirFilter: controller.direction.value,
               onDirectionChanged: (val) {
                 setState(() => _dirFilter = val);
               },
@@ -299,11 +300,16 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       );
     }
 
-    // Filter transactions by direction
+    // Filter transactions by direction (harmonized with server query & client safety)
     final all = controller.transactionsModel.value.data?.transactions ?? [];
     final transactions = all.where((tx) {
-      if (_dirFilter == 1) return tx.isPlus == true;
-      if (_dirFilter == 2) return tx.isPlus != true;
+      final dir = controller.direction.value != 0 ? controller.direction.value : _dirFilter;
+      if (dir == 1) return tx.isPlus == true;
+      if (dir == 2) return tx.isPlus != true;
+      if (dir == 3) {
+        final t = (tx.type ?? '').toLowerCase();
+        return t.contains('send') || t.contains('receive') || t.contains('transfer');
+      }
       return true;
     }).toList();
 
@@ -493,7 +499,10 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             onTap: () {
               HapticFeedback.selectionClick();
+              if (controller.direction.value == value && _dirFilter == value) return;
               setState(() => _dirFilter = value);
+              controller.direction.value = value;
+              controller.fetchDynamicTransactions();
             },
             child: AnimatedContainer(
               duration: AppDurations.fast,

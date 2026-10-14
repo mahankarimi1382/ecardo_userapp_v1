@@ -1,8 +1,9 @@
 name: web
 
 on:
-  # Disabled auto-run on push to conserve Actions minutes (Android release is primary).
-  # Trigger manually from Actions tab when a web deploy is needed.
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
