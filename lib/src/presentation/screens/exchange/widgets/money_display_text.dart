@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 
 /// Renders a monetary amount with a strict typographic hierarchy:
 ///   - Integer part: large, [FontWeight.w900], full-opacity.
@@ -115,29 +115,33 @@ class MoneyDisplayText extends StatelessWidget {
           letterSpacing: 0,
         );
 
-    return RichText(
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
-      text: TextSpan(
-        children: [
-          TextSpan(text: integerPart, style: iStyle),
-          if (decimalPart.isNotEmpty) TextSpan(text: decimalPart, style: dStyle),
-          if (currencyCode != null && currencyCode!.isNotEmpty) ...[
-            const TextSpan(text: ' '),
-            TextSpan(text: currencyCode, style: cStyle),
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: RichText(
+        textDirection: TextDirection.ltr,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+        text: TextSpan(
+          children: [
+            TextSpan(text: integerPart, style: iStyle),
+            if (decimalPart.isNotEmpty) TextSpan(text: decimalPart, style: dStyle),
+            if (currencyCode != null && currencyCode!.isNotEmpty) ...[
+              const TextSpan(text: ' '),
+              TextSpan(text: currencyCode, style: cStyle),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
 
-  /// Formats [value] with [decimalDigits] and a thousand separator, in
-  /// [locale]. Falls back to `en` if Intl doesn't have data for the locale.
+  /// Formats [value] with [decimalDigits] and a thousand separator.
+  /// Uses US formatting for tabular figures so digits and periods are never inverted.
   String _format(double value, int decimalDigits, String localeTag) {
     try {
       final nf = NumberFormat.currency(
-        locale: localeTag,
+        locale: 'en_US',
         symbol: '',
         decimalDigits: decimalDigits,
       );
@@ -157,11 +161,6 @@ class MoneyDisplayText extends StatelessWidget {
 
   /// Returns the decimal separator used by [localeTag] (or `.` if unknown).
   String _decimalSeparatorFor(String localeTag) {
-    try {
-      final symbols = NumberFormat.decimalPattern(localeTag).symbols;
-      return symbols.DECIMAL_SEP;
-    } catch (_) {
-      return '.';
-    }
+    return '.';
   }
 }

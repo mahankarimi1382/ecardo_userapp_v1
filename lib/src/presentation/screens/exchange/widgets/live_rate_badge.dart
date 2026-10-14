@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../../../app/constants/app_colors.dart';
 import '../../../../app/constants/app_spacing.dart';
@@ -127,52 +128,55 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      '1 ${widget.fromCode} =',
-                      style: TextStyle(
-                        fontSize: 12 * textScale,
-                        fontWeight: FontWeight.w600,
-                        color: ExchangeDesignTokens.textTertiary(context),
-                        letterSpacing: 0,
-                        fontFamily: 'Plus Jakarta Sans',
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.xs + 2),
-                    Flexible(
-                      child: Text(
-                        widget.rate.isFinite && widget.rate > 0
-                            ? _formatRate(widget.rate)
-                            : '—',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        '1 ${widget.fromCode} =',
                         style: TextStyle(
-                          fontSize: 16 * textScale,
-                          fontWeight: FontWeight.w900,
-                          color: ExchangeDesignTokens.textPrimary(context),
+                          fontSize: 12 * textScale,
+                          fontWeight: FontWeight.w600,
+                          color: ExchangeDesignTokens.textTertiary(context),
                           letterSpacing: 0,
                           fontFamily: 'Plus Jakarta Sans',
-                          fontFeatures: const [
-                            FontFeature.tabularFigures(),
-                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.xs),
-                    Text(
-                      widget.toCode,
-                      style: TextStyle(
-                        fontSize: 12 * textScale,
-                        fontWeight: FontWeight.w700,
-                        color: ExchangeDesignTokens.textTertiary(context),
-                        letterSpacing: 0,
-                        fontFamily: 'Plus Jakarta Sans',
+                      const SizedBox(width: AppSpacing.xs + 2),
+                      Flexible(
+                        child: Text(
+                          widget.rate.isFinite && widget.rate > 0
+                              ? _formatRate(widget.rate)
+                              : '—',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16 * textScale,
+                            fontWeight: FontWeight.w900,
+                            color: ExchangeDesignTokens.textPrimary(context),
+                            letterSpacing: 0,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontFeatures: const [
+                              FontFeature.tabularFigures(),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: AppSpacing.xs),
+                      Text(
+                        widget.toCode,
+                        style: TextStyle(
+                          fontSize: 12 * textScale,
+                          fontWeight: FontWeight.w700,
+                          color: ExchangeDesignTokens.textTertiary(context),
+                          letterSpacing: 0,
+                          fontFamily: 'Plus Jakarta Sans',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 // Subtitle: currency names OR status line
@@ -384,15 +388,23 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
   }
 
   String _formatRate(double rate) {
-    if (rate >= 1) return rate.toStringAsFixed(rate >= 100 ? 0 : 2);
-    if (rate >= 0.01) return rate.toStringAsFixed(4);
+    if (rate >= 100) {
+      return NumberFormat('#,##0', 'en_US').format(rate.round());
+    }
+    if (rate >= 1) {
+      return NumberFormat('#,##0.00', 'en_US').format(rate);
+    }
+    if (rate >= 0.0001) {
+      return NumberFormat('0.0000', 'en_US').format(rate);
+    }
     return rate.toStringAsFixed(8);
   }
 
   String _formatTimestamp(DateTime t) {
     final now = DateTime.now();
     final diff = now.difference(t);
-    if (diff.inSeconds < 60) return '${diff.inSeconds}s';
+    final sec = diff.inSeconds.clamp(0, 59);
+    if (diff.inSeconds < 60) return '${sec}s';
     if (diff.inMinutes < 60) return '${diff.inMinutes}m';
     return '${diff.inHours}h';
   }

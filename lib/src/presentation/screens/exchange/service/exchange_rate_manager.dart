@@ -127,6 +127,7 @@ class ExchangeRateManager {
   String normalizeApiCode(String walletCode) {
     final upper = walletCode.toUpperCase();
     if (upper == 'USDT') return 'USDT_IRT';
+    if (upper == 'IRT' || upper == 'TOMAN') return 'IRT';
     return upper;
   }
 
@@ -155,8 +156,16 @@ class ExchangeRateManager {
     final apiFromCode = normalizeApiCode(upperFrom);
     final apiToCode = normalizeApiCode(upperTo);
 
-    final fromRate = rates[apiFromCode] ?? (apiFromCode == 'IRR' ? 1.0 : null);
-    final toRate = rates[apiToCode] ?? (apiToCode == 'IRR' ? 1.0 : null);
+    double? resolveRateInIrr(String code) {
+      if (rates.containsKey(code)) return rates[code];
+      if (code == 'IRR') return 1.0;
+      if (code == 'IRT' || code == 'TOMAN') return 10.0;
+      if (code == 'USDT' && rates.containsKey('USDT_IRT')) return rates['USDT_IRT'];
+      return null;
+    }
+
+    final fromRate = resolveRateInIrr(apiFromCode);
+    final toRate = resolveRateInIrr(apiToCode);
 
     final newRate = calculateCrossRate(fromRate, toRate);
     if (newRate == null) return;
@@ -227,7 +236,10 @@ class ExchangeRateManager {
     if (fromRate <= 0 || toRate <= 0) {
       targetStaticRate.value = 1.0;
     } else {
-      targetStaticRate.value = fromRate / toRate;
+      // In currencies table, conversion_rate represents target units per 1 base (USD).
+      // Example: 1 USD has rate 1.0; 1 IRT has rate 95,000.
+      // Therefore, 1 USD = (toRate / fromRate) = 95,000 / 1.0 = 95,000 IRT.
+      targetStaticRate.value = toRate / fromRate;
     }
 
     // Benchmark fallback if rates are 1.0 or 0 and currency codes differ
@@ -255,9 +267,9 @@ class ExchangeRateManager {
       'GBP': 0.77,
       'AED': 3.67,
       'TRY': 34.2,
-      'IRT': 65000.0,
-      'TOMAN': 65000.0,
-      'IRR': 650000.0,
+      'IRT': 95000.0,
+      'TOMAN': 95000.0,
+      'IRR': 950000.0,
     };
 
     final fRate = ratesAgainstUsd[f];

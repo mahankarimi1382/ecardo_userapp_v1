@@ -141,17 +141,20 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                                 ),
                               ),
                               const SizedBox(height: 2),
-                              Text(
-                                '1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  color: ExchangeDesignTokens.textPrimary(
-                                    context,
+                              Directionality(
+                                textDirection: TextDirection.ltr,
+                                child: Text(
+                                  '1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                    color: ExchangeDesignTokens.textPrimary(
+                                      context,
+                                    ),
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
                                   ),
-                                  fontFeatures: const [
-                                    FontFeature.tabularFigures(),
-                                  ],
                                 ),
                               ),
                             ],

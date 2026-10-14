@@ -267,7 +267,7 @@ void main() {
     test('calculateStaticRate derives rate from CurrenciesData list', () {
       final currencies = [
         CurrenciesData(code: 'USD', conversionRate: '1.0'),
-        CurrenciesData(code: 'EUR', conversionRate: '1.08'),
+        CurrenciesData(code: 'EUR', conversionRate: '0.9259'),
       ];
 
       final targetRate = 0.0.obs;
@@ -278,9 +278,9 @@ void main() {
         targetStaticRate: targetRate,
       );
 
-      // fromRate / toRate: 1.0 / 1.08 ≈ 0.9259259
-      expect(targetRate.value, closeTo(1.0 / 1.08, 0.0001));
-      expect(manager.currentRate.value, closeTo(1.0 / 1.08, 0.0001));
+      // toRate / fromRate: 0.9259 / 1.0 = 0.9259 (matches backend conversion formula)
+      expect(targetRate.value, closeTo(0.9259, 0.0001));
+      expect(manager.currentRate.value, closeTo(0.9259, 0.0001));
     });
 
     test('lockRateForReview and drift detection', () {

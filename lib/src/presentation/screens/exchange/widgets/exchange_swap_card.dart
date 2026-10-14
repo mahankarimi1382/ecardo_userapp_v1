@@ -5,7 +5,6 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
-import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
@@ -363,20 +362,25 @@ class _ToCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EcardoGlassCard(
-      variant: EcardoGlassVariant.frosted,
-      blur: 16.0,
-      borderRadius: 0,
+    return Container(
       padding: const EdgeInsetsDirectional.fromSTEB(
         AppSpacing.xl,
         AppSpacing.xxl + 4,
         AppSpacing.xl,
         AppSpacing.xl,
       ),
-      shadows: ExchangeDesignTokens.cardShadow(context),
-      backgroundColor: ExchangeDesignTokens.cardSurface(context),
-      interactive: false,
-      clipBehavior: Clip.none,
+      decoration: BoxDecoration(
+        color: ExchangeDesignTokens.cardSurface(context),
+        borderRadius: const BorderRadiusDirectional.only(
+          bottomStart: Radius.circular(AppSpacing.radiusXl),
+          bottomEnd: Radius.circular(AppSpacing.radiusXl),
+        ),
+        border: Border.all(
+          color: ExchangeDesignTokens.cardBorder(context),
+          width: 1.0,
+        ),
+        boxShadow: ExchangeDesignTokens.cardShadow(context),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

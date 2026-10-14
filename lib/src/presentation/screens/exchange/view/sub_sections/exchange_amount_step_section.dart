@@ -486,8 +486,22 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.xs + 2),
                 Expanded(
-                  child: Text(
-                    '${loc.exchangeMinHint} $minStr ${fromWallet.code ?? ''}  •  ${loc.exchangeMaxHint} $maxStr ${fromWallet.code ?? ''}',
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: '${loc.exchangeMinHint}: '),
+                        TextSpan(
+                          text: '$minStr ${fromWallet.code ?? ''}',
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        const TextSpan(text: '   •   '),
+                        TextSpan(text: '${loc.exchangeMaxHint}: '),
+                        TextSpan(
+                          text: '$maxStr ${fromWallet.code ?? ''}',
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
