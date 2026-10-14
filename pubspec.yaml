@@ -3,7 +3,7 @@ description: "eCardo — International Financial Super App for users (multi-curr
 publish_to: 'none'
 
 
-version: 1.0.159+159
+version: 1.0.160+160
 
 environment:
   sdk: ^3.9.2
@@ -56,6 +56,7 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_secure_storage: ^9.2.2
   animations: ^2.2.0
+  url_launcher: ^6.3.3
 
 dev_dependencies:
   change_app_package_name: ^1.5.0

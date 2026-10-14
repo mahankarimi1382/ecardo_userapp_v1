@@ -32,6 +32,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -394,6 +395,12 @@ class AppUpdateController extends GetxController {
       return;
     }
 
+    if (Platform.isIOS) {
+      await openDirectDownload();
+      phase.value = AppUpdatePhase.idle;
+      return;
+    }
+
     // ----- Permissions (Install unknown apps) -----
     final granted = await _ensureInstallPermission();
     if (!granted) {
@@ -611,6 +618,17 @@ class AppUpdateController extends GetxController {
     final directUrl = directDownloadUrl.value.isNotEmpty
         ? directDownloadUrl.value
         : 'https://ecardo.ir/download';
+
+    try {
+      final targetUri = Uri.parse(directUrl);
+      if (await canLaunchUrl(targetUri)) {
+        await launchUrl(targetUri, mode: LaunchMode.externalApplication);
+        return;
+      }
+    } catch (e) {
+      debugPrint('url_launcher direct download error: $e');
+    }
+
     if (Platform.isAndroid) {
       try {
         final intent = AndroidIntent(
