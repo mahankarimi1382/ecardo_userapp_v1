@@ -343,7 +343,7 @@ class _VisaRequestCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '\$${request.totalFee.toStringAsFixed(0)} ${request.currency}',
+                    formatVisaPrice(request.totalFee, request.currency, context: context),
                     style: TextStyle(
                       fontSize: 13.5.sp,
                       fontWeight: FontWeight.w900,

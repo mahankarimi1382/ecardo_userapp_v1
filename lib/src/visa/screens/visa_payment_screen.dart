@@ -168,7 +168,7 @@ class VisaPaymentScreen extends StatelessWidget {
                         isDark: isDark,
                         title: l10nPick(context, en: '1. Platform Service Fee', fa: '۱. هزینه خدمات و کارشناسی پرونده'),
                         subtitle: l10nPick(context, en: 'Application audit, translation check, and tracking', fa: 'بررسی مدارک، فرم‌بندی و پیگیری اختصاصی'),
-                        amount: '\$${request.serviceFee.toStringAsFixed(2)}',
+                        amount: formatVisaPrice(request.serviceFee, request.currency, context: context),
                       ),
                       Divider(
                         height: AppSpacing.xxl,
@@ -181,7 +181,7 @@ class VisaPaymentScreen extends StatelessWidget {
                         isDark: isDark,
                         title: l10nPick(context, en: '2. Embassy & Government Fee', fa: '۲. تعرفه رسمی سفارت و اداره مهاجرت'),
                         subtitle: l10nPick(context, en: 'Official immigration authority fee for issuance', fa: 'تعرفه مستقیم مراجع صادرکننده ویزا'),
-                        amount: '\$${request.govFee.toStringAsFixed(2)}',
+                        amount: formatVisaPrice(request.govFee, request.currency, context: context),
                       ),
                       Divider(
                         height: AppSpacing.xxl,
@@ -207,7 +207,7 @@ class VisaPaymentScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '\$${request.totalFee.toStringAsFixed(2)} ${request.currency}',
+                              formatVisaPrice(request.totalFee, request.currency, context: context),
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w900,
@@ -381,7 +381,7 @@ class VisaPaymentScreen extends StatelessWidget {
                 const Icon(Icons.lock_outline_rounded, size: 18),
                 SizedBox(width: AppSpacing.sm.w),
                 Text(
-                  '${l10nPick(context, en: 'Pay', fa: 'پرداخت')} \$${request.totalFee.toStringAsFixed(2)} ${request.currency}',
+                  '${l10nPick(context, en: 'Pay', fa: 'پرداخت')} ${formatVisaPrice(request.totalFee, request.currency, context: context)}',
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,

@@ -94,7 +94,7 @@ class VisaApplicationScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '\$${catalog.totalFee.toStringAsFixed(0)}',
+                        formatVisaPrice(catalog.totalFee, catalog.currency, context: context),
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,

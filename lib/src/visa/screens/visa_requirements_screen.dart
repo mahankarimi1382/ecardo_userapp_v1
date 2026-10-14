@@ -114,7 +114,7 @@ class VisaRequirementsScreen extends StatelessWidget {
                 _priceRow(
                   isDark: isDark,
                   title: l10nPick(context, en: 'Platform Service Fee', fa: 'هزینه خدمات و بررسی تخصصی'),
-                  amount: '\$${item.serviceFee.toStringAsFixed(2)}',
+                  amount: formatVisaPrice(item.serviceFee, item.currency, context: context),
                   subtitle: l10nPick(context, en: 'Application prep & consultant audit', fa: 'تشکیل پرونده و اعتبارسنجی مدارک'),
                 ),
                 Divider(
@@ -124,7 +124,7 @@ class VisaRequirementsScreen extends StatelessWidget {
                 _priceRow(
                   isDark: isDark,
                   title: l10nPick(context, en: 'Government & Embassy Fee', fa: 'تعرفه رسمی دولتی و صدور مرجع'),
-                  amount: '\$${item.govFee.toStringAsFixed(2)}',
+                  amount: formatVisaPrice(item.govFee, item.currency, context: context),
                   subtitle: l10nPick(context, en: 'Non-refundable after embassy submission', fa: 'غیرقابل استرداد پس از ثبت در مرجع صادرکننده'),
                 ),
                 Divider(
@@ -143,7 +143,7 @@ class VisaRequirementsScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '\$${item.totalFee.toStringAsFixed(2)} ${item.currency}',
+                      formatVisaPrice(item.totalFee, item.currency, context: context),
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w900,

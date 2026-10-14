@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 import '../bookings/travel_checkout_screen.dart';
@@ -1254,32 +1255,32 @@ class _CipLoungeReservationScreenState
         children: [
           // IMPORTANT: First add button MUST increment Adult count for test compatibility
           _buildCounterRow(
-            label: 'Adult Guests (12+ yrs)',
-            subtitle: '\$${airport['basePriceUsd']} per person',
+            label: l10nPick(context, en: 'Adult Guests (12+ yrs)', fa: 'مهمان بزرگسال (۱۲ سال به بالا)', ar: 'ضيوف بالغون (12+ سنة)'),
+            subtitle: l10nPick(context, en: '\$${airport['basePriceUsd']} per person', fa: '${airport['basePriceUsd']} دلار برای هر نفر', ar: '${airport['basePriceUsd']} دولار لكل شخص'),
             value: _adultsCount,
             minValue: 1,
             onChanged: (val) => setState(() => _adultsCount = val),
           ),
           Divider(height: 24.h, color: TravelTheme.borderFor(context)),
           _buildCounterRow(
-            label: 'Child Guests (2-12 yrs)',
-            subtitle: '\$${airport['childPriceUsd']} per person',
+            label: l10nPick(context, en: 'Child Guests (2-12 yrs)', fa: 'مهمان کودک (۲ تا ۱۲ سال)', ar: 'ضيوف أطفال (2-12 سنة)'),
+            subtitle: l10nPick(context, en: '\$${airport['childPriceUsd']} per person', fa: '${airport['childPriceUsd']} دلار برای هر نفر', ar: '${airport['childPriceUsd']} دولار لكل شخص'),
             value: _childrenCount,
             minValue: 0,
             onChanged: (val) => setState(() => _childrenCount = val),
           ),
           Divider(height: 24.h, color: TravelTheme.borderFor(context)),
           _buildCounterRow(
-            label: 'Escort & Welcomer Guests',
-            subtitle: '\$${airport['escortPriceUsd'] ?? 25.0} per person (Non-traveling)',
+            label: l10nPick(context, en: 'Escort & Welcomer Guests', fa: 'همراه و مشایعت‌کننده', ar: 'المرافقون والمستقبلون'),
+            subtitle: l10nPick(context, en: '\$${airport['escortPriceUsd'] ?? 25.0} per person (Non-traveling)', fa: '${airport['escortPriceUsd'] ?? 25.0} دلار برای هر نفر (بدون پرواز)', ar: '${airport['escortPriceUsd'] ?? 25.0} دولار لكل شخص'),
             value: _escortsCount,
             minValue: 0,
             onChanged: (val) => setState(() => _escortsCount = val),
           ),
           Divider(height: 24.h, color: TravelTheme.borderFor(context)),
           _buildCounterRow(
-            label: 'Infant Guests (<2 yrs)',
-            subtitle: 'Complimentary (Adds to flight manifest)',
+            label: l10nPick(context, en: 'Infant Guests (<2 yrs)', fa: 'نوزاد (زیر ۲ سال)', ar: 'رضيع (أقل من سنتين)'),
+            subtitle: l10nPick(context, en: 'Complimentary (Adds to flight manifest)', fa: 'رایگان (ثبت در مانیفست پرواز)', ar: 'مجاني (يُضاف إلى بيان الرحلة)'),
             value: _infantsCount,
             minValue: 0,
             onChanged: (val) => setState(() => _infantsCount = val),

@@ -576,7 +576,7 @@ class VisaCatalogCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${l10nPick(context, en: 'From', fa: 'شروع از')}: \$${item.totalFee.toStringAsFixed(0)}',
+                      '${l10nPick(context, en: 'From', fa: 'شروع از')}: ${formatVisaPrice(item.totalFee, item.currency, context: context)}',
                       style: TextStyle(
                         fontSize: 13.5.sp,
                         fontWeight: FontWeight.w900,

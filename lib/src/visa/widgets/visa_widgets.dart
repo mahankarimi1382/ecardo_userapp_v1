@@ -656,3 +656,18 @@ class VisaDocUploadCard extends StatelessWidget {
     );
   }
 }
+
+/// Helper function to format visa prices with correct currency symbol and separators.
+String formatVisaPrice(double amount, String currency, {BuildContext? context}) {
+  final curr = currency.toUpperCase().trim();
+  final isWhole = (amount - amount.roundToDouble()).abs() < 0.01;
+  final formattedAmount = isWhole ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
+  final isFa = context != null ? (Localizations.localeOf(context).languageCode == 'fa') : true;
+
+  if (curr == 'USD') return isFa ? '$formattedAmount دلار' : '\$$formattedAmount';
+  if (curr == 'EUR') return isFa ? '$formattedAmount یورو' : '€$formattedAmount';
+  if (curr == 'GBP') return isFa ? '$formattedAmount پوند' : '£$formattedAmount';
+  if (curr == 'IRR') return '$formattedAmount ریال';
+  if (curr == 'TOMAN' || curr == 'IRT') return '$formattedAmount تومان';
+  return '$formattedAmount $currency';
+}
