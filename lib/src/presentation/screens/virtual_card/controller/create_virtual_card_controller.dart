@@ -186,9 +186,7 @@ class CreateVirtualCardController extends GetxController {
       final model = CardProductModel.fromJson(response.data!);
       cardProducts.assignAll(
         model.data.where(
-          (product) =>
-              product.currency?.toUpperCase() == 'IRR' &&
-              product.capabilities?.canCreateVirtual == true,
+          (product) => product.capabilities?.canCreateVirtual == true,
         ),
       );
       if (cardProducts.isNotEmpty) {
@@ -278,6 +276,7 @@ class CreateVirtualCardController extends GetxController {
     } else {
       fundingSource.value = 'gateway';
     }
+    fetchIrrWallets();
     selectedGateway.value = product.gateways.firstOrNull;
     gatewayController.text = _gatewayDisplayText(selectedGateway.value);
   }
@@ -313,11 +312,27 @@ class CreateVirtualCardController extends GetxController {
       if (response.status != Status.completed) return;
 
       final model = WalletsModel.fromJson(response.data!);
-      irrWallets.assignAll(
-        (model.data?.wallets ?? []).where(
-          (wallet) => wallet.code?.toUpperCase() == 'IRR',
-        ),
-      );
+      final all = model.data?.wallets ?? [];
+      final prodCurrency = selectedCardProduct.value?.currency?.toUpperCase() ?? 'USD';
+
+      if (prodCurrency == 'IRR' || prodCurrency == 'IRT') {
+        irrWallets.assignAll(
+          all.where((w) => w.code?.toUpperCase() == 'IRR' || w.code?.toUpperCase() == 'IRT'),
+        );
+      } else if (prodCurrency == 'USD') {
+        irrWallets.assignAll(
+          all.where((w) => w.code?.toUpperCase() == 'USD' || w.code?.toUpperCase() == 'USDT'),
+        );
+      } else {
+        irrWallets.assignAll(
+          all.where((w) => w.code?.toUpperCase() == prodCurrency),
+        );
+      }
+
+      if (irrWallets.isEmpty && all.isNotEmpty) {
+        irrWallets.assignAll(all);
+      }
+
       selectedIrrWallet.value = irrWallets.firstOrNull;
       irrWalletController.text = _walletDisplayText(selectedIrrWallet.value);
     } catch (e, stackTrace) {
@@ -352,7 +367,7 @@ class CreateVirtualCardController extends GetxController {
 
   String _walletDisplayText(Wallets? wallet) {
     if (wallet == null) return '';
-    return '${wallet.name ?? 'IRR'} - '
+    return '${wallet.name ?? wallet.code ?? 'Wallet'} - '
         '${wallet.formattedBalance ?? wallet.balance ?? '0'}';
   }
 
@@ -366,16 +381,15 @@ class CreateVirtualCardController extends GetxController {
     isCreateVirtualCardLoading.value = true;
     try {
       final product = selectedCardProduct.value!;
-      final amount = int.parse(amountController.text.replaceAll(',', ''));
+      final amount = num.tryParse(amountController.text.replaceAll(',', '').trim()) ?? 0;
       final holder = selectedTab.value ? selectedCardHolder.value : null;
+      final isWalletFund = fundingSource.value == 'irr_wallet' || fundingSource.value == 'wallet';
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.postCardOrdersEndpoint,
         data: {
           'card_product_id': product.id,
-          'funding_source': fundingSource.value,
-          'wallet_id': fundingSource.value == 'irr_wallet'
-              ? selectedIrrWallet.value?.id
-              : null,
+          'funding_source': isWalletFund ? 'wallet' : 'gateway',
+          'wallet_id': isWalletFund ? selectedIrrWallet.value?.id : null,
           'gateway_method_id': fundingSource.value == 'gateway'
               ? selectedGateway.value?.id
               : null,
@@ -478,28 +492,36 @@ class CreateVirtualCardController extends GetxController {
       return false;
     }
 
-    final amount = int.tryParse(amountController.text.replaceAll(',', ''));
+    final amount = num.tryParse(amountController.text.replaceAll(',', '').trim());
     if (amount == null || amount <= 0) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcEnterValidAmountIrr);
+      ToastHelper().showErrorToast(
+        product.currency?.toUpperCase() == 'IRR'
+            ? AppLocalizations.of(Get.context!)!.vcEnterValidAmountIrr
+            : 'Please enter a valid initial amount.',
+      );
       return false;
     }
     if (product.minimumInitialLoad > 0 &&
         amount < product.minimumInitialLoad) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.vcMinInitialLoad(product.minimumInitialLoad),
+        product.currency?.toUpperCase() == 'IRR'
+            ? AppLocalizations.of(Get.context!)!.vcMinInitialLoad(product.minimumInitialLoad)
+            : 'Minimum initial load is ${product.minimumInitialLoad} ${product.currency ?? ''}',
       );
       return false;
     }
     if (product.maximumInitialLoad > 0 &&
         amount > product.maximumInitialLoad) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.vcMaxInitialLoad(product.maximumInitialLoad),
+        product.currency?.toUpperCase() == 'IRR'
+            ? AppLocalizations.of(Get.context!)!.vcMaxInitialLoad(product.maximumInitialLoad)
+            : 'Maximum initial load is ${product.maximumInitialLoad} ${product.currency ?? ''}',
       );
       return false;
     }
-    if (fundingSource.value == 'irr_wallet' &&
+    if ((fundingSource.value == 'irr_wallet' || fundingSource.value == 'wallet') &&
         selectedIrrWallet.value == null) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcSelectIrrWallet);
+      ToastHelper().showErrorToast('Please select a funding wallet.');
       return false;
     }
     if (fundingSource.value == 'gateway' && selectedGateway.value == null) {

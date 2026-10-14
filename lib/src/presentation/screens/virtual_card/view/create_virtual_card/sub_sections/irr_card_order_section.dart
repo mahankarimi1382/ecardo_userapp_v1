@@ -59,7 +59,7 @@ class IrrCardOrderSection extends StatelessWidget {
           ],
           SizedBox(height: 6.h),
           Text(
-            'Issue fee: ${_formatIrr(product.creationFee)} IRR',
+            'Issue fee: ${_formatAmount(product.creationFee, product.currency)}',
             style: TextStyle(
               color: AppColors.lightTextTertiary,
               fontSize: 13.sp,
@@ -74,7 +74,7 @@ class IrrCardOrderSection extends StatelessWidget {
           ],
           SizedBox(height: 16.h),
           CommonRequiredLabelAndDynamicField(
-            labelText: 'Initial load (IRR)',
+            labelText: 'Initial load (${product.currency ?? 'USD'})',
             isLabelRequired: true,
             dynamicField: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,8 +86,8 @@ class IrrCardOrderSection extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  '${_formatIrr(product.minimumInitialLoad)} - '
-                  '${_formatIrr(product.maximumInitialLoad)} IRR',
+                  '${_formatAmount(product.minimumInitialLoad, product.currency)} - '
+                  '${_formatAmount(product.maximumInitialLoad, product.currency)}',
                   style: TextStyle(
                     color: AppColors.lightTextTertiary,
                     fontSize: 12.sp,
@@ -112,7 +112,7 @@ class IrrCardOrderSection extends StatelessWidget {
             CommonRequiredLabelAndDynamicField(
               labelText:
                   'Request physical card '
-                  '(${_formatIrr(product.physicalCardFee)} IRR)',
+                  '(${_formatAmount(product.physicalCardFee, product.currency)})',
               dynamicField: _BooleanChoice(
                 value: controller.requestPhysical.value,
                 onChanged: (value) {
@@ -137,8 +137,13 @@ class IrrCardOrderSection extends StatelessWidget {
     });
   }
 
-  static String _formatIrr(num value) {
-    return NumberFormat.decimalPattern().format(value);
+  static String _formatAmount(num value, [String? currency]) {
+    final curr = (currency ?? '').toUpperCase().trim();
+    final formatted = NumberFormat.decimalPattern().format(value);
+    if (curr == 'USD') return '\$$formatted';
+    if (curr == 'EUR') return '€$formatted';
+    if (curr.isNotEmpty) return '$formatted $curr';
+    return formatted;
   }
 }
 
@@ -232,10 +237,10 @@ class _FundingSourceSection extends StatelessWidget {
         ],
         if (controller.fundingSource.value == 'irr_wallet')
           CommonRequiredLabelAndDynamicField(
-            labelText: 'IRR wallet',
+            labelText: 'Funding wallet (${product.currency ?? 'USD'})',
             isLabelRequired: true,
             dynamicField: CommonTextInputField(
-              hintText: 'Select IRR wallet',
+              hintText: 'Select funding wallet',
               controller: controller.irrWalletController,
               readOnly: true,
               suffixIcon: Image.asset(PngAssets.arrowDownCommonIcon),
@@ -246,8 +251,8 @@ class _FundingSourceSection extends StatelessWidget {
                     selectedItem: controller.selectedIrrWallet.value,
                     bottomSheetHeight: 400.h,
                     isShowTitle: true,
-                    title: 'Select IRR Wallet',
-                    notFoundText: 'No IRR wallet found',
+                    title: 'Select Funding Wallet',
+                    notFoundText: 'No matching wallet found',
                     getDisplayText: _walletText,
                     areItemsEqual: (first, second) => first.id == second.id,
                     onItemSelected: controller.selectIrrWallet,
@@ -297,8 +302,8 @@ class _FundingSourceSection extends StatelessWidget {
             controller.fundingSource.value == 'irr_wallet' &&
             controller.irrWallets.isEmpty) ...[
           SizedBox(height: 8.h),
-          const _MessageBox(
-            message: 'No IRR wallet is available for this account.',
+          _MessageBox(
+            message: 'No ${product.currency ?? 'USD'} wallet is available for this account.',
             color: AppColors.error,
           ),
         ],

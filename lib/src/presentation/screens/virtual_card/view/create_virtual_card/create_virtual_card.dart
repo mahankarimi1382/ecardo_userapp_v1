@@ -177,7 +177,7 @@ class _IrrProductArea extends StatelessWidget {
             Text(
               hasError
                   ? controller.cardProductsError.value
-                  : 'No active IRR card product is currently available.',
+                  : 'No active card product is currently available.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: hasError
@@ -191,7 +191,7 @@ class _IrrProductArea extends StatelessWidget {
               width: 180,
               height: 42,
               fontSize: 13,
-              text: 'Retry IRR products',
+              text: 'Retry',
               onPressed: controller.retryCardProducts,
             ),
           ],
