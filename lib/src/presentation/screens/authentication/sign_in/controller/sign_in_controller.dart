@@ -237,6 +237,7 @@ class SignInController extends GetxController {
     try {
       final token = Get.find<TokenService>().accessToken.value;
       if (token == null || token.isEmpty) {
+        await settingsService.wipeSession();
         ToastHelper().showErrorToast(
           _pick(
             en: 'Session expired. Sign in with your email and password.',
@@ -515,6 +516,23 @@ class SignInController extends GetxController {
               useBiometric ? biometricEmail.value : emailController.text;
           Get.toNamed(BaseRoute.twoFactorAuth);
         } else {
+          // Verify secure token presence before declaring persistent login
+          final currentToken = Get.isRegistered<TokenService>()
+              ? Get.find<TokenService>().accessToken.value
+              : null;
+          if (currentToken == null || currentToken.isEmpty) {
+            debugPrint('❌ fetchUser: Missing token in TokenService. Secure storage write failed.');
+            await Get.find<SettingsService>().wipeSession();
+            ToastHelper().showErrorToast(
+              _pick(
+                en: 'Secure storage unavailable. Please check device security settings and try again.',
+                fa: 'فضای ذخیره‌سازی امن در دسترس نیست. لطفاً تنظیمات امنیتی دستگاه را بررسی کرده و مجدداً تلاش کنید.',
+                ar: 'وحدة التخزين الآمنة غير متوفرة. يرجى التحقق من إعدادات أمان الجهاز والمحاولة مرة أخرى.',
+                zh: '安全存储不可用。请检查设备安全设置后重试。',
+              ),
+            );
+            return false;
+          }
           await Get.find<SettingsService>().saveLoggedInUserEmail(
             useBiometric ? biometricEmail.value : emailController.text,
           );

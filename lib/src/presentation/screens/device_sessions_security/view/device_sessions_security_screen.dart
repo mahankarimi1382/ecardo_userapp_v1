@@ -256,9 +256,6 @@ class _DeviceSessionsSecurityScreenState
       if (Get.isRegistered<AppLockService>()) {
         await Get.find<AppLockService>().setPin(c1.text);
       }
-      if (Get.isRegistered<SettingsService>()) {
-        await Get.find<SettingsService>().setAppPin('set');
-      }
       controller.hasPinSet.value = true;
       controller.addAudit(
         title: auditTitle,

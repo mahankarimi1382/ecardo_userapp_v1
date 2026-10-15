@@ -161,9 +161,8 @@ void _installGlobalErrorHandlers() {
 }
 
 Future<void> _initializeServices() async {
-  Get.put(SettingsService());
-  await Get.find<SettingsService>().loadRateUnitIntoRx();
-  await Get.find<SettingsService>().initPrivacySettings();
+  final settingsService = Get.put(SettingsService());
+  await settingsService.init();
   // Register the in-app self-update controller for the user app.
   // Pass [AppUpdateConfig.merchant] / [AppUpdateConfig.agent] in the
   // respective merchant / agent apps.
@@ -171,7 +170,9 @@ Future<void> _initializeServices() async {
     AppUpdateController(config: AppUpdateConfig.user),
     permanent: true,
   );
-  Get.put<TokenService>(TokenService());
+  final tokenService = Get.put<TokenService>(TokenService());
+  // Ensure token service is ready before subsequent services or network requests dispatch
+  await tokenService.isReady;
   if (kDebugMode) {
     Get.put<DemoAccountService>(DemoAccountService(), permanent: true);
   }
@@ -182,6 +183,7 @@ Future<void> _initializeServices() async {
   Get.put<OfflineRequestQueue>(OfflineRequestQueue(), permanent: true);
   Get.put<OfflineCacheService>(OfflineCacheService(), permanent: true);
   await Get.putAsync<AppLockService>(() async => AppLockService().init(), permanent: true);
+  await settingsService.migrateLegacyPin();
   await Get.putAsync<LocaleThemeService>(() async => LocaleThemeService().init(), permanent: true);
   Future.microtask(() => Get.find<OfflineRequestQueue>().init());
   Future.microtask(() => Get.find<NotificationHistoryService>().init());

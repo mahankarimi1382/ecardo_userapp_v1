@@ -30,24 +30,39 @@ class TokenService extends GetxService {
     accessibility: KeychainAccessibility.first_unlock,
   );
 
-  late final FlutterSecureStorage _secureStorage;
+  final FlutterSecureStorage _secureStorage;
+
+  TokenService({FlutterSecureStorage? secureStorage})
+      : _secureStorage = secureStorage ??
+            const FlutterSecureStorage(
+              aOptions: _androidOptions,
+              iOptions: _iosOptions,
+            );
 
   /// The reactive access token (null when logged out).
   final Rx<String?> accessToken = Rx<String?>(null);
 
+  Future<void>? _readinessFuture;
+
+  /// Readiness Future ensuring token loading/migration has completed
+  /// before any authenticated network request or gate proceeds.
+  Future<void> get isReady => _readinessFuture ?? Future.value();
+
   @override
   void onInit() {
     super.onInit();
-    _secureStorage = const FlutterSecureStorage(
-      aOptions: _androidOptions,
-      iOptions: _iosOptions,
-    );
-    loadAccessToken();
+    _readinessFuture = loadAccessToken();
   }
 
   /// Load the access token from secure storage.
   /// Also migrates from legacy SharedPreferences if found.
-  Future<void> loadAccessToken() async {
+  Future<void> loadAccessToken() {
+    final future = _loadAccessTokenInternal();
+    _readinessFuture = future;
+    return future;
+  }
+
+  Future<void> _loadAccessTokenInternal() async {
     try {
       // Try secure storage first
       String? token = await _secureStorage.read(key: accessTokenKey);
@@ -67,20 +82,22 @@ class TokenService extends GetxService {
   }
 
   /// Save the access token to secure storage.
+  /// If secure storage write fails (e.g. Android Keystore / iOS Keychain error),
+  /// the token is cleared from memory and returns false so caller does NOT proceed
+  /// with a phantom persistent session.
   Future<bool> saveAccessToken(String token) async {
-    // 1. Immediately update reactive memory cache so subsequent requests
-    // have the token right away without waiting on native platform channel
-    accessToken.value = token;
     try {
       await _secureStorage.write(key: accessTokenKey, value: token);
+      accessToken.value = token;
       if (kDebugMode) {
         debugPrint('🔑 TokenService: token saved securely');
       }
       return true;
     } catch (e) {
       debugPrint('🔑 TokenService: failed to save token: $e');
-      // Token is still preserved in memory for the active session
-      accessToken.value = token;
+      // CRITICAL SECURITY FIX (FIND-004): Never keep a phantom token in memory
+      // if secure persistence failed. Clear reactive state and fail closed.
+      accessToken.value = null;
       return false;
     }
   }

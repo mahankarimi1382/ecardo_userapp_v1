@@ -64,6 +64,7 @@ class SplashController extends GetxController {
     if (bioOutcome != _bioSuccess) {
       try {
         final tokenService = Get.find<TokenService>();
+        await tokenService.isReady;
         await tokenService.loadAccessToken();
         final token = tokenService.accessToken.value;
         final hasToken = token != null && token.isNotEmpty;
@@ -92,12 +93,21 @@ class SplashController extends GetxController {
             await _showSessionExpiredAndGoSignIn();
           }
         } else if (isLoggedIn) {
+          // Phantom session: SharedPreferences has logged_in flag, but TokenService has no token!
+          debugPrint('⚠️ Splash: logged_in flag present but token missing. Wiping phantom session.');
+          if (Get.isRegistered<SettingsService>()) {
+            await Get.find<SettingsService>().wipeSession();
+          }
+          await tokenService.clearToken();
           Get.offNamed(BaseRoute.signIn);
         } else {
           Get.offNamed(BaseRoute.welcome);
         }
       } catch (_) {
         if (isLoggedIn) {
+          if (Get.isRegistered<SettingsService>()) {
+            await Get.find<SettingsService>().wipeSession();
+          }
           Get.offNamed(BaseRoute.signIn);
         } else {
           Get.offNamed(BaseRoute.welcome);
@@ -175,6 +185,7 @@ class SplashController extends GetxController {
 
       // 1.0.51: prefer bearer token — no password needed for unlock.
       final tokenService = Get.find<TokenService>();
+      await tokenService.isReady;
       await tokenService.loadAccessToken();
       final token = tokenService.accessToken.value;
       final hasToken = token != null && token.isNotEmpty;

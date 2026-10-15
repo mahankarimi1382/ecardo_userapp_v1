@@ -256,15 +256,25 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     BuildContext context,
     TransferController controller,
   ) async {
+    final bool isPasscodeSettingEnabled =
+        Get.find<SettingsService>().getSetting("transfer_money_passcode_status") == "1";
+
+    if (!isPasscodeSettingEnabled) {
+      await controller.transferAmount();
+      return;
+    }
+
     // Check if user has set a transaction passcode
     String? storedPasscode = controller.userModel.value.data?.passcode;
+    bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
     if (storedPasscode == null || storedPasscode.isEmpty) {
       if (Get.isRegistered<HomeController>()) {
         storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
       }
     }
 
-    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode);
+    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
 
     if (!hasPasscode) {
       HapticFeedback.mediumImpact();
@@ -295,21 +305,25 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
         ),
         buttonColor: AppColors.lightPrimary,
         confirmTextColor: Colors.white,
-        onConfirm: () {
+        onConfirm: () async {
           Get.back();
-          Get.to(() => const TransactionPinScreen());
+          await Get.to(() => const TransactionPinScreen());
+          await controller.fetchUser();
+          if (Get.isRegistered<HomeController>()) {
+            await Get.find<HomeController>().fetchUser();
+          }
         },
       );
       return;
     }
 
-    final String? verified = await Get.bottomSheet<String>(
+    final dynamic verified = await Get.bottomSheet<dynamic>(
       const VerifyPasscodeBottomSheet(),
     );
-    if (verified == null || !PasscodeHelper.isValidFormat(verified)) {
+    if (verified == null || !PasscodeHelper.isValidFormat(verified.toString())) {
       return;
     }
-    await controller.transferAmount(passcode: verified);
+    await controller.transferAmount(passcode: verified.toString());
   }
 
   Widget _buildDivider(ColorScheme colorScheme) {

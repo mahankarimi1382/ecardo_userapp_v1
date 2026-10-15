@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -296,7 +297,7 @@ class WithdrawController extends GetxController {
   }
 
   // Withdraw Function
-  Future<void> submitWithdraw() async {
+  Future<void> submitWithdraw({String? passcode}) async {
     // v1.0.24: guard against double submission while a request is in flight.
     if (isWithdrawLoading.isTrue) return;
     isWithdrawLoading.value = true;
@@ -305,6 +306,8 @@ class WithdrawController extends GetxController {
       final Map<String, dynamic> requestBody = {
         'amount': amountController.text.trim(),
         'withdraw_account_id': withdrawAccount.value!.id.toString(),
+        if (passcode != null && passcode.isNotEmpty)
+          'passcode': PasscodeHelper.normalize(passcode),
       };
 
       final response = await Get.find<NetworkService>().post(

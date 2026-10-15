@@ -388,7 +388,7 @@ class CreateVirtualCardController extends GetxController {
         endpoint: ApiPath.postCardOrdersEndpoint,
         data: {
           'card_product_id': product.id,
-          'funding_source': isWalletFund ? 'wallet' : 'gateway',
+          'funding_source': isWalletFund ? 'irr_wallet' : 'gateway',
           'wallet_id': isWalletFund ? selectedIrrWallet.value?.id : null,
           'gateway_method_id': fundingSource.value == 'gateway'
               ? selectedGateway.value?.id

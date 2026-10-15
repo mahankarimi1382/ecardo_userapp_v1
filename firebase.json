@@ -4,7 +4,7 @@
       "android": {
         "default": {
           "projectId": "ecardo-app",
-          "appId": "1:279734428004:android:ccd69b013d25e835949a71",
+          "appId": "1:292987494106:android:3f1e8b21e46ceb2c138fe3",
           "fileOutput": "android/app/google-services.json"
         }
       },
@@ -12,15 +12,15 @@
         "lib/firebase_options.dart": {
           "projectId": "ecardo-app",
           "configurations": {
-            "android": "1:279734428004:android:ccd69b013d25e835949a71",
-            "ios": "1:279734428004:ios:f06064424e537a53949a71"
+            "android": "1:292987494106:android:3f1e8b21e46ceb2c138fe3",
+            "ios": "1:292987494106:ios:9009185e45066d59138fe3"
           }
         }
       },
       "ios": {
         "default": {
           "projectId": "ecardo-app",
-          "appId": "1:279734428004:ios:f06064424e537a53949a71",
+          "appId": "1:292987494106:ios:9009185e45066d59138fe3",
           "uploadDebugSymbols": false,
           "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }

@@ -8,6 +8,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -144,12 +145,14 @@ class DeviceSessionsController extends GetxController {
       final supported = await _bio.isSupported();
       final enabled = await _bio.isEnabled();
       final lockMin = _settings != null ? await _settings!.getAppLockMinutes() : 0;
-      final pin = _settings != null ? (await _settings!.getAppPin()) ?? '' : '';
+      final hasPin = Get.isRegistered<AppLockService>()
+          ? await Get.find<AppLockService>().hasPinSet()
+          : await AppLockService().hasPinSet();
 
       bioSupported.value = supported;
       bioEnabled.value = enabled;
       lockMinutes.value = lockMin;
-      hasPinSet.value = pin.isNotEmpty;
+      hasPinSet.value = hasPin;
     } catch (e) {
       debugPrint('DeviceSessionsController.initData error: $e');
     } finally {

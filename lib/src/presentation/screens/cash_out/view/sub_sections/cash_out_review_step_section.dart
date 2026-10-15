@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/widgets/monogram_avatar.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/controller/cash_out_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_breakdown_card.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_step_indicator.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
@@ -60,15 +61,33 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
       // Fallback to passcode prompt
     }
 
-    // Verify Passcode Bottom Sheet
-    final verified = await Get.bottomSheet<String>(
-      const VerifyPasscodeBottomSheet(),
-    );
-    if (verified == null || !PasscodeHelper.isValidFormat(verified)) {
-      _swipeKey.currentState?.reset();
-      return;
+    // Step-up Security: Verify Transaction Passcode
+    final bool isPasscodeEnabled =
+        Get.find<SettingsService>().getSetting("cashout_passcode_status") == "1";
+
+    String? storedPasscode = controller.userModel.value.data?.passcode;
+    bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
+    if (storedPasscode == null || storedPasscode.isEmpty) {
+      if (Get.isRegistered<HomeController>()) {
+        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+      }
     }
-    await controller.cashOut(passcode: verified);
+    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+
+    if (isPasscodeEnabled && hasPasscode) {
+      final dynamic verified = await Get.bottomSheet<dynamic>(
+        const VerifyPasscodeBottomSheet(),
+      );
+      if (verified == null ||
+          !PasscodeHelper.isValidFormat(verified.toString())) {
+        _swipeKey.currentState?.reset();
+        return;
+      }
+      await controller.cashOut(passcode: verified.toString());
+    } else {
+      await controller.cashOut();
+    }
   }
 
   @override

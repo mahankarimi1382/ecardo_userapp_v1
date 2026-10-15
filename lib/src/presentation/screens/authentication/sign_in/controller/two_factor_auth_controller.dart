@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
 
@@ -45,6 +46,47 @@ class TwoFactorAuthController extends GetxController {
         data: requestBody,
       );
       if (response.status == Status.completed) {
+        final maybeToken = response.data?["data"]?["token"];
+        if (maybeToken is String && maybeToken.isNotEmpty) {
+          final saveOk = await Get.find<TokenService>().saveAccessToken(maybeToken);
+          if (!saveOk) {
+            debugPrint('❌ TwoFa: Secure storage unavailable saving token');
+            if (Get.isRegistered<SettingsService>()) {
+              await Get.find<SettingsService>().wipeSession();
+            }
+            await Get.find<TokenService>().clearToken();
+            ToastHelper().showErrorToast(
+              _pick(
+                en: 'Secure storage unavailable. Please check device security settings and try again.',
+                fa: 'فضای ذخیره‌سازی امن در دسترس نیست. لطفاً تنظیمات امنیتی دستگاه را بررسی کرده و مجدداً تلاش کنید.',
+                ar: 'وحدة التخزين الآمنة غير متوفرة. يرجى التحقق من إعدادات أمان الجهاز والمحاولة مرة أخرى.',
+                zh: '安全存储不可用。请检查设备安全设置后重试。',
+              ),
+            );
+            return;
+          }
+        }
+
+        // Verify valid token exists in TokenService before declaring persistent login
+        final currentToken = Get.isRegistered<TokenService>()
+            ? Get.find<TokenService>().accessToken.value
+            : null;
+        if (currentToken == null || currentToken.isEmpty) {
+          debugPrint('❌ TwoFa: Missing token in TokenService. Refusing to persist login.');
+          if (Get.isRegistered<SettingsService>()) {
+            await Get.find<SettingsService>().wipeSession();
+          }
+          ToastHelper().showErrorToast(
+            _pick(
+              en: 'Secure storage unavailable. Please check device security settings and try again.',
+              fa: 'فضای ذخیره‌سازی امن در دسترس نیست. لطفاً تنظیمات امنیتی دستگاه را بررسی کرده و مجدداً تلاش کنید.',
+              ar: 'وحدة التخزين الآمنة غير متوفرة. يرجى التحقق من إعدادات أمان الجهاز والمحاولة مرة أخرى.',
+              zh: '安全存储不可用。请检查设备安全设置后重试。',
+            ),
+          );
+          return;
+        }
+
         // AUTH-BIO (A-4): for 2FA users the full auth chain only completes
         // here — persist `logged_in` now (mirrors SignInController.fetchUser).
         await Get.find<SettingsService>().saveLoginCurrentState("logged_in");

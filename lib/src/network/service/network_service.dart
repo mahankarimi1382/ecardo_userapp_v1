@@ -15,6 +15,7 @@ import 'package:ecardo_user/src/common/services/app_update_helper.dart';
 import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/common/services/kyc_error_handler.dart';
 import 'package:ecardo_user/src/common/services/session_manager.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -33,12 +34,17 @@ class NetworkService extends getx.GetxService {
   // pass-through. Never hardcode a stale version again (S-003/S-022 fix).
   String _appVersion = '';
 
-  /// v1.0.24 (S-023): in-flight Idempotency-Key registry keyed by
-  /// '${method}:$path'. A key is minted when a money POST starts and released
-  /// when that request completes, so an accidental double submission of the
-  /// same logical call REUSES the same key (the server can then collapse it)
-  /// instead of minting a fresh one per request.
-  final Map<String, String> _inflightIdempotency = {};
+  /// v1.0.24 (S-023) / Workstream B: in-flight Idempotency-Key registry keyed by
+  /// '${method}:$path?$query:$identity'. A key is minted when an idempotent/money POST
+  /// starts and released when that request completes with success (200/201).
+  /// On transport timeouts (connection/receive/send timeout, SocketException),
+  /// the key is retained up to 5 minutes so immediate retries reuse the identical
+  /// key, preventing double-debits.
+  final Map<String, _IdempotencyEntry> _inflightIdempotency = {};
+
+  static const Duration _idempotencyTtl = Duration(minutes: 5);
+  static const int _maxIdempotencyEntries = 50;
+  DateTime Function() _clock = DateTime.now;
 
   /// Endpoints that move money — every POST to one of these carries an
   /// Idempotency-Key (the X-Request-ID of the logical call) so the server
@@ -197,6 +203,8 @@ class NetworkService extends getx.GetxService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // Await token readiness to prevent premature dispatched requests racing initial load/migration
+          await _tokenService.isReady;
           String? accessToken = _tokenService.accessToken.value;
           // v1.0.24: never log the raw token (was: full bearer leak in logs).
           _log('🔑 Token: ${accessToken == null || accessToken.isEmpty ? '<none>' : '<redacted ${accessToken.length} chars>'}');
@@ -215,27 +223,46 @@ class NetworkService extends getx.GetxService {
           }
           options.headers['X-Client'] = 'ecardo_user_flutter';
 
-          // v1.0.24 (S-023 client side): money POSTs carry Idempotency-Key.
-          // The key is reused across an in-flight logical call so a double
-          // submission maps to the same idempotency key server-side.
+          // v1.0.24 (S-023 client side) / Workstream B: money and idempotent POSTs
+          // carry Idempotency-Key.
+          // The key is reused across an in-flight logical call and retained on
+          // transport timeouts (up to 5 min TTL) so a retry maps to the same
+          // idempotency key server-side.
           if (options.method.toUpperCase() == 'POST' &&
               options.headers['Idempotency-Key'] == null) {
             final path = options.uri.path;
+            final rawOpId = options.headers['X-Operation-ID'] ??
+                options.extra['operationId'];
+            final explicitOpId =
+                (rawOpId is String && rawOpId.trim().isNotEmpty)
+                    ? rawOpId.trim()
+                    : null;
             final isMoney = _idempotentEndpointSuffixes.any(
               (suffix) => path.endsWith(suffix),
             );
-            if (isMoney) {
-              // phase1-fix (P0-3): identity of the LOGICAL operation is
-              // path + query + payload fingerprint. Two different concurrent
-              // money ops on one endpoint no longer share a key; a genuine
-              // double-tap of the same op still reuses it.
-              final mapKey =
-                  'POST:$path?${options.uri.query}:${_payloadFingerprint(options.data)}';
-              options.headers['Idempotency-Key'] =
-                  _inflightIdempotency.putIfAbsent(mapKey, () {
-                    final minted = options.headers['X-Request-ID'] as String?;
-                    return minted ?? _generateRequestId();
-                  });
+            if (isMoney || explicitOpId != null) {
+              _evictExpiredIdempotencyEntries();
+              final mapKey = _getIdempotencyMapKey(options);
+              var entry = _inflightIdempotency[mapKey];
+              final now = _clock();
+              if (entry != null &&
+                  now.difference(entry.createdAt) >= _idempotencyTtl) {
+                _inflightIdempotency.remove(mapKey);
+                entry = null;
+              }
+              if (entry == null) {
+                _boundRegistrySize();
+                final seed = explicitOpId ??
+                    (options.headers['X-Request-ID'] as String?) ??
+                    _generateRequestId();
+                entry = _IdempotencyEntry(seed, now);
+                _inflightIdempotency[mapKey] = entry;
+              }
+              options.headers['Idempotency-Key'] = entry.key;
+              if (explicitOpId != null &&
+                  options.headers['X-Operation-ID'] == null) {
+                options.headers['X-Operation-ID'] = explicitOpId;
+              }
             }
           }
           // v1.0.5: Platform identification
@@ -252,13 +279,14 @@ class NetworkService extends getx.GetxService {
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          _releaseIdempotencyKey(response.requestOptions);
+          final statusCode = response.statusCode;
+          if (statusCode == null || (statusCode >= 200 && statusCode < 300)) {
+            _releaseIdempotencyKey(response.requestOptions);
+          }
           return handler.next(response);
         },
         onError: (DioException error, handler) async {
-          final isTimeout = error.type == DioExceptionType.connectionTimeout ||
-              error.type == DioExceptionType.receiveTimeout ||
-              error.type == DioExceptionType.sendTimeout;
+          final isTimeout = _isTransportTimeoutOrSocketException(error);
           if (!isTimeout) {
             _releaseIdempotencyKey(error.requestOptions);
           }
@@ -421,7 +449,11 @@ class NetworkService extends getx.GetxService {
         if (response.statusCode == 200) {
           final newToken = response.data['data']?['token'];
           if (newToken != null && newToken is String) {
-            await _tokenService.saveAccessToken(newToken);
+            final saveOk = await _tokenService.saveAccessToken(newToken);
+            if (!saveOk) {
+              _log('❌ Failed to save refreshed access token to secure storage', icon: '❌');
+              return false;
+            }
             _log('✓ Token refreshed successfully');
             return true;
           }
@@ -440,18 +472,68 @@ class NetworkService extends getx.GetxService {
     return false;
   }
 
-  /// v1.0.24 (S-023): release the in-flight idempotency key once the request
-  /// has finished (success or failure), so the NEXT logical submission mints a
-  /// fresh key. The 401-refresh retry is safe: it re-enters with the key
-  /// already embedded in the request headers, so nothing is re-minted.
+  void _evictExpiredIdempotencyEntries([DateTime? now]) {
+    final currentTime = now ?? _clock();
+    _inflightIdempotency.removeWhere((_, entry) =>
+        currentTime.difference(entry.createdAt) >= _idempotencyTtl);
+  }
+
+  void _boundRegistrySize() {
+    while (_inflightIdempotency.length >= _maxIdempotencyEntries) {
+      final oldestKey = _inflightIdempotency.entries
+          .reduce((a, b) => a.value.createdAt.isBefore(b.value.createdAt) ? a : b)
+          .key;
+      _inflightIdempotency.remove(oldestKey);
+    }
+  }
+
+  String _getIdempotencyMapKey(RequestOptions options) {
+    final rawOpId = options.headers['X-Operation-ID'] ?? options.extra['operationId'];
+    final explicitOpId = (rawOpId is String && rawOpId.trim().isNotEmpty)
+        ? rawOpId.trim()
+        : null;
+    final identity = explicitOpId != null
+        ? 'op:$explicitOpId'
+        : _payloadFingerprint(options.data);
+    return '${options.method.toUpperCase()}:${options.uri.path}?${options.uri.query}:$identity';
+  }
+
+  /// Workstream B: release the in-flight idempotency key once the request
+  /// has finished successfully (or on non-timeout client/server errors), so the
+  /// NEXT logical submission mints a fresh key.
   void _releaseIdempotencyKey(RequestOptions options) {
     final headerKey = options.headers['Idempotency-Key'];
     if (headerKey is! String || headerKey.isEmpty) return;
-    final mapKey =
-        '${options.method.toUpperCase()}:${options.uri.path}?${options.uri.query}:${_payloadFingerprint(options.data)}';
-    if (_inflightIdempotency[mapKey] == headerKey) {
+    _evictExpiredIdempotencyEntries();
+    final mapKey = _getIdempotencyMapKey(options);
+    if (_inflightIdempotency[mapKey]?.key == headerKey) {
       _inflightIdempotency.remove(mapKey);
     }
+  }
+
+  bool _isTransportTimeoutOrSocketException(DioException error) {
+    if (error.response != null) return false;
+    if (error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.receiveTimeout ||
+        error.type == DioExceptionType.sendTimeout ||
+        error.type == DioExceptionType.connectionError) {
+      return true;
+    }
+    final underlying = error.error;
+    if (underlying is SocketException ||
+        (underlying != null &&
+            underlying.toString().toLowerCase().contains('socketexception'))) {
+      return true;
+    }
+    final message = error.message?.toLowerCase() ?? '';
+    if (message.contains('socketexception') ||
+        message.contains('connection refused') ||
+        message.contains('connection reset') ||
+        message.contains('network is unreachable') ||
+        message.contains('broken pipe')) {
+      return true;
+    }
+    return false;
   }
 
   /// phase1-fix (P0-3): payload fingerprint for idempotency scoping.
@@ -475,22 +557,56 @@ class NetworkService extends getx.GetxService {
   static const Set<String> _sensitivePayloadKeys = {
     'password',
     'current_password',
+    'currentpassword',
+    'current-password',
     'new_password',
+    'newpassword',
+    'new-password',
     'password_confirmation',
+    'passwordconfirmation',
+    'password-confirmation',
     'code',
     'otp',
     'passcode',
     'pin',
     'cvv',
     'card_number',
+    'cardnumber',
+    'card-number',
+    'pan',
+    'access_token',
+    'accesstoken',
+    'access-token',
+    'refresh_token',
+    'refreshtoken',
+    'refresh-token',
+    'authorization',
+    'iban',
+    'account_number',
+    'accountnumber',
+    'account-number',
+    'national_id',
+    'nationalid',
+    'national-id',
+    'secret',
+    'bearer',
   };
+
+  static bool _isSensitiveKey(String key) {
+    final trimmed = key.trim();
+    if (_sensitivePayloadKeys.contains(trimmed)) return true;
+    final lower = trimmed.toLowerCase();
+    if (_sensitivePayloadKeys.contains(lower)) return true;
+    final stripped = lower.replaceAll(RegExp(r'[-_\s]'), '');
+    return _sensitivePayloadKeys.contains(stripped);
+  }
 
   static dynamic _sanitizePayload(dynamic data) {
     if (data is Map) {
       final sanitized = <dynamic, dynamic>{};
       for (final entry in data.entries) {
-        final keyStr = entry.key.toString().toLowerCase().trim();
-        if (_sensitivePayloadKeys.contains(keyStr)) {
+        final keyStr = entry.key.toString();
+        if (_isSensitiveKey(keyStr)) {
           sanitized[entry.key] = '<redacted>';
         } else {
           sanitized[entry.key] = _sanitizePayload(entry.value);
@@ -529,7 +645,17 @@ class NetworkService extends getx.GetxService {
       if (response.statusCode == 200) {
         String accessToken = response.data["data"]["token"];
         await _tokenService.clearToken();
-        await _tokenService.saveAccessToken(accessToken);
+        final saveOk = await _tokenService.saveAccessToken(accessToken);
+        if (!saveOk) {
+          _log('❌ Failed to save access token to secure storage', icon: '❌');
+          if (getx.Get.isRegistered<SettingsService>()) {
+            await getx.Get.find<SettingsService>().wipeSession();
+          }
+          await _tokenService.clearToken();
+          final errorMsg = _secureStorageUnavailableMessage();
+          ToastHelper().showErrorToast(errorMsg);
+          return ApiResponse.error(errorMsg);
+        }
         _log('🔑 Token Saved Successfully');
         return ApiResponse.completed(response.data);
       }
@@ -595,7 +721,17 @@ class NetworkService extends getx.GetxService {
         final accessToken = response.data["data"]?["token"];
         if (accessToken is String && accessToken.isNotEmpty) {
           await _tokenService.clearToken();
-          await _tokenService.saveAccessToken(accessToken);
+          final saveOk = await _tokenService.saveAccessToken(accessToken);
+          if (!saveOk) {
+            _log('❌ Failed to save OTP access token to secure storage', icon: '❌');
+            if (getx.Get.isRegistered<SettingsService>()) {
+              await getx.Get.find<SettingsService>().wipeSession();
+            }
+            await _tokenService.clearToken();
+            final errorMsg = _secureStorageUnavailableMessage();
+            ToastHelper().showErrorToast(errorMsg);
+            return ApiResponse.error(errorMsg);
+          }
           _setupInterceptors();
           _log('🔑 Login OTP token saved');
         }
@@ -639,7 +775,17 @@ class NetworkService extends getx.GetxService {
             : <String, dynamic>{};
         final accessToken = responseData["data"]?['token'];
         if (accessToken is String && accessToken.isNotEmpty) {
-          await _tokenService.saveAccessToken(accessToken);
+          final saveOk = await _tokenService.saveAccessToken(accessToken);
+          if (!saveOk) {
+            _log('❌ Failed to save register access token to secure storage', icon: '❌');
+            if (getx.Get.isRegistered<SettingsService>()) {
+              await getx.Get.find<SettingsService>().wipeSession();
+            }
+            await _tokenService.clearToken();
+            final errorMsg = _secureStorageUnavailableMessage();
+            ToastHelper().showErrorToast(errorMsg);
+            return ApiResponse.error(errorMsg);
+          }
           _setupInterceptors();
           _log('🔑 Token Saved Successfully');
         }
@@ -734,6 +880,7 @@ class NetworkService extends getx.GetxService {
     required String endpoint,
     Map<String, dynamic>? data,
     String? idempotencyKey,
+    String? operationId,
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
@@ -764,12 +911,19 @@ class NetworkService extends getx.GetxService {
         headers['Idempotency-Key'] = idempotencyKey;
         headers['X-Idempotency-Key'] = idempotencyKey;
       }
+      if (operationId != null && operationId.isNotEmpty) {
+        headers['X-Operation-ID'] = operationId;
+      }
       final response = await _dio.post(
         endpoint,
         data: data != null ? jsonEncode(data) : null,
         options: Options(
           headers: headers.isEmpty ? null : headers,
-          extra: {'isForeground': isForeground},
+          extra: {
+            'isForeground': isForeground,
+            if (operationId != null && operationId.isNotEmpty)
+              'operationId': operationId,
+          },
         ),
       );
 
@@ -1312,16 +1466,16 @@ class NetworkService extends getx.GetxService {
         final jsonResponse = response.data is Map<String, dynamic>
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
-        _log('$requestType Response: ${jsonResponse.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse);
+        _log('$requestType Error [status 400]: $errorMessages', icon: '❌');
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
       case 401:
         final jsonResponse401 = response.data is Map<String, dynamic>
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
-        _log('$requestType Response: ${jsonResponse401.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse401);
+        _log('$requestType Error [status 401]: $errorMessages', icon: '❌');
 
         // Do not invoke session expiration logout when user is on login/register endpoints
         final isAuthEndpoint = response.requestOptions.path.contains(ApiPath.loginEndpoint) ||
@@ -1352,8 +1506,8 @@ class NetworkService extends getx.GetxService {
         final jsonResponse4xx = response.data is Map<String, dynamic>
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
-        _log('$requestType Response: ${jsonResponse4xx.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse4xx);
+        _log('$requestType Error [status ${response.statusCode}]: $errorMessages', icon: '❌');
         // v1.1 (KYC-ERR): a KYC block (KYC_LEVEL_REQUIRED /
         // KYC_FEATURE_REQUIRED) was already routed to the
         // UpgradeRequiredScreen by the interceptor — the raw server message
@@ -1373,8 +1527,8 @@ class NetworkService extends getx.GetxService {
         final jsonResponse500 = response.data is Map<String, dynamic>
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
-        _log('$requestType Response: ${jsonResponse500.toString()}', icon: '❌');
         final errorMessages = _errorMessage(jsonResponse500);
+        _log('$requestType Error [status 500]: $errorMessages', icon: '❌');
         ToastHelper().showErrorToast(errorMessages);
         return ApiResponse.error(errorMessages);
 
@@ -1382,8 +1536,8 @@ class NetworkService extends getx.GetxService {
         final jsonResponse503 = response.data is Map<String, dynamic>
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
-        _log('$requestType Response: ${jsonResponse503.toString()}', icon: '❌');
         final errorMessages503 = _errorMessage(jsonResponse503);
+        _log('$requestType Error [status 503]: $errorMessages503', icon: '❌');
         // v1.1 (KYC-ERR): KYC_CHECK_UNAVAILABLE is a transient verification
         // infrastructure outage — show a retry message, never logout, never
         // clear the token and never take over with the maintenance screen.
@@ -1405,7 +1559,7 @@ class NetworkService extends getx.GetxService {
         return ApiResponse.error(errorMessages503);
 
       default:
-        _log('Unknown Error: ${response.statusCode}', icon: '❓');
+        _log('Unknown Error [status ${response.statusCode}]', icon: '❓');
         ToastHelper().showErrorToast(
           // P-4: null-safe localization with English fallback (was `localization!`).
           localization?.networkErrorOccurred ??
@@ -1478,6 +1632,17 @@ class NetworkService extends getx.GetxService {
     return raw;
   }
 
+  String _secureStorageUnavailableMessage() {
+    return l10nPickAuto(
+      en: 'Secure storage unavailable. Please check device security settings and try again.',
+      fa: 'فضای ذخیره‌سازی امن در دسترس نیست. لطفاً تنظیمات امنیتی دستگاه را بررسی کرده و مجدداً تلاش کنید.',
+      ar: 'وحدة التخزين الآمنة غير متوفرة. يرجى التحقق من إعدادات أمان الجهاز والمحاولة مرة أخرى.',
+      tr: 'Güvenli depolama alanı kullanılamıyor. Lütfen cihaz güvenlik ayarlarını kontrol edip tekrar deneyin.',
+      ru: 'Безопасное хранилище недоступно. Проверьте настройки безопасности устройства и повторите попытку.',
+      zh: '安全存储不可用。请检查设备安全设置后重试。',
+    );
+  }
+
   Map<String, String> get _baseHeaders {
     return {'Content-Type': 'application/json', 'Accept': 'application/json'};
   }
@@ -1487,6 +1652,75 @@ class NetworkService extends getx.GetxService {
       debugPrint('$icon $message');
     }
   }
+
+  // ---------------------- TESTING HELPERS ----------------------
+
+  @visibleForTesting
+  Dio get dio => _dio;
+
+  @visibleForTesting
+  Dio get globalDio => _globalDio;
+
+  @visibleForTesting
+  set clock(DateTime Function() c) => _clock = c;
+
+  @visibleForTesting
+  DateTime Function() get clock => _clock;
+
+  @visibleForTesting
+  Map<String, String> get inflightIdempotencyKeys =>
+      _inflightIdempotency.map((k, v) => MapEntry(k, v.key));
+
+  @visibleForTesting
+  int get inflightIdempotencyCount => _inflightIdempotency.length;
+
+  @visibleForTesting
+  String? getIdempotencyKey(String mapKey) {
+    _evictExpiredIdempotencyEntries();
+    return _inflightIdempotency[mapKey]?.key;
+  }
+
+  @visibleForTesting
+  void setIdempotencyEntry(String mapKey, String key, DateTime createdAt) {
+    _inflightIdempotency[mapKey] = _IdempotencyEntry(key, createdAt);
+  }
+
+  @visibleForTesting
+  void evictExpiredIdempotencyEntries([DateTime? now]) {
+    _evictExpiredIdempotencyEntries(now);
+  }
+
+  @visibleForTesting
+  void boundRegistrySize() => _boundRegistrySize();
+
+  @visibleForTesting
+  String getIdempotencyMapKey(RequestOptions options) =>
+      _getIdempotencyMapKey(options);
+
+  @visibleForTesting
+  void releaseIdempotencyKey(RequestOptions options) =>
+      _releaseIdempotencyKey(options);
+
+  @visibleForTesting
+  bool isTransportTimeoutOrSocketException(DioException error) =>
+      _isTransportTimeoutOrSocketException(error);
+
+  @visibleForTesting
+  static dynamic sanitizePayload(dynamic data) => _sanitizePayload(data);
+
+  @visibleForTesting
+  ApiResponse<Map<String, dynamic>> handleDioErrorResponse(
+    Response response,
+    String requestType,
+  ) =>
+      _handleDioErrorResponse(response, requestType);
+}
+
+/// Workstream B: Idempotency entry tracking the minted key and creation timestamp.
+class _IdempotencyEntry {
+  final String key;
+  final DateTime createdAt;
+  _IdempotencyEntry(this.key, this.createdAt);
 }
 
 /// NET-FIX: single silent retry for idempotent (GET) requests that failed on
@@ -1535,3 +1769,4 @@ class _TransportRetryInterceptor extends Interceptor {
     }
   }
 }
+

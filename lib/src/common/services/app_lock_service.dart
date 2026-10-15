@@ -21,10 +21,15 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   static const _pinSaltKey = 'app_lock_pin_salt';
   static const _failedKey = 'app_lock_failed_count';
 
-  final FlutterSecureStorage _secure = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
-  );
+  final FlutterSecureStorage _secure;
+
+  AppLockService({FlutterSecureStorage? secureStorage})
+      : _secure = secureStorage ??
+            const FlutterSecureStorage(
+              aOptions: AndroidOptions(encryptedSharedPreferences: true),
+              iOptions:
+                  IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+            );
 
   final RxBool locked = false.obs;
   final RxInt failedAttempts = 0.obs;
@@ -41,6 +46,14 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
     } catch (e) {
       failedAttempts.value = 0;
     }
+    // Clean up or migrate legacy plaintext PIN if still present in SharedPreferences
+    try {
+      if (Get.isRegistered<SettingsService>()) {
+        await Get.find<SettingsService>().migrateLegacyPin();
+      } else {
+        await SettingsService().migrateLegacyPin();
+      }
+    } catch (_) {}
     return this;
   }
 

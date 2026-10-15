@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
 
@@ -124,6 +125,20 @@ class EmailOtpLoginController extends GetxController {
           await signIn.fetchUser();
         } else {
           // Fallback: entered the OTP screen without the sign-in stack.
+          final token = Get.isRegistered<TokenService>()
+              ? Get.find<TokenService>().accessToken.value
+              : null;
+          if (token == null || token.isEmpty) {
+            debugPrint('❌ verifyCode: Missing token in TokenService. Secure storage write failed.');
+            await Get.find<SettingsService>().wipeSession();
+            ToastHelper().showErrorToast(_pick(
+              en: 'Secure storage unavailable. Please check device security settings and try again.',
+              fa: 'فضای ذخیره‌سازی امن در دسترس نیست. لطفاً تنظیمات امنیتی دستگاه را بررسی کرده و مجدداً تلاش کنید.',
+              ar: 'وحدة التخزين الآمنة غير متوفرة. يرجى التحقق من إعدادات أمان الجهاز والمحاولة مرة أخرى.',
+              zh: '安全存储不可用。请检查设备安全设置后重试。',
+            ));
+            return;
+          }
           await Get.find<SettingsService>().saveLoginCurrentState('logged_in');
           await Get.find<SettingsService>()
               .saveLoggedInUserEmail(emailController.text.trim());

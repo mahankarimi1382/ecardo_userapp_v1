@@ -159,12 +159,16 @@ class CreateGiftReviewSection extends StatelessWidget {
                                     "1";
 
                                 if (isPasscodeEnabled) {
-                                  final bool? isVerified =
-                                      await Get.bottomSheet<bool>(
-                                        VerifyPasscodeBottomSheet(),
+                                  final dynamic verified =
+                                      await Get.bottomSheet<dynamic>(
+                                        const VerifyPasscodeBottomSheet(),
                                       );
-                                  if (isVerified != true) return;
-                                  controller.createGift();
+                                  final isVerified = verified != null &&
+                                      verified != false &&
+                                      (verified is! String || verified.isNotEmpty);
+                                  if (!isVerified) return;
+                                  final passcode = verified is String ? verified : null;
+                                  controller.createGift(passcode: passcode);
                                 } else {
                                   controller.createGift();
                                 }

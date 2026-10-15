@@ -72,14 +72,18 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
         Get.find<SettingsService>().getSetting("withdraw_passcode_status") == "1";
 
     if (isPasscodeEnabled) {
-      final bool? isVerified = await Get.bottomSheet<bool>(
+      final dynamic verified = await Get.bottomSheet<dynamic>(
         const VerifyPasscodeBottomSheet(),
       );
-      if (isVerified != true) {
+      final isVerified = verified != null &&
+          verified != false &&
+          (verified is! String || verified.isNotEmpty);
+      if (!isVerified) {
         _swipeKey.currentState?.reset();
         return;
       }
-      await controller.submitWithdraw();
+      final passcode = verified is String ? verified : null;
+      await controller.submitWithdraw(passcode: passcode);
     } else {
       await controller.submitWithdraw();
     }

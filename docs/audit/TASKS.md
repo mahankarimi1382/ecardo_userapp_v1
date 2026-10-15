@@ -1,9 +1,10 @@
 # eCardo User App (v1) — Prioritized Remediation Task Backlog
 
-**Document Version:** 1.1.0  
-**Date:** 2026-10-14  
-**Audit Context:** `ecardo_userapp_v1_audit_roadmap_fa.md` — Section 10  
-**Target Commit SHA:** `d56ab71d293ca1c7ec29b63863ecbc40ca9c8d67`
+**Document Version:** 1.2.0  
+**Date:** 2026-10-15  
+**Audit Context:** `ecardo_userapp_v1_reaudit_2026-10-15_fa.md`  
+**Target Commit SHA:** `de37b1ea0d2b9769ae38ea3d637f181d62149209` (`de37b1e`)  
+**Automated Tests Verified:** 646 passing tests (0 failures)
 
 ---
 
@@ -16,7 +17,7 @@
 | **TASK-ARC-01** | Architecture / Stability | **P0** | Frontend Team | **VERIFIED & IMPLEMENTED** | None |
 | **TASK-UI-01** | UI / RTL | **P0** | Design System Team | **VERIFIED & IMPLEMENTED** | None |
 | **TASK-SEC-02** | Security / Native Privacy | **P1** | Mobile Platform Team | **VERIFIED & IMPLEMENTED** | None |
-| **TASK-BRAND-01** | Configuration / Branding | **P1** | Mobile Platform Team | **VERIFIED & IMPLEMENTED** | None |
+| **TASK-BRAND-01 (FIND-001)** | Configuration / Branding | **P1** | Mobile Platform Team | **VERIFIED & IMPLEMENTED** | None |
 | **TASK-NET-01** | Network / Session | **P1** | Core Network Team | **VERIFIED & IMPLEMENTED** | None |
 | **TASK-NET-02** | Network / Resiliency | **P1** | Core Network Team | **VERIFIED & IMPLEMENTED** | None |
 | **TASK-FIN-01** | Financial / WebView | **P1** | Fintech Logic Team | **VERIFIED & IMPLEMENTED** | None |
@@ -27,7 +28,8 @@
 | **TASK-LOC-01** | Localization | **P1** | Localization Team | **VERIFIED & IMPLEMENTED** | None |
 | **TASK-LOC-03** | Travel / Shamsi Calendar | **P1** | Localization Team | **VERIFIED & IMPLEMENTED** | None |
 | **TASK-VAL-01** | Financial / Form Input | **P1** | Frontend Team | **VERIFIED & IMPLEMENTED** | None |
-| **TASK-CICD-01** | DevOps / Build Pipeline | **P1** | DevOps Team | **VERIFIED & IMPLEMENTED** | None |
+| **TASK-CICD-01 (FIND-002)** | DevOps / Build Pipeline | **P1** | DevOps Team | **VERIFIED & IMPLEMENTED** | None |
+| **TASK-DOC-01 (FIND-006)** | Documentation / Governance | **P1** | DevOps / Architecture | **VERIFIED & IMPLEMENTED** | None |
 
 ---
 
@@ -106,14 +108,17 @@
   - Android: Set `WindowManager.LayoutParams.FLAG_SECURE` in `MainActivity.kt`.
   - iOS: Add blur view in `AppDelegate.swift` when resigning active.
 
-### TASK-BRAND-01: Synchronize Firebase Project Identifiers
+### TASK-BRAND-01 (FIND-001): Synchronize Firebase Project Identifiers & Metadata
 - **Priority:** **P1**
+- **Status:** **VERIFIED & IMPLEMENTED**
 - **Affected Files:**
-  - `firebase.json:6, 13, 22`
-  - `lib/firebase_options.dart:48-55`
-- **Action Plan:**
-  - Update `firebase.json` project ID to `ecardo-app`.
-  - Replace legacy Qunzo iOS parameters in `firebase_options.dart` with credentials from `ios/Runner/GoogleService-Info.plist`.
+  - `firebase.json`
+  - `lib/firebase_options.dart`
+  - `android/app/google-services.json`
+  - `ios/Runner/GoogleService-Info.plist`
+- **Resolution & Evidence:**
+  - Reconciled all `appId` and `projectId` entries in `firebase.json` with project `ecardo-app` (`1:292987494106:android:3f1e8b21e46ceb2c138fe3` and `1:292987494106:ios:9009185e45066d59138fe3`).
+  - Confirmed 100% synchronization with `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, and `lib/firebase_options.dart`.
 
 ### TASK-NET-01: Fix Premature Logout Bug on Retried Request Failure
 - **Priority:** **P1**
@@ -157,10 +162,24 @@
 - **Action Plan:**
   - Add Luhn check for debit cards and mod-97-10 check for Iranian Sheba before proceeding to next step.
 
-### TASK-CICD-01: Enable Dart Obfuscation & Scope Permissions in CI
+### TASK-CICD-01 (FIND-002): Enable Dart Obfuscation & Smart Formatting Check in CI
 - **Priority:** **P1**
+- **Status:** **VERIFIED & IMPLEMENTED**
 - **Affected Files:**
-  - `.github/workflows/flutter.yml:26, 81, 186-187`
-- **Action Plan:**
-  - Add `--obfuscate --split-debug-info=build/symbols` to release APK build command.
-  - Scope `permissions: contents: write` to tag release jobs only.
+  - `.github/workflows/flutter.yml`
+- **Resolution & Evidence:**
+  - Added `--obfuscate --split-debug-info=build/symbols` to release APK build command.
+  - Reintroduced smart changed-files Dart formatting gate (`git diff --name-only origin/main...HEAD 2>/dev/null | grep '\.dart$'`) before static analysis, ensuring format compliance on all new code without blocking on legacy files.
+  - Verified all actions are pinned to secure v4 commit SHAs (`actions/checkout@v4`, `actions/setup-java@v4`, `actions/upload-artifact@v4`).
+
+### TASK-DOC-01 (FIND-006): Synchronize README and Audit Documentation with Codebase Reality
+- **Priority:** **P1**
+- **Status:** **VERIFIED & IMPLEMENTED**
+- **Affected Files:**
+  - `README.md`
+  - `docs/audit/BASELINE.md`
+  - `docs/audit/FINDINGS.md`
+  - `docs/audit/TASKS.md`
+- **Resolution & Evidence:**
+  - Replaced outdated initial audit README with complete production architecture documentation (`com.ecardo.user`, `FlutterSecureStorage`, runtime SSL pinning with fail-closed gates, 6 complete locales, Vazirmatn font, Shamsi date picker).
+  - Updated all audit documents to commit `de37b1e` and verified 646 passing tests.

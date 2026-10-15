@@ -148,10 +148,13 @@ class RequestMoneyReviewStepSection extends StatelessWidget {
                               "1";
 
                           if (isPasscodeEnabled) {
-                            final bool? isVerified = await Get.bottomSheet<bool>(
+                            final dynamic verified = await Get.bottomSheet<dynamic>(
                               const VerifyPasscodeBottomSheet(),
                             );
-                            if (isVerified != true) return;
+                            final isVerified = verified != null &&
+                                verified != false &&
+                                (verified is! String || verified.isNotEmpty);
+                            if (!isVerified) return;
                             controller.requestMoney();
                           } else {
                             controller.requestMoney();

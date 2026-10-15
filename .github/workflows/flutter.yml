@@ -76,6 +76,18 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "pubspec version=$VERSION"
 
+      - name: Check code formatting on changed files
+        shell: bash
+        run: |
+          CHANGED_DART_FILES=$(git diff --name-only origin/main...HEAD 2>/dev/null | grep '\.dart$' || true)
+          if [ -n "$CHANGED_DART_FILES" ]; then
+            echo "Checking formatting on changed Dart files:"
+            echo "$CHANGED_DART_FILES"
+            dart format --output=none --set-exit-if-changed $CHANGED_DART_FILES
+          else
+            echo "No changed Dart files to format."
+          fi
+
       - name: Run Analyze (errors are fatal)
         run: |
           set -o pipefail

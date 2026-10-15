@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -269,7 +270,7 @@ class CreateGiftController extends GetxController {
   }
 
   // Create Gift
-  Future<void> createGift() async {
+  Future<void> createGift({String? passcode}) async {
     // v1.0.24: guard against double submission while a request is in flight.
     if (isCreateGiftLoading.isTrue) return;
     isCreateGiftLoading.value = true;
@@ -279,6 +280,8 @@ class CreateGiftController extends GetxController {
       'wallet_id': wallet.value!.isDefault!
           ? "default"
           : wallet.value!.id.toString(),
+      if (passcode != null && passcode.isNotEmpty)
+        'passcode': PasscodeHelper.normalize(passcode),
     };
 
     try {

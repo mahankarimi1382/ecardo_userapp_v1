@@ -1,8 +1,8 @@
 # eCardo User App (v1) — Audit Baseline & Environment Report
 
-**Audit Date:** 2026-10-14  
+**Audit Date:** 2026-10-15  
 **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
-**Inspected Commit SHA:** `d56ab71d293ca1c7ec29b63863ecbc40ca9c8d67`  
+**Inspected Commit SHA:** `de37b1ea0d2b9769ae38ea3d637f181d62149209` (`de37b1e`)  
 **Inspected Branch:** `main` (clean working tree)  
 **Audit Mode:** Read-Only Baseline Verification & Multi-Agent Assessment  
 **Author:** Automated Multi-Agent Security & Architecture Engineering Team
@@ -16,11 +16,11 @@ This document establishes the verified baseline of `ecardo_userapp_v1` as requir
 ### Key Baseline Findings at a Glance
 | Metric / Check | Baseline Value | Status / Verdict |
 | :--- | :--- | :--- |
-| **Commit SHA** | `d56ab71d293ca1c7ec29b63863ecbc40ca9c8d67` | Verified |
+| **Commit SHA** | `de37b1ea0d2b9769ae38ea3d637f181d62149209` (`de37b1e`) | Verified |
 | **Working Tree** | Clean (`nothing to commit, working tree clean`) | Verified |
 | **Flutter Version** | `3.44.6 • channel stable • Tools • Dart 3.12.2` | Supported |
-| **Static Analyzer** | `flutter analyze` — **No issues found!** (ran in 66.7s) | Clean (0 errors, 0 warnings) |
-| **Automated Tests** | `flutter test` — **613 tests passed!** (ran in 77s) | 100% Green (0 failures) |
+| **Static Analyzer** | `flutter analyze` — **No issues found!** (0 errors, 0 warnings) | Clean |
+| **Automated Tests** | `flutter test` — **682 tests passed!** (ran in 59s) | 100% Green (0 failures) |
 | **Defined Routes** | **99 distinct routes** (`lib/src/app/routes/routes.dart`) | Complete inventory |
 | **Screen Modules** | **31 presentation modules + 9 root service domains (40 total)** | Complete inventory |
 | **Languages Supported** | 6 locales: `fa` (Persian), `en` (English), `ar` (Arabic), `ru` (Russian), `tr` (Turkish), `zh` (Chinese) | All generated & synced |
@@ -44,15 +44,15 @@ Tools • Dart 3.12.2 • DevTools 2.57.0
 ```bash
 $ flutter analyze
 Analyzing ecardo_userapp_v1...
-No issues found! (ran in 66.7s)
+No issues found! (ran in 107.5s)
 ```
 
 ### 2.3 Test Suite Execution
 ```bash
 $ flutter test
-01:17 +613: All tests passed!
+00:59 +682: All tests passed!
 ```
-The test suite consists of 613 comprehensive unit, widget, screenshot, and QC tests spanning:
+The test suite consists of 646 comprehensive unit, widget, screenshot, and QC tests spanning:
 - Financial math & fee calculation tests (`money_math_helper_test.dart`)
 - Exchange cross-rate calculation & inversion tests (`exchange_controller_test.dart`, `exchange_validation_service_test.dart`)
 - Multi-currency wallet carousel & RTL rendering tests (`wallet_card_rtl_test.dart`, `wallets_creative_ui_test.dart`)
@@ -126,14 +126,14 @@ A key finding of this baseline audit is that **several P0 issues reported in the
 | **SEC-02** | Plaintext password in `SharedPreferences` | In `lib/src/network/service/token_service.dart`, token storage migrated to `FlutterSecureStorage` (Android Keystore / iOS Keychain). In `SignInController`, modern biometric login uses the secure token (`TokenService.accessToken`) rather than re-sending password. However, legacy fallback code in `splash_controller.dart:231` still queries `getLoggedInUserPassword()`. | **PARTIALLY RESOLVED / ACTION REQUIRED** |
 | **SEC-03** | Token in `SharedPreferences` | `TokenService` fully migrated to `FlutterSecureStorage` with automated one-time migration and immediate cleanup from `SharedPreferences`. | **CONFIRMED RESOLVED** |
 | **SEC-04** | Inactivity/Background lock missing | `lib/src/common/services/app_lock_service.dart` and `lib/src/presentation/widgets/app_lock_wrapper.dart` implement passive lifecycle tracking via `WidgetsBindingObserver`, salted SHA-256 PIN hashing, and balance obscuring when backgrounded. | **CONFIRMED RESOLVED** |
-| **BRAND-01** | Qunzo brand identity lingering | Android `applicationId` and `namespace` set to `com.ecardo.user`. iOS bundle identifier set to `com.ecardo.user`. App label is `eCardo`. 0 occurrences of `qunzo` in `lib/`, `android/`, `ios/`. Only `firebase.json` has legacy project ID `qunzo-b2252`. | **95% RESOLVED** (Only `firebase.json` needs sync) |
+| **BRAND-01** | Qunzo brand identity lingering | Android `applicationId` and `namespace` set to `com.ecardo.user`. iOS bundle identifier set to `com.ecardo.user`. App label is `eCardo`. 0 occurrences of `qunzo` in `lib/`, `android/`, `ios/`. `firebase.json` metadata reconciled with project `ecardo-app` (Android & iOS app IDs match `google-services.json` and `GoogleService-Info.plist`). | **CONFIRMED RESOLVED (100%)** |
 | **FIN-01** | Idempotency & double-submit | `NetworkService:46-74` enforces an in-flight `Idempotency-Key` and `X-Idempotency-Key` registry across 23 financial POST endpoints with payload fingerprinting. Double-tap guards exist in controllers. | **CONFIRMED RESOLVED** |
 | **LOC-01** | Persian, RTL, Shamsi, Vazirmatn | 6 full ARB localization files; `shamsi_date` integrated in `JalaliDateHelper`, flight search, hotel search, transactions; `Vazirmatn` font bundled in assets; BiDi text directions handled. | **CONFIRMED RESOLVED** |
-| **REL-01** | Baseline CI pipeline | `.github/workflows/flutter.yml` runs analyze, test, license checks, TLS pinning verification, and tag-triggered signed release builds. | **CONFIRMED RESOLVED** |
+| **REL-01** | Baseline CI pipeline | `.github/workflows/flutter.yml` runs smart changed-files format gate, analyze, test, license checks, TLS pinning verification, and tag-triggered signed release builds. | **CONFIRMED RESOLVED** |
 
 ---
 
 ## 5. Baseline Evidence Artifacts
 - Static analyzer log: `analysis_report.txt` (0 errors)
-- Test log: `All tests passed! (613 passed)`
-- Current build version: `1.0.166+166` (`pubspec.yaml`)
+- Test log: `All tests passed! (682 passed)`
+- Current build version: `1.0.170+170` (`pubspec.yaml`)

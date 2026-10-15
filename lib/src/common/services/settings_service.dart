@@ -35,7 +35,7 @@ class SettingsService extends GetxService {
   static const String themeModeKey = 'theme_mode_pref'; // system|light|dark
   static const String rateUnitKey = 'rate_unit'; // irr|toman
   final RxString rateUnitRx = 'irr'.obs;
-  static const String appPinKey = 'app_pin_4';
+  static const String _legacyAppPinKey = 'app_pin_4';
 
   static const String privacyModeKey = 'privacy_mode_enabled';
   static const String hideBalanceOnBackgroundKey = 'hide_balance_on_background';
@@ -117,16 +117,25 @@ class SettingsService extends GetxService {
   // Migrated from SharedPreferences to flutter_secure_storage.
   // Note: legacy password storage is pruned per TASK-SEC-01;
   // secureStorage is maintained to cleanly delete legacy credentials.
-  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
-  );
+  final FlutterSecureStorage _secureStorage;
+
+  SettingsService({FlutterSecureStorage? secureStorage})
+      : _secureStorage = secureStorage ??
+            const FlutterSecureStorage(
+              aOptions: AndroidOptions(encryptedSharedPreferences: true),
+              iOptions:
+                  IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+            );
 
   /// A-SEC (1.0.51): biometric gate uses the bearer token, not a stored
   /// password. Call this after login so legacy installs drop the old secret.
   Future<void> clearLoggedInUserPassword() async {
     try {
-      await _secureStorage.delete(key: currentPasswordKey);
+      try {
+        await _secureStorage.delete(key: currentPasswordKey);
+      } catch (e) {
+        debugPrint('clearLoggedInUserPassword secure storage delete failed: $e');
+      }
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(currentPasswordKey);
       currentPassword.value = null;
@@ -148,7 +157,12 @@ class SettingsService extends GetxService {
       await prefs.remove(currentEmailVerifiedKey);
       await prefs.remove(currentSetUpPasswordKey);
       await prefs.remove(currentFcmTokenKey);
-      await _secureStorage.delete(key: currentPasswordKey);
+      await prefs.remove(_legacyAppPinKey);
+      try {
+        await _secureStorage.delete(key: currentPasswordKey);
+      } catch (e) {
+        debugPrint('wipeSession secure storage delete failed: $e');
+      }
       currentEmail.value = null;
       currentPassword.value = null;
       logInCurrentState.value = null;
@@ -369,14 +383,40 @@ class SettingsService extends GetxService {
     rateUnitRx.value = await getRateUnit();
   }
 
-  Future<String?> getAppPin() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(appPinKey);
+  /// Migrates any legacy plaintext PIN from SharedPreferences to [AppLockService]
+  /// and immediately removes the plaintext key from SharedPreferences.
+  /// Guarantees that SharedPreferences never stores plaintext PINs.
+  Future<void> migrateLegacyPin() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!prefs.containsKey(_legacyAppPinKey)) return;
+
+      final legacyPin = prefs.getString(_legacyAppPinKey);
+      if (legacyPin != null && legacyPin.isNotEmpty && legacyPin != 'set') {
+        // Only valid 4-digit numeric PINs are migrated to AppLockService
+        if (legacyPin.length == 4 && int.tryParse(legacyPin) != null) {
+          final appLock = Get.isRegistered<AppLockService>()
+              ? Get.find<AppLockService>()
+              : AppLockService();
+          if (!await appLock.hasPinSet()) {
+            await appLock.setPin(legacyPin);
+            debugPrint('🛡️ Migrated legacy plaintext PIN from SharedPreferences to AppLockService');
+          }
+        }
+      }
+      await prefs.remove(_legacyAppPinKey);
+      debugPrint('🛡️ Permanently removed legacy app_pin_4 from SharedPreferences');
+    } catch (e) {
+      debugPrint('⚠️ migrateLegacyPin failed: $e');
+    }
   }
 
-  Future<void> setAppPin(String pin) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(appPinKey, pin);
+  /// Initialize core settings and run security migrations on startup
+  Future<SettingsService> init() async {
+    await loadRateUnitIntoRx();
+    await initPrivacySettings();
+    await migrateLegacyPin();
+    return this;
   }
 
   /// Privacy Mode: masks balances with asterisks across the entire app

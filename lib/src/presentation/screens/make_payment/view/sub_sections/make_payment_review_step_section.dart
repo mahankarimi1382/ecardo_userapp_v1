@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/ecardo_glass_card.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
@@ -160,14 +161,34 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                       isLoading: controller.isMakePaymentLoading.value,
                       onPressed: () async {
                         HapticFeedback.lightImpact();
-                        final verified = await Get.bottomSheet<String>(
-                          const VerifyPasscodeBottomSheet(),
-                        );
-                        if (verified == null ||
-                            !PasscodeHelper.isValidFormat(verified)) {
-                          return;
+                        final bool isPasscodeEnabled =
+                            Get.find<SettingsService>().getSetting(
+                                  "make_payment_passcode_status",
+                                ) ==
+                                "1";
+
+                        String? storedPasscode = controller.userModel.value.data?.passcode;
+                        bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
+                        if (storedPasscode == null || storedPasscode.isEmpty) {
+                          if (Get.isRegistered<HomeController>()) {
+                            storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
+                            hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+                          }
                         }
-                        await controller.makePayment(passcode: verified);
+                        final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+
+                        if (isPasscodeEnabled && hasPasscode) {
+                          final dynamic verified = await Get.bottomSheet<dynamic>(
+                            const VerifyPasscodeBottomSheet(),
+                          );
+                          if (verified == null ||
+                              !PasscodeHelper.isValidFormat(verified.toString())) {
+                            return;
+                          }
+                          await controller.makePayment(passcode: verified.toString());
+                        } else {
+                          await controller.makePayment();
+                        }
                       },
                       width: double.infinity,
                       height: 52,

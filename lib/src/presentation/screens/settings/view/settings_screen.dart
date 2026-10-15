@@ -382,7 +382,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (Get.isRegistered<AppLockService>()) {
         await Get.find<AppLockService>().setPin(c1.text);
       }
-      await settings.setAppPin('set');
       if (!mounted) return;
       Get.snackbar(
         'PIN',

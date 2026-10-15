@@ -10,7 +10,9 @@ import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/currency_sparkline_chart.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
@@ -347,36 +349,34 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                   onSwipeComplete: () async {
                     HapticFeedback.mediumImpact();
 
-                    final savedPasscode =
-                        controller.userModel.value.data?.passcode;
-                    final bool hasPasscode =
-                        savedPasscode != null &&
-                            savedPasscode.isNotEmpty &&
-                            savedPasscode != "0";
-
-                    if (!hasPasscode) {
-                      controller.exchangeWallet();
-                      return;
-                    }
-
                     final bool isPasscodeEnabled =
                         settings.getSetting(
                               "exchange_passcode_status",
                             ) ==
                             "1";
 
-                    if (isPasscodeEnabled) {
-                      final String? verifiedPasscode =
-                          await Get.bottomSheet<String>(
+                    final storedPasscode = controller.userModel.value.data?.passcode ??
+                        (Get.isRegistered<HomeController>()
+                            ? Get.find<HomeController>().userModel.value.data?.passcode
+                            : null);
+                    final hasPasscodeFlag = controller.userModel.value.data?.hasPasscode ??
+                        (Get.isRegistered<HomeController>()
+                            ? Get.find<HomeController>().userModel.value.data?.hasPasscode
+                            : null);
+                    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+
+                    if (isPasscodeEnabled && hasPasscode) {
+                      final dynamic verifiedPasscode =
+                          await Get.bottomSheet<dynamic>(
                         const VerifyPasscodeBottomSheet(),
                       );
                       if (verifiedPasscode == null ||
-                          verifiedPasscode.isEmpty) {
+                          verifiedPasscode.toString().isEmpty) {
                         _swipeKey.currentState?.reset();
                         return;
                       }
                       controller.exchangeWallet(
-                        passcode: verifiedPasscode,
+                        passcode: verifiedPasscode.toString(),
                       );
                     } else {
                       controller.exchangeWallet();
