@@ -71,6 +71,14 @@ class NetworkService extends getx.GetxService {
     '/user/p2p/pay-order',
     '/user/travel/book',
     '/user/travel/order',
+    '/user/visa/requests',
+    '/user/card-orders',
+    '/user/virtual-card/topup',
+    '/user/virtual-card/balance-topup',
+    '/user/add-money',
+    '/user/rentals/book',
+    '/user/tours/book',
+    '/user/licenses/order',
   ];
 
   AppLocalizations? get localization {
@@ -141,16 +149,6 @@ class NetworkService extends getx.GetxService {
       );
     }
 
-    _dio.interceptors.clear();
-    // NET-FIX (RC-flake): one silent retry for idempotent (GET) requests on
-    // pure transport failures — mobile handovers and CF edge blips used to
-    // surface as user-facing errors on first attempt. Money-mutating
-    // methods are NEVER retried here (server-side idempotency covers
-    // double-tap, but blind POST retries would still risk double side
-    // effects on endpoints without the middleware).
-    _dio.interceptors.add(
-      _TransportRetryInterceptor((options) => _dio.fetch(options)),
-    );
     _setupInterceptors();
   }
 
@@ -193,6 +191,9 @@ class NetworkService extends getx.GetxService {
   // Setup Interceptor
   void _setupInterceptors() {
     _dio.interceptors.clear();
+    _dio.interceptors.add(
+      _TransportRetryInterceptor((options) => _dio.fetch(options)),
+    );
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -255,7 +256,12 @@ class NetworkService extends getx.GetxService {
           return handler.next(response);
         },
         onError: (DioException error, handler) async {
-          _releaseIdempotencyKey(error.requestOptions);
+          final isTimeout = error.type == DioExceptionType.connectionTimeout ||
+              error.type == DioExceptionType.receiveTimeout ||
+              error.type == DioExceptionType.sendTimeout;
+          if (!isTimeout) {
+            _releaseIdempotencyKey(error.requestOptions);
+          }
           if (error.response?.statusCode == 401) {
             // Do NOT attempt token refresh for login/auth/fcm or unauthenticated endpoints
             final path = error.requestOptions.uri.path;
@@ -313,6 +319,10 @@ class NetworkService extends getx.GetxService {
                   return;
                 } catch (e) {
                   _log('Retry failed: $e');
+                  if (e is DioException) {
+                    return handler.next(e);
+                  }
+                  return handler.next(error);
                 }
               }
             }
@@ -462,6 +472,37 @@ class NetworkService extends getx.GetxService {
     return 'req-${base64UrlEncode(bytes).replaceAll('=', '').toLowerCase()}';
   }
 
+  static const Set<String> _sensitivePayloadKeys = {
+    'password',
+    'current_password',
+    'new_password',
+    'password_confirmation',
+    'code',
+    'otp',
+    'passcode',
+    'pin',
+    'cvv',
+    'card_number',
+  };
+
+  static dynamic _sanitizePayload(dynamic data) {
+    if (data is Map) {
+      final sanitized = <dynamic, dynamic>{};
+      for (final entry in data.entries) {
+        final keyStr = entry.key.toString().toLowerCase().trim();
+        if (_sensitivePayloadKeys.contains(keyStr)) {
+          sanitized[entry.key] = '<redacted>';
+        } else {
+          sanitized[entry.key] = _sanitizePayload(entry.value);
+        }
+      }
+      return sanitized;
+    } else if (data is List) {
+      return data.map(_sanitizePayload).toList();
+    }
+    return data;
+  }
+
   // ------------------------------ AUTH CALLS ------------------------------ //
 
   // Login POST Method
@@ -578,13 +619,7 @@ class NetworkService extends getx.GetxService {
 
     _log('📤 Register POST Request URL: $url');
     // v1.0.24: never log plaintext passwords — redact like login() does.
-    final sanitizedBody = Map<String, dynamic>.of(data);
-    for (final key in sanitizedBody.keys.toList()) {
-      if (key.toLowerCase().contains('password')) {
-        sanitizedBody[key] = '<redacted>';
-      }
-    }
-    _log('📦 Register POST Request Body: ${jsonEncode(sanitizedBody)}');
+    _log('📦 Register POST Request Body: ${jsonEncode(_sanitizePayload(data))}');
 
     try {
       final response = await _dio.post(
@@ -718,7 +753,7 @@ class NetworkService extends getx.GetxService {
     _log('📤 POST Request URL: $url');
 
     if (data != null) {
-      _log('📦 POST Request Body: ${jsonEncode(data)}');
+      _log('📦 POST Request Body: ${jsonEncode(_sanitizePayload(data))}');
     } else {
       _log('📦 POST Request Body: No body data');
     }
@@ -896,7 +931,7 @@ class NetworkService extends getx.GetxService {
     _log('📤 PUT Request URL: $url');
 
     if (data != null) {
-      _log('📦 PUT Request Body: ${jsonEncode(data)}');
+      _log('📦 PUT Request Body: ${jsonEncode(_sanitizePayload(data))}');
     } else {
       _log('📦 PUT Request Body: No body data');
     }
@@ -967,7 +1002,7 @@ class NetworkService extends getx.GetxService {
     _log('📤 PATCH Request URL: $url');
 
     if (data != null) {
-      _log('📦 PATCH Request Body: ${jsonEncode(data)}');
+      _log('📦 PATCH Request Body: ${jsonEncode(_sanitizePayload(data))}');
     } else {
       _log('📦 PATCH Request Body: No body data');
     }
@@ -1034,7 +1069,7 @@ class NetworkService extends getx.GetxService {
     _log('🗑️ DELETE Request URL: $url');
 
     if (data != null) {
-      _log('📦 DELETE Request Body: ${jsonEncode(data)}');
+      _log('📦 DELETE Request Body: ${jsonEncode(_sanitizePayload(data))}');
     } else {
       _log('📦 DELETE Request Body: No body data');
     }
@@ -1111,7 +1146,7 @@ class NetworkService extends getx.GetxService {
       _log('Global POST Request URL: $url', icon: '✅');
 
       if (data != null) {
-        _log('📦 Global POST Request Body: ${jsonEncode(data)}');
+        _log('📦 Global POST Request Body: ${jsonEncode(_sanitizePayload(data))}');
       } else {
         _log('📦 Global POST Request Body: No body data');
       }
@@ -1253,7 +1288,7 @@ class NetworkService extends getx.GetxService {
         final jsonData = response.data is Map
             ? Map<String, dynamic>.from(response.data as Map)
             : <String, dynamic>{};
-        _log('$requestType Response: $jsonData', icon: '✅');
+        _log('$requestType Response: [status ${response.statusCode}]', icon: '✅');
         return ApiResponse.completed(jsonData);
       default:
         _log('Unknown Status Code: ${response.statusCode}', icon: '❓');

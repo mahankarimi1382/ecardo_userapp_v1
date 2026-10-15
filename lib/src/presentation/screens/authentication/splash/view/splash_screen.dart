@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_strings.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/splash/controller/splash_controller.dart';
 
 /// v1.0.56 — fullscreen splash (no half-white gap).
@@ -258,7 +259,12 @@ class _SplashScreenState extends State<SplashScreen>
                       FadeTransition(
                         opacity: _tagFade,
                         child: Text(
-                          'Financial Super App',
+                          l10nPick(
+                            context,
+                            en: 'Financial Super App',
+                            fa: 'سوپراپلیکیشن مالی بین‌المللی',
+                            ar: 'التطبيق المالي الفائق',
+                          ),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: (13.sp).clamp(11.0, 15.0).toDouble(),
@@ -298,8 +304,18 @@ class _SplashScreenState extends State<SplashScreen>
                               settingsService.isSettingsLoading.value;
                           return Text(
                             loading
-                                ? 'Preparing your workspace…'
-                                : 'Almost ready',
+                                ? l10nPick(
+                                    context,
+                                    en: 'Preparing your workspace…',
+                                    fa: 'در حال آماده‌سازی محیط کاربری…',
+                                    ar: 'جارٍ إعداد مساحة العمل…',
+                                  )
+                                : l10nPick(
+                                    context,
+                                    en: 'Almost ready',
+                                    fa: 'تقریباً آماده است',
+                                    ar: 'جاهز تقريباً',
+                                  ),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: (12.sp).clamp(11.0, 14.0).toDouble(),

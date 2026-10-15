@@ -19,6 +19,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_destination_card.dart';
 
 /// Transaction status for the digital receipt header badge.
 enum ReceiptStatus {
@@ -479,7 +480,7 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
             ar: 'من محفظة',
             zh: '付款钱包',
           ),
-          value: widget.fromAccount,
+          value: WithdrawDestinationCard.maskAccountNumber(widget.fromAccount),
         ),
       );
     }
@@ -495,7 +496,7 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
             ar: 'إلى محفظة',
             zh: '收款钱包',
           ),
-          value: widget.toAccount,
+          value: WithdrawDestinationCard.maskAccountNumber(widget.toAccount),
         ),
       );
     }

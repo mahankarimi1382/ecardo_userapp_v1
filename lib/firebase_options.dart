@@ -46,8 +46,8 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDgFfu2VI5eHHsXsy_FlI0bXHy3-hzp6uo', // Keeps old until iOS config provided
-    appId: '1:279734428004:ios:f06064424e537a53949a71', // Keeps old until iOS config provided
+    apiKey: 'AIzaSyCugrhE0iAiv4H2FFYyhEZT_AUrXGjcafM',
+    appId: '1:292987494106:ios:9009185e45066d59138fe3',
     messagingSenderId: '292987494106',
     projectId: 'ecardo-app',
     storageBucket: 'ecardo-app.firebasestorage.app',

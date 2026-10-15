@@ -21,9 +21,10 @@ class AddPaymentMethod extends StatefulWidget {
 }
 
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
-  final AddPaymentMethodController controller = Get.put(
-    AddPaymentMethodController(),
-  );
+  AddPaymentMethodController get controller =>
+      Get.isRegistered<AddPaymentMethodController>()
+          ? Get.find<AddPaymentMethodController>()
+          : Get.put(AddPaymentMethodController());
   final PaymentAccountController paymentAccountController = Get.find();
 
   @override

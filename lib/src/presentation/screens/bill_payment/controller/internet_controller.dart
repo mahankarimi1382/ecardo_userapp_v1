@@ -27,7 +27,8 @@ class InternetController extends GetxController {
   // step so a backend "pending" payment no longer looks like a success.
   final Rxn<Map<String, dynamic>> lastBillPaymentResult =
       Rxn<Map<String, dynamic>>();
-  final localization = AppLocalizations.of(Get.context!);
+  AppLocalizations? get localization =>
+      Get.context != null ? AppLocalizations.of(Get.context!) : null;
 
   // Stepper
   final RxInt currentStep = 0.obs;
@@ -105,7 +106,9 @@ class InternetController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isLoading.value = false;
     }
@@ -129,7 +132,9 @@ class InternetController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchPayBillServices() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isPayBillServiceLoading.value = false;
     }
@@ -176,7 +181,9 @@ class InternetController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ submitPayBill() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isSubmitLoading.value = false;
     }
@@ -212,25 +219,33 @@ class InternetController extends GetxController {
   bool validateAmountStep() {
     // Validate Country
     if (countryController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.internetCountryRequired);
+      ToastHelper().showErrorToast(
+        localization?.internetCountryRequired ?? 'Country is required',
+      );
       return false;
     }
 
     // Validate Service
     if (serviceController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.internetServiceRequired);
+      ToastHelper().showErrorToast(
+        localization?.internetServiceRequired ?? 'Service is required',
+      );
       return false;
     }
 
     // Validate Amount
     if (amountText.value.isEmpty && amountController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.internetAmountRequired);
+      ToastHelper().showErrorToast(
+        localization?.internetAmountRequired ?? 'Amount is required',
+      );
       return false;
     }
 
     final amount = double.tryParse(amountController.text) ?? 0.0;
     if (amount <= 0) {
-      ToastHelper().showErrorToast(localization!.internetAmountValid);
+      ToastHelper().showErrorToast(
+        localization?.internetAmountValid ?? 'Please enter a valid amount',
+      );
       return false;
     }
 
@@ -241,7 +256,8 @@ class InternetController extends GetxController {
 
       if (fieldData.text.trim().isEmpty) {
         ToastHelper().showErrorToast(
-          localization!.internetDynamicFieldRequired(fieldName),
+          localization?.internetDynamicFieldRequired(fieldName) ??
+              '$fieldName is required',
         );
         return false;
       }

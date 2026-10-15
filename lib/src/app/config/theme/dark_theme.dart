@@ -29,8 +29,16 @@ class DarkTheme {
       outlineVariant: AppColors.darkBorder,
     );
 
+    final locale = Localizations.maybeLocaleOf(context)?.languageCode ?? 'en';
+    final isRtlLanguage = locale == 'fa' || locale == 'ar';
+    final primaryFont = isRtlLanguage ? 'Vazirmatn' : 'Plus Jakarta Sans';
+    final fallbackFonts = isRtlLanguage
+        ? const ['Plus Jakarta Sans', 'NotoSansRU']
+        : const ['Vazirmatn', 'NotoSansRU'];
+
     final baseText = Typography.material2021().white.apply(
-      fontFamily: 'Plus Jakarta Sans',
+      fontFamily: primaryFont,
+      fontFamilyFallback: fallbackFonts,
       bodyColor: AppColors.warmWhite,
       displayColor: AppColors.warmWhite,
     );
@@ -40,8 +48,8 @@ class DarkTheme {
       brightness: Brightness.dark,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.deepBlack,
-      fontFamily: 'Plus Jakarta Sans',
-      fontFamilyFallback: const ['Vazirmatn', 'NotoSansRU'],
+      fontFamily: primaryFont,
+      fontFamilyFallback: fallbackFonts,
       textTheme: baseText,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.deepBlack,
@@ -98,8 +106,9 @@ class DarkTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: brand,
-          textStyle: const TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
+          textStyle: TextStyle(
+            fontFamily: primaryFont,
+            fontFamilyFallback: fallbackFonts,
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
@@ -112,8 +121,9 @@ class DarkTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: brand,
           side: const BorderSide(color: AppColors.darkBorder, width: 1.5),
-          textStyle: const TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
+          textStyle: TextStyle(
+            fontFamily: primaryFont,
+            fontFamilyFallback: fallbackFonts,
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
@@ -143,19 +153,21 @@ class DarkTheme {
           return AppColors.darkBorder;
         }),
       ),
-      tabBarTheme: const TabBarThemeData(
+      tabBarTheme: TabBarThemeData(
         labelColor: brand,
         unselectedLabelColor: AppColors.softGray,
         indicatorColor: brand,
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: AppColors.darkBorder,
         labelStyle: TextStyle(
-          fontFamily: 'Plus Jakarta Sans',
+          fontFamily: primaryFont,
+          fontFamilyFallback: fallbackFonts,
           fontWeight: FontWeight.w700,
           fontSize: 14,
         ),
         unselectedLabelStyle: TextStyle(
-          fontFamily: 'Plus Jakarta Sans',
+          fontFamily: primaryFont,
+          fontFamilyFallback: fallbackFonts,
           fontWeight: FontWeight.w500,
           fontSize: 14,
         ),
@@ -166,15 +178,17 @@ class DarkTheme {
         indicatorColor: brand.withValues(alpha: 0.18),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
+            return TextStyle(
+              fontFamily: primaryFont,
+              fontFamilyFallback: fallbackFonts,
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: brand,
             );
           }
-          return const TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
+          return TextStyle(
+            fontFamily: primaryFont,
+            fontFamilyFallback: fallbackFonts,
             fontSize: 12,
             fontWeight: FontWeight.w500,
             color: AppColors.softGray,

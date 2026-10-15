@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_success_celebration.dart';
+import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_destination_card.dart';
 
 class TransferSuccessStepSection extends StatefulWidget {
   const TransferSuccessStepSection({super.key});
@@ -59,10 +60,19 @@ class _TransferSuccessStepSectionState
     final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? controller.charge.value;
 
     final recipientAccount = controller.recipientUidController.text.trim();
+    final maskedRecipientAccount = WithdrawDestinationCard.maskAccountNumber(recipientAccount);
     final matchedBeneficiary = controller.findBeneficiaryByAccount(recipientAccount);
     final recipientName = matchedBeneficiary?.nickname ??
         matchedBeneficiary?.receiver?.name ??
-        recipientAccount;
+        (maskedRecipientAccount.isNotEmpty ? maskedRecipientAccount : recipientAccount);
+
+    final senderAccount = currentWallet?.accountNo?.trim() ??
+        senderTx?["account_number"]?.toString().trim() ??
+        senderTx?["from_wallet"]?.toString().trim() ??
+        '';
+    final maskedSenderAccount = senderAccount.isNotEmpty
+        ? WithdrawDestinationCard.maskAccountNumber(senderAccount)
+        : null;
 
     return Obx(() {
       if (controller.isTransferAmountLoading.value) {
@@ -98,14 +108,23 @@ class _TransferSuccessStepSectionState
                 items: [
                   EcardoReceiptItem(
                     label: localization.transferReviewStepSectionRecipientAccount,
-                    value: recipientAccount,
+                    value: maskedRecipientAccount.isNotEmpty
+                        ? maskedRecipientAccount
+                        : recipientAccount,
                     isCopyable: true,
                     copyText: recipientAccount,
                   ),
                   EcardoReceiptItem(
                     label: 'From Wallet',
-                    value: currentWallet?.name ?? 'Wallet',
+                    value: maskedSenderAccount != null && maskedSenderAccount.isNotEmpty
+                        ? '${currentWallet?.name ?? "Wallet"} ($maskedSenderAccount)'
+                        : (currentWallet?.name ?? 'Wallet'),
                   ),
+                  if (maskedSenderAccount != null && maskedSenderAccount.isNotEmpty)
+                    EcardoReceiptItem(
+                      label: 'Sender Account',
+                      value: maskedSenderAccount,
+                    ),
                   EcardoReceiptItem(
                     label: 'To',
                     value: recipientName,

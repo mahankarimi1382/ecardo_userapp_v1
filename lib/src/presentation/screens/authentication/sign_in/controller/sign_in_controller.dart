@@ -62,10 +62,8 @@ class SignInController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
 
   final RxString biometricEmail = "".obs;
-  final RxString biometricPassword = "".obs;
 
   final RxString pendingTwoFaEmail = "".obs;
-  final RxString pendingTwoFaPassword = "".obs;
 
   @override
   void onInit() {
@@ -388,9 +386,7 @@ class SignInController extends GetxController {
         ? biometricEmail.value.trim()
         : emailController.text.trim();
 
-    final String password = useBiometric
-        ? biometricPassword.value.trim()
-        : passwordController.text.trim();
+    final String password = passwordController.text.trim();
 
     try {
       final response = await Get.find<NetworkService>().login(
@@ -449,9 +445,6 @@ class SignInController extends GetxController {
       _handleLoginFailure(_friendlyNetworkError(e));
     } finally {
       isLoading.value = false;
-      if (useBiometric) {
-        biometricPassword.value = '';
-      }
     }
   }
 
@@ -520,8 +513,6 @@ class SignInController extends GetxController {
         if (userModel.value.data?.twoFa == true) {
           pendingTwoFaEmail.value =
               useBiometric ? biometricEmail.value : emailController.text;
-          pendingTwoFaPassword.value =
-              useBiometric ? biometricPassword.value : passwordController.text;
           Get.toNamed(BaseRoute.twoFactorAuth);
         } else {
           await Get.find<SettingsService>().saveLoggedInUserEmail(

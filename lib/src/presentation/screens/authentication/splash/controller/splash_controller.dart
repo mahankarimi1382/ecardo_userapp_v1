@@ -16,7 +16,6 @@ import 'package:ecardo_user/src/common/services/firebase_messaging_service.dart'
 import 'package:ecardo_user/src/common/services/permission_flow_service.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
-import 'package:ecardo_user/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart';
 
 class SplashController extends GetxController {
   /// AUTH-BIO (primary directive): maximum time the splash flow waits for
@@ -222,23 +221,10 @@ class SplashController extends GetxController {
         } catch (e) {
           debugPrint('AUTH-BIO: token unlock failed: $e');
         }
-        // Token rejected — session is not usable, force password sign-in.
-        await _showSessionExpiredAndGoSignIn();
-        return _bioSuccess;
       }
 
-      // Legacy one-shot: password still on device from older builds.
-      final savedPassword = await SettingsService.getLoggedInUserPassword();
-      if (savedPassword == null || savedPassword.isEmpty) {
-        return _bioFailed;
-      }
-
-      Get.offNamed(BaseRoute.signIn);
-      final controller = Get.put(SignInController());
-      controller.biometricEmail.value = savedEmail;
-      controller.biometricPassword.value = savedPassword;
-      await controller.submitSignIn(useBiometric: true);
-      // After this login, password is cleared by SignInController (1.0.51).
+      // Token missing or expired — session is not usable, force sign-in.
+      await _showSessionExpiredAndGoSignIn();
       return _bioSuccess;
     } catch (e, s) {
       debugPrint('AUTH-BIO: unexpected error: $e');

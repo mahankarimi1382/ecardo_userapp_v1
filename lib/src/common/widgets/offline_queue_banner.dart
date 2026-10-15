@@ -68,7 +68,12 @@ class _OfflineQueueBannerState extends State<OfflineQueueBanner> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    '$count درخواست در انتظار ارسال',
+                    l10nPick(
+                      context,
+                      en: '$count pending offline requests',
+                      fa: '$count درخواست در انتظار ارسال',
+                      ar: '$count طلبات معلقة بدون اتصال',
+                    ),
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
@@ -83,9 +88,14 @@ class _OfflineQueueBannerState extends State<OfflineQueueBanner> {
                       q.flushFailed.value = false;
                     }
                   },
-                  child: const Text(
-                    'تلاش مجدد',
-                    style: TextStyle(
+                  child: Text(
+                    l10nPick(
+                      context,
+                      en: 'Retry',
+                      fa: 'تلاش مجدد',
+                      ar: 'إعادة المحاولة',
+                    ),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       color: Color(0xFFB45309),
                     ),

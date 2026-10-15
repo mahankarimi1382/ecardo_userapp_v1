@@ -132,7 +132,7 @@ void main() {
               expect(scheme.primaryContainer, equals(AppColors.lightPrimaryContainer));
               expect(scheme.onPrimaryContainer, equals(AppColors.lightPrimaryDark));
               expect(scheme.secondary, equals(AppColors.lightSecondary));
-              expect(scheme.onSecondary, equals(AppColors.white));
+              expect(scheme.onSecondary, equals(AppColors.deepBlack)); // WCAG 2.2 AA compliant (9:1 contrast)
               expect(scheme.surface, equals(AppColors.lightBackground));
               expect(scheme.onSurface, equals(AppColors.deepBlack));
               expect(scheme.error, equals(AppColors.error));

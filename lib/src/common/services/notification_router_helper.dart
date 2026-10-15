@@ -53,19 +53,46 @@ class NotificationRouterHelper {
           type == 'deposit' ||
           type == 'withdraw' ||
           type == 'financial';
+      final security = type == 'security' ||
+          type == 'device_login' ||
+          type == 'password_change' ||
+          type == 'auth_alert';
+      final marketing = type == 'marketing' ||
+          type == 'promotion' ||
+          type == 'deal';
+
+      String channelId = NotificationChannels.primaryId;
+      String channelName = NotificationChannels.primaryName;
+      String channelDesc = NotificationChannels.primaryDescription;
+      Importance importance = Importance.high;
+      Priority priority = Priority.high;
+
+      if (security) {
+        channelId = NotificationChannels.securityId;
+        channelName = NotificationChannels.securityName;
+        channelDesc = NotificationChannels.securityDescription;
+        importance = Importance.high;
+        priority = Priority.high;
+      } else if (financial) {
+        channelId = NotificationChannels.financialId;
+        channelName = NotificationChannels.financialName;
+        channelDesc = NotificationChannels.financialDescription;
+        importance = Importance.high;
+        priority = Priority.high;
+      } else if (marketing) {
+        channelId = NotificationChannels.marketingId;
+        channelName = NotificationChannels.marketingName;
+        channelDesc = NotificationChannels.marketingDescription;
+        importance = Importance.defaultImportance;
+        priority = Priority.defaultPriority;
+      }
 
       final androidDetails = AndroidNotificationDetails(
-        financial
-            ? NotificationChannels.financialId
-            : NotificationChannels.primaryId,
-        financial
-            ? NotificationChannels.financialName
-            : NotificationChannels.primaryName,
-        channelDescription: financial
-            ? NotificationChannels.financialDescription
-            : NotificationChannels.primaryDescription,
-        importance: financial ? Importance.max : Importance.high,
-        priority: financial ? Priority.max : Priority.high,
+        channelId,
+        channelName,
+        channelDescription: channelDesc,
+        importance: importance,
+        priority: priority,
         icon: '@drawable/ic_notification',
         playSound: true,
         enableVibration: true,

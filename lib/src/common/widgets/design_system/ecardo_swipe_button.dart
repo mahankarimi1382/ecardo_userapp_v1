@@ -125,12 +125,13 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     });
   }
 
-  void _onHorizontalDragUpdate(DragUpdateDetails details, double maxDrag) {
+  void _onHorizontalDragUpdate(DragUpdateDetails details, double maxDrag, {bool isRtl = false}) {
     if (!widget.enabled || widget.isLoading || widget.isSuccess || _completed) {
       return;
     }
 
-    final newPos = (_dragPosition + details.delta.dx).clamp(0.0, maxDrag);
+    final delta = isRtl ? -details.delta.dx : details.delta.dx;
+    final newPos = (_dragPosition + delta).clamp(0.0, maxDrag);
     final progress = maxDrag > 0 ? (newPos / maxDrag) : 0.0;
 
     // Haptic tick at 50% milestone
@@ -203,6 +204,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final double thumbSize = widget.height - 8.0;
 
@@ -219,6 +221,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
           return _buildTrack(
             context,
             isDark,
+            isRtl,
             totalWidth,
             maxDrag,
             progress,
@@ -232,6 +235,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
   Widget _buildTrack(
     BuildContext context,
     bool isDark,
+    bool isRtl,
     double totalWidth,
     double maxDrag,
     double progress,
@@ -310,18 +314,18 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
         else if (widget.isSuccess)
           _buildSuccessState(isDark)
         else
-          _buildTextLabel(isDark, progress, totalWidth, thumbSize),
+          _buildTextLabel(isDark, isRtl, progress, totalWidth, thumbSize),
 
         // 4. Draggable Thumb
         if (!widget.isLoading && !widget.isSuccess)
-          Positioned(
-            left: 4.0 + _dragPosition,
+          PositionedDirectional(
+            start: 4.0 + _dragPosition,
             child: GestureDetector(
               onHorizontalDragUpdate: (details) =>
-                  _onHorizontalDragUpdate(details, maxDrag),
+                  _onHorizontalDragUpdate(details, maxDrag, isRtl: isRtl),
               onHorizontalDragEnd: (details) =>
                   _onHorizontalDragEnd(details, maxDrag),
-              child: _buildThumb(isDark, thumbSize, progress),
+              child: _buildThumb(isDark, thumbSize, progress, isRtl: isRtl),
             ),
           ),
       ],
@@ -330,6 +334,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
 
   Widget _buildTextLabel(
     bool isDark,
+    bool isRtl,
     double progress,
     double totalWidth,
     double thumbSize,
@@ -359,7 +364,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
                   ),
                 ),
                 const SizedBox(width: 8),
-                _buildShimmerArrows(textColor),
+                _buildShimmerArrows(textColor, isRtl: isRtl),
               ],
             );
           },
@@ -368,27 +373,29 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     );
   }
 
-  Widget _buildShimmerArrows(Color textColor) {
+  Widget _buildShimmerArrows(Color textColor, {bool isRtl = false}) {
+    final icon = isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded;
+    final sign = isRtl ? 1.0 : -1.0;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
-          Icons.chevron_right_rounded,
+          icon,
           size: 16,
           color: textColor.withValues(alpha: 0.35),
         ),
         Transform.translate(
-          offset: const Offset(-8, 0),
+          offset: Offset(sign * 8, 0),
           child: Icon(
-            Icons.chevron_right_rounded,
+            icon,
             size: 16,
             color: textColor.withValues(alpha: 0.70),
           ),
         ),
         Transform.translate(
-          offset: const Offset(-16, 0),
+          offset: Offset(sign * 16, 0),
           child: Icon(
-            Icons.chevron_right_rounded,
+            icon,
             size: 16,
             color: textColor,
           ),
@@ -397,7 +404,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     );
   }
 
-  Widget _buildThumb(bool isDark, double size, double progress) {
+  Widget _buildThumb(bool isDark, double size, double progress, {bool isRtl = false}) {
     final defaultThumbColor = isDark ? AppColors.darkSurface : AppColors.white;
     final thumbColor = widget.thumbColor ?? defaultThumbColor;
 
@@ -430,7 +437,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
       child: Center(
         child: widget.icon ??
             Icon(
-              Icons.arrow_forward_rounded,
+              isRtl ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
               color: iconColor,
               size: 20,
             ),

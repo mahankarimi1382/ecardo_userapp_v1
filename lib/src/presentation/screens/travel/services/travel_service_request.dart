@@ -6,12 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// car rental, taxi, ...). These services run on curated in-app demo data —
 /// no backend contract yet — so submissions live in shared_preferences and
 /// start in the `underReview` state the admin flow will later take over.
-enum TravelServiceRequestStatus { underReview, approved, rejected }
+enum TravelServiceRequestStatus { pending, underReview, approved, rejected }
 
 TravelServiceRequestStatus travelServiceRequestStatusFromRaw(String raw) {
   return switch (raw.trim().toLowerCase()) {
     'approved' => TravelServiceRequestStatus.approved,
     'rejected' => TravelServiceRequestStatus.rejected,
+    'pending' => TravelServiceRequestStatus.pending,
     _ => TravelServiceRequestStatus.underReview,
   };
 }

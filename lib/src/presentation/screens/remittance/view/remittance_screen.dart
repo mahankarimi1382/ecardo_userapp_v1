@@ -127,12 +127,8 @@ class RemittanceScreen extends StatelessWidget {
         case 2:
           text = l.remittanceContinue;
           onPressed = () {
-            if (c.receiverNameController.text.isNotEmpty &&
-                c.receiverPhoneController.text.isNotEmpty &&
-                c.selectedReceiverCountry.value.isNotEmpty) {
+            if (RemittanceReceiverSection.validate(context, c)) {
               c.nextStep();
-            } else {
-              Get.snackbar(l.remittanceError, l.remittanceErrCompleteReceiver, snackPosition: SnackPosition.BOTTOM);
             }
           };
           break;

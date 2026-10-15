@@ -16,7 +16,9 @@ class MyOrderScreen extends StatefulWidget {
 }
 
 class _MyOrderScreenState extends State<MyOrderScreen> {
-  final MyOrderController controller = Get.put(MyOrderController());
+  MyOrderController get controller => Get.isRegistered<MyOrderController>()
+      ? Get.find<MyOrderController>()
+      : Get.put(MyOrderController());
   late final ScrollController _scrollController;
 
   @override

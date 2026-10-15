@@ -41,8 +41,6 @@
 	<string>Camera access is required for scanning payment QR codes, debit card numbers, and KYC identity verification</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Biometric authentication is used for secure and fast login to your eCardo account and payment authorization</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Microphone access is required for in-app customer support audio and video verification if needed</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Permission required to save transaction receipts, payment vouchers, and wallet cards to your photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>

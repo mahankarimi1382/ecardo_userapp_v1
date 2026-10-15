@@ -25,6 +25,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance_model.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 /// Step 3: Receiver information form.
 class RemittanceReceiverSection extends StatelessWidget {
@@ -37,6 +38,142 @@ class RemittanceReceiverSection extends StatelessWidget {
     ('IR', 'Iran'), ('CN', 'China'), ('TR', 'Turkey'), ('AE', 'UAE'),
     ('RU', 'Russia'), ('PK', 'Pakistan'), ('AF', 'Afghanistan'), ('IQ', 'Iraq'),
   ];
+
+  /// Validates Iranian Sheba format:
+  /// Must begin with 'IR' (case-insensitive) followed by exactly 24 digits (total 26 characters).
+  static String? validateSheba(String? value, {bool required = false}) {
+    if (value == null || value.trim().isEmpty) {
+      if (required) return 'Sheba number is required';
+      return null;
+    }
+    final clean = value.replaceAll(' ', '').toUpperCase();
+    if (!clean.startsWith('IR')) {
+      return 'Sheba must start with IR';
+    }
+    if (clean.length != 26) {
+      return 'Sheba must be exactly 26 characters (IR + 24 digits)';
+    }
+    final digitsPart = clean.substring(2);
+    if (!RegExp(r'^\d{24}$').hasMatch(digitsPart)) {
+      return 'Sheba must contain only 24 digits after IR';
+    }
+    return null;
+  }
+
+  /// Luhn checksum calculation for 16-digit debit/credit card numbers.
+  static bool isValidLuhn(String cardNumber) {
+    final digits = cardNumber.replaceAll(RegExp(r'\D'), '');
+    if (digits.length != 16) return false;
+    int sum = 0;
+    bool alternate = false;
+    for (int i = digits.length - 1; i >= 0; i--) {
+      int n = int.parse(digits[i]);
+      if (alternate) {
+        n *= 2;
+        if (n > 9) {
+          n -= 9;
+        }
+      }
+      sum += n;
+      alternate = !alternate;
+    }
+    return sum % 10 == 0;
+  }
+
+  /// Validates 16-digit debit card numbers:
+  /// Must be exactly 16 digits, with optional Luhn checksum check.
+  static String? validateCardNumber(String? value, {bool required = false}) {
+    if (value == null || value.trim().isEmpty) {
+      if (required) return 'Card number is required';
+      return null;
+    }
+    final clean = value.replaceAll(RegExp(r'[\s\-]'), '');
+    if (!RegExp(r'^\d+$').hasMatch(clean)) {
+      return 'Card number must contain digits only';
+    }
+    if (clean.length != 16) {
+      return 'Card number must be exactly 16 digits';
+    }
+    if (!isValidLuhn(clean)) {
+      return 'Invalid card number checksum';
+    }
+    return null;
+  }
+
+  /// Validates all receiver fields before calling [RemittanceController.nextStep].
+  static bool validate(BuildContext context, RemittanceController controller) {
+    final l = AppLocalizations.of(context);
+
+    // 1. Core receiver fields
+    if (controller.receiverNameController.text.trim().isEmpty ||
+        controller.receiverPhoneController.text.trim().isEmpty ||
+        controller.selectedReceiverCountry.value.isEmpty) {
+      ToastHelper().showErrorToast(
+        l?.remittanceErrCompleteReceiver ?? 'Please complete receiver information',
+      );
+      return false;
+    }
+
+    // 2. Sheba validation for shaba_number field
+    final isShebaRequired = controller.selectedMethodFields.any(
+      (f) => (f.name == 'shaba_number' || f.name == 'iban') && f.required,
+    );
+    final shabaVal = controller.receiverShabaController.text.trim();
+    if (shabaVal.isNotEmpty || isShebaRequired) {
+      final err = validateSheba(shabaVal, required: isShebaRequired);
+      if (err != null) {
+        ToastHelper().showErrorToast(err);
+        return false;
+      }
+    }
+
+    // 3. IBAN field when country is IR or value starts with IR
+    final ibanVal = controller.receiverIbanController.text.trim();
+    if (ibanVal.isNotEmpty &&
+        (controller.selectedReceiverCountry.value == 'IR' ||
+            ibanVal.toUpperCase().startsWith('IR'))) {
+      final err = validateSheba(ibanVal, required: false);
+      if (err != null) {
+        ToastHelper().showErrorToast(err);
+        return false;
+      }
+    }
+
+    // 4. 16-digit debit card validation
+    final isCardRequired = controller.selectedMethodFields.any(
+      (f) => f.name == 'card_number' && f.required,
+    );
+    final cardVal = controller.receiverCardNumberController.text.trim();
+    if (cardVal.isNotEmpty || isCardRequired) {
+      final err = validateCardNumber(cardVal, required: isCardRequired);
+      if (err != null) {
+        ToastHelper().showErrorToast(err);
+        return false;
+      }
+    }
+
+    // 5. Enforce required dynamic payout fields
+    for (final field in controller.selectedMethodFields) {
+      if (!field.required) continue;
+      final fc = controller.methodFieldController(field.name);
+      if (fc == null || fc.text.trim().isEmpty) {
+        ToastHelper().showErrorToast(
+          l?.remittanceErrRequiredField(controller.localizedFieldLabel(field)) ??
+              'Please enter ${field.label}',
+        );
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /// Convenience method that validates the receiver form and triggers [RemittanceController.nextStep].
+  static void proceedToNextStep(BuildContext context, RemittanceController controller) {
+    if (validate(context, controller)) {
+      controller.nextStep();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +262,7 @@ class RemittanceReceiverSection extends StatelessWidget {
   }
 }
 
-class _LabeledField extends StatelessWidget {
+class _LabeledField extends StatefulWidget {
   final RemittanceController controller;
   final String name;
   final String label;
@@ -138,8 +275,50 @@ class _LabeledField extends StatelessWidget {
   });
 
   @override
+  State<_LabeledField> createState() => _LabeledFieldState();
+}
+
+class _LabeledFieldState extends State<_LabeledField> {
+  String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    final c = widget.controller.methodFieldController(widget.name);
+    if (c != null && c.text.isNotEmpty) {
+      _validate(c.text);
+    }
+  }
+
+  void _validate(String value) {
+    String? err;
+    final trimmed = value.trim();
+    final isSheba = widget.name == 'shaba_number' ||
+        (widget.name == 'iban' &&
+            (widget.controller.selectedReceiverCountry.value == 'IR' ||
+                trimmed.toUpperCase().startsWith('IR')));
+    final isCard = widget.name == 'card_number';
+
+    if (isSheba) {
+      if (trimmed.isNotEmpty || widget.required) {
+        err = RemittanceReceiverSection.validateSheba(trimmed, required: widget.required);
+      }
+    } else if (isCard) {
+      if (trimmed.isNotEmpty || widget.required) {
+        err = RemittanceReceiverSection.validateCardNumber(trimmed, required: widget.required);
+      }
+    }
+
+    if (_errorText != err) {
+      setState(() {
+        _errorText = err;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final fieldController = controller.methodFieldController(name);
+    final fieldController = widget.controller.methodFieldController(widget.name);
     if (fieldController == null) {
       // Unknown backend field name — skip silently (never crash).
       return const SizedBox.shrink();
@@ -147,11 +326,16 @@ class _LabeledField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Label(required ? '$label *' : label),
-        _Field(fieldController, label,
-            keyboardType: name == 'card_number' || name == 'account_number'
-                ? TextInputType.number
-                : TextInputType.text),
+        _Label(widget.required ? '${widget.label} *' : widget.label),
+        _Field(
+          fieldController,
+          widget.label,
+          errorText: _errorText,
+          onChanged: _validate,
+          keyboardType: widget.name == 'card_number' || widget.name == 'account_number'
+              ? TextInputType.number
+              : TextInputType.text,
+        ),
       ],
     );
   }
@@ -174,7 +358,16 @@ class _Field extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
   final TextInputType? keyboardType;
-  const _Field(this.controller, this.hint, {this.keyboardType});
+  final String? errorText;
+  final ValueChanged<String>? onChanged;
+
+  const _Field(
+    this.controller,
+    this.hint, {
+    this.keyboardType,
+    this.errorText,
+    this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +378,7 @@ class _Field extends StatelessWidget {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      onChanged: onChanged,
       style: TextStyle(
         fontSize: 14.sp,
         color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
@@ -193,11 +387,43 @@ class _Field extends StatelessWidget {
         filled: true,
         fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
         hintText: hint,
-        hintStyle: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint),
+        hintStyle: TextStyle(
+          fontSize: 14.sp,
+          color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+        ),
+        errorText: errorText,
+        errorMaxLines: 2,
+        errorStyle: TextStyle(
+          fontSize: 11.sp,
+          color: AppColors.error,
+          fontWeight: FontWeight.w500,
+        ),
         contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: borderColor)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: borderColor)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primaryColor, width: 1.5)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: errorText != null ? AppColors.error : borderColor,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: errorText != null ? AppColors.error : primaryColor,
+            width: 1.5,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+        ),
       ),
     );
   }

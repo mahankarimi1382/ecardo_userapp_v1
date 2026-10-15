@@ -2146,7 +2146,7 @@ class _CipLoungeReservationScreenState
         amountLabel: '\$${reservation.totalPrice.toStringAsFixed(0)} USD',
         reference: reservation.reference,
         createdAt: DateTime.now(),
-        status: TravelServiceRequestStatus.approved,
+        status: TravelServiceRequestStatus.pending,
         details: {
           'airport': reservation.airport.code,
           'flight': reservation.flightNumber,

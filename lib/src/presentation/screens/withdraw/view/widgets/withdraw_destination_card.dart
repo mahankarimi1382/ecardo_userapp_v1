@@ -36,44 +36,50 @@ class WithdrawDestinationCard extends StatelessWidget {
     this.onChange,
   });
 
-  static String maskAccountNumber(Accounts? account) {
+  static String maskAccountNumber(dynamic account) {
     if (account == null) return '';
 
     String rawValue = '';
-    if (account.method?.fields != null) {
-      for (final f in account.method!.fields!) {
-        final name = (f.name ?? '').toLowerCase();
-        if ((name.contains('account') ||
-                name.contains('iban') ||
-                name.contains('sheba') ||
-                name.contains('shaba') ||
-                name.contains('card') ||
-                name.contains('number') ||
-                name.contains('wallet') ||
-                name.contains('address')) &&
-            f.value != null &&
-            f.value!.trim().isNotEmpty) {
-          rawValue = f.value!.trim();
-          break;
-        }
-      }
-      if (rawValue.isEmpty) {
+    if (account is String) {
+      rawValue = account.trim();
+    } else if (account is Accounts) {
+      if (account.method?.fields != null) {
         for (final f in account.method!.fields!) {
-          if (f.value != null &&
-              f.value!.trim().isNotEmpty &&
-              f.type != 'file') {
+          final name = (f.name ?? '').toLowerCase();
+          if ((name.contains('account') ||
+                  name.contains('iban') ||
+                  name.contains('sheba') ||
+                  name.contains('shaba') ||
+                  name.contains('card') ||
+                  name.contains('number') ||
+                  name.contains('wallet') ||
+                  name.contains('address')) &&
+              f.value != null &&
+              f.value!.trim().isNotEmpty) {
             rawValue = f.value!.trim();
             break;
           }
         }
+        if (rawValue.isEmpty) {
+          for (final f in account.method!.fields!) {
+            if (f.value != null &&
+                f.value!.trim().isNotEmpty &&
+                f.type != 'file') {
+              rawValue = f.value!.trim();
+              break;
+            }
+          }
+        }
       }
-    }
 
-    if (rawValue.isEmpty) {
-      if (account.walletName != null && account.walletName!.isNotEmpty) {
-        return account.walletName!;
+      if (rawValue.isEmpty) {
+        if (account.walletName != null && account.walletName!.isNotEmpty) {
+          return account.walletName!;
+        }
+        return '•••• •••• •••• 4242';
       }
-      return '•••• •••• •••• 4242';
+    } else {
+      rawValue = account.toString().trim();
     }
 
     // Sheba formatting (e.g. IR820170000000123456789012)

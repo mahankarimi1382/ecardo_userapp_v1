@@ -10,7 +10,7 @@ class LightTheme {
       primaryContainer: AppColors.lightPrimaryContainer,
       onPrimaryContainer: AppColors.lightPrimaryDark,
       secondary: AppColors.lightSecondary,
-      onSecondary: AppColors.white,
+      onSecondary: AppColors.deepBlack,
       secondaryContainer: AppColors.lightSecondaryContainer,
       onSecondaryContainer: AppColors.deepBlack,
       surface: AppColors.lightBackground,
@@ -28,8 +28,16 @@ class LightTheme {
       outlineVariant: AppColors.lightOutlineVariant,
     );
 
+    final locale = Localizations.maybeLocaleOf(context)?.languageCode ?? 'en';
+    final isRtlLanguage = locale == 'fa' || locale == 'ar';
+    final primaryFont = isRtlLanguage ? 'Vazirmatn' : 'Plus Jakarta Sans';
+    final fallbackFonts = isRtlLanguage
+        ? const ['Plus Jakarta Sans', 'NotoSansRU']
+        : const ['Vazirmatn', 'NotoSansRU'];
+
     final baseText = Typography.material2021().black.apply(
-          fontFamily: 'Plus Jakarta Sans',
+          fontFamily: primaryFont,
+          fontFamilyFallback: fallbackFonts,
           bodyColor: AppColors.deepBlack,
           displayColor: AppColors.deepBlack,
         );
@@ -39,8 +47,8 @@ class LightTheme {
       brightness: Brightness.light,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.lightBackground,
-      fontFamily: 'Plus Jakarta Sans',
-      fontFamilyFallback: const ['Vazirmatn', 'NotoSansRU'],
+      fontFamily: primaryFont,
+      fontFamilyFallback: fallbackFonts,
       textTheme: baseText,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.lightBackground,
@@ -108,8 +116,9 @@ class LightTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.lightPrimary,
-          textStyle: const TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
+          textStyle: TextStyle(
+            fontFamily: primaryFont,
+            fontFamilyFallback: fallbackFonts,
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
@@ -122,8 +131,9 @@ class LightTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.deepBlack,
           side: const BorderSide(color: AppColors.lightBorder, width: 1.5),
-          textStyle: const TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
+          textStyle: TextStyle(
+            fontFamily: primaryFont,
+            fontFamilyFallback: fallbackFonts,
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
@@ -158,19 +168,21 @@ class LightTheme {
         thickness: 1,
         space: 1,
       ),
-      tabBarTheme: const TabBarThemeData(
+      tabBarTheme: TabBarThemeData(
         labelColor: AppColors.lightPrimary,
         unselectedLabelColor: AppColors.softGray,
         indicatorColor: AppColors.lightPrimary,
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: AppColors.lightBorder,
         labelStyle: TextStyle(
-          fontFamily: 'Plus Jakarta Sans',
+          fontFamily: primaryFont,
+          fontFamilyFallback: fallbackFonts,
           fontWeight: FontWeight.w700,
           fontSize: 14,
         ),
         unselectedLabelStyle: TextStyle(
-          fontFamily: 'Plus Jakarta Sans',
+          fontFamily: primaryFont,
+          fontFamilyFallback: fallbackFonts,
           fontWeight: FontWeight.w500,
           fontSize: 14,
         ),
@@ -181,15 +193,17 @@ class LightTheme {
         indicatorColor: AppColors.lightPrimary.withValues(alpha: 0.12),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
+            return TextStyle(
+              fontFamily: primaryFont,
+              fontFamilyFallback: fallbackFonts,
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: AppColors.lightPrimary,
             );
           }
-          return const TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
+          return TextStyle(
+            fontFamily: primaryFont,
+            fontFamilyFallback: fallbackFonts,
             fontSize: 12,
             fontWeight: FontWeight.w500,
             color: AppColors.softGray,

@@ -27,7 +27,8 @@ class GiftCardController extends GetxController {
   final RxInt count = 1.obs;
   final Rxn<Map<String, dynamic>> successGiftCardOrderData =
       Rxn<Map<String, dynamic>>();
-  final localization = AppLocalizations.of(Get.context!);
+  AppLocalizations? get localization =>
+      Get.context != null ? AppLocalizations.of(Get.context!) : null;
 
   // Gift Card Products
   final Rx<GiftCardProductModel> giftCardProductModel =
@@ -216,7 +217,9 @@ class GiftCardController extends GetxController {
       if (currentPage.value == 1) {
         isGiftCardError.value = true;
       }
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isGiftCardLoading.value = false;
       isGiftCardLoadingMore.value = false;
@@ -278,7 +281,9 @@ class GiftCardController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ getGiftCardCountry() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {}
   }
 
@@ -298,7 +303,9 @@ class GiftCardController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ getGiftCardCategory() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {}
   }
 
@@ -316,7 +323,9 @@ class GiftCardController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ getGiftCardProductDetails() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {}
   }
 
@@ -358,7 +367,9 @@ class GiftCardController extends GetxController {
       // the caller never learned the purchase failed.
       debugPrint('❌ postBuyNowGiftCard() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isBuyNowGiftCardLoading.value = false;
     }
@@ -383,13 +394,17 @@ class GiftCardController extends GetxController {
   }) {
     // Validate Amount
     if (denominationType == 'RANGE' && amountController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.giftCardAmountRequired);
+      ToastHelper().showErrorToast(
+        localization?.giftCardAmountRequired ?? 'Amount is required',
+      );
       return false;
     }
 
     final amount = double.tryParse(amountController.text) ?? 0.0;
     if (denominationType == 'RANGE' && amount <= 0) {
-      ToastHelper().showErrorToast(localization!.giftCardAmountInvalid);
+      ToastHelper().showErrorToast(
+        localization?.giftCardAmountInvalid ?? 'Please enter a valid amount',
+      );
       return false;
     }
 
@@ -397,7 +412,8 @@ class GiftCardController extends GetxController {
         (double.tryParse(minRecipientDenomination) ?? 0.0) > 0 &&
         amount < (double.tryParse(minRecipientDenomination) ?? 0.0)) {
       ToastHelper().showErrorToast(
-        localization!.giftCardAmountMinError(minRecipientDenomination),
+        localization?.giftCardAmountMinError(minRecipientDenomination) ??
+            'Minimum amount is $minRecipientDenomination',
       );
       return false;
     }
@@ -406,37 +422,48 @@ class GiftCardController extends GetxController {
         (double.tryParse(maxRecipientDenomination) ?? 0.0) > 0 &&
         amount > (double.tryParse(maxRecipientDenomination) ?? 0.0)) {
       ToastHelper().showErrorToast(
-        localization!.giftCardAmountMaxError(maxRecipientDenomination),
+        localization?.giftCardAmountMaxError(maxRecipientDenomination) ??
+            'Maximum amount is $maxRecipientDenomination',
       );
       return false;
     }
 
     // Validate Email
     if (emailController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.giftCardEmailRequired);
+      ToastHelper().showErrorToast(
+        localization?.giftCardEmailRequired ?? 'Email is required',
+      );
       return false;
     }
 
     if (emailController.text.isNotEmpty && !emailController.text.isEmail) {
-      ToastHelper().showErrorToast(localization!.giftCardEmailInvalid);
+      ToastHelper().showErrorToast(
+        localization?.giftCardEmailInvalid ?? 'Please enter a valid email address',
+      );
       return false;
     }
 
     // Validate Country
     if (countryController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.giftCardCountryRequired);
+      ToastHelper().showErrorToast(
+        localization?.giftCardCountryRequired ?? 'Country is required',
+      );
       return false;
     }
 
     // Validate Phone
     if (phoneController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.giftCardPhoneRequired);
+      ToastHelper().showErrorToast(
+        localization?.giftCardPhoneRequired ?? 'Phone number is required',
+      );
       return false;
     }
 
     // Validate Name
     if (nameController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization!.giftCardNameRequired);
+      ToastHelper().showErrorToast(
+        localization?.giftCardNameRequired ?? 'Name is required',
+      );
       return false;
     }
 

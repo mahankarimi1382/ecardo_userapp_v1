@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -6,6 +7,8 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -30,7 +33,8 @@ class CashOutController extends GetxController {
   final Rxn<Map<String, dynamic>> successCashOutData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
+  AppLocalizations? get localization =>
+      Get.context != null ? AppLocalizations.of(Get.context!) : null;
 
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> cashOutWalletsList = <Wallets>[].obs;
@@ -107,7 +111,9 @@ class CashOutController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {}
   }
 
@@ -125,7 +131,9 @@ class CashOutController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCashOutConfig() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isCashoutConfigLoading.value = false;
     }
@@ -176,34 +184,46 @@ class CashOutController extends GetxController {
       chargeLoadFailed.value = true;
       debugPrint('❌ getChargeConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {}
   }
 
   bool validateAmountStep() {
     if (chargeLoadFailed.value) {
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
       return false;
     }
     final walletData = wallet.value;
     if (walletData == null || (walletData.name ?? '').isEmpty) {
-      ToastHelper().showErrorToast(localization.cashOutValidationSelectWallet);
+      ToastHelper().showErrorToast(
+        localization?.cashOutValidationSelectWallet ?? 'Please select a wallet',
+      );
       return false;
     }
 
     if (agentAidController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization.cashOutValidationEnterAgentAid);
+      ToastHelper().showErrorToast(
+        localization?.cashOutValidationEnterAgentAid ?? 'Please enter agent AID',
+      );
       return false;
     }
 
     if (amountController.text.isEmpty) {
-      ToastHelper().showErrorToast(localization.cashOutValidationEnterAmount);
+      ToastHelper().showErrorToast(
+        localization?.cashOutValidationEnterAmount ?? 'Please enter amount',
+      );
       return false;
     }
 
     final currentWallet = wallet.value;
     if (currentWallet == null) {
-      ToastHelper().showErrorToast(localization.cashOutValidationSelectWallet);
+      ToastHelper().showErrorToast(
+        localization?.cashOutValidationSelectWallet ?? 'Please select a wallet',
+      );
       return false;
     }
 
@@ -231,20 +251,20 @@ class CashOutController extends GetxController {
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
-        localization.cashOutValidationAmountMinimum(
+        localization?.cashOutValidationAmountMinimum(
           min.toStringAsFixed(calculateDecimals),
           walletCode,
-        ),
+        ) ?? 'Minimum cash out amount is ${min.toStringAsFixed(calculateDecimals)} $walletCode',
       );
       return false;
     }
 
     if (enteredAmount > max) {
       ToastHelper().showErrorToast(
-        localization.cashOutValidationAmountMaximum(
+        localization?.cashOutValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
           walletCode,
-        ),
+        ) ?? 'Maximum cash out amount is ${max.toStringAsFixed(calculateDecimals)} $walletCode',
       );
       return false;
     }
@@ -254,10 +274,10 @@ class CashOutController extends GetxController {
     final double totalRequired = enteredAmount + charge.value;
     if (totalRequired > availableBalance) {
       ToastHelper().showErrorToast(
-        localization.exchangeValidationInsufficientBalance(
+        localization?.exchangeValidationInsufficientBalance(
           availableBalance.toStringAsFixed(calculateDecimals),
           walletCode,
-        ),
+        ) ?? 'Insufficient balance: ${availableBalance.toStringAsFixed(calculateDecimals)} $walletCode',
       );
       return false;
     }
@@ -285,7 +305,9 @@ class CashOutController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isLoading.value = false;
     }
@@ -316,11 +338,39 @@ class CashOutController extends GetxController {
         ToastHelper().showSuccessToast(response.data!["message"]);
         successCashOutData.value = response.data!['data'];
         currentStep.value = 2;
+      } else if (response.status == Status.error) {
+        final msg = response.message?.toLowerCase() ?? '';
+        if (msg.contains('timed out') || msg.contains('timeout')) {
+          throw Exception(response.message ?? 'Request timed out');
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ cashOut() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      final errStr = e.toString().toLowerCase();
+      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+          errStr.contains('timed out') ||
+          errStr.contains('timeout') ||
+          errStr.contains('connectiontimeout') ||
+          errStr.contains('receivetimeout') ||
+          (e is DioException &&
+              (e.type == DioExceptionType.connectionTimeout ||
+                  e.type == DioExceptionType.sendTimeout ||
+                  e.type == DioExceptionType.receiveTimeout));
+      if (isTimeout) {
+        ToastHelper().showWarningToast(
+          l10nPickAuto(
+            en: 'Request timed out on response. Please verify in Transaction History before trying again to prevent duplicate cash out.',
+            fa: 'زمان پاسخ درخواست به پایان رسید. لطفاً قبل از تلاش مجدد، وضعیت تراکنش را بررسی کنید تا از برداشت تکراری جلوگیری شود.',
+            ar: 'انتهت مهلة استجابة الطلب. يرجى التحقق من حالة المعاملة قبل إعادة الإرسال لتجنب تكرار السحب.',
+            zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复提现。',
+          ),
+        );
+      } else {
+        ToastHelper().showErrorToast(
+          localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        );
+      }
     } finally {
       isCashOutLoading.value = false;
     }
@@ -340,7 +390,9 @@ class CashOutController extends GetxController {
       isBeneficiaryLoading.value = false;
       debugPrint('❌ fetchBeneficiary() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+      );
     } finally {
       isBeneficiaryLoading.value = false;
     }

@@ -354,13 +354,16 @@ class TravelRequestStatusChip extends StatelessWidget {
     final label = switch (status) {
       TravelServiceRequestStatus.approved => localization.travelRequestApproved,
       TravelServiceRequestStatus.rejected => localization.travelRequestRejected,
-      TravelServiceRequestStatus.underReview =>
+      TravelServiceRequestStatus.underReview ||
+      TravelServiceRequestStatus.pending =>
         localization.travelRequestUnderReview,
     };
     final color = switch (status) {
       TravelServiceRequestStatus.approved => TravelTheme.green,
       TravelServiceRequestStatus.rejected => TravelTheme.red,
-      TravelServiceRequestStatus.underReview => TravelTheme.warning,
+      TravelServiceRequestStatus.underReview ||
+      TravelServiceRequestStatus.pending =>
+        TravelTheme.warning,
     };
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),

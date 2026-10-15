@@ -2212,17 +2212,20 @@ class _FlightDatePickerBottomSheet extends StatefulWidget {
 class _FlightDatePickerBottomSheetState
     extends State<_FlightDatePickerBottomSheet> {
   late DateTime _selectedDate;
-  bool _persianCalendar = true;
+  bool _useShamsi = true;
+  late Jalali _viewJalaliMonth;
 
   @override
   void initState() {
     super.initState();
     _selectedDate = widget.initialDate;
-    _persianCalendar = widget.lang == 'fa';
+    _useShamsi = widget.lang == 'fa';
+    final j = Jalali.fromDateTime(_selectedDate);
+    _viewJalaliMonth = Jalali(j.year, j.month, 1);
   }
 
   String _dateSummary(DateTime date) {
-    if (_persianCalendar) {
+    if (_useShamsi) {
       final j = Jalali.fromDateTime(date);
       return '${j.formatter.wN}، ${j.day} ${j.formatter.mN} ${j.year}';
     }
@@ -2230,11 +2233,202 @@ class _FlightDatePickerBottomSheetState
   }
 
   String _secondaryDateSummary(DateTime date) {
-    if (_persianCalendar) {
+    if (_useShamsi) {
       return DateFormat('EEE, d MMM yyyy').format(date);
     }
     final j = Jalali.fromDateTime(date);
     return '${j.formatter.wN}، ${j.day} ${j.formatter.mN} ${j.year}';
+  }
+
+  Widget _buildShamsiDatePicker(BuildContext context) {
+    final firstJalali = Jalali.fromDateTime(widget.firstDate);
+    final lastJalali = Jalali.fromDateTime(widget.lastDate);
+
+    final canGoPrev = (_viewJalaliMonth.year > firstJalali.year) ||
+        (_viewJalaliMonth.year == firstJalali.year &&
+            _viewJalaliMonth.month > firstJalali.month);
+    final canGoNext = (_viewJalaliMonth.year < lastJalali.year) ||
+        (_viewJalaliMonth.year == lastJalali.year &&
+            _viewJalaliMonth.month < lastJalali.month);
+
+    final firstDay = Jalali(_viewJalaliMonth.year, _viewJalaliMonth.month, 1);
+    final daysInMonth = firstDay.monthLength;
+    final leadingBlanks = firstDay.weekDay - 1;
+    final totalCells = leadingBlanks + daysInMonth;
+
+    final jNow = Jalali.now();
+    final jSelected = Jalali.fromDateTime(_selectedDate);
+    final firstDateOnly = DateUtils.dateOnly(widget.firstDate);
+    final lastDateOnly = DateUtils.dateOnly(widget.lastDate);
+
+    const weekDayLabels = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_right_rounded),
+                color: canGoPrev
+                    ? ECardoTokens.ink(context)
+                    : ECardoTokens.inkMuted(context).withValues(alpha: 0.25),
+                onPressed: canGoPrev
+                    ? () {
+                        AppHaptics.light();
+                        setState(() {
+                          _viewJalaliMonth = _viewJalaliMonth.addMonths(-1);
+                        });
+                      }
+                    : null,
+              ),
+              Text(
+                '${_viewJalaliMonth.formatter.mN} ${_viewJalaliMonth.year}',
+                style: TextStyle(
+                  fontSize: 14.5.sp,
+                  fontWeight: FontWeight.w800,
+                  color: ECardoTokens.ink(context),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.chevron_left_rounded),
+                color: canGoNext
+                    ? ECardoTokens.ink(context)
+                    : ECardoTokens.inkMuted(context).withValues(alpha: 0.25),
+                onPressed: canGoNext
+                    ? () {
+                        AppHaptics.light();
+                        setState(() {
+                          _viewJalaliMonth = _viewJalaliMonth.addMonths(1);
+                        });
+                      }
+                    : null,
+              ),
+            ],
+          ),
+          SizedBox(height: 6.h),
+          Row(
+            children: weekDayLabels.map((label) {
+              final isFriday = label == 'ج';
+              return Expanded(
+                child: Center(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: isFriday
+                          ? ECardoTokens.brand700(context)
+                          : ECardoTokens.inkMuted(context),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 6.h),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: totalCells,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+              childAspectRatio: 1.15,
+            ),
+            itemBuilder: (context, index) {
+              if (index < leadingBlanks) {
+                return const SizedBox.shrink();
+              }
+              final dayNumber = index - leadingBlanks + 1;
+              final dayJalali = Jalali(
+                _viewJalaliMonth.year,
+                _viewJalaliMonth.month,
+                dayNumber,
+              );
+              final dayDate = dayJalali.toDateTime();
+              final dateOnly = DateUtils.dateOnly(dayDate);
+              final isSelectable = !dateOnly.isBefore(firstDateOnly) &&
+                  !dateOnly.isAfter(lastDateOnly);
+
+              final isSelected = dayJalali.year == jSelected.year &&
+                  dayJalali.month == jSelected.month &&
+                  dayJalali.day == jSelected.day;
+
+              final isToday = dayJalali.year == jNow.year &&
+                  dayJalali.month == jNow.month &&
+                  dayJalali.day == jNow.day;
+
+              BoxDecoration? decoration;
+              Color textColor;
+
+              if (isSelected) {
+                decoration = BoxDecoration(
+                  color: ECardoTokens.brand700(context),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: ECardoTokens.brand700(context)
+                          .withValues(alpha: 0.35),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                );
+                textColor = ECardoTokens.inkOnBrand;
+              } else if (isToday) {
+                decoration = BoxDecoration(
+                  border: Border.all(
+                    color: ECardoTokens.brand700(context),
+                    width: 1.4,
+                  ),
+                  shape: BoxShape.circle,
+                );
+                textColor = ECardoTokens.brand700(context);
+              } else if (!isSelectable) {
+                textColor =
+                    ECardoTokens.inkMuted(context).withValues(alpha: 0.35);
+              } else {
+                textColor = ECardoTokens.ink(context);
+              }
+
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: isSelectable
+                      ? () {
+                          AppHaptics.selection();
+                          setState(() {
+                            _selectedDate = dayDate;
+                          });
+                        }
+                      : null,
+                  customBorder: const CircleBorder(),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: decoration,
+                    child: Text(
+                      '$dayNumber',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: isSelected || isToday
+                            ? FontWeight.w800
+                            : FontWeight.w600,
+                        color: textColor,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -2252,216 +2446,249 @@ class _FlightDatePickerBottomSheetState
       ),
       child: SafeArea(
         top: false,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Container(
-                  width: 38.w,
-                  height: 4.h,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 38.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: ECardoTokens.borderStrong(context),
+                      borderRadius:
+                          BorderRadius.circular(ECardoTokens.radiusFull),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        color: ECardoTokens.ink(context),
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded),
+                      color: ECardoTokens.inkMuted(context),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.h),
+                Container(
                   decoration: BoxDecoration(
-                    color: ECardoTokens.borderStrong(context),
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusFull),
+                    color: ECardoTokens.surfaceSunken(context),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.title,
-                    style: TextStyle(
-                      color: ECardoTokens.ink(context),
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close_rounded),
-                    color: ECardoTokens.inkMuted(context),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              Container(
-                decoration: BoxDecoration(
-                  color: ECardoTokens.surfaceSunken(context),
-                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                ),
-                padding: EdgeInsets.all(4.r),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _persianCalendar = true),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 8.h),
-                          decoration: BoxDecoration(
-                            color: _persianCalendar
-                                ? ECardoTokens.surfaceCard(context)
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                            boxShadow: _persianCalendar
-                                ? ECardoTokens.shadowCard(context)
-                                : null,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            l10nPick(context, en: 'Solar Hijri (Jalali)', fa: 'تقویم شمسی', ar: 'التقويم الشمسي'),
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: _persianCalendar
-                                  ? FontWeight.w800
-                                  : FontWeight.w600,
-                              color: _persianCalendar
-                                  ? ECardoTokens.brand700(context)
-                                  : ECardoTokens.inkMuted(context),
+                  padding: EdgeInsets.all(4.r),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _useShamsi = true;
+                              final j = Jalali.fromDateTime(_selectedDate);
+                              _viewJalaliMonth = Jalali(j.year, j.month, 1);
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            decoration: BoxDecoration(
+                              color: _useShamsi
+                                  ? ECardoTokens.surfaceCard(context)
+                                  : Colors.transparent,
+                              borderRadius:
+                                  BorderRadius.circular(ECardoTokens.radiusSm),
+                              boxShadow: _useShamsi
+                                  ? ECardoTokens.shadowCard(context)
+                                  : null,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              l10nPick(
+                                context,
+                                en: 'Solar Hijri (Jalali)',
+                                fa: 'تقویم شمسی',
+                                ar: 'التقويم الشمسي',
+                              ),
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: _useShamsi
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                color: _useShamsi
+                                    ? ECardoTokens.brand700(context)
+                                    : ECardoTokens.inkMuted(context),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _persianCalendar = false),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 8.h),
-                          decoration: BoxDecoration(
-                            color: !_persianCalendar
-                                ? ECardoTokens.surfaceCard(context)
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                            boxShadow: !_persianCalendar
-                                ? ECardoTokens.shadowCard(context)
-                                : null,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            l10nPick(context, en: 'Gregorian', fa: 'تقویم میلادی', ar: 'التقويم الميلادي'),
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: !_persianCalendar
-                                  ? FontWeight.w800
-                                  : FontWeight.w600,
-                              color: !_persianCalendar
-                                  ? ECardoTokens.brand700(context)
-                                  : ECardoTokens.inkMuted(context),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _useShamsi = false),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            decoration: BoxDecoration(
+                              color: !_useShamsi
+                                  ? ECardoTokens.surfaceCard(context)
+                                  : Colors.transparent,
+                              borderRadius:
+                                  BorderRadius.circular(ECardoTokens.radiusSm),
+                              boxShadow: !_useShamsi
+                                  ? ECardoTokens.shadowCard(context)
+                                  : null,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              l10nPick(
+                                context,
+                                en: 'Gregorian',
+                                fa: 'تقویم میلادی',
+                                ar: 'التقويم الميلادي',
+                              ),
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: !_useShamsi
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                color: !_useShamsi
+                                    ? ECardoTokens.brand700(context)
+                                    : ECardoTokens.inkMuted(context),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 12.h),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-                decoration: BoxDecoration(
-                  color: ECardoTokens.brand100(context).withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                  border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.2)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.event_available_rounded,
-                      color: ECardoTokens.brand700(context),
-                      size: 20.r,
+                SizedBox(height: 12.h),
+                Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                  decoration: BoxDecoration(
+                    color: ECardoTokens.brand100(context).withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                    border: Border.all(
+                      color: ECardoTokens.brand500(context).withValues(alpha: 0.2),
                     ),
-                    SizedBox(width: 10.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            jalaliStr,
-                            style: TextStyle(
-                              color: ECardoTokens.brand700(context),
-                              fontSize: 13.5.sp,
-                              fontWeight: FontWeight.w900,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.event_available_rounded,
+                        color: ECardoTokens.brand700(context),
+                        size: 20.r,
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              jalaliStr,
+                              style: TextStyle(
+                                color: ECardoTokens.brand700(context),
+                                fontSize: 13.5.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
+                            Text(
+                              secondaryStr,
+                              style: TextStyle(
+                                color: ECardoTokens.inkMuted(context),
+                                fontSize: 10.5.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                _useShamsi
+                    ? _buildShamsiDatePicker(context)
+                    : Theme(
+                        data: Theme.of(context).copyWith(
+                          colorScheme: Theme.of(context).colorScheme.copyWith(
+                            primary: ECardoTokens.brand700(context),
+                            surface: ECardoTokens.surfaceCard(context),
                           ),
-                          Text(
-                            secondaryStr,
-                            style: TextStyle(
-                              color: ECardoTokens.inkMuted(context),
-                              fontSize: 10.5.sp,
+                        ),
+                        child: CalendarDatePicker2(
+                          config: CalendarDatePicker2Config(
+                            calendarType: CalendarDatePicker2Type.single,
+                            firstDate: widget.firstDate,
+                            lastDate: widget.lastDate,
+                            selectedDayHighlightColor:
+                                ECardoTokens.brand700(context),
+                            controlsTextStyle: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: ECardoTokens.ink(context),
+                              fontSize: 13.sp,
+                            ),
+                            dayTextStyle: TextStyle(
+                              color: ECardoTokens.ink(context),
                               fontWeight: FontWeight.w600,
+                              fontSize: 12.sp,
                             ),
                           ),
-                        ],
+                          value: [_selectedDate],
+                          onValueChanged: (dates) {
+                            final d = dates.firstOrNull;
+                            if (d != null) {
+                              AppHaptics.selection();
+                              setState(() => _selectedDate = d);
+                            }
+                          },
+                        ),
+                      ),
+                SizedBox(height: 14.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48.h,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      AppHaptics.medium();
+                      Navigator.of(context).pop(_selectedDate);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ECardoTokens.brand700(context),
+                      foregroundColor: ECardoTokens.inkOnBrand,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(ECardoTokens.radiusLg),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10.h),
-              Theme(
-                data: Theme.of(context).copyWith(
-                  colorScheme: Theme.of(context).colorScheme.copyWith(
-                    primary: ECardoTokens.brand700(context),
-                    surface: ECardoTokens.surfaceCard(context),
-                  ),
-                ),
-                child: CalendarDatePicker2(
-                  config: CalendarDatePicker2Config(
-                    calendarType: CalendarDatePicker2Type.single,
-                    firstDate: widget.firstDate,
-                    lastDate: widget.lastDate,
-                    selectedDayHighlightColor: ECardoTokens.brand700(context),
-                    controlsTextStyle: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      color: ECardoTokens.ink(context),
-                      fontSize: 13.sp,
-                    ),
-                    dayTextStyle: TextStyle(
-                      color: ECardoTokens.ink(context),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12.sp,
-                    ),
-                  ),
-                  value: [_selectedDate],
-                  onValueChanged: (dates) {
-                    final d = dates.firstOrNull;
-                    if (d != null) {
-                      AppHaptics.selection();
-                      setState(() => _selectedDate = d);
-                    }
-                  },
-                ),
-              ),
-              SizedBox(height: 14.h),
-              SizedBox(
-                width: double.infinity,
-                height: 48.h,
-                child: ElevatedButton(
-                  onPressed: () {
-                    AppHaptics.medium();
-                    Navigator.of(context).pop(_selectedDate);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ECardoTokens.brand700(context),
-                    foregroundColor: ECardoTokens.inkOnBrand,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-                    ),
-                  ),
-                  child: Text(
-                    l10nPick(context, en: 'Confirm Date', fa: 'تأیید تاریخ', ar: 'تأكيد التاريخ'),
-                    style: TextStyle(
-                      fontSize: 13.5.sp,
-                      fontWeight: FontWeight.w800,
+                    child: Text(
+                      l10nPick(
+                        context,
+                        en: 'Confirm Date',
+                        fa: 'تأیید تاریخ',
+                        ar: 'تأكيد التاريخ',
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

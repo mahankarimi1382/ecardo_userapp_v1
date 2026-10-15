@@ -13,7 +13,9 @@ class CreateAdScreen extends StatefulWidget {
 }
 
 class _CreateAdScreenState extends State<CreateAdScreen> {
-  final CreateAdController controller = Get.put(CreateAdController());
+  CreateAdController get controller => Get.isRegistered<CreateAdController>()
+      ? Get.find<CreateAdController>()
+      : Get.put(CreateAdController());
 
   @override
   Widget build(BuildContext context) {

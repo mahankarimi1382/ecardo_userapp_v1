@@ -19,7 +19,7 @@ String l10nPick(
     case 'fa':
       return fa;
     case 'ar':
-      return ar ?? fa;
+      return ar ?? en;
     case 'tr':
       return tr ?? en;
     case 'ru':

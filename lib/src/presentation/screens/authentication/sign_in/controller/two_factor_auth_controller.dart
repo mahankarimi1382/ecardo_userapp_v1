@@ -65,7 +65,6 @@ class TwoFactorAuthController extends GetxController {
           // 1.0.51: token-only biometric — drop any staged password.
           await Get.find<SettingsService>().clearLoggedInUserPassword();
           signIn.pendingTwoFaEmail.value = "";
-          signIn.pendingTwoFaPassword.value = "";
         }
 
         // v1.0.24: mirror sign_in — users who have NOT completed onboarding

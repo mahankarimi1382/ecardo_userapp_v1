@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,8 @@ import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/api_response.dart';
@@ -690,14 +693,40 @@ class ExchangeController extends GetxController {
         }
         currentStep.value = 2;
         AppEventBus.emit(BalanceChangedEvent(sourceModule: 'exchange'));
+      } else if (response.status == Status.error) {
+        final msg = response.message?.toLowerCase() ?? '';
+        if (msg.contains('timed out') || msg.contains('timeout')) {
+          throw Exception(response.message ?? 'Request timed out');
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ exchangeWallet() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ??
-            'Something went wrong. Please try again.',
-      );
+      final errStr = e.toString().toLowerCase();
+      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+          errStr.contains('timed out') ||
+          errStr.contains('timeout') ||
+          errStr.contains('connectiontimeout') ||
+          errStr.contains('receivetimeout') ||
+          (e is DioException &&
+              (e.type == DioExceptionType.connectionTimeout ||
+                  e.type == DioExceptionType.sendTimeout ||
+                  e.type == DioExceptionType.receiveTimeout));
+      if (isTimeout) {
+        ToastHelper().showWarningToast(
+          l10nPickAuto(
+            en: 'Request timed out on response. Please verify in Transaction History before trying again to prevent duplicate exchange.',
+            fa: 'زمان پاسخ درخواست به پایان رسید. لطفاً قبل از تلاش مجدد، وضعیت تراکنش را بررسی کنید تا از تبدیل تکراری جلوگیری شود.',
+            ar: 'انتهت مهلة استجابة الطلب. يرجى التحقق من حالة المعاملة قبل إعادة الإرسال لتجنب تكرار التحويل.',
+            zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复兑换。',
+          ),
+        );
+      } else {
+        ToastHelper().showErrorToast(
+          localizationOrNull?.allControllerLoadError ??
+              'Something went wrong. Please try again.',
+        );
+      }
     } finally {
       isExchangeWalletLoading.value = false;
     }

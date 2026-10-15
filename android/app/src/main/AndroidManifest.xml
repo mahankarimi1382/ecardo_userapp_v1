@@ -16,7 +16,6 @@
     <!-- Android 13+ scoped media permissions (not strictly needed for APK
          download but kept for image picker compatibility) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <!-- Required to install APK packages downloaded by the app (Android 8+) -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- AUTH-BIO (A-5): QUERY_ALL_PACKAGES removed — no Dart code queries the

@@ -120,6 +120,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
         _finish(success: serverState, data: {'tnx': tnx});
         return;
       }
+      // If server status query cannot verify the transaction after 3 retries,
+      // do NOT treat URL /success as confirmed success.
+      if (treatAsSuccessHint) {
+        _finish(
+          success: false,
+          message:
+              'Transaction verification pending. Please check your transaction history.',
+        );
+        return;
+      }
     }
 
     // 2) Legacy fallback: scrape the page body (kept for compatibility).
@@ -140,8 +150,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
       }
     }
 
-    // 3) Nothing conclusive — use the URL hint without claiming success.
-    _finish(success: treatAsSuccessHint, data: null);
+    // 3) Nothing conclusive — do not treat /success as confirmed success.
+    if (treatAsSuccessHint) {
+      _finish(
+        success: false,
+        message:
+            'Transaction verification pending. Please check your transaction history.',
+      );
+    } else {
+      _finish(success: false, data: null);
+    }
   }
 
   /// Returns true/false when the server gives a definitive verdict,

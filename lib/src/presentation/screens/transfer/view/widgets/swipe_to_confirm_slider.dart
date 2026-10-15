@@ -78,6 +78,7 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final thumbSize = widget.height - 8.0;
 
@@ -111,6 +112,8 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                       colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.12),
                       colorScheme.primary.withValues(alpha: isDark ? 0.35 : 0.25),
                     ],
+                    begin: AlignmentDirectional.centerStart,
+                    end: AlignmentDirectional.centerEnd,
                   ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
@@ -135,7 +138,7 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       Icon(
-                        Icons.chevron_right_rounded,
+                        isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
                         size: 18,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -145,8 +148,8 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
               ),
 
               // Draggable Slider Thumb
-              Positioned(
-                left: _dragPosition + 4.0,
+              PositionedDirectional(
+                start: _dragPosition + 4.0,
                 child: GestureDetector(
                   onHorizontalDragStart: (_) {
                     if (widget.isLoading || _hasTriggered) return;
@@ -158,13 +161,15 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                   },
                   onHorizontalDragUpdate: (details) {
                     if (widget.isLoading || _hasTriggered) return;
+                    final dx = isRtl ? -details.delta.dx : details.delta.dx;
+                    final newPosition = (_dragPosition + dx).clamp(0.0, maxDrag);
+                    final currentProgress = maxDrag > 0 ? (newPosition / maxDrag) : 0.0;
                     setState(() {
-                      _dragPosition = (_dragPosition + details.delta.dx)
-                          .clamp(0.0, maxDrag);
+                      _dragPosition = newPosition;
                     });
 
                     // Light haptic feedback as threshold is approached
-                    if (progress > 0.8 && !_hasTriggered) {
+                    if (currentProgress > 0.8 && !_hasTriggered) {
                       HapticFeedback.lightImpact();
                     }
                   },
@@ -174,7 +179,8 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                       _isDragging = false;
                     });
 
-                    if (progress >= 0.85) {
+                    final currentProgress = maxDrag > 0 ? (_dragPosition / maxDrag) : 0.0;
+                    if (currentProgress >= 0.85) {
                       _hasTriggered = true;
                       HapticFeedback.heavyImpact();
                       // Snap to end
@@ -203,8 +209,8 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                           colorScheme.primary,
                           isDark ? AppColors.mutedBlue : AppColors.darkGray,
                         ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                        begin: AlignmentDirectional.topStart,
+                        end: AlignmentDirectional.bottomEnd,
                       ),
                       boxShadow: [
                         BoxShadow(
@@ -229,7 +235,7 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                               ),
                             )
                           : Icon(
-                              Icons.arrow_forward_rounded,
+                              isRtl ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
                               size: 20,
                               color: colorScheme.onPrimary,
                             ),

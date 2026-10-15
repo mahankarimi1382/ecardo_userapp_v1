@@ -414,17 +414,19 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
         ? widget.cardHolderName!
         : (widget.title.isNotEmpty ? widget.title : 'Virtual Card');
 
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(20.w, 16.h, 20.w, 16.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-            // Row 1: Brand + Contactless NFC + EMV Chip
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Row 1: EMV Chip + Contactless NFC (left) & Brand (right)
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildBrand(),
+                _buildEmvChip(),
                 const SizedBox(width: AppSpacing.sm),
                 Icon(
                   Icons.contactless_rounded,
@@ -432,32 +434,30 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                   color: Colors.white.withValues(alpha: 0.75),
                 ),
                 const Spacer(),
-                _buildEmvChip(),
+                _buildBrand(),
               ],
             ),
 
             SizedBox(height: 12.h),
 
-          // Row 2: Card Title & Masked PAN with Tap-To-Copy & Reveal Toggle
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                holderText,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'monospace',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13.5.sp,
-                  color: Colors.white.withValues(alpha: 0.88),
-                  letterSpacing: 1.0,
+            // Row 2: Card Title & Masked PAN with Tap-To-Copy & Reveal Toggle
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  holderText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13.5.sp,
+                    color: Colors.white.withValues(alpha: 0.88),
+                    letterSpacing: 1.0,
+                  ),
                 ),
-              ),
-              SizedBox(height: 6.h),
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Row(
+                SizedBox(height: 6.h),
+                Row(
                   children: [
                     Expanded(
                       child: GestureDetector(
@@ -544,36 +544,36 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                       ),
                   ],
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
-          SizedBox(height: 12.h),
+            SizedBox(height: 12.h),
 
-          // Row 3: First Value (Expiry/Balance), Second Value (CVC/Currency), Status Badge
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _ValueBlock(
-                  label: widget.firstLabel,
-                  value: widget.firstValue,
+            // Row 3: First Value (Expiry/Balance), Second Value (CVC/Currency), Status Badge
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: _ValueBlock(
+                    label: widget.firstLabel,
+                    value: widget.firstValue,
+                  ),
                 ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                flex: 2,
-                child: _ValueBlock(
-                  label: widget.secondLabel,
-                  value: widget.secondValue,
+                SizedBox(width: 10.w),
+                Expanded(
+                  flex: 2,
+                  child: _ValueBlock(
+                    label: widget.secondLabel,
+                    value: widget.secondValue,
+                  ),
                 ),
-              ),
-              SizedBox(width: 8.w),
-              _StatusBadge(status: widget.status, isFrozen: _isCardFrozen),
-            ],
-          ),
-        ],
+                SizedBox(width: 8.w),
+                _StatusBadge(status: widget.status, isFrozen: _isCardFrozen),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

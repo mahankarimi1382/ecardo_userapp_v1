@@ -58,6 +58,12 @@ jobs:
       - name: Generate localizations
         run: flutter gen-l10n
 
+      - name: Run Analyze
+        run: flutter analyze
+
+      - name: Run Tests
+        run: flutter test
+
       - name: Build Web (release)
         run: |
           flutter build web --release --base-href "/web-app/" --no-tree-shake-icons

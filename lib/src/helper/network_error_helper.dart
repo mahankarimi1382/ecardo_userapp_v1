@@ -67,13 +67,24 @@ class NetworkErrorHelper {
         ),
       );
 
-  static NetworkErrorInfo from(Object e) {
+  static bool isTimeout(Object e) {
     if (e is DioException) {
-      if (e.type == DioExceptionType.connectionTimeout ||
+      return e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.sendTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        return _timeout();
-      }
+          e.type == DioExceptionType.receiveTimeout;
+    }
+    final s = e.toString().toLowerCase();
+    return s.contains('timed out') ||
+        s.contains('timeout') ||
+        s.contains('connectiontimeout') ||
+        s.contains('receivetimeout');
+  }
+
+  static NetworkErrorInfo from(Object e) {
+    if (isTimeout(e)) {
+      return _timeout();
+    }
+    if (e is DioException) {
       if (e.type == DioExceptionType.connectionError ||
           e.error is SocketException) {
         return _offline();

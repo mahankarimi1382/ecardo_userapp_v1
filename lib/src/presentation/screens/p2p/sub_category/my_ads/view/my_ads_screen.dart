@@ -16,7 +16,9 @@ class MyAdsScreen extends StatefulWidget {
 }
 
 class _MyAdsScreenState extends State<MyAdsScreen> {
-  final MyAdsController controller = Get.put(MyAdsController());
+  MyAdsController get controller => Get.isRegistered<MyAdsController>()
+      ? Get.find<MyAdsController>()
+      : Get.put(MyAdsController());
   late final ScrollController _scrollController;
 
   @override
