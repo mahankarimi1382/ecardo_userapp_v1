@@ -28,7 +28,7 @@ The `ecardo_userapp_v1` codebase represents a fully rebranded, hardened, and loc
 | **Localization** | English & Arabic only | **6 complete locales**: Persian (`fa`), Arabic (`ar`), English (`en`), Russian (`ru`), Turkish (`tr`), Chinese (`zh`) |
 | **Typography** | Latin-only Plus Jakarta Sans | **`Vazirmatn`** (Persian & Arabic), **`Plus Jakarta Sans`** (Latin), **`NotoSansRU`** (Cyrillic) |
 | **Calendar Support** | Gregorian only | **Shamsi (Jalali)** solar calendar (`shamsi_date`) with Shamsi date picker + Gregorian for international locales |
-| **Build & CI/CD** | Debug-signed APKs | **Fail-closed release signing**, R8 minification, `--obfuscate --split-debug-info`, smart changed-files format gate, automated 687 test suite |
+| **Build & CI/CD** | Debug-signed APKs | **Fail-closed release signing**, R8 minification with coroutine preservation, Universal FAT APK (arm64/arm32/x64), automated 687 test suite |
 
 ---
 

@@ -143,11 +143,12 @@ android {
             // reaching here when key.properties is missing.
             signingConfig = signingConfigs.getByName("release")
 
-            // v1.0.4+5: Enable R8 obfuscation + shrinking
+            // v1.0.172: Use standard proguard-android.txt to prevent R8 from stripping
+            // synthetic Kotlin coroutine continuation methods required by Pigeon/SharedPreferences
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
+                getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
             )
 

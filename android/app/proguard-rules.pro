@@ -10,6 +10,17 @@
 -keep class io.flutter.plugins.** { *; }
 -dontwarn io.flutter.embedding.**
 
+# ---------- Kotlin Coroutines, Pigeon & SharedPreferences (v1.0.172 Fix) ----------
+-dontoptimize
+-keep class io.flutter.plugins.sharedpreferences.** { *; }
+-keepclassmembers class io.flutter.plugins.sharedpreferences.** { *; }
+-keep class kotlin.coroutines.** { *; }
+-keepclassmembers class kotlin.coroutines.** { *; }
+-keepclassmembers class * {
+    *** *(kotlin.coroutines.Continuation);
+}
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+
 # ---------- GetX (state management) ----------
 -keep class get.** { *; }
 -dontwarn get.**
