@@ -1,26 +1,35 @@
 # eCardo Mobile Client Documentation Portal
 
-Welcome to the engineering and product documentation portal for **eCardo User App (`ecardo_userapp_v1`)**.
+Welcome to the engineering, architecture, operations, testing, and product documentation portal for **eCardo User App (`ecardo_userapp_v1`)**.
 
 ---
 
-## 1. Audit & Baseline Reports (`docs/audit/`)
+## 1. Release Evidence & Pre-Release Verification (`docs/audit/`)
+Official release readiness certification, cryptographic signing verification, and audit gate matrices:
+
+| Document | Description | Target Release / Gate |
+| :--- | :--- | :--- |
+| **[RELEASE_EVIDENCE.md](audit/RELEASE_EVIDENCE.md)** | **Production Release Evidence & Verification Dossier:** Executive status (Android READY / iOS BLOCKED), commit `5a4abe6`, version `1.0.170+170`, static analyzer output (`No issues found!`, 0 errors, 0 warnings), 682 automated tests passing (100%), Android signing (V1/V2/V3 schemes, R8, ProGuard, `FLAG_SECURE`), GitHub Actions execution evidence (#609, #226), rollback protocol, and key rotation runbook. | **Release v1.0.170** |
+| **[RELEASE_CHECKLIST.md](audit/RELEASE_CHECKLIST.md)** | **Production Release Verification Checklist:** Line-by-line verification of P0 hard gates (G-01 through G-08) and build/packaging requirements (B-01 through B-04), synchronized with commit `5a4abe6` and version `1.0.170+170`. | **Gates G-01–G-08, B-01–B-04** |
+
+---
+
+## 2. Audit & Baseline Reports (`docs/audit/`)
 Complete artifacts produced from the deep codebase audit and verification against `ecardo_userapp_v1_audit_roadmap_fa.md`:
 
 | Document | Description |
 | :--- | :--- |
 | **[BASELINE.md](audit/BASELINE.md)** | Baseline metrics, Flutter/Dart environment diagnostics, 99 routes and 40 modules inventory. |
 | **[FINDINGS.md](audit/FINDINGS.md)** | Line-by-line verification matrix for all P0/P1 audit findings across security, auth, and network. |
+| **[TASKS.md](audit/TASKS.md)** | Master backlog of prioritized remediation tasks (All P0 and P1 tasks verified & implemented). |
 | **[THREAT_MODEL.md](audit/THREAT_MODEL.md)** | Threat model and defense-in-depth security posture evaluated against OWASP MASVS v2.0. |
 | **[FINANCIAL_FLOWS.md](audit/FINANCIAL_FLOWS.md)** | Specification of financial state machines, precision math, idempotency, and gateway verifications. |
 | **[MARKET_READINESS.md](audit/MARKET_READINESS.md)** | Regional readiness matrix across Iran, UAE, Turkey, Russia, China, and Global corridors. |
-| **[RELEASE_CHECKLIST.md](audit/RELEASE_CHECKLIST.md)** | Pre-release verification checklist, signing keys protocol, and rollback procedures. |
-| **[TASKS.md](audit/TASKS.md)** | Master backlog of prioritized remediation tasks (All P0 and P1 tasks verified & implemented). |
 | **[DX_ROADMAP.md](audit/DX_ROADMAP.md)** | Product excellence roadmap covering tasks DX-001 through DX-020 from Annex 2. |
 
 ---
 
-## 2. Architecture Decision Records (`docs/adr/`)
+## 3. Architecture Decision Records (`docs/adr/`)
 Formal decision records capturing core technical choices, trade-offs, and invariants:
 
 | ADR | Title & Scope |
@@ -33,7 +42,54 @@ Formal decision records capturing core technical choices, trade-offs, and invari
 
 ---
 
-## 3. Product & Design System Specifications (`docs/design/`)
+## 4. Master Architecture, Observability & Domain Specifications
+Enterprise architecture, telemetry data pipelines, search boundaries, and domain specifications:
+
+| Document | Title & Scope | Domain / Category |
+| :--- | :--- | :--- |
+| **[MASTER_ARCHITECTURE.md](MASTER_ARCHITECTURE.md)** | Master Architecture Blueprint across financial, travel, commercial, and identity domains. | Enterprise Architecture |
+| **[DOMAIN_INVENTORY.md](DOMAIN_INVENTORY.md)** | Comprehensive inventory of all 40 modules, 99 routes, and controller dependencies. | Domain Mapping |
+| **[SUB_SERVICES_COMPREHENSIVE_BLUEPRINT.md](SUB_SERVICES_COMPREHENSIVE_BLUEPRINT.md)** | Service architecture blueprint for sub-services, micro-apps, and shared modules. | Modular Services |
+| **[MASTER_UPGRADE_PLAN_COMMERCIAL_TRAVEL.md](MASTER_UPGRADE_PLAN_COMMERCIAL_TRAVEL.md)** | Master upgrade plan for commercial and travel service modernization. | Platform Upgrades |
+| **[BACKEND_IMPLEMENTATION_SPEC.md](financial/BACKEND_IMPLEMENTATION_SPEC.md)** | Backend API specification, state transitions, and database schemas for financial transactions. | Financial Backend |
+| **[ADR-ELASTICSEARCH-001.md](architecture/ADR-ELASTICSEARCH-001.md)** | Architectural Role, Non-Financial Boundary, and Graceful Degradation of Elasticsearch (EL-003, EL-017). | Observability Architecture |
+| **[OBSERVABILITY-DATA-FLOW.md](architecture/OBSERVABILITY-DATA-FLOW.md)** | End-to-End Telemetry Pipeline, Transactional Outbox, Sampling & Circuit Breaking (EL-008, EL-010, EL-011). | Telemetry Pipeline |
+| **[EVENT-CATALOG.md](architecture/EVENT-CATALOG.md)** | Canonical ECS Schema Envelope, Domain Action Catalog & Malformed Rejection Rules (EL-005, EL-012). | Event Architecture |
+| **[DATA-CLASSIFICATION.md](architecture/DATA-CLASSIFICATION.md)** | Data Classification Matrix, Forbidden Telemetry Items & ILM Retention Policies (EL-002, EL-021). | Data Governance |
+| **[travel/ARCHITECTURE.md](travel/ARCHITECTURE.md)** | Travel domain subsystem architecture, state machines, and booking lifecycle. | Travel Architecture |
+| **[travel/API_CONTRACT.md](travel/API_CONTRACT.md)** | Complete REST API contracts for flight, hotel, tour, visa, and rental services. | Travel API Contracts |
+| **[travel/SCREEN_MAP.md](travel/SCREEN_MAP.md)** | Screen navigation flows, dynamic transitions, and travel service routing. | Screen Navigation |
+
+---
+
+## 5. SRE Operations & Disaster Recovery (`docs/operations/`)
+Production runbooks, disaster recovery drills, incident response playbooks, and update operations:
+
+| Document | Title & Scope | Application Domain |
+| :--- | :--- | :--- |
+| **[ELASTICSEARCH-RUNBOOK.md](operations/ELASTICSEARCH-RUNBOOK.md)** | SRE Runbook for Cluster Maintenance, ILM 4-Phase Policies, Shard Sizing & Alert SOPs (EL-018, EL-022). | SRE Operations |
+| **[SNAPSHOT-RESTORE-DRILL.md](operations/SNAPSHOT-RESTORE-DRILL.md)** | Off-Cluster S3 Snapshot Backup Protocol, RTO (<2h) / RPO (<1h) SLAs & Verification Drill (EL-013, EL-022). | Disaster Recovery |
+| **[TELEMETRY-INCIDENTS.md](operations/TELEMETRY-INCIDENTS.md)** | Incident Playbooks: Ingest Lag, Disk Flood Watermark & Accidental PII Eradication (EL-018). | Incident Response |
+| **[travel/OPERATIONS.md](travel/OPERATIONS.md)** | Travel operations runbook, partner API health monitoring, and exception handling. | Travel Operations |
+| **[travel/HANDOFF.md](travel/HANDOFF.md)** | Operations handoff guide for travel service maintenance. | Operational Handoff |
+| **[APP_UPDATE_SETUP.md](APP_UPDATE_SETUP.md)** | In-App update setup, forced/flexible update policy, and backend API integration. | App Lifecycle |
+
+---
+
+## 6. Testing & Quality Assurance (`docs/testing/`)
+Automated test documentation, security test suites, flow validations, and integration reports:
+
+| Document | Title & Scope | Verification Focus |
+| :--- | :--- | :--- |
+| **[TELEMETRY-SECURITY-TESTS.md](testing/TELEMETRY-SECURITY-TESTS.md)** | Negative Security Test Suite for Data Leakage Prevention (Synthetic Luhn PAN, OTP, JWT, Passwords) (EL-016). | Telemetry Security |
+| **[OBSERVABILITY-LOAD-TESTS.md](testing/OBSERVABILITY-LOAD-TESTS.md)** | Peak Burst Load (5,000 req/s), ES Network Drop Fault Injection & Buffer Drop Policy (EL-017). | Stress & Fault Injection |
+| **[travel/TESTING.md](travel/TESTING.md)** | Travel subsystem testing guide, mock service harnesses, and verification strategies. | Travel Domain Tests |
+| **[flow_test_report.md](flow_test_report.md)** | Flow-to-flow validation report and live backend REST probe audit. | Navigation & REST Flows |
+| **[app_flow_audit.md](app_flow_audit.md)** | Comprehensive audit of user application flows, transitions, and screen state. | UI State Machines |
+
+---
+
+## 7. Product & Design System Specifications (`docs/design/`)
 Product design, research, user journeys, and accessibility specifications from Annex 2:
 
 | Document | Scope & Target Task |
@@ -49,6 +105,8 @@ Product design, research, user journeys, and accessibility specifications from A
 
 ---
 
-## 4. Quality Gates & Release Verification
+## 8. Quality Gates & Release Verification
+- **Release Evidence Dossier:** Refer to [`docs/audit/RELEASE_EVIDENCE.md`](audit/RELEASE_EVIDENCE.md) for full static analyzer and test execution evidence.
+- **Pre-Release Checklist:** Refer to [`docs/audit/RELEASE_CHECKLIST.md`](audit/RELEASE_CHECKLIST.md) for verified P0 release gates (G-01–G-08) and packaging requirements (B-01–B-04).
 - **Pull Request Template:** [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md) enforces the mandatory 15-question review checklist from Section 20 of Annex 2.
 - **CI Pipelines:** [`.github/workflows/flutter.yml`](../.github/workflows/flutter.yml) guarantees code formatting check, static analysis, unit/widget tests, and obfuscated split-APK builds.
