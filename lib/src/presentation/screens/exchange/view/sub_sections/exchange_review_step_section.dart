@@ -350,10 +350,7 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                     HapticFeedback.mediumImpact();
 
                     final bool isPasscodeEnabled =
-                        settings.getSetting(
-                              "exchange_passcode_status",
-                            ) ==
-                            "1";
+                        settings.getSetting("exchange_passcode_status") != "0";
 
                     final storedPasscode = controller.userModel.value.data?.passcode ??
                         (Get.isRegistered<HomeController>()
@@ -365,7 +362,13 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                             : null);
                     final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
 
-                    if (isPasscodeEnabled && hasPasscode) {
+                    // Prompt for passcode if user has set a passcode on their account or if feature requires it
+                    final shouldPromptPasscode = hasPasscode ||
+                        (storedPasscode != null && storedPasscode.isNotEmpty && storedPasscode != '0') ||
+                        (hasPasscodeFlag == true) ||
+                        isPasscodeEnabled;
+
+                    if (shouldPromptPasscode) {
                       final dynamic verifiedPasscode =
                           await Get.bottomSheet<dynamic>(
                         const VerifyPasscodeBottomSheet(),

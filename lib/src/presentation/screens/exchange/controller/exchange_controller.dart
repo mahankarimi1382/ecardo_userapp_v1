@@ -23,6 +23,7 @@ import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_r
 import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_rate_service.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_validation_service.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/service/recent_pairs_store.dart';
+import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/live_rate_badge.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
 
@@ -698,6 +699,16 @@ class ExchangeController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
+        if (msg.contains('passcode')) {
+          isExchangeWalletLoading.value = false;
+          final dynamic verified = await Get.bottomSheet<dynamic>(
+            const VerifyPasscodeBottomSheet(),
+          );
+          if (verified != null && verified.toString().isNotEmpty) {
+            await exchangeWallet(passcode: verified.toString());
+            return;
+          }
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ exchangeWallet() error: $e');
@@ -721,6 +732,15 @@ class ExchangeController extends GetxController {
             zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复兑换。',
           ),
         );
+      } else if (errStr.contains('passcode')) {
+        isExchangeWalletLoading.value = false;
+        final dynamic verified = await Get.bottomSheet<dynamic>(
+          const VerifyPasscodeBottomSheet(),
+        );
+        if (verified != null && verified.toString().isNotEmpty) {
+          await exchangeWallet(passcode: verified.toString());
+          return;
+        }
       } else {
         ToastHelper().showErrorToast(
           localizationOrNull?.allControllerLoadError ??

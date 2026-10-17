@@ -577,13 +577,18 @@ class CreateVirtualCardController extends GetxController {
   // Fetch Card Providers
   Future<void> fetchCardProviders() async {
     try {
+      final cb = DateTime.now().millisecondsSinceEpoch;
       final response = await Get.find<NetworkService>().globalGet(
-        endpoint: ApiPath.getCardProvidersEndpoint,
+        endpoint: '${ApiPath.getCardProvidersEndpoint}?cb=$cb',
       );
       if (response.status == Status.completed) {
         final cardProvidersModel = CardProviderModel.fromJson(response.data!);
         cardProvidersList.clear();
-        cardProvidersList.assignAll(cardProvidersModel.data!);
+        final rawProviders = cardProvidersModel.data ?? [];
+        // Filter out legacy providers known to reject regional cards
+        cardProvidersList.assignAll(
+          rawProviders.where((p) => p.code != 'stripe'),
+        );
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCardProviders() error: $e');
@@ -676,11 +681,25 @@ class CreateVirtualCardController extends GetxController {
         clearFields();
         Get.back();
         await Get.find<VirtualCardController>().fetchVirtualCards();
+      } else {
+        final errorMsg = response.message ?? '';
+        ToastHelper().showErrorToast(
+          errorMsg.contains('unable to serve')
+              ? 'این ارائه‌دهنده کارت برای کشور ایران در دسترس نیست. لطفاً کارت داخلی eCardo را انتخاب فرمایید.'
+              : errorMsg.isNotEmpty
+                  ? errorMsg
+                  : (localization?.allControllerLoadError ?? 'Failed to create virtual card'),
+        );
       }
     } catch (e, stackTrace) {
       debugPrint('❌ createVirtualCard() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization!.allControllerLoadError);
+      final errStr = e.toString();
+      ToastHelper().showErrorToast(
+        errStr.contains('unable to serve')
+            ? 'این ارائه‌دهنده کارت برای کشور ایران در دسترس نیست. لطفاً کارت داخلی eCardo را انتخاب فرمایید.'
+            : (localization?.allControllerLoadError ?? 'Failed to create virtual card'),
+      );
     } finally {
       isCreateVirtualCardLoading.value = false;
     }
