@@ -61,78 +61,76 @@ class _EcardoUserState extends State<EcardoUser> {
           final appTheme = lts?.themeMode.value ?? ThemeMode.system;
 
           return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: AppStrings.appName,
-          themeMode: appTheme,
-          theme: LightTheme().lightTheme(context),
-          darkTheme: DarkTheme().darkTheme(context),
-          getPages: routesHandler,
-          initialBinding: InitialBinding(),
-          initialRoute: BaseRoute.root,
-          unknownRoute: GetPage(
-            name: '/not-found',
-            page: () => const NotFoundScreen(),
-          ),
-          locale: appLocale,
-          fallbackLocale: const Locale('en'),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en'),
-            Locale("ar"),
-            Locale('fa'),
-            Locale('zh'),
-            Locale('tr'),
-            Locale('ru'),
-          ],
-          builder: (context, widget) {
-            // NOTIF-FIX: keep the FCM service's context fresh so deferred
-            // routing works, and drain any notification payload that was
-            // parked during cold start (tap on tray notification while the
-            // app was launching).
-            if (!kIsWeb && Get.isRegistered<FirebaseMessagingService>()) {
-              Get.find<FirebaseMessagingService>().attachContext(context);
-            }
-            Widget body = widget ?? const SizedBox.shrink();
-            // UI Defensive hardening: clamp system font scaling (max 1.3) to prevent fixed-height layout breaks
-            final mediaQuery = MediaQuery.of(context);
-            final clampedTextScaler = mediaQuery.textScaler.clamp(
-              minScaleFactor: 0.85,
-              maxScaleFactor: 1.3,
-            );
-            body = MediaQuery(
-              data: mediaQuery.copyWith(textScaler: clampedTextScaler),
-              child: body,
-            );
+            debugShowCheckedModeBanner: false,
+            title: AppStrings.appName,
+            themeMode: appTheme,
+            theme: LightTheme().lightTheme(context),
+            darkTheme: DarkTheme().darkTheme(context),
+            getPages: routesHandler,
+            initialBinding: InitialBinding(),
+            initialRoute: BaseRoute.root,
+            unknownRoute: GetPage(
+              name: '/not-found',
+              page: () => const NotFoundScreen(),
+            ),
+            locale: appLocale,
+            fallbackLocale: const Locale('en'),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale("ar"),
+              Locale('fa'),
+              Locale('zh'),
+              Locale('tr'),
+              Locale('ru'),
+            ],
+            builder: (context, widget) {
+              // NOTIF-FIX: keep the FCM service's context fresh so deferred
+              // routing works, and drain any notification payload that was
+              // parked during cold start (tap on tray notification while the
+              // app was launching).
+              if (!kIsWeb && Get.isRegistered<FirebaseMessagingService>()) {
+                Get.find<FirebaseMessagingService>().attachContext(context);
+              }
+              Widget body = widget ?? const SizedBox.shrink();
+              // Accessibility & UI Defensive hardening (A11Y-01): support font scaling up to 1.8 for accessibility
+              final mediaQuery = MediaQuery.of(context);
+              final clampedTextScaler = mediaQuery.textScaler.clamp(
+                minScaleFactor: 0.85,
+                maxScaleFactor: 1.8,
+              );
+              body = MediaQuery(
+                data: mediaQuery.copyWith(textScaler: clampedTextScaler),
+                child: body,
+              );
 
-            // App lock overlay (PIN / biometric gate)
-            // Touch tracking for idle session timeout.
-            body = Listener(
-              behavior: HitTestBehavior.translucent,
-              onPointerDown: (_) {
-                if (Get.isRegistered<SessionTimeoutService>()) {
-                  Get.find<SessionTimeoutService>().touch();
-                }
-              },
-              child: body,
-            );
+              // App lock overlay (PIN / biometric gate)
+              // Touch tracking for idle session timeout.
+              body = Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: (_) {
+                  if (Get.isRegistered<SessionTimeoutService>()) {
+                    Get.find<SessionTimeoutService>().touch();
+                  }
+                },
+                child: body,
+              );
 
-            return AppLockWrapper(
-              child: Column(
-                children: [
-                  const OfflineQueueBanner(),
-                  Expanded(
-                    child: _VpnBannerWrapper(child: body),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+              return AppLockWrapper(
+                child: Column(
+                  children: [
+                    const OfflineQueueBanner(),
+                    Expanded(child: _VpnBannerWrapper(child: body)),
+                  ],
+                ),
+              );
+            },
+          );
         });
       },
     );

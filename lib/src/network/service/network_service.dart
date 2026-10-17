@@ -29,7 +29,8 @@ class NetworkService extends getx.GetxService {
   final Dio _dio = Dio();
   final Dio _globalDio = Dio();
   final String baseUrl = ApiPath.baseUrl;
-  late TokenService _tokenService;  // Real app version (from pubspec via package_info_plus). Until resolved we
+  late TokenService
+  _tokenService; // Real app version (from pubspec via package_info_plus). Until resolved we
   // send an empty value — the server treats a missing/unparseable header as
   // pass-through. Never hardcode a stale version again (S-003/S-022 fix).
   String _appVersion = '';
@@ -207,7 +208,9 @@ class NetworkService extends getx.GetxService {
           await _tokenService.isReady;
           String? accessToken = _tokenService.accessToken.value;
           // v1.0.24: never log the raw token (was: full bearer leak in logs).
-          _log('🔑 Token: ${accessToken == null || accessToken.isEmpty ? '<none>' : '<redacted ${accessToken.length} chars>'}');
+          _log(
+            '🔑 Token: ${accessToken == null || accessToken.isEmpty ? '<none>' : '<redacted ${accessToken.length} chars>'}',
+          );
 
           if (accessToken != null && accessToken.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $accessToken';
@@ -231,12 +234,13 @@ class NetworkService extends getx.GetxService {
           if (options.method.toUpperCase() == 'POST' &&
               options.headers['Idempotency-Key'] == null) {
             final path = options.uri.path;
-            final rawOpId = options.headers['X-Operation-ID'] ??
+            final rawOpId =
+                options.headers['X-Operation-ID'] ??
                 options.extra['operationId'];
             final explicitOpId =
                 (rawOpId is String && rawOpId.trim().isNotEmpty)
-                    ? rawOpId.trim()
-                    : null;
+                ? rawOpId.trim()
+                : null;
             final isMoney = _idempotentEndpointSuffixes.any(
               (suffix) => path.endsWith(suffix),
             );
@@ -252,13 +256,17 @@ class NetworkService extends getx.GetxService {
               }
               if (entry == null) {
                 _boundRegistrySize();
-                final seed = explicitOpId ??
+                final seed =
+                    explicitOpId ??
                     (options.headers['X-Request-ID'] as String?) ??
                     _generateRequestId();
                 entry = _IdempotencyEntry(seed, now);
                 _inflightIdempotency[mapKey] = entry;
               }
               options.headers['Idempotency-Key'] = entry.key;
+              // P1-02 (FIN-IDEM-02): Send both Idempotency-Key and X-Idempotency-Key
+              // to guarantee 100% compatibility across all server and middleware contracts.
+              options.headers['X-Idempotency-Key'] = entry.key;
               if (explicitOpId != null &&
                   options.headers['X-Operation-ID'] == null) {
                 options.headers['X-Operation-ID'] = explicitOpId;
@@ -272,8 +280,8 @@ class NetworkService extends getx.GetxService {
             options.headers['X-Platform'] = Platform.isAndroid
                 ? 'android'
                 : Platform.isIOS
-                    ? 'ios'
-                    : 'unknown';
+                ? 'ios'
+                : 'unknown';
           }
 
           return handler.next(options);
@@ -287,20 +295,30 @@ class NetworkService extends getx.GetxService {
         },
         onError: (DioException error, handler) async {
           final isTimeout = _isTransportTimeoutOrSocketException(error);
-          if (!isTimeout) {
+          final statusCode = error.response?.statusCode;
+          // P0-02 (FIN-IDEM-01): 5xx server errors are ambiguous — the server transaction
+          // may have committed before an upstream or serialization crash occurred.
+          // Retain the idempotency key for 5xx, timeouts, and connection drops to prevent
+          // double-debits on retry! Only release on deterministic 4xx client errors (e.g. 400, 422).
+          final isAmbiguousServerError =
+              statusCode != null && statusCode >= 500 && statusCode < 600;
+          if (!isTimeout && !isAmbiguousServerError) {
             _releaseIdempotencyKey(error.requestOptions);
           }
           if (error.response?.statusCode == 401) {
             // Do NOT attempt token refresh for login/auth/fcm or unauthenticated endpoints
             final path = error.requestOptions.uri.path;
-            final isUnauthenticatedFlow = path.contains('/auth/user/login') ||
+            final isUnauthenticatedFlow =
+                path.contains('/auth/user/login') ||
                 path.contains('/auth/user/login-otp') ||
                 path.contains('/auth/user/register') ||
                 path.contains('/auth/user/refresh') ||
                 path.contains('/setup-fcm');
 
             final currentToken = _tokenService.accessToken.value;
-            if (isUnauthenticatedFlow || currentToken == null || currentToken.isEmpty) {
+            if (isUnauthenticatedFlow ||
+                currentToken == null ||
+                currentToken.isEmpty) {
               return handler.next(error);
             }
 
@@ -314,11 +332,14 @@ class NetworkService extends getx.GetxService {
                   handler.next(error);
                   return;
                 }
-                error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
-                _dio.fetch(error.requestOptions).then(
-                  (response) => handler.resolve(response),
-                  onError: (e) => handler.next(error),
-                );
+                error.requestOptions.headers['Authorization'] =
+                    'Bearer $newToken';
+                _dio
+                    .fetch(error.requestOptions)
+                    .then(
+                      (response) => handler.resolve(response),
+                      onError: (e) => handler.next(error),
+                    );
               });
               return;
             }
@@ -334,13 +355,16 @@ class NetworkService extends getx.GetxService {
                 // v1.0.24: drain the queue FIRST (with the new token) so the
                 // queued requests can never be left hanging, then retry the
                 // original request.
-                final queued = List<void Function(String?)>.of(_pendingRequests);
+                final queued = List<void Function(String?)>.of(
+                  _pendingRequests,
+                );
                 _pendingRequests.clear();
                 for (final callback in queued) {
                   callback(newToken);
                 }
 
-                error.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                error.requestOptions.headers['Authorization'] =
+                    'Bearer $newToken';
                 try {
                   final response = await _dio.fetch(error.requestOptions);
                   handler.resolve(response);
@@ -370,7 +394,8 @@ class NetworkService extends getx.GetxService {
               unawaited(
                 getx.Get.find<SessionManager>().handleUnauthorized(
                   isForeground: isForeground,
-                  message: localization?.unauthorizedDialogTitle ??
+                  message:
+                      localization?.unauthorizedDialogTitle ??
                       'Your session has expired. Please sign in again.',
                 ),
               );
@@ -439,11 +464,13 @@ class NetworkService extends getx.GetxService {
         }
         final response = await _globalDio.post(
           '$baseUrl${ApiPath.tokenRefreshEndpoint}',
-          options: Options(headers: {
-            'Authorization': 'Bearer ${_tokenService.accessToken.value}',
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          }),
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer ${_tokenService.accessToken.value}',
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ),
         );
 
         if (response.statusCode == 200) {
@@ -451,7 +478,10 @@ class NetworkService extends getx.GetxService {
           if (newToken != null && newToken is String) {
             final saveOk = await _tokenService.saveAccessToken(newToken);
             if (!saveOk) {
-              _log('❌ Failed to save refreshed access token to secure storage', icon: '❌');
+              _log(
+                '❌ Failed to save refreshed access token to secure storage',
+                icon: '❌',
+              );
               return false;
             }
             _log('✓ Token refreshed successfully');
@@ -474,21 +504,25 @@ class NetworkService extends getx.GetxService {
 
   void _evictExpiredIdempotencyEntries([DateTime? now]) {
     final currentTime = now ?? _clock();
-    _inflightIdempotency.removeWhere((_, entry) =>
-        currentTime.difference(entry.createdAt) >= _idempotencyTtl);
+    _inflightIdempotency.removeWhere(
+      (_, entry) => currentTime.difference(entry.createdAt) >= _idempotencyTtl,
+    );
   }
 
   void _boundRegistrySize() {
     while (_inflightIdempotency.length >= _maxIdempotencyEntries) {
       final oldestKey = _inflightIdempotency.entries
-          .reduce((a, b) => a.value.createdAt.isBefore(b.value.createdAt) ? a : b)
+          .reduce(
+            (a, b) => a.value.createdAt.isBefore(b.value.createdAt) ? a : b,
+          )
           .key;
       _inflightIdempotency.remove(oldestKey);
     }
   }
 
   String _getIdempotencyMapKey(RequestOptions options) {
-    final rawOpId = options.headers['X-Operation-ID'] ?? options.extra['operationId'];
+    final rawOpId =
+        options.headers['X-Operation-ID'] ?? options.extra['operationId'];
     final explicitOpId = (rawOpId is String && rawOpId.trim().isNotEmpty)
         ? rawOpId.trim()
         : null;
@@ -499,10 +533,12 @@ class NetworkService extends getx.GetxService {
   }
 
   /// Workstream B: release the in-flight idempotency key once the request
-  /// has finished successfully (or on non-timeout client/server errors), so the
+  /// has finished successfully (or on deterministic 4xx client errors), so the
   /// NEXT logical submission mints a fresh key.
   void _releaseIdempotencyKey(RequestOptions options) {
-    final headerKey = options.headers['Idempotency-Key'];
+    final headerKey =
+        options.headers['Idempotency-Key'] ??
+        options.headers['X-Idempotency-Key'];
     if (headerKey is! String || headerKey.isEmpty) return;
     _evictExpiredIdempotencyEntries();
     final mapKey = _getIdempotencyMapKey(options);
@@ -630,7 +666,9 @@ class NetworkService extends getx.GetxService {
 
     _log('📤 Login POST Request URL: $url');
     // v1.0.24: never log the password — only the (non-secret) email.
-    _log('📦 Login POST Request Body: {"email": $email, "password": "<redacted>"}');
+    _log(
+      '📦 Login POST Request Body: {"email": $email, "password": "<redacted>"}',
+    );
 
     try {
       final response = await _dio.post(
@@ -723,7 +761,10 @@ class NetworkService extends getx.GetxService {
           await _tokenService.clearToken();
           final saveOk = await _tokenService.saveAccessToken(accessToken);
           if (!saveOk) {
-            _log('❌ Failed to save OTP access token to secure storage', icon: '❌');
+            _log(
+              '❌ Failed to save OTP access token to secure storage',
+              icon: '❌',
+            );
             if (getx.Get.isRegistered<SettingsService>()) {
               await getx.Get.find<SettingsService>().wipeSession();
             }
@@ -755,7 +796,9 @@ class NetworkService extends getx.GetxService {
 
     _log('📤 Register POST Request URL: $url');
     // v1.0.24: never log plaintext passwords — redact like login() does.
-    _log('📦 Register POST Request Body: ${jsonEncode(_sanitizePayload(data))}');
+    _log(
+      '📦 Register POST Request Body: ${jsonEncode(_sanitizePayload(data))}',
+    );
 
     try {
       final response = await _dio.post(
@@ -777,7 +820,10 @@ class NetworkService extends getx.GetxService {
         if (accessToken is String && accessToken.isNotEmpty) {
           final saveOk = await _tokenService.saveAccessToken(accessToken);
           if (!saveOk) {
-            _log('❌ Failed to save register access token to secure storage', icon: '❌');
+            _log(
+              '❌ Failed to save register access token to secure storage',
+              icon: '❌',
+            );
             if (getx.Get.isRegistered<SettingsService>()) {
               await getx.Get.find<SettingsService>().wipeSession();
             }
@@ -1016,7 +1062,9 @@ class NetworkService extends getx.GetxService {
 
     String url = '${_dio.options.baseUrl}$endpoint';
     _log('📤 POST (multipart) Request URL: $url');
-    _log('📦 POST (multipart) Fields: ${data.fields.length}, Files: ${data.files.length}');
+    _log(
+      '📦 POST (multipart) Fields: ${data.fields.length}, Files: ${data.files.length}',
+    );
 
     try {
       // Allow Dio to handle Content-Type and multipart boundary generation natively.
@@ -1030,9 +1078,7 @@ class NetworkService extends getx.GetxService {
           sendTimeout: const Duration(seconds: 180),
           receiveTimeout: const Duration(seconds: 180),
           extra: {'isForeground': isForeground},
-          headers: {
-            'Accept': 'application/json',
-          },
+          headers: {'Accept': 'application/json'},
         ),
       );
       return _handleResponse(response, "POST (multipart)");
@@ -1291,7 +1337,10 @@ class NetworkService extends getx.GetxService {
       return ApiResponse.completed({
         'status': 'success',
         'message': 'Demo Mode simulated response',
-        'data': {'id': DateTime.now().millisecondsSinceEpoch, 'status': 'completed'},
+        'data': {
+          'id': DateTime.now().millisecondsSinceEpoch,
+          'status': 'completed',
+        },
       });
     }
 
@@ -1300,7 +1349,9 @@ class NetworkService extends getx.GetxService {
       _log('Global POST Request URL: $url', icon: '✅');
 
       if (data != null) {
-        _log('📦 Global POST Request Body: ${jsonEncode(_sanitizePayload(data))}');
+        _log(
+          '📦 Global POST Request Body: ${jsonEncode(_sanitizePayload(data))}',
+        );
       } else {
         _log('📦 Global POST Request Body: No body data');
       }
@@ -1402,16 +1453,21 @@ class NetworkService extends getx.GetxService {
       _log('$requestType TimeoutException: Request timed out', icon: '⏳');
       ToastHelper().showErrorToast(
         // P-4: null-safe localization with English fallback (was `localization!`).
-        localization?.networkErrorTimeout ?? 'Request timed out. Please try again.',
+        localization?.networkErrorTimeout ??
+            'Request timed out. Please try again.',
       );
       return ApiResponse.error('Request timed out');
     }
 
     // Detect SSL / Bad Certificate validation failure
     if (e.type == DioExceptionType.badCertificate) {
-      _log('$requestType Security Error: SSL certificate verification failed', icon: '🚨');
+      _log(
+        '$requestType Security Error: SSL certificate verification failed',
+        icon: '🚨',
+      );
       ToastHelper().showErrorToast(
-        localization?.networkErrorGeneric ?? 'Secure connection could not be established.',
+        localization?.networkErrorGeneric ??
+            'Secure connection could not be established.',
       );
       return ApiResponse.error('SSL certificate verification failed');
     }
@@ -1425,7 +1481,8 @@ class NetworkService extends getx.GetxService {
     _log('$requestType DioException: ${e.message}', icon: '🚫');
     ToastHelper().showErrorToast(
       // P-4: null-safe localization with English fallback (was `localization!`).
-      localization?.networkErrorOccurred ?? 'An error occurred. Please try again.',
+      localization?.networkErrorOccurred ??
+          'An error occurred. Please try again.',
     );
     return ApiResponse.error(e.message ?? 'An error occurred');
   }
@@ -1442,7 +1499,10 @@ class NetworkService extends getx.GetxService {
         final jsonData = response.data is Map
             ? Map<String, dynamic>.from(response.data as Map)
             : <String, dynamic>{};
-        _log('$requestType Response: [status ${response.statusCode}]', icon: '✅');
+        _log(
+          '$requestType Response: [status ${response.statusCode}]',
+          icon: '✅',
+        );
         return ApiResponse.completed(jsonData);
       default:
         _log('Unknown Status Code: ${response.statusCode}', icon: '❓');
@@ -1478,7 +1538,8 @@ class NetworkService extends getx.GetxService {
         _log('$requestType Error [status 401]: $errorMessages', icon: '❌');
 
         // Do not invoke session expiration logout when user is on login/register endpoints
-        final isAuthEndpoint = response.requestOptions.path.contains(ApiPath.loginEndpoint) ||
+        final isAuthEndpoint =
+            response.requestOptions.path.contains(ApiPath.loginEndpoint) ||
             response.requestOptions.path.contains('/login') ||
             response.requestOptions.path.contains('/register');
 
@@ -1507,16 +1568,20 @@ class NetworkService extends getx.GetxService {
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
         final errorMessages = _errorMessage(jsonResponse4xx);
-        _log('$requestType Error [status ${response.statusCode}]: $errorMessages', icon: '❌');
+        _log(
+          '$requestType Error [status ${response.statusCode}]: $errorMessages',
+          icon: '❌',
+        );
         // v1.1 (KYC-ERR): a KYC block (KYC_LEVEL_REQUIRED /
         // KYC_FEATURE_REQUIRED) was already routed to the
         // UpgradeRequiredScreen by the interceptor — the raw server message
         // must NOT double up as an error toast here.
         final isKycBlock =
             response.requestOptions.extra[KycErrorHandler.handledExtraKey] ==
-                true;
+            true;
         if (isKycBlock) {
-          final friendly = localization?.kycUpgradeRequiredTitle ??
+          final friendly =
+              localization?.kycUpgradeRequiredTitle ??
               'Verification upgrade required';
           return ApiResponse.error(friendly);
         }
@@ -1543,9 +1608,10 @@ class NetworkService extends getx.GetxService {
         // clear the token and never take over with the maintenance screen.
         final isKycUnavailable =
             response.requestOptions.extra[KycErrorHandler.handledExtraKey] ==
-                true;
+            true;
         if (isKycUnavailable) {
-          final retryMessage = localization?.kycVerificationUnavailable ??
+          final retryMessage =
+              localization?.kycVerificationUnavailable ??
               'Verification service is temporarily unavailable. Please try again in a few moments.';
           ToastHelper().showErrorToast(retryMessage);
           return ApiResponse.error(retryMessage);
@@ -1594,7 +1660,6 @@ class NetworkService extends getx.GetxService {
 
     return localization?.networkErrorOccurred ?? 'An error occurred.';
   }
-
 
   String _friendlyServerMessage(String raw) {
     final lower = raw.toLowerCase();
@@ -1712,8 +1777,7 @@ class NetworkService extends getx.GetxService {
   ApiResponse<Map<String, dynamic>> handleDioErrorResponse(
     Response response,
     String requestType,
-  ) =>
-      _handleDioErrorResponse(response, requestType);
+  ) => _handleDioErrorResponse(response, requestType);
 }
 
 /// Workstream B: Idempotency entry tracking the minted key and creation timestamp.
@@ -1769,4 +1833,3 @@ class _TransportRetryInterceptor extends Interceptor {
     }
   }
 }
-

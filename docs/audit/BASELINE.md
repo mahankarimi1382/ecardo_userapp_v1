@@ -1,26 +1,26 @@
 # eCardo User App (v1) — Audit Baseline & Environment Report
 
-**Audit Date:** 2026-10-15  
+**Audit Date:** 2026-10-17  
 **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
-**Inspected Commit SHA:** `de37b1ea0d2b9769ae38ea3d637f181d62149209` (`de37b1e`)  
-**Inspected Branch:** `main` (clean working tree)  
-**Audit Mode:** Read-Only Baseline Verification & Multi-Agent Assessment  
+**Inspected Commit SHA:** `7bce9ba` (v1.0.171+171)  
+**Inspected Branch:** `main`  
+**Audit Mode:** Full Re-Audit Verification & Black-Screen Root Cause Resolution  
 **Author:** Automated Multi-Agent Security & Architecture Engineering Team
 
 ---
 
 ## 1. Executive Summary & Audit Baseline
 
-This document establishes the verified baseline of `ecardo_userapp_v1` as required by Phase 0 of the audit roadmap (`ecardo_userapp_v1_audit_roadmap_fa.md`). Every finding and metric in this report was verified directly by executing diagnostic commands on the live codebase and running automated tests.
+This document establishes the verified baseline of `ecardo_userapp_v1` as required by the full re-audit roadmap (`ecardo_userapp_v1_full_reaudit_2026-10-17_fa.md`). Every finding and metric in this report was verified directly by executing diagnostic commands on the live codebase and running automated tests.
 
 ### Key Baseline Findings at a Glance
 | Metric / Check | Baseline Value | Status / Verdict |
 | :--- | :--- | :--- |
-| **Commit SHA** | `de37b1ea0d2b9769ae38ea3d637f181d62149209` (`de37b1e`) | Verified |
+| **Commit SHA** | `7bce9ba` (v1.0.171+171) | Verified |
 | **Working Tree** | Clean (`nothing to commit, working tree clean`) | Verified |
 | **Flutter Version** | `3.44.6 • channel stable • Tools • Dart 3.12.2` | Supported |
 | **Static Analyzer** | `flutter analyze` — **No issues found!** (0 errors, 0 warnings) | Clean |
-| **Automated Tests** | `flutter test` — **682 tests passed!** (ran in 59s) | 100% Green (0 failures) |
+| **Automated Tests** | `flutter test` — **687 tests passed!** (ran in 55s) | 100% Green (0 failures) |
 | **Defined Routes** | **99 distinct routes** (`lib/src/app/routes/routes.dart`) | Complete inventory |
 | **Screen Modules** | **31 presentation modules + 9 root service domains (40 total)** | Complete inventory |
 | **Languages Supported** | 6 locales: `fa` (Persian), `en` (English), `ar` (Arabic), `ru` (Russian), `tr` (Turkish), `zh` (Chinese) | All generated & synced |

@@ -24,12 +24,14 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   final FlutterSecureStorage _secure;
 
   AppLockService({FlutterSecureStorage? secureStorage})
-      : _secure = secureStorage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(encryptedSharedPreferences: true),
-              iOptions:
-                  IOSOptions(accessibility: KeychainAccessibility.first_unlock),
-            );
+    : _secure =
+          secureStorage ??
+          const FlutterSecureStorage(
+            aOptions: AndroidOptions(encryptedSharedPreferences: true),
+            iOptions: IOSOptions(
+              accessibility: KeychainAccessibility.first_unlock,
+            ),
+          );
 
   final RxBool locked = false.obs;
   final RxInt failedAttempts = 0.obs;
@@ -81,7 +83,8 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
     try {
       if (Get.isRegistered<SettingsService>()) {
         final settings = Get.find<SettingsService>();
-        if (settings.hideBalanceOnBackground.value || settings.isPrivacyMode.value) {
+        if (settings.hideBalanceOnBackground.value ||
+            settings.isPrivacyMode.value) {
           settings.isPrivacyMode.value = true;
         }
       }
@@ -159,15 +162,11 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
       final ok = await verifyPin(pin);
       if (ok) {
         locked.value = false;
-        failedAttempts.value = 0;
-        await _secure.write(key: _failedKey, value: '0');
+        await resetFailedAttempts();
         return true;
       }
       failedAttempts.value++;
-      await _secure.write(
-        key: _failedKey,
-        value: '${failedAttempts.value}',
-      );
+      await _secure.write(key: _failedKey, value: '${failedAttempts.value}');
       return false;
     } catch (e) {
       if (kDebugMode) {
@@ -175,6 +174,15 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
       }
       return false;
     }
+  }
+
+  /// P2-02 (PIN-UX-01): Synchronously and persistently reset failed unlock attempts
+  /// in both reactive state and secure storage.
+  Future<void> resetFailedAttempts() async {
+    failedAttempts.value = 0;
+    try {
+      await _secure.write(key: _failedKey, value: '0');
+    } catch (_) {}
   }
 
   Future<void> setPin(String pin) async {

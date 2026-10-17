@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/network/service/token_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 /// Full-screen PIN gate. Shown by [AppLockWrapper] when locked.
@@ -46,7 +47,7 @@ class _LockScreenState extends State<LockScreen> {
         final ok = await bio.authenticate(reason: reasonText);
         if (ok && mounted) {
           _lock.locked.value = false;
-          _lock.failedAttempts.value = 0;
+          await _lock.resetFailedAttempts();
         }
       }
     } catch (_) {}
@@ -100,6 +101,9 @@ class _LockScreenState extends State<LockScreen> {
 
   Future<void> _forceLogout() async {
     try {
+      if (Get.isRegistered<TokenService>()) {
+        await Get.find<TokenService>().clearToken();
+      }
       if (Get.isRegistered<SettingsService>()) {
         await Get.find<SettingsService>().wipeSession();
       }
@@ -112,9 +116,17 @@ class _LockScreenState extends State<LockScreen> {
     HapticFeedback.lightImpact();
     final go = await Get.dialog<bool>(
       AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        ),
         title: Text(
-          l10nPick(context, en: 'Forgot PIN?', fa: 'فراموشی PIN', ar: 'هل نسيت الرمز؟', zh: '忘记密码？'),
+          l10nPick(
+            context,
+            en: 'Forgot PIN?',
+            fa: 'فراموشی PIN',
+            ar: 'هل نسيت الرمز؟',
+            zh: '忘记密码？',
+          ),
           style: AppTextStyles.titleMedium,
         ),
         content: Text(
@@ -135,7 +147,13 @@ class _LockScreenState extends State<LockScreen> {
           TextButton(
             onPressed: () => Get.back(result: true),
             child: Text(
-              l10nPick(context, en: 'Sign Out', fa: 'خروج', ar: 'خروج', zh: '退出登录'),
+              l10nPick(
+                context,
+                en: 'Sign Out',
+                fa: 'خروج',
+                ar: 'خروج',
+                zh: '退出登录',
+              ),
               style: const TextStyle(color: AppColors.error),
             ),
           ),
@@ -162,7 +180,11 @@ class _LockScreenState extends State<LockScreen> {
                 color: AppColors.white.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.lock_outline_rounded, color: AppColors.white, size: 40),
+              child: const Icon(
+                Icons.lock_outline_rounded,
+                color: AppColors.white,
+                size: 40,
+              ),
             ),
             SizedBox(height: AppSpacing.lg),
             Text(
@@ -203,7 +225,9 @@ class _LockScreenState extends State<LockScreen> {
                   height: 14,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: filled ? AppColors.white : AppColors.white.withValues(alpha: 0.25),
+                    color: filled
+                        ? AppColors.white
+                        : AppColors.white.withValues(alpha: 0.25),
                   ),
                 );
               }),

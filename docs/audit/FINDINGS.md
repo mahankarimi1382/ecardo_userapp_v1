@@ -1,10 +1,10 @@
 # eCardo User App (v1) — Comprehensive Audit Findings & Verification Matrix
 
-**Audit Date:** 2026-10-15  
+**Audit Date:** 2026-10-17  
 **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
-**Inspected Commit SHA:** `de37b1ea0d2b9769ae38ea3d637f181d62149209` (`de37b1e`)  
-**Inspected Branch:** `main` (clean working tree)  
-**Standard Reference:** OWASP MASVS / MASTG & `ecardo_userapp_v1_reaudit_2026-10-15_fa.md`
+**Inspected Commit SHA:** `7bce9ba` (v1.0.171+171)  
+**Inspected Branch:** `main`  
+**Standard Reference:** OWASP MASVS / MASTG & `ecardo_userapp_v1_full_reaudit_2026-10-17_fa.md`
 
 ---
 
@@ -12,12 +12,20 @@
 
 | ID | Domain / Scope | Severity | Status in Codebase | Resolution & Verification |
 | :--- | :--- | :--- | :--- | :--- |
+| **P0-STARTUP** | Cold Start Black Screen & Native FLAG_SECURE | **P0** | **CONFIRMED RESOLVED** | Removed unconditional `FLAG_SECURE` in `MainActivity.kt`; added 4s/6s init timeouts in `main.dart` & 3.5s splash watchdog |
+| **SEC-OFFLINE-01 (P0-01)** | Offline Request Queue Password Vulnerability | **P0** | **CONFIRMED RESOLVED** | Removed `/user/settings/change-password` from allowlist; blocked all auth, password, pin, otp, kyc, and financial endpoints |
+| **FIN-IDEM-01 (P0-02)** | Idempotency Key Premature Release on 5xx | **P0** | **CONFIRMED RESOLVED** | Retain idempotency key across HTTP 5xx ambiguous server errors, timeouts, and socket drops to prevent double debits |
+| **FIN-IDEM-02 (P1-02)** | Header Naming Compatibility Contract | **P1** | **CONFIRMED RESOLVED** | NetworkService attaches both `Idempotency-Key` and `X-Idempotency-Key` simultaneously for 100% server compatibility |
+| **SEC-LOGOUT-01 (P1-03)** | TokenService & Force Logout Leakage | **P1** | **CONFIRMED RESOLVED** | `clearToken()` wipes both secure storage and legacy SharedPreferences; `_forceLogout()` explicitly clears token |
+| **PIN-UX-01 (P2-02)** | Biometric Unlock Failed Attempts Reset | **P2** | **CONFIRMED RESOLVED** | `resetFailedAttempts()` synchronously resets reactive count and persists '0' to secure storage upon successful biometric auth |
+| **A11Y-01 (P2-04)** | Accessibility Text Scaler Restrictive Clamp | **P2** | **CONFIRMED RESOLVED** | Increased `maxScaleFactor` clamp in `app.dart` to 1.8 to respect user accessibility preferences |
+| **CI-FMT-01 (P1-04)** | CI Dart Format Gate False Green Detection | **P1** | **CONFIRMED RESOLVED** | Refactored formatting gate in `flutter.yml` to dynamically resolve base ref (`github.base_ref` / `event.before` / `HEAD~1`) |
 | **SEC-01** | Release Signing & Keystore Integrity | **P0** | **CONFIRMED RESOLVED (Android)** | Android fail-closed verified; R8/minification enabled; `--obfuscate` in CI |
 | **SEC-02** | Plaintext Password Storage for Biometrics | **P0** | **CONFIRMED RESOLVED** | Legacy `getLoggedInUserPassword()` & `biometricPassword` completely pruned; token-based biometric flow |
 | **SEC-03** | Token Storage & Session Expiration | **P0** | **CONFIRMED RESOLVED** | Verified: `FlutterSecureStorage` + Keystore/Keychain + 30m idle session timeout |
-| **SEC-04** | App Inactivity Lock & Screen Privacy | **P0** | **CONFIRMED RESOLVED (Android)** | Native Android `FLAG_SECURE` in `MainActivity.kt` + `AppLockService` lifecycle timeout |
+| **SEC-04** | App Inactivity Lock & Screen Privacy | **P0** | **CONFIRMED RESOLVED (Android)** | `AppLockService` lifecycle timeout & reactive background privacy obscuring without emulator black screen |
 | **BRAND-01 / FIND-001** | Brand Identity & Firebase Metadata | **P1** | **CONFIRMED RESOLVED** | `firebase.json` app IDs reconciled with `ecardo-app` (`1:292987494106:...`) across Android & iOS |
-| **FIN-01** | Financial Logic, Math & Idempotency | **P0** | **CONFIRMED RESOLVED** | 23 endpoints protected with `X-Idempotency-Key`; money rounding rules verified |
+| **FIN-01** | Financial Logic, Math & Idempotency | **P0** | **CONFIRMED RESOLVED** | 23 endpoints protected with `X-Idempotency-Key` & `Idempotency-Key`; money rounding rules verified |
 | **API-01** | Network Timeouts & 401 Refresh Mutex | **P1** | **CONFIRMED RESOLVED** | Verified: Mutex queue in `NetworkService:275-334` |
 | **API-02** | False Logout Bug on Retried Request Failure | **P1** | **CONFIRMED RESOLVED** | Fixed in `NetworkService`: propagated via `handler.next(error)` without unauthorized logout |
 | **API-03** | Retry Interceptor Wiped by Clear() | **P1** | **CONFIRMED RESOLVED** | Fixed: `_TransportRetryInterceptor` re-registered in `_setupInterceptors()` |

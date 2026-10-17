@@ -17,7 +17,8 @@ import 'package:shared_preferences/shared_preferences.dart' as legacy_sp;
 /// with storage permission) to read and impersonate the user.
 class TokenService extends GetxService {
   static const String accessTokenKey = 'access_token';
-  static const String _legacyKey = 'access_token'; // same key in SharedPreferences
+  static const String _legacyKey =
+      'access_token'; // same key in SharedPreferences
 
   /// Android-specific options: encrypted with Keystore, require device unlock.
   static const AndroidOptions _androidOptions = AndroidOptions(
@@ -33,11 +34,12 @@ class TokenService extends GetxService {
   final FlutterSecureStorage _secureStorage;
 
   TokenService({FlutterSecureStorage? secureStorage})
-      : _secureStorage = secureStorage ??
-            const FlutterSecureStorage(
-              aOptions: _androidOptions,
-              iOptions: _iosOptions,
-            );
+    : _secureStorage =
+          secureStorage ??
+          const FlutterSecureStorage(
+            aOptions: _androidOptions,
+            iOptions: _iosOptions,
+          );
 
   /// The reactive access token (null when logged out).
   final Rx<String?> accessToken = Rx<String?>(null);
@@ -67,13 +69,23 @@ class TokenService extends GetxService {
       // Try secure storage first
       String? token = await _secureStorage.read(key: accessTokenKey);
 
-      // If not in secure storage, try migrating from SharedPreferences
-      token ??= await _migrateFromLegacyStorage();
+      if (token != null && token.isNotEmpty) {
+        accessToken.value = token;
+        // P1-03: purge lingering legacy plaintext token now that secure token exists
+        try {
+          final prefs = await legacy_sp.SharedPreferences.getInstance();
+          await prefs.remove(_legacyKey);
+        } catch (_) {}
+      } else {
+        // If not in secure storage, try migrating from SharedPreferences
+        token = await _migrateFromLegacyStorage();
+        accessToken.value = token;
+      }
 
-      accessToken.value = token;
       if (kDebugMode) {
         debugPrint(
-            '🔑 TokenService: token loaded (${token != null ? "present" : "absent"})');
+          '🔑 TokenService: token loaded (${token != null ? "present" : "absent"})',
+        );
       }
     } catch (e) {
       debugPrint('🔑 TokenService: failed to load token: $e');
@@ -89,6 +101,11 @@ class TokenService extends GetxService {
     try {
       await _secureStorage.write(key: accessTokenKey, value: token);
       accessToken.value = token;
+      // P1-03: Ensure legacy plaintext storage is purged immediately on save
+      try {
+        final prefs = await legacy_sp.SharedPreferences.getInstance();
+        await prefs.remove(_legacyKey);
+      } catch (_) {}
       if (kDebugMode) {
         debugPrint('🔑 TokenService: token saved securely');
       }
@@ -103,10 +120,15 @@ class TokenService extends GetxService {
   }
 
   /// Clear the access token (logout).
+  /// P1-03 (SEC-LOGOUT-01): Clears both secure storage and legacy plaintext storage.
   Future<bool> clearToken() async {
     accessToken.value = null;
     try {
       await _secureStorage.delete(key: accessTokenKey);
+      try {
+        final prefs = await legacy_sp.SharedPreferences.getInstance();
+        await prefs.remove(_legacyKey);
+      } catch (_) {}
       if (kDebugMode) {
         debugPrint('🔑 TokenService: token cleared');
       }
@@ -133,7 +155,8 @@ class TokenService extends GetxService {
 
       if (kDebugMode) {
         debugPrint(
-            '🔑 TokenService: migrated token from SharedPreferences to secure storage');
+          '🔑 TokenService: migrated token from SharedPreferences to secure storage',
+        );
       }
       return legacyToken;
     } catch (e) {

@@ -22,18 +22,25 @@ class OfflineRequestQueue extends GetxService {
   StreamSubscription? _sub;
   bool _flushing = false;
 
-  // v1.0.88 — fixed whitelist: previous values did not match real endpoints
-  // so no offline POSTs were ever queued. Real endpoints used by app:
-  // /user/settings/profile, /setup-fcm, /change-language/{code}, etc.
+  // v1.0.171 — SEC-OFFLINE-01: strictly non-sensitive, idempotent endpoints only.
+  // Sensitive endpoints (password, auth, financial, KYC, OTP) are strictly forbidden.
   static const _allowedPrefixes = <String>[
     '/user/settings/profile',
-    '/user/settings/change-password',
     '/setup-fcm',
     '/change-language/',
     '/mark-as-read-notification',
   ];
 
   static const _blockedKeywords = <String>[
+    'password',
+    'passcode',
+    'pin',
+    'otp',
+    'auth',
+    'login',
+    'register',
+    'kyc',
+    'secret',
     'transfer',
     'withdraw',
     'deposit',

@@ -3,7 +3,7 @@
 [![Flutter Version](https://img.shields.io/badge/Flutter-3.44.6-blue.svg)](https://flutter.dev)
 [![Dart Version](https://img.shields.io/badge/Dart-3.12.2-blue.svg)](https://dart.dev)
 [![Application ID](https://img.shields.io/badge/Application%20ID-com.ecardo.user-green.svg)](android/app/build.gradle.kts)
-[![Tests Passing](https://img.shields.io/badge/Tests-646%20Passing-brightgreen.svg)](test/)
+[![Tests Passing](https://img.shields.io/badge/Tests-687%20Passing-brightgreen.svg)](test/)
 [![Static Analysis](https://img.shields.io/badge/Analyze-0%20Issues-brightgreen.svg)](analysis_options.yaml)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)]()
 
@@ -23,12 +23,12 @@ The `ecardo_userapp_v1` codebase represents a fully rebranded, hardened, and loc
 | **Credential Storage** | Plaintext `SharedPreferences` | **`FlutterSecureStorage`** (Android Keystore / iOS Keychain) with automatic migration from legacy storage |
 | **Biometric Auth** | Stored plaintext password | Biometric challenge & secure bearer token; zero plaintext password persistence |
 | **Network Security** | No certificate pinning | **Runtime SSL certificate pinning** (`SslPinningConfig`) with fail-closed gates for `ecardo.ir` and `trip.ecardo.ir` |
-| **Screen Privacy** | App switcher exposes data | Android **`FLAG_SECURE`** enabled in `MainActivity.kt` |
-| **Financial Safety** | Unprotected mutations | **Idempotency keys** (`X-Idempotency-Key`) across 23 financial endpoints |
+| **Screen Privacy** | App switcher exposes data | **`AppLockService` background privacy protection** and balance obscuring with zero-freeze cold start |
+| **Financial Safety** | Unprotected mutations | **Idempotency keys** (`Idempotency-Key` & `X-Idempotency-Key`) across 23 financial endpoints with 5xx error retention |
 | **Localization** | English & Arabic only | **6 complete locales**: Persian (`fa`), Arabic (`ar`), English (`en`), Russian (`ru`), Turkish (`tr`), Chinese (`zh`) |
 | **Typography** | Latin-only Plus Jakarta Sans | **`Vazirmatn`** (Persian & Arabic), **`Plus Jakarta Sans`** (Latin), **`NotoSansRU`** (Cyrillic) |
 | **Calendar Support** | Gregorian only | **Shamsi (Jalali)** solar calendar (`shamsi_date`) with Shamsi date picker + Gregorian for international locales |
-| **Build & CI/CD** | Debug-signed APKs | **Fail-closed release signing**, R8 minification, `--obfuscate --split-debug-info`, smart changed-files format gate, automated 646 test suite |
+| **Build & CI/CD** | Debug-signed APKs | **Fail-closed release signing**, R8 minification, `--obfuscate --split-debug-info`, smart changed-files format gate, automated 687 test suite |
 
 ---
 
@@ -138,23 +138,23 @@ Firebase configuration is fully reconciled with the production Google Cloud proj
 
 ## 7. Quality Assurance & Testing Suite
 
-### 7.1 Automated Test Suite (646 Tests)
-The repository contains **646 passing automated tests** verifying financial logic, state machines, and UI components:
+### 7.1 Automated Test Suite (687 Tests)
+The repository contains **687 passing automated tests** verifying financial logic, state machines, and UI components:
 ```bash
 $ flutter test
-01:14 +646: All tests passed!
+00:55 +687: All tests passed!
 ```
-- **Financial Math**: Rounding rules, fee deductions, balance debit/credit idempotency (`money_math_helper_test.dart`).
+- **Financial Math & Idempotency**: Rounding rules, fee deductions, balance debit/credit idempotency, 5xx key retention (`money_math_helper_test.dart`, `workstream_b_idempotency_logging_test.dart`, `reaudit_security_invariants_test.dart`).
 - **Exchange Logic**: Cross-rate calculations, rate inversion safety, rate lock timeouts (`exchange_controller_test.dart`).
 - **RTL & Widget Geometry**: Directionality mirroring, swipe slider limits, wallet card flipping (`wallet_card_rtl_test.dart`).
 - **Input Validation**: Sheba mod-97-10 checksums, card Luhn validation (`withdraw_modernization_qc_test.dart`).
-- **Session & Security**: Token migration, app lock timeouts, PIN hashing (`app_lock_service_test.dart`).
+- **Session & Security**: Token migration, offline request queue hardening, app lock timeouts, persistent PIN hashing (`app_lock_service_test.dart`, `workstream_a_session_pin_test.dart`).
 
 ### 7.2 Static Code Analysis
 ```bash
 $ flutter analyze
 Analyzing ecardo_userapp_v1...
-No issues found! (ran in 107.5s)
+No issues found! (ran in 6.7s)
 ```
 The codebase maintains **0 analyzer errors** and adheres to strict linting rules.
 
@@ -166,14 +166,22 @@ The GitHub Actions workflow (`.github/workflows/flutter.yml`) automates build, t
 
 1. **Smart Changed-Files Formatting Gate**:
    ```bash
-   CHANGED_DART_FILES=$(git diff --name-only origin/main...HEAD 2>/dev/null | grep '\.dart$' || true)
+   BASE_REF=""
+   if [ "${{ github.event_name }}" = "pull_request" ]; then
+     BASE_REF="origin/${{ github.base_ref }}"
+   elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+     BASE_REF="${{ github.event.before }}"
+   else
+     BASE_REF="HEAD~1"
+   fi
+   CHANGED_DART_FILES=$(git diff --name-only "$BASE_REF"...HEAD 2>/dev/null | grep '\.dart$' || true)
    if [ -n "$CHANGED_DART_FILES" ]; then
      dart format --output=none --set-exit-if-changed $CHANGED_DART_FILES
    fi
    ```
 2. **Localization Generation**: Executes `flutter gen-l10n` to ensure all 6 ARB catalogs compile cleanly.
 3. **Static Analyzer Gate**: Runs `flutter analyze` with failure on any compiler or analysis error.
-4. **Automated Test Gate**: Executes the complete 646-test suite via `flutter test`.
+4. **Automated Test Gate**: Executes the complete 687-test suite via `flutter test`.
 5. **Signed Release Pipeline**:
    - Compiles release APK with `--obfuscate --split-debug-info=build/symbols --split-per-abi`.
    - Injects runtime SSL certificate pins (`ECARDO_CERT_PIN`).

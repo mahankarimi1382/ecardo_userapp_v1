@@ -79,13 +79,22 @@ jobs:
       - name: Check code formatting on changed files
         shell: bash
         run: |
-          CHANGED_DART_FILES=$(git diff --name-only origin/main...HEAD 2>/dev/null | grep '\.dart$' || true)
+          BASE_REF=""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_REF="origin/${{ github.base_ref }}"
+          elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            BASE_REF="${{ github.event.before }}"
+          else
+            BASE_REF="HEAD~1"
+          fi
+          echo "Comparing against base ref: $BASE_REF"
+          CHANGED_DART_FILES=$(git diff --name-only "$BASE_REF"...HEAD 2>/dev/null | grep '\.dart$' || true)
           if [ -n "$CHANGED_DART_FILES" ]; then
-            echo "Checking formatting on changed Dart files:"
+            echo "Checking formatting on $(echo "$CHANGED_DART_FILES" | wc -l) changed Dart files:"
             echo "$CHANGED_DART_FILES"
             dart format --output=none --set-exit-if-changed $CHANGED_DART_FILES
           else
-            echo "No changed Dart files to format."
+            echo "No changed Dart files detected in diff against $BASE_REF."
           fi
 
       - name: Run Analyze (errors are fatal)
