@@ -109,13 +109,23 @@ class _SplashScreenState extends State<SplashScreen>
 
     _introController.forward();
 
+    bool hasNavigated = false;
+    void proceedToNextScreen() {
+      if (!hasNavigated && mounted) {
+        hasNavigated = true;
+        splashController.navigateBasedOnAuth();
+      }
+    }
+
     _settingsWorker = ever(settingsService.isSettingsDataLoad, (isLoaded) {
       if (isLoaded == true) {
-        Future.delayed(const Duration(milliseconds: 900), () {
-          if (mounted) splashController.navigateBasedOnAuth();
-        });
+        Future.delayed(const Duration(milliseconds: 900), proceedToNextScreen);
       }
     });
+
+    // Fail-safe watchdog: splash screen must NEVER freeze or hang indefinitely.
+    // If settings API times out or drops on a weak network, proceed automatically after 3.5s.
+    Future.delayed(const Duration(milliseconds: 3500), proceedToNextScreen);
   }
 
   Future<void> _loadVersion() async {

@@ -54,18 +54,28 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!kIsWeb) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  }
-  // phase1-fix (P0-14): only synchronous, local service registration before
-  // the first frame. The notification permission dialog and FCM token
-  // network calls move to post-first-frame so cold start can never hang.
-  await _initializeServices();
-  _configureUI();
   _installGlobalErrorHandlers();
+  _configureUI();
+
+  if (!kIsWeb) {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ).timeout(const Duration(seconds: 4));
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    } catch (e) {
+      debugPrint('⚠️ Firebase.initializeApp error or timeout: $e');
+    }
+  }
+
+  // phase1-fix (P0-14): only local service registration before the first frame.
+  // Enforce timeouts on all native storage/keystore calls so cold start can NEVER hang.
+  try {
+    await _initializeServices().timeout(const Duration(seconds: 6));
+  } catch (e, st) {
+    debugPrint('⚠️ _initializeServices error or timeout: $e\n$st');
+  }
+
   runApp(const EcardoUser());
 
   if (!kIsWeb) {
@@ -162,17 +172,27 @@ void _installGlobalErrorHandlers() {
 
 Future<void> _initializeServices() async {
   final settingsService = Get.put(SettingsService());
-  await settingsService.init();
+  try {
+    await settingsService.init().timeout(const Duration(seconds: 3));
+  } catch (e) {
+    debugPrint('⚠️ settingsService.init timeout or error: $e');
+  }
+
   // Register the in-app self-update controller for the user app.
-  // Pass [AppUpdateConfig.merchant] / [AppUpdateConfig.agent] in the
-  // respective merchant / agent apps.
   Get.put<AppUpdateController>(
     AppUpdateController(config: AppUpdateConfig.user),
     permanent: true,
   );
+
   final tokenService = Get.put<TokenService>(TokenService());
-  // Ensure token service is ready before subsequent services or network requests dispatch
-  await tokenService.isReady;
+  // Ensure token service is ready before subsequent services or network requests dispatch,
+  // bounded by a 3-second timeout so a platform keystore lockup never halts the boot sequence.
+  try {
+    await tokenService.isReady.timeout(const Duration(seconds: 3));
+  } catch (e) {
+    debugPrint('⚠️ tokenService.isReady timeout or error: $e');
+  }
+
   if (kDebugMode) {
     Get.put<DemoAccountService>(DemoAccountService(), permanent: true);
   }
@@ -182,9 +202,27 @@ Future<void> _initializeServices() async {
   Get.put<AppBadgeService>(AppBadgeService(), permanent: true);
   Get.put<OfflineRequestQueue>(OfflineRequestQueue(), permanent: true);
   Get.put<OfflineCacheService>(OfflineCacheService(), permanent: true);
-  await Get.putAsync<AppLockService>(() async => AppLockService().init(), permanent: true);
-  await settingsService.migrateLegacyPin();
-  await Get.putAsync<LocaleThemeService>(() async => LocaleThemeService().init(), permanent: true);
+
+  try {
+    await Get.putAsync<AppLockService>(() async => AppLockService().init(), permanent: true)
+        .timeout(const Duration(seconds: 3));
+  } catch (e) {
+    debugPrint('⚠️ AppLockService.init timeout or error: $e');
+  }
+
+  try {
+    await settingsService.migrateLegacyPin().timeout(const Duration(seconds: 2));
+  } catch (e) {
+    debugPrint('⚠️ migrateLegacyPin timeout or error: $e');
+  }
+
+  try {
+    await Get.putAsync<LocaleThemeService>(() async => LocaleThemeService().init(), permanent: true)
+        .timeout(const Duration(seconds: 3));
+  } catch (e) {
+    debugPrint('⚠️ LocaleThemeService.init timeout or error: $e');
+  }
+
   Future.microtask(() => Get.find<OfflineRequestQueue>().init());
   Future.microtask(() => Get.find<NotificationHistoryService>().init());
   Future.microtask(() => Get.find<AppBadgeService>().init());
