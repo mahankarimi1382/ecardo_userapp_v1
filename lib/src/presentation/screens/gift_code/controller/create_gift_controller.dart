@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_code/model/gift_config_model.dart';
 import 'package:ecardo_user/src/presentation/screens/gift_code/model/gift_wallet_model.dart';
 
@@ -295,11 +296,35 @@ class CreateGiftController extends GetxController {
         currentStep.value = 2;
         clearFields();
         ToastHelper().showSuccessToast(response.data!["message"]);
+      } else if (response.status == Status.error) {
+        final msg = response.message?.toLowerCase() ?? '';
+        if (msg.contains('passcode')) {
+          isCreateGiftLoading.value = false;
+          final dynamic verified = await Get.bottomSheet<dynamic>(
+            const VerifyPasscodeBottomSheet(),
+          );
+          if (verified != null && verified.toString().isNotEmpty) {
+            await createGift(passcode: verified.toString());
+            return;
+          }
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ createGift() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      final errStr = e.toString().toLowerCase();
+      if (errStr.contains('passcode')) {
+        isCreateGiftLoading.value = false;
+        final dynamic verified = await Get.bottomSheet<dynamic>(
+          const VerifyPasscodeBottomSheet(),
+        );
+        if (verified != null && verified.toString().isNotEmpty) {
+          await createGift(passcode: verified.toString());
+          return;
+        }
+      } else {
+        ToastHelper().showErrorToast(localization.allControllerLoadError);
+      }
     } finally {
       isCreateGiftLoading.value = false;
     }

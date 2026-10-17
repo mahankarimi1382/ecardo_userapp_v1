@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/model/payment_settings_model.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/model/payment_wallet_model.dart';
 
@@ -190,11 +191,35 @@ class MakePaymentController extends GetxController {
         ToastHelper().showSuccessToast(response.data!["message"]);
         successPaymentData.value = response.data!['data'];
         currentStep.value = 2;
+      } else if (response.status == Status.error) {
+        final msg = response.message?.toLowerCase() ?? '';
+        if (msg.contains('passcode')) {
+          isMakePaymentLoading.value = false;
+          final dynamic verified = await Get.bottomSheet<dynamic>(
+            const VerifyPasscodeBottomSheet(),
+          );
+          if (verified != null && verified.toString().isNotEmpty) {
+            await makePayment(passcode: verified.toString());
+            return;
+          }
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ makePayment() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization.allControllerLoadError);
+      final errStr = e.toString().toLowerCase();
+      if (errStr.contains('passcode')) {
+        isMakePaymentLoading.value = false;
+        final dynamic verified = await Get.bottomSheet<dynamic>(
+          const VerifyPasscodeBottomSheet(),
+        );
+        if (verified != null && verified.toString().isNotEmpty) {
+          await makePayment(passcode: verified.toString());
+          return;
+        }
+      } else {
+        ToastHelper().showErrorToast(localization.allControllerLoadError);
+      }
     } finally {
       isMakePaymentLoading.value = false;
     }

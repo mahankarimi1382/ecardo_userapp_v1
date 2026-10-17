@@ -406,7 +406,17 @@ class CreateVirtualCardController extends GetxController {
           'application_data': _applicationData(product.applicationFields),
         },
       );
-      if (response.status != Status.completed) return;
+      if (response.status != Status.completed) {
+        final errorMsg = response.message ?? '';
+        ToastHelper().showErrorToast(
+          errorMsg.contains('Insufficient') || errorMsg.contains('balance')
+              ? 'موجودی کیف پول انتخابی کافی نیست. لطفاً ابتدا کیف پول خود را شارژ یا تبدیل فرمایید.'
+              : errorMsg.isNotEmpty
+                  ? errorMsg
+                  : (localization?.allControllerLoadError ?? 'خطا در ثبت سفارش کارت'),
+        );
+        return;
+      }
 
       final responseData = response.data!['data'];
       final data = responseData is Map
@@ -519,10 +529,19 @@ class CreateVirtualCardController extends GetxController {
       );
       return false;
     }
-    if ((fundingSource.value == 'irr_wallet' || fundingSource.value == 'wallet') &&
-        selectedIrrWallet.value == null) {
-      ToastHelper().showErrorToast('Please select a funding wallet.');
-      return false;
+    if (fundingSource.value == 'irr_wallet' || fundingSource.value == 'wallet') {
+      if (selectedIrrWallet.value == null) {
+        ToastHelper().showErrorToast('Please select a funding wallet.');
+        return false;
+      }
+      final walletBal = double.tryParse(selectedIrrWallet.value?.balance ?? '0') ?? 0.0;
+      final requiredTotal = amount + product.creationFee;
+      if (walletBal < requiredTotal) {
+        ToastHelper().showErrorToast(
+          'موجودی کیف پول انتخابی کمتر از مبلغ مورد نیاز (${requiredTotal.toInt()} ${product.currency ?? "IRR"}) است. لطفاً ابتدا کیف پول خود را شارژ یا تبدیل فرمایید.',
+        );
+        return false;
+      }
     }
     if (fundingSource.value == 'gateway' && selectedGateway.value == null) {
       ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcSelectGateway);

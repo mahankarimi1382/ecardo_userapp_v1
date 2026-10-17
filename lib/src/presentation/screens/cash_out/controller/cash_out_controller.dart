@@ -14,6 +14,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/model/cash_out_config_model.dart';
 import 'package:ecardo_user/src/presentation/screens/cash_out/model/cash_out_wallet_model.dart';
 
@@ -343,6 +344,16 @@ class CashOutController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
+        if (msg.contains('passcode')) {
+          isCashOutLoading.value = false;
+          final dynamic verified = await Get.bottomSheet<dynamic>(
+            const VerifyPasscodeBottomSheet(),
+          );
+          if (verified != null && verified.toString().isNotEmpty) {
+            await cashOut(passcode: verified.toString());
+            return;
+          }
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ cashOut() error: $e');
@@ -366,6 +377,15 @@ class CashOutController extends GetxController {
             zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复提现。',
           ),
         );
+      } else if (errStr.contains('passcode')) {
+        isCashOutLoading.value = false;
+        final dynamic verified = await Get.bottomSheet<dynamic>(
+          const VerifyPasscodeBottomSheet(),
+        );
+        if (verified != null && verified.toString().isNotEmpty) {
+          await cashOut(passcode: verified.toString());
+          return;
+        }
       } else {
         ToastHelper().showErrorToast(
           localization?.allControllerLoadError ?? 'An error occurred while loading data.',

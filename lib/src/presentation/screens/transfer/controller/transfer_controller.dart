@@ -16,6 +16,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/model/transfer_config_model.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/model/transfer_wallet_model.dart';
 
@@ -354,6 +355,16 @@ class TransferController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
+        if (msg.contains('passcode')) {
+          isTransferAmountLoading.value = false;
+          final dynamic verified = await Get.bottomSheet<dynamic>(
+            const VerifyPasscodeBottomSheet(),
+          );
+          if (verified != null && verified.toString().isNotEmpty) {
+            await transferAmount(passcode: verified.toString());
+            return;
+          }
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ transferAmount() error: $e');
@@ -377,6 +388,15 @@ class TransferController extends GetxController {
             zh: '请求响应超时。请在重试前在交易记录中核实，以避免重复转账。',
           ),
         );
+      } else if (errStr.contains('passcode')) {
+        isTransferAmountLoading.value = false;
+        final dynamic verified = await Get.bottomSheet<dynamic>(
+          const VerifyPasscodeBottomSheet(),
+        );
+        if (verified != null && verified.toString().isNotEmpty) {
+          await transferAmount(passcode: verified.toString());
+          return;
+        }
       } else {
         ToastHelper().showErrorToast(localization.allControllerLoadError);
       }
