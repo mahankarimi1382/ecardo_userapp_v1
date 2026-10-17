@@ -93,15 +93,13 @@ class _SplashScreenState extends State<SplashScreen>
       parent: _introController,
       curve: const Interval(0.35, 0.75, curve: Curves.easeOut),
     );
-    _wordSlide = Tween<Offset>(
-      begin: const Offset(0, 0.35),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _introController,
-        curve: const Interval(0.35, 0.8, curve: Curves.easeOutCubic),
-      ),
-    );
+    _wordSlide = Tween<Offset>(begin: const Offset(0, 0.35), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _introController,
+            curve: const Interval(0.35, 0.8, curve: Curves.easeOutCubic),
+          ),
+        );
     _tagFade = CurvedAnimation(
       parent: _introController,
       curve: const Interval(0.55, 1.0, curve: Curves.easeOut),
@@ -222,12 +220,16 @@ class _SplashScreenState extends State<SplashScreen>
                                   ],
                                 ),
                                 border: Border.all(
-                                  color: AppColors.white.withValues(alpha: 0.35),
+                                  color: AppColors.white.withValues(
+                                    alpha: 0.35,
+                                  ),
                                   width: 1.2,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.black.withValues(alpha: 0.28),
+                                    color: AppColors.black.withValues(
+                                      alpha: 0.28,
+                                    ),
                                     blurRadius: 32,
                                     offset: const Offset(0, 14),
                                   ),
@@ -296,10 +298,10 @@ class _SplashScreenState extends State<SplashScreen>
                               return CustomPaint(
                                 painter: _SplashProgressPainter(
                                   progress: _progressController.value,
-                                  color:
-                                      AppColors.white.withValues(alpha: 0.9),
-                                  track:
-                                      AppColors.white.withValues(alpha: 0.18),
+                                  color: AppColors.white.withValues(alpha: 0.9),
+                                  track: AppColors.white.withValues(
+                                    alpha: 0.18,
+                                  ),
                                 ),
                               );
                             },

@@ -62,7 +62,9 @@ Future<void> main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ).timeout(const Duration(seconds: 4));
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+        _firebaseMessagingBackgroundHandler,
+      );
     } catch (e) {
       debugPrint('⚠️ Firebase.initializeApp error or timeout: $e');
     }
@@ -114,8 +116,8 @@ void _installGlobalErrorHandlers() {
     );
     // DARK-FIX: the error card used to render light-only; follow the
     // platform brightness so it doesn't flash white in dark mode.
-    final isDark = WidgetsBinding
-            .instance.platformDispatcher.platformBrightness ==
+    final isDark =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness ==
         Brightness.dark;
     return Material(
       color: isDark ? const Color(0xFF1A1824) : const Color(0xFFF8F8F8),
@@ -139,7 +141,9 @@ void _installGlobalErrorHandlers() {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: isDark ? AppColors.warmWhite : const Color(0xFF2D2D2D),
+                    color: isDark
+                        ? AppColors.warmWhite
+                        : const Color(0xFF2D2D2D),
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -148,7 +152,9 @@ void _installGlobalErrorHandlers() {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    color: isDark ? const Color(0xFFB0ADB8) : const Color(0xFF757575),
+                    color: isDark
+                        ? const Color(0xFFB0ADB8)
+                        : const Color(0xFF757575),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -158,7 +164,9 @@ void _installGlobalErrorHandlers() {
                   overflow: TextOverflow.fade,
                   style: TextStyle(
                     fontSize: 10,
-                    color: isDark ? const Color(0xFF8B8894) : const Color(0xFF9E9E9E),
+                    color: isDark
+                        ? const Color(0xFF8B8894)
+                        : const Color(0xFF9E9E9E),
                   ),
                 ),
               ],
@@ -198,27 +206,36 @@ Future<void> _initializeServices() async {
   }
   Get.put(NetworkService());
   Get.put<PermissionFlowService>(PermissionFlowService(), permanent: true);
-  Get.put<NotificationHistoryService>(NotificationHistoryService(), permanent: true);
+  Get.put<NotificationHistoryService>(
+    NotificationHistoryService(),
+    permanent: true,
+  );
   Get.put<AppBadgeService>(AppBadgeService(), permanent: true);
   Get.put<OfflineRequestQueue>(OfflineRequestQueue(), permanent: true);
   Get.put<OfflineCacheService>(OfflineCacheService(), permanent: true);
 
   try {
-    await Get.putAsync<AppLockService>(() async => AppLockService().init(), permanent: true)
-        .timeout(const Duration(seconds: 3));
+    await Get.putAsync<AppLockService>(
+      () async => AppLockService().init(),
+      permanent: true,
+    ).timeout(const Duration(seconds: 3));
   } catch (e) {
     debugPrint('⚠️ AppLockService.init timeout or error: $e');
   }
 
   try {
-    await settingsService.migrateLegacyPin().timeout(const Duration(seconds: 2));
+    await settingsService.migrateLegacyPin().timeout(
+      const Duration(seconds: 2),
+    );
   } catch (e) {
     debugPrint('⚠️ migrateLegacyPin timeout or error: $e');
   }
 
   try {
-    await Get.putAsync<LocaleThemeService>(() async => LocaleThemeService().init(), permanent: true)
-        .timeout(const Duration(seconds: 3));
+    await Get.putAsync<LocaleThemeService>(
+      () async => LocaleThemeService().init(),
+      permanent: true,
+    ).timeout(const Duration(seconds: 3));
   } catch (e) {
     debugPrint('⚠️ LocaleThemeService.init timeout or error: $e');
   }
