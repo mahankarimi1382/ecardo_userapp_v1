@@ -7,7 +7,7 @@
 - **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
 - **Active Git Branch:** `main`  
 - **Active Release Version:** `1.0.173+173` (declared in `pubspec.yaml`)  
-- **Active Release Commit SHA:** `be44e24ec33d4b253f2c00e059f4060c70b8633d` (`be44e24`)  
+- **Active Release Commit SHA:** `HEAD`  
 - **Active Release Git Tag:** `v1.0.173`  
 - **Preceding Build Version:** `1.0.172+172`  
 - **Preceding Build Commit SHA:** `98e899368df43dfe0aa36dac64e5752cd0d661aa` (`98e8993`)  

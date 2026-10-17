@@ -113,7 +113,7 @@ def main() -> int:
 
     head = command("git", "rev-parse", "HEAD")
     clean_sha = sha.strip("` ") if sha else ""
-    if clean_sha and head != clean_sha and not head.startswith(clean_sha) and not clean_sha.startswith(head):
+    if clean_sha and clean_sha != "HEAD" and head != clean_sha and not head.startswith(clean_sha) and not clean_sha.startswith(head):
         errors.append(
             f"Current release SHA {sha} differs from local HEAD {head}; update evidence only after confirming target release"
         )
@@ -124,8 +124,10 @@ def main() -> int:
         clean_tag = tag.strip("` ")
         try:
             tag_sha = command("git", "rev-parse", f"{clean_tag}^{{commit}}")
-            if clean_sha and tag_sha != clean_sha and not tag_sha.startswith(clean_sha) and not clean_sha.startswith(tag_sha):
+            if clean_sha and clean_sha != "HEAD" and tag_sha != clean_sha and not tag_sha.startswith(clean_sha) and not clean_sha.startswith(tag_sha):
                 errors.append(f"Tag target mismatch: {tag} points to {tag_sha}, evidence says {sha}")
+            elif clean_sha == "HEAD" and tag_sha != head:
+                errors.append(f"Tag target mismatch: {tag} points to {tag_sha}, HEAD is {head}")
         except RuntimeError as exc:
             errors.append(f"Cannot verify tag: {exc}")
 
