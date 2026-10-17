@@ -11,19 +11,18 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   # ------------------------------------------------------------------
-  # Gate: analyze + test + APK (debug on main/PR, signed release on tags)
+  # Gate: analyze + test + APK build (debug on main/PR, signed release on tags)
+  # Least-privilege: strictly read-only (contents: read)
   # ------------------------------------------------------------------
   build:
     runs-on: ubuntu-24.04
     permissions:
-      # NOTE: `contents: write` is REQUIRED here — this job publishes the
-      # GitHub Release and the public mirror on `push: tags: v*`. It is
-      # over-broad for the pull_request/main path, where only analyze+test run.
-      # The real fix is splitting the tag-publish steps into their own job;
-      # left in place deliberately rather than breaking the release path.
-      contents: write
+      contents: read
     outputs:
       version: ${{ steps.version.outputs.version }}
 
@@ -250,8 +249,62 @@ jobs:
               print("🔴 UNSIGNED"); sys.exit(2)
           print("✅ SIGNED")
 
-      - name: Publish APK to GitHub Release
+      # Upload release artifacts for tag builds so publish-tag-release can download them
+      - name: Upload Release APK
         if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-apk-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/
+          if-no-files-found: error
+          retention-days: 7
+
+      # wallet-modules v1.0.123: keep obfuscation symbols so field crashes
+      # (error_logs build_id) can be symbolicated to the exact class.
+      - name: Upload Debug Symbols
+        if: startsWith(github.ref, 'refs/tags/v')
+        continue-on-error: true
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: debug-symbols-${{ github.sha }}
+          if-no-files-found: ignore
+          retention-days: 14
+          path: build/symbols/
+
+      - name: Upload Build Log
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: build-log
+          if-no-files-found: warn
+          retention-days: 3
+          path: |
+            build_log.txt
+            analysis_report.txt
+
+  # ------------------------------------------------------------------
+  # On tag: publish the signed release APK built by `build` job,
+  # mirror to public releases repo, and notify production server.
+  # Isolated to least-privilege `contents: write` strictly for publishing.
+  # ------------------------------------------------------------------
+  publish-tag-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Download Release APK
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
+        with:
+          name: release-apk-${{ github.sha }}
+          path: build/app/outputs/flutter-apk
+
+      - name: Publish APK to GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -271,7 +324,6 @@ jobs:
           done
 
       - name: Mirror APK to public releases repo
-        if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ secrets.ECRDO_RELEASE_TOKEN }}
           FALLBACK_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -290,7 +342,6 @@ jobs:
           echo "PUBLIC_URL=https://github.com/${PUB}/releases/download/${PUB_TAG}/${APK_NAME}" >> "$GITHUB_ENV"
 
       - name: Notify eCardo Server of new release
-        if: startsWith(github.ref, 'refs/tags/v')
         env:
           ECARDO_DEPLOY_SECRET: ${{ secrets.ECARDO_DEPLOY_SECRET }}
         run: |
@@ -335,30 +386,15 @@ jobs:
           # notification regression can never look like a green release again.
           python3 -c "import json,sys;n=(json.load(open('notify-result.txt')).get('notification') or {});print('notification:',json.dumps(n,ensure_ascii=False));sys.exit(0 if n.get('sent') else 1)"
 
-      # wallet-modules v1.0.123: keep obfuscation symbols so field crashes
-      # (error_logs build_id) can be symbolicated to the exact class.
-      - name: Upload Debug Symbols
-        if: startsWith(github.ref, 'refs/tags/v')
-        continue-on-error: true
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: debug-symbols-${{ github.sha }}
-          if-no-files-found: ignore
-          retention-days: 14
-          path: build/symbols/
-
-      - name: Upload Build Log
+      - name: Upload Notify Log
         if: always()
         continue-on-error: true
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: build-log
-          if-no-files-found: warn
+          name: notify-log
+          if-no-files-found: ignore
           retention-days: 3
-          path: |
-            build_log.txt
-            analysis_report.txt
-            notify-result.txt
+          path: notify-result.txt
 
   # ------------------------------------------------------------------
   # On main: if pubspec version has no v* tag yet, create tag + full

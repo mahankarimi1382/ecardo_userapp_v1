@@ -4,13 +4,14 @@ Welcome to the engineering, architecture, operations, testing, and product docum
 
 ---
 
-## 1. Release Evidence & Pre-Release Verification (`docs/audit/`)
+## 1. Active Release Dossier & Pre-Release Verification
 Official release readiness certification, cryptographic signing verification, and audit gate matrices:
 
 | Document | Description | Target Release / Gate |
 | :--- | :--- | :--- |
-| **[RELEASE_EVIDENCE.md](audit/RELEASE_EVIDENCE.md)** | **Production Release Evidence & Verification Dossier:** Executive status (Android READY / iOS BLOCKED), commit `5a4abe6`, version `1.0.170+170`, static analyzer output (`No issues found!`, 0 errors, 0 warnings), 682 automated tests passing (100%), Android signing (V1/V2/V3 schemes, R8, ProGuard, `FLAG_SECURE`), GitHub Actions execution evidence (#609, #226), rollback protocol, and key rotation runbook. | **Release v1.0.170** |
-| **[RELEASE_CHECKLIST.md](audit/RELEASE_CHECKLIST.md)** | **Production Release Verification Checklist:** Line-by-line verification of P0 hard gates (G-01 through G-08) and build/packaging requirements (B-01 through B-04), synchronized with commit `5a4abe6` and version `1.0.170+170`. | **Gates G-01–G-08, B-01–B-04** |
+| **[CURRENT_RELEASE.md](CURRENT_RELEASE.md)** | **Canonical Active Release Line Dossier (REL-DOC-01):** Unambiguous reference for active release `v1.0.172+172` (commit `98e8993`) and reference `v1.0.171+171` build (commit `2502823`). Documents 687 automated tests (100% green), static analysis verdict, SharedPreferences R8 NoSuchMethodError fix, Universal FAT APK packaging, FLAG_SECURE removal, full re-audit compliance, and CI runs (#611, #612, #228). | **Active Release v1.0.172+172 / v1.0.171** |
+| **[RELEASE_CHECKLIST.md](audit/RELEASE_CHECKLIST.md)** | **Production Release Verification Checklist:** Line-by-line verification of P0 hard gates (G-01 through G-08) and build/packaging requirements (B-01 through B-04), synchronized with active release line `v1.0.172+172` (and reference `v1.0.171+171`), Universal FAT APK, and 687 test count. | **Gates G-01–G-08, B-01–B-04** |
+| **[RELEASE_EVIDENCE.md](audit/RELEASE_EVIDENCE.md)** | **Production Release Evidence & Verification Dossier (Archived Baseline v1.0.170):** Historical evidence archive for commit `5a4abe6`, version `1.0.170+170`, 682 tests baseline. Active release governance is maintained in `CURRENT_RELEASE.md`. | **Archived Release v1.0.170** |
 
 ---
 

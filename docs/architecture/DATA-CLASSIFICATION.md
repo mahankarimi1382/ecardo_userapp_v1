@@ -152,22 +152,22 @@ The following compiled regex rules are deployed in Layer 2 (Gateway) and Layer 3
 
 ## 6. Data Retention Policies & Index Lifecycle Management (ILM)
 
-Elasticsearch data streams are strictly governed by automated Index Lifecycle Management (ILM) policies. Under no circumstances may logs be retained indefinitely.
+Elasticsearch data streams are strictly governed by automated Index Lifecycle Management (ILM) policies. Under no circumstances may logs be retained indefinitely. In accordance with platform governance mandate **EL-GOV-01**, all services and operations runbooks adhere to a single canonical retention matrix.
 
-### 6.1 Retention Matrix per Data Stream
+### 6.1 Canonical Retention Matrix per Data Stream (EL-GOV-01)
 
 | Data Stream Pattern | Description & Log Content | Retention Period | Storage Lifecycle Phases | Action upon Expiry |
 | :--- | :--- | :--- | :--- | :--- |
-| **`logs-ecardo.mobile-prod`** | Sanitized Flutter mobile app diagnostic logs, route views, client network exceptions. | **14 Days** | **Hot:** Days 1–3 (Primary NVMe, rollover at 25GB or 1 day)<br>**Warm:** Days 4–14 (Read-only, 1 replica, shrink)<br>**Cold:** Skipped | **Hard Delete** at Day 15 |
-| **`logs-ecardo.api-prod`** | Structured backend API access logs, microservice transactions, operational errors. | **30 Days** | **Hot:** Days 1–7 (Rollover at 50GB or 1 day)<br>**Warm:** Days 8–30 (Force merge to 1 segment, compressed)<br>**Cold:** Skipped | **Hard Delete** at Day 31 |
-| **`logs-ecardo.security-prod`** | Security audit trails, auth failures, privilege escalations, password reset triggers. | **90 Days** | **Hot:** Days 1–14<br>**Warm:** Days 15–60 (Single replica)<br>**Cold:** Days 61–90 (Snapshot-backed, searchable snapshot) | **Hard Delete** at Day 91 |
-| **`traces-ecardo-prod`** | Distributed OpenTelemetry APM traces and span performance metrics. | **7 Days** | **Hot:** Days 1–2<br>**Warm:** Days 3–7 | **Hard Delete** at Day 8 |
+| **`logs-ecardo.api-prod`** | Structured backend API access logs, microservice transactions, operational errors. | **90 Days** | **Hot:** Days 1–7 (7d duration, rollover at 50GB or 7d, priority 100)<br>**Warm:** Days 8–30 (23d duration, min_age 7d, force merge to 1 segment, compressed, priority 50)<br>**Cold:** Days 31–90 (60d duration, min_age 30d, searchable snapshots, priority 20) | **Hard Delete** at Day 91 |
+| **`logs-ecardo.security-prod`** | Security audit trails, auth failures, privilege escalations, password reset triggers. | **180 Days** | **Hot:** Days 1–14 (14d duration, rollover at 50GB or 14d, priority 100)<br>**Warm:** Days 15–60 (46d duration, min_age 14d, single replica, force merge, priority 50)<br>**Cold:** Days 61–180 (120d duration, min_age 60d, snapshot-backed searchable snapshots, priority 20) | **Hard Delete** at Day 181 |
+| **`logs-ecardo.mobile-prod`** | Client performance telemetry, sanitized Flutter mobile app diagnostic logs, route views, client network exceptions. | **30 Days** | **Hot:** Days 1–7 (7d duration, rollover at 25GB or 7d, priority 100)<br>**Warm:** Days 8–30 (23d duration, min_age 7d, read-only, force merge to 1 segment, priority 50)<br>**Cold:** Skipped | **Hard Delete** at Day 31 |
+| **`traces-ecardo-prod`** | Raw traces, distributed OpenTelemetry APM spans, and tracing metrics. | **14 Days** | **Hot:** Days 1–3 (3d duration, rollover at 25GB or 3d, priority 100)<br>**Warm:** Days 4–14 (11d duration, min_age 3d, read-only, force merge to 1 segment, priority 50)<br>**Cold:** Skipped | **Hard Delete** at Day 15 |
 
 ---
 
 ### 6.2 Elasticsearch ILM Policy Definitions
 
-#### Policy 1: Mobile Diagnostics (`ecardo-mobile-ilm-policy`) - 14 Days
+#### Policy 1: Client Performance Telemetry (`ecardo-mobile-ilm-policy`) - 30 Days
 ```json
 {
   "policy": {
@@ -177,40 +177,7 @@ Elasticsearch data streams are strictly governed by automated Index Lifecycle Ma
         "actions": {
           "rollover": {
             "max_primary_shard_size": "25GB",
-            "max_age": "1d"
-          },
-          "set_priority": { "priority": 100 }
-        }
-      },
-      "warm": {
-        "min_age": "3d",
-        "actions": {
-          "forcemerge": { "max_num_segments": 1 },
-          "set_priority": { "priority": 50 }
-        }
-      },
-      "delete": {
-        "min_age": "14d",
-        "actions": {
-          "delete": {}
-        }
-      }
-    }
-  }
-}
-```
-
-#### Policy 2: API Operational Logs (`ecardo-api-ilm-policy`) - 30 Days
-```json
-{
-  "policy": {
-    "phases": {
-      "hot": {
-        "min_age": "0ms",
-        "actions": {
-          "rollover": {
-            "max_primary_shard_size": "50GB",
-            "max_age": "1d"
+            "max_age": "7d"
           },
           "set_priority": { "priority": 100 }
         }
@@ -233,7 +200,7 @@ Elasticsearch data streams are strictly governed by automated Index Lifecycle Ma
 }
 ```
 
-#### Policy 3: Security Audit Logs (`ecardo-security-ilm-policy`) - 90 Days
+#### Policy 2: API Operational Logs (`ecardo-api-ilm-policy`) - 90 Days
 ```json
 {
   "policy": {
@@ -244,6 +211,45 @@ Elasticsearch data streams are strictly governed by automated Index Lifecycle Ma
           "rollover": {
             "max_primary_shard_size": "50GB",
             "max_age": "7d"
+          },
+          "set_priority": { "priority": 100 }
+        }
+      },
+      "warm": {
+        "min_age": "7d",
+        "actions": {
+          "forcemerge": { "max_num_segments": 1 },
+          "set_priority": { "priority": 50 }
+        }
+      },
+      "cold": {
+        "min_age": "30d",
+        "actions": {
+          "set_priority": { "priority": 20 }
+        }
+      },
+      "delete": {
+        "min_age": "90d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}
+```
+
+#### Policy 3: Security & Audit Logs (`ecardo-security-ilm-policy`) - 180 Days
+```json
+{
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "rollover": {
+            "max_primary_shard_size": "50GB",
+            "max_age": "14d"
           },
           "set_priority": { "priority": 100 }
         }
@@ -262,7 +268,40 @@ Elasticsearch data streams are strictly governed by automated Index Lifecycle Ma
         }
       },
       "delete": {
-        "min_age": "90d",
+        "min_age": "180d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}
+```
+
+#### Policy 4: Raw Traces / APM Spans (`ecardo-traces-ilm-policy`) - 14 Days
+```json
+{
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "rollover": {
+            "max_primary_shard_size": "25GB",
+            "max_age": "3d"
+          },
+          "set_priority": { "priority": 100 }
+        }
+      },
+      "warm": {
+        "min_age": "3d",
+        "actions": {
+          "forcemerge": { "max_num_segments": 1 },
+          "set_priority": { "priority": 50 }
+        }
+      },
+      "delete": {
+        "min_age": "14d",
         "actions": {
           "delete": {}
         }

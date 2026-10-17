@@ -2,7 +2,7 @@
 
 **Audit Date:** 2026-10-17  
 **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
-**Inspected Commit SHA:** `7bce9ba` (v1.0.171+171)  
+**Inspected Commit SHA:** `98e8993` (v1.0.172+172, referencing `2502823` / v1.0.171+171)  
 **Inspected Branch:** `main`  
 **Audit Mode:** Full Re-Audit Verification & Black-Screen Root Cause Resolution  
 **Author:** Automated Multi-Agent Security & Architecture Engineering Team
@@ -16,7 +16,7 @@ This document establishes the verified baseline of `ecardo_userapp_v1` as requir
 ### Key Baseline Findings at a Glance
 | Metric / Check | Baseline Value | Status / Verdict |
 | :--- | :--- | :--- |
-| **Commit SHA** | `7bce9ba` (v1.0.171+171) | Verified |
+| **Commit SHA** | `98e8993` (v1.0.172+172 / reference `2502823` v1.0.171+171) | Verified |
 | **Working Tree** | Clean (`nothing to commit, working tree clean`) | Verified |
 | **Flutter Version** | `3.44.6 • channel stable • Tools • Dart 3.12.2` | Supported |
 | **Static Analyzer** | `flutter analyze` — **No issues found!** (0 errors, 0 warnings) | Clean |
@@ -50,14 +50,17 @@ No issues found! (ran in 107.5s)
 ### 2.3 Test Suite Execution
 ```bash
 $ flutter test
-00:59 +682: All tests passed!
+01:41 +687: All tests passed!
 ```
-The test suite consists of 646 comprehensive unit, widget, screenshot, and QC tests spanning:
+The test suite consists of 687 comprehensive unit, widget, screenshot, QC, and re-audit tests (613 baseline suites + 36 workstream A/B suites + 33 fintech/UI/typography suites + 5 re-audit security invariant tests) spanning:
 - Financial math & fee calculation tests (`money_math_helper_test.dart`)
 - Exchange cross-rate calculation & inversion tests (`exchange_controller_test.dart`, `exchange_validation_service_test.dart`)
 - Multi-currency wallet carousel & RTL rendering tests (`wallet_card_rtl_test.dart`, `wallets_creative_ui_test.dart`)
 - Withdraw Sheba & card masking tests (`withdraw_modernization_qc_test.dart`)
 - Auth, session & PIN verification tests (`app_lock_service_test.dart`, `passcode_helper_test.dart`)
+- Re-audit security invariant tests (`reaudit_security_invariants_test.dart`)
+- Workstream A session & PIN migration tests (`workstream_a_session_pin_test.dart`)
+- Workstream B idempotency & PII redaction tests (`workstream_b_idempotency_logging_test.dart`)
 - Travel, flight, hotel, and Jalali date conversion tests (`jalali_date_helper_test.dart`)
 
 ---
@@ -135,5 +138,5 @@ A key finding of this baseline audit is that **several P0 issues reported in the
 
 ## 5. Baseline Evidence Artifacts
 - Static analyzer log: `analysis_report.txt` (0 errors)
-- Test log: `All tests passed! (682 passed)`
-- Current build version: `1.0.170+170` (`pubspec.yaml`)
+- Test log: `All tests passed! (687 passed)`
+- Current build version: `1.0.172+172` (`pubspec.yaml`, referencing v1.0.171+171)

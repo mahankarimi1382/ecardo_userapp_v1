@@ -2,7 +2,7 @@
 
 **Audit Date:** 2026-10-17  
 **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
-**Inspected Commit SHA:** `7bce9ba` (v1.0.171+171)  
+**Inspected Commit SHA:** `98e8993` (v1.0.172+172, referencing `2502823` / v1.0.171+171)  
 **Inspected Branch:** `main`  
 **Standard Reference:** OWASP MASVS / MASTG & `ecardo_userapp_v1_full_reaudit_2026-10-17_fa.md`
 
@@ -41,7 +41,7 @@
 | **VAL-01** | Missing Sheba & Luhn Bank Card Validation | **P1** | **CONFIRMED RESOLVED** | Added client-side Luhn and Iranian Sheba mod-97-10 verification |
 | **PUSH-01** | Cold-Start Permission & Notification Channels | **P1** | **CONFIRMED RESOLVED** | Added permission primer card; localized notification channels |
 | **CICD-01 / FIND-002** | CI Obfuscation & Smart Formatting Check | **P1** | **CONFIRMED RESOLVED** | Smart changed-files `dart format` gate added; `--obfuscate` enabled; actions pinned to v4 |
-| **FIND-006** | Documentation Sync & Reality Reconciliation | **P1** | **CONFIRMED RESOLVED** | `README.md`, `docs/audit/BASELINE.md`, `FINDINGS.md`, and `TASKS.md` fully synced to SHA `de37b1e` |
+| **FIND-006** | Documentation Sync & Reality Reconciliation | **P1** | **CONFIRMED RESOLVED** | `README.md`, `docs/audit/BASELINE.md`, `FINDINGS.md`, `TASKS.md`, and `CURRENT_RELEASE.md` fully synced to SHA `98e8993` (687 tests) |
 
 ---
 
@@ -241,4 +241,4 @@
   - `docs/audit/FINDINGS.md`
   - `docs/audit/TASKS.md`
 - **Resolution & Verification:**
-  - Synchronized documentation to match the current codebase reality at commit `de37b1e` (646 tests passed, 0 analyzer errors). Stale claims regarding rebrand percentage, legacy package names, unencrypted preferences, and missing pinning removed.
+  - Synchronized documentation to match the current codebase reality at commit `98e8993` (v1.0.172+172 / reference `2502823` v1.0.171+171, 687 tests passed, 0 analyzer errors). Stale claims regarding rebrand percentage, legacy package names, unencrypted preferences, split-per-abi, and missing pinning removed.

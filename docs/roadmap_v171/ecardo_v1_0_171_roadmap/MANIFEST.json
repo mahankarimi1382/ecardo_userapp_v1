@@ -1,0 +1,129 @@
+{
+  "package": "ecardo_v1_0_171_next_roadmap",
+  "review_date": "2026-10-17",
+  "reviewed_release": "v1.0.171",
+  "release_commit": "25028235b92cd9c026454df64c88cef44fda9ce6",
+  "contains_executed_repo_changes": false,
+  "files": [
+    {
+      "path": "01_AUDIT_REPORT.md",
+      "bytes": 18139,
+      "sha256": "a82bfb3fa37f42c2565593f3b375abab79c02eeac68a91274ba07711c0f375ac"
+    },
+    {
+      "path": "02_MASTER_ROADMAP.md",
+      "bytes": 9549,
+      "sha256": "2cd4ebac4261c9dae1e1d3b85bc33e37e4e07cb0fa742415aee273e1b0ce1c12"
+    },
+    {
+      "path": "03_TASK_BACKLOG.md",
+      "bytes": 8861,
+      "sha256": "ce720bfd11fc0fa9b0af91f6731ea1d1d2ac5a18ff63c3e4d641fef6e41887db"
+    },
+    {
+      "path": "04_RELEASE_GATES.md",
+      "bytes": 3131,
+      "sha256": "20419921b9c68ecf14c2d8d6ba78bb13f6067f7bed1aeac5f27498ffd1bb628d"
+    },
+    {
+      "path": "05_FINANCIAL_IDEMPOTENCY_CONTRACT.md",
+      "bytes": 5043,
+      "sha256": "701d2479cc375b9fac48e088d9456bc5f158d213118fb221ede9562696cb7e16"
+    },
+    {
+      "path": "06_OFFLINE_QUEUE_SECURITY.md",
+      "bytes": 4606,
+      "sha256": "b7bba14a860b74b1256bebd138447bc5cf8256ec010d15a1f5e2f4c5dfa590a2"
+    },
+    {
+      "path": "07_THREAT_MODEL.md",
+      "bytes": 4235,
+      "sha256": "38cfa0408ef1415083197c97f70a6d075e2abb5699ada93c90f700f88a06b4a8"
+    },
+    {
+      "path": "08_ELASTICSEARCH_BIG_DATA_ROADMAP.md",
+      "bytes": 6146,
+      "sha256": "4e1b2a99cde6c99bf6a63c0f72bc9a8dca827e3b05b16e2cc7fd798a1b313271"
+    },
+    {
+      "path": "09_DATA_GOVERNANCE_AND_RETENTION.md",
+      "bytes": 3661,
+      "sha256": "60fc1e3ecb3faeedfbb2befde32a15d1c6732641f4f28fb5b633d9998392d333"
+    },
+    {
+      "path": "10_FINANCIAL_E2E_TEST_MATRIX.md",
+      "bytes": 4683,
+      "sha256": "e5d46ffd30e913ec8e2a334da8fd581fe626249792a61c61ec40c7e163ea9623"
+    },
+    {
+      "path": "11_UIUX_I18N_QA.md",
+      "bytes": 3309,
+      "sha256": "31aeebe7348f9863e40d34a3b0bab0871a2458a3475f9207cc313cbd44fdf6b0"
+    },
+    {
+      "path": "12_RELEASE_OPERATIONS.md",
+      "bytes": 3584,
+      "sha256": "76ba4c94a9e168ce6199ef3b7f3b712fb1051a6029ae045f22135d14cac652cf"
+    },
+    {
+      "path": "13_AGENT_EXECUTION_GUIDE.md",
+      "bytes": 3095,
+      "sha256": "eb6906f9d7414c376b086aaa21800088106d466b3e8354a5e4ac3d0064d1af68"
+    },
+    {
+      "path": "14_FILE_OWNERSHIP_PR_RULES.md",
+      "bytes": 2419,
+      "sha256": "bbbdb9dd312b6133b63a7400c3c933e79323d470a7f79e72f7409f541db53d97"
+    },
+    {
+      "path": "15_CURRENT_RELEASE_EVIDENCE.md",
+      "bytes": 2310,
+      "sha256": "7ff949efdfa8965571ea4849e37c48e02591554a4a391e6181799eb993438cea"
+    },
+    {
+      "path": "16_ARCH_DECISIONS.md",
+      "bytes": 2249,
+      "sha256": "5de1c41208e23f6a02abdae47939223ef1477c8eb9987ce2b7e5f91040eb2444"
+    },
+    {
+      "path": "17_IMPLEMENTATION_FILES_CHECKLIST.md",
+      "bytes": 3009,
+      "sha256": "2e1732fd8e8b4a2e6c344d34cd9b648202d9d8a235d28d718571fadeb9861801"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4657,
+      "sha256": "4e0eb9337e78977c74b2dd0ee50b590c72ae86479089f5548b53ada9f926ea6b"
+    },
+    {
+      "path": "TASKS.csv",
+      "bytes": 1269,
+      "sha256": "61fdaf6859c78074eb65738e42385e8b5515fd9df3627abe119501daff54da63"
+    },
+    {
+      "path": "scripts/verify_release_metadata.py",
+      "bytes": 3524,
+      "sha256": "276049123618a67af3a3407e6728f8aa092f194fecd4255f3004148b2f2a02eb"
+    },
+    {
+      "path": "templates/AGENT_TASK_REPORT.md",
+      "bytes": 782,
+      "sha256": "9b90378c43585c548696cc451d33860c9007f2569fa5655074206f08c85c811b"
+    },
+    {
+      "path": "templates/PULL_REQUEST_TEMPLATE.md",
+      "bytes": 1216,
+      "sha256": "e258b1af8d4919ed6fd3892567ff54e781b9f3393b5defa9598e3caaaec55a44"
+    },
+    {
+      "path": "templates/QUALITY_GATES_WORKFLOW_NOTES.md",
+      "bytes": 1909,
+      "sha256": "acc1f076499c369df90c1bf0ee7a8cf28ad9bd6f7fc020eb1af2657c88201c94"
+    },
+    {
+      "path": "templates/SECURITY_FINDING_TEMPLATE.md",
+      "bytes": 484,
+      "sha256": "5671f913daae4a140f08ff7010789923f4e17251e0d7fb54c220db4ed84d834b"
+    }
+  ]
+}

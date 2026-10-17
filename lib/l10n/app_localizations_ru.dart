@@ -3544,7 +3544,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String addMoneyValidationAmountMinimum(Object amount) {
-    return 'Сумма не должна превышать $amount';
+    return 'Сумма не должна быть меньше $amount';
   }
 
   @override
@@ -4493,7 +4493,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String cardDetailsAmountMinimumLimit(Object amount) {
-    return 'Сумма не должна превышать $amount';
+    return 'Сумма не должна быть меньше $amount';
   }
 
   @override

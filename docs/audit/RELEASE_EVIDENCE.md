@@ -1,11 +1,16 @@
 # eCardo User App (v1) — Production Release Evidence & Verification Dossier
 
-**Document Version:** 1.0.170  
+> ⚠️ **HISTORICAL AUDIT ARCHIVE — RELEASE v1.0.170 (COMMIT `5a4abe6`)**  
+> This file preserves the immutable historical verification record for build `1.0.170+170` (682 tests baseline).  
+> **For the active, canonical release line and current test evidence, refer to:**  
+> **👉 [`docs/CURRENT_RELEASE.md`](../CURRENT_RELEASE.md)** (Version **1.0.172+172**, Commit **`98e8993`**, **687 tests passed 100%**, Universal FAT APK, R8 `-dontoptimize` fix, `FLAG_SECURE` removal, and full re-audit compliance).
+
+**Document Version:** 1.0.170 (Historical Archive)  
 **Verification Date:** 2026-10-15  
 **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
-**Inspected Commit SHA:** `5a4abe64aba7d156ae1b92c1a84a31783c96cb65` (`5a4abe6`)  
-**Git Branch:** `main` (ahead of remote `origin/main` at `de37b1e` by 1 commit)  
-**Target Release Version:** `1.0.170+170` (defined in `pubspec.yaml`)  
+**Archived Commit SHA:** `5a4abe64aba7d156ae1b92c1a84a31783c96cb65` (`5a4abe6`)  
+**Active Release Line:** See `docs/CURRENT_RELEASE.md` for `98e8993` (v1.0.172+172 / 687 tests)  
+**Target Release Version:** `1.0.170+170` (historical archive)  
 **Lead QA & Audit Authority:** Enterprise Release Management & Security Verification Team  
 
 ---

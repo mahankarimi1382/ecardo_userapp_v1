@@ -83,8 +83,13 @@ class SettingsService extends GetxService {
 
   // Get Language Locale Current State Function
   static Future<String?> getLanguageLocaleCurrentState() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(currentLanguageLocaleKey);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(currentLanguageLocaleKey);
+    } catch (e) {
+      debugPrint('⚠️ SettingsService.getLanguageLocaleCurrentState error: $e');
+      return null;
+    }
   }
 
   // Saved User Login Current State Function
@@ -96,8 +101,13 @@ class SettingsService extends GetxService {
 
   // Get User Login Current State Function
   static Future<String?> getLoginCurrentState() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(logInCurrentStateKey);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(logInCurrentStateKey);
+    } catch (e) {
+      debugPrint('⚠️ SettingsService.getLoginCurrentState error: $e');
+      return null;
+    }
   }
 
   // Saved User Email Function
@@ -355,12 +365,13 @@ class SettingsService extends GetxService {
   }
 
   Future<String> getThemeModePref() async {
-    final prefs = await SharedPreferences.getInstance();
-    // DARK-FIX: the old default was 'light', which forced a light UI on
-    // first launch even when the OS was in dark mode (LocaleThemeService
-    // reads this pref at init). 'system' honours the OS until the user
-    // picks a mode explicitly.
-    return prefs.getString(themeModeKey) ?? 'system';
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(themeModeKey) ?? 'system';
+    } catch (e) {
+      debugPrint('⚠️ SettingsService.getThemeModePref error: $e');
+      return 'system';
+    }
   }
 
   Future<void> setThemeModePref(String mode) async {

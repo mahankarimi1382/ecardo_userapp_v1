@@ -6853,7 +6853,7 @@ abstract class AppLocalizations {
   /// No description provided for @addMoneyValidationAmountMinimum.
   ///
   /// In en, this message translates to:
-  /// **'Amount must not exceed {amount}'**
+  /// **'Amount must be at least {amount}'**
   String addMoneyValidationAmountMinimum(Object amount);
 
   /// No description provided for @addMoneyValidationAmountMaximum.
@@ -8533,7 +8533,7 @@ abstract class AppLocalizations {
   /// No description provided for @cardDetailsAmountMinimumLimit.
   ///
   /// In en, this message translates to:
-  /// **'Amount must not exceed {amount}'**
+  /// **'Amount must be at least {amount}'**
   String cardDetailsAmountMinimumLimit(Object amount);
 
   /// No description provided for @cardDetailsAmountMaximumLimit.

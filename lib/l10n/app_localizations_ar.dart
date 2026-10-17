@@ -6715,23 +6715,23 @@ class AppLocalizationsAr extends AppLocalizations {
       'احتفظ بالمرجع، وحدّث حجوزاتي لمتابعة الحالة، واستخدم فقط المستندات التي أصدرها الخادم.';
 
   @override
-  String get remittanceTitle => 'International Remittance';
+  String get remittanceTitle => 'الحوالات الدولية';
 
   @override
-  String get remittanceHistoryTitle => 'Remittance History';
+  String get remittanceHistoryTitle => 'سجل الحوالات';
 
   @override
-  String get remittanceDetailsTitle => 'Remittance Details';
+  String get remittanceDetailsTitle => 'تفاصيل الحوالة';
 
   @override
-  String get remittanceSelectPayoutMethod => 'Select Payout Method';
+  String get remittanceSelectPayoutMethod => 'اختر طريقة استلام الدفعة';
 
   @override
   String get remittanceNoMethods =>
-      'No remittance methods available.\nPlease try again later.';
+      'لا توجد طرق حوالة متاحة.\nيرجى المحاولة مرة أخرى لاحقاً.';
 
   @override
-  String get remittanceSendAmount => 'Send Amount';
+  String get remittanceSendAmount => 'مبلغ الإرسال';
 
   @override
   String get remittanceSendCurrency => 'عملة الإرسال';
@@ -6746,155 +6746,154 @@ class AppLocalizationsAr extends AppLocalizations {
   String get remittanceNoCurrencies => 'لا توجد عملات متاحة';
 
   @override
-  String get remittanceEnterAmount => 'Enter amount';
+  String get remittanceEnterAmount => 'أدخل المبلغ';
 
   @override
-  String get remittanceUnknownMethod => 'Unknown';
+  String get remittanceUnknownMethod => 'غير معروف';
 
   @override
   String remittanceRateLocked(int seconds) {
-    return 'Rate locked: ${seconds}s';
+    return 'تم تثبيت السعر: $seconds ثانية';
   }
 
   @override
-  String get remittanceExchangeRate => 'Exchange Rate';
+  String get remittanceExchangeRate => 'سعر الصرف';
 
   @override
-  String get remittanceReceiveAmount => 'Receive Amount';
+  String get remittanceReceiveAmount => 'مبلغ الاستلام';
 
   @override
-  String get remittanceSystemFee => 'System Fee';
+  String get remittanceSystemFee => 'رسوم النظام';
 
   @override
-  String get remittanceTotalPayable => 'Total Payable';
+  String get remittanceTotalPayable => 'إجمالي المبلغ المستحق';
 
   @override
-  String get remittanceGetQuote => 'Get Quote';
+  String get remittanceGetQuote => 'الحصول على عرض سعر';
 
   @override
-  String get remittanceStepAmount => 'Amount';
+  String get remittanceStepAmount => 'المبلغ';
 
   @override
-  String get remittanceStepSender => 'Sender';
+  String get remittanceStepSender => 'المرسل';
 
   @override
-  String get remittanceStepReceiver => 'Receiver';
+  String get remittanceStepReceiver => 'المستلم';
 
   @override
-  String get remittanceStepReview => 'Review';
+  String get remittanceStepReview => 'المراجعة';
 
   @override
-  String get remittanceStepDone => 'Done';
+  String get remittanceStepDone => 'تم';
 
   @override
-  String get remittanceSenderInfo => 'Sender Information';
+  String get remittanceSenderInfo => 'معلومات المرسل';
 
   @override
-  String get remittanceSelectCountry => 'Select country';
+  String get remittanceSelectCountry => 'اختر الدولة';
 
   @override
-  String get remittanceSenderTypeIndividual => 'Individual';
+  String get remittanceSenderTypeIndividual => 'فرد';
 
   @override
-  String get remittanceSenderTypeBusiness => 'Business';
+  String get remittanceSenderTypeBusiness => 'شركة';
 
   @override
-  String get remittanceSenderName => 'Full Name';
+  String get remittanceSenderName => 'الاسم الكامل';
 
   @override
-  String get remittanceSenderPhone => 'Phone Number';
+  String get remittanceSenderPhone => 'رقم الهاتف';
 
   @override
-  String get remittanceSenderIdNumber => 'ID Number';
+  String get remittanceSenderIdNumber => 'رقم الهوية';
 
   @override
-  String get remittanceReceiverInfo => 'Receiver Information';
+  String get remittanceReceiverInfo => 'معلومات المستلم';
 
   @override
-  String get remittancePayoutDetails => 'Payout Details';
+  String get remittancePayoutDetails => 'تفاصيل الدفع';
 
   @override
   String get remittancePayoutDetailsHint =>
-      'Fill in the fields relevant to the selected payout method.';
+      'املأ الحقول المتعلقة بطريقة استلام الدفعة المحددة.';
 
   @override
-  String get remittanceReceiverName => 'Full Name';
+  String get remittanceReceiverName => 'الاسم الكامل';
 
   @override
-  String get remittanceReceiverPhone => 'Phone Number';
+  String get remittanceReceiverPhone => 'رقم الهاتف';
 
   @override
-  String get remittanceBankName => 'Bank Name';
+  String get remittanceBankName => 'اسم البنك';
 
   @override
-  String get remittanceAccountNumber => 'Account Number';
+  String get remittanceAccountNumber => 'رقم الحساب';
 
   @override
-  String get remittanceIban => 'IBAN';
+  String get remittanceIban => 'آيبان (IBAN)';
 
   @override
-  String get remittanceAlipayAccount => 'Alipay Account';
+  String get remittanceAlipayAccount => 'حساب أليباي (Alipay)';
 
   @override
-  String get remittanceWechatAccount => 'WeChat Account';
+  String get remittanceWechatAccount => 'حساب وي شات (WeChat)';
 
   @override
-  String get remittanceReviewConfirm => 'Review & Confirm';
+  String get remittanceReviewConfirm => 'المراجعة والتأكيد';
 
   @override
   String get remittanceReviewHint =>
-      'Please review all details before submitting your remittance request.';
+      'يرجى مراجعة جميع التفاصيل قبل إرسال طلب الحوالة الخاص بك.';
 
   @override
   String get remittanceTermsNotice =>
-      'By submitting, you agree to our remittance terms. The rate is locked for 15 minutes. You will need to upload KYC documents and payment receipt after submission.';
+      'بإرسال هذا الطلب، فإنك توافق على شروط الحوالة الخاصة بنا. يتم تثبيت السعر لمدة 15 دقيقة. ستحتاج إلى تحميل وثائق التحقق من الهوية وإيصال الدفع بعد الإرسال.';
 
   @override
-  String get remittanceReviewSender => 'Sender';
+  String get remittanceReviewSender => 'المرسل';
 
   @override
-  String get remittanceReviewReceiver => 'Receiver';
+  String get remittanceReviewReceiver => 'المستلم';
 
   @override
-  String get remittanceReviewPayment => 'Payment';
+  String get remittanceReviewPayment => 'الدفع';
 
   @override
-  String get remittanceRequestSubmitted => 'Request Submitted!';
+  String get remittanceRequestSubmitted => 'تم إرسال الطلب بنجاح!';
 
   @override
-  String get remittanceRequestCreated =>
-      'Your remittance request has been created.';
+  String get remittanceRequestCreated => 'تم إنشاء طلب الحوالة الخاص بك.';
 
   @override
-  String get remittanceUploadDocuments => 'Upload Documents';
+  String get remittanceUploadDocuments => 'تحميل المستندات';
 
   @override
   String get remittanceUploadHint =>
-      'Upload your KYC documents and payment receipt to proceed.';
+      'قم بتحميل وثائق التحقق من الهوية وإيصال الدفع للمتابعة.';
 
   @override
-  String get remittanceAddDocument => 'Add Document';
+  String get remittanceAddDocument => 'إضافة مستند';
 
   @override
-  String get remittanceDocumentType => 'Document Type';
+  String get remittanceDocumentType => 'نوع المستند';
 
   @override
-  String get remittanceDocTypeKyc => 'KYC Document';
+  String get remittanceDocTypeKyc => 'وثيقة التحقق من الهوية';
 
   @override
-  String get remittanceDocTypePaymentReceipt => 'Payment Receipt';
+  String get remittanceDocTypePaymentReceipt => 'إيصال الدفع';
 
   @override
-  String get remittanceDocTypePayoutReceipt => 'Payout Receipt';
+  String get remittanceDocTypePayoutReceipt => 'إيصال تسليم الدفعة';
 
   @override
-  String get remittanceDocTypeOther => 'Other';
+  String get remittanceDocTypeOther => 'أخرى';
 
   @override
-  String get remittanceCancel => 'Cancel';
+  String get remittanceCancel => 'إلغاء';
 
   @override
-  String get remittanceAdd => 'Add';
+  String get remittanceAdd => 'إضافة';
 
   @override
   String get remittanceTakePhoto => 'التقاط صورة';
@@ -6916,159 +6915,155 @@ class AppLocalizationsAr extends AppLocalizations {
       'لا توجد ملفات صالحة للرفع. يرجى إعادة تحديد المستندات.';
 
   @override
-  String get remittanceContinue => 'Continue';
+  String get remittanceContinue => 'متابعة';
 
   @override
-  String get remittanceSubmitRequest => 'Submit Request';
+  String get remittanceSubmitRequest => 'إرسال الطلب';
 
   @override
-  String get remittanceUploading => 'Uploading...';
+  String get remittanceUploading => 'جارٍ الرفع...';
 
   @override
-  String get remittanceRefresh => 'Refresh';
+  String get remittanceRefresh => 'تحديث';
 
   @override
-  String get remittanceNoHistory => 'No remittances yet';
+  String get remittanceNoHistory => 'لا توجد حوالات بعد';
 
   @override
-  String get remittanceNoHistoryHint =>
-      'Your remittance history will appear here.';
+  String get remittanceNoHistoryHint => 'سيظهر سجل حوالاتك هنا.';
 
   @override
-  String get remittanceSend => 'Send';
+  String get remittanceSend => 'إرسال';
 
   @override
-  String get remittanceReceive => 'Receive';
+  String get remittanceReceive => 'استلام';
 
   @override
-  String get remittanceDate => 'Date';
+  String get remittanceDate => 'التاريخ';
 
   @override
-  String get remittanceNotFound => 'Remittance not found';
+  String get remittanceNotFound => 'لم يتم العثور على الحوالة';
 
   @override
-  String get remittanceStatusFinalized => 'This request is finalized.';
+  String get remittanceStatusFinalized => 'تم إتمام هذا الطلب نهائياً.';
 
   @override
-  String get remittanceStatusProcessing => 'Your request is being processed.';
+  String get remittanceStatusProcessing => 'طلبك قيد المعالجة حالياً.';
 
   @override
-  String get remittanceStatusActionNeeded =>
-      'Please complete the required steps.';
+  String get remittanceStatusActionNeeded => 'يرجى إكمال الخطوات المطلوبة.';
 
   @override
-  String get remittanceDetailsSectionSender => 'Sender Information';
+  String get remittanceDetailsSectionSender => 'معلومات المرسل';
 
   @override
-  String get remittanceDetailsSectionReceiver => 'Receiver Information';
+  String get remittanceDetailsSectionReceiver => 'معلومات المستلم';
 
   @override
-  String get remittanceDetailsSectionPayment => 'Payment Details';
+  String get remittanceDetailsSectionPayment => 'تفاصيل الدفع';
 
   @override
-  String get remittanceDetailsSectionTimeline => 'Status Timeline';
+  String get remittanceDetailsSectionTimeline => 'الجدول الزمني للحالة';
 
   @override
-  String get remittanceErrLoadMethods => 'Failed to load methods';
+  String get remittanceErrLoadMethods => 'فشل في تحميل طرق الدفع';
 
   @override
-  String get remittanceErrSelectPayout => 'Please select a payout method';
+  String get remittanceErrSelectPayout => 'يرجى تحديد طريقة استلام الدفعة';
 
   @override
-  String get remittanceErrInvalidAmount => 'Please enter a valid amount';
+  String get remittanceErrInvalidAmount => 'يرجى إدخال مبلغ صالح';
 
   @override
-  String get remittanceErrSelectSendCurrency => 'Please select a send currency';
+  String get remittanceErrSelectSendCurrency => 'يرجى تحديد عملة الإرسال';
 
   @override
-  String get remittanceErrQuoteFailed => 'Quote failed';
+  String get remittanceErrQuoteFailed => 'فشل الحصول على عرض السعر';
 
   @override
-  String get remittanceErrRequestQuoteFirst => 'Please request a quote first';
+  String get remittanceErrRequestQuoteFirst => 'يرجى طلب عرض سعر أولاً';
 
   @override
   String get remittanceErrQuoteExpired =>
-      'Quote expired. Please request a new one.';
+      'انتهت صلاحية عرض السعر. يرجى طلب عرض جديد.';
 
   @override
-  String get remittanceErrSenderInfo => 'Please complete sender information';
+  String get remittanceErrSenderInfo => 'يرجى إكمال معلومات المرسل';
 
   @override
-  String get remittanceErrReceiverInfo =>
-      'Please complete receiver information';
+  String get remittanceErrReceiverInfo => 'يرجى إكمال معلومات المستلم';
 
   @override
-  String get remittanceErrSubmissionFailed => 'Submission failed';
+  String get remittanceErrSubmissionFailed => 'فشل إرسال الطلب';
 
   @override
-  String get remittanceErrNoRemittance => 'No remittance to upload to';
+  String get remittanceErrNoRemittance => 'لا توجد حوالة لرفع المستندات إليها';
 
   @override
-  String get remittanceErrAddDocument => 'Please add at least one document';
+  String get remittanceErrAddDocument => 'يرجى إضافة مستند واحد على الأقل';
 
   @override
-  String get remittanceErrUploadFailed => 'Upload failed';
+  String get remittanceErrUploadFailed => 'فشل تحميل المستند';
 
   @override
-  String get remittanceErrLoadDetails => 'Failed to load details';
+  String get remittanceErrLoadDetails => 'فشل في تحميل التفاصيل';
 
   @override
-  String get remittanceErrCompleteSender => 'Please complete all sender fields';
+  String get remittanceErrCompleteSender => 'يرجى إكمال جميع حقول المرسل';
 
   @override
-  String get remittanceErrCompleteReceiver =>
-      'Please complete all receiver fields';
+  String get remittanceErrCompleteReceiver => 'يرجى إكمال جميع حقول المستلم';
 
   @override
-  String get remittanceSuccessUploaded => 'Documents uploaded successfully';
+  String get remittanceSuccessUploaded => 'تم تحميل المستندات بنجاح';
 
   @override
-  String get remittanceError => 'Error';
+  String get remittanceError => 'خطأ';
 
   @override
-  String get remittanceStatusDraft => 'Draft';
+  String get remittanceStatusDraft => 'مسودة';
 
   @override
-  String get remittanceStatusWaitingInformation => 'Waiting Information';
+  String get remittanceStatusWaitingInformation => 'في انتظار المعلومات';
 
   @override
-  String get remittanceStatusWaitingDocuments => 'Waiting Documents';
+  String get remittanceStatusWaitingDocuments => 'في انتظار المستندات';
 
   @override
-  String get remittanceStatusWaitingPayment => 'Waiting Payment';
+  String get remittanceStatusWaitingPayment => 'في انتظار الدفع';
 
   @override
-  String get remittanceStatusPaymentReviewing => 'Payment Reviewing';
+  String get remittanceStatusPaymentReviewing => 'مراجعة الدفع';
 
   @override
-  String get remittanceStatusInProcess => 'In Process';
+  String get remittanceStatusInProcess => 'قيد التنفيذ';
 
   @override
-  String get remittanceStatusDestinationProcessing => 'Destination Processing';
+  String get remittanceStatusDestinationProcessing => 'المعالجة في الوجهة';
 
   @override
-  String get remittanceStatusDestinationPaid => 'Destination Paid';
+  String get remittanceStatusDestinationPaid => 'تم الدفع في الوجهة';
 
   @override
-  String get remittanceStatusCompleted => 'Completed';
+  String get remittanceStatusCompleted => 'مكتملة';
 
   @override
-  String get remittanceStatusRejected => 'Rejected';
+  String get remittanceStatusRejected => 'مرفوضة';
 
   @override
-  String get remittanceStatusExpired => 'Expired';
+  String get remittanceStatusExpired => 'منتهية الصلاحية';
 
   @override
-  String get remittanceStatusCancelled => 'Cancelled';
+  String get remittanceStatusCancelled => 'ملغاة';
 
   @override
-  String get remittanceStatusRefundRequested => 'Refund Requested';
+  String get remittanceStatusRefundRequested => 'تم طلب استرداد المبلغ';
 
   @override
-  String get remittanceStatusRefundCompleted => 'Refund Completed';
+  String get remittanceStatusRefundCompleted => 'تم استرداد المبلغ بنجاح';
 
   @override
-  String get remittanceStatusUnknown => 'Unknown';
+  String get remittanceStatusUnknown => 'غير معروف';
 
   @override
   String get remittanceRetry => 'إعادة المحاولة';
@@ -8163,22 +8158,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get webViewLinkCannotOpen => 'لا يمكن فتح هذا الرابط في التطبيق.';
 
   @override
-  String get networkReconnected => 'You are back online';
+  String get networkReconnected => 'تمت استعادة الاتصال بالإنترنت';
 
   @override
   String get vpnHintBanner =>
-      'VPN detected — turn it off for a more stable experience';
+      'تم اكتشاف VPN — يرجى إيقاف تشغيله للحصول على تجربة أكثر استقراراً';
 
   @override
-  String get signInWithTelegram => 'Continue with Telegram';
+  String get signInWithTelegram => 'المتابعة باستخدام Telegram';
 
   @override
   String get signInTelegramUnavailable =>
-      'Telegram sign-in will be available once enabled on the server.';
+      'سيتوفر تسجيل الدخول عبر Telegram بمجرد تفعيله على الخادم.';
 
   @override
   String get sessionExpiredMessage =>
-      'Your session has expired. Please sign in again.';
+      'انتهت صلاحية جلستك. يرجى تسجيل الدخول مجدداً.';
 
   @override
   String get travelFromPrice => 'يبدأ من';

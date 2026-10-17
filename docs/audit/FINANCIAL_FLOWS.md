@@ -3,7 +3,7 @@
 **Document Version:** 1.0.0  
 **Date:** 2026-10-14  
 **Audit Context:** `ecardo_userapp_v1_audit_roadmap_fa.md` — Phase 2 & Section 5  
-**Codebase Verification SHA:** `d56ab71d293ca1c7ec29b63863ecbc40ca9c8d67`
+**Codebase Verification SHA:** `d56ab71d293ca1c7ec29b63863ecbc40ca9c8d67` (Initial Audit Baseline; Active Release: `98e8993` / `v1.0.172+172`)
 
 ---
 

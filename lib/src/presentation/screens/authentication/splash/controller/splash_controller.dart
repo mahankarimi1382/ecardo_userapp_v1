@@ -46,13 +46,27 @@ class SplashController extends GetxController {
       return;
     }
 
-    final loginState = await SettingsService.getLoginCurrentState();
+    String? loginState;
+    try {
+      loginState = await SettingsService.getLoginCurrentState()
+          .timeout(const Duration(seconds: 2));
+    } catch (e) {
+      debugPrint('⚠️ Splash: getLoginCurrentState error or timeout: $e');
+      loginState = null;
+    }
     final isLoggedIn = loginState != null && loginState.isNotEmpty;
 
     // AUTH-BIO: the biometric gate moved here from sign_in_screen. If the
     // user enabled biometrics and is logged in, the system prompt is shown
     // automatically (no touch) and navigation WAITS for its result.
-    final bioOutcome = await _tryAutoBiometricLogin();
+    String bioOutcome = _bioNotStarted;
+    try {
+      bioOutcome = await _tryAutoBiometricLogin()
+          .timeout(const Duration(seconds: 4));
+    } catch (e) {
+      debugPrint('⚠️ Splash: _tryAutoBiometricLogin error: $e');
+      bioOutcome = _bioNotStarted;
+    }
 
     if (bioOutcome == _bioFailed) {
       // WAVE-REVIEW: کاربر پرامپت بیومتریک را لغو کرد یا شکست خورد —

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -265,7 +266,7 @@ void main() {
       expect(networkService.inflightIdempotencyCount, equals(0));
     });
 
-    test('Non-transport error (HTTP 422 or 500) releases key immediately', () async {
+    test('Deterministic client error (HTTP 422) releases key immediately (FIN-IDEM-05)', () async {
       testAdapter.onFetch = (options) async {
         return ResponseBody.fromString(
           jsonEncode({'message': 'Insufficient funds', 'errors': {'amount': ['Too high']}}),
@@ -296,6 +297,111 @@ void main() {
       final k1 = testAdapter.capturedRequests[0].headers['Idempotency-Key'];
       final k2 = testAdapter.capturedRequests[1].headers['Idempotency-Key'];
       expect(k1, isNot(equals(k2)));
+    });
+
+    test('Deterministic client error (HTTP 400) releases key immediately (FIN-IDEM-05)', () async {
+      testAdapter.onFetch = (options) async {
+        return ResponseBody.fromString(
+          jsonEncode({'message': 'Bad Request', 'errors': {'amount': ['Invalid format']}}),
+          400,
+          headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        );
+      };
+
+      await networkService.post(
+        endpoint: '/user/transfer',
+        data: {'amount': -50},
+      );
+      expect(networkService.inflightIdempotencyCount, equals(0), reason: '400 should release key immediately');
+
+      // Next request gets fresh key
+      testAdapter.onFetch = (options) async {
+        return ResponseBody.fromString(
+          jsonEncode({'status': 'success'}),
+          200,
+          headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        );
+      };
+      await networkService.post(
+        endpoint: '/user/transfer',
+        data: {'amount': -50},
+      );
+      expect(testAdapter.capturedRequests.length, equals(2));
+      final k1 = testAdapter.capturedRequests[0].headers['Idempotency-Key'];
+      final k2 = testAdapter.capturedRequests[1].headers['Idempotency-Key'];
+      expect(k1, isNot(equals(k2)));
+    });
+
+    test('Ambiguous server errors (HTTP 500-599) retain idempotency key across retries and release only on 200 (FIN-IDEM-01, FIN-IDEM-05)', () async {
+      final serverErrorCodes = [500, 502, 503, 504];
+
+      for (final code in serverErrorCodes) {
+        testAdapter.capturedRequests.clear();
+        int attempt = 0;
+        testAdapter.onFetch = (options) async {
+          attempt++;
+          if (attempt == 1) {
+            return ResponseBody.fromString(
+              jsonEncode({'message': 'Server Error $code'}),
+              code,
+              headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+            );
+          }
+          return ResponseBody.fromString(
+            jsonEncode({'status': 'success', 'data': {'transferred': true}}),
+            200,
+            headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+          );
+        };
+
+        // Attempt 1 fails with 5xx
+        final res1 = await networkService.post(
+          endpoint: '/user/transfer',
+          data: {'amount': 300, 'code': code},
+        );
+        expect(res1.status, equals(Status.error));
+        expect(networkService.inflightIdempotencyCount, equals(1),
+            reason: 'HTTP $code must retain idempotency key (ambiguous state)');
+
+        final key1 = testAdapter.capturedRequests[0].headers['Idempotency-Key'];
+        final xKey1 = testAdapter.capturedRequests[0].headers['X-Idempotency-Key'];
+        expect(key1, isNotNull);
+        expect(xKey1, equals(key1));
+
+        // Attempt 2 (retry with same payload within TTL)
+        fakeNow = fakeNow.add(const Duration(seconds: 10));
+        final res2 = await networkService.post(
+          endpoint: '/user/transfer',
+          data: {'amount': 300, 'code': code},
+        );
+        expect(res2.status, equals(Status.completed));
+        expect(testAdapter.capturedRequests.length, equals(2));
+
+        final key2 = testAdapter.capturedRequests[1].headers['Idempotency-Key'];
+        final xKey2 = testAdapter.capturedRequests[1].headers['X-Idempotency-Key'];
+        expect(key2, equals(key1),
+            reason: 'Retry after HTTP $code must reuse the exact same idempotency key');
+        expect(xKey2, equals(key1));
+
+        // After HTTP 200, key must be released
+        expect(networkService.inflightIdempotencyCount, equals(0),
+            reason: 'HTTP 200 must release the key');
+
+        // Subsequent new transfer gets fresh key
+        testAdapter.onFetch = (options) async => ResponseBody.fromString(
+          jsonEncode({'status': 'success'}),
+          200,
+          headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+        );
+        await networkService.post(
+          endpoint: '/user/transfer',
+          data: {'amount': 300, 'code': code},
+        );
+        final key3 = testAdapter.capturedRequests[2].headers['Idempotency-Key'];
+        expect(key3, isNot(equals(key1)),
+            reason: 'Subsequent submission after success must get fresh key');
+        expect(networkService.inflightIdempotencyCount, equals(0));
+      }
     });
 
     test('Explicit X-Operation-ID header is used directly as idempotency seed', () async {
@@ -409,6 +515,125 @@ void main() {
       expect(networkService.getIdempotencyKey('POST:/user/cashout:1'), isNull);
       expect(networkService.getIdempotencyKey('POST:/user/cashout:2'), equals('key-old-2'));
       expect(networkService.getIdempotencyKey('POST:/user/cashout:3'), equals('key-recent'));
+    });
+
+    test('Deterministic canonical SHA-256 payload fingerprinting with recursive key sorting (FIN-IDEM-04)', () {
+      // 1. Map key order independence (flat)
+      final mapA = {'b': 2, 'a': 1, 'c': 3};
+      final mapB = {'c': 3, 'b': 2, 'a': 1};
+      final mapC = {'a': 1, 'c': 3, 'b': 2};
+
+      final fpA = networkService.payloadFingerprint(mapA);
+      final fpB = networkService.payloadFingerprint(mapB);
+      final fpC = networkService.payloadFingerprint(mapC);
+
+      expect(fpA, equals(fpB));
+      expect(fpA, equals(fpC));
+      // Must be 64-char lowercase hex
+      expect(RegExp(r'^[0-9a-f]{64}$').hasMatch(fpA), isTrue);
+
+      // Verify exact canonical SHA-256 computation: jsonEncode is '{"a":1,"b":2,"c":3}'
+      final expectedSha = sha256.convert(utf8.encode('{"a":1,"b":2,"c":3}')).toString();
+      expect(fpA, equals(expectedSha));
+
+      // 2. Nested Maps key order independence
+      final nested1 = {
+        'metadata': {'z': 100, 'y': 200},
+        'amount': 500,
+        'account': {'iban': 'IR123', 'bank': 'Mellat'},
+      };
+      final nested2 = {
+        'account': {'bank': 'Mellat', 'iban': 'IR123'},
+        'amount': 500,
+        'metadata': {'y': 200, 'z': 100},
+      };
+
+      final fpNested1 = networkService.payloadFingerprint(nested1);
+      final fpNested2 = networkService.payloadFingerprint(nested2);
+      expect(fpNested1, equals(fpNested2));
+
+      // 3. Lists containing Maps
+      final list1 = {
+        'items': [
+          {'key': 'k2', 'val': 'v2'},
+          {'key': 'k1', 'val': 'v1'},
+        ],
+      };
+      final list2 = {
+        'items': [
+          {'val': 'v2', 'key': 'k2'},
+          {'val': 'v1', 'key': 'k1'},
+        ],
+      };
+      expect(networkService.payloadFingerprint(list1), equals(networkService.payloadFingerprint(list2)));
+
+      // 4. Collision-free: different payloads produce distinct SHA-256 hashes
+      final diff1 = networkService.payloadFingerprint({'amount': 100});
+      final diff2 = networkService.payloadFingerprint({'amount': 101});
+      expect(diff1, isNot(equals(diff2)));
+
+      // 5. Null payload produces SHA-256 of empty bytes
+      final nullFp = networkService.payloadFingerprint(null);
+      final emptyBytesSha = sha256.convert(const <int>[]).toString();
+      expect(nullFp, equals(emptyBytesSha));
+    });
+
+    test('_getIdempotencyMapKey produces collision-free METHOD:NORMALIZED_PATH:IDENTITY format (FIN-IDEM-06)', () {
+      final req1 = RequestOptions(
+        method: 'post',
+        path: '//user///transfer//',
+        data: {'amount': 100, 'currency': 'USD'},
+      );
+      final mapKey1 = networkService.getIdempotencyMapKey(req1);
+
+      // Verify structure: METHOD:NORMALIZED_PATH:IDENTITY
+      final parts1 = mapKey1.split(':');
+      expect(parts1.length, equals(3));
+      expect(parts1[0], equals('POST'));
+      expect(parts1[1], equals('/user/transfer'));
+      expect(RegExp(r'^[0-9a-f]{64}$').hasMatch(parts1[2]), isTrue);
+
+      // Verify path with query parameters is sorted deterministically
+      final reqWithQuery = RequestOptions(
+        method: 'POST',
+        path: '/user/transfer?b=2&a=1&c=3',
+        data: {'amount': 50},
+      );
+      final mapKeyWithQuery = networkService.getIdempotencyMapKey(reqWithQuery);
+      expect(mapKeyWithQuery.contains('/user/transfer?a=1&b=2&c=3'), isTrue);
+
+      // Verify explicit operationId produces METHOD:NORMALIZED_PATH:op:OPERATION_ID
+      final reqWithOp = RequestOptions(
+        method: 'POST',
+        path: '/user/transfer',
+        headers: {'X-Operation-ID': 'op-unique-789'},
+      );
+      final mapKeyWithOp = networkService.getIdempotencyMapKey(reqWithOp);
+      expect(mapKeyWithOp, equals('POST:/user/transfer:op:op-unique-789'));
+    });
+
+    test('Emits both Idempotency-Key and X-Idempotency-Key on idempotent requests (FIN-IDEM-01)', () async {
+      testAdapter.capturedRequests.clear();
+      testAdapter.onFetch = (options) async => ResponseBody.fromString(
+        jsonEncode({'status': 'success', 'data': {}}),
+        200,
+        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]},
+      );
+
+      await networkService.post(
+        endpoint: '/user/transfer',
+        data: {'amount': 75},
+      );
+
+      expect(testAdapter.capturedRequests.length, equals(1));
+      final captured = testAdapter.capturedRequests[0];
+      final idem = captured.headers['Idempotency-Key'] as String?;
+      final xIdem = captured.headers['X-Idempotency-Key'] as String?;
+
+      expect(idem, isNotNull);
+      expect(idem, isNotEmpty);
+      expect(xIdem, isNotNull);
+      expect(xIdem, equals(idem), reason: 'Both headers must carry identical keys');
     });
   });
 

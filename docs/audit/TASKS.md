@@ -1,10 +1,10 @@
 # eCardo User App (v1) — Prioritized Remediation Task Backlog
 
-**Document Version:** 1.2.0  
-**Date:** 2026-10-15  
-**Audit Context:** `ecardo_userapp_v1_reaudit_2026-10-15_fa.md`  
-**Target Commit SHA:** `de37b1ea0d2b9769ae38ea3d637f181d62149209` (`de37b1e`)  
-**Automated Tests Verified:** 646 passing tests (0 failures)
+**Document Version:** 1.3.0  
+**Date:** 2026-10-17  
+**Audit Context:** `ecardo_userapp_v1_reaudit_2026-10-15_fa.md` & Re-Audit Remediation  
+**Target Commit SHA:** `98e899368df43dfe0aa36dac64e5752cd0d661aa` (`98e8993`, v1.0.172+172 / reference `2502823` v1.0.171+171)  
+**Automated Tests Verified:** 687 passing tests (0 failures)
 
 ---
 
@@ -177,9 +177,11 @@
 - **Status:** **VERIFIED & IMPLEMENTED**
 - **Affected Files:**
   - `README.md`
+  - `docs/CURRENT_RELEASE.md`
   - `docs/audit/BASELINE.md`
   - `docs/audit/FINDINGS.md`
   - `docs/audit/TASKS.md`
 - **Resolution & Evidence:**
   - Replaced outdated initial audit README with complete production architecture documentation (`com.ecardo.user`, `FlutterSecureStorage`, runtime SSL pinning with fail-closed gates, 6 complete locales, Vazirmatn font, Shamsi date picker).
-  - Updated all audit documents to commit `de37b1e` and verified 646 passing tests.
+  - Established `docs/CURRENT_RELEASE.md` (REL-DOC-01) as the unambiguous canonical reference for the active release line (`1.0.172+172` and `1.0.171`).
+  - Updated all audit documents to commit `98e8993` (v1.0.172+172) and verified 687 passing tests.

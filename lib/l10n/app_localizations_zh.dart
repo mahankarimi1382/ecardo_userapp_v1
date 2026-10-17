@@ -7993,22 +7993,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get webViewLinkCannotOpen => '无法在应用中打开此链接。';
 
   @override
-  String get networkReconnected => 'You are back online';
+  String get networkReconnected => '网络连接已恢复';
 
   @override
-  String get vpnHintBanner =>
-      'VPN detected — turn it off for a more stable experience';
+  String get vpnHintBanner => '检测到 VPN — 建议关闭以获得更稳定的连接体验';
 
   @override
-  String get signInWithTelegram => 'Continue with Telegram';
+  String get signInWithTelegram => '通过 Telegram 继续';
 
   @override
-  String get signInTelegramUnavailable =>
-      'Telegram sign-in will be available once enabled on the server.';
+  String get signInTelegramUnavailable => '服务器启用后即可使用 Telegram 登录。';
 
   @override
-  String get sessionExpiredMessage =>
-      'Your session has expired. Please sign in again.';
+  String get sessionExpiredMessage => '您的登录会话已过期，请重新登录。';
 
   @override
   String get travelFromPrice => '起价';

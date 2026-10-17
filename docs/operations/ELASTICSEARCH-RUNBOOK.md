@@ -38,29 +38,44 @@ This runbook provides Site Reliability Engineers (SRE), Platform Engineers, and 
 
 ## 2. Index Lifecycle Management (ILM) Policies
 
-All operational logs, traces, and application metrics flow into versioned Elasticsearch Data Streams (`logs-ecardo.*`, `metrics-ecardo.*`, `traces-ecardo.*`). The cluster enforces a four-phase Index Lifecycle Management (ILM) policy designed to control memory overhead, optimize search performance, and enforce data retention SLAs.
+All operational logs, traces, and application metrics flow into versioned Elasticsearch Data Streams (`logs-ecardo.*`, `metrics-ecardo.*`, `traces-ecardo.*`). In strict compliance with governance directive **EL-GOV-01**, all index retention and lifecycle transitions are 100% reconciled with the canonical matrix defined in `docs/architecture/DATA-CLASSIFICATION.md`.
 
-### 2.1 ILM Phase Specifications
+### 2.1 Canonical Retention Matrix (EL-GOV-01)
+
+| Data Stream Pattern | Classification / Scope | Retention Period | Storage Lifecycle Phases | Action upon Expiry |
+| :--- | :--- | :--- | :--- | :--- |
+| **`logs-ecardo.api-prod`** | API Operational Logs | **90 Days** | **Hot:** Days 1–7 (7d duration, rollover at 50GB or 7d, priority 100)<br>**Warm:** Days 8–30 (23d duration, min_age 7d, force merge to 1 segment, priority 50)<br>**Cold:** Days 31–90 (60d duration, min_age 30d, searchable snapshots, priority 20) | **Hard Delete** at Day 91 |
+| **`logs-ecardo.security-prod`** | Security & Audit Logs | **180 Days** | **Hot:** Days 1–14 (14d duration, rollover at 50GB or 14d, priority 100)<br>**Warm:** Days 15–60 (46d duration, min_age 14d, force merge to 1 segment, priority 50)<br>**Cold:** Days 61–180 (120d duration, min_age 60d, searchable snapshots, priority 20) | **Hard Delete** at Day 181 |
+| **`logs-ecardo.mobile-prod`** | Client Performance Telemetry | **30 Days** | **Hot:** Days 1–7 (7d duration, rollover at 25GB or 7d, priority 100)<br>**Warm:** Days 8–30 (23d duration, min_age 7d, force merge to 1 segment, priority 50)<br>**Cold:** Skipped | **Hard Delete** at Day 31 |
+| **`traces-ecardo.app-prod`** / **`traces-ecardo-prod`** | Raw Traces / APM Spans | **14 Days** | **Hot:** Days 1–3 (3d duration, rollover at 25GB or 3d, priority 100)<br>**Warm:** Days 4–14 (11d duration, min_age 3d, force merge to 1 segment, priority 50)<br>**Cold:** Skipped | **Hard Delete** at Day 15 |
 
 ```
   +---------------+       +---------------+       +---------------+       +---------------+
   |   HOT PHASE   | ----> |  WARM PHASE   | ----> |  COLD PHASE   | ----> | DELETE PHASE  |
   +---------------+       +---------------+       +---------------+       +---------------+
-  | Write & Search|       | Read-Only     |       | Searchable    |       | Complete      |
-  | Rollover:     |       | Age: 14 days  |       | Snapshots     |       | Purge from    |
-  |  25 GB or 7 d |       | ForceMerge: 1 |       | Age: 30 days  |       | Cluster       |
-  | Priority: 100 |       | Priority: 50  |       | Priority: 20  |       | Age: Ret. SLA |
+  | Write & Search|       | Read-Only     |       | Searchable    |       | Irreversible  |
+  | API/Mob: 7d   |       | API/Mob: 23d  |       | Snapshots     |       | Purge from    |
+  | Sec: 14d      |       | Sec: 46d      |       | API: 60d      |       | Cluster       |
+  | Trace: 3d     |       | Trace: 11d    |       | Sec: 120d     |       | Exact Matrix  |
+  | Priority: 100 |       | ForceMerge: 1 |       | Priority: 20  |       | SLA Retention |
   +---------------+       +---------------+       +---------------+       +---------------+
 ```
 
 1. **Hot Phase (Active Ingestion & Real-Time Querying):**
    - **Characteristics:** Shards accept live writes from OpenTelemetry Collectors and backend workers. High NVMe I/O priority.
-   - **Rollover Triggers:** Index primary shard size reaches **25 GB** OR elapsed time reaches **7 days**, whichever occurs first (`max_primary_shard_size: "25gb"`, `max_age: "7d"`). Max docs threshold: 50,000,000.
+   - **Rollover Triggers:** 
+     - API Logs (`logs-ecardo.api-prod`): `max_primary_shard_size: "50gb"`, `max_age: "7d"`.
+     - Security Logs (`logs-ecardo.security-prod`): `max_primary_shard_size: "50gb"`, `max_age: "14d"`.
+     - Client Telemetry (`logs-ecardo.mobile-prod`): `max_primary_shard_size: "25gb"`, `max_age: "7d"`.
+     - Raw Traces (`traces-ecardo.app-prod`): `max_primary_shard_size: "25gb"`, `max_age: "3d"`.
    - **Index Priority:** 100.
    - **Replicas:** 1 (in production) to guarantee High Availability (HA) against single-node hardware failure.
 
 2. **Warm Phase (Operational Querying & Segment Optimization):**
-   - **Trigger:** Shards transition into Warm phase **14 days** after rollover (`min_age: "14d"`).
+   - **Trigger:** Shards transition into Warm phase after hot duration:
+     - API Logs & Client Telemetry: **7 days** after index creation (`min_age: "7d"`), warm duration **23 days**.
+     - Security Logs: **14 days** after index creation (`min_age: "14d"`), warm duration **46 days**.
+     - Raw Traces: **3 days** after index creation (`min_age: "3d"`), warm duration **11 days**.
    - **Actions:**
      - Mark index as read-only (`index.blocks.write: true`).
      - Execute `forcemerge` down to **1 segment** (`max_num_segments: 1`) to reclaim deleted Lucene document space and drastically reduce segment memory overhead.
@@ -68,25 +83,29 @@ All operational logs, traces, and application metrics flow into versioned Elasti
      - Move index allocation to warm data nodes (`data_warm` tier) if tiered storage is configured.
 
 3. **Cold Phase (Long-Tail Retention & Searchable Snapshots):**
-   - **Trigger:** Shards transition into Cold phase **30 days** after rollover (`min_age: "30d"`).
+   - **Trigger:** Shards transition into Cold phase:
+     - API Logs: **30 days** after index creation (`min_age: "30d"`), cold duration **60 days**.
+     - Security Logs: **60 days** after index creation (`min_age: "60d"`), cold duration **120 days**.
+     - Client Telemetry & Raw Traces: Skipped (no cold tier; hard delete directly following warm phase).
    - **Actions:**
      - Migrate index to cold tier (`data_cold`) or mount as searchable snapshots backed by S3-compatible object storage.
      - Reduce replicas to 0 if searchable snapshots are enabled (storage engine mounts blocks on-demand from object storage).
      - Lower index priority to 20.
 
 4. **Delete Phase (Compliance Purge):**
-   - **Trigger:** Hard retention expiration based on data classification:
-     - Operational API Logs (`logs-ecardo.api-prod`): **90 days** from rollover.
-     - Technical Debug Traces (`traces-ecardo.app-prod`): **30 days** from rollover.
-     - Security Audit Logs (`logs-ecardo.security-prod`): **180 days** from rollover (or legal SLA).
-     - High-Volume Performance Metrics (`metrics-ecardo.app-prod`): **60 days** from rollover.
+   - **Trigger:** Hard retention expiration strictly governed by EL-GOV-01:
+     - API Operational Logs (`logs-ecardo.api-prod`): **90 days** (`min_age: "90d"`). Hard delete at Day 91.
+     - Security & Audit Logs (`logs-ecardo.security-prod`): **180 days** (`min_age: "180d"`). Hard delete at Day 181.
+     - Client Performance Telemetry (`logs-ecardo.mobile-prod`): **30 days** (`min_age: "30d"`). Hard delete at Day 31.
+     - Raw Traces / APM Spans (`traces-ecardo.app-prod` / `traces-ecardo-prod`): **14 days** (`min_age: "14d"`). Hard delete at Day 15.
    - **Actions:** Complete irreversible removal of indices and underlying segment files from cluster storage.
 
-### 2.2 Executable ILM Policy Definition
-Run the following API call via Kibana Dev Tools or `curl` to apply the baseline ILM policy:
+### 2.2 Executable ILM Policy Definitions
+Run the following API calls via Kibana Dev Tools or `curl` to apply the canonical ILM policies:
 
+#### 1. API Operational Logs Policy (90 Days Retention)
 ```bash
-curl -X PUT "https://serv.interex.ir:9200/_ilm/policy/ecardo_telemetry_ilm_policy" \
+curl -X PUT "https://serv.interex.ir:9200/_ilm/policy/ecardo_api_ilm_policy" \
   -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
   -H "Content-Type: application/json" \
   --cacert /etc/elasticsearch/certs/ca.crt \
@@ -96,48 +115,33 @@ curl -X PUT "https://serv.interex.ir:9200/_ilm/policy/ecardo_telemetry_ilm_polic
       "hot": {
         "min_age": "0ms",
         "actions": {
-          "set_priority": {
-            "priority": 100
-          },
+          "set_priority": { "priority": 100 },
           "rollover": {
-            "max_primary_shard_size": "25gb",
-            "max_age": "7d",
-            "max_docs": 50000000
+            "max_primary_shard_size": "50gb",
+            "max_age": "7d"
           }
         }
       },
       "warm": {
-        "min_age": "14d",
+        "min_age": "7d",
         "actions": {
-          "set_priority": {
-            "priority": 50
-          },
+          "set_priority": { "priority": 50 },
           "readonly": {},
-          "forcemerge": {
-            "max_num_segments": 1
-          },
-          "allocate": {
-            "number_of_replicas": 1
-          }
+          "forcemerge": { "max_num_segments": 1 },
+          "allocate": { "number_of_replicas": 1 }
         }
       },
       "cold": {
         "min_age": "30d",
         "actions": {
-          "set_priority": {
-            "priority": 20
-          },
-          "allocate": {
-            "number_of_replicas": 0
-          }
+          "set_priority": { "priority": 20 },
+          "allocate": { "number_of_replicas": 0 }
         }
       },
       "delete": {
         "min_age": "90d",
         "actions": {
-          "delete": {
-            "delete_searchable_snapshot": true
-          }
+          "delete": { "delete_searchable_snapshot": true }
         }
       }
     }
@@ -145,24 +149,214 @@ curl -X PUT "https://serv.interex.ir:9200/_ilm/policy/ecardo_telemetry_ilm_polic
 }'
 ```
 
-### 2.3 Index Template Attaching the ILM Policy
-All telemetry streams use composable index templates that enforce data stream creation, mapping strictness, and ILM assignment:
-
+#### 2. Security & Audit Logs Policy (180 Days Retention)
 ```bash
-curl -X PUT "https://serv.interex.ir:9200/_index_template/ecardo_logs_template" \
+curl -X PUT "https://serv.interex.ir:9200/_ilm/policy/ecardo_security_ilm_policy" \
   -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
   -H "Content-Type: application/json" \
   --cacert /etc/elasticsearch/certs/ca.crt \
   -d '{
-  "index_patterns": ["logs-ecardo.*"],
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "set_priority": { "priority": 100 },
+          "rollover": {
+            "max_primary_shard_size": "50gb",
+            "max_age": "14d"
+          }
+        }
+      },
+      "warm": {
+        "min_age": "14d",
+        "actions": {
+          "set_priority": { "priority": 50 },
+          "readonly": {},
+          "forcemerge": { "max_num_segments": 1 },
+          "allocate": { "number_of_replicas": 1 }
+        }
+      },
+      "cold": {
+        "min_age": "60d",
+        "actions": {
+          "set_priority": { "priority": 20 },
+          "allocate": { "number_of_replicas": 0 }
+        }
+      },
+      "delete": {
+        "min_age": "180d",
+        "actions": {
+          "delete": { "delete_searchable_snapshot": true }
+        }
+      }
+    }
+  }
+}'
+```
+
+#### 3. Client Performance Telemetry Policy (30 Days Retention)
+```bash
+curl -X PUT "https://serv.interex.ir:9200/_ilm/policy/ecardo_mobile_ilm_policy" \
+  -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
+  -H "Content-Type: application/json" \
+  --cacert /etc/elasticsearch/certs/ca.crt \
+  -d '{
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "set_priority": { "priority": 100 },
+          "rollover": {
+            "max_primary_shard_size": "25gb",
+            "max_age": "7d"
+          }
+        }
+      },
+      "warm": {
+        "min_age": "7d",
+        "actions": {
+          "set_priority": { "priority": 50 },
+          "readonly": {},
+          "forcemerge": { "max_num_segments": 1 },
+          "allocate": { "number_of_replicas": 1 }
+        }
+      },
+      "delete": {
+        "min_age": "30d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}'
+```
+
+#### 4. Raw Traces / APM Spans Policy (14 Days Retention)
+```bash
+curl -X PUT "https://serv.interex.ir:9200/_ilm/policy/ecardo_traces_ilm_policy" \
+  -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
+  -H "Content-Type: application/json" \
+  --cacert /etc/elasticsearch/certs/ca.crt \
+  -d '{
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "set_priority": { "priority": 100 },
+          "rollover": {
+            "max_primary_shard_size": "25gb",
+            "max_age": "3d"
+          }
+        }
+      },
+      "warm": {
+        "min_age": "3d",
+        "actions": {
+          "set_priority": { "priority": 50 },
+          "readonly": {},
+          "forcemerge": { "max_num_segments": 1 },
+          "allocate": { "number_of_replicas": 1 }
+        }
+      },
+      "delete": {
+        "min_age": "14d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}'
+```
+
+### 2.3 Index Templates Attaching Canonical ILM Policies
+All telemetry streams use composable index templates that enforce data stream creation, mapping strictness, and specific ILM policy assignment:
+
+```bash
+# 1. API Logs Template
+curl -X PUT "https://serv.interex.ir:9200/_index_template/ecardo_api_logs_template" \
+  -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
+  -H "Content-Type: application/json" \
+  --cacert /etc/elasticsearch/certs/ca.crt \
+  -d '{
+  "index_patterns": ["logs-ecardo.api-*"],
   "data_stream": {},
   "priority": 500,
   "template": {
     "settings": {
-      "index.lifecycle.name": "ecardo_telemetry_ilm_policy",
+      "index.lifecycle.name": "ecardo_api_ilm_policy",
       "index.number_of_shards": 1,
       "index.number_of_replicas": 1,
       "index.refresh_interval": "5s",
+      "index.codec": "best_compression"
+    }
+  }
+}'
+
+# 2. Security Audit Logs Template
+curl -X PUT "https://serv.interex.ir:9200/_index_template/ecardo_security_logs_template" \
+  -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
+  -H "Content-Type: application/json" \
+  --cacert /etc/elasticsearch/certs/ca.crt \
+  -d '{
+  "index_patterns": ["logs-ecardo.security-*"],
+  "data_stream": {},
+  "priority": 500,
+  "template": {
+    "settings": {
+      "index.lifecycle.name": "ecardo_security_ilm_policy",
+      "index.number_of_shards": 1,
+      "index.number_of_replicas": 1,
+      "index.refresh_interval": "5s",
+      "index.codec": "best_compression"
+    }
+  }
+}'
+
+# 3. Client Performance Telemetry Template
+curl -X PUT "https://serv.interex.ir:9200/_index_template/ecardo_mobile_logs_template" \
+  -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
+  -H "Content-Type: application/json" \
+  --cacert /etc/elasticsearch/certs/ca.crt \
+  -d '{
+  "index_patterns": ["logs-ecardo.mobile-*"],
+  "data_stream": {},
+  "priority": 500,
+  "template": {
+    "settings": {
+      "index.lifecycle.name": "ecardo_mobile_ilm_policy",
+      "index.number_of_shards": 1,
+      "index.number_of_replicas": 1,
+      "index.refresh_interval": "5s",
+      "index.codec": "best_compression"
+    }
+  }
+}'
+
+# 4. Raw Traces Template
+curl -X PUT "https://serv.interex.ir:9200/_index_template/ecardo_traces_template" \
+  -u "${ES_ADMIN_USER}:${ES_ADMIN_PASSWORD}" \
+  -H "Content-Type: application/json" \
+  --cacert /etc/elasticsearch/certs/ca.crt \
+  -d '{
+  "index_patterns": ["traces-ecardo.*"],
+  "data_stream": {},
+  "priority": 500,
+  "template": {
+    "settings": {
+      "index.lifecycle.name": "ecardo_traces_ilm_policy",
+      "index.number_of_shards": 1,
+      "index.number_of_replicas": 1,
+      "index.refresh_interval": "5s",
+      "index.codec": "best_compression"
+    }
+  }
+}'
+```
       "index.mapping.total_fields.limit": 1000,
       "index.codec": "best_compression"
     },

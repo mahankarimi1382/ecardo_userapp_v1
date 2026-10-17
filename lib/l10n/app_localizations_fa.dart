@@ -3552,7 +3552,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String addMoneyValidationAmountMinimum(Object amount) {
-    return 'مبلغ نباید از $amount بیشتر باشد';
+    return 'مبلغ نباید از $amount کمتر باشد';
   }
 
   @override
@@ -4512,7 +4512,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String cardDetailsAmountMinimumLimit(Object amount) {
-    return 'مبلغ نباید از $amount بیشتر باشد';
+    return 'مبلغ نباید از $amount کمتر باشد';
   }
 
   @override

@@ -1,0 +1,16 @@
+ID,Priority,Workstream,Title,Status,DependsOn,AcceptanceGate
+FIN-IDEM-01,P0,Financial,Durable operation ID and unknown-outcome reconciliation,TODO,,G-04
+FIN-IDEM-02,P0,Backend,Operation status endpoint,TODO,FIN-IDEM-01,G-04
+FIN-IDEM-03,P0,Financial QA,Duplicate request/callback integration tests,TODO,FIN-IDEM-01;FIN-IDEM-02,G-04
+SEC-OFF-01,P0,Mobile Security,Exact endpoint/method allowlist,TODO,,G-06
+SEC-OFF-02,P0,Privacy,Forbidden queue payload tests,TODO,SEC-OFF-01,G-06
+REL-DOC-01,P0,Release,Current release evidence v1.0.171,TODO,,G-13
+SEC-TOKEN-01,P1,Mobile Security,iOS Keychain policy and failure paths,TODO,,G-05
+CI-PRIV-01,P1,DevEx,Separate read-only CI and release write permissions,TODO,,G-11
+EL-GOV-01,P1,Data Governance,One approved retention registry,TODO,,G-12
+EL-EVIDENCE-01,P1,SRE,Verify or relabel restore drill evidence,TODO,EL-GOV-01,G-12
+EL-IMPL-01,P1,Platform,Record actual telemetry deployment inventory,TODO,,G-12
+IOS-REL-01,P1,Release,Signed iOS build and device smoke test,TODO,,G-09
+UX-I18N-01,P1,Mobile QA,Run six-locale critical-flow device matrix,TODO,,G-10
+CI-ACT-01,P2,DevEx,Upgrade deprecated actions and pin runner,TODO,CI-PRIV-01,G-11
+EL-LOAD-01,P2,SRE,Measure telemetry capacity and fault behavior,TODO,EL-IMPL-01;EL-GOV-01,G-12

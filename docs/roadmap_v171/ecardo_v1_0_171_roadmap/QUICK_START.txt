@@ -1,0 +1,7 @@
+eCardo User App v1.0.171 — Audit and Next Roadmap
+Review date: 2026-10-17
+Release tag: v1.0.171
+Commit: 25028235b92cd9c026454df64c88cef44fda9ce6
+
+Start with README.md, then 01_AUDIT_REPORT.md, 02_MASTER_ROADMAP.md, 03_TASK_BACKLOG.md and 04_RELEASE_GATES.md.
+The pack is a proposed roadmap; it has not been pushed into GitHub or executed against the repository.

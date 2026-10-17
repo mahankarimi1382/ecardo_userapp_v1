@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io' show Platform, SocketException;
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
@@ -231,45 +232,56 @@ class NetworkService extends getx.GetxService {
           // The key is reused across an in-flight logical call and retained on
           // transport timeouts (up to 5 min TTL) so a retry maps to the same
           // idempotency key server-side.
-          if (options.method.toUpperCase() == 'POST' &&
-              options.headers['Idempotency-Key'] == null) {
-            final path = options.uri.path;
-            final rawOpId =
-                options.headers['X-Operation-ID'] ??
-                options.extra['operationId'];
-            final explicitOpId =
-                (rawOpId is String && rawOpId.trim().isNotEmpty)
-                ? rawOpId.trim()
-                : null;
-            final isMoney = _idempotentEndpointSuffixes.any(
-              (suffix) => path.endsWith(suffix),
-            );
-            if (isMoney || explicitOpId != null) {
-              _evictExpiredIdempotencyEntries();
+          if (options.method.toUpperCase() == 'POST') {
+            final existingIdem = options.headers['Idempotency-Key'] ??
+                options.headers['X-Idempotency-Key'];
+            if (existingIdem != null) {
+              // FIN-IDEM-01: Ensure both headers are emitted if one was already set
+              options.headers['Idempotency-Key'] = existingIdem;
+              options.headers['X-Idempotency-Key'] = existingIdem;
               final mapKey = _getIdempotencyMapKey(options);
-              var entry = _inflightIdempotency[mapKey];
               final now = _clock();
-              if (entry != null &&
-                  now.difference(entry.createdAt) >= _idempotencyTtl) {
-                _inflightIdempotency.remove(mapKey);
-                entry = null;
-              }
-              if (entry == null) {
-                _boundRegistrySize();
-                final seed =
-                    explicitOpId ??
-                    (options.headers['X-Request-ID'] as String?) ??
-                    _generateRequestId();
-                entry = _IdempotencyEntry(seed, now);
-                _inflightIdempotency[mapKey] = entry;
-              }
-              options.headers['Idempotency-Key'] = entry.key;
-              // P1-02 (FIN-IDEM-02): Send both Idempotency-Key and X-Idempotency-Key
-              // to guarantee 100% compatibility across all server and middleware contracts.
-              options.headers['X-Idempotency-Key'] = entry.key;
-              if (explicitOpId != null &&
-                  options.headers['X-Operation-ID'] == null) {
-                options.headers['X-Operation-ID'] = explicitOpId;
+              _inflightIdempotency[mapKey] =
+                  _IdempotencyEntry(existingIdem.toString(), now);
+            } else {
+              final path = options.uri.path;
+              final rawOpId =
+                  options.headers['X-Operation-ID'] ??
+                  options.extra['operationId'];
+              final explicitOpId =
+                  (rawOpId is String && rawOpId.trim().isNotEmpty)
+                  ? rawOpId.trim()
+                  : null;
+              final isMoney = _idempotentEndpointSuffixes.any(
+                (suffix) => path.endsWith(suffix),
+              );
+              if (isMoney || explicitOpId != null) {
+                _evictExpiredIdempotencyEntries();
+                final mapKey = _getIdempotencyMapKey(options);
+                var entry = _inflightIdempotency[mapKey];
+                final now = _clock();
+                if (entry != null &&
+                    now.difference(entry.createdAt) >= _idempotencyTtl) {
+                  _inflightIdempotency.remove(mapKey);
+                  entry = null;
+                }
+                if (entry == null) {
+                  _boundRegistrySize();
+                  final seed =
+                      explicitOpId ??
+                      (options.headers['X-Request-ID'] as String?) ??
+                      _generateRequestId();
+                  entry = _IdempotencyEntry(seed, now);
+                  _inflightIdempotency[mapKey] = entry;
+                }
+                options.headers['Idempotency-Key'] = entry.key;
+                // P1-02 (FIN-IDEM-01 / FIN-IDEM-02): Send both Idempotency-Key and X-Idempotency-Key
+                // to guarantee 100% compatibility across all server and middleware contracts.
+                options.headers['X-Idempotency-Key'] = entry.key;
+                if (explicitOpId != null &&
+                    options.headers['X-Operation-ID'] == null) {
+                  options.headers['X-Operation-ID'] = explicitOpId;
+                }
               }
             }
           }
@@ -288,7 +300,15 @@ class NetworkService extends getx.GetxService {
         },
         onResponse: (response, handler) {
           final statusCode = response.statusCode;
-          if (statusCode == null || (statusCode >= 200 && statusCode < 300)) {
+          // FIN-IDEM-01 / FIN-IDEM-05: 2xx/3xx successes and deterministic 4xx client errors
+          // DO release the key once finished. Ambiguous 5xx server errors NEVER release prematurely.
+          final isAmbiguousServerError =
+              statusCode != null && statusCode >= 500 && statusCode <= 599;
+          final isDeterministicRelease =
+              statusCode == null ||
+              (statusCode >= 200 && statusCode < 500);
+
+          if (!isAmbiguousServerError && isDeterministicRelease) {
             _releaseIdempotencyKey(response.requestOptions);
           }
           return handler.next(response);
@@ -296,13 +316,17 @@ class NetworkService extends getx.GetxService {
         onError: (DioException error, handler) async {
           final isTimeout = _isTransportTimeoutOrSocketException(error);
           final statusCode = error.response?.statusCode;
-          // P0-02 (FIN-IDEM-01): 5xx server errors are ambiguous — the server transaction
-          // may have committed before an upstream or serialization crash occurred.
-          // Retain the idempotency key for 5xx, timeouts, and connection drops to prevent
-          // double-debits on retry! Only release on deterministic 4xx client errors (e.g. 400, 422).
+          // FIN-IDEM-01 / FIN-IDEM-05: 5xx server errors (HTTP 500-599), timeouts,
+          // and SocketExceptions are ambiguous — the server transaction may have
+          // committed before an upstream or serialization crash occurred.
+          // Retain the idempotency key and NEVER release it prematurely!
+          // Only release on deterministic 4xx client errors (e.g. 400, 422).
           final isAmbiguousServerError =
-              statusCode != null && statusCode >= 500 && statusCode < 600;
-          if (!isTimeout && !isAmbiguousServerError) {
+              statusCode != null && statusCode >= 500 && statusCode <= 599;
+          final isDeterministicClientError =
+              statusCode != null && statusCode >= 400 && statusCode <= 499;
+
+          if (!isTimeout && !isAmbiguousServerError && isDeterministicClientError) {
             _releaseIdempotencyKey(error.requestOptions);
           }
           if (error.response?.statusCode == 401) {
@@ -520,6 +544,43 @@ class NetworkService extends getx.GetxService {
     }
   }
 
+  static String _normalizePath(Uri uri) {
+    var rawPath = uri.path;
+    // If uri was scheme-relative without a scheme (e.g. //user/transfer),
+    // Dart's Uri.parse treats the first segment as uri.host.
+    if (uri.scheme.isEmpty && uri.host.isNotEmpty) {
+      rawPath = '/${uri.host}$rawPath';
+    }
+    var path = rawPath;
+    // Replace duplicate consecutive slashes with a single slash
+    path = path.replaceAll(RegExp(r'/+'), '/');
+    // Strip trailing slash unless the path is just '/'
+    if (path.length > 1 && path.endsWith('/')) {
+      path = path.substring(0, path.length - 1);
+    }
+    // Ensure leading slash
+    if (!path.startsWith('/')) {
+      path = '/$path';
+    }
+    // If query parameters exist, sort them deterministically
+    if (uri.hasQuery && uri.query.isNotEmpty) {
+      final sortedEntries = uri.queryParametersAll.entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key));
+      final queryPairs = <String>[];
+      for (final entry in sortedEntries) {
+        final sortedValues = List<String>.from(entry.value)..sort();
+        for (final val in sortedValues) {
+          queryPairs.add(
+            '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(val)}',
+          );
+        }
+      }
+      return '$path?${queryPairs.join('&')}';
+    }
+    return path;
+  }
+
+  /// FIN-IDEM-06: produces collision-free, stable key: METHOD:NORMALIZED_PATH:IDENTITY
   String _getIdempotencyMapKey(RequestOptions options) {
     final rawOpId =
         options.headers['X-Operation-ID'] ?? options.extra['operationId'];
@@ -529,7 +590,8 @@ class NetworkService extends getx.GetxService {
     final identity = explicitOpId != null
         ? 'op:$explicitOpId'
         : _payloadFingerprint(options.data);
-    return '${options.method.toUpperCase()}:${options.uri.path}?${options.uri.query}:$identity';
+    final normalizedPath = _normalizePath(options.uri);
+    return '${options.method.toUpperCase()}:$normalizedPath:$identity';
   }
 
   /// Workstream B: release the in-flight idempotency key once the request
@@ -544,6 +606,8 @@ class NetworkService extends getx.GetxService {
     final mapKey = _getIdempotencyMapKey(options);
     if (_inflightIdempotency[mapKey]?.key == headerKey) {
       _inflightIdempotency.remove(mapKey);
+    } else {
+      _inflightIdempotency.removeWhere((_, entry) => entry.key == headerKey);
     }
   }
 
@@ -557,12 +621,17 @@ class NetworkService extends getx.GetxService {
     }
     final underlying = error.error;
     if (underlying is SocketException ||
+        underlying is TimeoutException ||
         (underlying != null &&
-            underlying.toString().toLowerCase().contains('socketexception'))) {
+            (underlying.toString().toLowerCase().contains('socketexception') ||
+                underlying.toString().toLowerCase().contains('timeoutexception')))) {
       return true;
     }
     final message = error.message?.toLowerCase() ?? '';
     if (message.contains('socketexception') ||
+        message.contains('timeoutexception') ||
+        message.contains('timed out') ||
+        message.contains('timeout') ||
         message.contains('connection refused') ||
         message.contains('connection reset') ||
         message.contains('network is unreachable') ||
@@ -572,14 +641,66 @@ class NetworkService extends getx.GetxService {
     return false;
   }
 
-  /// phase1-fix (P0-3): payload fingerprint for idempotency scoping.
+  /// FIN-IDEM-04: Recursively canonicalize JSON structures by sorting Map keys.
+  static dynamic _canonicalizeJson(dynamic value) {
+    if (value is Map) {
+      final sortedEntries = value.entries.toList()
+        ..sort((a, b) => a.key.toString().compareTo(b.key.toString()));
+      final result = <String, dynamic>{};
+      for (final entry in sortedEntries) {
+        result[entry.key.toString()] = _canonicalizeJson(entry.value);
+      }
+      return result;
+    } else if (value is List) {
+      return value.map(_canonicalizeJson).toList();
+    }
+    return value;
+  }
+
+  /// FIN-IDEM-04: payload fingerprint for idempotency scoping using deterministic
+  /// canonical SHA-256 hash. When data is a Map, sorts keys recursively before hashing.
+  /// Never uses .hashCode.
   String _payloadFingerprint(Object? data) {
-    if (data == null) return 'empty';
-    if (data is FormData) return 'fd:${data.boundary}';
+    if (data == null) {
+      return sha256.convert(const <int>[]).toString();
+    }
+    if (data is FormData) {
+      final fields = data.fields.map((e) => '${e.key}=${e.value}').toList()
+        ..sort();
+      final files = data.files.map((e) => '${e.key}=${e.value.filename}').toList()
+        ..sort();
+      final fdRepr = 'fields:${fields.join('&')}|files:${files.join('&')}';
+      return sha256.convert(utf8.encode(fdRepr)).toString();
+    }
     try {
-      return 'j:${jsonEncode(data).hashCode.toRadixString(36)}';
+      dynamic parsed = data;
+      if (data is String) {
+        final trimmed = data.trim();
+        if ((trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+            (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+          try {
+            parsed = jsonDecode(trimmed);
+          } catch (_) {
+            parsed = data;
+          }
+        }
+      }
+      final canonical = _canonicalizeJson(parsed);
+      final jsonStr = jsonEncode(
+        canonical,
+        toEncodable: (item) {
+          if (item is DateTime) return item.toIso8601String();
+          try {
+            // ignore: avoid_dynamic_calls
+            return (item as dynamic).toJson();
+          } catch (_) {
+            return item.toString();
+          }
+        },
+      );
+      return sha256.convert(utf8.encode(jsonStr)).toString();
     } catch (_) {
-      return 'raw:${data.hashCode}';
+      return sha256.convert(utf8.encode(data.toString())).toString();
     }
   }
 
@@ -994,7 +1115,8 @@ class NetworkService extends getx.GetxService {
               e.type == DioExceptionType.connectionTimeout) &&
           getx.Get.isRegistered<OfflineRequestQueue>()) {
         final q = getx.Get.find<OfflineRequestQueue>();
-        if (q.isQueueable(endpoint)) {
+        if (!q.isFlushing &&
+            q.isQueueable(endpoint, method: 'POST', data: data)) {
           await q.enqueue(
             method: 'POST',
             endpoint: endpoint,
@@ -1154,6 +1276,21 @@ class NetworkService extends getx.GetxService {
         );
         if (fallback != null) {
           return ApiResponse.completed(fallback);
+        }
+      }
+      // Queue non-financial PUTs when offline (e.g. /user/settings/profile).
+      if ((e.type == DioExceptionType.connectionError ||
+              e.type == DioExceptionType.connectionTimeout) &&
+          getx.Get.isRegistered<OfflineRequestQueue>()) {
+        final q = getx.Get.find<OfflineRequestQueue>();
+        if (!q.isFlushing &&
+            q.isQueueable(endpoint, method: 'PUT', data: data)) {
+          await q.enqueue(
+            method: 'PUT',
+            endpoint: endpoint,
+            data: data,
+          );
+          return ApiResponse.error('queued_offline');
         }
       }
       return _handleDioException(e, "PUT");
@@ -1778,6 +1915,15 @@ class NetworkService extends getx.GetxService {
     Response response,
     String requestType,
   ) => _handleDioErrorResponse(response, requestType);
+
+  @visibleForTesting
+  String payloadFingerprint(Object? data) => _payloadFingerprint(data);
+
+  @visibleForTesting
+  static dynamic canonicalizeJson(dynamic value) => _canonicalizeJson(value);
+
+  @visibleForTesting
+  static String normalizePath(Uri uri) => _normalizePath(uri);
 }
 
 /// Workstream B: Idempotency entry tracking the minted key and creation timestamp.
