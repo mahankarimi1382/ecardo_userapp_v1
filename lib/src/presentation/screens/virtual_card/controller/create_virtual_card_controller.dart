@@ -604,9 +604,9 @@ class CreateVirtualCardController extends GetxController {
         final cardProvidersModel = CardProviderModel.fromJson(response.data!);
         cardProvidersList.clear();
         final rawProviders = cardProvidersModel.data ?? [];
-        // Filter out legacy providers known to reject regional cards
+        // Filter out legacy template providers (Stripe/Strowallet) that fail on regional issuance
         cardProvidersList.assignAll(
-          rawProviders.where((p) => p.code != 'stripe'),
+          rawProviders.where((p) => p.code != 'stripe' && p.code != 'strowallet'),
         );
       }
     } catch (e, stackTrace) {

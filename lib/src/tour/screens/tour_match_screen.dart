@@ -453,7 +453,7 @@ class _TourMatchScreenState extends State<TourMatchScreen> {
                                         borderRadius: BorderRadius.circular(8.r),
                                       ),
                                       child: Text(
-                                        '${tour.matchPercentage}% تطابق',
+                                        '${tour.matchPercentage}% ${l10nPick(context, en: 'Match', fa: 'تطابق', ar: 'تطابق', tr: 'Eşleşme', ru: 'Совпадение', zh: '匹配')}',
                                         style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.w800),
                                       ),
                                     ),
@@ -461,7 +461,7 @@ class _TourMatchScreenState extends State<TourMatchScreen> {
                               ),
                               SizedBox(height: 6.h),
                               Text(
-                                '${tour.city} • ${tour.durationDays} روز • قیمت از: ${tour.basePrice.toInt()} ${tour.currency}',
+                                '${tour.city} • ${tour.durationDays} ${l10nPick(context, en: 'days', fa: 'روز', ar: 'أيام', tr: 'gün', ru: 'дней', zh: '天')} • ${l10nPick(context, en: 'From:', fa: 'قیمت از:', ar: 'السعر من:', tr: 'Başlangıç:', ru: 'От:', zh: '起价：')} ${tour.basePrice.toInt()} ${tour.currency}',
                                 style: TextStyle(fontSize: 11.sp, color: TravelTheme.muted),
                               ),
                             ],

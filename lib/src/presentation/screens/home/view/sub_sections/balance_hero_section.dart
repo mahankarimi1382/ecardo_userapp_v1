@@ -57,6 +57,24 @@ class BalanceHeroSection extends StatelessWidget {
         availableCurrencies.add('USD');
       }
 
+      String? secondaryEquivalent;
+      const liveUsdToIrt = 95000.0;
+      final curUpper = currencyCode.toUpperCase();
+      if (curUpper == 'USD' || curUpper == 'USDT') {
+        final tomanEq = (currentBalance * liveUsdToIrt).toInt();
+        final formattedToman = tomanEq.toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]},',
+        );
+        secondaryEquivalent = '≈ $formattedToman ${l10nPick(context, en: "Toman", fa: "تومان", ar: "تومان", tr: "Tümen", ru: "Туман", zh: "托曼")}';
+      } else if (curUpper == 'IRT' || curUpper == 'TOMAN') {
+        final usdEq = currentBalance / liveUsdToIrt;
+        secondaryEquivalent = '≈ \$${usdEq.toStringAsFixed(2)} USD';
+      } else if (curUpper == 'IRR') {
+        final usdEq = (currentBalance / 10.0) / liveUsdToIrt;
+        secondaryEquivalent = '≈ \$${usdEq.toStringAsFixed(2)} USD';
+      }
+
       return Padding(
         padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
         child: EcardoBalanceHero(
@@ -64,6 +82,7 @@ class BalanceHeroSection extends StatelessWidget {
           currencyCode: currencyCode,
           currencySymbol: currencySymbol,
           availableCurrencies: availableCurrencies,
+          secondaryEquivalent: secondaryEquivalent,
           onCurrencyChanged: (code) {
             homeController.selectWalletByCurrency(code);
           },

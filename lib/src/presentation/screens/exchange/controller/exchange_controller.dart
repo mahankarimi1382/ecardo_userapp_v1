@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/network_error_helper.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/api_response.dart';
@@ -673,6 +674,7 @@ class ExchangeController extends GetxController {
         'rate_locked_at': reviewEnteredAt.toUtc().toIso8601String(),
       if (passcode != null && passcode.isNotEmpty) 'passcode': passcode,
     };
+    final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
     try {
       final response = await Get.find<NetworkService>().post(
@@ -699,7 +701,7 @@ class ExchangeController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (msg.contains('passcode')) {
+        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isExchangeWalletLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -708,6 +710,21 @@ class ExchangeController extends GetxController {
             await exchangeWallet(passcode: verified.toString());
             return;
           }
+        } else if (PasscodeHelper.isPasscodeInvalid(response.message)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'The transaction passcode entered is incorrect.',
+              fa: 'رمز عبور معامله وارد شده نادرست است.',
+              ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+              zh: '输入的交易密码不正确。',
+            ),
+          );
+        } else {
+          ToastHelper().showErrorToast(
+            response.message ??
+                localizationOrNull?.allControllerLoadError ??
+                'Something went wrong. Please try again.',
+          );
         }
       }
     } catch (e, stackTrace) {
@@ -732,7 +749,7 @@ class ExchangeController extends GetxController {
             zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复兑换。',
           ),
         );
-      } else if (errStr.contains('passcode')) {
+      } else if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
         isExchangeWalletLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -741,6 +758,15 @@ class ExchangeController extends GetxController {
           await exchangeWallet(passcode: verified.toString());
           return;
         }
+      } else if (PasscodeHelper.isPasscodeInvalid(e)) {
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'The transaction passcode entered is incorrect.',
+            fa: 'رمز عبور معامله وارد شده نادرست است.',
+            ar: 'رمز مرور المعاملة المدخل غیر صحیح.',
+            zh: '输入的交易密码不正确。',
+          ),
+        );
       } else {
         ToastHelper().showErrorToast(
           localizationOrNull?.allControllerLoadError ??

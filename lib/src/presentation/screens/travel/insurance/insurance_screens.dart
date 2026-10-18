@@ -129,6 +129,56 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
 
   Future<void> _submitOrder(BuildContext context) async {
     final localization = AppLocalizations.of(context)!;
+
+    final fullName = _fullNameEnController.text.trim();
+    final passportNo = _passportController.text.trim().toUpperCase();
+    final nationalId = _nationalCodeController.text.trim();
+    final phone = _phoneController.text.trim();
+
+    if (fullName.isEmpty || passportNo.isEmpty || nationalId.isEmpty || phone.isEmpty) {
+      showTravelMessage(
+        context,
+        title: l10nPick(context, en: 'Incomplete Information', fa: 'اطلاعات ناقص است', ar: 'بيانات ناقصة', tr: 'Eksik Bilgi', ru: 'Неполные данные'),
+        message: l10nPick(
+          context,
+          en: 'Please complete all required fields (English full name, passport number, national ID, and mobile phone).',
+          fa: 'لطفاً تمامی مشخصات الزامی مسافر (نام و نام خانوادگی به انگلیسی، شماره گذرنامه، کد ملی و تلفن همراه) را تکمیل نمایید.',
+          ar: 'يرجى ملء جميع الحقول المطلوبة للمسافر.',
+          tr: 'Lütfen tüm zorunlu alanları doldurun.',
+          ru: 'Пожалуйста, заполните все обязательные поля путешественника.',
+        ),
+      );
+      return;
+    }
+
+    if (fullName.length < 3) {
+      showTravelMessage(
+        context,
+        title: l10nPick(context, en: 'Invalid Name', fa: 'نام نامعتبر', ar: 'اسم غير صالح'),
+        message: l10nPick(
+          context,
+          en: 'Full name in English must contain at least 3 characters as in your passport.',
+          fa: 'نام و نام خانوادگی انگلیسی باید حداقل ۳ حرف و مطابق با گذرنامه باشد.',
+          ar: 'يجب أن يحتوي الاسم على 3 أحرف على الأقل كما في جواز السفر.',
+        ),
+      );
+      return;
+    }
+
+    if (passportNo.length < 6) {
+      showTravelMessage(
+        context,
+        title: l10nPick(context, en: 'Invalid Passport', fa: 'گذرنامه نامعتبر', ar: 'جواز غير صالح'),
+        message: l10nPick(
+          context,
+          en: 'Please enter a valid passport number (at least 6 characters).',
+          fa: 'شماره گذرنامه باید حداقل ۶ کاراکتر و معتبر باشد.',
+          ar: 'يرجى إدخال رقم جواز سفر صحيح.',
+        ),
+      );
+      return;
+    }
+
     if (_formKey.currentState?.validate() != true) {
       showTravelMessage(
         context,
@@ -160,11 +210,11 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
 
     final birthDateTime = DateTime.tryParse(_birthDateController.text) ?? DateTime(1995, 5, 15);
     final traveler = InsuredTraveler(
-      fullNameEn: _fullNameEnController.text.trim().toUpperCase(),
-      passportNumber: _passportController.text.trim().toUpperCase(),
-      nationalId: _nationalCodeController.text.trim(),
+      fullNameEn: fullName.toUpperCase(),
+      passportNumber: passportNo,
+      nationalId: nationalId,
       birthDate: birthDateTime,
-      phone: _phoneController.text.trim(),
+      phone: phone,
       email: _emailController.text.trim(),
     );
 

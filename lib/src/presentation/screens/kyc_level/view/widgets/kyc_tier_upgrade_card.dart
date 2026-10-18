@@ -1339,6 +1339,8 @@ class _TierDefinition {
       en: 'Tier 1 — Basic',
       fa: 'سطح ۱ — برنزی',
       ar: 'المستوى 1 — البرونزي',
+      tr: 'Seviye 1 — Temel (Bronz)',
+      ru: 'Уровень 1 — Базовый (Бронзовый)',
       zh: '第 1 级 — 青铜级',
     ),
     shortName: (context) => l10nPick(
@@ -1346,6 +1348,8 @@ class _TierDefinition {
       en: 'Basic',
       fa: 'برنزی',
       ar: 'برونزي',
+      tr: 'Bronz',
+      ru: 'Бронзовый',
       zh: '青铜',
     ),
     tabLabel: (context) => l10nPick(
@@ -1353,6 +1357,8 @@ class _TierDefinition {
       en: 'Tier 1 (Basic)',
       fa: 'سطح ۱ (برنزی)',
       ar: 'مستوى 1 (برونزي)',
+      tr: 'Seviye 1 (Bronz)',
+      ru: 'Уровень 1 (Бронзовый)',
       zh: '第1级 (青铜)',
     ),
     requirement: (context) => l10nPick(
@@ -1360,6 +1366,8 @@ class _TierDefinition {
       en: 'Email & Phone verified',
       fa: 'تأیید ایمیل و شماره همراه',
       ar: 'البريد الإلكتروني ورقم الهاتف موثقان',
+      tr: 'E-posta ve Telefon doğrulandı',
+      ru: 'Эл. почта и телефон подтверждены',
       zh: '邮箱和手机号已验证',
     ),
     virtualCardsLabel: (context) => l10nPick(
@@ -1367,6 +1375,8 @@ class _TierDefinition {
       en: '1 Virtual Card',
       fa: '۱ کارت مجازی',
       ar: 'بطاقة افتراضية واحدة',
+      tr: '1 Sanal Kart',
+      ru: '1 виртуальная карта',
       zh: '1 张虚拟卡',
     ),
     benefits: (context) => [
@@ -1419,6 +1429,8 @@ class _TierDefinition {
       en: 'Tier 2 — Standard',
       fa: 'سطح ۲ — نقره‌ای',
       ar: 'المستوى 2 — الفضي',
+      tr: 'Seviye 2 — Standart (Gümüş)',
+      ru: 'Уровень 2 — Стандартный (Серебряный)',
       zh: '第 2 级 — 白银级',
     ),
     shortName: (context) => l10nPick(
@@ -1426,6 +1438,8 @@ class _TierDefinition {
       en: 'Standard',
       fa: 'نقره‌ای',
       ar: 'فضي',
+      tr: 'Gümüş',
+      ru: 'Серебряный',
       zh: '白银',
     ),
     tabLabel: (context) => l10nPick(
@@ -1433,6 +1447,8 @@ class _TierDefinition {
       en: 'Tier 2 (Standard)',
       fa: 'سطح ۲ (نقره‌ای)',
       ar: 'مستوى 2 (فضي)',
+      tr: 'Seviye 2 (Gümüş)',
+      ru: 'Уровень 2 (Серебряный)',
       zh: '第2级 (白银)',
     ),
     requirement: (context) => l10nPick(
@@ -1440,6 +1456,8 @@ class _TierDefinition {
       en: 'National ID / Passport verified',
       fa: 'تأیید کارت ملی یا پاسپورت',
       ar: 'الهوية الوطنية أو جواز السفر موثق',
+      tr: 'Kimlik Kartı veya Pasaport doğrulandı',
+      ru: 'Удостоверение личности или паспорт подтверждены',
       zh: '身份证或护照已验证',
     ),
     virtualCardsLabel: (context) => l10nPick(
@@ -1447,6 +1465,8 @@ class _TierDefinition {
       en: '3 Virtual Cards',
       fa: '۳ کارت مجازی',
       ar: '3 بطاقات افتراضية',
+      tr: '3 Sanal Kart',
+      ru: '3 виртуальные карты',
       zh: '3 张虚拟卡',
     ),
     benefits: (context) => [
@@ -1506,6 +1526,8 @@ class _TierDefinition {
       en: 'Tier 3 — VIP',
       fa: 'سطح ۳ — طلایی (VIP)',
       ar: 'المستوى 3 — الذهبي (VIP)',
+      tr: 'Seviye 3 — Altın (VIP)',
+      ru: 'Уровень 3 — Золотой (VIP)',
       zh: '第 3 级 — 黄金级 (VIP)',
     ),
     shortName: (context) => l10nPick(
@@ -1513,6 +1535,8 @@ class _TierDefinition {
       en: 'VIP',
       fa: 'طلایی',
       ar: 'VIP ذهبي',
+      tr: 'Altın VIP',
+      ru: 'Золотой VIP',
       zh: 'VIP 黄金',
     ),
     tabLabel: (context) => l10nPick(
@@ -1520,6 +1544,8 @@ class _TierDefinition {
       en: 'Tier 3 (VIP)',
       fa: 'سطح ۳ (طلایی)',
       ar: 'مستوى 3 (ذهبي)',
+      tr: 'Seviye 3 (VIP)',
+      ru: 'Уровень 3 (VIP)',
       zh: '第3级 (VIP)',
     ),
     requirement: (context) => l10nPick(
@@ -1527,6 +1553,8 @@ class _TierDefinition {
       en: 'Proof of Address & Video Liveness verified',
       fa: 'تأیید نشانی سکونت و احراز هویت ویدیویی زنده',
       ar: 'إثبات العنوان والتحقق المرئي المباشر',
+      tr: 'İkamet Adresi ve Canlı Video Doğrulaması',
+      ru: 'Подтверждение адреса и видеоверификация',
       zh: '地址证明与动态活体视频验证',
     ),
     virtualCardsLabel: (context) => l10nPick(
@@ -1534,6 +1562,8 @@ class _TierDefinition {
       en: 'Unlimited Cards',
       fa: 'کارت‌های نامحدود',
       ar: 'بطاقات غير محدودة',
+      tr: 'Sınırsız Sanal Kart',
+      ru: 'Неограниченное количество виртуальных карт',
       zh: '无限量虚拟卡',
     ),
     benefits: (context) => [

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import '../models/visa_models.dart';
 import '../services/visa_service.dart';
@@ -160,7 +161,16 @@ class VisaController extends GetxController {
     if (fullNameController.text.trim().isEmpty ||
         passportNumberController.text.trim().isEmpty ||
         phoneController.text.trim().isEmpty) {
-      ToastHelper().showErrorToast('Please fill all required applicant fields');
+      ToastHelper().showErrorToast(
+        l10nPickAuto(
+          en: 'Please fill all required applicant fields',
+          fa: 'لطفاً تمامی مشخصات الزامی متقاضی را تکمیل فرمایید',
+          ar: 'يرجى ملء جميع الحقول المطلوبة لمقدم الطلب',
+          tr: 'Lütfen zorunlu başvuru alanlarını doldurun',
+          ru: 'Пожалуйста, заполните все обязательные поля заявителя',
+          zh: '请填写所有必填申请人信息',
+        ),
+      );
       return null;
     }
 
@@ -168,6 +178,7 @@ class VisaController extends GetxController {
     try {
       final applicantInfo = {
         'full_name': fullNameController.text.trim(),
+        'passport_no': passportNumberController.text.trim().toUpperCase(),
         'passport_number': passportNumberController.text.trim().toUpperCase(),
         'nationality': nationalityController.text.trim().toUpperCase(),
         'phone': phoneController.text.trim(),
@@ -206,9 +217,26 @@ class VisaController extends GetxController {
         // Refresh request detail
         await loadRequestDetail(created.caseNo);
         return currentRequest.value;
+      } else {
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'Failed to create visa application. Please check your connection and information.',
+            fa: 'امکان ثبت درخواست ویزا وجود نداشت. لطفاً اتصال و صحت اطلاعات را بررسی کنید.',
+            ar: 'فشل في إنشاء طلب التأشيرة. يرجى التحقق من اتصالك وبياناتك.',
+            tr: 'Vize başvurusu oluşturulamadı. Lütfen bilgilerinizi kontrol edin.',
+            ru: 'Не удалось создать заявку на визу. Проверьте введенные данные.',
+            zh: '创建签证申请失败，请检查网络与信息。',
+          ),
+        );
       }
     } catch (e) {
-      ToastHelper().showErrorToast('Failed to create application: $e');
+      ToastHelper().showErrorToast(
+        l10nPickAuto(
+          en: 'Failed to create application: $e',
+          fa: 'خطا در ثبت درخواست ویزا: $e',
+          ar: 'فشل في إنشاء طلب التأشيرة: $e',
+        ),
+      );
     } finally {
       isSubmitting.value = false;
     }
@@ -228,7 +256,13 @@ class VisaController extends GetxController {
         file: file,
       );
       if (success) {
-        ToastHelper().showSuccessToast('Document uploaded successfully');
+        ToastHelper().showSuccessToast(
+          l10nPickAuto(
+            en: 'Document uploaded successfully',
+            fa: 'مدرک با موفقیت بارگذاری شد',
+            ar: 'تم تحميل المستند بنجاح',
+          ),
+        );
         await loadRequestDetail(req.caseNo);
         return true;
       }
@@ -248,14 +282,38 @@ class VisaController extends GetxController {
       if (ok) {
         // Also auto-submit to consultant queue
         await _service.submitRequest(caseNo);
+        ToastHelper().showSuccessToast(
+          l10nPickAuto(
+            en: 'Payment completed and request submitted',
+            fa: 'پرداخت با موفقیت انجام شد و پرونده به کارشناسان ویزا ارجاع گردید',
+            ar: 'تم الدفع بنجاح وإرسال الطلب للمراجعة',
+            tr: 'Ödeme tamamlandı ve talep danışmanlara iletildi',
+            ru: 'Оплата завершена, заявка отправлена на рассмотрение',
+            zh: '支付完成并已提交签证顾问审核',
+          ),
+        );
         await loadRequestDetail(caseNo);
-        ToastHelper().showSuccessToast('Payment completed and request submitted');
         return true;
       } else {
-        ToastHelper().showErrorToast('Payment failed. Check your wallet balance.');
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'Payment could not be processed. Please check your wallet balance.',
+            fa: 'پرداخت انجام نشد. لطفاً موجودی کیف پول خود را بررسی نمایید.',
+            ar: 'تعذر معالجة الدفع. يرجى التحقق من رصيد محفظتك.',
+            tr: 'Ödeme işlenemedi. Lütfen cüzdan bakiyenizi kontrol edin.',
+            ru: 'Оплата не прошла. Проверьте баланс вашего кошелька.',
+            zh: '支付无法完成，请核对您的钱包余额。',
+          ),
+        );
       }
     } catch (e) {
-      ToastHelper().showErrorToast('Payment error: $e');
+      ToastHelper().showErrorToast(
+        l10nPickAuto(
+          en: 'Payment failed: $e',
+          fa: 'خطا در پرداخت هزینه: $e',
+          ar: 'فشل في الدفع: $e',
+        ),
+      );
     } finally {
       isPaying.value = false;
     }

@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -169,6 +170,7 @@ class MakePaymentController extends GetxController {
   Future<void> makePayment({String? passcode}) async {
     if (isMakePaymentLoading.isTrue) return;
     isMakePaymentLoading.value = true;
+    final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
     final Map<String, dynamic> requestBody = {
       'merchant_number': merchantMidController.text.trim(),
@@ -192,8 +194,7 @@ class MakePaymentController extends GetxController {
         successPaymentData.value = response.data!['data'];
         currentStep.value = 2;
       } else if (response.status == Status.error) {
-        final msg = response.message?.toLowerCase() ?? '';
-        if (msg.contains('passcode')) {
+        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isMakePaymentLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -202,13 +203,25 @@ class MakePaymentController extends GetxController {
             await makePayment(passcode: verified.toString());
             return;
           }
+        } else if (PasscodeHelper.isPasscodeInvalid(response.message)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'The transaction passcode entered is incorrect.',
+              fa: 'رمز عبور معامله وارد شده نادرست است.',
+              ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+              zh: '输入的交易密码不正确。',
+            ),
+          );
+        } else {
+          ToastHelper().showErrorToast(
+            response.message ?? localization.allControllerLoadError,
+          );
         }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ makePayment() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      final errStr = e.toString().toLowerCase();
-      if (errStr.contains('passcode')) {
+      if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
         isMakePaymentLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -217,6 +230,15 @@ class MakePaymentController extends GetxController {
           await makePayment(passcode: verified.toString());
           return;
         }
+      } else if (PasscodeHelper.isPasscodeInvalid(e)) {
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'The transaction passcode entered is incorrect.',
+            fa: 'رمز عبور معامله وارد شده نادرست است.',
+            ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+            zh: '输入的交易密码不正确。',
+          ),
+        );
       } else {
         ToastHelper().showErrorToast(localization.allControllerLoadError);
       }

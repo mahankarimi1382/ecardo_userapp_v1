@@ -9,6 +9,7 @@ import 'package:shamsi_date/shamsi_date.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_widgets.dart';
 
@@ -500,6 +501,13 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
         '${jalali.day.toString().padLeft(2, '0')}';
   }
 
+  void _setNights(int nights) {
+    final start = values.whereType<DateTime>().firstOrNull ?? DateTime.now().add(const Duration(days: 1));
+    setState(() {
+      values = [start, start.add(Duration(days: nights))];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final start = values.whereType<DateTime>().firstOrNull;
@@ -704,6 +712,30 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                 ),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [1, 2, 3, 5, 7].map((n) {
+                    final isCurrent = start != null && end != null && end.difference(start).inDays == n;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 3.w),
+                      child: ActionChip(
+                        label: Text(l10nPick(context, en: '$n Night${n > 1 ? 's' : ''}', fa: '$n شب', ar: '$n ليالٍ', tr: '$n Gece', ru: '$n ноч.')),
+                        labelStyle: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isCurrent ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                        ),
+                        backgroundColor: isCurrent ? ECardoTokens.brand700(context) : ECardoTokens.surfaceSunken(context),
+                        onPressed: () => _setNights(n),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
             Expanded(
               child: Theme(
                 data: Theme.of(context).copyWith(
@@ -715,7 +747,6 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                 child: CalendarDatePicker2(
                   config: CalendarDatePicker2Config(
                     calendarType: CalendarDatePicker2Type.range,
-                    calendarViewMode: CalendarDatePicker2Mode.scroll,
                     firstDate: DateUtils.dateOnly(DateTime.now()),
                     lastDate: DateTime.now().add(const Duration(days: 730)),
                     selectedDayHighlightColor:
@@ -734,7 +765,16 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                     ),
                   ),
                   value: values,
-                  onValueChanged: (next) => setState(() => values = next),
+                  onValueChanged: (next) {
+                    setState(() {
+                      final nonNulls = next.whereType<DateTime>().toList();
+                      if (nonNulls.length == 1) {
+                        values = [nonNulls.first, nonNulls.first.add(const Duration(days: 1))];
+                      } else {
+                        values = next;
+                      }
+                    });
+                  },
                 ),
               ),
             ),

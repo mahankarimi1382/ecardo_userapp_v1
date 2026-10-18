@@ -565,7 +565,7 @@ class _SupportTicketsState extends State<SupportTickets>
                   fa: 'ثبت تیکت جدید',
                   ar: 'تذكرة جديدة',
                   tr: 'Yeni Destek Talebi',
-                  ru: 'Новый тиکت',
+                  ru: 'Новый тикет',
                   zh: '新建工单',
                 ),
                 style: AppTextStyles.labelMedium.copyWith(

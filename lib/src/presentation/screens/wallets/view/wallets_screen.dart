@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/smart_back_helper.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
@@ -29,7 +30,7 @@ class WalletsScreen extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          Get.offNamed(BaseRoute.navigation);
+          SmartBackHelper.handleBack(context);
         }
       },
       child: Scaffold(
@@ -75,7 +76,7 @@ class WalletsScreen extends StatelessWidget {
               title: localization.walletsScreenTitle,
               isBackLogicApply: true,
               backLogicFunction: () async {
-                Get.offNamed(BaseRoute.navigation);
+                SmartBackHelper.handleBack(context);
               },
               rightSideWidget: Semantics(
                 button: true,

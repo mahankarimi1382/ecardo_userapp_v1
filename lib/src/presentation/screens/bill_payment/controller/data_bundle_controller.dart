@@ -288,7 +288,21 @@ class DataBundleController extends GetxController {
     } else {
       charge = (amount / 100) * serviceCharge;
     }
-    final payable = serviceRate > 0 ? ((amount / serviceRate) + charge) : 0.0;
+
+    double basePayable;
+    final sCur = serviceCurrency.toUpperCase().trim();
+    final cCur = currency.toUpperCase().trim();
+    if (sCur == cCur || sCur.isEmpty) {
+      basePayable = amount;
+    } else if (serviceRate > 1.0) {
+      basePayable = amount * serviceRate;
+    } else if (serviceRate > 0.0) {
+      basePayable = amount / serviceRate;
+    } else {
+      basePayable = amount;
+    }
+
+    final payable = basePayable + charge;
     payableAmount.value = payable;
     chargeText.value = '${charge.toStringAsFixed(decimals)} $currency';
     // Integer rates keep the historical compact display; fractional rates
@@ -302,8 +316,8 @@ class DataBundleController extends GetxController {
       isCrypto: false,
     );
     rateText.value = serviceRate == serviceRate.roundToDouble()
-        ? '1 $currency = ${serviceRate.toInt()} $serviceCurrency'
-        : '1 $currency = ${serviceRate.toStringAsFixed(rateDecimals)} $serviceCurrency';
+        ? '1 $serviceCurrency = ${serviceRate.toInt()} $currency'
+        : '1 $serviceCurrency = ${serviceRate.toStringAsFixed(rateDecimals)} $currency';
   }
 
   void resetFields() {

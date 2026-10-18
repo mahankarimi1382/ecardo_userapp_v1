@@ -1,17 +1,17 @@
-# eCardo User App (v1) — Active Release Line Dossier (v1.0.173+173)
+# eCardo User App (v1) — Active Release Line Dossier (v1.0.174+174)
 
-- **Document Version:** 1.0.173  
+- **Document Version:** 1.0.174  
 - **Canonical Release Identifier:** REL-DOC-01  
 - **Status:** **Active Staging & Verification**  
-- **Date:** 2026-10-17  
+- **Date:** 2026-10-18  
 - **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
 - **Active Git Branch:** `main`  
-- **Active Release Version:** `1.0.173+173` (declared in `pubspec.yaml`)  
+- **Active Release Version:** `1.0.174+174` (declared in `pubspec.yaml`)  
 - **Active Release Commit SHA:** `HEAD`  
-- **Active Release Git Tag:** `v1.0.173`  
-- **Preceding Build Version:** `1.0.172+172`  
-- **Preceding Build Commit SHA:** `98e899368df43dfe0aa36dac64e5752cd0d661aa` (`98e8993`)  
-- **Preceding Build Git Tag:** `v1.0.172`  
+- **Active Release Git Tag:** `v1.0.174`  
+- **Preceding Build Version:** `1.0.173+173`  
+- **Preceding Build Commit SHA:** `d47dae08d28cfc613ad480006a6b09c4e3bdffd9` (`d47dae0`)  
+- **Preceding Build Git Tag:** `v1.0.173`  
 - **Lead Authority:** Enterprise Architecture, Security Verification & Release Management Team  
 
 ---

@@ -1,4 +1,5 @@
 import 'package:ecardo_user/src/commercial/bindings/commercial_binding.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/commercial/screens/commercial_projects_screen.dart';
 import 'package:ecardo_user/src/commercial/screens/equity_project_detail_screen.dart';
 import 'package:ecardo_user/src/commercial/screens/equity_invest_checkout_screen.dart';
@@ -645,14 +646,35 @@ List<GetPage> routesHandler = [
         booking: TourBookingModel(
           id: bookingId ?? 1,
           bookingNo: 'TR-${bookingId ?? 1}',
-          tourTitle: 'تور گردشگری',
-          tourCity: 'تهران',
+          tourTitle: l10nPickAuto(
+            en: 'Guided Tour',
+            fa: 'تور گردشگری',
+            ar: 'جولة سياحية',
+            tr: 'Rehberli Tur',
+            ru: 'Экскурсионный тур',
+            zh: '观光旅游',
+          ),
+          tourCity: l10nPickAuto(
+            en: 'Tehran',
+            fa: 'تهران',
+            ar: 'طهران',
+            tr: 'Tahran',
+            ru: 'Тегеран',
+            zh: '德黑兰',
+          ),
           travelersCount: 1,
           basePrice: 0.0,
           totalPrice: 0.0,
           currency: 'USD',
           status: 'confirmed',
-          statusLabel: 'تأییدشده',
+          statusLabel: l10nPickAuto(
+            en: 'Confirmed',
+            fa: 'تأییدشده',
+            ar: 'مؤكد',
+            tr: 'Onaylandı',
+            ru: 'Подтверждено',
+            zh: '已确认',
+          ),
           createdAt: DateTime.now().toIso8601String(),
         ),
       );

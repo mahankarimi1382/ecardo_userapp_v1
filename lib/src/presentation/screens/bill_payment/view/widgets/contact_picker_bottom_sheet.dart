@@ -101,12 +101,14 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
     ),
   ];
 
+  List<ContactItem> _allContacts = [];
   List<ContactItem> _filteredContacts = [];
 
   @override
   void initState() {
     super.initState();
-    _filteredContacts = _mockContacts;
+    _allContacts = List.from(_mockContacts);
+    _filteredContacts = _allContacts;
     _checkPermission();
     _searchController.addListener(_onSearchChanged);
   }
@@ -151,9 +153,9 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
     final query = _searchController.text.trim().toLowerCase();
     setState(() {
       if (query.isEmpty) {
-        _filteredContacts = _mockContacts;
+        _filteredContacts = _allContacts;
       } else {
-        _filteredContacts = _mockContacts.where((contact) {
+        _filteredContacts = _allContacts.where((contact) {
           final matchesName = contact.name.toLowerCase().contains(query);
           final matchesPhone = contact.phone.contains(query);
           return matchesName || matchesPhone;

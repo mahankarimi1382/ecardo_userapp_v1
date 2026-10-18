@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../models/stock_models.dart';
 import '../services/stock_service.dart';
 
@@ -572,25 +573,60 @@ class StockController extends GetxController {
 
   String? validateOrder() {
     if (selectedSymbol.value == null) {
-      return 'ERR_PRECONDITION: لطفاً نماد سهام را انتخاب کنید.';
+      return l10nPickAuto(
+        en: 'ERR_PRECONDITION: Please select a stock symbol.',
+        fa: 'ERR_PRECONDITION: لطفاً نماد سهام را انتخاب کنید.',
+        ar: 'ERR_PRECONDITION: يرجى اختيار رمز السهم.',
+        tr: 'ERR_PRECONDITION: Lütfen bir hisse senedi sembolü seçin.',
+        ru: 'ERR_PRECONDITION: Пожалуйста, выберите символ акции.',
+        zh: 'ERR_PRECONDITION: 请选择股票代码。',
+      );
     }
     if (quantity.value <= 0) {
-      return 'ERR_VALIDATION: تعداد سهام باید بزرگتر از صفر باشد.';
+      return l10nPickAuto(
+        en: 'ERR_VALIDATION: Share quantity must be greater than zero.',
+        fa: 'ERR_VALIDATION: تعداد سهام باید بزرگتر از صفر باشد.',
+        ar: 'ERR_VALIDATION: يجب أن تكون كمية الأسهم أكبر من الصفر.',
+        tr: 'ERR_VALIDATION: Hisse adedi sıfırdan büyük olmalıdır.',
+        ru: 'ERR_VALIDATION: Количество акций должно быть больше нуля.',
+        zh: 'ERR_VALIDATION: 股票数量必须大于零。',
+      );
     }
     if (orderType.value == 'LIMIT') {
       final limitPrice = double.tryParse(limitPriceInput.value);
       if (limitPrice == null || limitPrice <= 0) {
-        return 'ERR_VALIDATION: قیمت سقف/کف برای سفارش محدود نامعتبر است.';
+        return l10nPickAuto(
+          en: 'ERR_VALIDATION: Limit price is invalid.',
+          fa: 'ERR_VALIDATION: قیمت سقف/کف برای سفارش محدود نامعتبر است.',
+          ar: 'ERR_VALIDATION: السعر المحدد للأمر غير صالح.',
+          tr: 'ERR_VALIDATION: Limit fiyat geçersiz.',
+          ru: 'ERR_VALIDATION: Лимитная цена недействительна.',
+          zh: 'ERR_VALIDATION: 限价订单价格无效。',
+        );
       }
     }
     if (orderType.value == 'STOP_LOSS') {
       final stopPrice = double.tryParse(stopPriceInput.value);
       if (stopPrice == null || stopPrice <= 0) {
-        return 'ERR_VALIDATION: قیمت حد ضرر (Stop-Loss) نامعتبر است.';
+        return l10nPickAuto(
+          en: 'ERR_VALIDATION: Stop-loss price is invalid.',
+          fa: 'ERR_VALIDATION: قیمت حد ضرر (Stop-Loss) نامعتبر است.',
+          ar: 'ERR_VALIDATION: سعر وقف الخسارة غير صالح.',
+          tr: 'ERR_VALIDATION: Zarar durdurma fiyatı geçersiz.',
+          ru: 'ERR_VALIDATION: Цена стоп-лосс недействительна.',
+          zh: 'ERR_VALIDATION: 止损价格无效。',
+        );
       }
     }
     if (!riskAcknowledged.value) {
-      return 'ERR_CONSENT: تأیید بیانیه پذیرش ریسک نوسانات بازار بین‌المللی الزامی است.';
+      return l10nPickAuto(
+        en: 'ERR_CONSENT: Risk acknowledgment statement must be confirmed.',
+        fa: 'ERR_CONSENT: تأیید بیانیه پذیرش ریسک نوسانات بازار بین‌المللی الزامی است.',
+        ar: 'ERR_CONSENT: يجب الموافقة على بيان الإقرار بمخاطر السوق.',
+        tr: 'ERR_CONSENT: Piyasa riski kabul beyanı onaylanmalıdır.',
+        ru: 'ERR_CONSENT: Необходимо подтвердить заявление о принятии рисков.',
+        zh: 'ERR_CONSENT: 必须确认市场风险告知书。',
+      );
     }
     return null;
   }

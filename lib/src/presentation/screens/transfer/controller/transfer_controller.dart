@@ -327,6 +327,7 @@ class TransferController extends GetxController {
   Future<void> transferAmount({String? passcode}) async {
     if (isTransferAmountLoading.isTrue) return;
     isTransferAmountLoading.value = true;
+    final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
     final Map<String, dynamic> requestBody = {
       'account_number': recipientUidController.text.trim(),
@@ -355,7 +356,7 @@ class TransferController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (msg.contains('passcode')) {
+        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isTransferAmountLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -364,6 +365,19 @@ class TransferController extends GetxController {
             await transferAmount(passcode: verified.toString());
             return;
           }
+        } else if (PasscodeHelper.isPasscodeInvalid(response.message)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'The transaction passcode entered is incorrect.',
+              fa: 'رمز عبور معامله وارد شده نادرست است.',
+              ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+              zh: '输入的交易密码不正确。',
+            ),
+          );
+        } else {
+          ToastHelper().showErrorToast(
+            response.message ?? localization.allControllerLoadError,
+          );
         }
       }
     } catch (e, stackTrace) {
@@ -388,7 +402,7 @@ class TransferController extends GetxController {
             zh: '请求响应超时。请在重试前在交易记录中核实，以避免重复转账。',
           ),
         );
-      } else if (errStr.contains('passcode')) {
+      } else if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
         isTransferAmountLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -397,6 +411,15 @@ class TransferController extends GetxController {
           await transferAmount(passcode: verified.toString());
           return;
         }
+      } else if (PasscodeHelper.isPasscodeInvalid(e)) {
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'The transaction passcode entered is incorrect.',
+            fa: 'رمز عبور معامله وارد شده نادرست است.',
+            ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+            zh: '输入的交易密码不正确。',
+          ),
+        );
       } else {
         ToastHelper().showErrorToast(localization.allControllerLoadError);
       }

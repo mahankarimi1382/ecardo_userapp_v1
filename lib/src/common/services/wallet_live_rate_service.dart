@@ -160,16 +160,21 @@ class WalletLiveRateService extends GetxService {
 
     if (eqInSite == null || !eqInSite.isFinite) return null;
 
-    final labelCurrency = site.isNotEmpty
-        ? site
-        : (code == 'IRR' || code == 'IRT' ? '' : 'IRR');
-    if (labelCurrency.isEmpty) return null;
+    final unit = Get.isRegistered<SettingsService>()
+        ? Get.find<SettingsService>().rateUnitRx.value
+        : 'toman';
+    final sUpper = site.toUpperCase().trim();
+    final isIranianUnit = sUpper == 'IRT' || sUpper == 'TOMAN' || sUpper == 'TMN' || sUpper == 'IRR';
+
+    final labelCurrency = isIranianUnit
+        ? (unit == 'irr' ? 'ریال' : 'تومان')
+        : (site.isNotEmpty ? site : 'USD');
 
     final abs = eqInSite.abs();
-    final fixed = decimals.clamp(0, 8);
+    final fixed = isIranianUnit ? (unit == 'irr' ? 0 : 0) : decimals.clamp(0, 2);
     String formatted;
     if (abs >= 1000) {
-      formatted = _withThousands(eqInSite, fixed > 2 ? 0 : fixed);
+      formatted = _withThousands(eqInSite, fixed);
     } else {
       formatted = eqInSite.toStringAsFixed(fixed);
     }
@@ -182,20 +187,23 @@ class WalletLiveRateService extends GetxService {
       return ratesIrr['USDT_IRT'];
     }
     // IRR is the base (1 IRR = 1). IRT/TMN/TOMAN are Toman: 1 unit = 10 IRR.
-    // Fixed 2026-09-25: IRT wallets were undervalued exactly 10x (12M Toman showed ~$5 instead of ~$51).
     if (code == 'IRR') return 1;
     if (code == 'IRT' || code == 'TMN' || code == 'TOMAN') return 10;
     return null;
   }
 
   double _irrToSite(double eqIrr, String site) {
-    if (site.isEmpty ||
-        site == 'IRR' ||
-        site == 'IRT' ||
-        site == 'TMN' ||
-        site == 'TOMAN') {
-      // Display in IRR (or Toman if site insists on TMN — keep IRR units).
-      return eqIrr;
+    final s = site.toUpperCase().trim();
+    final unit = Get.isRegistered<SettingsService>()
+        ? Get.find<SettingsService>().rateUnitRx.value
+        : 'toman';
+
+    if (s == 'IRT' || s == 'TOMAN' || s == 'TMN' || s.isEmpty) {
+      // 1 Toman = 10 IRR; if user chose Rial, display in IRR, else Toman.
+      return unit == 'irr' ? eqIrr : (eqIrr / 10.0);
+    }
+    if (s == 'IRR') {
+      return unit == 'toman' ? (eqIrr / 10.0) : eqIrr;
     }
     final sitePerIrrUnit = _rateIrrFor(site);
     if (sitePerIrrUnit == null || sitePerIrrUnit <= 0) return eqIrr;

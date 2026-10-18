@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/settings_model.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/app_lock_service.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -388,6 +389,7 @@ class SettingsService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(rateUnitKey, unit);
     rateUnitRx.value = unit;
+    AppEventBus.emit(BalanceChangedEvent(sourceModule: 'settings_rate_unit'));
   }
 
   Future<void> loadRateUnitIntoRx() async {

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/smart_back_helper.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
@@ -37,7 +37,7 @@ class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          Get.offNamed(BaseRoute.navigation);
+          SmartBackHelper.handleBack(context);
         }
       },
       child: Scaffold(

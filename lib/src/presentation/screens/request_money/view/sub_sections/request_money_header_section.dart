@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/helper/smart_back_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,7 @@ class RequestMoneyHeaderSection extends StatelessWidget {
               () => CommonAppBar(
                 title: localization.requestMoneyHeaderSectionTitle,
                 backLogicFunction: () async {
-                  Get.offNamed(BaseRoute.navigation);
+                  SmartBackHelper.handleBack(context);
                 },
                 isBackLogicApply: true,
                 rightSideWidget: controller.currentStep.value == 0

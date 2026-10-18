@@ -39,6 +39,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is required for scanning payment QR codes, debit card numbers, and KYC identity verification</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location access is used to provide nearby merchants, taxi pickup points, and localized financial services</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Contacts access allows you to easily select recipients for money transfers and mobile airtime recharges</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Biometric authentication is used for secure and fast login to your eCardo account and payment authorization</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

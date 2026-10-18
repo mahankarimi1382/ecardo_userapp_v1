@@ -317,6 +317,7 @@ class CashOutController extends GetxController {
   Future<void> cashOut({String? passcode}) async {
     if (isCashOutLoading.isTrue) return;
     isCashOutLoading.value = true;
+    final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
     final Map<String, dynamic> requestBody = {
       'agent_number': agentAidController.text.trim(),
@@ -344,7 +345,7 @@ class CashOutController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (msg.contains('passcode')) {
+        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isCashOutLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -353,6 +354,21 @@ class CashOutController extends GetxController {
             await cashOut(passcode: verified.toString());
             return;
           }
+        } else if (PasscodeHelper.isPasscodeInvalid(response.message)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'The transaction passcode entered is incorrect.',
+              fa: 'رمز عبور معامله وارد شده نادرست است.',
+              ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+              zh: '输入的交易密码不正确。',
+            ),
+          );
+        } else {
+          ToastHelper().showErrorToast(
+            response.message ??
+                localization?.allControllerLoadError ??
+                'An error occurred while loading data.',
+          );
         }
       }
     } catch (e, stackTrace) {
@@ -377,7 +393,7 @@ class CashOutController extends GetxController {
             zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复提现。',
           ),
         );
-      } else if (errStr.contains('passcode')) {
+      } else if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
         isCashOutLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -386,6 +402,15 @@ class CashOutController extends GetxController {
           await cashOut(passcode: verified.toString());
           return;
         }
+      } else if (PasscodeHelper.isPasscodeInvalid(e)) {
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'The transaction passcode entered is incorrect.',
+            fa: 'رمز عبور معامله وارد شده نادرست است.',
+            ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+            zh: '输入的交易密码不正确。',
+          ),
+        );
       } else {
         ToastHelper().showErrorToast(
           localization?.allControllerLoadError ?? 'An error occurred while loading data.',

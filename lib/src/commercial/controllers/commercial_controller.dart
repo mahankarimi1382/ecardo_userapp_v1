@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import '../models/commercial_models.dart';
 import '../widgets/equity_project_card.dart';
@@ -238,10 +239,28 @@ class CommercialController extends GetxController {
         applyFilter(selectedSector.value);
       }
 
-      ToastHelper().showSuccessToast('سرمایه‌گذاری شما با موفقیت ثبت و تأیید شد');
+      ToastHelper().showSuccessToast(
+        l10nPickAuto(
+          en: 'Your investment has been successfully registered and approved.',
+          fa: 'سرمایه‌گذاری شما با موفقیت ثبت و تأیید شد.',
+          ar: 'تم تسجيل استثمارك وتأكيده بنجاح.',
+          tr: 'Yatırımınız başarıyla kaydedildi ve onaylandı.',
+          ru: 'Ваша инвестиция успешно зарегистрирована и подтверждена.',
+          zh: '您的投资已成功登记并确认。',
+        ),
+      );
       return true;
     } catch (e) {
-      ToastHelper().showErrorToast('خطا در ثبت سرمایه‌گذاری: ${e.toString()}');
+      ToastHelper().showErrorToast(
+        l10nPickAuto(
+          en: 'Error registering investment: ${e.toString()}',
+          fa: 'خطا در ثبت سرمایه‌گذاری: ${e.toString()}',
+          ar: 'خطأ في تسجيل الاستثمار: ${e.toString()}',
+          tr: 'Yatırım kaydında hata: ${e.toString()}',
+          ru: 'Ошибка регистрации инвестиции: ${e.toString()}',
+          zh: '登记投资时出错: ${e.toString()}',
+        ),
+      );
       return false;
     } finally {
       isSubmittingInvestment.value = false;

@@ -245,6 +245,7 @@ class AirtimeAmountStepSection extends StatelessWidget {
                                             context,
                                             onContactSelected: (name, phone, opId) {
                                               entry.value.text = phone;
+                                              controller.targetPhoneNumberController.text = phone;
                                               controller.targetPhoneNumber.value = phone;
                                               controller.selectedOperatorId.value = opId;
                                               final opName = opId == 'mci'
@@ -290,6 +291,7 @@ class AirtimeAmountStepSection extends StatelessWidget {
                         isLabelRequired: true,
                         dynamicField: Obx(
                           () => CommonTextInputField(
+                            controller: controller.targetPhoneNumberController,
                             backgroundColor: inputBg,
                             hintText: '0912XXXXXXX',
                             keyboardType: TextInputType.phone,
@@ -302,8 +304,10 @@ class AirtimeAmountStepSection extends StatelessWidget {
                                 ContactPickerBottomSheet.show(
                                   context,
                                   onContactSelected: (name, phone, opId) {
+                                    controller.targetPhoneNumberController.text = phone;
                                     controller.targetPhoneNumber.value = phone;
                                     controller.selectedOperatorId.value = opId;
+                                    _detectOperatorFromNumber(controller, phone);
                                     ToastHelper().showSuccessToast('شماره $name انتخاب شد');
                                   },
                                 );
@@ -349,22 +353,18 @@ class AirtimeAmountStepSection extends StatelessWidget {
 
                 // 6. Custom Amount Field
                 Obx(() {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    final service = controller.serviceData.value;
-                    if (service != null &&
-                        service.amount != null &&
-                        service.amount! > 0) {
-                      controller.amountController.text = service.amount!
-                          .toInt()
-                          .toString();
-                      controller.amountText.value =
-                          controller.amountController.text;
-                    }
-                  });
                   final service = controller.serviceData.value;
-                  final currency = service?.currency ?? 'تومان';
                   final bool isPredefinedAmount =
                       service?.amount != null && service!.amount! > 0;
+                  if (isPredefinedAmount &&
+                      controller.amountController.text.trim().isEmpty) {
+                    controller.amountController.text = service.amount!
+                        .toInt()
+                        .toString();
+                    controller.amountText.value =
+                        controller.amountController.text;
+                  }
+                  final currency = service?.currency ?? 'تومان';
                   return CommonRequiredLabelAndDynamicField(
                     labelText: localization.airtimeAmountLabel,
                     isLabelRequired: true,

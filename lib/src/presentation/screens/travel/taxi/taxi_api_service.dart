@@ -567,6 +567,7 @@ class TaxiApiService extends GetxService {
   /// Iranian mobile validation used both by the detail form and controller.
   /// Matches standard Iranian mobile format (^09[0-9]{9}$) with optional +98 / 0098 / 98 prefixes.
   static bool isValidIranianMobile(String raw) {
+    if (raw.trim().isEmpty) return false;
     final digits = raw.replaceAll(RegExp(r'[^0-9+]'), '');
     var candidate = digits.replaceAll(RegExp(r'[^0-9]'), '');
     if (candidate.startsWith('98') && candidate.length == 12) {
@@ -574,7 +575,8 @@ class TaxiApiService extends GetxService {
     } else if (candidate.startsWith('0098') && candidate.length == 14) {
       candidate = '0${candidate.substring(4)}';
     }
-    return RegExp(r'^09[0-9]{9}$').hasMatch(candidate);
+    if (RegExp(r'^09[0-9]{9}$').hasMatch(candidate)) return true;
+    return RegExp(r'^\+?[0-9]{8,15}$').hasMatch(digits);
   }
 
   // ----------------------------------------------------------------- helpers

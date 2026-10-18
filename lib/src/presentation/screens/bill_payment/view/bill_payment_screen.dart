@@ -8,7 +8,7 @@ import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/smart_back_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/bill_payment/view/widgets/recent_favorite_bills_strip.dart';
 
 class BillCategoryItem {
@@ -218,18 +218,24 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               color: const Color(0xFF0D9488),
               onTap: () {
                 Get.back();
-                Get.toNamed(BaseRoute.electricity);
+                Get.toNamed(BaseRoute.electricity, arguments: {
+                  'service_type': 'municipality',
+                  'title': 'عوارض سالیانه شهرداری',
+                });
               },
             ),
             _buildGovTile(
               context,
               title: 'مالیات نقل و انتقال و مالیات خودرو',
-              subtitle: 'سازمان امور مالیاتی کشور',
+              subtitle: 'سامانه امور مالیاتی',
               icon: Icons.receipt_long_rounded,
               color: const Color(0xFF4F46E5),
               onTap: () {
                 Get.back();
-                ToastHelper().showSuccessToast('اتصال به درگاه سازمان امور مالیاتی کشور');
+                Get.toNamed(BaseRoute.electricity, arguments: {
+                  'service_type': 'tax',
+                  'title': 'مالیات نقل و انتقال خودرو',
+                });
               },
             ),
             SizedBox(height: 20.h),
@@ -303,7 +309,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          Get.offNamed(BaseRoute.navigation);
+          SmartBackHelper.handleBack(context);
         }
       },
       child: Scaffold(
@@ -317,7 +323,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               title: localization?.billPaymentScreenTitle ?? 'پرداخت قبوض و خدمات',
               isBackLogicApply: true,
               backLogicFunction: () async {
-                Get.offNamed(BaseRoute.navigation);
+                SmartBackHelper.handleBack(context);
               },
               rightSideWidget: GestureDetector(
                 onTap: () => Get.toNamed(BaseRoute.billPaymentHistory),

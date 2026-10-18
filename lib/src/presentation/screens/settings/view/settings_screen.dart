@@ -344,7 +344,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               obscureText: true,
               style: TextStyle(color: primaryTextColor),
               decoration: InputDecoration(
-                labelText: l10nPick(context, en: 'New PIN', fa: 'PIN جدید'),
+                labelText: l10nPick(
+                  context,
+                  en: 'New PIN',
+                  fa: 'PIN جدید',
+                  ar: 'رمز PIN جديد',
+                  tr: 'Yeni PIN',
+                  ru: 'Новый PIN',
+                  zh: '新 PIN 码',
+                ),
               ),
             ),
             TextField(
@@ -354,7 +362,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               obscureText: true,
               style: TextStyle(color: primaryTextColor),
               decoration: InputDecoration(
-                labelText: l10nPick(context, en: 'Repeat PIN', fa: 'تکرار PIN'),
+                labelText: l10nPick(
+                  context,
+                  en: 'Repeat PIN',
+                  fa: 'تکرار PIN',
+                  ar: 'تأكيد رمز PIN',
+                  tr: 'PIN Tekrarı',
+                  ru: 'Повторите PIN',
+                  zh: '确认 PIN 码',
+                ),
               ),
             ),
           ],
@@ -362,12 +378,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف')),
+            child: Text(
+              l10nPick(
+                context,
+                en: 'Cancel',
+                fa: 'انصراف',
+                ar: 'إلغاء',
+                tr: 'İptal',
+                ru: 'Отмена',
+                zh: '取消',
+              ),
+            ),
           ),
           TextButton(
             onPressed: () => Get.back(result: true),
             child: Text(
-              l10nPick(context, en: 'Save', fa: 'ذخیره'),
+              l10nPick(
+                context,
+                en: 'Save',
+                fa: 'ذخیره',
+                ar: 'حفظ',
+                tr: 'Kaydet',
+                ru: 'Сохранить',
+                zh: '保存',
+              ),
               style: TextStyle(
                 color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
                 fontWeight: FontWeight.w700,
@@ -385,7 +419,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (!mounted) return;
       Get.snackbar(
         'PIN',
-        l10nPick(context, en: 'Saved', fa: 'ذخیره شد'),
+        l10nPick(
+          context,
+          en: 'Saved',
+          fa: 'ذخیره شد',
+          ar: 'تم الحفظ بنجاح',
+          tr: 'Kaydedildi',
+          ru: 'Сохранено',
+          zh: '已保存',
+        ),
         snackPosition: SnackPosition.BOTTOM,
       );
     } else if (ok == true) {
@@ -395,6 +437,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           context,
           en: 'The PIN must be 4 digits and match',
           fa: 'PIN باید ۴ رقم و یکسان باشد',
+          ar: 'يجب أن يتكون رمز PIN من 4 أرقام وأن يكون متطابقاً',
+          tr: 'PIN 4 haneli olmalı ve eşleşmelidir',
+          ru: 'PIN-код должен состоять из 4 цифр и совпадать',
+          zh: 'PIN 码必须为4位数字且两次输入一致',
         ),
         snackPosition: SnackPosition.BOTTOM,
       );
@@ -1549,16 +1595,78 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String _lockLabel(int m) {
-    if (m < 0) return l10nPick(context, en: 'Immediately', fa: 'فوری');
-    if (m == 0) return l10nPick(context, en: 'Never', fa: 'هرگز');
-    if (m == 1) return l10nPick(context, en: '1 minute', fa: '۱ دقیقه');
-    return l10nPick(context, en: '$m minutes', fa: '$m دقیقه');
+    if (m < 0) {
+      return l10nPick(
+        context,
+        en: 'Immediately',
+        fa: 'فوری',
+        ar: 'فوراً',
+        tr: 'Hemen',
+        ru: 'Немедленно',
+        zh: '立即',
+      );
+    }
+    if (m == 0) {
+      return l10nPick(
+        context,
+        en: 'Never',
+        fa: 'هرگز',
+        ar: 'أبداً',
+        tr: 'Asla',
+        ru: 'Никогда',
+        zh: '从不',
+      );
+    }
+    if (m == 1) {
+      return l10nPick(
+        context,
+        en: '1 minute',
+        fa: '۱ دقیقه',
+        ar: 'دقيقة واحدة',
+        tr: '1 dakika',
+        ru: '1 минута',
+        zh: '1分钟',
+      );
+    }
+    return l10nPick(
+      context,
+      en: '$m minutes',
+      fa: '$m دقیقه',
+      ar: '$m دقائق',
+      tr: '$m dakika',
+      ru: '$m минут',
+      zh: '$m分钟',
+    );
   }
 
   String _themeLabel(String m) => switch (m) {
-        'light' => l10nPick(context, en: 'Light', fa: 'روشن', ar: 'فاتح', zh: '浅色'),
-        'dark' => l10nPick(context, en: 'Dark', fa: 'تیره', ar: 'داكن', zh: '深色'),
-        _ => l10nPick(context, en: 'System default', fa: 'سیستم', ar: 'النظام', zh: '跟随系统'),
+        'light' => l10nPick(
+            context,
+            en: 'Light',
+            fa: 'روشن',
+            ar: 'فاتح',
+            tr: 'Açık',
+            ru: 'Светлая',
+            zh: '浅色',
+          ),
+        'dark' => l10nPick(
+            context,
+            en: 'Dark',
+            fa: 'تیره',
+            ar: 'داكن',
+            tr: 'Koyu',
+            ru: 'Темная',
+            zh: '深色',
+          ),
+        _ => l10nPick(
+            context,
+            en: 'System default',
+            fa: 'سیستم',
+            ar: 'النظام',
+            tr: 'Sistem varsayılanı',
+            ru: 'По умолчанию',
+            zh: '跟随系统',
+          ),
       };
 
   Widget _iconBox({

@@ -116,7 +116,7 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
               isExpanded: true,
               value: reason,
               items: [
-                DropdownMenuItem(value: 'NOT_RECEIVED', child: Text(l10nPick(dlgContext, en: 'Funds not received', fa: 'وجه به ذینفع نرسید'))),
+                DropdownMenuItem(value: 'NOT_RECEIVED', child: Text(l10nPick(dlgContext, en: 'Funds not received', fa: 'وجه به دست گیرنده نرسید'))),
                 DropdownMenuItem(value: 'PARTIAL', child: Text(l10nPick(dlgContext, en: 'Less amount received', fa: 'مبلغ کمتر از فاکتور واریز شد'))),
                 DropdownMenuItem(value: 'WRONG_BENEFICIARY', child: Text(l10nPick(dlgContext, en: 'Wrong account credited', fa: 'حساب اشتباه واریز شد'))),
               ],
@@ -479,7 +479,7 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
           _calcRow(
             icon: Icons.arrow_downward_rounded,
             iconColor: AppColors.success,
-            label: l10nPick(context, en: 'Recipient Receives', fa: 'مبلغ دریافتی ذینفع'),
+            label: l10nPick(context, en: 'Recipient Receives', fa: 'مبلغ دریافتی گیرنده'),
             value: '${_formatNumber(recipientGets)} $destCurrency',
             isBold: true,
             isDark: isDark,

@@ -7,6 +7,8 @@ import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 import '../services/mock_travel_data.dart';
 import '../shared/travel_widgets.dart';
@@ -37,6 +39,16 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
     _controller = Get.isRegistered<TaxiController>()
         ? Get.find<TaxiController>()
         : Get.put(TaxiController());
+    final homeUser = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>().userModel.value.data
+        : null;
+    if (_controller.passengerNameController.text.trim().isEmpty && homeUser != null) {
+      final name = '${homeUser.firstName ?? ''} ${homeUser.lastName ?? ''}'.trim();
+      if (name.isNotEmpty) _controller.passengerNameController.text = name;
+    }
+    if (_controller.passengerPhoneController.text.trim().isEmpty && homeUser?.phone != null) {
+      _controller.passengerPhoneController.text = homeUser!.phone!;
+    }
   }
 
   int get totalFare => _controller.calculateTotalFare(_selectedVehicle!);
@@ -124,9 +136,32 @@ class _TaxiDetailScreenState extends State<TaxiDetailScreen> {
                       }
                       final booking = await _controller.createBooking();
                       if (booking != null && mounted) {
-                        // Start polling for live driver status once booked
                         _controller.startStatusPolling();
                         Get.off(() => TaxiVoucherScreen(booking: booking));
+                      } else if (mounted) {
+                        final errorMsg = _controller.errorMessage.value ??
+                            (_controller.validationErrors.isNotEmpty
+                                ? _controller.validationErrors.join(', ')
+                                : null);
+                        ToastHelper().showErrorToast(
+                          errorMsg != null
+                              ? l10nPickAuto(
+                                  en: 'Booking failed: $errorMsg',
+                                  fa: 'خطا در ثبت رزرو تاکسی: $errorMsg',
+                                  ar: 'فشل في حجز التوصيل: $errorMsg',
+                                  tr: 'Rezervasyon başarısız: $errorMsg',
+                                  ru: 'Ошибка бронирования такси: $errorMsg',
+                                  zh: '预订失败: $errorMsg',
+                                )
+                              : l10nPickAuto(
+                                  en: 'Unable to complete taxi booking. Please verify details.',
+                                  fa: 'امکان ثبت رزرو تاکسی وجود نداشت. لطفاً مشخصات مسافر و تلفن را بررسی فرمایید.',
+                                  ar: 'تعذر إتمام الحجز. يرجى التحقق من بيانات المسافر ورقم الهاتف.',
+                                  tr: 'Taksi rezervasyonu tamamlanamadı. Lütfen bilgileri kontrol edin.',
+                                  ru: 'Не удалось завершить бронирование. Проверьте данные пассажира.',
+                                  zh: '无法完成行程预订，请核对乘客与手机信息。',
+                                ),
+                        );
                       }
                     },
             );

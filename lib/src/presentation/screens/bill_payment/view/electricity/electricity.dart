@@ -53,7 +53,7 @@ class _ElectricityState extends State<Electricity> {
                     children: [
                       SizedBox(height: 16.h),
                       CommonAppBar(
-                        title: AppLocalizations.of(context)!.electricityTitle,
+                        title: controller.screenTitle,
                       ),
                       SizedBox(height: 30.h),
                     ],

@@ -1348,7 +1348,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get drawerMakePayment => 'Ödeme Yap';
 
   @override
-  String get drawerTransfer => 'Transfer';
+  String get drawerTransfer => 'Para Transferi';
 
   @override
   String get drawerWithdraw => 'Para Çek';
@@ -1465,7 +1465,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get comment_action_button_section => '==== Action Button Section ====';
 
   @override
-  String get actionButtonTransfer => 'Transfer';
+  String get actionButtonTransfer => 'Para Transferi';
 
   @override
   String get actionButtonWithdraw => 'Para Çek';
@@ -1559,7 +1559,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get otherServicesExchange => 'Döviz Çevir';
 
   @override
-  String get otherServicesTransfer => 'Transfer';
+  String get otherServicesTransfer => 'Para Transferi';
 
   @override
   String get otherServicesDynamicPassword => 'Dinamik PIN';
@@ -2719,7 +2719,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get disable2FaSectionTitle => '2FA Doğrulaması';
 
   @override
-  String get disable2FaSectionDescription => 'noInternetConnectionRetryButton';
+  String get disable2FaSectionDescription =>
+      'İki faktörlü kimlik doğrulamayı kapatmak hesap güvenliğinizi azaltır. İstediğiniz zaman tekrar etkinleştirebilirsiniz.';
 
   @override
   String get disable2FaSectionDisableButton => '2FA\'yı Kapat';
@@ -3443,7 +3444,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get bottomNavHome => 'Ana Sayfa';
 
   @override
-  String get bottomNavTransfer => 'Transfer';
+  String get bottomNavTransfer => 'Para Transferi';
 
   @override
   String get bottomNavGift => 'Hediye';

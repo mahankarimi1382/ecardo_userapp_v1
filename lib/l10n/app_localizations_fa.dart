@@ -705,13 +705,13 @@ class AppLocalizationsFa extends AppLocalizations {
       '==== Create Beneficiary Screen ====';
 
   @override
-  String get createBeneficiaryTitle => 'ایجاد جدید';
+  String get createBeneficiaryTitle => 'افزودن گیرنده جدید';
 
   @override
-  String get createBeneficiaryAccountNumber => 'شماره حساب';
+  String get createBeneficiaryAccountNumber => 'شماره حساب یا UID گیرنده';
 
   @override
-  String get createBeneficiaryNickName => 'نام مستعار';
+  String get createBeneficiaryNickName => 'نام یا عنوان گیرنده';
 
   @override
   String get createBeneficiaryCreateButton => 'ایجاد';
@@ -746,7 +746,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get accountUserMerchant => 'پذیرنده';
 
   @override
-  String get accountUserBeneficiary => 'ذی‌نفع';
+  String get accountUserBeneficiary => 'گیرنده وجه';
 
   @override
   String get accountUserAgent => 'ایجنت';
@@ -2718,7 +2718,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get disable2FaSectionDescription =>
-      'لطفاً تنظیمات شبکه خود را بررسی کنید';
+      'غیرفعال کردن ورود دومرحله‌ای امنیت حساب شما را کاهش می‌دهد. هر زمان مایل باشید می‌توانید مجدداً آن را فعال کنید.';
 
   @override
   String get disable2FaSectionDisableButton => 'غیرفعال‌سازی تأیید دومرحله‌ای';
@@ -2939,7 +2939,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get transferAmountStepSectionSavedBeneficiaryButton =>
-      'ذی‌نفعان ذخیره‌شده';
+      'گیرندگان ذخیره‌شده';
 
   @override
   String get transferAmountStepSectionInvalidQrCodeDigits =>
@@ -2950,10 +2950,10 @@ class AppLocalizationsFa extends AppLocalizations {
       'کد QR نامعتبر است. پیشوند UID یافت نشد.';
 
   @override
-  String get transferAmountStepSectionBeneficiariesTitle => 'ذی‌نفعان';
+  String get transferAmountStepSectionBeneficiariesTitle => 'گیرندگان وجه';
 
   @override
-  String get transferAmountStepSectionAddBeneficiary => 'افزودن ذی‌نفع';
+  String get transferAmountStepSectionAddBeneficiary => 'افزودن گیرنده جدید';
 
   @override
   String get transferAmountStepSectionUidLabel => 'UID:';
@@ -2963,7 +2963,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get transferAmountStepSectionDeleteConfirmationMessage =>
-      'آیا می‌خواهید این ذی‌نفع را حذف کنید؟';
+      'آیا از حذف این گیرنده اطمینان دارید؟';
 
   @override
   String get transferAmountStepSectionDeleteButton => 'حذف';
@@ -6571,7 +6571,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get travelCancellationPolicy => 'قوانین لغو';
 
   @override
-  String get travelBeneficiary => 'مسافر یا ذی‌نفع';
+  String get travelBeneficiary => 'مسافر یا گیرنده';
 
   @override
   String get travelDeparture => 'خروج';

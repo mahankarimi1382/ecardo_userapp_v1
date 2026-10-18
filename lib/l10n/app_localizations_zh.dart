@@ -2669,7 +2669,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get disable2FaSectionTitle => '两步验证（2FA）';
 
   @override
-  String get disable2FaSectionDescription => '请输入密码以关闭两步验证（2FA）';
+  String get disable2FaSectionDescription => '关闭两步验证会降低您的账户安全性。您可以随时重新启用它。';
 
   @override
   String get disable2FaSectionDisableButton => '关闭两步验证';

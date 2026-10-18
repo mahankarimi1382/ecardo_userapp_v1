@@ -22,6 +22,7 @@ class _WithdrawMoneySectionState extends State<WithdrawMoneySection> {
       controller.clearFields();
       controller.fetchWithdrawAccounts();
       controller.fetchUser();
+      controller.fetchUserWallets();
     }
   }
 

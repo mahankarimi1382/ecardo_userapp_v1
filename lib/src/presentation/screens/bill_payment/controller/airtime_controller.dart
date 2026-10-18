@@ -23,6 +23,7 @@ class AirtimeController extends GetxController {
   final RxString selectedOperatorId = "mci".obs;
   final RxString selectedOperatorName = "همراه اول".obs;
   final RxString targetPhoneNumber = "".obs;
+  final TextEditingController targetPhoneNumberController = TextEditingController();
   // PAYMENT-FIX (P-2): raw backend response body of the last successful
   // pay-bill call (pass-through, no client model). Surfaced by the result
   // step so a backend "pending" payment no longer looks like a success.
@@ -89,6 +90,7 @@ class AirtimeController extends GetxController {
     serviceController.dispose();
     amountFocusNode.dispose();
     amountController.dispose();
+    targetPhoneNumberController.dispose();
     dynamicFieldsFocusNode.dispose();
   }
 
@@ -103,9 +105,19 @@ class AirtimeController extends GetxController {
       if (response.status == Status.completed) {
         billCountriesModel.value = BillCountriesModel();
         billCountriesModel.value = BillCountriesModel.fromJson(response.data!);
+
+        final countries = billCountriesModel.value.data ?? [];
+        if (countryController.text.isEmpty && countries.isNotEmpty) {
+          final defaultCountry = countries.firstWhereOrNull(
+                (c) => c.toLowerCase() == 'iran' || c.toUpperCase() == 'IR',
+              ) ??
+              countries.first;
+          countryController.text = defaultCountry;
+          await fetchPayBillServices();
+        }
       }
     } catch (e, stackTrace) {
-      debugPrint('❌ fetchWallets() error: $e');
+      debugPrint('❌ fetchBillCountries() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localization?.allControllerLoadError ?? 'An error occurred while loading data.',
@@ -117,6 +129,7 @@ class AirtimeController extends GetxController {
 
   // Fetch Pay Bill Services
   Future<void> fetchPayBillServices() async {
+    if (countryController.text.trim().isEmpty) return;
     isPayBillServiceLoading.value = true;
     try {
       final response = await Get.find<NetworkService>().get(
@@ -129,6 +142,18 @@ class AirtimeController extends GetxController {
         );
         payBillServiceList.clear();
         payBillServiceList.assignAll(payBillServiceModel.data!);
+
+        if (payBillServiceList.isNotEmpty) {
+          final opId = selectedOperatorId.value;
+          final match = payBillServiceList.firstWhereOrNull((s) {
+            final name = (s.name ?? '').toLowerCase();
+            return name.contains(opId) ||
+                name.contains(selectedOperatorName.value);
+          }) ?? payBillServiceList.first;
+          serviceData.value = match;
+          serviceController.text = match.name ?? '';
+          setupDynamicFields(match.fields);
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchPayBillServices() error: $e');

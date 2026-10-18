@@ -62,8 +62,22 @@ class VisaService extends GetxService {
     String? travelDate,
     String? returnDate,
   }) async {
+    final fullName = applicantInfo['full_name']?.toString() ?? '';
+    final names = fullName.trim().split(' ');
+    final firstName = names.isNotEmpty ? names.first : 'Applicant';
+    final lastName = names.length > 1 ? names.sublist(1).join(' ') : 'Traveler';
+    final passportNo = (applicantInfo['passport_no'] ?? applicantInfo['passport_number'] ?? 'A1000000').toString().toUpperCase();
+    final passportExpiry = applicantInfo['passport_expiry_date'] ?? applicantInfo['passport_expiry'] ?? '${DateTime.now().year + 5}-10-20';
+
     final payload = <String, dynamic>{
       'catalog_id': catalogId,
+      'first_name': firstName,
+      'last_name': lastName,
+      'passport_no': passportNo,
+      'passport_expiry_date': passportExpiry,
+      'nationality': applicantInfo['nationality'] ?? 'IR',
+      'phone': applicantInfo['phone'] ?? '',
+      'email': applicantInfo['email'] ?? '',
       'applicant_info': applicantInfo,
       'travel_date': ?travelDate,
       'return_date': ?returnDate,
@@ -90,6 +104,7 @@ class VisaService extends GetxService {
   }) async {
     final fileName = file.path.split('/').last.split('\\').last;
     final formData = FormData.fromMap({
+      'doc_type': docKey,
       'doc_key': docKey,
       'file': await MultipartFile.fromFile(file.path, filename: fileName),
     });

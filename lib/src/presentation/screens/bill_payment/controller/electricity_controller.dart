@@ -27,6 +27,21 @@ class ElectricityController extends GetxController {
   AppLocalizations? get localization =>
       Get.context != null ? AppLocalizations.of(Get.context!) : null;
 
+  // Dynamic service type and title (supports electricity, water, gas, municipality, tax)
+  String get serviceType {
+    if (Get.arguments is Map && Get.arguments['service_type'] != null) {
+      return Get.arguments['service_type'].toString();
+    }
+    return 'electricity';
+  }
+
+  String get screenTitle {
+    if (Get.arguments is Map && Get.arguments['title'] != null) {
+      return Get.arguments['title'].toString();
+    }
+    return localization?.electricityTitle ?? 'قبض برق';
+  }
+
   // Stepper
   final RxInt currentStep = 0.obs;
 
@@ -93,15 +108,26 @@ class ElectricityController extends GetxController {
     isLoading.value = true;
     try {
       final response = await Get.find<NetworkService>().get(
-        endpoint: "${ApiPath.getBillCountriesEndpoint}/electricity",
+        endpoint: "${ApiPath.getBillCountriesEndpoint}/$serviceType",
       );
 
       if (response.status == Status.completed) {
         billCountriesModel.value = BillCountriesModel();
         billCountriesModel.value = BillCountriesModel.fromJson(response.data!);
+
+        // Auto-select default country (Iran or first country) if not selected
+        final countries = billCountriesModel.value.data ?? [];
+        if (countryController.text.isEmpty && countries.isNotEmpty) {
+          final defaultCountry = countries.firstWhereOrNull(
+                (c) => c.toLowerCase() == 'iran' || c.toUpperCase() == 'IR',
+              ) ??
+              countries.first;
+          countryController.text = defaultCountry;
+          await fetchPayBillServices();
+        }
       }
     } catch (e, stackTrace) {
-      debugPrint('❌ fetchWallets() error: $e');
+      debugPrint('❌ fetchBillCountries() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
         localization?.allControllerLoadError ?? 'An error occurred while loading data.',
@@ -113,11 +139,12 @@ class ElectricityController extends GetxController {
 
   // Fetch Pay Bill Services
   Future<void> fetchPayBillServices() async {
+    if (countryController.text.trim().isEmpty) return;
     isPayBillServiceLoading.value = true;
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint:
-            "${ApiPath.getPayBillServicesEndpoint}/${countryController.text}/electricity",
+            "${ApiPath.getPayBillServicesEndpoint}/${countryController.text}/$serviceType",
       );
       if (response.status == Status.completed) {
         final payBillServiceModel = PayBillServiceModel.fromJson(
@@ -125,6 +152,14 @@ class ElectricityController extends GetxController {
         );
         payBillServiceList.clear();
         payBillServiceList.assignAll(payBillServiceModel.data!);
+
+        // Auto-select the first service if not selected
+        if (payBillServiceList.isNotEmpty && serviceData.value == null) {
+          final first = payBillServiceList.first;
+          serviceData.value = first;
+          serviceController.text = first.name ?? '';
+          setupDynamicFields(first.fields);
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchPayBillServices() error: $e');

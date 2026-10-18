@@ -78,4 +78,102 @@ class PasscodeHelper {
   static const String cashOutSetting = 'cashout_passcode_status';
   static const String makePaymentSetting = 'make_payment_passcode_status';
   static const String exchangeSetting = 'exchange_passcode_status';
+
+  /// Canonical backend error codes for Passcode challenge & state machine (P0 Resilience).
+  static const String codePasscodeRequired = 'PASSCODE_REQUIRED';
+  static const String codePasscodeInvalid = 'PASSCODE_INVALID';
+  static const String codePasscodeNotConfigured = 'PASSCODE_NOT_CONFIGURED';
+  static const String codePasscodeLocked = 'PASSCODE_LOCKED';
+
+  /// Returns true ONLY if the error signifies that a passcode is required
+  /// and hasn't been provided yet.
+  ///
+  /// CRITICAL INVARIANT: If [wasPasscodeProvided] is true, this ALWAYS returns false
+  /// to strictly guarantee that no infinite prompt/retry loop can ever occur.
+  static bool isPasscodeRequired(
+    dynamic errorOrResponse, {
+    bool wasPasscodeProvided = false,
+  }) {
+    if (wasPasscodeProvided) {
+      return false;
+    }
+
+    final text = errorOrResponse?.toString().toLowerCase() ?? '';
+    if (text.isEmpty) return false;
+
+    // Check for explicit structured error code first
+    if (text.contains('passcode_required')) {
+      return true;
+    }
+
+    // Check for negative signals: if error indicates invalid/locked, it's NOT a missing passcode challenge
+    if (text.contains('invalid') ||
+        text.contains('incorrect') ||
+        text.contains('wrong') ||
+        text.contains('locked') ||
+        text.contains('اشتباه') ||
+        text.contains('نادرست') ||
+        text.contains('نامعتبر') ||
+        text.contains('مسدود')) {
+      return false;
+    }
+
+    final hasPasscodeTerm = text.contains('passcode') ||
+        text.contains('پس‌کد') ||
+        text.contains('رمز معامله') ||
+        text.contains('رمز عبور معامله') ||
+        text.contains('رمز');
+
+    // Check for legacy string indicators
+    if (hasPasscodeTerm &&
+        (text.contains('required') ||
+            text.contains('missing') ||
+            text.contains('enter') ||
+            text.contains('provide') ||
+            text.contains('الزامی') ||
+            text.contains('وارد'))) {
+      return true;
+    }
+
+    // Fallback: If 422 specifically mentions passcode and no invalid keyword was matched
+    if (text.contains('passcode') && (text.contains('422') || text.contains('error'))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Returns true if the error indicates the entered passcode was invalid/wrong.
+  static bool isPasscodeInvalid(dynamic errorOrResponse) {
+    final text = errorOrResponse?.toString().toLowerCase() ?? '';
+    final hasPasscodeTerm = text.contains('passcode') ||
+        text.contains('پس‌کد') ||
+        text.contains('رمز معامله') ||
+        text.contains('رمز عبور معامله') ||
+        text.contains('رمز');
+
+    return text.contains('passcode_invalid') ||
+        (hasPasscodeTerm &&
+            (text.contains('invalid') ||
+                text.contains('incorrect') ||
+                text.contains('wrong') ||
+                text.contains('اشتباه') ||
+                text.contains('نادرست') ||
+                text.contains('نامعتبر')));
+  }
+
+  /// Returns true if the passcode is temporarily or permanently locked.
+  static bool isPasscodeLocked(dynamic errorOrResponse) {
+    final text = errorOrResponse?.toString().toLowerCase() ?? '';
+    final hasPasscodeTerm = text.contains('passcode') ||
+        text.contains('پس‌کد') ||
+        text.contains('رمز معامله') ||
+        text.contains('رمز عبور معامله') ||
+        text.contains('رمز');
+
+    return text.contains('passcode_locked') ||
+        text.contains('passcode_blocked') ||
+        (hasPasscodeTerm &&
+            (text.contains('lock') || text.contains('مسدود') || text.contains('قفل')));
+  }
 }

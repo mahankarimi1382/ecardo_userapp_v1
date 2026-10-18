@@ -836,7 +836,7 @@
   "twoFactorAuthenticationScreenTitle": "两步验证（2FA）",
   "comment_disable_2fa_section": "==== Disable 2FA Section ====",
   "disable2FaSectionTitle": "两步验证（2FA）",
-  "disable2FaSectionDescription": "请输入密码以关闭两步验证（2FA）",
+  "disable2FaSectionDescription": "关闭两步验证会降低您的账户安全性。您可以随时重新启用它。",
   "disable2FaSectionDisableButton": "关闭两步验证",
   "disable2FaSectionPasswordRequired": "请输入密码",
   "comment_enable_2fa_section": "==== Enable 2FA Section ====",

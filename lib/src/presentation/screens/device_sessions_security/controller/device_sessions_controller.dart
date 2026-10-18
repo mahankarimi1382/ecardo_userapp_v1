@@ -698,21 +698,37 @@ class DeviceSessionsController extends GetxController {
       context,
       en: 'Biometric Lock Enabled',
       fa: 'فعال‌سازی قفل بیومتریک',
+      ar: 'تم تفعيل القفل البيومتري',
+      tr: 'Biyometrik Kilit Etkinleştirildi',
+      ru: 'Биометрическая блокировка включена',
+      zh: '生物识别锁定已启用',
     );
     final descOn = l10nPick(
       context,
       en: 'Biometric unlock enabled on this device',
       fa: 'ورود با اثر انگشت یا چهره در این دستگاه فعال شد',
+      ar: 'تم تفعيل الدخول بالبصمة أو الوجه على هذا الجهاز',
+      tr: 'Bu cihazda biyometrik kilit açma etkinleştirildi',
+      ru: 'Биометрическая разблокировка включена на этом устройстве',
+      zh: '此设备已启用生物识别解锁',
     );
     final titleOff = l10nPick(
       context,
       en: 'Biometric Lock Disabled',
       fa: 'غیرفعال‌سازی قفل بیومتریک',
+      ar: 'تم إيقاف القفل البيومتري',
+      tr: 'Biyometrik Kilit Devre Dışı Bırakıldı',
+      ru: 'Биометрическая блокировка отключена',
+      zh: '生物识别锁定已禁用',
     );
     final descOff = l10nPick(
       context,
       en: 'Biometric unlock turned off',
       fa: 'ورود با اثر انگشت یا چهره غیرفعال شد',
+      ar: 'تم إيقاف الدخول بالبصمة أو الوجه',
+      tr: 'Biyometrik kilit açma kapatıldı',
+      ru: 'Биометрическая разблокировка отключена',
+      zh: '生物识别解锁已关闭',
     );
 
     HapticFeedback.lightImpact();

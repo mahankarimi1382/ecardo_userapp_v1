@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -275,6 +276,7 @@ class CreateGiftController extends GetxController {
     // v1.0.24: guard against double submission while a request is in flight.
     if (isCreateGiftLoading.isTrue) return;
     isCreateGiftLoading.value = true;
+    final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
     final Map<String, dynamic> requestBody = {
       'amount': amountController.text.trim(),
@@ -297,8 +299,7 @@ class CreateGiftController extends GetxController {
         clearFields();
         ToastHelper().showSuccessToast(response.data!["message"]);
       } else if (response.status == Status.error) {
-        final msg = response.message?.toLowerCase() ?? '';
-        if (msg.contains('passcode')) {
+        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isCreateGiftLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -307,13 +308,25 @@ class CreateGiftController extends GetxController {
             await createGift(passcode: verified.toString());
             return;
           }
+        } else if (PasscodeHelper.isPasscodeInvalid(response.message)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'The transaction passcode entered is incorrect.',
+              fa: 'رمز عبور معامله وارد شده نادرست است.',
+              ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+              zh: '输入的交易密码不正确。',
+            ),
+          );
+        } else {
+          ToastHelper().showErrorToast(
+            response.message ?? localization.allControllerLoadError,
+          );
         }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ createGift() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      final errStr = e.toString().toLowerCase();
-      if (errStr.contains('passcode')) {
+      if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
         isCreateGiftLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -322,6 +335,15 @@ class CreateGiftController extends GetxController {
           await createGift(passcode: verified.toString());
           return;
         }
+      } else if (PasscodeHelper.isPasscodeInvalid(e)) {
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'The transaction passcode entered is incorrect.',
+            fa: 'رمز عبور معامله وارد شده نادرست است.',
+            ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+            zh: '输入的交易密码不正确。',
+          ),
+        );
       } else {
         ToastHelper().showErrorToast(localization.allControllerLoadError);
       }

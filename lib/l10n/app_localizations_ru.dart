@@ -1907,7 +1907,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get createInvoiceInformationSectionInvoiceTo => 'Плательщик';
 
   @override
-  String get createInvoiceInformationSectionEmailAddress => 'Email';
+  String get createInvoiceInformationSectionEmailAddress => 'Эл. почта';
 
   @override
   String get createInvoiceInformationSectionAddress => 'Адрес';
@@ -2715,7 +2715,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get disable2FaSectionTitle => 'Двухфакторная аутентификация (2FA)';
 
   @override
-  String get disable2FaSectionDescription => 'noInternetConnectionRetryButton';
+  String get disable2FaSectionDescription =>
+      'Отключение двухфакторной аутентификации снижает безопасность учетной записи. Вы можете включить ее снова в любое время.';
 
   @override
   String get disable2FaSectionDisableButton => 'Отключить 2FA';

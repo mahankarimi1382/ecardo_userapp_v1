@@ -2696,7 +2696,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get disable2FaSectionTitle => 'التحقق بخطوتين';
 
   @override
-  String get disable2FaSectionDescription => 'noInternetConnectionRetryButton';
+  String get disable2FaSectionDescription =>
+      'إيقاف تشغيل المصادقة الثنائية يقلل من أمان حسابك. يمكنك إعادة تفعيلها في أي وقت.';
 
   @override
   String get disable2FaSectionDisableButton => 'تعطيل التحقق بخطوتين';

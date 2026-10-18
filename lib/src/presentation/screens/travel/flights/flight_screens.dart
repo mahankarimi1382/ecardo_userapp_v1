@@ -1120,7 +1120,7 @@ class _FlightSearchSummary extends StatelessWidget {
             Text(
               [
                 formattedDeparture,
-                if (formattedReturn.isNotEmpty) formattedReturn,
+                if (search.isRoundTrip && formattedReturn.isNotEmpty) formattedReturn,
               ].join(' → '),
               style: TextStyle(color: TravelTheme.muted),
             ),

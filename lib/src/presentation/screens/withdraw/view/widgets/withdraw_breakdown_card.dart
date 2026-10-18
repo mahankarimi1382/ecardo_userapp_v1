@@ -48,15 +48,25 @@ class WithdrawBreakdownCard extends StatelessWidget {
               )
             : "${feeAmount.toStringAsFixed(decimals)} $currency");
     final formattedNet = "${netPayout.toStringAsFixed(decimals)} $currency";
+    final isInternationalCurrency = currency.toUpperCase() == 'USD' || currency.toUpperCase() == 'EUR' || currency.toUpperCase() == 'USDT';
     final resolvedSettlementTime = settlementTime ??
-        l10nPick(
-          context,
-          en: 'Instant ⚡ (Paya next cycle)',
-          fa: 'تسویه آنی ⚡ / پایا سیکل بعدی',
-          ar: 'تسوية فورية ⚡ / بايا',
-          tr: 'Anında ⚡ / Sonraki döngü',
-          ru: 'Мгновенно ⚡ / след. цикл',
-        );
+        (isInternationalCurrency
+            ? l10nPick(
+                context,
+                en: '1-3 Business Days (Wire / SWIFT)',
+                fa: '۱ تا ۳ روز کاری (انتقال بین‌المللی)',
+                ar: '1-3 أيام عمل (حوالة مصرفية)',
+                tr: '1-3 İş Günü (Uluslararası Transfer)',
+                ru: '1-3 рабочих дня (Международный перевод)',
+              )
+            : l10nPick(
+                context,
+                en: 'Instant ⚡ (Next Banking Cycle)',
+                fa: 'تسویه آنی ⚡ / سیکل بعدی بانکی',
+                ar: 'تسوية فورية ⚡ / الدورة المصرفية التالية',
+                tr: 'Anında ⚡ / Sonraki bankacılık döngüsü',
+                ru: 'Мгновенно ⚡ / след. банковский цикл',
+              ));
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),

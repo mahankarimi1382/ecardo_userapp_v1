@@ -225,7 +225,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
                               fontSize: 10.5.sp,
                             ),
                           ),
-                        if (retDate != null) ...[
+                        if (isRound && retDate != null) ...[
                           Text(
                             ' - ',
                             style: TextStyle(

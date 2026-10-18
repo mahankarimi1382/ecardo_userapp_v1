@@ -196,7 +196,7 @@ class _EquityInvestCheckoutScreenState
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '${widget.project.sector} • بازده ${widget.project.annualYieldPercent}%',
+                  '${widget.project.sector} • ${l10nPick(context, en: 'Annual Yield', fa: 'بازده سالانه', ar: 'العائد السنوي', tr: 'Yıllık Getiri', ru: 'Годовая доходность', zh: '年化收益率')} ${widget.project.annualYieldPercent}%',
                   style: TextStyle(
                     fontSize: 11.sp,
                     color: AppColors.success,
@@ -285,10 +285,30 @@ class _EquityInvestCheckoutScreenState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildPresetChip('پایه (حداقل)', 1.0, isDark, primaryAccent),
-              _buildPresetChip('۲ برابر', 2.0, isDark, primaryAccent),
-              _buildPresetChip('۵ برابر', 5.0, isDark, primaryAccent),
-              _buildPresetChip('۱۰ برابر', 10.0, isDark, primaryAccent),
+              _buildPresetChip(
+                l10nPick(context, en: 'Base (Min)', fa: 'پایه (حداقل)', ar: 'الأساسي (الحد الأدنى)', tr: 'Taban (Min)', ru: 'Базовый (Мин)', zh: '基础（最低）'),
+                1.0,
+                isDark,
+                primaryAccent,
+              ),
+              _buildPresetChip(
+                l10nPick(context, en: '2x', fa: '۲ برابر', ar: 'ضعفان', tr: '2 Katı', ru: '2x', zh: '2倍'),
+                2.0,
+                isDark,
+                primaryAccent,
+              ),
+              _buildPresetChip(
+                l10nPick(context, en: '5x', fa: '۵ برابر', ar: '5 أضعاف', tr: '5 Katı', ru: '5x', zh: '5倍'),
+                5.0,
+                isDark,
+                primaryAccent,
+              ),
+              _buildPresetChip(
+                l10nPick(context, en: '10x', fa: '۱۰ برابر', ar: '10 أضعاف', tr: '10 Katı', ru: '10x', zh: '10倍'),
+                10.0,
+                isDark,
+                primaryAccent,
+              ),
             ],
           ),
         ],
@@ -370,21 +390,21 @@ class _EquityInvestCheckoutScreenState
           ),
           SizedBox(height: AppSpacing.md.h),
           _buildRowDetail(
-            'تعداد سهام تخصیص‌یافته:',
-            '$shares سهم دیجیتال',
+            l10nPick(context, en: 'Allocated digital shares:', fa: 'تعداد سهام تخصیص‌یافته:', ar: 'عدد الأسهم المخصصة:', tr: 'Tahsis edilen dijital hisseler:', ru: 'Выделенные цифровые акции:', zh: '分配的数字股份：'),
+            '$shares ${l10nPick(context, en: 'Digital Shares', fa: 'سهم دیجیتال', ar: 'سهم رقمي', tr: 'Dijital Hisse', ru: 'цифровых акций', zh: '份数字股份')}',
             isDark,
           ),
           SizedBox(height: 6.h),
           _buildRowDetail(
-            'سود سهام پیش‌بینی سالانه:',
+            l10nPick(context, en: 'Projected annual dividend:', fa: 'سود سهام پیش‌بینی سالانه:', ar: 'أرباح الأسهم المتوقعة سنوياً:', tr: 'Tahmini yıllık temettü:', ru: 'Прогнозируемый годовой дивиденд:', zh: '预计年度股息：'),
             '${annualDividend.toStringAsFixed(0)} ${widget.project.currency} (${widget.project.annualYieldPercent}%)',
             isDark,
             highlightValue: true,
           ),
           SizedBox(height: 6.h),
           _buildRowDetail(
-            'دوره واریز سود:',
-            'سه‌ماهه (Quarterly Distribution)',
+            l10nPick(context, en: 'Payout frequency:', fa: 'دوره واریز سود:', ar: 'دورية توزيع الأرباح:', tr: 'Ödeme sıklığı:', ru: 'Периодичность выплат:', zh: '派息周期：'),
+            l10nPick(context, en: 'Quarterly Distribution', fa: 'سه‌ماهه (Quarterly)', ar: 'توزيع ربع سنوي', tr: 'Üç Aylık Dağıtım', ru: 'Ежеквартальное распределение', zh: '季度分红'),
             isDark,
           ),
           SizedBox(height: 6.h),

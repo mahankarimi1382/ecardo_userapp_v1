@@ -5,12 +5,14 @@ import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/model/withdraw_account_model.dart';
 
 class WithdrawController extends GetxController {
@@ -40,6 +42,7 @@ class WithdrawController extends GetxController {
   final withdrawAccountController = TextEditingController();
   final Rxn<Accounts> withdrawAccount = Rxn<Accounts>();
   final RxList<Accounts> withdrawAccountList = <Accounts>[].obs;
+  final RxList<Wallets> userWalletsList = <Wallets>[].obs;
 
   // Amount
   final RxBool isAmountFocused = false.obs;
@@ -48,17 +51,22 @@ class WithdrawController extends GetxController {
 
   /// Effective available balance for percentage chip calculations
   double get availableBalance {
+    final targetCurrency = (withdrawAccount.value?.currency ?? 'USD').toUpperCase().trim();
+    if (userWalletsList.isNotEmpty) {
+      final match = userWalletsList.firstWhereOrNull(
+        (w) => (w.code ?? '').toUpperCase().trim() == targetCurrency,
+      );
+      if (match != null && match.balance != null) {
+        final parsed = double.tryParse(match.balance.toString());
+        if (parsed != null && parsed >= 0) return parsed;
+      }
+    }
     final rawBalance = userModel.value.data?.balance;
     if (rawBalance != null && rawBalance.isNotEmpty) {
       final parsed = double.tryParse(rawBalance);
       if (parsed != null && parsed > 0) return parsed;
     }
-    final rawMax = withdrawAccount.value?.method?.maxWithdraw;
-    if (rawMax != null && rawMax.isNotEmpty) {
-      final parsed = double.tryParse(rawMax);
-      if (parsed != null && parsed > 0) return parsed;
-    }
-    return 1000.0;
+    return 0.0;
   }
 
   /// Dynamic daily withdrawal limit for the active account/method
@@ -127,40 +135,34 @@ class WithdrawController extends GetxController {
   Future<void> reviewCalculate() async {
     final baseAmount = double.tryParse(amountController.text) ?? 0.0;
     final double charge =
-        double.tryParse(withdrawAccount.value!.method!.charge!) ?? 0.0;
+        double.tryParse(withdrawAccount.value?.method?.charge ?? '0') ?? 0.0;
 
-    if (withdrawAccount.value!.method!.chargeType == 'percentage') {
+    if (withdrawAccount.value?.method?.chargeType == 'percentage') {
       calculatedCharge.value = (baseAmount * charge / 100);
       totalAmount.value = baseAmount + calculatedCharge.value;
+      chargeLoadFailed.value = false;
     } else {
-      await getChargeConverter();
+      // Fixed fee: directly in the withdrawal account's currency
+      calculatedCharge.value = charge;
+      totalAmount.value = baseAmount + charge;
+      chargeLoadFailed.value = false;
     }
   }
 
-  // Get Charge Converter
+  // Get Charge Converter (fallback for multi-currency conversion)
   Future<void> getChargeConverter() async {
     isChargeConverterLoading.value = true;
     chargeLoadFailed.value = false;
     try {
-      final response = await Get.find<NetworkService>().globalGet(
-        endpoint: ApiPath.getConverterEndpoint(
-          amount: withdrawAccount.value!.method!.charge!,
-          currencyCode: withdrawAccount.value!.currency!,
-        ),
-      );
-      if (response.status == Status.completed) {
-        converterModel.value = ConverterModel.fromJson(response.data!);
-        calculatedCharge.value =
-            double.tryParse(
-              converterModel.value.data!.convertedAmount ?? "0",
-            ) ??
-            0.0;
-        totalAmount.value =
-            ((double.tryParse(amountController.text) ?? 0.0) +
-                calculatedCharge.value);
-      } else {
-        chargeLoadFailed.value = true;
+      final acc = withdrawAccount.value;
+      if (acc == null) {
+        calculatedCharge.value = 0.0;
+        totalAmount.value = double.tryParse(amountController.text) ?? 0.0;
+        return;
       }
+      final charge = double.tryParse(acc.method?.charge ?? '0') ?? 0.0;
+      calculatedCharge.value = charge;
+      totalAmount.value = (double.tryParse(amountController.text) ?? 0.0) + charge;
     } catch (e, stackTrace) {
       chargeLoadFailed.value = true;
       debugPrint('❌ getChargeConverter() error: $e');
@@ -297,11 +299,29 @@ class WithdrawController extends GetxController {
     } finally {}
   }
 
+  // Fetch Wallets for Multi-Currency Balances
+  Future<void> fetchUserWallets() async {
+    try {
+      final response = await Get.find<NetworkService>().get(
+        endpoint: "${ApiPath.walletsEndpoint}?exchange",
+      );
+      if (response.status == Status.completed && response.data != null) {
+        final walletsModel = WalletsModel.fromJson(response.data!);
+        final wList = walletsModel.data?.wallets ?? [];
+        userWalletsList.assignAll(wList);
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ fetchUserWallets() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+    }
+  }
+
   // Withdraw Function
   Future<void> submitWithdraw({String? passcode}) async {
     // v1.0.24: guard against double submission while a request is in flight.
     if (isWithdrawLoading.isTrue) return;
     isWithdrawLoading.value = true;
+    final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
     try {
       final Map<String, dynamic> requestBody = {
@@ -321,8 +341,7 @@ class WithdrawController extends GetxController {
         currentStep.value = 2;
         ToastHelper().showSuccessToast(response.data!["message"]);
       } else if (response.status == Status.error) {
-        final msg = response.message?.toLowerCase() ?? '';
-        if (msg.contains('passcode')) {
+        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isWithdrawLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -331,13 +350,25 @@ class WithdrawController extends GetxController {
             await submitWithdraw(passcode: verified.toString());
             return;
           }
+        } else if (PasscodeHelper.isPasscodeInvalid(response.message)) {
+          ToastHelper().showErrorToast(
+            l10nPickAuto(
+              en: 'The transaction passcode entered is incorrect.',
+              fa: 'رمز عبور معامله وارد شده نادرست است.',
+              ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+              zh: '输入的交易密码不正确。',
+            ),
+          );
+        } else {
+          ToastHelper().showErrorToast(
+            response.message ?? localization.allControllerLoadError,
+          );
         }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ submitWithdraw() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      final errStr = e.toString().toLowerCase();
-      if (errStr.contains('passcode')) {
+      if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
         isWithdrawLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -346,6 +377,15 @@ class WithdrawController extends GetxController {
           await submitWithdraw(passcode: verified.toString());
           return;
         }
+      } else if (PasscodeHelper.isPasscodeInvalid(e)) {
+        ToastHelper().showErrorToast(
+          l10nPickAuto(
+            en: 'The transaction passcode entered is incorrect.',
+            fa: 'رمز عبور معامله وارد شده نادرست است.',
+            ar: 'رمز مرور المعاملة المدخل غير صحيح.',
+            zh: '输入的交易密码不正确。',
+          ),
+        );
       } else {
         ToastHelper().showErrorToast(localization.allControllerLoadError);
       }

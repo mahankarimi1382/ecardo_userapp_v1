@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/smart_back_helper.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
@@ -50,7 +51,11 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          Get.offNamed(BaseRoute.navigation);
+          if (controller.currentStep.value > 0) {
+            controller.currentStep.value--;
+          } else {
+            SmartBackHelper.handleBack(context);
+          }
         }
       },
       child: Scaffold(
@@ -71,7 +76,11 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                           () => CommonAppBar(
                             title: localization.makePaymentScreenTitle,
                             backLogicFunction: () async {
-                              Get.offNamed(BaseRoute.navigation);
+                              if (controller.currentStep.value > 0) {
+                                controller.currentStep.value--;
+                              } else {
+                                SmartBackHelper.handleBack(context);
+                              }
                             },
                             isBackLogicApply: true,
                             rightSideWidget: controller.currentStep.value == 0

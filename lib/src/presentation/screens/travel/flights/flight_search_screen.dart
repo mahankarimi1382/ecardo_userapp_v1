@@ -40,7 +40,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
   AirportItem _selectedOrigin = AirportItem.findByCode('DXB');
   AirportItem _selectedDestination = AirportItem.findByCode('LHR');
 
-  FlightTripType _tripType = FlightTripType.roundTrip;
+  FlightTripType _tripType = FlightTripType.oneWay;
   DateTime _departureDate = DateTime.now().add(const Duration(days: 7));
   DateTime _returnDate = DateTime.now().add(const Duration(days: 14));
 
