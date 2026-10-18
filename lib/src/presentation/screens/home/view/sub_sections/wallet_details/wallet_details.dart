@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/wallet_deta
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/widgets/crypto_deposit_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_color.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_icon.dart';
@@ -324,6 +325,18 @@ class _WalletDetailsState extends State<WalletDetails> {
                     icon: PngAssets.topUpCommonIcon,
                     iconBgColor: Color(0xFF81BAFF),
                     onTap: () {
+                      final currentWallet = controller.wallet.value;
+                      final isCryptoWallet = currentWallet?.isCrypto == true ||
+                          (currentWallet?.code ?? '').toUpperCase().trim() == 'USDT';
+
+                      if (isCryptoWallet && currentWallet != null) {
+                        CryptoDepositBottomSheet.show(
+                          context,
+                          wallet: currentWallet,
+                        );
+                        return;
+                      }
+
                       if (Get.find<SettingsService>().getSetting(
                             "user_deposit",
                           ) ==
