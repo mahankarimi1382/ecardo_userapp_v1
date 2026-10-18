@@ -1,7 +1,7 @@
 # 11. Complete Test Matrix & Verification Plan (IT-01 to IT-25)
 
 **Document Version:** 1.0.0  
-**Target Environment:** walet-ecardo (`192.168.200.57`) via Bastion `serv.interex.ir` (`192.168.100.65`)  
+**Target Environment:** walet-ecardo (`[WALLET_NODE_HOST]`) via Bastion `serv.interex.ir` (`[CORE_BACKEND_HOST]`)  
 **Repository:** `ecardo_userapp_v1`  
 **Test Suite Location:** `/opt/wallet-platform/tests/run_tests.py`  
 **Date:** 2026-10-18  

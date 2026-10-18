@@ -17,7 +17,7 @@ This document establishes the binding data governance, telemetry classification,
 ### 1.1 Non-Negotiable Source of Truth Invariant
 **Elasticsearch and the OpenTelemetry observability pipeline are strictly operational search, diagnostic, and distributed tracing facilities. They are NEVER the system of record or source of truth for financial balances, double-entry ledger journals, or user authorization states.**
 
-1. **Transactional Authority:** The sole authoritative source of truth for all account balances, journal entries, and fiat/crypto liabilities is the primary relational ACID ledger (`ecardoq192` on MariaDB) synchronized with cryptographic confirmations from the blockchain gateway (`walet-ecardo` on `192.168.200.57`).
+1. **Transactional Authority:** The sole authoritative source of truth for all account balances, journal entries, and fiat/crypto liabilities is the primary relational ACID ledger (`ecardoq192` on MariaDB) synchronized with cryptographic confirmations from the blockchain gateway (`walet-ecardo` on `[WALLET_NODE_HOST]`).
 2. **Zero-Trust Observability:** Telemetry and search pipelines must operate under a zero-trust model where no downstream logging component or search cluster receives or stores unmasked secrets, private keys, or raw personal identifiable information (PII).
 3. **Fail-Closed Redaction:** If an ingestion pipeline processor fails to apply redaction rules, the ingestion pipeline must discard the payload rather than permit unredacted ingestion into persistent search indices.
 

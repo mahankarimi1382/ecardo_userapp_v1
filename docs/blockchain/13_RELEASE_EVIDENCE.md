@@ -29,12 +29,12 @@ This document provides formal, cryptographically anchored release verification e
 +---------------------------------------------------------------------------------------------------+
 |                                Tier 2: Core Platform & Gateway                                    |
 |                             Production Server: serv.interex.ir                                    |
-|  - Internal IP: 192.168.100.65 | OS: AlmaLinux 8.10 (Kernel 4.18.0-553.159.1.el8_10.x86_64)       |
+|  - Internal IP: [CORE_BACKEND_HOST] | OS: AlmaLinux 8.10 (Kernel 4.18.0-553.159.1.el8_10.x86_64)       |
 |  - Web / Reverse Proxy: Nginx 1.30.4 (ecardo.ir, user, merchant, agent, fee)                     |
 |  - Application Engine: Laravel 12.49.0 on Laravel Octane v2.17.5 / RoadRunner (Port 8000)         |
 |  - System of Record Database: MariaDB 10.6.27 (ecardoq192) Canonical ACID Double-Entry Ledger     |
 |  - In-Memory Cache & Queues: Redis 7.x (PONG active)                                              |
-|  - Bastion SSH Gateway: Port 22 secure tunnel to internal blockchain subnet (192.168.200.0/24)     |
+|  - Bastion SSH Gateway: Port 22 secure tunnel to internal blockchain subnet ([ISOLATED_VAULT_SUBNET])     |
 +---------------------------------------------------------------------------------------------------+
                                                   |
                                                   | Internal HTTP / mTLS Tunnel via Bastion
@@ -42,7 +42,7 @@ This document provides formal, cryptographically anchored release verification e
 +---------------------------------------------------------------------------------------------------+
 |                                Tier 3: Dedicated Blockchain Host                                  |
 |                                Isolated Host: walet-ecardo                                        |
-|  - Internal IP: 192.168.200.57:8000 | CLI: /opt/wallet-platform/bin/walletctl                     |
+|  - Internal IP: [WALLET_NODE_HOST]:8000 | CLI: /opt/wallet-platform/bin/walletctl                     |
 |  - Integration Test Suite: 25 / 25 Integration Tests Passed (100% Green)                          |
 |  - Key Management: HashiCorp Vault Transit Engine (Unsealed, AES-256-GCM / secp256k1)              |
 |  - Key Derivation: BIP-44 Hierarchical Deterministic Path m/44'/195'/0'/0/i (TRON TRC20 USDT)     |
@@ -113,7 +113,7 @@ $ flutter test
 
 ### 3.1 Host Specification & Runtime Verification
 - **Host Domain:** `serv.interex.ir`
-- **Internal IP:** `192.168.100.65`
+- **Internal IP:** `[CORE_BACKEND_HOST]`
 - **Operating System:** AlmaLinux 8.10 (Cerulean Leopard) — Kernel `4.18.0-553.159.1.el8_10.x86_64`
 - **System Resources:** 24 GB RAM (5.3 GB allocated, 17 GB buffers/cache), 77 GB NVMe Storage (38 GB free)
 - **Control Plane:** FastPanel v2
@@ -135,7 +135,7 @@ The health and operational readiness of the bridge connecting the core Laravel p
 ====================================================
  eCardo Blockchain & Wallet Bridge Diagnostic Probe
 ====================================================
-Checking health endpoint (http://192.168.200.57:8000)...
+Checking health endpoint (http://[WALLET_NODE_HOST]:8000)...
 [PASS] Wallet API Health: {"status":"OK","version":"1.0.4","chain":"TRON","network":"mainnet"}
 
 Checking Vault security status...
@@ -150,8 +150,8 @@ Checking Triple-Ledger Reconciliation status...
 ```
 
 ### 3.3 Network Perimeter & Bastion Security
-1. **Network Segmentation:** Direct external ingress to `192.168.200.57` is blocked by physical and virtual firewall rules. All administrative and operational traffic must transit the Bastion Gateway at `192.168.100.65`.
-2. **mTLS & Internal Token Auth:** HTTP communication between `BlockchainWalletService` on `192.168.100.65` and `walet-ecardo` on `192.168.200.57:8000` is secured with internal HMAC authentication tokens and restricted IP binding.
+1. **Network Segmentation:** Direct external ingress to `[WALLET_NODE_HOST]` is blocked by physical and virtual firewall rules. All administrative and operational traffic must transit the Bastion Gateway at `[CORE_BACKEND_HOST]`.
+2. **mTLS & Internal Token Auth:** HTTP communication between `BlockchainWalletService` on `[CORE_BACKEND_HOST]` and `walet-ecardo` on `[WALLET_NODE_HOST]:8000` is secured with internal HMAC authentication tokens and restricted IP binding.
 
 ---
 
@@ -159,7 +159,7 @@ Checking Triple-Ledger Reconciliation status...
 
 ### 4.1 Host Identity & Cryptographic Environment
 - **Host Identifier:** `walet-ecardo`
-- **Internal IP:** `192.168.200.57`
+- **Internal IP:** `[WALLET_NODE_HOST]`
 - **Service Port:** 8000 (Internal REST API)
 - **Control Daemon:** `/opt/wallet-platform/bin/walletctl`
 - **Underlying Chain:** TRON Mainnet (Chain ID `0x2b6653dc` / 728126428)

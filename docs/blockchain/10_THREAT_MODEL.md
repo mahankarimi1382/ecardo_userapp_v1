@@ -1,7 +1,7 @@
 # 10. Comprehensive Threat Model — Blockchain & Custody Platform
 
 **Document Version:** 1.0.0  
-**Target Environment:** walet-ecardo (`192.168.200.57`) via Bastion `serv.interex.ir` (`192.168.100.65`)  
+**Target Environment:** walet-ecardo (`[WALLET_NODE_HOST]`) via Bastion `serv.interex.ir` (`[CORE_BACKEND_HOST]`)  
 **Repository:** `ecardo_userapp_v1`  
 **Classification:** Internal Confidential / Security Architecture  
 **Date:** 2026-10-18  
@@ -22,11 +22,11 @@ The assessment employs the **STRIDE** model (Spoofing, Tampering, Repudiation, I
 |       |                                                                                            |
 |   HTTPS / TLS 1.3 (Signed Requests, Nonces, JWT)                                                   |
 |       v                                                                                            |
-| [TB-2: Edge / Bastion]   serv.interex.ir (192.168.100.65) - Firewall & Reverse Proxy               |
+| [TB-2: Edge / Bastion]   serv.interex.ir ([CORE_BACKEND_HOST]) - Firewall & Reverse Proxy               |
 |       |                                                                                            |
 |   Private VPC / mTLS Direct TCP                                                                    |
 |       v                                                                                            |
-| [TB-3: Host Perimeter]  walet-ecardo (192.168.200.57)                                              |
+| [TB-3: Host Perimeter]  walet-ecardo ([WALLET_NODE_HOST])                                              |
 |       +------------------------------------------------------------------------------------------+ |
 |       | [TB-4: Service Core]  wallet-api.service (Port 8000)                                     | |
 |       |       |                       |                      |                                   | |
@@ -143,6 +143,6 @@ The assessment employs the **STRIDE** model (Spoofing, Tampering, Repudiation, I
 
 ## 4. Residual Risks & Governance Decisions
 
-1. **Host-Level Single Point of Failure (SPOF):** The wallet platform currently resides on a single primary VM (`walet-ecardo`, `192.168.200.57`). In the event of catastrophic physical hardware failure on the host hypervisor, cold backup restoration (IT-20) is required. A multi-node active-passive failover cluster is scheduled for Phase 3.
+1. **Host-Level Single Point of Failure (SPOF):** The wallet platform currently resides on a single primary VM (`walet-ecardo`, `[WALLET_NODE_HOST]`). In the event of catastrophic physical hardware failure on the host hypervisor, cold backup restoration (IT-20) is required. A multi-node active-passive failover cluster is scheduled for Phase 3.
 2. **Third-Party RPC Latency:** Reliance on external TRON RPC gateways introduces dependency on upstream network stability. High latency degrades deposit indexing time but does not threaten cryptographic safety.
 3. **Regulatory & Compliance Mandate:** While technical screening mechanisms are implemented (IT-12), regulatory compliance requirements (KYC/AML) must be periodically audited by the legal compliance officer.

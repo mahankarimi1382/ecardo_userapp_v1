@@ -45,7 +45,7 @@ The registry differentiates between operational domains, custody boundaries, and
                     v                                       v
     +-------------------------------+       +-------------------------------+
     |    Central MariaDB Ledger     |       |    walet-ecardo SQLite Edge   |
-    |          (ecardoq192)         |       |      (192.168.200.57:8000)    |
+    |          (ecardoq192)         |       |      ([WALLET_NODE_HOST]:8000)    |
     |  System of Record Accounting  |       |   Signer & Local Edge State   |
     +-------------------------------+       +-------------------------------+
 ```

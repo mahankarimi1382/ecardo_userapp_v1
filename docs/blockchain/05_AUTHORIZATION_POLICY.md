@@ -179,7 +179,7 @@ Policy enforcement is not isolated to application code. It operates across three
                                          |
                                          v
 +-----------------------------------------------------------------------------------+
-| 2. Signing Orchestrator Service (192.168.200.57:8000 / walet-ecardo)               |
+| 2. Signing Orchestrator Service ([WALLET_NODE_HOST]:8000 / walet-ecardo)               |
 |    - Receives signing request containing Payload + Policy Decision Token          |
 |    - Verifies cryptographic signature on Policy Token from Policy Engine          |
 |    - Recomputes SHA-256 canonical hash of payload                                 |

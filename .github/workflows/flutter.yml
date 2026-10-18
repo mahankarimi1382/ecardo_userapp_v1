@@ -397,13 +397,12 @@ jobs:
           path: notify-result.txt
 
   # ------------------------------------------------------------------
-  # On main: if pubspec version has no v* tag yet, create tag + full
-  # signed release + mirror + server notify IN THIS SAME RUN.
-  # (GITHUB_TOKEN tag push does not start a second workflow — so we
-  # must publish here or users never get an update notification.)
+  # On main: publish ONLY when explicitly flagged with [release] or
+  # chore(release) in the commit message (WAL-P1-07 Gate Protection).
+  # Ordinary pushes run test+build gates but cannot publish/deploy.
   # ------------------------------------------------------------------
   release-if-untagged:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && (contains(github.event.head_commit.message, '[release]') || contains(github.event.head_commit.message, 'chore(release)'))
     needs: [build]
     runs-on: ubuntu-24.04
     permissions:

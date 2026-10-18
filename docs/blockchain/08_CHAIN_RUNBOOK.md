@@ -1,7 +1,7 @@
 # 08. Chain & Wallet Platform Runbook
 
 **Document Version:** 1.0.0  
-**Target Environment:** walet-ecardo (`192.168.200.57`) via Bastion `serv.interex.ir` (`192.168.100.65`)  
+**Target Environment:** walet-ecardo (`[WALLET_NODE_HOST]`) via Bastion `serv.interex.ir` (`[CORE_BACKEND_HOST]`)  
 **Repository:** `ecardo_userapp_v1`  
 **Classification:** Internal Confidential / SRE & Operations  
 **Date:** 2026-10-18  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary & Infrastructure Topology
 
-The eCardo Wallet & Payment Platform operates as a high-performance, low-footprint microservices infrastructure deployed on the dedicated host `walet-ecardo` (`192.168.200.57`). It provides non-custodial and custodial crypto-asset management (specifically TRON TRC20 USDT), double-entry ledger bookkeeping, isolated transaction signing, and fiat gateway integration (Behpardakht Mellat PSP).
+The eCardo Wallet & Payment Platform operates as a high-performance, low-footprint microservices infrastructure deployed on the dedicated host `walet-ecardo` (`[WALLET_NODE_HOST]`). It provides non-custodial and custodial crypto-asset management (specifically TRON TRC20 USDT), double-entry ledger bookkeeping, isolated transaction signing, and fiat gateway integration (Behpardakht Mellat PSP).
 
 ```
                       +---------------------------------------+
@@ -20,7 +20,7 @@ The eCardo Wallet & Payment Platform operates as a high-performance, low-footpri
                                     HTTPS / TLS 1.3
                                           v
 +-----------------------------------------------------------------------------------+
-| Bastion / Gateway (192.168.100.65)                                                |
+| Bastion / Gateway ([CORE_BACKEND_HOST])                                                |
 | - mTLS / Reverse Proxy                                                            |
 | - Rate Limiting & Firewall Isolation                                              |
 +-----------------------------------------------------------------------------------+
@@ -28,7 +28,7 @@ The eCardo Wallet & Payment Platform operates as a high-performance, low-footpri
                             Private Network / Direct TCP
                                           v
 +-----------------------------------------------------------------------------------+
-| walet-ecardo (192.168.200.57)                                                     |
+| walet-ecardo ([WALLET_NODE_HOST])                                                     |
 | [Resources: 4 vCPU, 3.8 GB RAM | OS: Linux / Ubuntu LTS]                          |
 |                                                                                   |
 |  +-----------------------------------------------------------------------------+  |
@@ -408,10 +408,10 @@ TRC20 transfers on the TRON network require Energy and Bandwidth. If a child dep
 1. Check current head vs local confirmed block:
    ```bash
    # Query node block height via curl
-   curl -s -X POST http://192.168.200.57:8090/wallet/getnowblock | jq .block_header.raw_data.number
+   curl -s -X POST http://[WALLET_NODE_HOST]:8090/wallet/getnowblock | jq .block_header.raw_data.number
    ```
 2. If local listener lag exceeds 50 blocks:
-   - Check upstream network connectivity on Bastion (`192.168.100.65`).
+   - Check upstream network connectivity on Bastion (`[CORE_BACKEND_HOST]`).
    - Verify TRON RPC endpoint latency and rate limits.
    - Restart listener subsystem.
 3. Confirm that no pending deposits are stuck in `PENDING` longer than 15 minutes.

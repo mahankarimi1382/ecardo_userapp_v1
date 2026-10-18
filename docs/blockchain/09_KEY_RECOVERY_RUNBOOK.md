@@ -1,7 +1,7 @@
 # 09. Key Management & Recovery Runbook
 
 **Document Version:** 1.0.0  
-**Target Environment:** walet-ecardo (`192.168.200.57`) via Bastion `serv.interex.ir` (`192.168.100.65`)  
+**Target Environment:** walet-ecardo (`[WALLET_NODE_HOST]`) via Bastion `serv.interex.ir` (`[CORE_BACKEND_HOST]`)  
 **Repository:** `ecardo_userapp_v1`  
 **Classification:** Restricted / Cryptographic Security Operations  
 **Date:** 2026-10-18  
@@ -127,7 +127,7 @@ curl -s http://127.0.0.1:8000/ready
 Unsealing requires two authorized security officers (Dual-Control Principle):
 
 1. **Step 1 — Establish Secure Session:**
-   - Connect via Bastion (`192.168.100.65`) to `walet-ecardo` (`192.168.200.57`).
+   - Connect via Bastion (`[CORE_BACKEND_HOST]`) to `walet-ecardo` (`[WALLET_NODE_HOST]`).
 2. **Step 2 — Inject Passphrase Environment Variable:**
    - Officer A enters Part 1 of the credential; Officer B enters Part 2:
    ```bash

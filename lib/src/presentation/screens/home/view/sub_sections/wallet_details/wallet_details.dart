@@ -326,10 +326,10 @@ class _WalletDetailsState extends State<WalletDetails> {
                     iconBgColor: Color(0xFF81BAFF),
                     onTap: () {
                       final currentWallet = controller.wallet.value;
-                      final isCryptoWallet = currentWallet?.isCrypto == true ||
-                          (currentWallet?.code ?? '').toUpperCase().trim() == 'USDT';
+                      final code = (currentWallet?.code ?? '').toUpperCase().trim();
+                      final isUsdtWallet = code == 'USDT' || code == 'USDT_IRT';
 
-                      if (isCryptoWallet && currentWallet != null) {
+                      if (isUsdtWallet && currentWallet != null) {
                         CryptoDepositBottomSheet.show(
                           context,
                           wallet: currentWallet,

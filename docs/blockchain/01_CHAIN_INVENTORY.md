@@ -2,7 +2,7 @@
 
 ## ۱. مقدمه و چارچوب ارزیابی (Overview & Compliance Baseline)
 
-این سند بر اساس قالب رسمی ممیزی بلاک‌چین (`27_BLOCKCHAIN_INVENTORY_TEMPLATE_FA.md`) و منطبق با شواهد قطعی استخراج‌شده از زیرساخت عملیاتی سرور اختصاصی مدیریت ولت `walet-ecardo` (`192.168.200.57`) و هسته بک‌اند `serv.interex.ir` (`192.168.100.65`) تکمیل شده است.
+این سند بر اساس قالب رسمی ممیزی بلاک‌چین (`27_BLOCKCHAIN_INVENTORY_TEMPLATE_FA.md`) و منطبق با شواهد قطعی استخراج‌شده از زیرساخت عملیاتی سرور اختصاصی مدیریت ولت `walet-ecardo` (`[WALLET_NODE_HOST]`) و هسته بک‌اند `serv.interex.ir` (`[CORE_BACKEND_HOST]`) تکمیل شده است.
 
 بر اساس قواعد حاکمیتی سند:
 1. هیچ فیلدی بر مبنای حدس و گمان تکمیل نشده و تمام مقادیر با کد منبع، تنظیمات سیستم‌عامل، پروسه‌های فعال و پیکربندی‌های شبکه مطابقت دارند.
@@ -15,15 +15,15 @@
 | ردیف | فیلد شناسنامه | مقدار عملیاتی ثبت‌شده | شواهد، مستندات و واحد مالک |
 |---|---|---|---|
 | ۱ | Client/product and exact version | eCardo Wallet Platform v1.0 (Python 3.10+ / FastAPI / Uvicorn / systemd `wallet-api`) بر بستر Ubuntu 22.04.5 LTS | سرویس‌های فعال لینوکس در `/opt/wallet-platform/`؛ مالک: Backend & Infra |
-| ۲ | Chain/network ID | TRON Mainnet (Network ID: 11111 / TronGrid Public API Endpoint) | قرارداد TRC-20 فعال، تعاریف شبکه در `/opt/wallet-platform/`؛ مالک: Blockchain Engineering |
+| ۲ | Chain/network ID | TRON Mainnet — شناسه داخلی پلتفرم: 11111؛ شناسه استاندارد شبکه EVM/ChainID: 728126428 (0x2B6653DC) متصل به اندپوینت‌های رسمی TronGrid و FullNode RPC | قرارداد TRC-20 فعال، تعاریف شبکه در `/opt/wallet-platform/`؛ مالک: Blockchain Engineering |
 | ۳ | Public/private and permissioning | معماری ترکیبی (Hybrid): لایه بیرونی عمومی غیرمتمرکز (Public TRON L1) جهت تسویه با زنجیره اصلی؛ لایه درونی اختصاصی حضانتی متمرکز (Private Custodial) با دفترکل دوطرفه دوگانه‌سوز جهت تراکنش‌های داخلی رایگان | معماری سرویس `wallet-api` و تفکیک جریان تسویه؛ مالک: Security & Architecture |
 | ۴ | Consensus/finality | لایه ترون: DPoS (Delegated Proof of Stake) با قطعی‌سازی پس از ۱۹ بلاک (~۶۰ ثانیه). لایه داخلی: تسویه همزمان بلادرنگ در پایگاه داده SQLite با مکانیزم WAL و تراکنش‌های انحصاری سریال‌پذیر ACID | پروتکل اجماع شبکه ترون و جدول `ledger_entries`؛ مالک: Blockchain & Database Eng |
 | ۵ | Node/validator count | لایه خارجی: ۲۷ نماینده ارشد (Super Representatives) در شبکه ترون. لایه پلتفرم: یک ماشین اختصاصی مستقل (`walet-ecardo`) با کلاینت Light Gateway متصل به کلاستر RPC ترون | تنظیمات اتصال نود ترون و مانیتورینگ شبکه؛ مالک: SRE & DevOps |
-| ۶ | Host/fault-domain map | هاست اختصاصی `walet-ecardo` مستقر در ساب‌نت ایزوله `192.168.200.57` (۴ هسته پردازنده، ۳.۸ گیگابایت رم) بدون IP عمومی، ارتباط منحصراً از طریق گیت‌وی باستیون `192.168.100.65` | جدول مسیریابی فایروال و توپولوژی سرورها؛ مالک: Infrastructure Security |
+| ۶ | Host/fault-domain map | هاست اختصاصی `walet-ecardo` مستقر در ساب‌نت ایزوله `[WALLET_NODE_HOST]` (۴ هسته پردازنده، ۳.۸ گیگابایت رم) بدون IP عمومی، ارتباط منحصراً از طریق گیت‌وی باستیون `[CORE_BACKEND_HOST]` | جدول مسیریابی فایروال و توپولوژی سرورها؛ مالک: Infrastructure Security |
 | ۷ | Account model and signature curve | مدل حساب‌محور (Account-Based Model). منحنی بیضوی: secp256k1 با امضای قطعی ECDSA. توابع درهم‌ساز: Keccak-256 و SHA-256. فرمت آدرس: Base58Check با پیشوند 0x41 (پیشوند حرف T در ترون) | سورس ماژول‌های رمزنگاری در پلتفرم ولت؛ مالک: Cryptography & Blockchain |
 | ۸ | Smart-contract addresses / code hashes | توکن رسمی دلار تتر روی ترون (USDT TRC-20): `TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t` | قرارداد رسمی Tether در اکسپلورر Tronscan؛ مالک: Blockchain & Treasury |
 | ۹ | Contract owner/admin/upgrade key | ناشر شخص ثالث (Tether Ltd. / TRON Multi-Sig Foundation). پلتفرم eCardo مالک قرارداد نبوده و صرفاً دارنده کیف‌پول‌های سازمانی و آدرس‌های اشتقاقی مشتریان است | قرارداد رسمی USDT؛ مالک: Security & Compliance |
-| ۱۰ | RPC read and write exposure | دسترسی خواندن/نوشتن RPC به شبکه ترون صرفاً از درون سرور `walet-ecardo` با کانکشن خروجی رمزنگاری‌شده TLS به TronGrid/FullNode صورت می‌گیرد. هیچ پورت RPC در اینترنت عمومی باز نیست. API داخلی روی پورت ۸۰۰۰ فقط برای ساب‌نت هسته (`192.168.100.65`) مجاز است | پیکربندی Nginx/Ufw و لیست مجاز IP؛ مالک: Infrastructure Security |
+| ۱۰ | RPC read and write exposure | دسترسی خواندن/نوشتن RPC به شبکه ترون صرفاً از درون سرور `walet-ecardo` با کانکشن خروجی رمزنگاری‌شده TLS به TronGrid/FullNode صورت می‌گیرد. هیچ پورت RPC در اینترنت عمومی باز نیست. API داخلی روی پورت ۸۰۰۰ فقط برای ساب‌نت هسته (`[CORE_BACKEND_HOST]`) مجاز است | پیکربندی Nginx/Ufw و لیست مجاز IP؛ مالک: Infrastructure Security |
 | ۱۱ | Key generation/signing system | خزانه‌داری نرم‌افزاری امن (Software Vault) مجهز به رمزنگاری پاکتی (Envelope Encryption) با الگوریتم `PBKDF2-HMAC-SHA256`. کلید مستر در حالت آن‌سیل فقط در رم قرار دارد. امضای تراکنش به صورت ایزوله با کد خالص پایتون انجام می‌شود | ماژول خزانه‌داری در `/opt/wallet-platform/`؛ مالک: Security & Key Custody |
 | ۱۲ | Wallet creation and derivation scheme | استاندارد بین‌المللی BIP-44 با شاخه رسمی ترون: `m/44'/195'/0'/0/i`؛ اشتقاق ترتیبی قطعی به ازای شناسه یکتای کاربر در جدول `wallets` با جلوگیری سیستمی از تصادم ایندکس | سورس اشتقاق کلید در `walletctl`؛ مالک: Backend & Blockchain |
 | ۱۳ | Canonical balance source per asset | دارایی رمزارز خارجی (تتر ترون): وضعیت زنجیره اصلی ترون پس از ۱۹ تاییدیه نهایی. موجودی کاربران و تراکنش‌های درون‌برنامه‌ای: دفترکل دوطرفه در دیتابیس `wallet.db` (`ledger_entries`) متصل به MariaDB هسته. دارایی ریالی: درگاه به‌پرداخت ملت | تطبیق سه‌گانه در لجر و گزارشات بانکی؛ مالک: Financial Engineering |
@@ -50,9 +50,9 @@
 
 ### ۳.۳. ردیف‌های ۶ و ۱۰: توپولوژی میزبان، ایزولاسیون شبکه و درگاه‌های RPC
 - امنیت شبکه بر مبنای اصل «عدم اعتماد به محیط پیرامونی» (Zero Trust Network Access) طراحی شده است:
-  - هاست `walet-ecardo` دارای آدرس `192.168.200.57` است. این ماشین هیچ اینترفیس شبکه‌ای با آدرس عمومی اینترنت ندارد.
+  - هاست `walet-ecardo` دارای آدرس `[WALLET_NODE_HOST]` است. این ماشین هیچ اینترفیس شبکه‌ای با آدرس عمومی اینترنت ندارد.
   - پورت‌های فعال روی ماشین صرفاً شامل پورت ۲۲ (SSH)، پورت ۸۰۰۰ (`wallet-api`) و پورت ۸۰۸۰ (`web_dashboard`) هستند.
-  - قوانین فایروال (Iptables/UFW) اتصال به پورت ۸۰۰۰ را صرفاً به آدرس سرور مرکزی لاراول (`192.168.100.65`) محدود کرده‌اند.
+  - قوانین فایروال (Iptables/UFW) اتصال به پورت ۸۰۰۰ را صرفاً به آدرس سرور مرکزی لاراول (`[CORE_BACKEND_HOST]`) محدود کرده‌اند.
   - ارتباط با شبکه جهانی ترون منحصراً از طریق درخواست‌های خروجی امن (Outbound HTTPS/TLS) به نودهای خوشه‌ای TronGrid انجام می‌گیرد. بدین ترتیب امکان اکسپلویت آسیب‌پذیری‌های احتمالی RPC از مبدا اینترنت خارجی به صورت کامل مسدود شده است.
 
 ### ۳.۴. ردیف‌های ۷ و ۸: مدل رمزنگاری، توابع هش و قراردادهای هوشمند

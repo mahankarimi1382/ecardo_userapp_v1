@@ -3,7 +3,7 @@
 [![Flutter Version](https://img.shields.io/badge/Flutter-3.44.6-blue.svg)](https://flutter.dev)
 [![Dart Version](https://img.shields.io/badge/Dart-3.12.2-blue.svg)](https://dart.dev)
 [![Application ID](https://img.shields.io/badge/Application%20ID-com.ecardo.user-green.svg)](android/app/build.gradle.kts)
-[![Tests Passing](https://img.shields.io/badge/Tests-687%20Passing-brightgreen.svg)](test/)
+[![Tests Passing](https://img.shields.io/badge/Tests-731%20Passing-brightgreen.svg)](test/)
 [![Static Analysis](https://img.shields.io/badge/Analyze-0%20Issues-brightgreen.svg)](analysis_options.yaml)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)]()
 
@@ -28,7 +28,7 @@ The `ecardo_userapp_v1` codebase represents a fully rebranded, hardened, and loc
 | **Localization** | English & Arabic only | **6 complete locales**: Persian (`fa`), Arabic (`ar`), English (`en`), Russian (`ru`), Turkish (`tr`), Chinese (`zh`) |
 | **Typography** | Latin-only Plus Jakarta Sans | **`Vazirmatn`** (Persian & Arabic), **`Plus Jakarta Sans`** (Latin), **`NotoSansRU`** (Cyrillic) |
 | **Calendar Support** | Gregorian only | **Shamsi (Jalali)** solar calendar (`shamsi_date`) with Shamsi date picker + Gregorian for international locales |
-| **Build & CI/CD** | Debug-signed APKs | **Fail-closed release signing**, R8 minification with coroutine preservation, Universal FAT APK (arm64/arm32/x64), automated 687 test suite |
+| **Build & CI/CD** | Debug-signed APKs | **Fail-closed release signing**, R8 minification with coroutine preservation, Universal FAT APK (arm64/arm32/x64), automated 731 test suite |
 
 ---
 
@@ -138,13 +138,15 @@ Firebase configuration is fully reconciled with the production Google Cloud proj
 
 ## 7. Quality Assurance & Testing Suite
 
-### 7.1 Automated Test Suite (687 Tests)
-The repository contains **687 passing automated tests** verifying financial logic, state machines, and UI components:
+### 7.1 Automated Test Suite (731 Tests)
+The repository contains **731 passing automated tests** verifying financial logic, state machines, and UI components:
 ```bash
 $ flutter test
-00:55 +687: All tests passed!
+01:05 +731: All tests passed!
 ```
 - **Financial Math & Idempotency**: Rounding rules, fee deductions, balance debit/credit idempotency, 5xx key retention (`money_math_helper_test.dart`, `workstream_b_idempotency_logging_test.dart`, `reaudit_security_invariants_test.dart`).
+- **Base58Check Cryptographic Validation**: Validates authentic TRON TRC-20 addresses with double-SHA256 checksum verification and fail-closed security (`tron_address_validator_test.dart`).
+- **Passcode State Machine**: Loop-prevention invariants across all 6 financial operations (`passcode_resilience_state_machine_test.dart`).
 - **Exchange Logic**: Cross-rate calculations, rate inversion safety, rate lock timeouts (`exchange_controller_test.dart`).
 - **RTL & Widget Geometry**: Directionality mirroring, swipe slider limits, wallet card flipping (`wallet_card_rtl_test.dart`).
 - **Input Validation**: Sheba mod-97-10 checksums, card Luhn validation (`withdraw_modernization_qc_test.dart`).
@@ -154,7 +156,7 @@ $ flutter test
 ```bash
 $ flutter analyze
 Analyzing ecardo_userapp_v1...
-No issues found! (ran in 6.7s)
+No issues found! (ran in 7.1s)
 ```
 The codebase maintains **0 analyzer errors** and adheres to strict linting rules.
 
@@ -181,7 +183,7 @@ The GitHub Actions workflow (`.github/workflows/flutter.yml`) automates build, t
    ```
 2. **Localization Generation**: Executes `flutter gen-l10n` to ensure all 6 ARB catalogs compile cleanly.
 3. **Static Analyzer Gate**: Runs `flutter analyze` with failure on any compiler or analysis error.
-4. **Automated Test Gate**: Executes the complete 687-test suite via `flutter test`.
+4. **Automated Test Gate**: Executes the complete 731-test suite via `flutter test`.
 5. **Signed Release Pipeline**:
    - Compiles release APK with `--obfuscate --split-debug-info=build/symbols --split-per-abi`.
    - Injects runtime SSL certificate pins (`ECARDO_CERT_PIN`).

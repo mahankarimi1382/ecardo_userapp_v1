@@ -121,7 +121,7 @@ eCardo implements a robust **Triple Reconciliation Model** operating across thre
 |               NODE 1                |                               |               NODE 2                |
 |       Local walet-ecardo            |         Loop 1 Sync           |       Central MariaDB Ledger        |
 |          Edge SQLite                |<=============================>|            (ecardoq192)             |
-|     (Host: 192.168.200.57:8000)     |   (Continuous Journal Sync)   |     (Host: 192.168.100.65)          |
+|     (Host: [WALLET_NODE_HOST]:8000)     |   (Continuous Journal Sync)   |     (Host: [CORE_BACKEND_HOST])          |
 |  - Microsecond Sequencing Engine    |                               |  - Canonical System of Record       |
 |  - Cryptographic Signer & HSM Link  |                               |  - Account Chart & User Balances    |
 |  - Local Outbox & Digest Anchor     |                               |  - Audit History & Financial P&L    |
@@ -146,11 +146,11 @@ eCardo implements a robust **Triple Reconciliation Model** operating across thre
 
 ### 4.1 Node Roles & Systems of Record
 1. **Node 1: Local `walet-ecardo` SQLite Ledger (Edge Node)**
-   - **Host:** `192.168.200.57` (accessed via secure internal gateway `192.168.100.65`).
+   - **Host:** `[WALLET_NODE_HOST]` (accessed via secure internal gateway `[CORE_BACKEND_HOST]`).
    - **Role:** High-speed edge execution, BIP-44 key derivation (`m/44'/195'/0'/0/i`), deterministic transaction sequencing, and hardware signer interface.
    - **Storage:** High-concurrency SQLite WAL mode with local double-entry integrity checks.
 2. **Node 2: Central MariaDB Ledger (`ecardoq192`)**
-   - **Host:** `192.168.100.65` (MariaDB 10.6.27 database `ecardoq192`).
+   - **Host:** `[CORE_BACKEND_HOST]` (MariaDB 10.6.27 database `ecardoq192`).
    - **Role:** The overarching canonical financial System of Record (SoR) for all accounts, user entities, multi-asset journals, and compliance records.
 3. **Node 3: External On-Chain Explorers & Blockchain RPCs**
    - **Providers:** Native full nodes, TRON Grid API, EVM RPC endpoints, and third-party block explorer indexers.
@@ -214,7 +214,7 @@ When an invariant check fails across any of the three nodes, the discrepancy is 
     "chain_id": "TRON_MAINNET",
     "tx_hash": "a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0"
   },
-  "source_node": "walet-ecardo (192.168.200.57)",
+  "source_node": "walet-ecardo ([WALLET_NODE_HOST])",
   "target_node": "TRON_GRID_RPC",
   "assigned_owner": "sec-ops-team@ecardo.io",
   "suggested_action": "HOLD_RECIPIENT_AND_POST_ADJUSTMENT",

@@ -9,43 +9,180 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/tron_address_validator.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
 /// Modal bottom sheet displaying dedicated TRON TRC-20 on-chain deposit address,
 /// real-time QR code, network parameters, and security warnings.
-class CryptoDepositBottomSheet extends StatelessWidget {
+///
+/// Security Invariants (P0-01, P0-02, P0-03, WAL-P1-09):
+/// 1. Strict Fail-Closed: Never displays or copies a fake or invalid fallback address.
+/// 2. Base58Check Validation: Only cryptographically valid TRON addresses can render a QR code.
+/// 3. Server-Driven Policy: Deposit thresholds and confirmation counts are driven by server configuration.
+/// 4. Asset/Network Binding: Explicitly bound to USDT on TRON (TRC-20).
+class CryptoDepositBottomSheet extends StatefulWidget {
   final Wallets wallet;
-  final String depositAddress;
+  final String? initialAddress;
+  final String minDeposit;
+  final int requiredConfirmations;
+  final String networkName;
+  final String contractAddress;
 
   const CryptoDepositBottomSheet({
     super.key,
     required this.wallet,
-    required this.depositAddress,
+    this.initialAddress,
+    this.minDeposit = '1.00',
+    this.requiredConfirmations = 19,
+    this.networkName = 'TRON (TRC-20)',
+    this.contractAddress = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
   });
 
   static Future<void> show(
     BuildContext context, {
     required Wallets wallet,
     String? address,
+    String minDeposit = '1.00',
+    int requiredConfirmations = 19,
   }) async {
-    final rawAddress = address ?? wallet.accountNo ?? 'TLwT8x8H71v8qR4qNfM2F1m4P9yQ8sX3kZ';
-    final effectiveAddress = rawAddress.startsWith('T') && rawAddress.length >= 34
-        ? rawAddress
-        : 'TLwT8x8H71v8qR4qNfM2F1m4P9yQ8sX3kZ';
+    // P0-03: Strict asset validation — only USDT is accepted for TRC-20 flow
+    final assetCode = (wallet.code ?? '').toUpperCase().trim();
+    if (assetCode != 'USDT' && assetCode != 'USDT_IRT') {
+      ToastHelper().showWarningToast(
+        l10nPick(
+          context,
+          en: 'On-chain deposit is currently supported for USDT (TRC-20) only.',
+          fa: 'واریز آن‌چین در حال حاضر فقط برای ارز تتر (TRC-20) فعال است.',
+          ar: 'الإيداع عبر البلوكشين متاح حالياً لعملة USDT (TRC-20) فقط.',
+          tr: 'Zincir üstü yatırma şu anda yalnızca USDT (TRC-20) için desteklenmektedir.',
+          ru: 'Пополнение через блокчейн в настоящее время доступно только для USDT (TRC-20).',
+          zh: '目前仅支持 USDT (TRC-20) 链上充值。',
+        ),
+      );
+      return;
+    }
 
     await Get.bottomSheet<void>(
       CryptoDepositBottomSheet(
         wallet: wallet,
-        depositAddress: effectiveAddress,
+        initialAddress: address,
+        minDeposit: minDeposit,
+        requiredConfirmations: requiredConfirmations,
       ),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
   }
 
+  @override
+  State<CryptoDepositBottomSheet> createState() => _CryptoDepositBottomSheetState();
+}
+
+class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
+  String? _address;
+  late String _minDeposit;
+  late int _requiredConfirmations;
+  late String _networkName;
+  late String _contractAddress;
+
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _minDeposit = widget.minDeposit;
+    _requiredConfirmations = widget.requiredConfirmations;
+    _networkName = widget.networkName;
+    _contractAddress = widget.contractAddress;
+
+    // Check if initialAddress or wallet.accountNo is a valid Base58Check TRON address
+    final candidate = widget.initialAddress ?? widget.wallet.accountNo;
+    if (TronAddressValidator.isValid(candidate)) {
+      _address = candidate;
+    } else {
+      _fetchServerAddress();
+    }
+  }
+
+  Future<void> _fetchServerAddress() async {
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final networkService = Get.find<NetworkService>();
+      final response = await networkService.get(
+        endpoint: '/user/crypto/tron/address',
+      );
+
+      if (response.status == Status.completed && response.data != null) {
+        final data = response.data!['data'] is Map ? response.data!['data'] : response.data!;
+        final serverAddress = data['address']?.toString() ?? '';
+
+        if (TronAddressValidator.isValid(serverAddress)) {
+          if (mounted) {
+            setState(() {
+              _address = serverAddress;
+              if (data['min_deposit'] != null) {
+                _minDeposit = data['min_deposit'].toString();
+              }
+              if (data['required_confirmations'] != null) {
+                _requiredConfirmations = int.tryParse(data['required_confirmations'].toString()) ?? 19;
+              }
+              if (data['network'] != null) {
+                _networkName = data['network'].toString();
+              }
+              if (data['contract'] != null) {
+                _contractAddress = data['contract'].toString();
+              }
+              _isLoading = false;
+            });
+          }
+          return;
+        }
+      }
+
+      if (mounted) {
+        setState(() {
+          _errorMessage = l10nPick(
+            context,
+            en: 'Server returned an unverified deposit address format.',
+            fa: 'آدرس واریز ارائه‌شده توسط سرور از نظر ساختار معتبر نیست.',
+            ar: 'عنوان الإيداع المستلم غير متوافق.',
+            tr: 'Sunucudan alınan yatırma adresi formatı doğrulanamadı.',
+            ru: 'Формат адреса депозита от сервера не прошел проверку.',
+            zh: '服务器返回的充值地址格式未通过校验。',
+          );
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = l10nPick(
+            context,
+            en: 'Unable to connect to wallet node. Please check connection and try again.',
+            fa: 'امکان برقراری ارتباط با نود والت وجود ندارد. لطفاً اتصال را بررسی و مجدداً تلاش کنید.',
+            ar: 'تعذر الاتصال بخادم المحفظة. يرجى التحقق والمحاولة مجدداً.',
+            tr: 'Cüzdan sunucusuna bağlanılamadı. Lütfen tekrar deneyin.',
+            ru: 'Не удалось подключиться к серверу кошелька. Попробуйте снова.',
+            zh: '无法连接到钱包节点，请检查网络后重试。',
+          );
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   void _copyToClipboard(BuildContext context) {
+    if (_address == null || !TronAddressValidator.isValid(_address)) return;
     AppHaptics.selection();
-    Clipboard.setData(ClipboardData(text: depositAddress));
+    Clipboard.setData(ClipboardData(text: _address!));
     ToastHelper().showSuccessToast(
       l10nPick(
         context,
@@ -60,15 +197,16 @@ class CryptoDepositBottomSheet extends StatelessWidget {
   }
 
   void _shareAddress(BuildContext context) {
+    if (_address == null || !TronAddressValidator.isValid(_address)) return;
     AppHaptics.light();
     final message = l10nPick(
       context,
-      en: 'My eCardo USDT (TRC-20) Deposit Address:\n$depositAddress\n\nOnly send USDT via TRON network.',
-      fa: 'آدرس واریز تتر (TRC-20) من در eCardo:\n$depositAddress\n\nفقط تتر شبکه ترون ارسال شود.',
-      ar: 'عنوان إيداع USDT (TRC-20) في eCardo:\n$depositAddress\n\nيرجى إرسال USDT عبر شبكة TRON فقط.',
-      tr: 'eCardo USDT (TRC-20) Yatırma Adresim:\n$depositAddress\n\nYalnızca TRON ağı üzerinden USDT gönderin.',
-      ru: 'Мой адрес депозита eCardo USDT (TRC-20):\n$depositAddress\n\nОтправляйте только USDT через сеть TRON.',
-      zh: '我的 eCardo USDT (TRC-20) 充值地址:\n$depositAddress\n\n仅支持通过波场 (TRON) 网络充值。',
+      en: 'My eCardo USDT (TRC-20) Deposit Address:\n$_address\n\nOnly send USDT via TRON network.',
+      fa: 'آدرس واریز تتر (TRC-20) من در eCardo:\n$_address\n\nفقط تتر شبکه ترون ارسال شود.',
+      ar: 'عنوان إيداع USDT (TRC-20) في eCardo:\n$_address\n\nيرجى إرسال USDT عبر شبكة TRON فقط.',
+      tr: 'eCardo USDT (TRC-20) Yatırma Adresim:\n$_address\n\nYalnızca TRON ağı üzerinden USDT gönderin.',
+      ru: 'Мой адрес депозита eCardo USDT (TRC-20):\n$_address\n\nОтправляйте только USDT через сеть TRON.',
+      zh: '我的 eCardo USDT (TRC-20) 充值地址:\n$_address\n\n仅支持通过波场 (TRON) 网络充值。',
     );
     SharePlus.instance.share(
       ShareParams(
@@ -86,8 +224,10 @@ class CryptoDepositBottomSheet extends StatelessWidget {
     final ink = isDark ? AppColors.warmWhite : AppColors.lightTextPrimary;
     final inkMuted = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
 
+    final isAddressValid = TronAddressValidator.isValid(_address);
+
     return Container(
-      constraints: BoxConstraints(maxHeight: 700.h),
+      constraints: BoxConstraints(maxHeight: 740.h),
       decoration: BoxDecoration(
         color: surfaceBg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
@@ -160,7 +300,7 @@ class CryptoDepositBottomSheet extends StatelessWidget {
                           ),
                           SizedBox(height: 2.h),
                           Text(
-                            'USDT • TRON Network',
+                            'USDT • $_networkName',
                             style: TextStyle(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w600,
@@ -180,169 +320,277 @@ class CryptoDepositBottomSheet extends StatelessWidget {
               ),
               SizedBox(height: 20.h),
 
-              // QR Code Container
-              Container(
-                padding: EdgeInsets.all(16.r),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: cardBorder, width: 1.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+              // Loading State
+              if (_isLoading) ...[
+                SizedBox(height: 40.h),
+                const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF26A69A),
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    SvgPicture.string(
-                      Barcode.qrCode(
-                        errorCorrectLevel: BarcodeQRCorrectionLevel.high,
-                      ).toSvg(
-                        depositAddress,
+                SizedBox(height: 16.h),
+                Text(
+                  l10nPick(
+                    context,
+                    en: 'Allocating dedicated on-chain address...',
+                    fa: 'در حال تخصیص آدرس یکتای آن‌چین از نود والت...',
+                    ar: 'جاري إنشاء العنوان المخصص على البلوكشين...',
+                    tr: 'Özel zincir üstü adres tahsis ediliyor...',
+                    ru: 'Получение выделенного адреса в блокчейне...',
+                    zh: '正在从钱包节点获取专属链上充值地址...',
+                  ),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: inkMuted,
+                  ),
+                ),
+                SizedBox(height: 60.h),
+              ]
+              // Error State (P0-01 Fail-Closed: Never show fake QR or copy button)
+              else if (!isAddressValid) ...[
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16.r),
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(Icons.error_outline_rounded, color: AppColors.error, size: 36.r),
+                      SizedBox(height: 10.h),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Deposit Address Unavailable',
+                          fa: 'آدرس واریز موقتاً در دسترس نیست',
+                          ar: 'عنوان الإيداع غير متاح مؤقتاً',
+                          tr: 'Yatırma Adresi Geçici Olarak Kullanılamıyor',
+                          ru: 'Адрес депозита временно недоступен',
+                          zh: '充值地址暂不可用',
+                        ),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.error,
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        _errorMessage ??
+                            l10nPick(
+                              context,
+                              en: 'A valid deposit address could not be verified by the cryptographic security gate.',
+                              fa: 'آدرس واریز معتبر توسط گیت امنیتی رمزنگاری تأیید نشد. هیچ تراکنشی به آدرس نامعتبر مجاز نیست.',
+                              ar: 'لم يتم التحقق من عنوان الإيداع من قِبل بوابة الأمان.',
+                              tr: 'Geçerli bir yatırma adresi doğrulanamadı.',
+                              ru: 'Не удалось проверить адрес депозита криптографическим шлюзом.',
+                              zh: '充值地址未通过安全校验。',
+                            ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          color: inkMuted,
+                          height: 1.4,
+                        ),
+                      ),
+                      SizedBox(height: 14.h),
+                      ElevatedButton.icon(
+                        onPressed: _fetchServerAddress,
+                        icon: const Icon(Icons.refresh_rounded, size: 18),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Retry Fetching Address',
+                            fa: 'تلاش مجدد جهت استعلام آدرس',
+                            ar: 'إعادة المحاولة',
+                            tr: 'Adresi Yeniden Al',
+                            ru: 'Повторить запрос адреса',
+                            zh: '重试获取地址',
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF26A69A),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.h),
+              ]
+              // Success State: Valid Base58Check Address
+              else ...[
+                // QR Code Container
+                Container(
+                  padding: EdgeInsets.all(16.r),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(color: cardBorder, width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      SvgPicture.string(
+                        Barcode.qrCode(
+                          errorCorrectLevel: BarcodeQRCorrectionLevel.high,
+                        ).toSvg(
+                          _address!,
+                          width: 190.w,
+                          height: 190.w,
+                        ),
                         width: 190.w,
                         height: 190.w,
                       ),
-                      width: 190.w,
-                      height: 190.w,
-                    ),
-                    SizedBox(height: 10.h),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.verified_rounded,
-                          color: const Color(0xFF26A69A),
-                          size: 14.r,
+                      SizedBox(height: 10.h),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.verified_rounded,
+                            color: const Color(0xFF26A69A),
+                            size: 14.r,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            'BIP-44 Verified Address',
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF4B5563),
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.h),
+
+                // Address Box with Quick Copy
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(14.r),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(color: cardBorder),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Your Dedicated TRON (TRC-20) Address',
+                          fa: 'آدرس اختصاصی تتر شما در شبکه ترون',
+                          ar: 'عنوان TRON (TRC-20) المخصص لك',
+                          tr: 'Özel TRON (TRC-20) Yatırma Adresiniz',
+                          ru: 'Ваш личный адрес TRON (TRC-20)',
+                          zh: '您的专属波场 (TRC-20) 充值地址',
                         ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          'BIP-44 Derived Address',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: inkMuted,
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: SelectableText(
+                          _address!,
                           style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF4B5563),
-                            letterSpacing: 0.2,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: ink,
+                            letterSpacing: 0.6,
+                            fontFamily: 'monospace',
                           ),
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 20.h),
+                SizedBox(height: 14.h),
 
-              // Address Box with Quick Copy
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(14.r),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: cardBorder),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                // Action Buttons: Copy & Share
+                Row(
                   children: [
-                    Text(
-                      l10nPick(
-                        context,
-                        en: 'Your Dedicated TRON (TRC-20) Address',
-                        fa: 'آدرس اختصاصی تتر شما در شبکه ترون',
-                        ar: 'عنوان TRON (TRC-20) المخصص لك',
-                        tr: 'Özel TRON (TRC-20) Yatırma Adresiniz',
-                        ru: 'Ваш личный адрес TRON (TRC-20)',
-                        zh: '您的专属波场 (TRC-20) 充值地址',
-                      ),
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600,
-                        color: inkMuted,
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _copyToClipboard(context),
+                        icon: const Icon(Icons.copy_rounded, size: 18),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Copy Address',
+                            fa: 'کپی آدرس',
+                            ar: 'نسخ العنوان',
+                            tr: 'Adresi Kopyala',
+                            ru: 'Копировать адрес',
+                            zh: '复制地址',
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          side: BorderSide(
+                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          ),
+                          foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(height: 6.h),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: SelectableText(
-                        depositAddress,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w800,
-                          color: ink,
-                          letterSpacing: 0.6,
-                          fontFamily: 'monospace',
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _shareAddress(context),
+                        icon: const Icon(Icons.share_rounded, size: 18),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Share',
+                            fa: 'اشتراک‌گذاری',
+                            ar: 'مشاركة',
+                            tr: 'Paylaş',
+                            ru: 'Поделиться',
+                            zh: '分享',
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 14.h),
+                SizedBox(height: 16.h),
+              ],
 
-              // Action Buttons: Copy & Share
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _copyToClipboard(context),
-                      icon: const Icon(Icons.copy_rounded, size: 18),
-                      label: Text(
-                        l10nPick(
-                          context,
-                          en: 'Copy Address',
-                          fa: 'کپی آدرس',
-                          ar: 'نسخ العنوان',
-                          tr: 'Adresi Kopyala',
-                          ru: 'Копировать адрес',
-                          zh: '复制地址',
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        side: BorderSide(
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                        ),
-                        foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _shareAddress(context),
-                      icon: const Icon(Icons.share_rounded, size: 18),
-                      label: Text(
-                        l10nPick(
-                          context,
-                          en: 'Share',
-                          fa: 'اشتراک‌گذاری',
-                          ar: 'مشاركة',
-                          tr: 'Paylaş',
-                          ru: 'Поделиться',
-                          zh: '分享',
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                        foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.h),
-
-              // Security & Parameter Warning Banner
+              // Security & Parameter Warning Banner (Driven by Server Policies)
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(12.r),
@@ -386,12 +634,12 @@ class CryptoDepositBottomSheet extends StatelessWidget {
                           Text(
                             l10nPick(
                               context,
-                              en: '• Only send USDT (TRC-20) to this address.\n• Minimum deposit: 1.00 USDT.\n• Finality requires 19 block confirmations.\n• Real-time ledger credit with zero platform fee.',
-                              fa: '• فقط ارز تتر (USDT) بر بستر ترون (TRC-20) واریز نمایید.\n• حداقل واریز: ۱.۰۰ تتر است.\n• نهایی‌سازی نیازمند ۱۹ تاییدیه بلاک‌چین است.\n• شارژ آنی دفترکل با کارمزد صفر پلتفرم انجام می‌پذیرد.',
-                              ar: '• أرسل USDT (TRC-20) فقط إلى هذا العنوان.\n• الحد الأدنى للإيداع: 1.00 USDT.\n• يتطلب تأكيد 19 كتلة على الشبكة.\n• شحن فوري للرصيد بدون أي رسوم للمنصة.',
-                              tr: '• Bu adrese yalnızca TRON (TRC-20) ağında USDT gönderin.\n• Minimum yatırma: 1.00 USDT.\n• 19 blok onayı gereklidir.\n• Sıfır platform komisyonu ile anında bakiye yüklemesi.',
-                              ru: '• Отправляйте только USDT (TRC-20) на этот адрес.\n• Минимальный депозит: 1.00 USDT.\n• Требуется 19 подтверждений сети.\n• Мгновенное зачисление с нулевой комиссией платформы.',
-                              zh: '• 请仅向此地址充值波场 (TRC-20) 网络的 USDT。\n• 最低充值金额：1.00 USDT。\n• 需完成19个区块确认即可到账。\n• 零平台手续费实时记账入账。',
+                              en: '• Only send USDT ($_networkName) to this address.\n• Contract: $_contractAddress\n• Minimum deposit: $_minDeposit USDT.\n• Finality requires $_requiredConfirmations block confirmations.\n• Real-time ledger credit with zero platform fee.',
+                              fa: '• فقط ارز تتر (USDT) بر بستر $_networkName واریز نمایید.\n• قرارداد هوشمند: $_contractAddress\n• حداقل واریز: $_minDeposit تتر است.\n• نهایی‌سازی نیازمند $_requiredConfirmations تاییدیه بلاک‌چین است.\n• شارژ آنی دفترکل با کارمزد صفر پلتفرم انجام می‌پذیرد.',
+                              ar: '• أرسل USDT ($_networkName) فقط إلى هذا العنوان.\n• العقد الذكي: $_contractAddress\n• الحد الأدنى للإيداع: $_minDeposit USDT.\n• يتطلب تأكيد $_requiredConfirmations كتلة على الشبكة.\n• شحن فوري للرصيد بدون أي رسوم للمنصة.',
+                              tr: '• Bu adrese yalnızca $_networkName ağında USDT gönderin.\n• Akıllı Sözleşme: $_contractAddress\n• Minimum yatırma: $_minDeposit USDT.\n• $_requiredConfirmations blok onayı gereklidir.\n• Sıfır platform komisyonu ile anında bakiye yüklemesi.',
+                              ru: '• Отправляйте только USDT ($_networkName) на этот адрес.\n• Смарт-контракт: $_contractAddress\n• Минимальный депозит: $_minDeposit USDT.\n• Требуется $_requiredConfirmations подтверждений сети.\n• Мгновенное зачисление с нулевой комиссией платформы.',
+                              zh: '• 请仅向此地址充值 $_networkName 网络的 USDT。\n• 合约地址：$_contractAddress\n• 最低充值金额：$_minDeposit USDT。\n• 需完成 $_requiredConfirmations 个区块确认即可到账。\n• 零平台手续费实时记账入账。',
                             ),
                             style: TextStyle(
                               fontSize: 11.sp,

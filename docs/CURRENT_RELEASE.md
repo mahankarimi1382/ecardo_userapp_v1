@@ -1,17 +1,17 @@
-# eCardo User App (v1) — Active Release Line Dossier (v1.0.174+174)
+# eCardo User App (v1) — Active Release Line Dossier (v1.0.175+175)
 
-- **Document Version:** 1.0.174  
+- **Document Version:** 1.0.175  
 - **Canonical Release Identifier:** REL-DOC-01  
 - **Status:** **Active Staging & Verification**  
 - **Date:** 2026-10-18  
 - **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
 - **Active Git Branch:** `main`  
-- **Active Release Version:** `1.0.174+174` (declared in `pubspec.yaml`)  
+- **Active Release Version:** `1.0.175+175` (declared in `pubspec.yaml`)  
 - **Active Release Commit SHA:** `HEAD`  
-- **Active Release Git Tag:** `v1.0.174`  
-- **Preceding Build Version:** `1.0.173+173`  
-- **Preceding Build Commit SHA:** `d47dae08d28cfc613ad480006a6b09c4e3bdffd9` (`d47dae0`)  
-- **Preceding Build Git Tag:** `v1.0.173`  
+- **Active Release Git Tag:** `v1.0.175`  
+- **Preceding Build Version:** `1.0.174+174`  
+- **Preceding Build Commit SHA:** `cbfdd75ef622f0dccf8131336b6c5930d0f373d0` (`cbfdd75`)  
+- **Preceding Build Git Tag:** `v1.0.174`  
 - **Lead Authority:** Enterprise Architecture, Security Verification & Release Management Team  
 
 ---
@@ -23,8 +23,8 @@ This document establishes the **single canonical, unambiguous reference** for th
 ```
                       ┌───────────────────────────────────────────────┐
                       │        eCardo User App Client (v1)            │
-                      │   Active Release Line: v1.0.172+172 (98e8993) │
-                      │   Preceding Tag Build: v1.0.171+171 (2502823) │
+                      │   Active Release Line: v1.0.175+175 (HEAD)   │
+                      │   Preceding Tag Build: v1.0.174+174 (cbfdd75) │
                       └───────────────────────┬───────────────────────┘
                                               │
                       ┌───────────────────────┴───────────────────────┐
@@ -36,9 +36,9 @@ This document establishes the **single canonical, unambiguous reference** for th
          │ Status: 🟢 READY        │                     │ Status: 🔴 BLOCKED      │
          │ - Universal FAT APK     │                     │ - Apple Team ID missing │
          │ - R8 -dontoptimize fix  │                     │ - Provisioning missing  │
-         │ - FLAG_SECURE removed   │                     │ - Distribution certs    │
+         │ - Passcode loop fix     │                     │ - Distribution certs    │
          │ - Fail-closed signing   │                     │   unconfigured          │
-         │ - 687 tests passing     │                     │ - Code ready, certs     │
+         │ - 731 tests passing     │                     │ - Code ready, certs     │
          │ - 0 analyzer issues     │                     │   gate pending          │
          └─────────────────────────┘                     └─────────────────────────┘
 ```
@@ -46,12 +46,12 @@ This document establishes the **single canonical, unambiguous reference** for th
 ### 1.1 Release Line Invariants & Verification Verdict
 | Parameter | Inspected Value | Verdict |
 | :--- | :--- | :--- |
-| **Active Version** | `1.0.172+172` (`pubspec.yaml`) | **Canonical Active Target** |
-| **Active Commit SHA** | `98e899368df43dfe0aa36dac64e5752cd0d661aa` (`98e8993`) | **Verified on `main`** |
-| **Active Git Tag** | `v1.0.172` | **Tagged on `98e8993`** |
-| **Reference Build** | `1.0.171+171` (`25028235b92cd9c026454df64c88cef44fda9ce6`) | **Tagged on `v1.0.171`** |
+| **Active Version** | `1.0.175+175` (`pubspec.yaml`) | **Canonical Active Target** |
+| **Active Commit SHA** | `HEAD` | **Verified on `main`** |
+| **Active Git Tag** | `v1.0.175` | **Target Tag** |
+| **Reference Build** | `1.0.174+174` (`cbfdd75ef622f0dccf8131336b6c5930d0f373d0`) | **Tagged on `v1.0.174`** |
 | **Static Code Analyzer** | `flutter analyze --no-fatal-infos --no-fatal-warnings` | **No issues found! (0 errors, 0 warnings)** |
-| **Automated Regression Suite** | `flutter test` — **687 tests passed** (100% green) | **0 failures, 0 skipped** |
+| **Automated Regression Suite** | `flutter test` — **731 tests passed** (100% green) | **0 failures, 0 skipped** |
 | **Android Release Gate** | Fail-closed signing, R8 fix, Universal FAT APK | 🟢 **Active Staging & Verification Approved** |
 | **iOS Release Gate** | Apple Developer Team ID / Provisioning Profiles | 🔴 **BLOCKED** (Awaiting organizational credentials) |
 | **Web Release Gate** | GitHub Actions Web compiler & asset pipeline | 🟢 **Staging Verified** |

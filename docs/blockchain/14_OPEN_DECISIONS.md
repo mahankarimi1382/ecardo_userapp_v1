@@ -47,7 +47,7 @@ Every major infrastructure transition—whether expanding multi-chain adapters, 
 - **Primary Driver:** Expanding liquidity corridors, reducing customer gas costs for micro-transfers, and supporting multi-currency digital asset portfolios.  
 
 ### 2.1 Context and Technical Evaluation
-The operational baseline on `walet-ecardo` (`192.168.200.57`) currently executes transactions on TRON Mainnet (TRC20 USDT) using BIP-44 path `m/44'/195'/0'/0/i`. While TRON provides high throughput and deterministic energy/bandwidth mechanics, customer demand requires support for Binance Smart Chain (BSC / BEP-20) and Ethereum Virtual Machine (EVM) networks (e.g., Ethereum Mainnet, Polygon, Arbitrum).
+The operational baseline on `walet-ecardo` (`[WALLET_NODE_HOST]`) currently executes transactions on TRON Mainnet (TRC20 USDT) using BIP-44 path `m/44'/195'/0'/0/i`. While TRON provides high throughput and deterministic energy/bandwidth mechanics, customer demand requires support for Binance Smart Chain (BSC / BEP-20) and Ethereum Virtual Machine (EVM) networks (e.g., Ethereum Mainnet, Polygon, Arbitrum).
 
 #### Cryptographic & Protocol Comparison
 | Parameter | Current Baseline (TRON) | Proposed Addition (BSC / BEP-20) | Proposed Addition (EVM / Polygon) |
@@ -104,7 +104,7 @@ The multi-chain adapter expansion will be activated only when all of the followi
 - **Primary Driver:** Eliminating software memory exposure of cryptographic signing keys, establishing physical tamper-resistance, and meeting regulatory compliance mandates.  
 
 ### 3.1 Context and Current State
-Key derivation and transaction signing on `walet-ecardo` (`192.168.200.57`) currently utilize HashiCorp Vault Transit Engine with AES-256-GCM / secp256k1 software key wrapping. While access is restricted behind network firewalls, dual-token authorization, and policy enforcement, the master key material remains hosted inside virtualized OS memory.
+Key derivation and transaction signing on `walet-ecardo` (`[WALLET_NODE_HOST]`) currently utilize HashiCorp Vault Transit Engine with AES-256-GCM / secp256k1 software key wrapping. While access is restricted behind network firewalls, dual-token authorization, and policy enforcement, the master key material remains hosted inside virtualized OS memory.
 
 ### 3.2 Quantitative & Regulatory Migration Triggers
 Migration from virtualized Vault Transit to dedicated Hardware Security Modules (HSM) or Multi-Party Computation (MPC) infrastructure will be triggered upon crossing any of the following quantitative thresholds:
