@@ -214,23 +214,26 @@ class _LockScreenState extends State<LockScreen> {
               ),
             ),
             SizedBox(height: AppSpacing.xxl),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (i) {
-                final filled = i < _pin.length;
-                return AnimatedContainer(
-                  duration: AppSpacing.fast,
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  width: 14,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: filled
-                        ? AppColors.white
-                        : AppColors.white.withValues(alpha: 0.25),
-                  ),
-                );
-              }),
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(4, (i) {
+                  final filled = i < _pin.length;
+                  return AnimatedContainer(
+                    duration: AppSpacing.fast,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: filled
+                          ? AppColors.white
+                          : AppColors.white.withValues(alpha: 0.25),
+                    ),
+                  );
+                }),
+              ),
             ),
             if (_error != null) ...[
               SizedBox(height: AppSpacing.md),
@@ -274,7 +277,9 @@ class _LockScreenState extends State<LockScreen> {
       ['7', '8', '9'],
       ['', '0', '⌫'],
     ];
-    return Padding(
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         children: keys.map((row) {
@@ -308,6 +313,7 @@ class _LockScreenState extends State<LockScreen> {
           );
         }).toList(),
       ),
-    );
-  }
+    ),
+  );
+}
 }

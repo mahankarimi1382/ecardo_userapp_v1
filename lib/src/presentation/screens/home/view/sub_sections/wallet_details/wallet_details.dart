@@ -187,7 +187,8 @@ class _WalletDetailsState extends State<WalletDetails> {
                               localization.walletDetailsWalletsNotFound,
                           dropdownItems: controller.walletsList,
                           bottomSheetHeight: 450,
-                          currentlySelectedValue: controller.wallet.value?.name ?? "",
+                          currentlySelectedValue:
+                              controller.wallet.value?.name ?? "",
                           onItemSelected: (value) async {
                             final selectedWallet = controller.walletsList
                                 .firstWhere((w) => w.name == value);
@@ -326,8 +327,14 @@ class _WalletDetailsState extends State<WalletDetails> {
                     iconBgColor: Color(0xFF81BAFF),
                     onTap: () {
                       final currentWallet = controller.wallet.value;
-                      final code = (currentWallet?.code ?? '').toUpperCase().trim();
-                      final isUsdtWallet = code == 'USDT' || code == 'USDT_IRT';
+                      final code = (currentWallet?.code ?? '')
+                          .toUpperCase()
+                          .trim();
+                      // WAL-175-04: only USDT has an on-chain TRC-20
+                      // assignment. USDT_IRT is an internal conversion pair
+                      // and must use the internal add-money flow instead of
+                      // the on-chain deposit sheet.
+                      final isUsdtWallet = code == 'USDT';
 
                       if (isUsdtWallet && currentWallet != null) {
                         CryptoDepositBottomSheet.show(
@@ -343,9 +350,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                           "1") {
                         Get.toNamed(
                           BaseRoute.addMoney,
-                          arguments: {
-                            "wallet_id": controller.walletId.value,
-                          },
+                          arguments: {"wallet_id": controller.walletId.value},
                         );
                       } else {
                         ToastHelper().showErrorToast(

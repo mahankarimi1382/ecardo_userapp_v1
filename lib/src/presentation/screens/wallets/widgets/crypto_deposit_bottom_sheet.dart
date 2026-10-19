@@ -9,180 +9,213 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
-import 'package:ecardo_user/src/helper/tron_address_validator.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/model/crypto_deposit_policy.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 
-/// Modal bottom sheet displaying dedicated TRON TRC-20 on-chain deposit address,
-/// real-time QR code, network parameters, and security warnings.
+/// Modal bottom sheet displaying the dedicated TRON TRC-20 USDT deposit
+/// assignment returned by the authenticated eCardo backend.
 ///
-/// Security Invariants (P0-01, P0-02, P0-03, WAL-P1-09):
-/// 1. Strict Fail-Closed: Never displays or copies a fake or invalid fallback address.
-/// 2. Base58Check Validation: Only cryptographically valid TRON addresses can render a QR code.
-/// 3. Server-Driven Policy: Deposit thresholds and confirmation counts are driven by server configuration.
-/// 4. Asset/Network Binding: Explicitly bound to USDT on TRON (TRC-20).
+/// Security invariants:
+/// 1. Strict fail-closed: the widget never derives an address from
+///    `wallet.accountNo`, `initialAddress`, a cache or a hard-coded default.
+/// 2. Every policy field (wallet id, assignment id, chain, asset, network,
+///    contract, minimum, confirmations, expiry) must be present and valid
+///    together; otherwise no QR, copy or share action is rendered.
+/// 3. The on-chain feature can be disabled server-side; the sheet then shows
+///    an explicit "temporarily unavailable" state with no address.
 class CryptoDepositBottomSheet extends StatefulWidget {
   final Wallets wallet;
-  final String? initialAddress;
-  final String minDeposit;
-  final int requiredConfirmations;
-  final String networkName;
-  final String contractAddress;
 
-  const CryptoDepositBottomSheet({
-    super.key,
-    required this.wallet,
-    this.initialAddress,
-    this.minDeposit = '1.00',
-    this.requiredConfirmations = 19,
-    this.networkName = 'TRON (TRC-20)',
-    this.contractAddress = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-  });
+  const CryptoDepositBottomSheet({super.key, required this.wallet});
 
   static Future<void> show(
     BuildContext context, {
     required Wallets wallet,
-    String? address,
-    String minDeposit = '1.00',
-    int requiredConfirmations = 19,
   }) async {
-    // P0-03: Strict asset validation — only USDT is accepted for TRC-20 flow
+    // WAL-175-03 & WAL-175-04: only USDT has an on-chain TRC-20 assignment.
+    // USDT_IRT is an internal conversion pair and must never reach this flow.
     final assetCode = (wallet.code ?? '').toUpperCase().trim();
-    if (assetCode != 'USDT' && assetCode != 'USDT_IRT') {
+    if (assetCode != 'USDT') {
       ToastHelper().showWarningToast(
         l10nPick(
           context,
-          en: 'On-chain deposit is currently supported for USDT (TRC-20) only.',
-          fa: 'واریز آن‌چین در حال حاضر فقط برای ارز تتر (TRC-20) فعال است.',
-          ar: 'الإيداع عبر البلوكشين متاح حالياً لعملة USDT (TRC-20) فقط.',
-          tr: 'Zincir üstü yatırma şu anda yalnızca USDT (TRC-20) için desteklenmektedir.',
-          ru: 'Пополнение через блокчейн в настоящее время доступно только для USDT (TRC-20).',
-          zh: '目前仅支持 USDT (TRC-20) 链上充值。',
+          en: 'On-chain deposit is available for USDT (TRC-20) only.',
+          fa: 'واریز آن‌چین فقط برای تتر (USDT) بر بستر ترون فعال است. جفت USDT_IRT داخلی است و آدرس آن‌چین ندارد.',
+          ar: 'الإيداع عبر البلوكشين متاح لعملة USDT (TRC-20) فقط.',
+          tr: 'Zincir üstü yatırma yalnızca USDT (TRC-20) için geçerlidir.',
+          ru: 'Пополнение через блокчейн доступно только для USDT (TRC-20).',
+          zh: '链上充值仅支持 USDT (TRC-20)。',
         ),
       );
       return;
     }
 
     await Get.bottomSheet<void>(
-      CryptoDepositBottomSheet(
-        wallet: wallet,
-        initialAddress: address,
-        minDeposit: minDeposit,
-        requiredConfirmations: requiredConfirmations,
-      ),
+      CryptoDepositBottomSheet(wallet: wallet),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
   }
 
   @override
-  State<CryptoDepositBottomSheet> createState() => _CryptoDepositBottomSheetState();
+  State<CryptoDepositBottomSheet> createState() =>
+      _CryptoDepositBottomSheetState();
 }
 
 class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
-  String? _address;
-  late String _minDeposit;
-  late int _requiredConfirmations;
-  late String _networkName;
-  late String _contractAddress;
-
-  bool _isLoading = false;
+  CryptoDepositPolicy? _policy;
+  bool _isLoading = true;
+  bool _depositsDisabled = false;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _minDeposit = widget.minDeposit;
-    _requiredConfirmations = widget.requiredConfirmations;
-    _networkName = widget.networkName;
-    _contractAddress = widget.contractAddress;
-
-    // Check if initialAddress or wallet.accountNo is a valid Base58Check TRON address
-    final candidate = widget.initialAddress ?? widget.wallet.accountNo;
-    if (TronAddressValidator.isValid(candidate)) {
-      _address = candidate;
-    } else {
-      _fetchServerAddress();
-    }
+    _fetchPolicy();
   }
 
-  Future<void> _fetchServerAddress() async {
+  Future<void> _fetchPolicy() async {
     if (!mounted) return;
     setState(() {
       _isLoading = true;
+      _depositsDisabled = false;
+      _policy = null;
       _errorMessage = null;
     });
 
     try {
       final networkService = Get.find<NetworkService>();
       final response = await networkService.get(
-        endpoint: '/user/crypto/tron/address',
+        endpoint: '/user/crypto-wallet/address?chain=TRON&asset=USDT',
       );
 
-      if (response.status == Status.completed && response.data != null) {
-        final data = response.data!['data'] is Map ? response.data!['data'] : response.data!;
-        final serverAddress = data['address']?.toString() ?? '';
+      if (response.status != Status.completed || response.data == null) {
+        _showNetworkError();
+        return;
+      }
 
-        if (TronAddressValidator.isValid(serverAddress)) {
-          if (mounted) {
-            setState(() {
-              _address = serverAddress;
-              if (data['min_deposit'] != null) {
-                _minDeposit = data['min_deposit'].toString();
-              }
-              if (data['required_confirmations'] != null) {
-                _requiredConfirmations = int.tryParse(data['required_confirmations'].toString()) ?? 19;
-              }
-              if (data['network'] != null) {
-                _networkName = data['network'].toString();
-              }
-              if (data['contract'] != null) {
-                _contractAddress = data['contract'].toString();
-              }
-              _isLoading = false;
-            });
-          }
-          return;
+      final rawData = response.data!['data'];
+      if (rawData is! Map) {
+        _showInvalidResponse();
+        return;
+      }
+
+      final map = Map<String, dynamic>.from(rawData);
+      final enabledFlag = map['deposits_enabled'];
+      final isExplicitlyDisabled =
+          enabledFlag == false ||
+          enabledFlag == 0 ||
+          enabledFlag?.toString().trim().toLowerCase() == 'false';
+      if (isExplicitlyDisabled) {
+        if (mounted) {
+          setState(() {
+            _depositsDisabled = true;
+            _isLoading = false;
+            final serverMessage = response.data!['message']?.toString().trim();
+            _errorMessage = (serverMessage != null && serverMessage.isNotEmpty)
+                ? serverMessage
+                : null;
+          });
         }
+        return;
       }
 
+      final policy = CryptoDepositPolicy.fromServerData(map);
       if (mounted) {
         setState(() {
-          _errorMessage = l10nPick(
-            context,
-            en: 'Server returned an unverified deposit address format.',
-            fa: 'آدرس واریز ارائه‌شده توسط سرور از نظر ساختار معتبر نیست.',
-            ar: 'عنوان الإيداع المستلم غير متوافق.',
-            tr: 'Sunucudan alınan yatırma adresi formatı doğrulanamadı.',
-            ru: 'Формат адреса депозита от сервера не прошел проверку.',
-            zh: '服务器返回的充值地址格式未通过校验。',
-          );
+          _policy = policy;
           _isLoading = false;
         });
       }
-    } catch (e) {
+    } on CryptoDepositPolicyException catch (error) {
       if (mounted) {
         setState(() {
-          _errorMessage = l10nPick(
-            context,
-            en: 'Unable to connect to wallet node. Please check connection and try again.',
-            fa: 'امکان برقراری ارتباط با نود والت وجود ندارد. لطفاً اتصال را بررسی و مجدداً تلاش کنید.',
-            ar: 'تعذر الاتصال بخادم المحفظة. يرجى التحقق والمحاولة مجدداً.',
-            tr: 'Cüzdan sunucusuna bağlanılamadı. Lütfen tekrar deneyin.',
-            ru: 'Не удалось подключиться к серверу кошелька. Попробуйте снова.',
-            zh: '无法连接到钱包节点，请检查网络后重试。',
-          );
+          _errorMessage = _policyErrorMessage(error.error);
           _isLoading = false;
         });
       }
+    } catch (_) {
+      _showNetworkError();
+    }
+  }
+
+  void _showNetworkError() {
+    if (!mounted) return;
+    setState(() {
+      _errorMessage = l10nPick(
+        context,
+        en: 'Unable to reach the wallet service. Check your connection and try again.',
+        fa: 'امکان برقراری ارتباط با سرویس کیف پول وجود ندارد. اتصال را بررسی و مجدداً تلاش کنید.',
+        ar: 'تعذر الاتصال بخدمة المحفظة. تحقق من الاتصال وحاول مجدداً.',
+        tr: 'Cüzdan servisine ulaşılamadı. Bağlantınızı kontrol edip tekrar deneyin.',
+        ru: 'Не удалось связаться с сервисом кошелька. Проверьте соединение и повторите попытку.',
+        zh: '无法连接钱包服务，请检查网络后重试。',
+      );
+      _isLoading = false;
+    });
+  }
+
+  void _showInvalidResponse() {
+    if (!mounted) return;
+    setState(() {
+      _errorMessage = _policyErrorMessage(
+        CryptoDepositPolicyError.missingField,
+      );
+      _isLoading = false;
+    });
+  }
+
+  String _policyErrorMessage(CryptoDepositPolicyError error) {
+    switch (error) {
+      case CryptoDepositPolicyError.depositsDisabled:
+        return l10nPick(
+          context,
+          en: 'On-chain deposits are temporarily disabled pending infrastructure verification.',
+          fa: 'واریز آن‌چین موقتاً غیرفعال است؛ زیرساخت زنجیره در حال راستی‌آزمایی است.',
+          ar: 'الإيداع عبر البلوكشين معطل مؤقتاً ريثما يتم التحقق من البنية التحتية.',
+          tr: 'Zincir üstü yatırma, altyapı doğrulaması tamamlanana kadar geçici olarak devre dışı.',
+          ru: 'Пополнение через блокчейн временно отключено до завершения проверки инфраструктуры.',
+          zh: '链上充值暂时停用，等待基础设施验证。',
+        );
+      case CryptoDepositPolicyError.expiredAssignment:
+        return l10nPick(
+          context,
+          en: 'This deposit assignment has expired. Request a fresh address.',
+          fa: 'مهلت این تخصیص واریز به پایان رسیده است. آدرس جدید دریافت کنید.',
+          ar: 'انتهت صلاحية تخصيص الإيداع. اطلب عنواناً جديداً.',
+          tr: 'Bu yatırma atamasının süresi doldu. Yeni adres isteyin.',
+          ru: 'Срок действия назначения депозита истёк. Запросите новый адрес.',
+          zh: '此充值分配已过期，请重新获取地址。',
+        );
+      case CryptoDepositPolicyError.missingField:
+      case CryptoDepositPolicyError.invalidWalletId:
+      case CryptoDepositPolicyError.unsupportedChain:
+      case CryptoDepositPolicyError.unsupportedAsset:
+      case CryptoDepositPolicyError.unsupportedNetwork:
+      case CryptoDepositPolicyError.untrustedContract:
+      case CryptoDepositPolicyError.invalidAddress:
+      case CryptoDepositPolicyError.invalidMinimumDeposit:
+      case CryptoDepositPolicyError.invalidConfirmations:
+      case CryptoDepositPolicyError.invalidExpiry:
+        return l10nPick(
+          context,
+          en: 'The server response did not pass the deposit security checks. No address is shown.',
+          fa: 'پاسخ سرور از بررسی‌های امنیتی واریز عبور نکرد؛ برای محافظت از دارایی شما هیچ آدرسی نمایش داده نمی‌شود.',
+          ar: 'لم يجتز رد الخادم فحوصات أمان الإيداع. لا يتم عرض أي عنوان.',
+          tr: 'Sunucu yanıtı yatırma güvenlik kontrollerini geçemedi. Adres gösterilmiyor.',
+          ru: 'Ответ сервера не прошёл проверки безопасности депозита. Адрес не отображается.',
+          zh: '服务器响应未通过充值安全检查，不显示地址。',
+        );
     }
   }
 
   void _copyToClipboard(BuildContext context) {
-    if (_address == null || !TronAddressValidator.isValid(_address)) return;
+    final policy = _policy;
+    if (policy == null) return;
     AppHaptics.selection();
-    Clipboard.setData(ClipboardData(text: _address!));
+    Clipboard.setData(ClipboardData(text: policy.depositAddress));
     ToastHelper().showSuccessToast(
       l10nPick(
         context,
@@ -197,22 +230,20 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
   }
 
   void _shareAddress(BuildContext context) {
-    if (_address == null || !TronAddressValidator.isValid(_address)) return;
+    final policy = _policy;
+    if (policy == null) return;
     AppHaptics.light();
     final message = l10nPick(
       context,
-      en: 'My eCardo USDT (TRC-20) Deposit Address:\n$_address\n\nOnly send USDT via TRON network.',
-      fa: 'آدرس واریز تتر (TRC-20) من در eCardo:\n$_address\n\nفقط تتر شبکه ترون ارسال شود.',
-      ar: 'عنوان إيداع USDT (TRC-20) في eCardo:\n$_address\n\nيرجى إرسال USDT عبر شبكة TRON فقط.',
-      tr: 'eCardo USDT (TRC-20) Yatırma Adresim:\n$_address\n\nYalnızca TRON ağı üzerinden USDT gönderin.',
-      ru: 'Мой адрес депозита eCardo USDT (TRC-20):\n$_address\n\nОтправляйте только USDT через сеть TRON.',
-      zh: '我的 eCardo USDT (TRC-20) 充值地址:\n$_address\n\n仅支持通过波场 (TRON) 网络充值。',
+      en: 'My eCardo USDT (TRC-20) Deposit Address:\n${policy.depositAddress}\n\nOnly send USDT via the TRON network.',
+      fa: 'آدرس واریز تتر (TRC-20) من در eCardo:\n${policy.depositAddress}\n\nفقط تتر شبکه ترون ارسال شود.',
+      ar: 'عنوان إيداع USDT (TRC-20) في eCardo:\n${policy.depositAddress}\n\nيرجى إرسال USDT عبر شبكة TRON فقط.',
+      tr: 'eCardo USDT (TRC-20) Yatırma Adresim:\n${policy.depositAddress}\n\nYalnızca TRON ağı üzerinden USDT gönderin.',
+      ru: 'Мой адрес депозита eCardo USDT (TRC-20):\n${policy.depositAddress}\n\nОтправляйте только USDT через сеть TRON.',
+      zh: '我的 eCardo USDT (TRC-20) 充值地址:\n${policy.depositAddress}\n\n仅支持通过波场 (TRON) 网络充值。',
     );
     SharePlus.instance.share(
-      ShareParams(
-        text: message,
-        subject: 'eCardo TRC-20 Deposit Address',
-      ),
+      ShareParams(text: message, subject: 'eCardo TRC-20 Deposit Address'),
     );
   }
 
@@ -222,9 +253,12 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
     final surfaceBg = isDark ? AppColors.darkSurface : AppColors.white;
     final cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final ink = isDark ? AppColors.warmWhite : AppColors.lightTextPrimary;
-    final inkMuted = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final inkMuted = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
-    final isAddressValid = TronAddressValidator.isValid(_address);
+    final policy = _policy;
+    final hasValidPolicy = policy != null;
 
     return Container(
       constraints: BoxConstraints(maxHeight: 740.h),
@@ -253,7 +287,9 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                   width: 44.w,
                   height: 4.h,
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
@@ -269,7 +305,9 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                       Container(
                         padding: EdgeInsets.all(8.r),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF26A69A).withValues(alpha: 0.14),
+                          color: const Color(
+                            0xFF26A69A,
+                          ).withValues(alpha: 0.14),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -300,7 +338,7 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                           ),
                           SizedBox(height: 2.h),
                           Text(
-                            'USDT • $_networkName',
+                            'USDT • ${policy?.network ?? 'TRC20'}',
                             style: TextStyle(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w600,
@@ -314,7 +352,11 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.close_rounded, color: inkMuted, size: 22.r),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: inkMuted,
+                      size: 22.r,
+                    ),
                   ),
                 ],
               ),
@@ -324,20 +366,18 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
               if (_isLoading) ...[
                 SizedBox(height: 40.h),
                 const Center(
-                  child: CircularProgressIndicator(
-                    color: Color(0xFF26A69A),
-                  ),
+                  child: CircularProgressIndicator(color: Color(0xFF26A69A)),
                 ),
                 SizedBox(height: 16.h),
                 Text(
                   l10nPick(
                     context,
-                    en: 'Allocating dedicated on-chain address...',
-                    fa: 'در حال تخصیص آدرس یکتای آن‌چین از نود والت...',
-                    ar: 'جاري إنشاء العنوان المخصص على البلوكشين...',
-                    tr: 'Özel zincir üstü adres tahsis ediliyor...',
-                    ru: 'Получение выделенного адреса в блокчейне...',
-                    zh: '正在从钱包节点获取专属链上充值地址...',
+                    en: 'Verifying your dedicated on-chain assignment...',
+                    fa: 'در حال راستی‌آزمایی تخصیص اختصاصی آن‌چین شما...',
+                    ar: 'جاري التحقق من تخصيصك المخصص على البلوكشين...',
+                    tr: 'Özel zincir üstü atamanız doğrulanıyor...',
+                    ru: 'Проверка вашего персонального назначения в блокчейне...',
+                    zh: '正在验证您的专属链上分配...',
                   ),
                   style: TextStyle(
                     fontSize: 12.sp,
@@ -347,34 +387,65 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                 ),
                 SizedBox(height: 60.h),
               ]
-              // Error State (P0-01 Fail-Closed: Never show fake QR or copy button)
-              else if (!isAddressValid) ...[
+              // Fail-closed error / disabled state: no QR, no copy, no share.
+              else if (!hasValidPolicy) ...[
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
-                    color: AppColors.error.withValues(alpha: 0.12),
+                    color:
+                        (_depositsDisabled
+                                ? const Color(0xFFF59E0B)
+                                : AppColors.error)
+                            .withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
+                    border: Border.all(
+                      color:
+                          (_depositsDisabled
+                                  ? const Color(0xFFF59E0B)
+                                  : AppColors.error)
+                              .withValues(alpha: 0.4),
+                    ),
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.error_outline_rounded, color: AppColors.error, size: 36.r),
+                      Icon(
+                        _depositsDisabled
+                            ? Icons.pause_circle_outline_rounded
+                            : Icons.error_outline_rounded,
+                        color: _depositsDisabled
+                            ? const Color(0xFFF59E0B)
+                            : AppColors.error,
+                        size: 36.r,
+                      ),
                       SizedBox(height: 10.h),
                       Text(
-                        l10nPick(
-                          context,
-                          en: 'Deposit Address Unavailable',
-                          fa: 'آدرس واریز موقتاً در دسترس نیست',
-                          ar: 'عنوان الإيداع غير متاح مؤقتاً',
-                          tr: 'Yatırma Adresi Geçici Olarak Kullanılamıyor',
-                          ru: 'Адрес депозита временно недоступен',
-                          zh: '充值地址暂不可用',
-                        ),
+                        _depositsDisabled
+                            ? l10nPick(
+                                context,
+                                en: 'On-chain Deposit Temporarily Disabled',
+                                fa: 'واریز آن‌چین موقتاً غیرفعال است',
+                                ar: 'الإيداع عبر البلوكشين معطل مؤقتاً',
+                                tr: 'Zincir Üstü Yatırma Geçici Olarak Kapalı',
+                                ru: 'Пополнение через блокчейн временно отключено',
+                                zh: '链上充值暂时停用',
+                              )
+                            : l10nPick(
+                                context,
+                                en: 'Deposit Address Unavailable',
+                                fa: 'آدرس واریز موقتاً در دسترس نیست',
+                                ar: 'عنوان الإيداع غير متاح مؤقتاً',
+                                tr: 'Yatırma Adresi Geçici Olarak Kullanılamıyor',
+                                ru: 'Адрес депозита временно недоступен',
+                                zh: '充值地址暂不可用',
+                              ),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.error,
+                          color: _depositsDisabled
+                              ? const Color(0xFFF59E0B)
+                              : AppColors.error,
                         ),
                       ),
                       SizedBox(height: 6.h),
@@ -382,12 +453,12 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                         _errorMessage ??
                             l10nPick(
                               context,
-                              en: 'A valid deposit address could not be verified by the cryptographic security gate.',
-                              fa: 'آدرس واریز معتبر توسط گیت امنیتی رمزنگاری تأیید نشد. هیچ تراکنشی به آدرس نامعتبر مجاز نیست.',
-                              ar: 'لم يتم التحقق من عنوان الإيداع من قِبل بوابة الأمان.',
-                              tr: 'Geçerli bir yatırma adresi doğrulanamadı.',
-                              ru: 'Не удалось проверить адрес депозита криптографическим шлюзом.',
-                              zh: '充值地址未通过安全校验。',
+                              en: 'A valid, wallet-bound deposit assignment could not be verified. No address will be shown until the server policy is complete.',
+                              fa: 'تخصیص واریز معتبر و متصل به کیف پول تأیید نشد. تا تکمیل سیاست سرور هیچ آدرسی نمایش داده نمی‌شود.',
+                              ar: 'لم يتم التحقق من تخصيص إيداع صالح مرتبط بالمحفظة. لن يظهر أي عنوان حتى تكتمل سياسة الخادم.',
+                              tr: 'Cüzdana bağlı geçerli bir yatırma ataması doğrulanamadı. Sunucu politikası tamamlanana kadar adres gösterilmez.',
+                              ru: 'Не удалось проверить действительное назначение депозита, привязанное к кошельку. Адрес не будет показан до завершения политики сервера.',
+                              zh: '无法验证有效的钱包绑定充值分配。在服务器策略完整前不会显示地址。',
                             ),
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -398,21 +469,23 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                       ),
                       SizedBox(height: 14.h),
                       ElevatedButton.icon(
-                        onPressed: _fetchServerAddress,
+                        onPressed: _fetchPolicy,
                         icon: const Icon(Icons.refresh_rounded, size: 18),
                         label: Text(
                           l10nPick(
                             context,
-                            en: 'Retry Fetching Address',
-                            fa: 'تلاش مجدد جهت استعلام آدرس',
+                            en: 'Retry',
+                            fa: 'تلاش مجدد',
                             ar: 'إعادة المحاولة',
-                            tr: 'Adresi Yeniden Al',
-                            ru: 'Повторить запрос адреса',
-                            zh: '重试获取地址',
+                            tr: 'Yeniden Dene',
+                            ru: 'Повторить',
+                            zh: '重试',
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF26A69A),
+                          backgroundColor: _depositsDisabled
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF26A69A),
                           foregroundColor: Colors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -425,9 +498,8 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                 ),
                 SizedBox(height: 20.h),
               ]
-              // Success State: Valid Base58Check Address
+              // Success State: fully-validated assignment only.
               else ...[
-                // QR Code Container
                 Container(
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
@@ -448,7 +520,7 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                         Barcode.qrCode(
                           errorCorrectLevel: BarcodeQRCorrectionLevel.high,
                         ).toSvg(
-                          _address!,
+                          policy.depositAddress,
                           width: 190.w,
                           height: 190.w,
                         ),
@@ -466,7 +538,7 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            'BIP-44 Verified Address',
+                            'Checksum-verified TRON address',
                             style: TextStyle(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w700,
@@ -481,12 +553,13 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                 ),
                 SizedBox(height: 20.h),
 
-                // Address Box with Quick Copy
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(14.r),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightBackground,
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(color: cardBorder),
                   ),
@@ -513,7 +586,7 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                       Directionality(
                         textDirection: TextDirection.ltr,
                         child: SelectableText(
-                          _address!,
+                          policy.depositAddress,
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
@@ -528,7 +601,6 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                 ),
                 SizedBox(height: 14.h),
 
-                // Action Buttons: Copy & Share
                 Row(
                   children: [
                     Expanded(
@@ -549,9 +621,13 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           side: BorderSide(
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary,
                           ),
-                          foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          foregroundColor: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
                           ),
@@ -576,8 +652,12 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                         ),
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 12.h),
-                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                          foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                          backgroundColor: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
+                          foregroundColor: isDark
+                              ? AppColors.deepBlack
+                              : AppColors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
@@ -590,70 +670,120 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                 SizedBox(height: 16.h),
               ],
 
-              // Security & Parameter Warning Banner (Driven by Server Policies)
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(12.r),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(14.r),
-                  border: Border.all(
-                    color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+              // Security & policy banner — values come only from the policy.
+              if (hasValidPolicy)
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(12.r),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(14.r),
+                    border: Border.all(
+                      color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: const Color(0xFFF59E0B),
+                        size: 20.r,
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10nPick(
+                                context,
+                                en: 'Deposit Requirements',
+                                fa: 'شرایط و ضوابط واریز آن‌چین',
+                                ar: 'متطلبات الإيداع',
+                                tr: 'Yatırma Koşulları',
+                                ru: 'Требования к пополнению',
+                                zh: '充值规则',
+                              ),
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w800,
+                                color: const Color(0xFFF59E0B),
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              l10nPick(
+                                context,
+                                en:
+                                    '• Only send USDT on ${policy.network} to this address.\n'
+                                    '• Contract: ${policy.contractAddress}\n'
+                                    '• Minimum deposit: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• Finality requires ${policy.requiredConfirmations} block confirmations.\n'
+                                    '• Your balance is credited after on-chain finality and server reconciliation.',
+                                fa:
+                                    '• فقط تتر (USDT) بر بستر ${policy.network} به این آدرس واریز کنید.\n'
+                                    '• قرارداد هوشمند: ${policy.contractAddress}\n'
+                                    '• حداقل واریز: ${policy.minimumDeposit.toStringAsFixed(2)} تتر.\n'
+                                    '• نهایی‌سازی نیازمند ${policy.requiredConfirmations} تأییدیه بلاک است.\n'
+                                    '• موجودی پس از نهایی‌سازی زنجیره و تطبیق سمت سرور به حساب شما اضافه می‌شود.',
+                                ar:
+                                    '• أرسل USDT على ${policy.network} فقط إلى هذا العنوان.\n'
+                                    '• العقد الذكي: ${policy.contractAddress}\n'
+                                    '• الحد الأدنى: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• يتطلب ${policy.requiredConfirmations} تأكيد كتلة.\n'
+                                    '• يُضاف الرصيد بعد نهائية الشبكة والتسوية من الخادم.',
+                                tr:
+                                    '• Bu adrese yalnızca ${policy.network} ağında USDT gönderin.\n'
+                                    '• Akıllı sözleşme: ${policy.contractAddress}\n'
+                                    '• Minimum: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• ${policy.requiredConfirmations} blok onayı gerekir.\n'
+                                    '• Bakiye zincir finalitesi ve sunucu mutabakatından sonra eklenir.',
+                                ru:
+                                    '• Отправляйте только USDT (${policy.network}) на этот адрес.\n'
+                                    '• Контракт: ${policy.contractAddress}\n'
+                                    '• Минимум: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• Требуется ${policy.requiredConfirmations} подтверждений.\n'
+                                    '• Баланс зачисляется после финальности сети и сверки на сервере.',
+                                zh:
+                                    '• 请仅通过 ${policy.network} 网络向此地址充值 USDT。\n'
+                                    '• 合约地址：${policy.contractAddress}\n'
+                                    '• 最低充值：${policy.minimumDeposit.toStringAsFixed(2)} USDT。\n'
+                                    '• 需要 ${policy.requiredConfirmations} 个区块确认。\n'
+                                    '• 链上最终确认及服务器对账后入账。',
+                              ),
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w500,
+                                color: inkMuted,
+                                height: 1.5,
+                              ),
+                            ),
+                            if (policy.expiresAt != null) ...[
+                              SizedBox(height: 6.h),
+                              Text(
+                                l10nPick(
+                                  context,
+                                  en: 'Assignment valid until ${policy.expiresAt!.toLocal()}.',
+                                  fa: 'اعتبار این تخصیص تا ${policy.expiresAt!.toLocal()} است.',
+                                  ar: 'التخصيص صالح حتى ${policy.expiresAt!.toLocal()}.',
+                                  tr: 'Atama ${policy.expiresAt!.toLocal()} tarihine kadar geçerli.',
+                                  ru: 'Назначение действительно до ${policy.expiresAt!.toLocal()}.',
+                                  zh: '分配有效期至 ${policy.expiresAt!.toLocal()}。',
+                                ),
+                                style: TextStyle(
+                                  fontSize: 10.5.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: inkMuted,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: const Color(0xFFF59E0B),
-                      size: 20.r,
-                    ),
-                    SizedBox(width: 10.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10nPick(
-                              context,
-                              en: 'Deposit Invariants & Requirements',
-                              fa: 'شرایط و ضوابط واریز آن‌چین',
-                              ar: 'متطلبات وضوابط الإيداع',
-                              tr: 'Yatırma Koşulları ve Gereksinimleri',
-                              ru: 'Условия и требования к пополнению',
-                              zh: '充值规则与要求',
-                            ),
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w800,
-                              color: const Color(0xFFF59E0B),
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            l10nPick(
-                              context,
-                              en: '• Only send USDT ($_networkName) to this address.\n• Contract: $_contractAddress\n• Minimum deposit: $_minDeposit USDT.\n• Finality requires $_requiredConfirmations block confirmations.\n• Real-time ledger credit with zero platform fee.',
-                              fa: '• فقط ارز تتر (USDT) بر بستر $_networkName واریز نمایید.\n• قرارداد هوشمند: $_contractAddress\n• حداقل واریز: $_minDeposit تتر است.\n• نهایی‌سازی نیازمند $_requiredConfirmations تاییدیه بلاک‌چین است.\n• شارژ آنی دفترکل با کارمزد صفر پلتفرم انجام می‌پذیرد.',
-                              ar: '• أرسل USDT ($_networkName) فقط إلى هذا العنوان.\n• العقد الذكي: $_contractAddress\n• الحد الأدنى للإيداع: $_minDeposit USDT.\n• يتطلب تأكيد $_requiredConfirmations كتلة على الشبكة.\n• شحن فوري للرصيد بدون أي رسوم للمنصة.',
-                              tr: '• Bu adrese yalnızca $_networkName ağında USDT gönderin.\n• Akıllı Sözleşme: $_contractAddress\n• Minimum yatırma: $_minDeposit USDT.\n• $_requiredConfirmations blok onayı gereklidir.\n• Sıfır platform komisyonu ile anında bakiye yüklemesi.',
-                              ru: '• Отправляйте только USDT ($_networkName) на этот адрес.\n• Смарт-контракт: $_contractAddress\n• Минимальный депозит: $_minDeposit USDT.\n• Требуется $_requiredConfirmations подтверждений сети.\n• Мгновенное зачисление с нулевой комиссией платформы.',
-                              zh: '• 请仅向此地址充值 $_networkName 网络的 USDT。\n• 合约地址：$_contractAddress\n• 最低充值金额：$_minDeposit USDT。\n• 需完成 $_requiredConfirmations 个区块确认即可到账。\n• 零平台手续费实时记账入账。',
-                            ),
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w500,
-                              color: inkMuted,
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               SizedBox(height: 8.h),
             ],
           ),

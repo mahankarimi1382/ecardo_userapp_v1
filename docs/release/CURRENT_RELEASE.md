@@ -14,6 +14,8 @@
 - **Preceding Build Git Tag:** `v1.0.174`  
 - **Lead Authority:** Enterprise Architecture, Security Verification & Release Management Team  
 
+> **Unreleased (2026-10-19):** `1.0.176+176` — fail-closed TRC-20 deposit policy, checksum-only label, USDT_IRT removal from on-chain flow, CI action upgrades. Not tagged/released; backend deposits remain disabled (`WALLET_DEPOSITS_ENABLED=false`).
+
 ---
 
 ## 1. Executive Release Summary & Canonical Pointer
@@ -193,7 +195,7 @@ $ flutter test
 
 ### 6.1 Server-Side Minimum Supported Version Gate (`min_version`)
 If an unexpected regression is detected after distribution:
-1. Update `min_supported_version` on the backend server to `1.0.171` or `1.0.170`.
+1. Update `min_supported_version` on the backend server to `1.0.174` or `1.0.173`.
 2. Mobile clients running unverified versions are immediately intercepted by `AppUpdateController` with a non-dismissible update dialog directing users to download the verified stable release from the release mirror.
 
 ### 6.2 Emergency Maintenance Mode Trigger
@@ -210,9 +212,12 @@ Releases are automatically mirrored to the public repository `ecardo-apps-releas
 
 | Verification Domain | Verifier / Tool | Date | Verdict | Hash / Artifact Reference |
 | :--- | :--- | :--- | :--- | :--- |
-| **Active Release SHA** | Git VCS | 2026-10-17 | **Verified** | `98e899368df43dfe0aa36dac64e5752cd0d661aa` |
-| **Reference Build SHA** | Git VCS | 2026-10-17 | **Verified** | `25028235b92cd9c026454df64c88cef44fda9ce6` |
-| **Static Code Quality** | Flutter SDK 3.44.6 Analyzer | 2026-10-17 | **Passed (0 issues)** | Clean (ran in 107.5s) |
-| **Automated Test Suite** | Flutter Test Engine | 2026-10-17 | **Passed (687 / 687)** | 100% Green (0 fails, 0 skipped) |
-| **Android Release Gate** | Enterprise Architecture | 2026-10-17 | **APPROVED** | Universal FAT APK, R8 -dontoptimize fix |
-| **iOS Release Gate** | Enterprise Architecture | 2026-10-17 | **BLOCKED** | Awaiting Apple Developer credentials |
+| **Active Release SHA** | Git VCS / GitHub Actions | 2026-10-18 | **Verified** | `741eae8808f9fb9b1c3541a4e37658bdd9f2ff33` |
+| **Reference Build SHA** | Git VCS | 2026-10-18 | **Verified** | `cbfdd75ef622f0dccf8131336b6c5930d0f373d0` |
+| **Android CI Run #621** | GitHub Actions (main) | 2026-10-18 | **SUCCESS** | Run 39127227074 |
+| **Android Tag Run #622** | GitHub Actions (v1.0.175) | 2026-10-18 | **SUCCESS** | Run 39127229743 (release-apk-741eae8..., 59.2 MB) |
+| **Web Build Run #234** | GitHub Actions | 2026-10-18 | **SUCCESS** | Run 39127227032 |
+| **Static Code Quality** | Flutter SDK 3.44.6 Analyzer | 2026-10-18 | **Passed (0 issues)** | Clean |
+| **Automated Test Suite** | Flutter Test Engine | 2026-10-18 | **Passed (731 / 731)** | 100% Green (0 fails, 0 skipped) |
+| **Android Release Gate** | Enterprise Architecture | 2026-10-18 | **APPROVED** | Universal FAT APK, R8 fix, Fail-closed signing |
+| **iOS Release Gate** | Enterprise Architecture | 2026-10-18 | **BLOCKED** | Awaiting Apple Developer credentials |

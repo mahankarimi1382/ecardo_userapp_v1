@@ -2,9 +2,29 @@ class DynamicDecimalsHelper {
   static const Set<String> _zeroDecimalCurrencies = {
     'IRR',
     'IRT',
+    'TOMAN',
+    'TMN',
+    'RLS',
+    'RIAL',
     'JPY',
     'CLP',
     'KRW',
+    'VND',
+    'IDR',
+  };
+
+  static const Set<String> _twoDecimalCurrencies = {
+    'USD',
+    'EUR',
+    'CNY',
+    'RMB',
+    'YUAN',
+    'GBP',
+    'AED',
+    'TRY',
+    'CAD',
+    'AUD',
+    'CHF',
   };
 
   int getDynamicDecimals({
@@ -16,6 +36,9 @@ class DynamicDecimalsHelper {
     final upperCode = currencyCode.toUpperCase().trim();
     if (_zeroDecimalCurrencies.contains(upperCode)) {
       return 0;
+    }
+    if (_twoDecimalCurrencies.contains(upperCode)) {
+      return 2;
     }
 
     final bool dynamicDecimal = currencyCode == siteCurrencyCode;
