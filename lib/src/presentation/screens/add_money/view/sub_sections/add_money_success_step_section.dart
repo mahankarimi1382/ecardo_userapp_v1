@@ -4,15 +4,16 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/route_return.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
-import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_success_celebration.dart';
 
 class AddMoneySuccessStepSection extends StatefulWidget {
   const AddMoneySuccessStepSection({super.key});
@@ -32,149 +33,124 @@ class _AddMoneySuccessStepSectionState
     final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final currentWallet = controller.wallet.value;
+    final payCurrency = (controller.successPaymentData.value?["pay_currency"] ?? currentWallet?.code ?? "USD").toString();
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.wallet.value!.code!,
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
+      currencyCode: currentWallet?.code ?? 'USD',
+      siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
       siteCurrencyDecimals: settingsService.getSetting(
         "site_currency_decimals",
-      )!,
-      isCrypto: controller.wallet.value!.isCrypto!,
+      ) ?? '2',
+      isCrypto: currentWallet?.isCrypto ?? false,
     );
+
+    final rawAmount = controller.successPaymentData.value?["amount"] ?? controller.amountController.text;
+    final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
+    final rawCharge = controller.successPaymentData.value?["charge"];
+    final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? 0.0;
+    final tnxId = controller.successPaymentData.value?["tnx"]?.toString() ??
+        'DEP-${DateTime.now().millisecondsSinceEpoch}';
+    final txType = controller.successPaymentData.value?["type"]?.toString() ?? 'Deposit';
 
     return Obx(
       () => controller.isPaymentLoading.value
           ? const CommonLoading()
           : SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.page,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 child: Column(
                   children: [
-                    const SizedBox(height: AppSpacing.xl),
-                    // Success Hero Banner
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.xl,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? AppColors.darkSurfaceVariant
-                            : AppColors.success.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusXl,
-                        ),
-                        border: Border.all(
-                          color: AppColors.success.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            PngAssets.commonSuccessIcon,
-                            width: 72,
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          Text(
-                            localization.addMoneySuccessTitle,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 22,
-                              color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                        ],
+                    const SizedBox(height: AppSpacing.md),
+
+                    // 1. Celebratory Success Animation
+                    TransferSuccessCelebration(
+                      title: localization.addMoneySuccessTitle,
+                      subtitle: l10nPick(
+                        context,
+                        en: 'Deposit completed successfully',
+                        fa: 'افزایش موجودی با موفقیت انجام شد',
+                        ar: 'تم شحن الرصيد بنجاح',
+                        tr: 'Para yatırma işlemi başarıyla tamamlandı',
+                        ru: 'Пополнение успешно выполнено',
                       ),
                     ),
+
                     const SizedBox(height: AppSpacing.xl),
 
-                    // Transaction Detail Card
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.lg,
+                    // 2. Ultra-Premium Digital Receipt (Design System)
+                    EcardoDigitalReceipt(
+                      title: l10nPick(
+                        context,
+                        en: 'Deposit Receipt',
+                        fa: 'رسید افزایش موجودی',
+                        ar: 'إيصال الإيداع',
+                        tr: 'Yatırma Makbuzu',
+                        ru: 'Квитанция пополнения',
                       ),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusLg,
+                      transactionReference: tnxId,
+                      primaryAmount: amount,
+                      primaryCurrency: payCurrency,
+                      primaryDecimals: calculateDecimals,
+                      status: EcardoReceiptStatus.success,
+                      items: [
+                        EcardoReceiptItem(
+                          label: l10nPick(
+                            context,
+                            en: 'Wallet Name',
+                            fa: 'نام کیف پول',
+                            ar: 'اسم المحفظة',
+                            tr: 'Cüzdan Adı',
+                            ru: 'Название кошелька',
+                          ),
+                          value: currentWallet?.name ?? 'Wallet',
                         ),
-                        border: Border.all(
-                          color: isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder,
+                        EcardoReceiptItem(
+                          label: l10nPick(
+                            context,
+                            en: 'Payment Method',
+                            fa: 'روش پرداخت',
+                            ar: 'طريقة الدفع',
+                            tr: 'Ödeme Yöntemi',
+                            ru: 'Способ оплаты',
+                          ),
+                          value: controller.gatewayMethod.value?.formattedName ?? payCurrency,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: isDark
-                                ? AppColors.darkShadow
-                                : AppColors.lightShadow,
-                            blurRadius: AppSpacing.md,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
+                        EcardoReceiptItem(
+                          label: localization.addMoneySuccessTransactionType,
+                          value: txType,
+                        ),
+                        EcardoReceiptItem(
+                          label: localization.addMoneySuccessCharge,
+                          amount: chargeVal,
+                          currency: payCurrency,
+                          decimals: calculateDecimals,
+                        ),
+                        EcardoReceiptItem(
+                          label: localization.addMoneySuccessFinalAmount,
+                          amount: amount + chargeVal,
+                          currency: payCurrency,
+                          decimals: calculateDecimals,
+                          isHighlighted: true,
+                          valueColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                        ),
+                      ],
+                      note: l10nPick(
+                        context,
+                        en: 'Powered by eCardo Secure Network',
+                        fa: 'پردازش‌شده توسط شبکه امن اکاردو',
+                        ar: 'مشغل بواسطة شبكة إيكاردو الآمنة',
+                        tr: 'eCardo Güvenli Ağı Tarafından Desteklenmektedir',
+                        ru: 'На базе защищенной сети eCardo',
                       ),
-                      child: Column(
-                        children: [
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization.addMoneySuccessAmount,
-                            content:
-                                "${double.tryParse(controller.amountController.text)?.toStringAsFixed(calculateDecimals)} ${(controller.successPaymentData.value?["pay_currency"] ?? "")}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                          ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization.addMoneySuccessTransactionId,
-                            content:
-                                "${controller.successPaymentData.value!["tnx"]}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                            isCopyable: true,
-                          ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization.addMoneySuccessCharge,
-                            content:
-                                "${(double.tryParse((controller.successPaymentData.value?["charge"]?.toString() ?? "")) ?? 0.0).toStringAsFixed(calculateDecimals)} ${(controller.successPaymentData.value?["pay_currency"] ?? "")}",
-                            contentColor: AppColors.warning,
-                          ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization.addMoneySuccessTransactionType,
-                            content:
-                                "${controller.successPaymentData.value!["type"]}",
-                            contentColor: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                          ),
-                          _buildDivider(isDark),
-                          _buildDynamicRow(
-                            isDark: isDark,
-                            title: localization.addMoneySuccessFinalAmount,
-                            content:
-                                "${(double.tryParse((controller.successPaymentData.value?["amount"]?.toString() ?? "")) ?? 0.0).toStringAsFixed(calculateDecimals)} ${(controller.successPaymentData.value?["pay_currency"] ?? "")}",
-                            contentColor: AppColors.success,
-                            isTotal: true,
-                          ),
-                        ],
-                      ),
+                      showBarcode: true,
+                      showWatermark: true,
                     ),
-                    const SizedBox(height: AppSpacing.xxxl),
 
+                    const SizedBox(height: AppSpacing.xxl),
+
+                    // 3. Action Buttons
                     CommonButton(
                       onPressed: () async {
                         HapticFeedback.lightImpact();
@@ -202,98 +178,16 @@ class _AddMoneySuccessStepSectionState
                           : AppColors.lightPrimary.withValues(alpha: 0.06),
                       borderColor: isDark
                           ? AppColors.darkBorder
-                          : AppColors.lightPrimary.withValues(alpha: 0.60),
-                      borderWidth: 1.5,
+                          : AppColors.lightPrimary.withValues(alpha: 0.25),
                       textColor: isDark
                           ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
+                          : AppColors.lightPrimary,
                     ),
-                    const SizedBox(height: AppSpacing.huge),
+                    const SizedBox(height: AppSpacing.xxl),
                   ],
                 ),
               ),
             ),
-    );
-  }
-
-  static Widget _buildDivider(bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-      child: Divider(
-        height: 1,
-        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-      ),
-    );
-  }
-
-  static Widget _buildDynamicRow({
-    required bool isDark,
-    required String title,
-    required String content,
-    required Color contentColor,
-    bool isTotal = false,
-    bool isCopyable = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
-              fontSize: isTotal ? 16 : 14,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: Text(
-                    content,
-                    style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: isTotal ? FontWeight.w900 : FontWeight.w700,
-                      fontSize: isTotal ? 17 : 14,
-                      color: contentColor,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-                if (isCopyable) ...[
-                  const SizedBox(width: AppSpacing.xs),
-                  InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      Clipboard.setData(ClipboardData(text: content));
-                      ToastHelper().showSuccessToast("Copied to clipboard");
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xs),
-                      child: Icon(
-                        Icons.copy_rounded,
-                        size: 16,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextTertiary,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

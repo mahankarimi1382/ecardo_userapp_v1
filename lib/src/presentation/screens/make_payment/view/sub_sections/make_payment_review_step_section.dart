@@ -5,17 +5,88 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
-import 'package:ecardo_user/src/common/widgets/design_system/ecardo_glass_card.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
-class MakePaymentReviewStepSection extends StatelessWidget {
+class MakePaymentReviewStepSection extends StatefulWidget {
   const MakePaymentReviewStepSection({super.key});
+
+  @override
+  State<MakePaymentReviewStepSection> createState() =>
+      _MakePaymentReviewStepSectionState();
+}
+
+class _MakePaymentReviewStepSectionState
+    extends State<MakePaymentReviewStepSection> {
+  final GlobalKey<EcardoSwipeButtonState> _swipeKey =
+      GlobalKey<EcardoSwipeButtonState>();
+
+  Future<void> _handleConfirmPayment(BuildContext context) async {
+    HapticFeedback.lightImpact();
+    final MakePaymentController controller = Get.find();
+
+    final bioReason = l10nPick(
+      context,
+      en: 'Authenticate to confirm merchant payment',
+      fa: 'جهت تأیید پرداخت به پذیرنده احراز هویت کنید',
+      ar: 'التحقق لتأكيد دفع التاجر',
+      tr: 'Üye işyeri ödemesini onaylamak için doğrulama yapın',
+      ru: 'Подтвердите личность для оплаты мерчанту',
+    );
+
+    // Step-up Security: Try biometric first if available
+    final biometricService = BiometricAuthService();
+    try {
+      final isBioEnabled = await biometricService.isEnabled();
+      if (isBioEnabled) {
+        final bioOk = await biometricService.authenticate(reason: bioReason);
+        if (bioOk) {
+          await controller.makePayment();
+          return;
+        }
+      }
+    } catch (_) {
+      // Fallback to passcode prompt
+    }
+
+    final bool isPasscodeEnabled =
+        Get.find<SettingsService>().getSetting(
+              "make_payment_passcode_status",
+            ) ==
+            "1";
+
+    String? storedPasscode = controller.userModel.value.data?.passcode;
+    bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
+    if (storedPasscode == null || storedPasscode.isEmpty) {
+      if (Get.isRegistered<HomeController>()) {
+        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+      }
+    }
+    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+
+    if (isPasscodeEnabled && hasPasscode) {
+      final dynamic verified = await Get.bottomSheet<dynamic>(
+        const VerifyPasscodeBottomSheet(),
+      );
+      if (verified == null ||
+          !PasscodeHelper.isValidFormat(verified.toString())) {
+        _swipeKey.currentState?.reset();
+        return;
+      }
+      await controller.makePayment(passcode: verified.toString());
+    } else {
+      await controller.makePayment();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,87 +193,62 @@ class MakePaymentReviewStepSection extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xxxl),
+            const SizedBox(height: AppSpacing.xl),
 
-            Row(
-              children: [
-                Expanded(
-                  child: CommonIconButton(
-                    backgroundColor: isDark
-                        ? AppColors.darkSurfaceVariant
-                        : AppColors.lightPrimary.withValues(alpha: 0.04),
-                    borderWidth: 1.5,
-                    borderColor: isDark
-                        ? AppColors.darkBorder
-                        : AppColors.lightPrimary.withValues(alpha: 0.30),
-                    width: double.infinity,
-                    height: 52,
-                    text: localization.makePaymentReviewStepSectionBackButton,
-                    icon: PngAssets.reviewArrowBackCommonIcon,
-                    iconWidth: 18,
-                    iconHeight: 18,
-                    iconAndTextSpace: AppSpacing.sm,
-                    iconColor: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                    textColor: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      controller.currentStep.value = 0;
-                    },
-                  ),
+            // Ultra-Modern Swipe Button
+            Obx(
+              () => EcardoSwipeButton(
+                key: _swipeKey,
+                text: l10nPick(
+                  context,
+                  en: 'Swipe to Confirm Payment',
+                  fa: 'برای تأیید پرداخت بکشید',
+                  ar: 'اسحب لتأكيد الدفع',
+                  tr: 'Ödemeyi Onaylamak İçin Kaydırın',
+                  ru: 'Проведите для подтверждения оплаты',
                 ),
-                const SizedBox(width: AppSpacing.lg),
-                Expanded(
-                  child: Obx(
-                    () => CommonIconButton(
-                      isLoading: controller.isMakePaymentLoading.value,
-                      onPressed: () async {
-                        HapticFeedback.lightImpact();
-                        final bool isPasscodeEnabled =
-                            Get.find<SettingsService>().getSetting(
-                                  "make_payment_passcode_status",
-                                ) ==
-                                "1";
-
-                        String? storedPasscode = controller.userModel.value.data?.passcode;
-                        bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
-                        if (storedPasscode == null || storedPasscode.isEmpty) {
-                          if (Get.isRegistered<HomeController>()) {
-                            storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
-                            hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
-                          }
-                        }
-                        final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
-
-                        if (isPasscodeEnabled && hasPasscode) {
-                          final dynamic verified = await Get.bottomSheet<dynamic>(
-                            const VerifyPasscodeBottomSheet(),
-                          );
-                          if (verified == null ||
-                              !PasscodeHelper.isValidFormat(verified.toString())) {
-                            return;
-                          }
-                          await controller.makePayment(passcode: verified.toString());
-                        } else {
-                          await controller.makePayment();
-                        }
-                      },
-                      width: double.infinity,
-                      height: 52,
-                      text:
-                          localization.makePaymentReviewStepSectionConfirmButton,
-                      icon: PngAssets.reviewArrowRightCommonIcon,
-                      iconWidth: 18,
-                      iconHeight: 18,
-                      iconAndTextSpace: AppSpacing.sm,
-                      isIconRight: true,
-                    ),
-                  ),
+                loadingText: l10nPick(
+                  context,
+                  en: 'Processing...',
+                  fa: 'در حال پردازش...',
                 ),
-              ],
+                successText: l10nPick(
+                  context,
+                  en: 'Payment Confirmed',
+                  fa: 'پرداخت تأیید شد',
+                ),
+                isLoading: controller.isMakePaymentLoading.value,
+                onSwipeComplete: () => _handleConfirmPayment(context),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+
+            // Back button
+            CommonIconButton(
+              backgroundColor: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightPrimary.withValues(alpha: 0.04),
+              borderWidth: 1.5,
+              borderColor: isDark
+                  ? AppColors.darkBorder
+                  : AppColors.lightPrimary.withValues(alpha: 0.30),
+              width: double.infinity,
+              height: 48,
+              text: localization.makePaymentReviewStepSectionBackButton,
+              icon: PngAssets.reviewArrowBackCommonIcon,
+              iconWidth: 18,
+              iconHeight: 18,
+              iconAndTextSpace: AppSpacing.sm,
+              iconColor: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+              textColor: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                controller.currentStep.value = 0;
+              },
             ),
             const SizedBox(height: AppSpacing.huge),
           ],
@@ -233,59 +279,45 @@ class MakePaymentReviewStepSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
             style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
-              fontSize: isTotal ? 16 : 14,
+              fontSize: isTotal ? 15 : 13,
+              fontWeight: isTotal ? FontWeight.w700 : FontWeight.w500,
               color: isDark
                   ? AppColors.darkTextSecondary
                   : AppColors.lightTextSecondary,
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: isBadge
-                ? Align(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: contentColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radiusXs,
-                        ),
-                      ),
-                      child: Text(
-                        content,
-                        style: TextStyle(
-                          letterSpacing: 0,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                          color: contentColor,
-                        ),
-                      ),
-                    ),
-                  )
-                : Text(
+          isBadge
+              ? Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: contentColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
+                  ),
+                  child: Text(
                     content,
                     style: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: isTotal ? FontWeight.w900 : FontWeight.w700,
-                      fontSize: isTotal ? 17 : 15,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
                       color: contentColor,
                     ),
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
                   ),
-          ),
+                )
+              : Text(
+                  content,
+                  style: TextStyle(
+                    fontSize: isTotal ? 16 : 14,
+                    fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
+                    color: contentColor,
+                  ),
+                ),
         ],
       ),
     );

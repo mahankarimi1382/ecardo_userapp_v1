@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/model/transfer_wallet_model.dart';
 
 /// Big, beautiful FinTech hero amount input card with currency prefix/suffix,
@@ -72,9 +73,15 @@ class TransferAmountInputCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Enter Amount',
+                l10nPick(
+                  context,
+                  en: 'Enter Amount',
+                  fa: 'مبلغ انتقال',
+                  ar: 'أدخل المبلغ',
+                  tr: 'Miktarı Girin',
+                  ru: 'Введите сумму',
+                ),
                 style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -110,9 +117,15 @@ class TransferAmountInputCard extends StatelessWidget {
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       Text(
-                        'Bal: $balanceText $currencyCode',
+                        l10nPick(
+                          context,
+                          en: 'Bal: $balanceText $currencyCode',
+                          fa: 'موجودی: $balanceText $currencyCode',
+                          ar: 'الرصيد: $balanceText $currencyCode',
+                          tr: 'Bakiye: $balanceText $currencyCode',
+                          ru: 'Баланс: $balanceText $currencyCode',
+                        ),
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           color: colorScheme.primary,
@@ -251,14 +264,14 @@ class _QuickPercentageRow extends StatelessWidget {
       {'label': '25%', 'value': 0.25},
       {'label': '50%', 'value': 0.50},
       {'label': '75%', 'value': 0.75},
-      {'label': 'Max', 'value': 1.0},
+      {'label': l10nPick(context, en: 'Max', fa: 'حداکثر', ar: 'الكل', tr: 'Maks', ru: 'Макс'), 'value': 1.0, 'isMax': true},
     ];
 
     return Row(
       children: chips.map((c) {
         final label = c['label'] as String;
         final value = c['value'] as double;
-        final isMax = label == 'Max';
+        final isMax = c['isMax'] == true;
 
         return Expanded(
           child: Padding(
@@ -335,7 +348,7 @@ class _LiveFeeEstimationPill extends StatelessWidget {
     final feeText = chargeLoadFailed
         ? '—'
         : isFree
-            ? 'Free'
+            ? l10nPick(context, en: 'Free', fa: 'رایگان', ar: 'مجاني', tr: 'Ücretsiz', ru: 'Бесплатно')
             : '${charge.toStringAsFixed(decimals)} $currencyCode';
 
     return Container(
@@ -367,9 +380,15 @@ class _LiveFeeEstimationPill extends StatelessWidget {
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Text(
-                    'Transfer Fee',
+                    l10nPick(
+                      context,
+                      en: 'Transfer Fee',
+                      fa: 'کارمزد انتقال',
+                      ar: 'رسوم التحويل',
+                      tr: 'Transfer Ücreti',
+                      ru: 'Комиссия перевода',
+                    ),
                     style: TextStyle(
-                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: colorScheme.onSurface.withValues(alpha: 0.7),
@@ -388,7 +407,6 @@ class _LiveFeeEstimationPill extends StatelessWidget {
                 child: Text(
                   feeText,
                   style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: isFree ? AppColors.success : colorScheme.onSurface,
@@ -408,9 +426,15 @@ class _LiveFeeEstimationPill extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Limits',
+                  l10nPick(
+                    context,
+                    en: 'Limits',
+                    fa: 'سقف انتقال',
+                    ar: 'الحدود',
+                    tr: 'Limitler',
+                    ru: 'Лимиты',
+                  ),
                   style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: colorScheme.onSurface.withValues(alpha: 0.5),
@@ -419,7 +443,6 @@ class _LiveFeeEstimationPill extends StatelessWidget {
                 Text(
                   '${wallet!.transferLimit!.min ?? '0'} – ${wallet!.transferLimit!.max ?? '∞'} $currencyCode',
                   style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: colorScheme.onSurface.withValues(alpha: 0.6),

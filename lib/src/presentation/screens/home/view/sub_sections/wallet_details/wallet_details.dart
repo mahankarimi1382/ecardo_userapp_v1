@@ -66,17 +66,19 @@ class _WalletDetailsState extends State<WalletDetails> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: Obx(
         () => controller.isLoading.value
             ? CommonLoading()
             : RefreshIndicator(
-                color: AppColors.lightPrimary,
+                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 onRefresh: _onRefresh,
                 child: Column(
                   children: [
-                    _buildHeaderSection(),
+                    _buildHeaderSection(isDark),
                     SizedBox(height: 30),
                     SectionHeader(
                       sectionName: localization.walletDetailsHistory,
@@ -85,7 +87,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                       },
                     ),
                     SizedBox(height: 16),
-                    _buildTransactionsList(),
+                    _buildTransactionsList(isDark),
                   ],
                 ),
               ),
@@ -98,16 +100,20 @@ class _WalletDetailsState extends State<WalletDetails> {
     required String icon,
     required Color iconBgColor,
     required GestureTapCallback? onTap,
+    required bool isDark,
   }) {
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppColors.lightPrimary.withValues(alpha: 0.30),
-            width: 2,
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.lightPrimary.withValues(alpha: 0.30),
+            width: 1.5,
           ),
         ),
         child: Row(
@@ -127,9 +133,9 @@ class _WalletDetailsState extends State<WalletDetails> {
               title,
               style: TextStyle(
                 letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 16,
-                color: AppColors.lightTextPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
           ],
@@ -138,13 +144,13 @@ class _WalletDetailsState extends State<WalletDetails> {
     );
   }
 
-  Widget _buildHeaderSection() {
+  Widget _buildHeaderSection(bool isDark) {
     final localization = AppLocalizations.of(context)!;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadiusDirectional.only(
           bottomStart: Radius.circular(30),
           bottomEnd: Radius.circular(30),
@@ -325,6 +331,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                     title: localization.walletDetailsTopUp,
                     icon: PngAssets.topUpCommonIcon,
                     iconBgColor: Color(0xFF81BAFF),
+                    isDark: isDark,
                     onTap: () {
                       final currentWallet = controller.wallet.value;
                       final code = (currentWallet?.code ?? '')
@@ -366,6 +373,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                     title: localization.walletDetailsWithdraw,
                     icon: PngAssets.withdrawCommonIcon,
                     iconBgColor: Color(0xFF9280FD),
+                    isDark: isDark,
                     onTap: () {
                       if (Get.find<SettingsService>().getSetting(
                             "user_withdraw",
@@ -389,7 +397,7 @@ class _WalletDetailsState extends State<WalletDetails> {
     );
   }
 
-  Widget _buildTransactionsList() {
+  Widget _buildTransactionsList(bool isDark) {
     final transactions = controller.allTransactions;
 
     if (controller.isLoading.value && transactions.isEmpty) {
@@ -407,7 +415,7 @@ class _WalletDetailsState extends State<WalletDetails> {
             margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: AppColors.white,
+              color: isDark ? AppColors.darkCard : AppColors.white,
             ),
             child: ListView.separated(
               controller: _scrollController,
@@ -459,11 +467,11 @@ class _WalletDetailsState extends State<WalletDetails> {
                                     Text(
                                       transaction.type ?? "",
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         letterSpacing: 0,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 15.5,
-                                        color: AppColors.lightTextPrimary,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 15,
+                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
@@ -472,9 +480,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         letterSpacing: 0,
-                                        fontSize: 14,
-                                        color: AppColors.lightTextTertiary,
-                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13,
+                                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ],
@@ -529,7 +537,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                                 fontSize: 15,
                                 color: transaction.isPlus == true
                                     ? AppColors.success
-                                    : AppColors.error,
+                                    : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
                               ),
                             ),
                           ],
@@ -543,7 +551,7 @@ class _WalletDetailsState extends State<WalletDetails> {
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Divider(
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.10),
+                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
                     height: 0,
                   ),
                 );

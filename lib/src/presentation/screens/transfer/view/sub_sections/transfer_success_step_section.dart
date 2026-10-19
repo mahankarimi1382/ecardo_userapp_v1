@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_success_celebration.dart';
@@ -90,7 +91,14 @@ class _TransferSuccessStepSectionState
               // 1. Celebratory Success Animation
               TransferSuccessCelebration(
                 title: localization.transferSuccessStepSectionTitle,
-                subtitle: 'Your money was successfully transferred',
+                subtitle: l10nPick(
+                  context,
+                  en: 'Your money was successfully transferred',
+                  fa: 'انتقال وجه با موفقیت انجام شد',
+                  ar: 'تم تحويل أموالك بنجاح',
+                  tr: 'Paranız başarıyla transfer edildi',
+                  ru: 'Средства успешно переведены',
+                ),
                 dateTime: createdAt.isNotEmpty ? createdAt : null,
               ),
 
@@ -98,7 +106,14 @@ class _TransferSuccessStepSectionState
 
               // 2. Ultra-Premium Digital Receipt (Design System)
               EcardoDigitalReceipt(
-                title: 'Transfer Receipt',
+                title: l10nPick(
+                  context,
+                  en: 'Transfer Receipt',
+                  fa: 'رسید انتقال وجه',
+                  ar: 'إيصال التحويل',
+                  tr: 'Transfer Makbuzu',
+                  ru: 'Квитанция перевода',
+                ),
                 transactionReference: tnxId,
                 formattedTimestamp: createdAt.isNotEmpty ? createdAt : null,
                 primaryAmount: amount,
@@ -115,18 +130,39 @@ class _TransferSuccessStepSectionState
                     copyText: recipientAccount,
                   ),
                   EcardoReceiptItem(
-                    label: 'From Wallet',
+                    label: l10nPick(
+                      context,
+                      en: 'From Wallet',
+                      fa: 'از کیف پول',
+                      ar: 'من المحفظة',
+                      tr: 'Cüzdandan',
+                      ru: 'Из кошелька',
+                    ),
                     value: maskedSenderAccount != null && maskedSenderAccount.isNotEmpty
                         ? '${currentWallet?.name ?? "Wallet"} ($maskedSenderAccount)'
                         : (currentWallet?.name ?? 'Wallet'),
                   ),
                   if (maskedSenderAccount != null && maskedSenderAccount.isNotEmpty)
                     EcardoReceiptItem(
-                      label: 'Sender Account',
+                      label: l10nPick(
+                        context,
+                        en: 'Sender Account',
+                        fa: 'حساب مبدأ',
+                        ar: 'حساب المرسل',
+                        tr: 'Gönderen Hesap',
+                        ru: 'Счет отправителя',
+                      ),
                       value: maskedSenderAccount,
                     ),
                   EcardoReceiptItem(
-                    label: 'To',
+                    label: l10nPick(
+                      context,
+                      en: 'To',
+                      fa: 'گیرنده',
+                      ar: 'إلى',
+                      tr: 'Alıcı',
+                      ru: 'Получатель',
+                    ),
                     value: recipientName,
                   ),
                   EcardoReceiptItem(
@@ -139,7 +175,14 @@ class _TransferSuccessStepSectionState
                       value: description,
                     ),
                   EcardoReceiptItem(
-                    label: 'Fee / Charge',
+                    label: l10nPick(
+                      context,
+                      en: 'Fee / Charge',
+                      fa: 'کارمزد انتقال',
+                      ar: 'الرسوم',
+                      tr: 'Ücret',
+                      ru: 'Комиссия',
+                    ),
                     amount: chargeVal,
                     currency: walletCode,
                     decimals: calculateDecimals,
@@ -153,7 +196,14 @@ class _TransferSuccessStepSectionState
                     valueColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
                   ),
                 ],
-                note: 'Powered by eCardo Secure Network',
+                note: l10nPick(
+                  context,
+                  en: 'Powered by eCardo Secure Network',
+                  fa: 'پردازش‌شده توسط شبکه امن اکاردو',
+                  ar: 'مشغل بواسطة شبكة إيكاردو الآمنة',
+                  tr: 'eCardo Güvenli Ağı Tarafından Desteklenmektedir',
+                  ru: 'На базе защищенной сети eCardo',
+                ),
                 showBarcode: true,
                 showWatermark: true,
               ),
