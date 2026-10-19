@@ -116,22 +116,15 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                         );
 
                         if (scannedCode != null) {
-                          if (scannedCode.startsWith("AID:")) {
-                            final midValue = scannedCode
-                                .replaceAll("AID:", "")
-                                .trim();
+                          final clean = scannedCode.trim();
+                          final aidMatch = RegExp(
+                            r'^(?:AID\s*:\s*)?(\d+)$',
+                            caseSensitive: false,
+                          ).firstMatch(clean);
 
-                            final isNumeric = RegExp(
-                              r'^\d+$',
-                            ).hasMatch(midValue);
-
-                            if (isNumeric) {
-                              controller.agentAidController.text = midValue;
-                            } else {
-                              ToastHelper().showErrorToast(
-                                localizations.cashOutQrInvalidDigits,
-                              );
-                            }
+                          if (aidMatch != null) {
+                            controller.agentAidController.text =
+                                aidMatch.group(1)!;
                           } else {
                             ToastHelper().showErrorToast(
                               localizations.cashOutQrInvalidPrefix,

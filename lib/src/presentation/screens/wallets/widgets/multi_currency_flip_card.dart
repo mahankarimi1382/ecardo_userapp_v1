@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/presentation/screens/wallets/widgets/crypto_deposit_bottom_sheet.dart';
 
 /// Card theme presets for each world currency.
 class CurrencyCardTheme {
@@ -757,9 +758,9 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
               ),
             ),
             const Spacer(),
-            // Quick Action Shortcut Buttons
+            // Quick Action Shortcut Buttons (Deposit, Withdraw, Transfer, Exchange)
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 14, 12),
+              padding: const EdgeInsetsDirectional.fromSTEB(12, 10, 12, 12),
               child: Row(
                 children: [
                   Expanded(
@@ -775,29 +776,34 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       ),
                       icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white, size: 13),
                       onTap: () {
-                        Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id?.toString() ?? ''});
+                        final isUsdt = (widget.wallet.code ?? '').toUpperCase().trim() == 'USDT';
+                        if (isUsdt) {
+                          CryptoDepositBottomSheet.show(context, wallet: widget.wallet);
+                        } else {
+                          Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id?.toString() ?? ''});
+                        }
                       },
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: _buildActionBtn(
                       label: l10nPick(
                         context,
-                        en: 'Exchange',
-                        fa: 'تبدیل',
-                        ar: 'تبادل',
-                        zh: '兑换',
-                        tr: 'Takas',
-                        ru: 'Обмен',
+                        en: 'Withdraw',
+                        fa: 'برداشت',
+                        ar: 'سحب',
+                        zh: '提现',
+                        tr: 'Çekim',
+                        ru: 'Вывод',
                       ),
-                      icon: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 13),
+                      icon: const Icon(Icons.arrow_circle_up_rounded, color: Colors.white, size: 13),
                       onTap: () {
-                        Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id?.toString() ?? ''});
+                        Get.toNamed(BaseRoute.withdraw, arguments: {'wallet_id': widget.wallet.id?.toString() ?? ''});
                       },
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: _buildActionBtn(
                       label: l10nPick(
@@ -812,6 +818,24 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       icon: _mirrorInRtl(Icons.send_rounded),
                       onTap: () {
                         Get.toNamed(BaseRoute.transfer, arguments: {'wallet_id': widget.wallet.id});
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: _buildActionBtn(
+                      label: l10nPick(
+                        context,
+                        en: 'Exchange',
+                        fa: 'تبدیل',
+                        ar: 'تبادل',
+                        zh: '兑换',
+                        tr: 'Takas',
+                        ru: 'Обмен',
+                      ),
+                      icon: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 13),
+                      onTap: () {
+                        Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id?.toString() ?? ''});
                       },
                     ),
                   ),

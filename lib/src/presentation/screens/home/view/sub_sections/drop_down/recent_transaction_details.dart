@@ -116,11 +116,16 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     HapticFeedback.lightImpact();
     Get.back();
     final tnx = widget.transaction.tnx ?? '';
-    final subject = 'TX #$tnx';
     try {
       Get.toNamed(
         BaseRoute.addNewTicket,
-        arguments: {'subject': subject, 'tnx': tnx},
+        arguments: {
+          'transaction_ref': tnx,
+          'amount': widget.transaction.amount,
+          'currency': widget.transaction.trxCurrencyCode,
+          'title': widget.transaction.type ?? 'تراکنش',
+          'status': widget.transaction.status,
+        },
       );
     } catch (_) {
       Get.toNamed(BaseRoute.supportTickets);

@@ -87,8 +87,9 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
 
     try {
       final networkService = Get.find<NetworkService>();
+      final walletParam = widget.wallet.id != null ? '&wallet_id=${widget.wallet.id}' : '';
       final response = await networkService.get(
-        endpoint: '/user/crypto-wallet/address?chain=TRON&asset=USDT',
+        endpoint: '/user/crypto-wallet/address?chain=TRON&asset=USDT$walletParam',
       );
 
       if (response.status != Status.completed || response.data == null) {
@@ -191,6 +192,7 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
         );
       case CryptoDepositPolicyError.missingField:
       case CryptoDepositPolicyError.invalidWalletId:
+      case CryptoDepositPolicyError.walletIdMismatch:
       case CryptoDepositPolicyError.unsupportedChain:
       case CryptoDepositPolicyError.unsupportedAsset:
       case CryptoDepositPolicyError.unsupportedNetwork:
@@ -199,6 +201,7 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
       case CryptoDepositPolicyError.invalidMinimumDeposit:
       case CryptoDepositPolicyError.invalidConfirmations:
       case CryptoDepositPolicyError.invalidExpiry:
+      case CryptoDepositPolicyError.missingExpiry:
         return l10nPick(
           context,
           en: 'The server response did not pass the deposit security checks. No address is shown.',
@@ -538,7 +541,15 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            'Checksum-verified TRON address',
+                            l10nPick(
+                              context,
+                              en: 'Checksum-verified TRON address',
+                              fa: 'آدرس ترون دارای اعتبارسنجی چکسام',
+                              ar: 'عنوان ترون موثق بالتحقق من المجموع الاختباري',
+                              tr: 'Sağlama toplamı doğrulanmış TRON adresi',
+                              ru: 'Адрес TRON с подтверждённой контрольной суммой',
+                              zh: '校验和验证通过的 TRON 地址',
+                            ),
                             style: TextStyle(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w700,
@@ -718,37 +729,37 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                                 en:
                                     '• Only send USDT on ${policy.network} to this address.\n'
                                     '• Contract: ${policy.contractAddress}\n'
-                                    '• Minimum deposit: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• Minimum deposit: ${policy.formattedMinimumDeposit} USDT.\n'
                                     '• Finality requires ${policy.requiredConfirmations} block confirmations.\n'
                                     '• Your balance is credited after on-chain finality and server reconciliation.',
                                 fa:
                                     '• فقط تتر (USDT) بر بستر ${policy.network} به این آدرس واریز کنید.\n'
                                     '• قرارداد هوشمند: ${policy.contractAddress}\n'
-                                    '• حداقل واریز: ${policy.minimumDeposit.toStringAsFixed(2)} تتر.\n'
+                                    '• حداقل واریز: ${policy.formattedMinimumDeposit} تتر.\n'
                                     '• نهایی‌سازی نیازمند ${policy.requiredConfirmations} تأییدیه بلاک است.\n'
                                     '• موجودی پس از نهایی‌سازی زنجیره و تطبیق سمت سرور به حساب شما اضافه می‌شود.',
                                 ar:
                                     '• أرسل USDT على ${policy.network} فقط إلى هذا العنوان.\n'
                                     '• العقد الذكي: ${policy.contractAddress}\n'
-                                    '• الحد الأدنى: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• الحد الأدنى: ${policy.formattedMinimumDeposit} USDT.\n'
                                     '• يتطلب ${policy.requiredConfirmations} تأكيد كتلة.\n'
                                     '• يُضاف الرصيد بعد نهائية الشبكة والتسوية من الخادم.',
                                 tr:
                                     '• Bu adrese yalnızca ${policy.network} ağında USDT gönderin.\n'
                                     '• Akıllı sözleşme: ${policy.contractAddress}\n'
-                                    '• Minimum: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• Minimum: ${policy.formattedMinimumDeposit} USDT.\n'
                                     '• ${policy.requiredConfirmations} blok onayı gerekir.\n'
                                     '• Bakiye zincir finalitesi ve sunucu mutabakatından sonra eklenir.',
                                 ru:
                                     '• Отправляйте только USDT (${policy.network}) на этот адрес.\n'
                                     '• Контракт: ${policy.contractAddress}\n'
-                                    '• Минимум: ${policy.minimumDeposit.toStringAsFixed(2)} USDT.\n'
+                                    '• Минимум: ${policy.formattedMinimumDeposit} USDT.\n'
                                     '• Требуется ${policy.requiredConfirmations} подтверждений.\n'
                                     '• Баланс зачисляется после финальности сети и сверки на сервере.',
                                 zh:
                                     '• 请仅通过 ${policy.network} 网络向此地址充值 USDT。\n'
                                     '• 合约地址：${policy.contractAddress}\n'
-                                    '• 最低充值：${policy.minimumDeposit.toStringAsFixed(2)} USDT。\n'
+                                    '• 最低充值：${policy.formattedMinimumDeposit} USDT。\n'
                                     '• 需要 ${policy.requiredConfirmations} 个区块确认。\n'
                                     '• 链上最终确认及服务器对账后入账。',
                               ),

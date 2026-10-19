@@ -61,6 +61,7 @@ void main() {
         tester,
         const WelcomeScreen(),
         textDirection: TextDirection.rtl,
+        locale: const Locale('fa'),
         registrations: _authRegistrations(),
       );
       await capture(tester, 'welcome__rtl');
@@ -92,6 +93,7 @@ void main() {
         tester,
         const SignInScreen(),
         textDirection: TextDirection.rtl,
+        locale: const Locale('fa'),
         registrations: _authRegistrations(),
       );
       await capture(tester, 'signin__rtl');

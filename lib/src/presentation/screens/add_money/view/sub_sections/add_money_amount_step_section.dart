@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_drop
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
 import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/model/gateway_methods_model.dart';
 
@@ -264,6 +265,72 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                   ),
                 ),
               ),
+
+              // Instant KYC / Gateway limit error alert in red
+              Obx(() {
+                final enteredAmount =
+                    double.tryParse(controller.amountController.text.trim()) ?? 0.0;
+                final gateway = controller.gatewayMethod.value;
+                if (gateway == null ||
+                    gateway.formattedName == null ||
+                    gateway.formattedName!.isEmpty ||
+                    enteredAmount <= 0) {
+                  return const SizedBox.shrink();
+                }
+                final min = double.tryParse(gateway.minimumDeposit ?? '0') ?? 0.0;
+                final max = double.tryParse(gateway.maximumDeposit ?? '0') ?? 0.0;
+
+                final isBelowMin = min > 0 && enteredAmount < min;
+                final isAboveMax = max > 0 && enteredAmount > max;
+
+                if (!isBelowMin && !isAboveMax) return const SizedBox.shrink();
+
+                final curr = gateway.currency ?? '';
+                final errorMsg = isAboveMax
+                    ? l10nPick(
+                        context,
+                        en: 'Amount exceeds maximum allowed limit ($max $curr)',
+                        fa: 'مبلغ بیش از سقف مجاز ($max $curr) است',
+                        ar: 'المبلغ يتجاوز الحد الأقصى المسموح ($max $curr)',
+                        tr: 'Tutar izin verilen maksimum limiti aşıyor ($max $curr)',
+                        ru: 'Сумма превышает лимит ($max $curr)',
+                      )
+                    : l10nPick(
+                        context,
+                        en: 'Amount is below minimum allowed limit ($min $curr)',
+                        fa: 'مبلغ کمتر از حداقل مجاز ($min $curr) است',
+                        ar: 'المبلغ أقل من الحد الأدنى المسموح ($min $curr)',
+                        tr: 'Tutar minimum limitin altında ($min $curr)',
+                        ru: 'Сумма ниже минимального лимита ($min $curr)',
+                      );
+
+                return Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    top: AppSpacing.xs + 2,
+                    start: AppSpacing.xs,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.error_outline_rounded,
+                        color: AppColors.error,
+                        size: 14,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          errorMsg,
+                          style: const TextStyle(
+                            color: AppColors.error,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
 
               Obx(() {
                 final gateway = controller.gatewayMethod.value;

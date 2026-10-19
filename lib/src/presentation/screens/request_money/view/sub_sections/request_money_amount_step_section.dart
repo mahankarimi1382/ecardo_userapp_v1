@@ -84,21 +84,15 @@ class _RequestMoneyAmountStepSectionState
                     );
 
                     if (scannedCode != null) {
-                      if (scannedCode.startsWith("UID:")) {
-                        final midValue = scannedCode
-                            .replaceAll("UID:", "")
-                            .trim();
+                      final clean = scannedCode.trim();
+                      final uidMatch = RegExp(
+                        r'^(?:UID\s*:\s*)?(\d+)$',
+                        caseSensitive: false,
+                      ).firstMatch(clean);
 
-                        final isNumeric = RegExp(r'^\d+$').hasMatch(midValue);
-
-                        if (isNumeric) {
-                          controller.recipientUidController.text = midValue;
-                        } else {
-                          ToastHelper().showErrorToast(
-                            localization
-                                .requestMoneyAmountStepSectionInvalidQrCodeDigits,
-                          );
-                        }
+                      if (uidMatch != null) {
+                        controller.recipientUidController.text =
+                            uidMatch.group(1)!;
                       } else {
                         ToastHelper().showErrorToast(
                           localization

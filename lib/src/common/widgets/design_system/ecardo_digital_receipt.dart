@@ -1,11 +1,20 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 /// Status of the transaction represented in [EcardoDigitalReceipt].
 enum EcardoReceiptStatus {
@@ -63,9 +72,12 @@ class EcardoDigitalReceipt extends StatefulWidget {
   final String? note;
   final VoidCallback? onShare;
   final VoidCallback? onDownload;
+  final VoidCallback? onSupport;
   final bool showBarcode;
   final bool showWatermark;
   final String? watermarkText;
+  final bool showActionButtons;
+  final bool showSupportButton;
   final EdgeInsetsGeometry padding;
 
   const EcardoDigitalReceipt({
@@ -82,9 +94,12 @@ class EcardoDigitalReceipt extends StatefulWidget {
     this.note,
     this.onShare,
     this.onDownload,
+    this.onSupport,
     this.showBarcode = true,
     this.showWatermark = true,
     this.watermarkText,
+    this.showActionButtons = true,
+    this.showSupportButton = true,
     this.padding = const EdgeInsets.all(AppSpacing.lg),
   });
 
@@ -95,10 +110,12 @@ class EcardoDigitalReceipt extends StatefulWidget {
 class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
   final GlobalKey _dividerKey = GlobalKey();
   final GlobalKey _containerKey = GlobalKey();
+  final GlobalKey _receiptCaptureKey = GlobalKey();
 
   double? _measuredNotchY;
   String? _feedbackMessage;
   Timer? _feedbackTimer;
+  bool _isExporting = false;
 
   static const double _notchRadius = 12.0;
   static const double _borderRadius = 18.0;
@@ -178,9 +195,11 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Stack(
-          alignment: Alignment.topCenter,
-          children: [
+        RepaintBoundary(
+          key: _receiptCaptureKey,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
             // 1. Ticket Card Body with custom notches
             CustomPaint(
               key: _containerKey,
@@ -317,11 +336,12 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
                   ),
                 ),
               ),
-          ],
+            ],
+          ),
         ),
 
-        // Action Buttons Row (Share / Download)
-        if (widget.onShare != null || widget.onDownload != null) ...[
+        // Action Buttons Row (Share / Download / Support)
+        if (widget.showActionButtons) ...[
           const SizedBox(height: AppSpacing.md),
           _buildActionButtons(context, isDark),
         ],
@@ -754,31 +774,182 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
     );
   }
 
+  Future<void> _handleShare() async {
+    if (widget.onShare != null) {
+      widget.onShare!();
+      return;
+    }
+    if (_isExporting) return;
+    setState(() => _isExporting = true);
+    HapticFeedback.lightImpact();
+
+    try {
+      final boundary = _receiptCaptureKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) {
+        // Fallback to text share
+        await SharePlus.instance.share(
+          ShareParams(
+            text: '${widget.title}\nRef: ${widget.transactionReference}\nAmount: ${widget.primaryAmount ?? ""} ${widget.primaryCurrency ?? ""}',
+            subject: 'eCardo Receipt',
+          ),
+        );
+        return;
+      }
+
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
+
+      if (byteData != null) {
+        final tempDir = await getTemporaryDirectory();
+        final file = File(
+          '${tempDir.path}/ecardo_receipt_${widget.transactionReference}_${DateTime.now().millisecondsSinceEpoch}.png',
+        );
+        await file.writeAsBytes(byteData.buffer.asUint8List());
+
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(file.path)],
+            text: '${widget.title} (${widget.transactionReference})',
+            subject: 'eCardo Receipt',
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Receipt share error: $e');
+      if (mounted) {
+        ToastHelper().showErrorToast(
+          l10nPick(
+            context,
+            en: 'Could not share the receipt image',
+            fa: 'اشتراک‌گذاری تصویر رسید ناموفق بود',
+            ar: 'تعذرت مشاركة صورة الإيصال',
+            tr: 'Makbuz resmi paylaşılamadı',
+            ru: 'Не удалось отправить чек',
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isExporting = false);
+    }
+  }
+
+  Future<void> _handleDownload() async {
+    if (widget.onDownload != null) {
+      widget.onDownload!();
+      return;
+    }
+    HapticFeedback.selectionClick();
+    Clipboard.setData(ClipboardData(text: widget.transactionReference));
+    _triggerCopy(widget.transactionReference, 'Ref ID');
+
+    ToastHelper().showSuccessToast(
+      l10nPick(
+        context,
+        en: 'Receipt Reference copied to clipboard',
+        fa: 'کد پیگیری رسید در کلیپ‌بورد کپی شد',
+        ar: 'تم نسخ رقم المرجع إلى الحافظة',
+        tr: 'Makbuz referansı kopyalandı',
+        ru: 'Код квитанции скопирован в буфер',
+      ),
+    );
+  }
+
+  void _handleSupport() {
+    if (widget.onSupport != null) {
+      widget.onSupport!();
+      return;
+    }
+    HapticFeedback.lightImpact();
+    Get.toNamed(
+      BaseRoute.addNewTicket,
+      arguments: {
+        'transaction_ref': widget.transactionReference,
+        'amount': widget.primaryAmount,
+        'currency': widget.primaryCurrency,
+        'title': widget.title,
+        'status': widget.status.name,
+      },
+    );
+  }
+
   Widget _buildActionButtons(BuildContext context, bool isDark) {
-    return Row(
+    return Column(
       children: [
-        if (widget.onShare != null)
-          Expanded(
-            child: _ReceiptActionButton(
-              icon: Icons.share_rounded,
-              label: 'Share Receipt',
-              onPressed: widget.onShare!,
-              isPrimary: false,
-              isDark: isDark,
+        Row(
+          children: [
+            Expanded(
+              child: _ReceiptActionButton(
+                icon: Icons.share_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Share Receipt',
+                  fa: 'اشتراک رسید',
+                  ar: 'مشاركة الإيصال',
+                  tr: 'Makbuzu Paylaş',
+                  ru: 'Поделиться',
+                ),
+                onPressed: _handleShare,
+                isPrimary: false,
+                isDark: isDark,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: _ReceiptActionButton(
+                icon: Icons.copy_rounded,
+                label: l10nPick(
+                  context,
+                  en: 'Copy Ref ID',
+                  fa: 'کپی کد پیگیری',
+                  ar: 'نسخ المرجع',
+                  tr: 'Referansı Kopyala',
+                  ru: 'Скопировать',
+                ),
+                onPressed: _handleDownload,
+                isPrimary: true,
+                isDark: isDark,
+              ),
+            ),
+          ],
+        ),
+        if (widget.showSupportButton) ...[
+          const SizedBox(height: AppSpacing.sm),
+          InkWell(
+            onTap: _handleSupport,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.support_agent_rounded,
+                    size: 15,
+                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Need help with this transaction? Contact Support',
+                      fa: 'نیاز به راهنمایی دارید؟ ارسال به پشتیبانی',
+                      ar: 'هل تحتاج إلى مساعدة؟ تواصل مع الدعم',
+                      tr: 'Yardıma mı ihtiyacınız var? Destek',
+                      ru: 'Нужна помощь? Обратиться в поддержку',
+                    ),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        if (widget.onShare != null && widget.onDownload != null)
-          const SizedBox(width: AppSpacing.md),
-        if (widget.onDownload != null)
-          Expanded(
-            child: _ReceiptActionButton(
-              icon: Icons.download_rounded,
-              label: 'Download PDF',
-              onPressed: widget.onDownload!,
-              isPrimary: true,
-              isDark: isDark,
-            ),
-          ),
+        ],
       ],
     );
   }

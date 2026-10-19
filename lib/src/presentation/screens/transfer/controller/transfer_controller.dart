@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,6 +44,11 @@ class TransferController extends GetxController {
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> transferWalletsList = <Wallets>[].obs;
 
+  final Rxn<Map<String, dynamic>> lookedUpRecipient =
+      Rxn<Map<String, dynamic>>();
+  final RxBool isLookingUpRecipient = false.obs;
+  Timer? _recipientLookupDebounce;
+
   final RxBool isRecipientUidFocused = false.obs;
   final FocusNode recipientUidFocusNode = FocusNode();
   final recipientUidController = TextEditingController();
@@ -57,16 +63,27 @@ class TransferController extends GetxController {
     recipientUidFocusNode.addListener(_handleRecipientUidFocusChange);
     amountFocusNode.addListener(_handleAmountFocusChange);
     amountController.addListener(_handleAmountTextChange);
+    recipientUidController.addListener(_handleRecipientUidChange);
   }
 
   @override
   void onClose() {
+    _recipientLookupDebounce?.cancel();
+    recipientUidController.removeListener(_handleRecipientUidChange);
     recipientUidFocusNode.removeListener(_handleRecipientUidFocusChange);
     amountFocusNode.removeListener(_handleAmountFocusChange);
     amountController.removeListener(_handleAmountTextChange);
     recipientUidFocusNode.dispose();
     amountFocusNode.dispose();
     super.onClose();
+  }
+
+  void _handleRecipientUidChange() {
+    _recipientLookupDebounce?.cancel();
+    _recipientLookupDebounce = Timer(
+      const Duration(milliseconds: 400),
+      () => lookupRecipient(recipientUidController.text.trim()),
+    );
   }
 
   void _handleRecipientUidFocusChange() {
@@ -160,17 +177,81 @@ class TransferController extends GetxController {
     calculateLiveCharge();
   }
 
-  Beneficiaries? findBeneficiaryByAccount(String accountNumber) {
-    if (accountNumber.trim().isEmpty) return null;
-    final list = beneficiaryModel.value.data?.beneficiaries;
-    if (list == null || list.isEmpty) return null;
-    try {
-      return list.firstWhere(
-        (b) => (b.accountNumber?.trim() == accountNumber.trim()),
-      );
-    } catch (_) {
-      return null;
+  Future<void> lookupRecipient(String accountNumber) async {
+    final cleanAccount = accountNumber.trim();
+    if (cleanAccount.length < 3) {
+      lookedUpRecipient.value = null;
+      isLookingUpRecipient.value = false;
+      return;
     }
+
+    isLookingUpRecipient.value = true;
+    try {
+      final response = await Get.find<NetworkService>().get(
+        endpoint:
+            '${ApiPath.userTransferEndpoint}/lookup-recipient?account_number=$cleanAccount',
+      );
+
+      if (response.status == Status.completed && response.data != null) {
+        final dynamic data = response.data?['data'];
+        if (data is Map<String, dynamic>) {
+          lookedUpRecipient.value = data;
+        } else if (data is Map) {
+          lookedUpRecipient.value = Map<String, dynamic>.from(data);
+        } else {
+          lookedUpRecipient.value = null;
+        }
+      } else {
+        lookedUpRecipient.value = null;
+      }
+    } catch (e) {
+      lookedUpRecipient.value = null;
+    } finally {
+      isLookingUpRecipient.value = false;
+    }
+  }
+
+  Beneficiaries? findBeneficiaryByAccount(String accountNumber) {
+    final cleanAccount = accountNumber.trim();
+    if (cleanAccount.isEmpty) return null;
+    final list = beneficiaryModel.value.data?.beneficiaries;
+    if (list != null && list.isNotEmpty) {
+      try {
+        return list.firstWhere(
+          (b) => (b.accountNumber?.trim() == cleanAccount),
+        );
+      } catch (_) {}
+    }
+
+    final lookedUp = lookedUpRecipient.value;
+    if (lookedUp != null) {
+      final lookedUpAccount = (lookedUp['account_number'] ??
+              lookedUp['accountNumber'] ??
+              lookedUp['uid'])
+          ?.toString()
+          .trim();
+
+      final isMatch = (lookedUpAccount != null && lookedUpAccount == cleanAccount) ||
+          (lookedUpAccount == null && recipientUidController.text.trim() == cleanAccount) ||
+          recipientUidController.text.trim() == cleanAccount;
+
+      if (isMatch) {
+        final name = lookedUp['name']?.toString() ??
+            lookedUp['nickname']?.toString() ??
+            cleanAccount;
+        final avatar = lookedUp['avatar']?.toString();
+        return Beneficiaries(
+          accountNumber: cleanAccount,
+          nickname: name,
+          receiver: Receiver(
+            name: name,
+            avatar: avatar,
+          ),
+        );
+      }
+    }
+
+    return null;
   }
 
   Future<void> _calculateCharge() async {
@@ -488,5 +569,6 @@ class TransferController extends GetxController {
     charge.value = 0.0;
     totalAmount.value = 0.0;
     recipientUidController.clear();
+    lookedUpRecipient.value = null;
   }
 }

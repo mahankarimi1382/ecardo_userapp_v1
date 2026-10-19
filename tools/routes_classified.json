@@ -1,0 +1,3048 @@
+[
+  {
+    "id": "ROUTE-001",
+    "route_constant": "BaseRoute.root",
+    "route_path": "/",
+    "screen_widget": "SplashScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/splash/view/splash_screen.dart",
+    "bindings": [
+      "SplashBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "SplashController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart"
+    ],
+    "domain": "Global State",
+    "priority": "P1",
+    "notes": "App root entry point"
+  },
+  {
+    "id": "ROUTE-002",
+    "route_constant": "BaseRoute.splash",
+    "route_path": "/splash_route",
+    "screen_widget": "SplashScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/splash/view/splash_screen.dart",
+    "bindings": [
+      "SplashBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "SplashController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P1",
+    "notes": "App bootstrap & splash screen"
+  },
+  {
+    "id": "ROUTE-003",
+    "route_constant": "BaseRoute.welcome",
+    "route_path": "/welcome_route",
+    "screen_widget": "WelcomeScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/welcome/view/welcome_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Auth",
+    "priority": "P2",
+    "notes": "Onboarding welcome carousel / landing"
+  },
+  {
+    "id": "ROUTE-004",
+    "route_constant": "BaseRoute.signIn",
+    "route_path": "/sign_in_route",
+    "screen_widget": "SignInScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_in/view/sign_in_screen.dart",
+    "bindings": [
+      "SignInBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "SignInController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P0",
+    "notes": "Primary authentication & MFA challenge"
+  },
+  {
+    "id": "ROUTE-005",
+    "route_constant": "BaseRoute.twoFactorAuth",
+    "route_path": "/two_factor_auth_route",
+    "screen_widget": "TwoFactorAuth",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_in/view/sub_sections/two_factor_auth.dart",
+    "bindings": [
+      "TwoFactorAuthBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TwoFactorAuthController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_in/controller/two_factor_auth_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P0",
+    "notes": "Primary authentication & MFA challenge"
+  },
+  {
+    "id": "ROUTE-006",
+    "route_constant": "BaseRoute.emailOtpLogin",
+    "route_path": "/email_otp_login_route",
+    "screen_widget": "EmailOtpLoginScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_in/view/sub_sections/email_otp_login_screen.dart",
+    "bindings": [
+      "EmailOtpLoginBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "EmailOtpLoginController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_in/controller/email_otp_login_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P0",
+    "notes": "Primary authentication & MFA challenge"
+  },
+  {
+    "id": "ROUTE-007",
+    "route_constant": "BaseRoute.email",
+    "route_path": "/email_route",
+    "screen_widget": "EmailScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_up/view/email/email_screen.dart",
+    "bindings": [
+      "EmailBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "EmailController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_up/controller/email_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P0",
+    "notes": "User registration flow: email"
+  },
+  {
+    "id": "ROUTE-008",
+    "route_constant": "BaseRoute.verifyEmail",
+    "route_path": "/verify_email_route",
+    "screen_widget": "VerifyEmailScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_up/view/verify_email/verify_email_screen.dart",
+    "bindings": [
+      "VerifyEmailBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "VerifyEmailController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_up/controller/verify_email_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P0",
+    "notes": "User registration flow: verifyEmail"
+  },
+  {
+    "id": "ROUTE-009",
+    "route_constant": "BaseRoute.forgotPassword",
+    "route_path": "/forgot_password_route",
+    "screen_widget": "ForgotPasswordScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/forgot_password/view/forgot_password_screen.dart",
+    "bindings": [
+      "ForgotPasswordBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ForgotPasswordController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/forgot_password/controller/forgot_password_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P1",
+    "notes": "Password recovery flow: forgotPassword"
+  },
+  {
+    "id": "ROUTE-010",
+    "route_constant": "BaseRoute.resetPassword",
+    "route_path": "/reset_password_route",
+    "screen_widget": "ResetPassword",
+    "screen_file": "lib/src/presentation/screens/authentication/forgot_password/view/sub_sections/reset_password.dart",
+    "bindings": [
+      "ResetPasswordBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ResetPasswordController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/forgot_password/controller/reset_password_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P0",
+    "notes": "Password recovery flow: resetPassword"
+  },
+  {
+    "id": "ROUTE-011",
+    "route_constant": "BaseRoute.forgotPasswordPinVerification",
+    "route_path": "/forgot_password_pin_verification_route",
+    "screen_widget": "ForgotPasswordPinVerification",
+    "screen_file": "lib/src/presentation/screens/authentication/forgot_password/view/sub_sections/forgot_password_pin_verification.dart",
+    "bindings": [
+      "ForgotPasswordPinVerificationBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ForgotPasswordPinVerificationController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/forgot_password/controller/forgot_password_pin_verification_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P1",
+    "notes": "Password recovery flow: forgotPasswordPinVerification"
+  },
+  {
+    "id": "ROUTE-012",
+    "route_constant": "BaseRoute.navigation",
+    "route_path": "/navigation_route",
+    "screen_widget": "NavigationScreen",
+    "screen_file": "lib/src/app/navigation/navigation_screen.dart",
+    "bindings": [
+      "HomeBinding",
+      "TransferBinding",
+      "VirtualCardBinding",
+      "GiftCodeBinding",
+      "CreateGiftBinding",
+      "GiftRedeemBinding",
+      "GiftHistoryBinding",
+      "KycLevelBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart",
+      "lib/src/presentation/screens/kyc_level/kyc_level_binding.dart"
+    ],
+    "controllers": [
+      "HomeController",
+      "TransferController",
+      "VirtualCardController",
+      "GiftCodeController",
+      "CreateGiftController",
+      "GiftRedeemController",
+      "GiftHistoryController",
+      "KycLevelController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/home/controller/home_controller.dart",
+      "lib/src/presentation/screens/transfer/controller/transfer_controller.dart",
+      "lib/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart",
+      "lib/src/presentation/screens/gift_code/controller/gift_code_controller.dart",
+      "lib/src/presentation/screens/gift_code/controller/create_gift_controller.dart",
+      "lib/src/presentation/screens/gift_code/controller/gift_redeem_controller.dart",
+      "lib/src/presentation/screens/gift_code/controller/gift_history_controller.dart",
+      "lib/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart"
+    ],
+    "domain": "Home",
+    "priority": "P0",
+    "notes": "Main shell with bottom navigation bar & dashboard tabs"
+  },
+  {
+    "id": "ROUTE-013",
+    "route_constant": "BaseRoute.wallets",
+    "route_path": "/wallets_route",
+    "screen_widget": "WalletsScreen",
+    "screen_file": "lib/src/presentation/screens/wallets/view/wallets_screen.dart",
+    "bindings": [
+      "WalletsBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "WalletsController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/wallets/controller/wallets_controller.dart"
+    ],
+    "domain": "Wallets",
+    "priority": "P0",
+    "notes": "Wallet management: wallets"
+  },
+  {
+    "id": "ROUTE-014",
+    "route_constant": "BaseRoute.createNewWallet",
+    "route_path": "/create_new_wallet_route",
+    "screen_widget": "CreateNewWallet",
+    "screen_file": "lib/src/presentation/screens/wallets/view/create_new_wallet/create_new_wallet.dart",
+    "bindings": [
+      "CreateNewWalletBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "CreateNewWalletController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/wallets/controller/create_new_wallet_controller.dart"
+    ],
+    "domain": "Wallets",
+    "priority": "P1",
+    "notes": "Wallet management: createNewWallet"
+  },
+  {
+    "id": "ROUTE-015",
+    "route_constant": "BaseRoute.qrCode",
+    "route_path": "/qr_code_route",
+    "screen_widget": "QrCodeScreen",
+    "screen_file": "lib/src/presentation/screens/qr_code/view/qr_code_screen.dart",
+    "bindings": [
+      "QrCodeBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "QrCodeController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/qr_code/controller/qr_code_controller.dart"
+    ],
+    "domain": "Payments",
+    "priority": "P1",
+    "notes": "QR code display and scanning"
+  },
+  {
+    "id": "ROUTE-016",
+    "route_constant": "BaseRoute.addMoney",
+    "route_path": "/add_money_route",
+    "screen_widget": "AddMoneyScreen",
+    "screen_file": "lib/src/presentation/screens/add_money/view/add_money_screen.dart",
+    "bindings": [
+      "AddMoneyBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "AddMoneyController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/add_money/controller/add_money_controller.dart"
+    ],
+    "domain": "Payments",
+    "priority": "P0",
+    "notes": "Deposit / Add money flow: addMoney"
+  },
+  {
+    "id": "ROUTE-017",
+    "route_constant": "BaseRoute.makePayment",
+    "route_path": "/make_payment_route",
+    "screen_widget": "MakePaymentScreen",
+    "screen_file": "lib/src/presentation/screens/make_payment/view/make_payment_screen.dart",
+    "bindings": [
+      "MakePaymentBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "MakePaymentController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/make_payment/controller/make_payment_controller.dart"
+    ],
+    "domain": "Payments",
+    "priority": "P0",
+    "notes": "Merchant payment flow: makePayment"
+  },
+  {
+    "id": "ROUTE-018",
+    "route_constant": "BaseRoute.requestMoney",
+    "route_path": "/request_money_route",
+    "screen_widget": "RequestMoneyScreen",
+    "screen_file": "lib/src/presentation/screens/request_money/view/request_money_screen.dart",
+    "bindings": [
+      "RequestMoneyBinding",
+      "ReceivedRequestMoneyBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "RequestMoneyController",
+      "ReceivedRequestController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/request_money/controller/request_money_controller.dart",
+      "lib/src/presentation/screens/request_money/controller/received_request_controller.dart"
+    ],
+    "domain": "Transfers",
+    "priority": "P1",
+    "notes": "Request money & history: requestMoney"
+  },
+  {
+    "id": "ROUTE-019",
+    "route_constant": "BaseRoute.giftCode",
+    "route_path": "/gift_code_route",
+    "screen_widget": "GiftCodeScreen",
+    "screen_file": "lib/src/presentation/screens/gift_code/view/gift_code_screen.dart",
+    "bindings": [
+      "GiftCodeBinding",
+      "GiftRedeemBinding",
+      "CreateGiftBinding",
+      "GiftHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "GiftCodeController",
+      "GiftRedeemController",
+      "CreateGiftController",
+      "GiftHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/gift_code/controller/gift_code_controller.dart",
+      "lib/src/presentation/screens/gift_code/controller/gift_redeem_controller.dart",
+      "lib/src/presentation/screens/gift_code/controller/create_gift_controller.dart",
+      "lib/src/presentation/screens/gift_code/controller/gift_history_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P1",
+    "notes": "Gift cards & gift codes: giftCode"
+  },
+  {
+    "id": "ROUTE-020",
+    "route_constant": "BaseRoute.transfer",
+    "route_path": "/transfer_route",
+    "screen_widget": "TransferScreen",
+    "screen_file": "lib/src/presentation/screens/transfer/view/transfer_screen.dart",
+    "bindings": [
+      "TransferBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TransferController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/transfer/controller/transfer_controller.dart"
+    ],
+    "domain": "Transfers",
+    "priority": "P0",
+    "notes": "Money transfer & history: transfer"
+  },
+  {
+    "id": "ROUTE-021",
+    "route_constant": "BaseRoute.cashOut",
+    "route_path": "/cash_out_route",
+    "screen_widget": "CashOutScreen",
+    "screen_file": "lib/src/presentation/screens/cash_out/view/cash_out_screen.dart",
+    "bindings": [
+      "CashOutBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "CashOutController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/cash_out/controller/cash_out_controller.dart"
+    ],
+    "domain": "Withdraw/Cash out",
+    "priority": "P0",
+    "notes": "Cash-out flow: cashOut"
+  },
+  {
+    "id": "ROUTE-022",
+    "route_constant": "BaseRoute.withdraw",
+    "route_path": "/withdraw_route",
+    "screen_widget": "WithdrawScreen",
+    "screen_file": "lib/src/presentation/screens/withdraw/view/withdraw_screen.dart",
+    "bindings": [
+      "WithdrawBinding",
+      "WithdrawAccountBinding",
+      "CreateWithdrawAccountBinding",
+      "EditWithdrawAccountBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "WithdrawController",
+      "WithdrawAccountController",
+      "CreateWithdrawAccountController",
+      "EditWithdrawAccountController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/withdraw/controller/withdraw_controller.dart",
+      "lib/src/presentation/screens/withdraw/controller/withdraw_account_controller.dart",
+      "lib/src/presentation/screens/withdraw/controller/create_withdraw_account_controller.dart",
+      "lib/src/presentation/screens/withdraw/controller/edit_withdraw_account_controller.dart"
+    ],
+    "domain": "Withdraw/Cash out",
+    "priority": "P0",
+    "notes": "Withdrawal flow: withdraw"
+  },
+  {
+    "id": "ROUTE-023",
+    "route_constant": "BaseRoute.exchange",
+    "route_path": "/exchange_route",
+    "screen_widget": "ExchangeScreen",
+    "screen_file": "lib/src/presentation/screens/exchange/view/exchange_screen.dart",
+    "bindings": [
+      "ExchangeBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ExchangeRateService",
+      "ExchangeController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/exchange/service/exchange_rate_service.dart",
+      "lib/src/presentation/screens/exchange/controller/exchange_controller.dart"
+    ],
+    "domain": "Exchange",
+    "priority": "P0",
+    "notes": "Currency exchange flow: exchange"
+  },
+  {
+    "id": "ROUTE-024",
+    "route_constant": "BaseRoute.transactions",
+    "route_path": "/transactions_route",
+    "screen_widget": "TransactionsScreen",
+    "screen_file": "lib/src/presentation/screens/transactions/view/transactions_screen.dart",
+    "bindings": [
+      "TransactionsBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TransactionsController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/transactions/controller/transactions_controller.dart"
+    ],
+    "domain": "Activity",
+    "priority": "P0",
+    "notes": "Transaction history and activity audit log"
+  },
+  {
+    "id": "ROUTE-025",
+    "route_constant": "BaseRoute.services",
+    "route_path": "/services_route",
+    "screen_widget": "ServicesScreen",
+    "screen_file": "lib/src/presentation/screens/services/view/services_screen.dart",
+    "bindings": [
+      "ServicesBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "HomeController",
+      "KycLevelController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/home/controller/home_controller.dart",
+      "lib/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart"
+    ],
+    "domain": "Home",
+    "priority": "P1",
+    "notes": "Services hub grid for all modular financial and travel services"
+  },
+  {
+    "id": "ROUTE-026",
+    "route_constant": "BaseRoute.referral",
+    "route_path": "/referral_route",
+    "screen_widget": "ReferralScreen",
+    "screen_file": "lib/src/presentation/screens/referral/view/referral_screen.dart",
+    "bindings": [
+      "ReferralBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ReferralController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/referral/controller/referral_controller.dart"
+    ],
+    "domain": "Rewards",
+    "priority": "P2",
+    "notes": "Referral & reward program: referral"
+  },
+  {
+    "id": "ROUTE-027",
+    "route_constant": "BaseRoute.referredFriends",
+    "route_path": "/referred_friends_route",
+    "screen_widget": "ReferredFriends",
+    "screen_file": "lib/src/presentation/screens/referral/view/referred_friends/referred_friends.dart",
+    "bindings": [
+      "ReferredFriendsBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ReferredFriendsController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/referral/controller/referred_friends_controller.dart"
+    ],
+    "domain": "Rewards",
+    "priority": "P2",
+    "notes": "Referral & reward program: referredFriends"
+  },
+  {
+    "id": "ROUTE-028",
+    "route_constant": "BaseRoute.referralTree",
+    "route_path": "/referral_tree_route",
+    "screen_widget": "ReferralTree",
+    "screen_file": "lib/src/presentation/screens/referral/view/referral_tree/referral_tree.dart",
+    "bindings": [
+      "ReferralTreeBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ReferralTreeController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/referral/controller/referral_tree_controller.dart"
+    ],
+    "domain": "Rewards",
+    "priority": "P2",
+    "notes": "Referral & reward program: referralTree"
+  },
+  {
+    "id": "ROUTE-029",
+    "route_constant": "BaseRoute.permissionsSettings",
+    "route_path": "/permissions_settings_route",
+    "screen_widget": "PermissionsSettingsScreen",
+    "screen_file": "lib/src/presentation/screens/settings/view/permissions_settings_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Security",
+    "priority": "P2",
+    "notes": "Security controls & authentication: permissionsSettings"
+  },
+  {
+    "id": "ROUTE-030",
+    "route_constant": "BaseRoute.privacyPolicy",
+    "route_path": "/privacy_policy_route",
+    "screen_widget": "PrivacyPolicyScreen",
+    "screen_file": "lib/src/presentation/screens/settings/view/privacy_policy_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Legal",
+    "priority": "P2",
+    "notes": "Privacy policy & legal terms"
+  },
+  {
+    "id": "ROUTE-031",
+    "route_constant": "BaseRoute.deviceSessionsSecurity",
+    "route_path": "/device_sessions_security_route",
+    "screen_widget": "DeviceSessionsSecurityScreen",
+    "screen_file": "lib/src/presentation/screens/device_sessions_security/view/device_sessions_security_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Security",
+    "priority": "P2",
+    "notes": "Security controls & authentication: deviceSessionsSecurity"
+  },
+  {
+    "id": "ROUTE-032",
+    "route_constant": "BaseRoute.profileSettings",
+    "route_path": "/profile_settings_route",
+    "screen_widget": "ProfileSettings",
+    "screen_file": "lib/src/presentation/screens/settings/view/profile_settings/profile_settings.dart",
+    "bindings": [
+      "ProfileSettingsBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ProfileSettingsController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/profile_settings_controller.dart"
+    ],
+    "domain": "KYC/Profile",
+    "priority": "P1",
+    "notes": "User profile settings & account info"
+  },
+  {
+    "id": "ROUTE-033",
+    "route_constant": "BaseRoute.changePassword",
+    "route_path": "/change_password_route",
+    "screen_widget": "ChangePassword",
+    "screen_file": "lib/src/presentation/screens/settings/view/change_password/change_password.dart",
+    "bindings": [
+      "ChangePasswordBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ChangePasswordController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/change_password_controller.dart"
+    ],
+    "domain": "Security",
+    "priority": "P1",
+    "notes": "Security controls & authentication: changePassword"
+  },
+  {
+    "id": "ROUTE-034",
+    "route_constant": "BaseRoute.twoFactorAuthentication",
+    "route_path": "/two_factor_authentication_route",
+    "screen_widget": "TwoFactorAuthentication",
+    "screen_file": "lib/src/presentation/screens/settings/view/two_factor_authentication/two_factor_authentication.dart",
+    "bindings": [
+      "TwoFactorAuthenticationBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TwoFactorAuthenticationController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart"
+    ],
+    "domain": "Security",
+    "priority": "P1",
+    "notes": "Security controls & authentication: twoFactorAuthentication"
+  },
+  {
+    "id": "ROUTE-035",
+    "route_constant": "BaseRoute.notifications",
+    "route_path": "/notifications_route",
+    "screen_widget": "Notifications",
+    "screen_file": "lib/src/presentation/screens/settings/view/notifications/notifications.dart",
+    "bindings": [
+      "NotificationBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "NotificationController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/notification_controller.dart"
+    ],
+    "domain": "Notifications",
+    "priority": "P1",
+    "notes": "In-app notifications inbox"
+  },
+  {
+    "id": "ROUTE-036",
+    "route_constant": "BaseRoute.supportTickets",
+    "route_path": "/support_tickets_route",
+    "screen_widget": "SupportTickets",
+    "screen_file": "lib/src/presentation/screens/settings/view/support_tickets/support_tickets.dart",
+    "bindings": [
+      "SupportTicketBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "SupportTicketController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/support_ticket_controller.dart"
+    ],
+    "domain": "Support",
+    "priority": "P1",
+    "notes": "Customer support tickets: supportTickets"
+  },
+  {
+    "id": "ROUTE-037",
+    "route_constant": "BaseRoute.kycHistory",
+    "route_path": "/kyc_history_route",
+    "screen_widget": "KycHistory",
+    "screen_file": "lib/src/presentation/screens/settings/view/id_verification/kyc_history/kyc_history.dart",
+    "bindings": [
+      "KycHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "KycHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/kyc_history_controller.dart"
+    ],
+    "domain": "KYC/Profile",
+    "priority": "P1",
+    "notes": "KYC verification & tier upgrade: kycHistory"
+  },
+  {
+    "id": "ROUTE-038",
+    "route_constant": "BaseRoute.addNewTicket",
+    "route_path": "/add_new_ticket_route",
+    "screen_widget": "AddNewTicket",
+    "screen_file": "lib/src/presentation/screens/settings/view/support_tickets/add_new_ticket/add_new_ticket.dart",
+    "bindings": [
+      "AddNewTicketBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "AddNewTicketController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/add_new_ticket_controller.dart"
+    ],
+    "domain": "Support",
+    "priority": "P1",
+    "notes": "Customer support tickets: addNewTicket"
+  },
+  {
+    "id": "ROUTE-039",
+    "route_constant": "BaseRoute.replayTicket",
+    "route_path": "/replay_ticket_route",
+    "screen_widget": "ReplayTicket",
+    "screen_file": "lib/src/presentation/screens/settings/view/support_tickets/replay_ticket/replay_ticket.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Support",
+    "priority": "P1",
+    "notes": "Customer support tickets: replayTicket"
+  },
+  {
+    "id": "ROUTE-040",
+    "route_constant": "BaseRoute.giftHistory",
+    "route_path": "/gift_history_route",
+    "screen_widget": "GiftHistory",
+    "screen_file": "lib/src/presentation/screens/gift_code/view/sub_sections/gift_history.dart",
+    "bindings": [
+      "GiftHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "GiftHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/gift_code/controller/gift_history_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P2",
+    "notes": "Gift cards & gift codes: giftHistory"
+  },
+  {
+    "id": "ROUTE-041",
+    "route_constant": "BaseRoute.idVerification",
+    "route_path": "/id_verification_route",
+    "screen_widget": "IdVerification",
+    "screen_file": "lib/src/presentation/screens/settings/view/id_verification/id_verification.dart",
+    "bindings": [
+      "IDVerificationBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "IdVerificationController",
+      "KycLevelController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/settings/controller/id_verification_controller.dart",
+      "lib/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart"
+    ],
+    "domain": "KYC/Profile",
+    "priority": "P1",
+    "notes": "KYC verification & tier upgrade: idVerification"
+  },
+  {
+    "id": "ROUTE-042",
+    "route_constant": "BaseRoute.signUpStatus",
+    "route_path": "/sign_up_status_route",
+    "screen_widget": "SignUpStatusScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_up/view/sign_up_status/sign_up_status_screen.dart",
+    "bindings": [
+      "SignUpStatusBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "SignUpStatusController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_up/controller/sign_up_status_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P1",
+    "notes": "User registration flow: signUpStatus"
+  },
+  {
+    "id": "ROUTE-043",
+    "route_constant": "BaseRoute.setUpPassword",
+    "route_path": "/set_up_password_route",
+    "screen_widget": "SetUpPasswordScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_up/view/set_up_password/set_up_password_screen.dart",
+    "bindings": [
+      "SetUpPasswordBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "SetUpPasswordController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_up/controller/set_up_password_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P0",
+    "notes": "User registration flow: setUpPassword"
+  },
+  {
+    "id": "ROUTE-044",
+    "route_constant": "BaseRoute.personalInfo",
+    "route_path": "/personal_info_route",
+    "screen_widget": "PersonalInfoScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_up/view/personal_info/personal_info_screen.dart",
+    "bindings": [
+      "PersonalInfoBinding",
+      "RegisterFieldsBinding",
+      "CountryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "PersonalInfoController",
+      "RegisterFieldsController",
+      "CountryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_up/controller/personal_info_controller.dart",
+      "lib/src/common/controller/register_fields_controller.dart",
+      "lib/src/common/controller/country_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P1",
+    "notes": "User registration flow: personalInfo"
+  },
+  {
+    "id": "ROUTE-045",
+    "route_constant": "BaseRoute.authIdVerification",
+    "route_path": "/auth_id_verification_route",
+    "screen_widget": "AuthIdVerificationScreen",
+    "screen_file": "lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/auth_id_verification_screen.dart",
+    "bindings": [
+      "AuthIdVerificationBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "AuthIdVerificationController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart"
+    ],
+    "domain": "Auth",
+    "priority": "P1",
+    "notes": "User registration flow: authIdVerification"
+  },
+  {
+    "id": "ROUTE-046",
+    "route_constant": "BaseRoute.walletsDetails",
+    "route_path": "/wallet_details_route",
+    "screen_widget": "WalletDetails",
+    "screen_file": "lib/src/presentation/screens/home/view/sub_sections/wallet_details/wallet_details.dart",
+    "bindings": [
+      "WalletDetailsBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "WalletDetailsController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/home/controller/wallet_details_controller.dart"
+    ],
+    "domain": "Wallets",
+    "priority": "P0",
+    "notes": "Wallet management: walletsDetails"
+  },
+  {
+    "id": "ROUTE-047",
+    "route_constant": "BaseRoute.addMoneyHistory",
+    "route_path": "/add_money_history_route",
+    "screen_widget": "AddMoneyHistory",
+    "screen_file": "lib/src/presentation/screens/add_money/view/add_money_history/add_money_history.dart",
+    "bindings": [
+      "AddMoneyHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "AddMoneyHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/add_money/controller/add_money_history_controller.dart"
+    ],
+    "domain": "Payments",
+    "priority": "P1",
+    "notes": "Deposit / Add money flow: addMoneyHistory"
+  },
+  {
+    "id": "ROUTE-048",
+    "route_constant": "BaseRoute.makePaymentHistory",
+    "route_path": "/make_payment_history_route",
+    "screen_widget": "MakePaymentHistory",
+    "screen_file": "lib/src/presentation/screens/make_payment/view/make_payment_history/make_payment_history.dart",
+    "bindings": [
+      "MakePaymentHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "MakePaymentHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/make_payment/controller/make_payment_history_controller.dart"
+    ],
+    "domain": "Payments",
+    "priority": "P1",
+    "notes": "Merchant payment flow: makePaymentHistory"
+  },
+  {
+    "id": "ROUTE-049",
+    "route_constant": "BaseRoute.transferHistory",
+    "route_path": "/transfer_history_route",
+    "screen_widget": "TransferHistory",
+    "screen_file": "lib/src/presentation/screens/transfer/view/transfer_history/transfer_history.dart",
+    "bindings": [
+      "TransferHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TransferHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/transfer/controller/transfer_history_controller.dart"
+    ],
+    "domain": "Transfers",
+    "priority": "P1",
+    "notes": "Money transfer & history: transferHistory"
+  },
+  {
+    "id": "ROUTE-050",
+    "route_constant": "BaseRoute.transferReceivedHistory",
+    "route_path": "/transfer_received_history_route",
+    "screen_widget": "TransferReceivedHistory",
+    "screen_file": "lib/src/presentation/screens/transfer/view/transfer_received_history/transfer_received_history.dart",
+    "bindings": [
+      "TransferReceivedHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TransferReceivedHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/transfer/controller/transfer_received_history_controller.dart"
+    ],
+    "domain": "Transfers",
+    "priority": "P1",
+    "notes": "Money transfer & history: transferReceivedHistory"
+  },
+  {
+    "id": "ROUTE-051",
+    "route_constant": "BaseRoute.cashOutHistory",
+    "route_path": "/cash_out_history_route",
+    "screen_widget": "CashOutHistory",
+    "screen_file": "lib/src/presentation/screens/cash_out/view/cash_out_history/cash_out_history.dart",
+    "bindings": [
+      "CashOutHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "CashOutHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/cash_out/controller/cash_out_history_controller.dart"
+    ],
+    "domain": "Withdraw/Cash out",
+    "priority": "P1",
+    "notes": "Cash-out flow: cashOutHistory"
+  },
+  {
+    "id": "ROUTE-052",
+    "route_constant": "BaseRoute.withdrawHistory",
+    "route_path": "/withdraw_history_route",
+    "screen_widget": "WithdrawHistory",
+    "screen_file": "lib/src/presentation/screens/withdraw/view/withdraw_history/withdraw_history.dart",
+    "bindings": [
+      "WithdrawHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "WithdrawHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/withdraw/controller/withdraw_history_controller.dart"
+    ],
+    "domain": "Withdraw/Cash out",
+    "priority": "P1",
+    "notes": "Withdrawal flow: withdrawHistory"
+  },
+  {
+    "id": "ROUTE-053",
+    "route_constant": "BaseRoute.exchangeHistory",
+    "route_path": "/exchange_history_route",
+    "screen_widget": "ExchangeHistory",
+    "screen_file": "lib/src/presentation/screens/exchange/view/exchange_history/exchange_history.dart",
+    "bindings": [
+      "ExchangeHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ExchangeHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/exchange/controller/exchange_history_controller.dart"
+    ],
+    "domain": "Exchange",
+    "priority": "P1",
+    "notes": "Currency exchange flow: exchangeHistory"
+  },
+  {
+    "id": "ROUTE-054",
+    "route_constant": "BaseRoute.requestMoneyHistory",
+    "route_path": "/request_money_history_route",
+    "screen_widget": "RequestMoneyHistory",
+    "screen_file": "lib/src/presentation/screens/request_money/view/request_money_history/request_money_history.dart",
+    "bindings": [
+      "RequestMoneyHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "RequestMoneyHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/request_money/controller/request_money_history_controller.dart"
+    ],
+    "domain": "Transfers",
+    "priority": "P1",
+    "notes": "Request money & history: requestMoneyHistory"
+  },
+  {
+    "id": "ROUTE-055",
+    "route_constant": "BaseRoute.giftRedeemHistory",
+    "route_path": "/gift_redeem_history_route",
+    "screen_widget": "GiftRedeemHistory",
+    "screen_file": "lib/src/presentation/screens/gift_code/view/gift_redeem_history/gift_redeem_history.dart",
+    "bindings": [
+      "GiftRedeemHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "GiftRedeemHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/gift_code/controller/gift_redeem_history_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P2",
+    "notes": "Gift cards & gift codes: giftRedeemHistory"
+  },
+  {
+    "id": "ROUTE-056",
+    "route_constant": "BaseRoute.createBeneficiary",
+    "route_path": "/create_beneficiary_route",
+    "screen_widget": "CreateBeneficiaryScreen",
+    "screen_file": "lib/src/presentation/screens/beneficiary/view/create_beneficiary/create_beneficiary_screen.dart",
+    "bindings": [
+      "CreateBeneficiaryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "CreateBeneficiaryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart"
+    ],
+    "domain": "Transfers",
+    "priority": "P1",
+    "notes": "Beneficiary management: createBeneficiary"
+  },
+  {
+    "id": "ROUTE-057",
+    "route_constant": "BaseRoute.updateBeneficiary",
+    "route_path": "/update_beneficiary_route",
+    "screen_widget": "UpdateBeneficiaryScreen",
+    "screen_file": "lib/src/presentation/screens/beneficiary/view/update_beneficiary/update_beneficiary_screen.dart",
+    "bindings": [
+      "UpdateBeneficiaryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "UpdateBeneficiaryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/beneficiary/controller/update_beneficiary_controller.dart"
+    ],
+    "domain": "Transfers",
+    "priority": "P1",
+    "notes": "Beneficiary management: updateBeneficiary"
+  },
+  {
+    "id": "ROUTE-058",
+    "route_constant": "BaseRoute.noInternetConnection",
+    "route_path": "/no_internet_connection",
+    "screen_widget": "NoInternetConnection",
+    "screen_file": "lib/src/presentation/widgets/no_internet_connection.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Global State",
+    "priority": "P1",
+    "notes": "Global app state & exception handler: noInternetConnection"
+  },
+  {
+    "id": "ROUTE-059",
+    "route_constant": "BaseRoute.billPayment",
+    "route_path": "/bill_payment_route",
+    "screen_widget": "BillPaymentScreen",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Bills/Services",
+    "priority": "P1",
+    "notes": "Utility & bill payment: billPayment"
+  },
+  {
+    "id": "ROUTE-060",
+    "route_constant": "BaseRoute.airtime",
+    "route_path": "/airtime_route",
+    "screen_widget": "Airtime",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/airtime/airtime.dart",
+    "bindings": [
+      "AirtimeBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "AirtimeController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/bill_payment/controller/airtime_controller.dart"
+    ],
+    "domain": "Bills/Services",
+    "priority": "P0",
+    "notes": "Utility & bill payment: airtime"
+  },
+  {
+    "id": "ROUTE-061",
+    "route_constant": "BaseRoute.electricity",
+    "route_path": "/electricity_route",
+    "screen_widget": "Electricity",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/electricity/electricity.dart",
+    "bindings": [
+      "ElectricityBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "ElectricityController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/bill_payment/controller/electricity_controller.dart"
+    ],
+    "domain": "Bills/Services",
+    "priority": "P0",
+    "notes": "Utility & bill payment: electricity"
+  },
+  {
+    "id": "ROUTE-062",
+    "route_constant": "BaseRoute.internet",
+    "route_path": "/internet_route",
+    "screen_widget": "Internet",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/internet/internet.dart",
+    "bindings": [
+      "InternetBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "InternetController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/bill_payment/controller/internet_controller.dart"
+    ],
+    "domain": "Bills/Services",
+    "priority": "P0",
+    "notes": "Utility & bill payment: internet"
+  },
+  {
+    "id": "ROUTE-063",
+    "route_constant": "BaseRoute.dataBundle",
+    "route_path": "/data_bundle_route",
+    "screen_widget": "DataBundle",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/data_bundle/data_bundle.dart",
+    "bindings": [
+      "DataBundleBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "DataBundleController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/bill_payment/controller/data_bundle_controller.dart"
+    ],
+    "domain": "Bills/Services",
+    "priority": "P1",
+    "notes": "Utility & bill payment: dataBundle"
+  },
+  {
+    "id": "ROUTE-064",
+    "route_constant": "BaseRoute.cable",
+    "route_path": "/cable_route",
+    "screen_widget": "Cable",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/cable/cable.dart",
+    "bindings": [
+      "CableBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "CableController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/bill_payment/controller/cable_controller.dart"
+    ],
+    "domain": "Bills/Services",
+    "priority": "P1",
+    "notes": "Utility & bill payment: cable"
+  },
+  {
+    "id": "ROUTE-065",
+    "route_constant": "BaseRoute.toll",
+    "route_path": "/toll_route",
+    "screen_widget": "Toll",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/toll/toll.dart",
+    "bindings": [
+      "TollBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TollController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/bill_payment/controller/toll_controller.dart"
+    ],
+    "domain": "Bills/Services",
+    "priority": "P1",
+    "notes": "Utility & bill payment: toll"
+  },
+  {
+    "id": "ROUTE-066",
+    "route_constant": "BaseRoute.virtualCard",
+    "route_path": "/virtual_card_route",
+    "screen_widget": "VirtualCardScreen",
+    "screen_file": "lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart",
+    "bindings": [
+      "VirtualCardBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "VirtualCardController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/virtual_card/controller/virtual_card_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P0",
+    "notes": "Virtual card operations: virtualCard"
+  },
+  {
+    "id": "ROUTE-067",
+    "route_constant": "BaseRoute.createVirtualCard",
+    "route_path": "/create_virtual_card_route",
+    "screen_widget": "CreateVirtualCard",
+    "screen_file": "lib/src/presentation/screens/virtual_card/view/create_virtual_card/create_virtual_card.dart",
+    "bindings": [
+      "CreateNewCardBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "CreateVirtualCardController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P0",
+    "notes": "Virtual card operations: createVirtualCard"
+  },
+  {
+    "id": "ROUTE-068",
+    "route_constant": "BaseRoute.virtualCardDetails",
+    "route_path": "/virtual_card_details_route",
+    "screen_widget": "VirtualCardDetails",
+    "screen_file": "lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart",
+    "bindings": [
+      "VirtualCardDetailsBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "VirtualCardDetailsController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P0",
+    "notes": "Virtual card operations: virtualCardDetails"
+  },
+  {
+    "id": "ROUTE-069",
+    "route_constant": "BaseRoute.billPaymentHistory",
+    "route_path": "/bill_payment_history_route",
+    "screen_widget": "BillPaymentHistory",
+    "screen_file": "lib/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart",
+    "bindings": [
+      "BillPaymentHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "BillPaymentHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/bill_payment/controller/bill_payment_history_controller.dart"
+    ],
+    "domain": "Bills/Services",
+    "priority": "P1",
+    "notes": "Utility & bill payment: billPaymentHistory"
+  },
+  {
+    "id": "ROUTE-070",
+    "route_constant": "BaseRoute.getCardInfo",
+    "route_path": "/get_card_info_route",
+    "screen_widget": "GetCardInfo",
+    "screen_file": "lib/src/presentation/screens/virtual_card/view/get_card_info/get_card_info.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Cards",
+    "priority": "P1",
+    "notes": "Virtual card operations: getCardInfo"
+  },
+  {
+    "id": "ROUTE-071",
+    "route_constant": "BaseRoute.virtualCardTransaction",
+    "route_path": "/virtual_card_transaction_route",
+    "screen_widget": "VirtualCardTransaction",
+    "screen_file": "lib/src/presentation/screens/virtual_card/view/virtual_card_transaction/virtual_card_transaction.dart",
+    "bindings": [
+      "VirtualCardTransactionBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "VirtualCardTransactionController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/virtual_card/controller/virtual_card_transaction_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P0",
+    "notes": "Virtual card operations: virtualCardTransaction"
+  },
+  {
+    "id": "ROUTE-072",
+    "route_constant": "BaseRoute.paymentLinks",
+    "route_path": "/payment_links_route",
+    "screen_widget": "PaymentLinksScreen",
+    "screen_file": "lib/src/presentation/screens/payment_links/view/payment_links_screen.dart",
+    "bindings": [
+      "PaymentLinksBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "PaymentLinksController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/payment_links/controller/payment_links_controller.dart"
+    ],
+    "domain": "Payments",
+    "priority": "P1",
+    "notes": "Payment links creation and management"
+  },
+  {
+    "id": "ROUTE-073",
+    "route_constant": "BaseRoute.giftCard",
+    "route_path": "/gift_card_route",
+    "screen_widget": "GiftCardScreen",
+    "screen_file": "lib/src/presentation/screens/gift_card/view/gift_card_screen.dart",
+    "bindings": [
+      "GiftCardBinding",
+      "GiftCardHistoryBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "GiftCardController",
+      "GiftCardHistoryController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/gift_card/controller/gift_card_controller.dart",
+      "lib/src/presentation/screens/gift_card/controller/gift_card_history_controller.dart"
+    ],
+    "domain": "Cards",
+    "priority": "P1",
+    "notes": "Gift cards & gift codes: giftCard"
+  },
+  {
+    "id": "ROUTE-074",
+    "route_constant": "BaseRoute.maintenanceMode",
+    "route_path": "/maintenance_mode_route",
+    "screen_widget": "MaintenanceMode",
+    "screen_file": "lib/src/presentation/widgets/maintenance_mode.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Global State",
+    "priority": "P1",
+    "notes": "Global app state & exception handler: maintenanceMode"
+  },
+  {
+    "id": "ROUTE-075",
+    "route_constant": "BaseRoute.p2pTrading",
+    "route_path": "/p2p_trading_route",
+    "screen_widget": "P2pViewScreen",
+    "screen_file": "lib/src/presentation/screens/p2p/view/p2p_view.dart",
+    "bindings": [
+      "P2pBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "P2pController",
+      "PaymentAccountController",
+      "MyAdsController",
+      "MyOrderController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/p2p/controller/p2p_controller.dart",
+      "lib/src/presentation/screens/p2p/sub_category/payment_account/controller/payment_account_controller.dart",
+      "lib/src/presentation/screens/p2p/sub_category/my_ads/controller/my_ads_controller.dart",
+      "lib/src/presentation/screens/p2p/sub_category/my_order/controller/my_order_controller.dart"
+    ],
+    "domain": "P2P",
+    "priority": "P0",
+    "notes": "Peer-to-peer crypto and fiat trading"
+  },
+  {
+    "id": "ROUTE-076",
+    "route_constant": "BaseRoute.travel",
+    "route_path": "/travel_route",
+    "screen_widget": "TravelHomeScreen",
+    "screen_file": "lib/src/presentation/screens/travel/home/travel_home_screen.dart",
+    "bindings": [
+      "TravelBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TravelController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/core/controller/travel_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: travel"
+  },
+  {
+    "id": "ROUTE-077",
+    "route_constant": "BaseRoute.travelHistory",
+    "route_path": "/travel_history_route",
+    "screen_widget": "TravelHistoryScreen",
+    "screen_file": "lib/src/presentation/screens/travel/account/travel_history_screen.dart",
+    "bindings": [
+      "TravelBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TravelController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/core/controller/travel_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: travelHistory"
+  },
+  {
+    "id": "ROUTE-078",
+    "route_constant": "BaseRoute.travelAccount",
+    "route_path": "/travel_account_route",
+    "screen_widget": "TravelAccountScreen",
+    "screen_file": "lib/src/presentation/screens/travel/account/travel_account_screen.dart",
+    "bindings": [
+      "TravelBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "TravelController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/core/controller/travel_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: travelAccount"
+  },
+  {
+    "id": "ROUTE-079",
+    "route_constant": "BaseRoute.dynamicPassword",
+    "route_path": "/dynamic_password_route",
+    "screen_widget": "DynamicPasswordScreen",
+    "screen_file": "lib/src/presentation/screens/dynamic_password/view/dynamic_password_screen.dart",
+    "bindings": [
+      "DynamicPasswordBinding"
+    ],
+    "binding_files": [
+      "lib/src/app/bindings/app_bindings.dart"
+    ],
+    "controllers": [
+      "HomeController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/home/controller/home_controller.dart"
+    ],
+    "domain": "Security",
+    "priority": "P0",
+    "notes": "Security controls & authentication: dynamicPassword"
+  },
+  {
+    "id": "ROUTE-080",
+    "route_constant": "BaseRoute.remittance",
+    "route_path": "/remittance_route",
+    "screen_widget": "RemittanceScreen",
+    "screen_file": "lib/src/presentation/screens/remittance/view/remittance_screen.dart",
+    "bindings": [
+      "RemittanceBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/remittance/binding/remittance_binding.dart"
+    ],
+    "controllers": [
+      "RemittanceController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/remittance/controller/remittance_controller.dart"
+    ],
+    "domain": "Remittance",
+    "priority": "P0",
+    "notes": "Cross-border remittance flow: remittance"
+  },
+  {
+    "id": "ROUTE-081",
+    "route_constant": "BaseRoute.remittanceHistory",
+    "route_path": "/remittance_history_route",
+    "screen_widget": "RemittanceHistoryScreen",
+    "screen_file": "lib/src/presentation/screens/remittance/view/remittance_history/remittance_history.dart",
+    "bindings": [
+      "RemittanceBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/remittance/binding/remittance_binding.dart"
+    ],
+    "controllers": [
+      "RemittanceController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/remittance/controller/remittance_controller.dart"
+    ],
+    "domain": "Remittance",
+    "priority": "P1",
+    "notes": "Cross-border remittance flow: remittanceHistory"
+  },
+  {
+    "id": "ROUTE-082",
+    "route_constant": "BaseRoute.remittanceDetails",
+    "route_path": "/remittance_details_route",
+    "screen_widget": "RemittanceDetailsScreen",
+    "screen_file": "lib/src/presentation/screens/remittance/view/remittance_details/remittance_details.dart",
+    "bindings": [
+      "RemittanceBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/remittance/binding/remittance_binding.dart"
+    ],
+    "controllers": [
+      "RemittanceController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/remittance/controller/remittance_controller.dart"
+    ],
+    "domain": "Remittance",
+    "priority": "P1",
+    "notes": "Cross-border remittance flow: remittanceDetails"
+  },
+  {
+    "id": "ROUTE-083",
+    "route_constant": "BaseRoute.kycSubmitWizard",
+    "route_path": "/kyc_submit_wizard_route",
+    "screen_widget": "KycSubmitWizard",
+    "screen_file": "lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart",
+    "bindings": [
+      "KycLevelBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/kyc_level/kyc_level_binding.dart"
+    ],
+    "controllers": [
+      "KycLevelController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart"
+    ],
+    "domain": "KYC/Profile",
+    "priority": "P0",
+    "notes": "KYC verification & tier upgrade: kycSubmitWizard"
+  },
+  {
+    "id": "ROUTE-084",
+    "route_constant": "BaseRoute.upgradeRequired",
+    "route_path": "/upgrade_required_route",
+    "screen_widget": "UpgradeRequiredScreen",
+    "screen_file": "lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "KYC/Profile",
+    "priority": "P1",
+    "notes": "KYC verification & tier upgrade: upgradeRequired"
+  },
+  {
+    "id": "ROUTE-085",
+    "route_constant": "BaseRoute.appUpdate",
+    "route_path": "/app_update_route",
+    "screen_widget": "AppUpdateScreen",
+    "screen_file": "lib/src/presentation/screens/app_update/view/app_update_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [
+      "AppUpdateController"
+    ],
+    "controller_files": [
+      "lib/src/common/services/app_update_controller.dart"
+    ],
+    "domain": "Global State",
+    "priority": "P1",
+    "notes": "Global app state & exception handler: appUpdate"
+  },
+  {
+    "id": "ROUTE-086",
+    "route_constant": "BaseRoute.localeTransition",
+    "route_path": "/locale_transition_route",
+    "screen_widget": "LocaleTransitionScreen",
+    "screen_file": "lib/src/app/views/locale_transition_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Settings",
+    "priority": "P2",
+    "notes": "Locale switch waypoint screen"
+  },
+  {
+    "id": "ROUTE-087",
+    "route_constant": "BaseRoute.tourHome",
+    "route_path": "/tour_home_route",
+    "screen_widget": "TourListScreen",
+    "screen_file": "lib/src/tour/screens/tour_list_screen.dart",
+    "bindings": [
+      "TourBinding"
+    ],
+    "binding_files": [
+      "lib/src/tour/bindings/tour_binding.dart"
+    ],
+    "controllers": [
+      "TourService",
+      "TourController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:TourService",
+      "lib/src/tour/controllers/tour_controller.dart"
+    ],
+    "domain": "Tours",
+    "priority": "P1",
+    "notes": "Tour booking module: tourHome"
+  },
+  {
+    "id": "ROUTE-088",
+    "route_constant": "BaseRoute.tourMatch",
+    "route_path": "/tour_match_route",
+    "screen_widget": "TourMatchScreen",
+    "screen_file": "lib/src/tour/screens/tour_match_screen.dart",
+    "bindings": [
+      "TourBinding"
+    ],
+    "binding_files": [
+      "lib/src/tour/bindings/tour_binding.dart"
+    ],
+    "controllers": [
+      "TourService",
+      "TourController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:TourService",
+      "lib/src/tour/controllers/tour_controller.dart"
+    ],
+    "domain": "Tours",
+    "priority": "P2",
+    "notes": "Tour booking module: tourMatch"
+  },
+  {
+    "id": "ROUTE-089",
+    "route_constant": "BaseRoute.tourMyBookings",
+    "route_path": "/tour_my_bookings_route",
+    "screen_widget": "TourMyBookingsScreen",
+    "screen_file": "lib/src/tour/screens/tour_my_bookings_screen.dart",
+    "bindings": [
+      "TourBinding"
+    ],
+    "binding_files": [
+      "lib/src/tour/bindings/tour_binding.dart"
+    ],
+    "controllers": [
+      "TourService",
+      "TourController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:TourService",
+      "lib/src/tour/controllers/tour_controller.dart"
+    ],
+    "domain": "Tours",
+    "priority": "P1",
+    "notes": "Tour booking module: tourMyBookings"
+  },
+  {
+    "id": "ROUTE-090",
+    "route_constant": "BaseRoute.tourDetail",
+    "route_path": "/tour_detail_route",
+    "screen_widget": "TourDetailScreen",
+    "screen_file": "lib/src/tour/screens/tour_detail_screen.dart",
+    "bindings": [
+      "TourBinding"
+    ],
+    "binding_files": [
+      "lib/src/tour/bindings/tour_binding.dart"
+    ],
+    "controllers": [
+      "TourService",
+      "TourController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:TourService",
+      "lib/src/tour/controllers/tour_controller.dart"
+    ],
+    "domain": "Tours",
+    "priority": "P1",
+    "notes": "Tour booking module: tourDetail"
+  },
+  {
+    "id": "ROUTE-091",
+    "route_constant": "BaseRoute.tourBook",
+    "route_path": "/tour_book_route",
+    "screen_widget": "TourBookScreen",
+    "screen_file": "lib/src/tour/screens/tour_book_screen.dart",
+    "bindings": [
+      "TourBinding"
+    ],
+    "binding_files": [
+      "lib/src/tour/bindings/tour_binding.dart"
+    ],
+    "controllers": [
+      "TourService",
+      "TourController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:TourService",
+      "lib/src/tour/controllers/tour_controller.dart"
+    ],
+    "domain": "Tours",
+    "priority": "P0",
+    "notes": "Tour booking module: tourBook"
+  },
+  {
+    "id": "ROUTE-092",
+    "route_constant": "BaseRoute.tourPayment",
+    "route_path": "/tour_payment_route",
+    "screen_widget": "TourPaymentScreen",
+    "screen_file": "lib/src/tour/screens/tour_payment_screen.dart",
+    "bindings": [
+      "TourBinding"
+    ],
+    "binding_files": [
+      "lib/src/tour/bindings/tour_binding.dart"
+    ],
+    "controllers": [
+      "TourService",
+      "TourController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:TourService",
+      "lib/src/tour/controllers/tour_controller.dart"
+    ],
+    "domain": "Tours",
+    "priority": "P0",
+    "notes": "Tour booking module: tourPayment"
+  },
+  {
+    "id": "ROUTE-093",
+    "route_constant": "BaseRoute.tourVoucher",
+    "route_path": "/tour_voucher_route",
+    "screen_widget": "TourVoucherScreen",
+    "screen_file": "lib/src/tour/screens/tour_voucher_screen.dart",
+    "bindings": [
+      "TourBinding"
+    ],
+    "binding_files": [
+      "lib/src/tour/bindings/tour_binding.dart"
+    ],
+    "controllers": [
+      "TourService",
+      "TourController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:TourService",
+      "lib/src/tour/controllers/tour_controller.dart"
+    ],
+    "domain": "Tours",
+    "priority": "P2",
+    "notes": "Tour booking module: tourVoucher"
+  },
+  {
+    "id": "ROUTE-094",
+    "route_constant": "BaseRoute.escrowHome",
+    "route_path": "/escrow_home_route",
+    "screen_widget": "EscrowListScreen",
+    "screen_file": "lib/src/escrow/screens/escrow_list_screen.dart",
+    "bindings": [
+      "EscrowBinding"
+    ],
+    "binding_files": [
+      "lib/src/escrow/bindings/escrow_binding.dart"
+    ],
+    "controllers": [
+      "EscrowController"
+    ],
+    "controller_files": [
+      "lib/src/escrow/controllers/escrow_controller.dart"
+    ],
+    "domain": "Escrow",
+    "priority": "P1",
+    "notes": "Escrow safe transaction module: escrowHome"
+  },
+  {
+    "id": "ROUTE-095",
+    "route_constant": "BaseRoute.escrowDetail",
+    "route_path": "/escrow_detail_route",
+    "screen_widget": "EscrowDetailScreen",
+    "screen_file": "lib/src/escrow/screens/escrow_detail_screen.dart",
+    "bindings": [
+      "EscrowBinding"
+    ],
+    "binding_files": [
+      "lib/src/escrow/bindings/escrow_binding.dart"
+    ],
+    "controllers": [
+      "EscrowController"
+    ],
+    "controller_files": [
+      "lib/src/escrow/controllers/escrow_controller.dart"
+    ],
+    "domain": "Escrow",
+    "priority": "P1",
+    "notes": "Escrow safe transaction module: escrowDetail"
+  },
+  {
+    "id": "ROUTE-096",
+    "route_constant": "BaseRoute.escrowCreate",
+    "route_path": "/escrow_create_route",
+    "screen_widget": "EscrowCreateScreen",
+    "screen_file": "lib/src/escrow/screens/escrow_create_screen.dart",
+    "bindings": [
+      "EscrowBinding"
+    ],
+    "binding_files": [
+      "lib/src/escrow/bindings/escrow_binding.dart"
+    ],
+    "controllers": [
+      "EscrowController"
+    ],
+    "controller_files": [
+      "lib/src/escrow/controllers/escrow_controller.dart"
+    ],
+    "domain": "Escrow",
+    "priority": "P0",
+    "notes": "Escrow safe transaction module: escrowCreate"
+  },
+  {
+    "id": "ROUTE-097",
+    "route_constant": "BaseRoute.escrowPayment",
+    "route_path": "/escrow_payment_route",
+    "screen_widget": "EscrowPaymentScreen",
+    "screen_file": "lib/src/escrow/screens/escrow_payment_screen.dart",
+    "bindings": [
+      "EscrowBinding"
+    ],
+    "binding_files": [
+      "lib/src/escrow/bindings/escrow_binding.dart"
+    ],
+    "controllers": [
+      "EscrowController"
+    ],
+    "controller_files": [
+      "lib/src/escrow/controllers/escrow_controller.dart"
+    ],
+    "domain": "Escrow",
+    "priority": "P0",
+    "notes": "Escrow safe transaction module: escrowPayment"
+  },
+  {
+    "id": "ROUTE-098",
+    "route_constant": "BaseRoute.escrowShipment",
+    "route_path": "/escrow_shipment_route",
+    "screen_widget": "EscrowShipmentScreen",
+    "screen_file": "lib/src/escrow/screens/escrow_shipment_screen.dart",
+    "bindings": [
+      "EscrowBinding"
+    ],
+    "binding_files": [
+      "lib/src/escrow/bindings/escrow_binding.dart"
+    ],
+    "controllers": [
+      "EscrowController"
+    ],
+    "controller_files": [
+      "lib/src/escrow/controllers/escrow_controller.dart"
+    ],
+    "domain": "Escrow",
+    "priority": "P1",
+    "notes": "Escrow safe transaction module: escrowShipment"
+  },
+  {
+    "id": "ROUTE-099",
+    "route_constant": "BaseRoute.escrowDispute",
+    "route_path": "/escrow_dispute_route",
+    "screen_widget": "EscrowDisputeScreen",
+    "screen_file": "lib/src/escrow/screens/escrow_dispute_screen.dart",
+    "bindings": [
+      "EscrowBinding"
+    ],
+    "binding_files": [
+      "lib/src/escrow/bindings/escrow_binding.dart"
+    ],
+    "controllers": [
+      "EscrowController"
+    ],
+    "controller_files": [
+      "lib/src/escrow/controllers/escrow_controller.dart"
+    ],
+    "domain": "Escrow",
+    "priority": "P1",
+    "notes": "Escrow safe transaction module: escrowDispute"
+  },
+  {
+    "id": "ROUTE-100",
+    "route_constant": "BaseRoute.visaHome",
+    "route_path": "/visa_home_route",
+    "screen_widget": "VisaCatalogScreen",
+    "screen_file": "lib/src/visa/screens/visa_catalog_screen.dart",
+    "bindings": [
+      "VisaBinding"
+    ],
+    "binding_files": [
+      "lib/src/visa/bindings/visa_binding.dart"
+    ],
+    "controllers": [
+      "VisaService",
+      "VisaController"
+    ],
+    "controller_files": [
+      "lib/src/visa/services/visa_service.dart",
+      "lib/src/visa/controllers/visa_controller.dart"
+    ],
+    "domain": "Visa",
+    "priority": "P1",
+    "notes": "Visa assistance service: visaHome"
+  },
+  {
+    "id": "ROUTE-101",
+    "route_constant": "BaseRoute.visaDetail",
+    "route_path": "/visa_detail_route",
+    "screen_widget": "VisaDetailScreen",
+    "screen_file": "lib/src/visa/screens/visa_detail_screen.dart",
+    "bindings": [
+      "VisaBinding"
+    ],
+    "binding_files": [
+      "lib/src/visa/bindings/visa_binding.dart"
+    ],
+    "controllers": [
+      "VisaService",
+      "VisaController"
+    ],
+    "controller_files": [
+      "lib/src/visa/services/visa_service.dart",
+      "lib/src/visa/controllers/visa_controller.dart"
+    ],
+    "domain": "Visa",
+    "priority": "P1",
+    "notes": "Visa assistance service: visaDetail"
+  },
+  {
+    "id": "ROUTE-102",
+    "route_constant": "BaseRoute.visaList",
+    "route_path": "/visa_list_route",
+    "screen_widget": "VisaListScreen",
+    "screen_file": "lib/src/visa/screens/visa_list_screen.dart",
+    "bindings": [
+      "VisaBinding"
+    ],
+    "binding_files": [
+      "lib/src/visa/bindings/visa_binding.dart"
+    ],
+    "controllers": [
+      "VisaService",
+      "VisaController"
+    ],
+    "controller_files": [
+      "lib/src/visa/services/visa_service.dart",
+      "lib/src/visa/controllers/visa_controller.dart"
+    ],
+    "domain": "Visa",
+    "priority": "P1",
+    "notes": "Visa assistance service: visaList"
+  },
+  {
+    "id": "ROUTE-103",
+    "route_constant": "BaseRoute.visaIntro",
+    "route_path": "/visa_intro_route",
+    "screen_widget": "VisaIntroScreen",
+    "screen_file": "lib/src/visa/screens/visa_intro_screen.dart",
+    "bindings": [
+      "VisaBinding"
+    ],
+    "binding_files": [
+      "lib/src/visa/bindings/visa_binding.dart"
+    ],
+    "controllers": [
+      "VisaService",
+      "VisaController"
+    ],
+    "controller_files": [
+      "lib/src/visa/services/visa_service.dart",
+      "lib/src/visa/controllers/visa_controller.dart"
+    ],
+    "domain": "Visa",
+    "priority": "P2",
+    "notes": "Visa assistance service: visaIntro"
+  },
+  {
+    "id": "ROUTE-104",
+    "route_constant": "BaseRoute.stockHome",
+    "route_path": "/stock_home_route",
+    "screen_widget": "StockHomeScreen",
+    "screen_file": "lib/src/stock/screens/stock_home_screen.dart",
+    "bindings": [
+      "StockBinding"
+    ],
+    "binding_files": [
+      "lib/src/stock/bindings/stock_binding.dart"
+    ],
+    "controllers": [
+      "StockService",
+      "StockController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:StockService",
+      "lib/src/stock/controllers/stock_controller.dart"
+    ],
+    "domain": "Stock",
+    "priority": "P1",
+    "notes": "Stock trading module: stockHome"
+  },
+  {
+    "id": "ROUTE-105",
+    "route_constant": "BaseRoute.stockIntro",
+    "route_path": "/stock_intro_route",
+    "screen_widget": "StockIntroScreen",
+    "screen_file": "lib/src/stock/screens/stock_intro_screen.dart",
+    "bindings": [
+      "StockBinding"
+    ],
+    "binding_files": [
+      "lib/src/stock/bindings/stock_binding.dart"
+    ],
+    "controllers": [
+      "StockService",
+      "StockController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:StockService",
+      "lib/src/stock/controllers/stock_controller.dart"
+    ],
+    "domain": "Stock",
+    "priority": "P1",
+    "notes": "Stock trading module: stockIntro"
+  },
+  {
+    "id": "ROUTE-106",
+    "route_constant": "BaseRoute.stockOrder",
+    "route_path": "/stock_order_route",
+    "screen_widget": "StockOrderScreen",
+    "screen_file": "lib/src/stock/screens/stock_order_screen.dart",
+    "bindings": [
+      "StockBinding"
+    ],
+    "binding_files": [
+      "lib/src/stock/bindings/stock_binding.dart"
+    ],
+    "controllers": [
+      "StockService",
+      "StockController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:StockService",
+      "lib/src/stock/controllers/stock_controller.dart"
+    ],
+    "domain": "Stock",
+    "priority": "P0",
+    "notes": "Stock trading module: stockOrder"
+  },
+  {
+    "id": "ROUTE-107",
+    "route_constant": "BaseRoute.stockConfirm",
+    "route_path": "/stock_confirm_route",
+    "screen_widget": "StockOrderConfirmScreen",
+    "screen_file": "lib/src/stock/screens/stock_confirm_screen.dart",
+    "bindings": [
+      "StockBinding"
+    ],
+    "binding_files": [
+      "lib/src/stock/bindings/stock_binding.dart"
+    ],
+    "controllers": [
+      "StockService",
+      "StockController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:StockService",
+      "lib/src/stock/controllers/stock_controller.dart"
+    ],
+    "domain": "Stock",
+    "priority": "P0",
+    "notes": "Stock trading module: stockConfirm"
+  },
+  {
+    "id": "ROUTE-108",
+    "route_constant": "BaseRoute.stockTracking",
+    "route_path": "/stock_tracking_route",
+    "screen_widget": "StockTrackingScreen",
+    "screen_file": "lib/src/stock/screens/stock_tracking_screen.dart",
+    "bindings": [
+      "StockBinding"
+    ],
+    "binding_files": [
+      "lib/src/stock/bindings/stock_binding.dart"
+    ],
+    "controllers": [
+      "StockService",
+      "StockController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:StockService",
+      "lib/src/stock/controllers/stock_controller.dart"
+    ],
+    "domain": "Stock",
+    "priority": "P1",
+    "notes": "Stock trading module: stockTracking"
+  },
+  {
+    "id": "ROUTE-109",
+    "route_constant": "BaseRoute.loanHome",
+    "route_path": "/loan_home_route",
+    "screen_widget": "LoanHomeScreen",
+    "screen_file": "lib/src/loan/screens/loan_home_screen.dart",
+    "bindings": [
+      "LoanBinding"
+    ],
+    "binding_files": [
+      "lib/src/loan/bindings/loan_binding.dart"
+    ],
+    "controllers": [
+      "LoanApiService",
+      "LoanController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LoanApiService",
+      "lib/src/loan/controllers/loan_controller.dart"
+    ],
+    "domain": "Loan",
+    "priority": "P1",
+    "notes": "Loan & micro-credit module: loanHome"
+  },
+  {
+    "id": "ROUTE-110",
+    "route_constant": "BaseRoute.loanDetail",
+    "route_path": "/loan_detail_route",
+    "screen_widget": "LoanDetailScreen",
+    "screen_file": "lib/src/loan/screens/loan_detail_screen.dart",
+    "bindings": [
+      "LoanBinding"
+    ],
+    "binding_files": [
+      "lib/src/loan/bindings/loan_binding.dart"
+    ],
+    "controllers": [
+      "LoanApiService",
+      "LoanController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LoanApiService",
+      "lib/src/loan/controllers/loan_controller.dart"
+    ],
+    "domain": "Loan",
+    "priority": "P1",
+    "notes": "Loan & micro-credit module: loanDetail"
+  },
+  {
+    "id": "ROUTE-111",
+    "route_constant": "BaseRoute.loanIntro",
+    "route_path": "/loan_intro_route",
+    "screen_widget": "LoanIntroScreen",
+    "screen_file": "lib/src/loan/screens/loan_intro_screen.dart",
+    "bindings": [
+      "LoanBinding"
+    ],
+    "binding_files": [
+      "lib/src/loan/bindings/loan_binding.dart"
+    ],
+    "controllers": [
+      "LoanApiService",
+      "LoanController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LoanApiService",
+      "lib/src/loan/controllers/loan_controller.dart"
+    ],
+    "domain": "Loan",
+    "priority": "P1",
+    "notes": "Loan & micro-credit module: loanIntro"
+  },
+  {
+    "id": "ROUTE-112",
+    "route_constant": "BaseRoute.loanApplication",
+    "route_path": "/loan_application_route",
+    "screen_widget": "LoanApplicationScreen",
+    "screen_file": "lib/src/loan/screens/loan_application_screen.dart",
+    "bindings": [
+      "LoanBinding"
+    ],
+    "binding_files": [
+      "lib/src/loan/bindings/loan_binding.dart"
+    ],
+    "controllers": [
+      "LoanApiService",
+      "LoanController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LoanApiService",
+      "lib/src/loan/controllers/loan_controller.dart"
+    ],
+    "domain": "Loan",
+    "priority": "P0",
+    "notes": "Loan & micro-credit module: loanApplication"
+  },
+  {
+    "id": "ROUTE-113",
+    "route_constant": "BaseRoute.loanConfirm",
+    "route_path": "/loan_confirm_route",
+    "screen_widget": "LoanConfirmScreen",
+    "screen_file": "lib/src/loan/screens/loan_confirm_screen.dart",
+    "bindings": [
+      "LoanBinding"
+    ],
+    "binding_files": [
+      "lib/src/loan/bindings/loan_binding.dart"
+    ],
+    "controllers": [
+      "LoanApiService",
+      "LoanController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LoanApiService",
+      "lib/src/loan/controllers/loan_controller.dart"
+    ],
+    "domain": "Loan",
+    "priority": "P0",
+    "notes": "Loan & micro-credit module: loanConfirm"
+  },
+  {
+    "id": "ROUTE-114",
+    "route_constant": "BaseRoute.loanTracking",
+    "route_path": "/loan_tracking_route",
+    "screen_widget": "LoanTrackingScreen",
+    "screen_file": "lib/src/loan/screens/loan_tracking_screen.dart",
+    "bindings": [
+      "LoanBinding"
+    ],
+    "binding_files": [
+      "lib/src/loan/bindings/loan_binding.dart"
+    ],
+    "controllers": [
+      "LoanApiService",
+      "LoanController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LoanApiService",
+      "lib/src/loan/controllers/loan_controller.dart"
+    ],
+    "domain": "Loan",
+    "priority": "P1",
+    "notes": "Loan & micro-credit module: loanTracking"
+  },
+  {
+    "id": "ROUTE-115",
+    "route_constant": "BaseRoute.rentalHome",
+    "route_path": "/rental_home_route",
+    "screen_widget": "RentalHomeScreen",
+    "screen_file": "lib/src/rental/screens/rental_home_screen.dart",
+    "bindings": [
+      "RentalBinding"
+    ],
+    "binding_files": [
+      "lib/src/rental/bindings/rental_binding.dart"
+    ],
+    "controllers": [
+      "RentalApiService",
+      "RentalController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:RentalApiService",
+      "lib/src/rental/controllers/rental_controller.dart"
+    ],
+    "domain": "Rental",
+    "priority": "P1",
+    "notes": "Car rental booking service: rentalHome"
+  },
+  {
+    "id": "ROUTE-116",
+    "route_constant": "BaseRoute.guaranteeHome",
+    "route_path": "/guarantee_home_route",
+    "screen_widget": "GuaranteeHomeScreen",
+    "screen_file": "lib/src/guarantee/screens/guarantee_home_screen.dart",
+    "bindings": [
+      "GuaranteeBinding"
+    ],
+    "binding_files": [
+      "lib/src/guarantee/bindings/guarantee_binding.dart"
+    ],
+    "controllers": [
+      "GuaranteeApiService",
+      "GuaranteeController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:GuaranteeApiService",
+      "lib/src/guarantee/controllers/guarantee_controller.dart"
+    ],
+    "domain": "Guarantee",
+    "priority": "P1",
+    "notes": "Bank guarantee service: guaranteeHome"
+  },
+  {
+    "id": "ROUTE-117",
+    "route_constant": "BaseRoute.guaranteeDetail",
+    "route_path": "/guarantee_detail_route",
+    "screen_widget": "GuaranteeDetailScreen",
+    "screen_file": "lib/src/guarantee/screens/guarantee_detail_screen.dart",
+    "bindings": [
+      "GuaranteeBinding"
+    ],
+    "binding_files": [
+      "lib/src/guarantee/bindings/guarantee_binding.dart"
+    ],
+    "controllers": [
+      "GuaranteeApiService",
+      "GuaranteeController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:GuaranteeApiService",
+      "lib/src/guarantee/controllers/guarantee_controller.dart"
+    ],
+    "domain": "Guarantee",
+    "priority": "P1",
+    "notes": "Bank guarantee service: guaranteeDetail"
+  },
+  {
+    "id": "ROUTE-118",
+    "route_constant": "BaseRoute.guaranteeIntro",
+    "route_path": "/guarantee_intro_route",
+    "screen_widget": "GuaranteeIntroScreen",
+    "screen_file": "lib/src/guarantee/screens/guarantee_intro_screen.dart",
+    "bindings": [
+      "GuaranteeBinding"
+    ],
+    "binding_files": [
+      "lib/src/guarantee/bindings/guarantee_binding.dart"
+    ],
+    "controllers": [
+      "GuaranteeApiService",
+      "GuaranteeController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:GuaranteeApiService",
+      "lib/src/guarantee/controllers/guarantee_controller.dart"
+    ],
+    "domain": "Guarantee",
+    "priority": "P1",
+    "notes": "Bank guarantee service: guaranteeIntro"
+  },
+  {
+    "id": "ROUTE-119",
+    "route_constant": "BaseRoute.guaranteeApplication",
+    "route_path": "/guarantee_application_route",
+    "screen_widget": "GuaranteeApplicationScreen",
+    "screen_file": "lib/src/guarantee/screens/guarantee_application_screen.dart",
+    "bindings": [
+      "GuaranteeBinding"
+    ],
+    "binding_files": [
+      "lib/src/guarantee/bindings/guarantee_binding.dart"
+    ],
+    "controllers": [
+      "GuaranteeApiService",
+      "GuaranteeController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:GuaranteeApiService",
+      "lib/src/guarantee/controllers/guarantee_controller.dart"
+    ],
+    "domain": "Guarantee",
+    "priority": "P0",
+    "notes": "Bank guarantee service: guaranteeApplication"
+  },
+  {
+    "id": "ROUTE-120",
+    "route_constant": "BaseRoute.guaranteeConfirm",
+    "route_path": "/guarantee_confirm_route",
+    "screen_widget": "GuaranteeConfirmScreen",
+    "screen_file": "lib/src/guarantee/screens/guarantee_confirm_screen.dart",
+    "bindings": [
+      "GuaranteeBinding"
+    ],
+    "binding_files": [
+      "lib/src/guarantee/bindings/guarantee_binding.dart"
+    ],
+    "controllers": [
+      "GuaranteeApiService",
+      "GuaranteeController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:GuaranteeApiService",
+      "lib/src/guarantee/controllers/guarantee_controller.dart"
+    ],
+    "domain": "Guarantee",
+    "priority": "P0",
+    "notes": "Bank guarantee service: guaranteeConfirm"
+  },
+  {
+    "id": "ROUTE-121",
+    "route_constant": "BaseRoute.guaranteeTracking",
+    "route_path": "/guarantee_tracking_route",
+    "screen_widget": "GuaranteeTrackingScreen",
+    "screen_file": "lib/src/guarantee/screens/guarantee_tracking_screen.dart",
+    "bindings": [
+      "GuaranteeBinding"
+    ],
+    "binding_files": [
+      "lib/src/guarantee/bindings/guarantee_binding.dart"
+    ],
+    "controllers": [
+      "GuaranteeApiService",
+      "GuaranteeController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:GuaranteeApiService",
+      "lib/src/guarantee/controllers/guarantee_controller.dart"
+    ],
+    "domain": "Guarantee",
+    "priority": "P1",
+    "notes": "Bank guarantee service: guaranteeTracking"
+  },
+  {
+    "id": "ROUTE-122",
+    "route_constant": "BaseRoute.rentalDetail",
+    "route_path": "/rental_detail_route",
+    "screen_widget": "RentalDetailScreen",
+    "screen_file": "lib/src/rental/screens/rental_detail_screen.dart",
+    "bindings": [
+      "RentalBinding"
+    ],
+    "binding_files": [
+      "lib/src/rental/bindings/rental_binding.dart"
+    ],
+    "controllers": [
+      "RentalApiService",
+      "RentalController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:RentalApiService",
+      "lib/src/rental/controllers/rental_controller.dart"
+    ],
+    "domain": "Rental",
+    "priority": "P1",
+    "notes": "Car rental booking service: rentalDetail"
+  },
+  {
+    "id": "ROUTE-123",
+    "route_constant": "BaseRoute.rentalVoucher",
+    "route_path": "/rental_voucher_route",
+    "screen_widget": "RentalVoucherScreen",
+    "screen_file": "lib/src/rental/screens/rental_voucher_screen.dart",
+    "bindings": [
+      "RentalBinding"
+    ],
+    "binding_files": [
+      "lib/src/rental/bindings/rental_binding.dart"
+    ],
+    "controllers": [
+      "RentalApiService",
+      "RentalController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:RentalApiService",
+      "lib/src/rental/controllers/rental_controller.dart"
+    ],
+    "domain": "Rental",
+    "priority": "P2",
+    "notes": "Car rental booking service: rentalVoucher"
+  },
+  {
+    "id": "ROUTE-124",
+    "route_constant": "BaseRoute.remittanceTrack",
+    "route_path": "/remittance_track_route",
+    "screen_widget": "RemittanceTrackScreen",
+    "screen_file": "lib/src/remitv2/screens/remittance_track_screen.dart",
+    "bindings": [],
+    "binding_files": [],
+    "controllers": [],
+    "controller_files": [],
+    "domain": "Remittance",
+    "priority": "P1",
+    "notes": "Cross-border remittance flow: remittanceTrack"
+  },
+  {
+    "id": "ROUTE-125",
+    "route_constant": "BaseRoute.licenseStore",
+    "route_path": "/license_store_route",
+    "screen_widget": "LicenseStoreScreen",
+    "screen_file": "lib/src/license/view/license_store_screen.dart",
+    "bindings": [
+      "LicenseBinding"
+    ],
+    "binding_files": [
+      "lib/src/license/binding/license_binding.dart"
+    ],
+    "controllers": [
+      "LicenseService",
+      "LicenseController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LicenseService",
+      "lib/src/license/controller/license_controller.dart"
+    ],
+    "domain": "License",
+    "priority": "P1",
+    "notes": "Software license store: licenseStore"
+  },
+  {
+    "id": "ROUTE-126",
+    "route_constant": "BaseRoute.licenseMyLicenses",
+    "route_path": "/license_my_licenses_route",
+    "screen_widget": "LicenseMyLicensesScreen",
+    "screen_file": "lib/src/license/view/license_my_licenses_screen.dart",
+    "bindings": [
+      "LicenseBinding"
+    ],
+    "binding_files": [
+      "lib/src/license/binding/license_binding.dart"
+    ],
+    "controllers": [
+      "LicenseService",
+      "LicenseController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LicenseService",
+      "lib/src/license/controller/license_controller.dart"
+    ],
+    "domain": "License",
+    "priority": "P1",
+    "notes": "Software license store: licenseMyLicenses"
+  },
+  {
+    "id": "ROUTE-127",
+    "route_constant": "BaseRoute.licenseIntro",
+    "route_path": "/license_intro_route",
+    "screen_widget": "LicenseIntroScreen",
+    "screen_file": "lib/src/license/view/license_intro_screen.dart",
+    "bindings": [
+      "LicenseBinding"
+    ],
+    "binding_files": [
+      "lib/src/license/binding/license_binding.dart"
+    ],
+    "controllers": [
+      "LicenseService",
+      "LicenseController"
+    ],
+    "controller_files": [
+      "UNKNOWN_CTRL_FILE:LicenseService",
+      "lib/src/license/controller/license_controller.dart"
+    ],
+    "domain": "License",
+    "priority": "P2",
+    "notes": "Software license store: licenseIntro"
+  },
+  {
+    "id": "ROUTE-128",
+    "route_constant": "BaseRoute.commercialProjects",
+    "route_path": "/commercial_projects_route",
+    "screen_widget": "CommercialProjectsScreen",
+    "screen_file": "lib/src/commercial/screens/commercial_projects_screen.dart",
+    "bindings": [
+      "CommercialBinding"
+    ],
+    "binding_files": [
+      "lib/src/commercial/bindings/commercial_binding.dart"
+    ],
+    "controllers": [
+      "CommercialController"
+    ],
+    "controller_files": [
+      "lib/src/commercial/controllers/commercial_controller.dart"
+    ],
+    "domain": "Commercial",
+    "priority": "P1",
+    "notes": "Commercial equity & investment module: commercialProjects"
+  },
+  {
+    "id": "ROUTE-129",
+    "route_constant": "BaseRoute.commercialProjectDetail",
+    "route_path": "/commercial_project_detail_route",
+    "screen_widget": "EquityProjectDetailScreen",
+    "screen_file": "lib/src/commercial/screens/equity_project_detail_screen.dart",
+    "bindings": [
+      "CommercialBinding"
+    ],
+    "binding_files": [
+      "lib/src/commercial/bindings/commercial_binding.dart"
+    ],
+    "controllers": [
+      "CommercialController"
+    ],
+    "controller_files": [
+      "lib/src/commercial/controllers/commercial_controller.dart"
+    ],
+    "domain": "Commercial",
+    "priority": "P1",
+    "notes": "Commercial equity & investment module: commercialProjectDetail"
+  },
+  {
+    "id": "ROUTE-130",
+    "route_constant": "BaseRoute.commercialInvestCheckout",
+    "route_path": "/commercial_invest_checkout_route",
+    "screen_widget": "EquityInvestCheckoutScreen",
+    "screen_file": "lib/src/commercial/screens/equity_invest_checkout_screen.dart",
+    "bindings": [
+      "CommercialBinding"
+    ],
+    "binding_files": [
+      "lib/src/commercial/bindings/commercial_binding.dart"
+    ],
+    "controllers": [
+      "CommercialController"
+    ],
+    "controller_files": [
+      "lib/src/commercial/controllers/commercial_controller.dart"
+    ],
+    "domain": "Commercial",
+    "priority": "P0",
+    "notes": "Commercial equity & investment module: commercialInvestCheckout"
+  },
+  {
+    "id": "ROUTE-131",
+    "route_constant": "BaseRoute.commercialMyInvestments",
+    "route_path": "/commercial_my_investments_route",
+    "screen_widget": "MyInvestmentsScreen",
+    "screen_file": "lib/src/commercial/screens/my_investments_screen.dart",
+    "bindings": [
+      "CommercialBinding"
+    ],
+    "binding_files": [
+      "lib/src/commercial/bindings/commercial_binding.dart"
+    ],
+    "controllers": [
+      "CommercialController"
+    ],
+    "controller_files": [
+      "lib/src/commercial/controllers/commercial_controller.dart"
+    ],
+    "domain": "Commercial",
+    "priority": "P1",
+    "notes": "Commercial equity & investment module: commercialMyInvestments"
+  },
+  {
+    "id": "ROUTE-132",
+    "route_constant": "BaseRoute.boatCatalog",
+    "route_path": "/boat_catalog_route",
+    "screen_widget": "BoatCatalogScreen",
+    "screen_file": "lib/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart",
+    "bindings": [
+      "BoatBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/travel/boat/bindings/boat_binding.dart"
+    ],
+    "controllers": [
+      "BoatController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/boat/controllers/boat_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: boatCatalog"
+  },
+  {
+    "id": "ROUTE-133",
+    "route_constant": "BaseRoute.boatVoucher",
+    "route_path": "/boat_voucher_route",
+    "screen_widget": "BoatVoucherScreen",
+    "screen_file": "lib/src/presentation/screens/travel/boat/screens/boat_voucher_screen.dart",
+    "bindings": [
+      "BoatBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/travel/boat/bindings/boat_binding.dart"
+    ],
+    "controllers": [
+      "BoatController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/boat/controllers/boat_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: boatVoucher"
+  },
+  {
+    "id": "ROUTE-134",
+    "route_constant": "BaseRoute.localCatalog",
+    "route_path": "/local_catalog_route",
+    "screen_widget": "LocalCatalogScreen",
+    "screen_file": "lib/src/presentation/screens/travel/local/screens/local_catalog_screen.dart",
+    "bindings": [
+      "LocalExperienceBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/travel/local/bindings/local_experience_binding.dart"
+    ],
+    "controllers": [
+      "LocalExperienceController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/local/controllers/local_experience_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: localCatalog"
+  },
+  {
+    "id": "ROUTE-135",
+    "route_constant": "BaseRoute.localVoucher",
+    "route_path": "/local_voucher_route",
+    "screen_widget": "LocalVoucherScreen",
+    "screen_file": "lib/src/presentation/screens/travel/local/screens/local_voucher_screen.dart",
+    "bindings": [
+      "LocalExperienceBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/travel/local/bindings/local_experience_binding.dart"
+    ],
+    "controllers": [
+      "LocalExperienceController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/local/controllers/local_experience_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: localVoucher"
+  },
+  {
+    "id": "ROUTE-136",
+    "route_constant": "BaseRoute.diningCatalog",
+    "route_path": "/dining_catalog_route",
+    "screen_widget": "DiningCatalogScreen",
+    "screen_file": "lib/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart",
+    "bindings": [
+      "DiningBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/travel/dining/bindings/dining_binding.dart"
+    ],
+    "controllers": [
+      "DiningController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/dining/controllers/dining_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P1",
+    "notes": "Travel & lifestyle service: diningCatalog"
+  },
+  {
+    "id": "ROUTE-137",
+    "route_constant": "BaseRoute.diningOrderPass",
+    "route_path": "/dining_order_pass_route",
+    "screen_widget": "DiningOrderPassScreen",
+    "screen_file": "lib/src/presentation/screens/travel/dining/screens/dining_order_pass_screen.dart",
+    "bindings": [
+      "DiningBinding"
+    ],
+    "binding_files": [
+      "lib/src/presentation/screens/travel/dining/bindings/dining_binding.dart"
+    ],
+    "controllers": [
+      "DiningController"
+    ],
+    "controller_files": [
+      "lib/src/presentation/screens/travel/dining/controllers/dining_controller.dart"
+    ],
+    "domain": "Travel",
+    "priority": "P0",
+    "notes": "Travel & lifestyle service: diningOrderPass"
+  }
+]

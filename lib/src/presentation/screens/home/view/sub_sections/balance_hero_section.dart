@@ -4,6 +4,7 @@ import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart'
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/controller/wallets_controller.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -58,7 +59,15 @@ class BalanceHeroSection extends StatelessWidget {
       }
 
       String? secondaryEquivalent;
-      const liveUsdToIrt = 95000.0;
+      double liveUsdToIrt = 95000.0;
+      if (Get.isRegistered<WalletLiveRateService>()) {
+        final liveRates = Get.find<WalletLiveRateService>();
+        final rateIrr =
+            liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
+        if (rateIrr != null && rateIrr > 0) {
+          liveUsdToIrt = rateIrr / 10.0;
+        }
+      }
       final curUpper = currencyCode.toUpperCase();
       if (curUpper == 'USD' || curUpper == 'USDT') {
         final tomanEq = (currentBalance * liveUsdToIrt).toInt();

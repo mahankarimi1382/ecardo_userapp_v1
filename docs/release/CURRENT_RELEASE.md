@@ -1,20 +1,21 @@
-# eCardo User App (v1) — Active Release Line Dossier (v1.0.175+175)
+# eCardo User App (v1) — Active Release Line Dossier (v1.0.178+178)
 
-- **Document Version:** 1.0.175  
+- **Document Version:** 1.0.178  
 - **Canonical Release Identifier:** REL-DOC-01  
-- **Status:** **Active Staging & Verification**  
-- **Date:** 2026-10-18  
+- **Status:** **Active Released & Verified (Production Gated)**  
+- **Date:** 2026-10-19  
 - **Target Repository:** `mahankarimi1382/ecardo_userapp_v1`  
 - **Active Git Branch:** `main`  
-- **Active Release Version:** `1.0.175+175` (declared in `pubspec.yaml`)  
-- **Active Release Commit SHA:** `HEAD`  
-- **Active Release Git Tag:** `v1.0.175`  
-- **Preceding Build Version:** `1.0.174+174`  
-- **Preceding Build Commit SHA:** `cbfdd75ef622f0dccf8131336b6c5930d0f373d0` (`cbfdd75`)  
-- **Preceding Build Git Tag:** `v1.0.174`  
+- **Active Release Version:** `1.0.178+178` (Release Tag: `v1.0.178`)  
+- **Active Release Commit SHA:** `a3b6010` (Full: `a3b60104764b85c2763264ec47185bb81cb60d2b`)  
+- **Active Release Git Tag:** `v1.0.178`  
+- **Preceding Tagged Release:** `1.0.177+177` (commit `d7b4976`)  
+- **Milestone Security Tag:** `1.0.175+175` (commit `741eae8`)  
+- **Local Staging Version:** `1.0.180+180` (pubspec.yaml development branch)  
 - **Lead Authority:** Enterprise Architecture, Security Verification & Release Management Team  
 
-> **Unreleased (2026-10-19):** `1.0.176+176` — fail-closed TRC-20 deposit policy, checksum-only label, USDT_IRT removal from on-chain flow, CI action upgrades. Not tagged/released; backend deposits remain disabled (`WALLET_DEPOSITS_ENABLED=false`).
+> **Security & Gating Notice (2026-10-19):**  
+> `v1.0.178+178` incorporates fail-closed TRC-20 deposit policy validation, server-bound address assignment, interactive audio-haptic feedback, and modern payment review flows. Production on-chain deposits remain strictly gated (`WALLET_DEPOSITS_ENABLED=false`) until private backend indexer reconciliation and finality proofs are completed.
 
 ---
 
@@ -25,8 +26,8 @@ This document establishes the **single canonical, unambiguous reference** for th
 ```
                       ┌───────────────────────────────────────────────┐
                       │        eCardo User App Client (v1)            │
-                      │   Active Release Line: v1.0.175+175 (HEAD)   │
-                      │   Preceding Tag Build: v1.0.174+174 (cbfdd75) │
+                      │   Active Release Line: v1.0.178+178 (a3b6010) │
+                      │   Preceding Tag Build: v1.0.177+177 (d7b4976) │
                       └───────────────────────┬───────────────────────┘
                                               │
                       ┌───────────────────────┴───────────────────────┐
@@ -35,28 +36,29 @@ This document establishes the **single canonical, unambiguous reference** for th
          ┌─────────────────────────┐                     ┌─────────────────────────┐
          │     Android Platform    │                     │       iOS Platform      │
          ├─────────────────────────┤                     ├─────────────────────────┤
-         │ Status: 🟢 READY        │                     │ Status: 🔴 BLOCKED      │
+         │ Status: 🟢 READY (v178) │                     │ Status: 🔴 BLOCKED      │
          │ - Universal FAT APK     │                     │ - Apple Team ID missing │
-         │ - R8 -dontoptimize fix  │                     │ - Provisioning missing  │
-         │ - Passcode loop fix     │                     │ - Distribution certs    │
-         │ - Fail-closed signing   │                     │   unconfigured          │
-         │ - 731 tests passing     │                     │ - Code ready, certs     │
+         │   (59.2 MB, SHA256:     │                     │ - Provisioning missing  │
+         │    50d14ef5853309e6...) │                     │ - Distribution certs    │
+         │ - R8 -dontoptimize fix  │                     │   unconfigured          │
+         │ - Fail-closed signing   │                     │ - Code ready, certs     │
          │ - 0 analyzer issues     │                     │   gate pending          │
-         └─────────────────────────┘                     └─────────────────────────┘
+         │ - Audio-haptic feedback │                     └─────────────────────────┘
+         │ - Modern request flow   │
+         └─────────────────────────┘
 ```
 
 ### 1.1 Release Line Invariants & Verification Verdict
 | Parameter | Inspected Value | Verdict |
 | :--- | :--- | :--- |
-| **Active Version** | `1.0.175+175` (`pubspec.yaml`) | **Canonical Active Target** |
-| **Active Commit SHA** | `HEAD` | **Verified on `main`** |
-| **Active Git Tag** | `v1.0.175` | **Target Tag** |
-| **Reference Build** | `1.0.174+174` (`cbfdd75ef622f0dccf8131336b6c5930d0f373d0`) | **Tagged on `v1.0.174`** |
+| **Active Version** | `1.0.178+178` (`pubspec.yaml` in tag `v1.0.178`) / `1.0.180+180` (staging) | **Canonical Active Target** |
+| **Active Commit SHA** | `a3b6010` (`a3b60104764b85c2763264ec47185bb81cb60d2b`) | **Verified on `main` and tag `v1.0.178`** |
+| **Active Git Tag** | `v1.0.178` | **Official Public Release Tag** |
+| **Release Artifact** | Android Universal FAT APK (`59.2 MB`) SHA-256: `50d14ef5853309e615944d155d04aec2796a801280ae4c066cf5630d8d6ae134` | **Verified in GitHub Actions #628** |
 | **Static Code Analyzer** | `flutter analyze --no-fatal-infos --no-fatal-warnings` | **No issues found! (0 errors, 0 warnings)** |
-| **Automated Regression Suite** | `flutter test` — **731 tests passed** (100% green) | **0 failures, 0 skipped** |
-| **Android Release Gate** | Fail-closed signing, R8 fix, Universal FAT APK | 🟢 **Active Staging & Verification Approved** |
+| **Android Release Gate** | Fail-closed signing, R8 fix, Universal FAT APK, Audio Feedback | 🟢 **Verified & Publicly Released** |
 | **iOS Release Gate** | Apple Developer Team ID / Provisioning Profiles | 🔴 **BLOCKED** (Awaiting organizational credentials) |
-| **Web Release Gate** | GitHub Actions Web compiler & asset pipeline | 🟢 **Staging Verified** |
+| **Web Release Gate** | GitHub Actions Web compiler & asset pipeline (Run #238) | 🟢 **Staging Verified** |
 
 ---
 
@@ -66,17 +68,16 @@ The active release line builds are fully reproducible and verified across automa
 
 | Workflow Name | Run ID | Target Commit SHA | Git Reference | Platform & Scope | CI Execution Verdict |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Android Build & Test (`flutter.yml`)** | **#611** | `2502823` | `refs/heads/main` | Android branch build & test | **Success 🟢** (Analyze clean, tests green, debug APK) |
-| **Android Tag Release (`flutter.yml`)** | **#612** | `2502823` | `refs/tags/v1.0.171` | Android signed release build | **Success 🟢** (Release APK packaged & signed) |
-| **Flutter Web Build (`web.yml`)** | **#228** | `2502823` | `refs/heads/main` | Web deployment bundle | **Success 🟢** (Asset tree verified, static bundle) |
-| **Android Build & Test (`flutter.yml`)** | `v1.0.172` | `98e8993` | `refs/heads/main` / `refs/tags/v1.0.172` | Universal FAT APK & 687 tests | **Staging Verified 🟢** (R8 rules hardened, 687 tests 100%) |
-| **Flutter Web Build (`web.yml`)** | `v1.0.172` | `98e8993` | `refs/heads/main` / `refs/tags/v1.0.172` | Web release build | **Staging Verified 🟢** (Web bundle compiled clean) |
+| **Android Tag Release (`flutter.yml`)** | **#628** | `a3b6010` | `refs/tags/v1.0.178` | Android signed release build & universal APK | **Success 🟢** (Release APK packaged & signed, SHA-256 verified) |
+| **Android Build & Test (`flutter.yml`)** | **#627** | `a3b6010` | `refs/heads/main` | Android branch build & test | **Success 🟢** (Analyze clean, tests green, debug APK) |
+| **Flutter Web Build (`web.yml`)** | **#238** | `a3b6010` | `refs/heads/main` | Web deployment bundle | **Success 🟢** (Asset tree verified, static bundle) |
+| **Android Tag Release (`flutter.yml`)** | **#612** | `2502823` | `refs/tags/v1.0.171` | Android signed release build | **Historical 🟢** (v1.0.171 base) |
 
 ### 2.1 Remote CI Action URLs
-- **Android v1.0.171 CI Action Query:** https://github.com/mahankarimi1382/ecardo_userapp_v1/actions?query=commit%3A2502823
-- **Active v1.0.172 Commit Reference:** https://github.com/mahankarimi1382/ecardo_userapp_v1/commit/98e899368df43dfe0aa36dac64e5752cd0d661aa
-- **Active v1.0.172 Tag Reference:** https://github.com/mahankarimi1382/ecardo_userapp_v1/releases/tag/v1.0.172
-- **Preceding v1.0.171 Tag Reference:** https://github.com/mahankarimi1382/ecardo_userapp_v1/releases/tag/v1.0.171
+- **Android v1.0.178 Release Run #628:** https://github.com/mahankarimi1382/ecardo_userapp_v1/actions/runs/39218327659
+- **Android Main Branch Run #627:** https://github.com/mahankarimi1382/ecardo_userapp_v1/actions/runs/39218312783
+- **Active v1.0.178 Commit Reference:** https://github.com/mahankarimi1382/ecardo_userapp_v1/commit/a3b60104764b85c2763264ec47185bb81cb60d2b
+- **Active v1.0.178 Tag Reference:** https://github.com/mahankarimi1382/ecardo_userapp_v1/releases/tag/v1.0.178
 
 ---
 

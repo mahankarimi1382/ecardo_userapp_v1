@@ -1,12 +1,19 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/network/api/api_path.dart';
+import 'package:ecardo_user/src/network/response/status.dart';
+import 'package:ecardo_user/src/network/service/network_service.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 /// Card freeze control (Block 4).
 ///
@@ -360,6 +367,16 @@ class VirtualCardSecurityControls extends StatelessWidget {
           },
         );
       },
+    );
+  }
+
+  void _showCardOtpModal(BuildContext context) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const _CardOtpBottomSheet(),
     );
   }
 
@@ -729,6 +746,71 @@ class VirtualCardSecurityControls extends StatelessWidget {
               ),
             ),
           ],
+
+          SizedBox(height: 12.h),
+
+          // 6. DYNAMIC PASSWORD / OTP (رمز پویا کارت - BluBank style)
+          _SecurityActionTile(
+            isDark: isDark,
+            icon: Icons.lock_clock_rounded,
+            iconColor: const Color(0xFF8B5CF6),
+            iconBgColor: const Color(0xFFEDE9FE),
+            title: l10nPick(
+              context,
+              en: 'Dynamic Password (OTP)',
+              fa: 'رمز پویا و یکبار مصرف کارت',
+              ar: 'رمز المرور الديناميكي (OTP)',
+              tr: 'Dinamik Şifre (OTP)',
+              ru: 'Динамический пароль (OTP)',
+              zh: '动态密码 (OTP)',
+            ),
+            subtitle: l10nPick(
+              context,
+              en: 'Instant 90-second OTP for secure online payments',
+              fa: 'تولید آنی رمز دوم معتبر به مدت ۹۰ ثانیه جهت پرداخت اینترنتی',
+              ar: 'رمز صالح لمدة 90 ثانية للدفع الإلكتروني الآمن',
+              tr: 'Güvenli çevrimiçi ödemeler için 90 saniyelik OTP',
+              ru: 'Мгновенный 90-секундный код для онлайн-оплаты',
+              zh: '用于安全在线支付的90秒动态验证码',
+            ),
+            onTap: () => _showCardOtpModal(context),
+            trailing: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF2A2A2A)
+                    : const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.pin_rounded,
+                    size: 14.sp,
+                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    l10nPick(
+                      context,
+                      en: 'Get OTP',
+                      fa: 'دریافت رمز',
+                      ar: 'رمز جديد',
+                      tr: 'Şifre Al',
+                      ru: 'Получить',
+                      zh: '获取动态码',
+                    ),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -1191,6 +1273,355 @@ class _SpendingLimitsBottomSheetState extends State<_SpendingLimitsBottomSheet> 
               );
             }).toList(),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// DYNAMIC CARD OTP BOTTOM SHEET (BluBank Style In-App Temporary Password)
+// ============================================================================
+
+class _CardOtpBottomSheet extends StatefulWidget {
+  const _CardOtpBottomSheet();
+
+  @override
+  State<_CardOtpBottomSheet> createState() => _CardOtpBottomSheetState();
+}
+
+class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
+  String? _otpCode;
+  int _secondsRemaining = 0;
+  Timer? _timer;
+  bool _isLoading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchOtp();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _fetchOtp() async {
+    if (_isLoading) return;
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    _timer?.cancel();
+
+    try {
+      final home = Get.isRegistered<HomeController>()
+          ? Get.find<HomeController>()
+          : Get.put<HomeController>(HomeController());
+      final accountNo = home.userModel.value.data?.accountNumber ?? '';
+
+      if (accountNo.isEmpty) {
+        setState(() {
+          _isLoading = false;
+          _error = 'Account number not found';
+        });
+        return;
+      }
+
+      final response = await Get.find<NetworkService>().post(
+        endpoint: ApiPath.generateDynamicPasswordOtpEndpoint,
+        data: {'account_number': accountNo},
+      );
+
+      if (response.status == Status.completed && response.data != null) {
+        final data = response.data!['data'] ?? response.data!;
+        final code = data['code']?.toString() ?? '';
+        final expiresIn = int.tryParse(data['expires_in']?.toString() ?? '90') ?? 90;
+
+        HapticFeedback.heavyImpact();
+        SystemSound.play(SystemSoundType.click);
+
+        setState(() {
+          _otpCode = code;
+          _secondsRemaining = expiresIn;
+          _isLoading = false;
+        });
+
+        _startCountdown();
+      } else {
+        setState(() {
+          _isLoading = false;
+          _error = response.message ?? 'Failed to generate OTP';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _error = e.toString();
+      });
+    }
+  }
+
+  void _startCountdown() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsRemaining > 0) {
+        if (mounted) setState(() => _secondsRemaining--);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  void _copyOtp() {
+    if (_otpCode == null || _otpCode!.isEmpty) return;
+    HapticFeedback.selectionClick();
+    Clipboard.setData(ClipboardData(text: _otpCode!));
+    ToastHelper().showSuccessToast(
+      l10nPick(
+        context,
+        en: 'Dynamic passcode copied to clipboard',
+        fa: 'رمز پویا در کلیپ‌بورد کپی شد',
+        ar: 'تم نسخ رمز المرور المؤقت',
+        tr: 'Dinamik şifre kopyalandı',
+        ru: 'Код скопирован в буфер',
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const totalDuration = 90.0;
+    final progress = (_secondsRemaining / totalDuration).clamp(0.0, 1.0);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkBackground : AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(
+        20.w,
+        14.h,
+        20.w,
+        30.h + MediaQuery.viewInsetsOf(context).bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Drag handle
+          Center(
+            child: Container(
+              width: 44.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF4A4A4A) : const Color(0xFFD0D0D0),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+              ),
+            ),
+          ),
+          SizedBox(height: 18.h),
+
+          // Header
+          Row(
+            children: [
+              Container(
+                width: 44.r,
+                height: 44.r,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.35),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.lock_clock_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Dynamic Password (OTP)',
+                        fa: 'رمز پویا (یکبار مصرف کارت)',
+                        ar: 'رمز المرور لمرة واحدة (OTP)',
+                        tr: 'Dinamik Şifre (OTP)',
+                        ru: 'Динамический пароль (OTP)',
+                        zh: '动态验证码 (OTP)',
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Valid for 90 seconds for internet checkout',
+                        fa: 'معتبر به مدت ۹۰ ثانیه جهت تایید خرید اینترنتی',
+                        ar: 'صالح لمدة 90 ثانية للدفع الإلكتروني',
+                        tr: 'Çevrimiçi ödemeler için 90 saniye geçerli',
+                        ru: 'Действителен 90 секунд для оплаты',
+                        zh: '90秒内有效，用于在线支付',
+                      ),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 24.h),
+
+          if (_isLoading)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 36.h),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          else if (_error != null)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 24.h),
+              child: Column(
+                children: [
+                  Icon(Icons.error_outline_rounded, color: AppColors.error, size: 36.sp),
+                  SizedBox(height: 8.h),
+                  Text(_error!, style: const TextStyle(color: AppColors.error)),
+                  SizedBox(height: 12.h),
+                  ElevatedButton(onPressed: _fetchOtp, child: const Text('Retry')),
+                ],
+              ),
+            )
+          else ...[
+            // Large Monospace Code Card
+            GestureDetector(
+              onTap: _copyOtp,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1E1E2D)
+                      : const Color(0xFFF5F3FF),
+                  borderRadius: BorderRadius.circular(18.r),
+                  border: Border.all(
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.35),
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _otpCode ?? '------',
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 8.w,
+                        color: isDark
+                            ? Colors.white
+                            : const Color(0xFF5B21B6),
+                      ),
+                    ),
+                    SizedBox(width: 14.w),
+                    Icon(
+                      Icons.copy_rounded,
+                      size: 20.sp,
+                      color: const Color(0xFF8B5CF6),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: 18.h),
+
+            // Countdown Progress
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 18.r,
+                  height: 18.r,
+                  child: CircularProgressIndicator(
+                    value: progress,
+                    strokeWidth: 2.5,
+                    backgroundColor: isDark
+                        ? const Color(0xFF333333)
+                        : const Color(0xFFE5E7EB),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      _secondsRemaining > 20
+                          ? const Color(0xFF8B5CF6)
+                          : AppColors.error,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  '${l10nPick(context, en: 'Expires in', fa: 'انقضا تا', ar: 'ينتهي خلال')}: $_secondsRemaining ${l10nPick(context, en: 'sec', fa: 'ثانیه', ar: 'ثانية')}',
+                  style: TextStyle(
+                    fontSize: 12.5.sp,
+                    fontWeight: FontWeight.w700,
+                    color: _secondsRemaining > 20
+                        ? (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)
+                        : AppColors.error,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 16.h),
+
+            if (_secondsRemaining == 0)
+              ElevatedButton.icon(
+                onPressed: _fetchOtp,
+                icon: const Icon(Icons.refresh_rounded),
+                label: Text(l10nPick(context, en: 'Generate New OTP', fa: 'دریافت رمز جدید')),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B5CF6),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                ),
+              ),
+          ],
         ],
       ),
     );

@@ -9,6 +9,8 @@ import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
+import 'package:ecardo_user/src/common/services/wallet_live_rate_service.dart';
+import 'package:ecardo_user/src/presentation/screens/exchange/service/exchange_rate_service.dart';
 
 enum WalletFilterType { all, fiat, crypto }
 
@@ -71,14 +73,49 @@ class WalletsController extends GetxController {
     double sum = 0.0;
     for (final w in walletsList) {
       final rawBalance = _parseBalance(w.balance ?? w.formattedBalance);
+      final code = (w.code ?? '').toUpperCase().trim();
       double rate = 1.0;
-      if (w.conversionRate != null && w.conversionRate!.isNotEmpty) {
+
+      if (code == 'BTC') {
+        double? dynamicBtcRate;
+        // 1. Dynamic rate lookup from WalletLiveRateService (IRR cross-rate against USD)
+        if (Get.isRegistered<WalletLiveRateService>()) {
+          final liveRates = Get.find<WalletLiveRateService>();
+          final btcIrr = liveRates.ratesIrr['BTC'];
+          final usdIrr =
+              liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
+          if (btcIrr != null && btcIrr > 0 && usdIrr != null && usdIrr > 0) {
+            dynamicBtcRate = btcIrr / usdIrr;
+          }
+        }
+        // 2. Dynamic rate lookup from ExchangeRateService
+        if (dynamicBtcRate == null && Get.isRegistered<ExchangeRateService>()) {
+          final exchangeRates = Get.find<ExchangeRateService>();
+          final btcLive = exchangeRates.rates['BTC'];
+          final usdLive =
+              exchangeRates.rates['USD'] ?? exchangeRates.rates['USDT'];
+          if (btcLive != null && btcLive > 0) {
+            dynamicBtcRate = (usdLive != null && usdLive > 0)
+                ? (btcLive / usdLive)
+                : btcLive;
+          }
+        }
+        // 3. Conversion rate from wallet if available and valid (> 1.0 to guard against 1.0 placeholder)
+        if (dynamicBtcRate == null &&
+            w.conversionRate != null &&
+            w.conversionRate!.isNotEmpty) {
+          final parsed =
+              double.tryParse(w.conversionRate!.replaceAll(',', ''));
+          if (parsed != null && parsed > 1.0) {
+            dynamicBtcRate = parsed;
+          }
+        }
+        // Graceful fallback if neither live rates nor wallet conversion rate is available
+        rate = dynamicBtcRate ?? 68450.0;
+      } else if (w.conversionRate != null && w.conversionRate!.isNotEmpty) {
         rate = double.tryParse(w.conversionRate!.replaceAll(',', '')) ?? 1.0;
       } else {
-        final code = (w.code ?? '').toUpperCase().trim();
-        if (code == 'BTC') {
-          rate = 68450.0;
-        } else if (code == 'ETH') {
+        if (code == 'ETH') {
           rate = 3520.0;
         } else if (code == 'USDT' || code == 'USD') {
           rate = 1.0;

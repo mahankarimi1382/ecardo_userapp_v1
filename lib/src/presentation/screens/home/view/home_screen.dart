@@ -189,18 +189,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),
+                      // SERVICES HUB ENTRY: prominent access to all services
+                      const SliverToBoxAdapter(
+                        child: ServicesEntrySection(),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: SizedBox(height: AppSpacing.sectionGap),
+                      ),
                       const SliverToBoxAdapter(child: MyWalletSection()),
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),
                       const SliverToBoxAdapter(child: ReferralStatsSection()),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(height: AppSpacing.sectionGap),
-                      ),
-                      // SERVICES HUB ENTRY: leading to dedicated All-Services page
-                      const SliverToBoxAdapter(
-                        child: ServicesEntrySection(),
-                      ),
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),

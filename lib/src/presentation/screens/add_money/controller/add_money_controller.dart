@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -265,11 +266,13 @@ class AddMoneyController extends GetxController {
           if (paymentResult != null && paymentResult['success'] == true) {
             successPaymentData.value = paymentResult['data'];
             currentStep.value = 2;
+            AppEventBus.emit(BalanceChangedEvent(sourceModule: 'add_money'));
           } else if (paymentResult == null) {
             // The user backed out of the gateway page. The deposit is still
             // open server-side, so say so instead of silently resetting.
             pendingPaymentData.value = payload;
             currentStep.value = 2;
+            AppEventBus.emit(BalanceChangedEvent(sourceModule: 'add_money'));
             ToastHelper().showSuccessToast(localization!.addMoneySuccess);
           }
         }
@@ -339,6 +342,7 @@ class AddMoneyController extends GetxController {
       if (response.status == Status.completed) {
         pendingPaymentData.value = response.data?['data'];
         currentStep.value = 2;
+        AppEventBus.emit(BalanceChangedEvent(sourceModule: 'add_money'));
         ToastHelper().showSuccessToast(localization!.addMoneySuccess);
       }
     } catch (e, stackTrace) {

@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/wallet_details_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart';
@@ -385,6 +386,59 @@ class _WalletDetailsState extends State<WalletDetails> {
                           localization.walletDetailsUserWithdrawNotEnabled,
                         );
                       }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildActionButton(
+                    title: l10nPick(
+                      context,
+                      en: 'Transfer',
+                      fa: 'انتقال',
+                      ar: 'تحويل',
+                      zh: '转账',
+                      tr: 'Transfer',
+                      ru: 'Перевод',
+                    ),
+                    icon: PngAssets.bottomNavigationTransferSolidIcon,
+                    iconBgColor: const Color(0xFF10B981),
+                    isDark: isDark,
+                    onTap: () {
+                      Get.toNamed(
+                        BaseRoute.transfer,
+                        arguments: {"wallet_id": controller.walletId.value},
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(width: 18),
+                Expanded(
+                  child: _buildActionButton(
+                    title: l10nPick(
+                      context,
+                      en: 'Exchange',
+                      fa: 'تبدیل',
+                      ar: 'تبادل',
+                      zh: '兑换',
+                      tr: 'Takas',
+                      ru: 'Обмен',
+                    ),
+                    icon: PngAssets.exchangeService,
+                    iconBgColor: const Color(0xFFF59E0B),
+                    isDark: isDark,
+                    onTap: () {
+                      Get.toNamed(
+                        BaseRoute.exchange,
+                        arguments: {"from_wallet": controller.walletId.value},
+                      );
                     },
                   ),
                 ),

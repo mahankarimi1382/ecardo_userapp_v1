@@ -251,6 +251,9 @@ class _AddNewTicketState extends State<AddNewTicket> {
                         _buildGuidanceCard(context, isDark),
                         const SizedBox(height: 20),
 
+                        // Auto-attached Transaction Context Card
+                        _buildAttachedTransactionCard(context, isDark),
+
                         // Department / Topic Selector
                         _buildDepartmentSelector(
                           context,
@@ -416,6 +419,128 @@ class _AddNewTicketState extends State<AddNewTicket> {
         ],
       ),
     );
+  }
+
+  Widget _buildAttachedTransactionCard(BuildContext context, bool isDark) {
+    return Obx(() {
+      final ref = controller.attachedTransactionRef.value;
+      if (ref == null || ref.isEmpty) return const SizedBox.shrink();
+
+      final amount = controller.attachedAmount.value;
+      final currency = controller.attachedCurrency.value;
+      final title = controller.attachedTitle.value;
+
+      return Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: isDark
+              ? AppColors.darkCard
+              : AppColors.lightSecondaryContainer.withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          border: Border.all(
+            color: isDark
+                ? AppColors.mainSoftBlue.withValues(alpha: 0.45)
+                : AppColors.brandViolet.withValues(alpha: 0.35),
+            width: 1.2,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                    .withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.receipt_long_rounded,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: AppColors.success.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          l10nPick(
+                            context,
+                            en: 'Auto-Attached Transaction',
+                            fa: 'تراکنش ضمیمه‌شده خودکار',
+                            ar: 'معاملة مرفقة تلقائياً',
+                            tr: 'Otomatik Eklenen İşlem',
+                            ru: 'Прикрепленная транзакция',
+                          ),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.success,
+                          ),
+                        ),
+                      ),
+                      if (title != null && title.isNotEmpty) ...[
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    ref,
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  if (amount != null && amount.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      '$amount ${currency ?? ""}'.trim(),
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close_rounded, size: 18),
+              tooltip: l10nPick(context, en: 'Remove', fa: 'حذف پیوست'),
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                controller.attachedTransactionRef.value = null;
+              },
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildTipItem(BuildContext context, bool isDark, String text) {

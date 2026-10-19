@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -149,6 +150,7 @@ class RequestMoneyController extends GetxController {
         clearFields();
         successPaymentData.value = response.data!['data'];
         currentStep.value = 2;
+        AppEventBus.emit(BalanceChangedEvent(sourceModule: 'request_money'));
         ToastHelper().showSuccessToast(response.data!["message"]);
       }
     } catch (e, stackTrace) {

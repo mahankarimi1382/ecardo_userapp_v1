@@ -26,9 +26,16 @@ void main() {
     };
   }
 
-  CryptoDepositPolicyError? errorOf(Map<String, dynamic> data) {
+  CryptoDepositPolicyError? errorOf(
+    Map<String, dynamic> data, {
+    String? expectedWalletId,
+  }) {
     try {
-      CryptoDepositPolicy.fromServerData(data, now: now);
+      CryptoDepositPolicy.fromServerData(
+        data,
+        now: now,
+        expectedWalletId: expectedWalletId,
+      );
       return null;
     } on CryptoDepositPolicyException catch (error) {
       return error.error;
@@ -49,18 +56,70 @@ void main() {
       expect(policy.contractAddress, CryptoDepositPolicy.usdtTrc20Contract);
       expect(policy.depositAddress, validAddress);
       expect(policy.minimumDeposit, 1.0);
+      expect(policy.formattedMinimumDeposit, '1');
       expect(policy.requiredConfirmations, 19);
       expect(policy.walletId, 'f5fd1a7a-c940-4342-b2a6-bd8867d9fc00');
       expect(policy.assignmentId, 'assign-123');
     });
 
-    test('accepts a policy without an expiry', () {
+    test('accepts a permanent assignment without an expiry', () {
       final policy = CryptoDepositPolicy.fromServerData(
-        validPayload(overrides: {'expires_at': null}),
+        validPayload(overrides: {
+          'assignment_mode': 'permanent',
+          'expires_at': null,
+        }),
         now: now,
       );
       expect(policy.expiresAt, isNull);
       expect(policy.isExpired, isFalse);
+      expect(policy.assignmentMode, 'permanent');
+    });
+
+    test('rejects missing expiry on default expiring assignment mode', () {
+      expect(
+        errorOf(validPayload(overrides: {'expires_at': null})),
+        CryptoDepositPolicyError.missingExpiry,
+      );
+    });
+
+    test('verifies wallet binding with expectedWalletId', () {
+      const correctId = 'f5fd1a7a-c940-4342-b2a6-bd8867d9fc00';
+      const wrongId = '00000000-0000-0000-0000-000000000000';
+
+      // Matches
+      final policy = CryptoDepositPolicy.fromServerData(
+        validPayload(),
+        now: now,
+        expectedWalletId: correctId,
+      );
+      expect(policy.walletId, correctId);
+
+      // Mismatch fails closed
+      expect(
+        errorOf(validPayload(), expectedWalletId: wrongId),
+        CryptoDepositPolicyError.walletIdMismatch,
+      );
+    });
+
+    test('preserves exact fractional token precision without double truncation', () {
+      final p1 = CryptoDepositPolicy.fromServerData(
+        validPayload(overrides: {'minimum_deposit': '1.001000'}),
+        now: now,
+      );
+      expect(p1.minimumDeposit, 1.001);
+      expect(p1.formattedMinimumDeposit, '1.001');
+
+      final p2 = CryptoDepositPolicy.fromServerData(
+        validPayload(overrides: {'minimum_deposit': '0.000001'}),
+        now: now,
+      );
+      expect(p2.formattedMinimumDeposit, '0.000001');
+
+      final p3 = CryptoDepositPolicy.fromServerData(
+        validPayload(overrides: {'minimum_deposit': '10.500000'}),
+        now: now,
+      );
+      expect(p3.formattedMinimumDeposit, '10.5');
     });
 
     test('rejects a disabled feature even if an address is present', () {

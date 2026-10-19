@@ -13,6 +13,7 @@ import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
@@ -78,127 +79,270 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
       );
 
       final enteredUid = controller.recipientUidController.text.trim();
-      final matchedBeneficiary = controller.findBeneficiaryByAccount(enteredUid);
-      final hasSelectedRecipient = enteredUid.isNotEmpty;
-
       final beneficiaries =
           controller.beneficiaryModel.value.data?.beneficiaries ?? <Beneficiaries>[];
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Recipient Selection
-            if (hasSelectedRecipient)
-              TransferRecipientCard(
-                beneficiary: matchedBeneficiary,
-                fallbackUid: enteredUid,
-                onClear: () {
-                  controller.recipientUidController.clear();
-                  setState(() {});
-                },
-              )
-            else ...[
-              CommonRequiredLabelAndDynamicField(
-                labelText: localization.transferAmountStepSectionRecipientUid,
-                isLabelRequired: true,
-                dynamicField: Row(
-                  children: [
-                    Expanded(
-                      child: Obx(
-                        () => CommonTextInputField(
-                          focusNode: controller.recipientUidFocusNode,
-                          isFocused: controller.isRecipientUidFocused.value,
-                          backgroundColor: isDark
-                              ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.4)
-                              : colorScheme.surface,
-                          hintText: "Enter Recipient UID",
-                          controller: controller.recipientUidController,
-                          keyboardType: TextInputType.number,
-                          onChanged: (_) => setState(() {}),
+          // 1. Recipient UID Input Field with QR Scanner
+          CommonRequiredLabelAndDynamicField(
+            labelText: localization.transferAmountStepSectionRecipientUid,
+            isLabelRequired: true,
+            dynamicField: Row(
+              children: [
+                Expanded(
+                  child: Obx(
+                    () => CommonTextInputField(
+                      focusNode: controller.recipientUidFocusNode,
+                      isFocused: controller.isRecipientUidFocused.value,
+                      backgroundColor: isDark
+                          ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.4)
+                          : colorScheme.surface,
+                      hintText: "Enter Recipient UID",
+                      controller: controller.recipientUidController,
+                      keyboardType: TextInputType.number,
+                      suffixIcon: controller.recipientUidController.text.isNotEmpty
+                          ? IconButton(
+                              icon: Icon(
+                                Icons.clear_rounded,
+                                size: 18,
+                                color: colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
+                              onPressed: () {
+                                controller.recipientUidController.clear();
+                                controller.lookedUpRecipient.value = null;
+                                setState(() {});
+                              },
+                            )
+                          : null,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                // QR Scanner button
+                InkWell(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  onTap: () async {
+                    HapticFeedback.lightImpact();
+                    final scannedCode = await Get.to(
+                      () => const QrScannerScreen(),
+                    );
+
+                    if (scannedCode != null) {
+                      final clean = scannedCode.trim();
+                      final uidMatch = RegExp(
+                        r'^(?:UID\s*:\s*)?(\d+)$',
+                        caseSensitive: false,
+                      ).firstMatch(clean);
+
+                      if (uidMatch != null) {
+                        controller.recipientUidController.text =
+                            uidMatch.group(1)!;
+                        setState(() {});
+                      } else {
+                        ToastHelper().showErrorToast(
+                          localization
+                              .transferAmountStepSectionInvalidQrCodePrefix,
+                        );
+                      }
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colorScheme.primary.withValues(alpha: 0.35),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
                         ),
+                      ],
+                    ),
+                    child: Image.asset(
+                      PngAssets.qrCodeScannerIcon,
+                      color: colorScheme.onPrimary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Real-time recipient lookup status / confirmation chip
+          Obx(() {
+            final cleanUid = controller.recipientUidController.text.trim();
+            final isLookingUp = controller.isLookingUpRecipient.value;
+            final recipientData = controller.lookedUpRecipient.value;
+            final matchedBeneficiary = controller.findBeneficiaryByAccount(cleanUid);
+
+            if (isLookingUp) {
+              return Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.sm),
-                    // QR Scanner button
-                    InkWell(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                      onTap: () async {
-                        HapticFeedback.lightImpact();
-                        final scannedCode = await Get.to(
-                          () => const QrScannerScreen(),
-                        );
-
-                        if (scannedCode != null) {
-                          if (scannedCode.startsWith("UID:")) {
-                            final midValue = scannedCode
-                                .replaceAll("UID:", "")
-                                .trim();
-
-                            final isNumeric = RegExp(
-                              r'^\d+$',
-                            ).hasMatch(midValue);
-
-                            if (isNumeric) {
-                              controller.recipientUidController.text = midValue;
-                              setState(() {});
-                            } else {
-                              ToastHelper().showErrorToast(
-                                localization
-                                    .transferAmountStepSectionInvalidQrCodeDigits,
-                              );
-                            }
-                          } else {
-                            ToastHelper().showErrorToast(
-                              localization
-                                  .transferAmountStepSectionInvalidQrCodePrefix,
-                            );
-                          }
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(15),
-                        width: 52,
-                        height: 52,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colorScheme.primary.withValues(alpha: 0.35),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Image.asset(
-                          PngAssets.qrCodeScannerIcon,
-                          color: colorScheme.onPrimary,
-                        ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      l10nPick(
+                        context,
+                        fa: 'در حال استعلام حساب...',
+                        en: 'Verifying account...',
+                        ar: 'جارٍ الاستعلام عن الحساب...',
+                      ),
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
                 ),
-              ),
+              );
+            }
 
-              // Quick Beneficiaries Carousel
-              if (beneficiaries.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.sm),
-                BeneficiariesQuickPickRow(
-                  beneficiaries: beneficiaries,
-                  selectedUid: enteredUid,
-                  onSelect: (b) {
-                    controller.recipientUidController.text = b.accountNumber ?? '';
-                    setState(() {});
-                  },
-                  onAddNew: () async {
-                    await controller.fetchBeneficiary();
-                    if (mounted) {
-                      Get.bottomSheet(_buildBeneficiary());
-                    }
-                  },
+            if (recipientData != null || matchedBeneficiary != null) {
+              final recipientName = recipientData?['name']?.toString() ??
+                  recipientData?['nickname']?.toString() ??
+                  matchedBeneficiary?.nickname ??
+                  matchedBeneficiary?.receiver?.name ??
+                  cleanUid;
+
+              final recipientAccount = recipientData?['account_number']?.toString() ??
+                  recipientData?['accountNumber']?.toString() ??
+                  matchedBeneficiary?.accountNumber ??
+                  cleanUid;
+
+              final avatarUrl = recipientData?['avatar']?.toString() ??
+                  matchedBeneficiary?.receiver?.avatar;
+
+              final labelText = l10nPick(
+                context,
+                fa: 'حساب مقصد: $recipientName ($recipientAccount)',
+                en: 'Recipient: $recipientName ($recipientAccount)',
+                ar: 'حساب الوجهة: $recipientName ($recipientAccount)',
+              );
+
+              return Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.success.withValues(alpha: 0.15)
+                        : AppColors.successContainer.withValues(alpha: 0.7),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(
+                      color: AppColors.success.withValues(alpha: isDark ? 0.4 : 0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RecipientMonogramAvatar(
+                        name: recipientName,
+                        identifier: recipientAccount,
+                        avatarUrl: avatarUrl,
+                        size: 26,
+                        isVerified: true,
+                        showBadge: false,
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      Flexible(
+                        child: Text(
+                          labelText,
+                          style: const TextStyle(
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.success,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      const Icon(
+                        Icons.verified_rounded,
+                        color: AppColors.success,
+                        size: 16,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ],
+              );
+            }
+
+            if (cleanUid.length >= 6) {
+              return Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      color: AppColors.error,
+                      size: 15,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      l10nPick(
+                        context,
+                        fa: 'کاربری با این شناسه یافت نشد',
+                        en: 'User not found with this UID',
+                        ar: 'لم يتم العثور على مستخدم بهذا المعرف',
+                      ),
+                      style: const TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return const SizedBox.shrink();
+          }),
+
+          // Quick Beneficiaries Carousel
+          if (beneficiaries.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.sm),
+            BeneficiariesQuickPickRow(
+              beneficiaries: beneficiaries,
+              selectedUid: enteredUid,
+              onSelect: (b) {
+                controller.recipientUidController.text = b.accountNumber ?? '';
+                setState(() {});
+              },
+              onAddNew: () async {
+                await controller.fetchBeneficiary();
+                if (mounted) {
+                  Get.bottomSheet(_buildBeneficiary());
+                }
+              },
+            ),
+          ],
 
             const SizedBox(height: AppSpacing.lg),
 

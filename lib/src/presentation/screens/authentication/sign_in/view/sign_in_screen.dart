@@ -201,7 +201,15 @@ class _SignInScreenState extends State<SignInScreen>
           ),
           SizedBox(height: 18.h),
           Text(
-            localizations.signInWelcomeBack,
+            l10nPick(
+              context,
+              en: 'Welcome Back!',
+              fa: 'خوش آمدید',
+              ar: 'مرحباً بعودتك',
+              zh: '欢迎回来',
+              tr: 'Tekrar Hoş Geldiniz',
+              ru: 'С возвращением',
+            ),
             textAlign: TextAlign.center,
             style: TextStyle(
               letterSpacing: -0.5,
@@ -214,7 +222,15 @@ class _SignInScreenState extends State<SignInScreen>
           ),
           SizedBox(height: 6.h),
           Text(
-            localizations.signInSubtitle,
+            l10nPick(
+              context,
+              en: 'Join and take control of your finances today',
+              fa: 'امروز به ما بپیوندید و کنترل دارایی‌های خود را به دست بگیرید',
+              ar: 'انضم إلينا وتحكم في أموالك اليوم',
+              zh: '立即加入，掌控您的财务',
+              tr: 'Bugün katılın ve mali durumunuzu kontrol altına alın',
+              ru: 'Присоединяйтесь и управляйте финансами',
+            ),
             textAlign: TextAlign.center,
             style: TextStyle(
               letterSpacing: 0,
@@ -371,29 +387,31 @@ class _SignInScreenState extends State<SignInScreen>
                   children: [
                     Icon(
                       Icons.lock_outline_rounded,
-                      size: 17.sp,
+                      size: 16.sp,
                       color: _selectedTab == 0 ? activeText : inactiveText,
                     ),
-                    SizedBox(width: 6.w),
+                    SizedBox(width: 5.w),
                     Flexible(
-                      child: Text(
-                        l10nPick(
-                          context,
-                          en: 'Password',
-                          fa: 'رمز عبور',
-                          ar: 'كلمة المرور',
-                          zh: '密码登录',
-                          tr: 'Şifre',
-                          ru: 'Пароль',
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 13.5.sp,
-                          fontWeight: _selectedTab == 0
-                              ? FontWeight.w900
-                              : FontWeight.w600,
-                          color: _selectedTab == 0 ? activeText : inactiveText,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10nPick(
+                            context,
+                            en: 'Password',
+                            fa: 'رمز عبور',
+                            ar: 'كلمة المرور',
+                            zh: '密码登录',
+                            tr: 'Şifre',
+                            ru: 'Пароль',
+                          ),
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: _selectedTab == 0
+                                ? FontWeight.w900
+                                : FontWeight.w600,
+                            color: _selectedTab == 0 ? activeText : inactiveText,
+                          ),
                         ),
                       ),
                     ),
@@ -434,29 +452,31 @@ class _SignInScreenState extends State<SignInScreen>
                   children: [
                     Icon(
                       Icons.mark_email_read_outlined,
-                      size: 17.sp,
+                      size: 16.sp,
                       color: _selectedTab == 1 ? activeText : inactiveText,
                     ),
-                    SizedBox(width: 6.w),
+                    SizedBox(width: 5.w),
                     Flexible(
-                      child: Text(
-                        l10nPick(
-                          context,
-                          en: 'One-Time Code (OTP)',
-                          fa: 'کد یک‌بارمصرف',
-                          ar: 'رمز الدخول (OTP)',
-                          zh: '验证码登录',
-                          tr: 'Tek Seferlik Kod',
-                          ru: 'Код из почты',
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 13.5.sp,
-                          fontWeight: _selectedTab == 1
-                              ? FontWeight.w900
-                              : FontWeight.w600,
-                          color: _selectedTab == 1 ? activeText : inactiveText,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10nPick(
+                            context,
+                            en: 'Email OTP',
+                            fa: 'کد یک‌بارمصرف',
+                            ar: 'رمز الدخول (OTP)',
+                            zh: '验证码登录',
+                            tr: 'Tek Seferlik Kod',
+                            ru: 'Код из почты',
+                          ),
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: _selectedTab == 1
+                                ? FontWeight.w900
+                                : FontWeight.w600,
+                            color: _selectedTab == 1 ? activeText : inactiveText,
+                          ),
                         ),
                       ),
                     ),

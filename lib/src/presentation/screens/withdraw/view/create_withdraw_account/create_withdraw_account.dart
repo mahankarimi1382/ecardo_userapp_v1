@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/controller/create_withdraw_account_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/model/withdraw_method_model.dart';
 
@@ -88,6 +89,76 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                       child: Column(
                         children: [
                           const SizedBox(height: AppSpacing.lg),
+
+                          // Security Policy Notice (Own-Account KYC Policy)
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                            padding: const EdgeInsets.all(AppSpacing.md),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? const Color(0xFF1E293B)
+                                  : const Color(0xFFF1F5F9),
+                              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                              border: Border.all(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue.withValues(alpha: 0.3)
+                                    : AppColors.brandViolet.withValues(alpha: 0.2),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.verified_user_rounded,
+                                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        l10nPick(
+                                          context,
+                                          en: 'Own-Account Policy',
+                                          fa: 'قانون برداشت به حساب خود',
+                                          ar: 'سياسة الحساب الشخصي',
+                                          tr: 'Kendi Hesabına Çekim İlkesi',
+                                          ru: 'Вывод только на свой счет',
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 12.5,
+                                          fontWeight: FontWeight.w800,
+                                          color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 3),
+                                      Text(
+                                        l10nPick(
+                                          context,
+                                          en: 'Withdrawals are strictly permitted only to accounts registered under your verified KYC legal identity.',
+                                          fa: 'تسویه حساب منحصراً به حساب‌های بانکی/شبای منطبق با نام و کدملی احراز‌شده کاربر امکان‌پذیر است.',
+                                          ar: 'يُسمح بالسحب فقط إلى الحسابات المسجلة باسمك المطابق للتحقق من الهوية.',
+                                          tr: 'Para çekme işlemleri yalnızca doğrulanmış kimliğinize ait hesaplara yapılabilir.',
+                                          ru: 'Вывод средств разрешен только на верифицированные банковские счета.',
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          height: 1.4,
+                                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+
                           CommonRequiredLabelAndDynamicField(
                             labelText: localization.createWithdrawAccountWallet,
                             isLabelRequired: true,

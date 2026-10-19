@@ -1,30 +1,17 @@
-// PAYMENT-FIX (P-2) — shared "bill payment result" step.
-//
-// All six bill payment services (airtime, electricity, internet,
-// data_bundle, cable, toll) used to end a submission with only a toast and
-// a silent form reset, so a backend "pending" payment looked exactly like a
-// successful one. This widget renders the backend-driven result state after
-// a completed pay-bill call:
-//   * headline: the backend `message` (pass-through, hidden when absent),
-//   * status row: the server status pass-through (`data['status']`) when
-//     the backend provides one,
-//   * amount / charge / payable rows from the values the user confirmed,
-//   * a link into Bill Payment History where the authoritative server-side
-//     status lives.
-//
-// TODO(lead): the exact success payload of `POST /user/pay-bill` is not
-// contractual in the client (no response model exists). Message/status are
-// therefore rendered as null-safe pass-throughs; once the backend confirms
-// the payload shape (e.g. `data.status` / `data.tnx`), consider a typed
-// model and a dedicated pending/success visual per status.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_success_celebration.dart';
 
-class BillPaymentResultStepSection extends StatelessWidget {
+/// Neo-Fintech Bill Payment Result Step with Celebration & Digital Receipt.
+class BillPaymentResultStepSection extends StatefulWidget {
   const BillPaymentResultStepSection({
     super.key,
     required this.result,
@@ -41,7 +28,6 @@ class BillPaymentResultStepSection extends StatelessWidget {
   });
 
   /// Raw backend response body of the last successful pay-bill call
-  /// (pass-through only — no client model is imposed on it).
   final Map<String, dynamic>? result;
 
   final String amountLabel;
@@ -55,15 +41,27 @@ class BillPaymentResultStepSection extends StatelessWidget {
   final String closeButtonLabel;
   final VoidCallback onClose;
 
+  @override
+  State<BillPaymentResultStepSection> createState() =>
+      _BillPaymentResultStepSectionState();
+}
+
+class _BillPaymentResultStepSectionState
+    extends State<BillPaymentResultStepSection> {
+  @override
+  void initState() {
+    super.initState();
+    // Auto-refresh balances and transactions on completion
+    AppEventBus.emit(BalanceChangedEvent(sourceModule: 'bill_payment'));
+  }
+
   String? get _headline {
-    final message = result?['message']?.toString();
+    final message = widget.result?['message']?.toString();
     return (message == null || message.isEmpty) ? null : message;
   }
 
-  /// Server-driven payment status, e.g. "pending"/"Success". Surfaced only
-  /// when the backend actually sends it (null-safe pass-through).
   String? get _statusText {
-    final data = result?['data'];
+    final data = widget.result?['data'];
     if (data is Map) {
       final status = data['status']?.toString();
       if (status != null && status.isNotEmpty && status != 'null') {
@@ -73,181 +71,153 @@ class BillPaymentResultStepSection extends StatelessWidget {
     return null;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final dividerColor = isDark ? AppColors.darkDivider : AppColors.lightDivider;
-
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            Container(
-              width: double.infinity,
-              height: 192,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(PngAssets.pendingAndSuccessFrame),
-                  fit: BoxFit.contain,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Image.asset(PngAssets.commonSuccessIcon, width: 80),
-                  const SizedBox(height: 16),
-                  if (_headline != null)
-                    Text(
-                      textAlign: TextAlign.center,
-                      _headline!,
-                      style: TextStyle(
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 18,
-                        color: primaryTextColor,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurface : AppColors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  width: 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: (isDark ? Colors.black : AppColors.black).withValues(alpha: isDark ? 0.25 : 0.05),
-                    blurRadius: 15,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  _buildResultDynamicContent(
-                    context: context,
-                    title: amountLabel,
-                    content: amountValue,
-                    contentColor: primaryTextColor,
-                  ),
-                  const SizedBox(height: 16),
-                  Divider(
-                    height: 1,
-                    color: dividerColor,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildResultDynamicContent(
-                    context: context,
-                    title: chargeLabel,
-                    content: chargeValue,
-                    contentColor: AppColors.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Divider(
-                    height: 1,
-                    color: dividerColor,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildResultDynamicContent(
-                    context: context,
-                    title: payableLabel,
-                    content: payableValue,
-                    contentColor: primaryTextColor,
-                  ),
-                  if (_statusText != null) ...[
-                    const SizedBox(height: 16),
-                    Divider(
-                      height: 1,
-                      color: dividerColor,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildResultDynamicContent(
-                      context: context,
-                      title: statusLabel,
-                      content: _statusText!,
-                      contentColor: primaryTextColor,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(height: 36),
-            CommonButton(
-              onPressed: () => Get.toNamed(BaseRoute.billPaymentHistory),
-              width: double.infinity,
-              text: historyButtonLabel,
-            ),
-            const SizedBox(height: 16),
-            CommonButton(
-              onPressed: onClose,
-              width: double.infinity,
-              text: closeButtonLabel,
-              backgroundColor: isDark
-                  ? AppColors.darkSurfaceVariant
-                  : AppColors.lightPrimary.withValues(alpha: 0.06),
-              borderColor: isDark
-                  ? AppColors.darkBorder
-                  : AppColors.lightPrimary.withValues(alpha: 0.60),
-              borderWidth: 1.5,
-              textColor: primaryTextColor,
-            ),
-            const SizedBox(height: 60),
-          ],
-        ),
-      ),
-    );
+  String get _referenceCode {
+    final data = widget.result?['data'];
+    if (data is Map) {
+      final tnx = data['tnx'] ?? data['transaction_id'] ?? data['id'];
+      if (tnx != null && tnx.toString().isNotEmpty) {
+        return tnx.toString();
+      }
+    }
+    return 'BILL-${DateTime.now().millisecondsSinceEpoch}';
   }
 
-  static Widget _buildResultDynamicContent({
-    required BuildContext context,
-    required String title,
-    required String content,
-    required Color contentColor,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextPrimary.withValues(alpha: 0.60),
+  EcardoReceiptStatus get _receiptStatus {
+    final status = _statusText?.toLowerCase() ?? '';
+    if (status.contains('fail') || status.contains('reject')) {
+      return EcardoReceiptStatus.failed;
+    }
+    if (status.contains('pend') || status.contains('process')) {
+      return EcardoReceiptStatus.pending;
+    }
+    return EcardoReceiptStatus.success;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
+
+    final title = _headline ??
+        l10nPick(
+          context,
+          en: 'Bill Payment Submitted',
+          fa: 'پرداخت قبض با موفقیت ثبت شد',
+          ar: 'تم تقديم دفع الفاتورة بنجاح',
+          tr: 'Fatura ödemesi gönderildi',
+          ru: 'Оплата счета зарегистрирована',
+        );
+
+    final subtitle = l10nPick(
+      context,
+      en: 'Your utility payment request has been processed securely.',
+      fa: 'درخواست پرداخت قبض شما با موفقیت در سیستم پردازش شد.',
+      ar: 'تمت معالجة طلب سداد الفاتورة بأمان.',
+      tr: 'Fatura ödeme talebiniz güvenle işlendi.',
+      ru: 'Ваш платеж успешно обработан.',
+    );
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Column(
+          children: [
+            const SizedBox(height: AppSpacing.md),
+
+            // 1. Celebratory Success Animation
+            TransferSuccessCelebration(
+              title: title,
+              subtitle: subtitle,
             ),
-          ),
-          Expanded(
-            child: Text(
-              content,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w900,
-                fontSize: 15,
-                color: contentColor,
+
+            const SizedBox(height: AppSpacing.xl),
+
+            // 2. Ultra-Premium Digital Receipt (Design System)
+            EcardoDigitalReceipt(
+              title: l10nPick(
+                context,
+                en: 'Bill Payment Receipt',
+                fa: 'رسید پرداخت قبوض',
+                ar: 'إيصال دفع الفاتورة',
+                tr: 'Fatura Ödeme Makbuzu',
+                ru: 'Квитанция оплаты счета',
               ),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
+              transactionReference: _referenceCode,
+              status: _receiptStatus,
+              items: [
+                EcardoReceiptItem(
+                  label: widget.amountLabel,
+                  value: widget.amountValue,
+                ),
+                EcardoReceiptItem(
+                  label: widget.chargeLabel,
+                  value: widget.chargeValue,
+                ),
+                EcardoReceiptItem(
+                  label: widget.payableLabel,
+                  value: widget.payableValue,
+                  isHighlighted: true,
+                  valueColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                ),
+                if (_statusText != null)
+                  EcardoReceiptItem(
+                    label: widget.statusLabel,
+                    value: _statusText!,
+                    valueColor: _receiptStatus == EcardoReceiptStatus.success
+                        ? AppColors.success
+                        : AppColors.warning,
+                  ),
+              ],
+              note: l10nPick(
+                context,
+                en: 'Authoritative status is recorded in your Bill Payment History.',
+                fa: 'وضعیت تسویه نهایی در تاریخچه پرداخت قبوض قابل رهگیری است.',
+                ar: 'يتم تسجيل الحالة المعتمدة في سجل دفع الفواتير.',
+                tr: 'Nihai durum Fatura Ödeme Geçmişinizde kaydedilir.',
+                ru: 'Окончательный статус отображается в истории платежей.',
+              ),
+              showBarcode: true,
+              showWatermark: true,
             ),
-          ),
-        ],
+
+            const SizedBox(height: AppSpacing.xxl),
+
+            // 3. Action Buttons
+            CommonButton(
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Get.toNamed(BaseRoute.billPaymentHistory);
+              },
+              borderRadius: AppSpacing.radiusLg,
+              width: double.infinity,
+              height: 52,
+              text: widget.historyButtonLabel,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            CommonButton(
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                widget.onClose();
+              },
+              borderRadius: AppSpacing.radiusLg,
+              width: double.infinity,
+              height: 50,
+              text: widget.closeButtonLabel,
+              backgroundColor: isDark
+                  ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
+                  : colorScheme.primary.withValues(alpha: 0.06),
+              borderColor: isDark
+                  ? colorScheme.outlineVariant.withValues(alpha: 0.4)
+                  : colorScheme.primary.withValues(alpha: 0.2),
+              borderWidth: 1.5,
+              textColor: colorScheme.onSurface,
+            ),
+
+            const SizedBox(height: AppSpacing.huge),
+          ],
+        ),
       ),
     );
   }

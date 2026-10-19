@@ -24,6 +24,12 @@ class AddNewTicketController extends GetxController {
   final RxString selectedDepartment = 'finance'.obs;
   final RxString selectedPriority = 'low'.obs;
 
+  // Auto-attached transaction context metadata
+  final Rxn<String> attachedTransactionRef = Rxn<String>();
+  final Rxn<String> attachedAmount = Rxn<String>();
+  final Rxn<String> attachedCurrency = Rxn<String>();
+  final Rxn<String> attachedTitle = Rxn<String>();
+
   // Title
   final RxBool isTitleFocused = false.obs;
   final FocusNode titleFocusNode = FocusNode();
@@ -39,6 +45,7 @@ class AddNewTicketController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _parseArguments();
     titleFocusNode.addListener(() {
       isTitleFocused.value = titleFocusNode.hasFocus;
     });
@@ -51,6 +58,32 @@ class AddNewTicketController extends GetxController {
     descriptionController.addListener(() {
       descriptionLength.value = descriptionController.text.length;
     });
+  }
+
+  void _parseArguments() {
+    final args = Get.arguments;
+    if (args is Map) {
+      final txRef = args['transaction_ref']?.toString();
+      final amount = args['amount']?.toString();
+      final currency = args['currency']?.toString();
+      final title = args['title']?.toString();
+
+      if (txRef != null && txRef.isNotEmpty) {
+        attachedTransactionRef.value = txRef;
+        attachedAmount.value = amount;
+        attachedCurrency.value = currency;
+        attachedTitle.value = title;
+
+        selectedDepartment.value = 'finance';
+        selectedPriority.value = 'high';
+        titleController.text = 'پیگیری تراکنش: $txRef';
+        descriptionController.text =
+            'کد پیگیری تراکنش: $txRef\n'
+            'مبلغ: ${amount ?? "-"} ${currency ?? ""}\n'
+            'نوع تراکنش: ${title ?? "تراکنش مالی"}\n'
+            'شرح مشکل:\n';
+      }
+    }
   }
 
   int addAttachmentSlot() {
@@ -150,6 +183,10 @@ class AddNewTicketController extends GetxController {
     descriptionController.clear();
     titleLength.value = 0;
     descriptionLength.value = 0;
+    attachedTransactionRef.value = null;
+    attachedAmount.value = null;
+    attachedCurrency.value = null;
+    attachedTitle.value = null;
     selectedDepartment.value = 'finance';
     selectedPriority.value = 'low';
     multipleImagePickerController.attachedImages.clear();

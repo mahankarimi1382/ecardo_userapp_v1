@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/beneficiary_model.dart';
 import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -193,6 +194,7 @@ class MakePaymentController extends GetxController {
         ToastHelper().showSuccessToast(response.data!["message"]);
         successPaymentData.value = response.data!['data'];
         currentStep.value = 2;
+        AppEventBus.emit(BalanceChangedEvent(sourceModule: 'make_payment'));
       } else if (response.status == Status.error) {
         if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isMakePaymentLoading.value = false;

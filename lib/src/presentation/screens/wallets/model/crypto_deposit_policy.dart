@@ -19,13 +19,16 @@ class CryptoDepositPolicy {
     required this.contractAddress,
     required this.depositAddress,
     required this.minimumDeposit,
+    required this.minimumDepositRaw,
+    required this.formattedMinimumDeposit,
     required this.requiredConfirmations,
     required this.expiresAt,
+    required this.assignmentMode,
   });
 
   static const String usdtTrc20Contract = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
 
-  static const Set<String> allowedNetworks = {'TRC20', 'TRON'};
+  static const Set<String> allowedNetworks = {'TRC20', 'TRON', 'TRON_MAINNET'};
 
   static const double maxReasonableMinimumDeposit = 100000;
 
@@ -47,12 +50,28 @@ class CryptoDepositPolicy {
   final String contractAddress;
   final String depositAddress;
   final double minimumDeposit;
+  final String minimumDepositRaw;
+  final String formattedMinimumDeposit;
   final int requiredConfirmations;
   final DateTime? expiresAt;
+  final String assignmentMode;
 
   bool get isExpired {
     final expiry = expiresAt;
     return expiry != null && !expiry.isAfter(DateTime.now().toUtc());
+  }
+
+  /// Exact amount string formatting without losing token precision.
+  static String formatExactAmount(String raw, double parsed) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) return parsed.toString();
+    if (trimmed.contains('.')) {
+      final clean = trimmed
+          .replaceAll(RegExp(r'0+$'), '')
+          .replaceAll(RegExp(r'\.$'), '');
+      return clean.isEmpty ? '0' : clean;
+    }
+    return trimmed;
   }
 
   /// Parses and validates the server payload.
@@ -61,6 +80,7 @@ class CryptoDepositPolicy {
   factory CryptoDepositPolicy.fromServerData(
     Map<String, dynamic> data, {
     DateTime? now,
+    String? expectedWalletId,
   }) {
     final clock = (now ?? DateTime.now()).toUtc();
 
@@ -75,6 +95,14 @@ class CryptoDepositPolicy {
     if (!_uuid.hasMatch(walletId)) {
       throw const CryptoDepositPolicyException(
         CryptoDepositPolicyError.invalidWalletId,
+      );
+    }
+
+    if (expectedWalletId != null &&
+        expectedWalletId.trim().isNotEmpty &&
+        walletId.toLowerCase() != expectedWalletId.trim().toLowerCase()) {
+      throw const CryptoDepositPolicyException(
+        CryptoDepositPolicyError.walletIdMismatch,
       );
     }
 
@@ -113,12 +141,14 @@ class CryptoDepositPolicy {
       );
     }
 
+    final rawMinStr = data['minimum_deposit']?.toString().trim() ?? '';
     final minimum = _readDecimal(data, 'minimum_deposit');
     if (minimum <= 0 || minimum > maxReasonableMinimumDeposit) {
       throw const CryptoDepositPolicyException(
         CryptoDepositPolicyError.invalidMinimumDeposit,
       );
     }
+    final formattedMin = formatExactAmount(rawMinStr, minimum);
 
     final confirmations = _readInt(data, 'required_confirmations');
     if (confirmations < minimumConfirmations ||
@@ -127,6 +157,9 @@ class CryptoDepositPolicy {
         CryptoDepositPolicyError.invalidConfirmations,
       );
     }
+
+    final rawMode = data['assignment_mode']?.toString().trim().toLowerCase();
+    final assignmentMode = rawMode == 'permanent' ? 'permanent' : 'expiring';
 
     DateTime? expiresAt;
     final rawExpiry = data['expires_at'];
@@ -142,6 +175,10 @@ class CryptoDepositPolicy {
           CryptoDepositPolicyError.expiredAssignment,
         );
       }
+    } else if (assignmentMode != 'permanent') {
+      throw const CryptoDepositPolicyException(
+        CryptoDepositPolicyError.missingExpiry,
+      );
     }
 
     return CryptoDepositPolicy._(
@@ -156,8 +193,11 @@ class CryptoDepositPolicy {
       contractAddress: contract,
       depositAddress: address,
       minimumDeposit: minimum,
+      minimumDepositRaw: rawMinStr,
+      formattedMinimumDeposit: formattedMin,
       requiredConfirmations: confirmations,
       expiresAt: expiresAt,
+      assignmentMode: assignmentMode,
     );
   }
 
@@ -203,6 +243,7 @@ enum CryptoDepositPolicyError {
   depositsDisabled,
   missingField,
   invalidWalletId,
+  walletIdMismatch,
   unsupportedChain,
   unsupportedAsset,
   unsupportedNetwork,
@@ -211,6 +252,7 @@ enum CryptoDepositPolicyError {
   invalidMinimumDeposit,
   invalidConfirmations,
   invalidExpiry,
+  missingExpiry,
   expiredAssignment,
 }
 

@@ -93,20 +93,15 @@ class _MakePaymentAmountStepSectionState
                   );
 
                   if (scannedCode != null) {
-                    if (scannedCode.startsWith("MID:")) {
-                      final midValue = scannedCode
-                          .replaceAll("MID:", "")
-                          .trim();
+                    final clean = scannedCode.trim();
+                    final midMatch = RegExp(
+                      r'^(?:MID\s*:\s*)?(\d+)$',
+                      caseSensitive: false,
+                    ).firstMatch(clean);
 
-                      final isNumeric = RegExp(r'^\d+$').hasMatch(midValue);
-                      if (isNumeric) {
-                        controller.merchantMidController.text = midValue;
-                      } else {
-                        ToastHelper().showErrorToast(
-                          localization
-                              .makePaymentAmountStepSectionInvalidQrCodeDigits,
-                        );
-                      }
+                    if (midMatch != null) {
+                      controller.merchantMidController.text =
+                          midMatch.group(1)!;
                     } else {
                       ToastHelper().showErrorToast(
                         localization
