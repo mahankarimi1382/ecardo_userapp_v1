@@ -189,6 +189,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     _resetController.forward(from: 0.0).then((_) {
       if (!mounted) return;
       HapticFeedback.heavyImpact();
+      SystemSound.play(SystemSoundType.click);
       widget.onSwipeComplete();
     });
   }

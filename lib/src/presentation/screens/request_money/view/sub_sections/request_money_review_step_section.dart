@@ -5,15 +5,88 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
-import 'package:ecardo_user/src/common/widgets/design_system/ecardo_glass_card.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
-class RequestMoneyReviewStepSection extends StatelessWidget {
+class RequestMoneyReviewStepSection extends StatefulWidget {
   const RequestMoneyReviewStepSection({super.key});
+
+  @override
+  State<RequestMoneyReviewStepSection> createState() =>
+      _RequestMoneyReviewStepSectionState();
+}
+
+class _RequestMoneyReviewStepSectionState
+    extends State<RequestMoneyReviewStepSection> {
+  final GlobalKey<EcardoSwipeButtonState> _swipeKey =
+      GlobalKey<EcardoSwipeButtonState>();
+
+  Future<void> _handleConfirmRequest(BuildContext context) async {
+    HapticFeedback.lightImpact();
+    final RequestMoneyController controller = Get.find();
+
+    final bioReason = l10nPick(
+      context,
+      en: 'Authenticate to confirm request money',
+      fa: 'جهت تأیید ارسال درخواست پول احراز هویت کنید',
+      ar: 'التحقق لتأكيد طلب المال',
+      tr: 'Para talebini onaylamak için doğrulama yapın',
+      ru: 'Подтвердите личность для запроса средств',
+    );
+
+    // Step-up Security: Try biometric first if available
+    final biometricService = BiometricAuthService();
+    try {
+      final isBioEnabled = await biometricService.isEnabled();
+      if (isBioEnabled) {
+        final bioOk = await biometricService.authenticate(reason: bioReason);
+        if (bioOk) {
+          controller.requestMoney();
+          return;
+        }
+      }
+    } catch (_) {
+      // Fallback to passcode prompt
+    }
+
+    final bool isPasscodeEnabled =
+        Get.find<SettingsService>().getSetting(
+              "request_money_accept_passcode_status",
+            ) ==
+            "1";
+
+    String? storedPasscode = controller.userModel.value.data?.passcode;
+    bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
+    if (storedPasscode == null || storedPasscode.isEmpty) {
+      if (Get.isRegistered<HomeController>()) {
+        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+      }
+    }
+    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+
+    if (isPasscodeEnabled && hasPasscode) {
+      final dynamic verified = await Get.bottomSheet<dynamic>(
+        const VerifyPasscodeBottomSheet(),
+      );
+      if (verified == null ||
+          !PasscodeHelper.isValidFormat(verified.toString())) {
+        _swipeKey.currentState?.reset();
+        return;
+      }
+      controller.requestMoney();
+    } else {
+      controller.requestMoney();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,85 +170,50 @@ class RequestMoneyReviewStepSection extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xxxl),
 
-            Row(
-              children: [
-                Expanded(
-                  child: CommonIconButton(
-                    backgroundColor: isDark
-                        ? AppColors.darkSurfaceVariant
-                        : AppColors.lightPrimary.withValues(alpha: 0.04),
-                    borderWidth: 1.5,
-                    borderColor: isDark
-                        ? AppColors.darkBorder
-                        : AppColors.lightPrimary.withValues(alpha: 0.30),
-                    width: double.infinity,
-                    height: 52,
-                    text: localization.requestMoneyReviewStepSectionBackButton,
-                    icon: PngAssets.reviewArrowBackCommonIcon,
-                    iconWidth: 18,
-                    iconHeight: 18,
-                    iconAndTextSpace: AppSpacing.sm,
-                    iconColor: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                    textColor: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      controller.currentStep.value = 0;
-                    },
-                  ),
+            // Modern Interactive Swipe Button with Step-up Security
+            Obx(
+              () => EcardoSwipeButton(
+                key: _swipeKey,
+                text: l10nPick(
+                  context,
+                  en: 'Slide to confirm request',
+                  fa: 'برای تأیید و ارسال درخواست بکشید',
+                  ar: 'اسحب لتأكيد الطلب',
+                  tr: 'Talebi onaylamak için kaydırın',
+                  ru: 'Проведите для подтверждения запроса',
                 ),
-                const SizedBox(width: AppSpacing.lg),
-                Expanded(
-                  child: Obx(
-                    () => CommonIconButton(
-                      isLoading: controller.isRequestMoneyLoading.value,
-                      onPressed: () async {
-                        HapticFeedback.lightImpact();
-                        if (controller.currentStep.value == 1) {
-                          if ((controller.userModel.value.data?.passcode ?? "0") ==
-                              "0") {
-                            controller.requestMoney();
-                            return;
-                          }
+                isLoading: controller.isRequestMoneyLoading.value,
+                onSwipeComplete: () => _handleConfirmRequest(context),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
 
-                          final bool isPasscodeEnabled =
-                              Get.find<SettingsService>().getSetting(
-                                "request_money_accept_passcode_status",
-                              ) ==
-                              "1";
-
-                          if (isPasscodeEnabled) {
-                            final dynamic verified = await Get.bottomSheet<dynamic>(
-                              const VerifyPasscodeBottomSheet(),
-                            );
-                            final isVerified = verified != null &&
-                                verified != false &&
-                                (verified is! String || verified.isNotEmpty);
-                            if (!isVerified) return;
-                            controller.requestMoney();
-                          } else {
-                            controller.requestMoney();
-                          }
-                        } else {
-                          controller.nextStepWithValidation();
-                        }
-                      },
-                      width: double.infinity,
-                      height: 52,
-                      text:
-                          localization.requestMoneyReviewStepSectionConfirmButton,
-                      icon: PngAssets.reviewArrowRightCommonIcon,
-                      iconWidth: 18,
-                      iconHeight: 18,
-                      iconAndTextSpace: AppSpacing.sm,
-                      isIconRight: true,
-                    ),
-                  ),
-                ),
-              ],
+            // Secondary Back Button
+            CommonIconButton(
+              backgroundColor: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightPrimary.withValues(alpha: 0.04),
+              borderWidth: 1.5,
+              borderColor: isDark
+                  ? AppColors.darkBorder
+                  : AppColors.lightPrimary.withValues(alpha: 0.30),
+              width: double.infinity,
+              height: 52,
+              text: localization.requestMoneyReviewStepSectionBackButton,
+              icon: PngAssets.reviewArrowBackCommonIcon,
+              iconWidth: 18,
+              iconHeight: 18,
+              iconAndTextSpace: AppSpacing.sm,
+              iconColor: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+              textColor: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                controller.currentStep.value = 0;
+              },
             ),
             const SizedBox(height: AppSpacing.huge),
           ],

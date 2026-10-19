@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 
@@ -57,6 +58,11 @@ class _TransferSuccessCelebrationState
         curve: const Interval(0.4, 1.0, curve: Curves.easeInOut),
       ),
     );
+
+    Future.microtask(() {
+      HapticFeedback.heavyImpact();
+      SystemSound.play(SystemSoundType.click);
+    });
 
     _controller.forward();
   }
