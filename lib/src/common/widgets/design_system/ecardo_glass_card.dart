@@ -115,7 +115,11 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
   void _handleTapDown(TapDownDetails _) {
     if (_isInteractive) {
       HapticFeedback.lightImpact();
-      _controller.forward();
+      final disableAnimations =
+          MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+      if (!disableAnimations) {
+        _controller.forward();
+      }
     }
   }
 
@@ -137,49 +141,55 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final disableAnimations =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
 
     // Resolve color styling dynamically based on theme and variant
     final resolvedBg = widget.backgroundColor ?? _resolveBackgroundColor(isDark);
     final resolvedBorderGradient =
         widget.borderGradient ?? _resolveBorderGradient(isDark);
     final resolvedGlow = widget.glowColor ?? _resolveGlowColor(isDark);
-    final resolvedBlur = _resolveBlur();
+    final resolvedBlur = disableAnimations ? 0.0 : _resolveBlur();
+
+    Widget innerContent = CustomPaint(
+      foregroundPainter: _GradientBorderPainter(
+        borderRadius: widget.borderRadius,
+        borderWidth: widget.borderWidth,
+        gradient: resolvedBorderGradient,
+      ),
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          color: resolvedBg,
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          gradient: RadialGradient(
+            center: widget.glowAlignment,
+            radius: widget.glowRadius,
+            colors: [
+              resolvedGlow,
+              resolvedGlow.withValues(alpha: 0.0),
+            ],
+            stops: const [0.0, 1.0],
+          ),
+        ),
+        padding: widget.padding,
+        child: widget.child,
+      ),
+    );
 
     Widget cardBody = ClipRRect(
       borderRadius: BorderRadius.circular(widget.borderRadius),
       clipBehavior: widget.clipBehavior,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: resolvedBlur,
-          sigmaY: resolvedBlur,
-        ),
-        child: CustomPaint(
-          foregroundPainter: _GradientBorderPainter(
-            borderRadius: widget.borderRadius,
-            borderWidth: widget.borderWidth,
-            gradient: resolvedBorderGradient,
-          ),
-          child: Container(
-            width: widget.width,
-            height: widget.height,
-            decoration: BoxDecoration(
-              color: resolvedBg,
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              gradient: RadialGradient(
-                center: widget.glowAlignment,
-                radius: widget.glowRadius,
-                colors: [
-                  resolvedGlow,
-                  resolvedGlow.withValues(alpha: 0.0),
-                ],
-                stops: const [0.0, 1.0],
+      child: resolvedBlur > 0
+          ? BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: resolvedBlur,
+                sigmaY: resolvedBlur,
               ),
-            ),
-            padding: widget.padding,
-            child: widget.child,
-          ),
-        ),
-      ),
+              child: innerContent,
+            )
+          : innerContent,
     );
 
     // Apply soft drop shadows if enabled or provided

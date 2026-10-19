@@ -39,6 +39,9 @@ class CryptoDepositPolicy {
     r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
   );
 
+  /// Validates whether a string conforms to the canonical UUID format.
+  static bool isValidUuid(String value) => _uuid.hasMatch(value.trim());
+
   final bool depositsEnabled;
   final String policyVersion;
   final String walletId;

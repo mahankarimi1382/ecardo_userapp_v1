@@ -123,7 +123,14 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
         return;
       }
 
-      final policy = CryptoDepositPolicy.fromServerData(map);
+      final expectedWalletId = (widget.wallet.accountNo != null &&
+              CryptoDepositPolicy.isValidUuid(widget.wallet.accountNo!))
+          ? widget.wallet.accountNo
+          : null;
+      final policy = CryptoDepositPolicy.fromServerData(
+        map,
+        expectedWalletId: expectedWalletId,
+      );
       if (mounted) {
         setState(() {
           _policy = policy;

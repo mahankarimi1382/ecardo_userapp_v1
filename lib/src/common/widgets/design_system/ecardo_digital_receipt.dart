@@ -897,14 +897,14 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: _ReceiptActionButton(
-                icon: Icons.copy_rounded,
+                icon: widget.onDownload != null ? Icons.download_rounded : Icons.copy_rounded,
                 label: l10nPick(
                   context,
-                  en: 'Copy Ref ID',
-                  fa: 'کپی کد پیگیری',
-                  ar: 'نسخ المرجع',
-                  tr: 'Referansı Kopyala',
-                  ru: 'Скопировать',
+                  en: widget.onDownload != null ? 'Download PDF' : 'Copy Ref ID',
+                  fa: widget.onDownload != null ? 'دانلود PDF' : 'کپی کد پیگیری',
+                  ar: widget.onDownload != null ? 'تحميل PDF' : 'نسخ المرجع',
+                  tr: widget.onDownload != null ? 'PDF İndir' : 'Referansı Kopyala',
+                  ru: widget.onDownload != null ? 'Скачать PDF' : 'Скопировать',
                 ),
                 onPressed: _handleDownload,
                 isPrimary: true,
@@ -930,19 +930,22 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
                     color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    l10nPick(
-                      context,
-                      en: 'Need help with this transaction? Contact Support',
-                      fa: 'نیاز به راهنمایی دارید؟ ارسال به پشتیبانی',
-                      ar: 'هل تحتاج إلى مساعدة؟ تواصل مع الدعم',
-                      tr: 'Yardıma mı ihtiyacınız var? Destek',
-                      ru: 'Нужна помощь? Обратиться в поддержку',
-                    ),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  Flexible(
+                    child: Text(
+                      l10nPick(
+                        context,
+                        en: 'Need help? Contact Support',
+                        fa: 'نیاز به راهنمایی دارید؟ ارسال به پشتیبانی',
+                        ar: 'هل تحتاج إلى مساعدة؟ تواصل مع الدعم',
+                        tr: 'Yardım mı lazım? Destek',
+                        ru: 'Нужна помощь? В поддержку',
+                      ),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -1044,11 +1047,15 @@ class _ReceiptActionButtonState extends State<_ReceiptActionButton>
             children: [
               Icon(widget.icon, size: 16, color: fg),
               const SizedBox(width: AppSpacing.sm),
-              Text(
-                widget.label,
-                style: AppTextStyles.labelMedium.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: fg,
+              Flexible(
+                child: Text(
+                  widget.label,
+                  style: AppTextStyles.labelMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: fg,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ],
